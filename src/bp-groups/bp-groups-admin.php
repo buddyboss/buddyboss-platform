@@ -285,7 +285,7 @@ function bp_groups_admin_load() {
 
 		// If the group doesn't exist, just redirect back to the index.
 		if ( empty( $group->slug ) ) {
-			wp_redirect( $redirect_to );
+			wp_safe_redirect( $redirect_to );
 			exit;
 		}
 
@@ -362,6 +362,16 @@ function bp_groups_admin_load() {
 		 */
 		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
 		$media_status         = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+
+		/**
+		 * Filters the allowed media status values for the group.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of allowed media statuses.
+		 */
+		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
+		$document_status         = in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -531,12 +541,12 @@ function bp_groups_admin_load() {
 		 *
 		 * @param string $redirect_to URL to redirect user to.
 		 */
-		wp_redirect( apply_filters( 'bp_group_admin_edit_redirect', $redirect_to ) );
+		wp_safe_redirect( apply_filters( 'bp_group_admin_edit_redirect', $redirect_to ) );
 		exit;
 
 		// If a referrer and a nonce is supplied, but no action, redirect back.
 	} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
-		wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
+		wp_safe_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
 		exit;
 	}
 }
@@ -1783,7 +1793,7 @@ function bp_groups_admin_process_group_type_bulk_changes( $doaction ) {
 		$redirect = add_query_arg( array( 'updated' => 'group-type-change-success' ), wp_get_referer() );
 	}
 
-	wp_redirect( $redirect );
+	wp_safe_redirect( $redirect );
 	exit();
 }
 add_action( 'bp_groups_admin_load', 'bp_groups_admin_process_group_type_bulk_changes' );

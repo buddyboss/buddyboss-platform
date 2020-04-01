@@ -3739,3 +3739,43 @@ function groups_can_user_manage_folders( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+/**
+ * Check whether a user is allowed to manage document in a given group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_document( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status   = bp_group_get_media_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' == $status ) {
+		$is_allowed = true;
+	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' == $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}

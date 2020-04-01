@@ -112,6 +112,52 @@ class BP_Document_Query extends BP_Recursive_Query {
 	}
 
 	/**
+	 * Generates WHERE SQL clause to be appended to a main query.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 *
+	 * @param string $alias An existing table alias that is compatible with the current query clause.
+	 *                      Default: 'a'. BP_Document::get() uses 'a', so we default to that.
+	 * @return string SQL fragment to append to the main WHERE clause.
+	 */
+	public function get_sql_document( $alias = 'm' ) {
+		if ( ! empty( $alias ) ) {
+			$this->table_alias = sanitize_title( $alias );
+		}
+
+		$sql = $this->get_sql_clauses();
+
+		// We only need the 'where' clause.
+		//
+		// Also trim trailing "AND" clause from parent BP_Recursive_Query class
+		// since it's not necessary for our needs.
+		return preg_replace( '/^\sAND/', '', $sql['where'] );
+	}
+
+	/**
+	 * Generates WHERE SQL clause to be appended to a main query.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 *
+	 * @param string $alias An existing table alias that is compatible with the current query clause.
+	 *                      Default: 'a'. BP_Document::get() uses 'a', so we default to that.
+	 * @return string SQL fragment to append to the main WHERE clause.
+	 */
+	public function get_sql_folder( $alias = 'a' ) {
+		if ( ! empty( $alias ) ) {
+			$this->table_alias = sanitize_title( $alias );
+		}
+
+		$sql = $this->get_sql_clauses();
+
+		// We only need the 'where' clause.
+		//
+		// Also trim trailing "AND" clause from parent BP_Recursive_Query class
+		// since it's not necessary for our needs.
+		return preg_replace( '/^\sAND/', '', $sql['where'] );
+	}
+
+	/**
 	 * Generate WHERE clauses for a first-order clause.
 	 *
 	 * @since BuddyBoss 1.3.0

@@ -497,7 +497,7 @@ class BP_Document {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( $sort !== 'ASC' && $sort !== 'DESC' ) {
 			$sort = 'DESC';
 		}
 
@@ -735,11 +735,17 @@ class BP_Document {
 		$where_conditions_folder   = array();
 
 		if ( ! empty( $r['scope'] ) ) {
-			$scope_query = self::get_scope_query_sql( $r['scope'], $r );
+			$scope_query_document = self::get_scope_document_query_sql( $r['scope'], $r );
+			$scope_query_folder   = self::get_scope_folder_query_sql( $r['scope'], $r );
 
 			// Override some arguments if needed.
-			if ( ! empty( $scope_query['override'] ) ) {
-				$r = array_replace_recursive( $r, $scope_query['override'] );
+			if ( ! empty( $scope_query_document['override'] ) ) {
+				$r = array_replace_recursive( $r, $scope_query_document['override'] );
+			}
+
+			// Override some arguments if needed.
+			if ( ! empty( $scope_query_folder['override'] ) ) {
+				$r = array_replace_recursive( $r, $scope_query_folder['override'] );
 			}
 		}
 
@@ -768,7 +774,7 @@ class BP_Document {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( $sort !== 'ASC' && $sort !== 'DESC' ) {
 			$sort = 'DESC';
 		}
 
@@ -810,9 +816,9 @@ class BP_Document {
 		}
 
 		// existing-document check to query document which has no folders assigned
-		if ( ! empty( $r['folder_id'] ) && 'existing-document' != $r['folder_id'] ) {
+		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
 			$where_conditions_document['folder'] = "m.album_id = {$r['folder_id']}";
-		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' == $r['folder_id'] ) {
+		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
 			$where_conditions_document['folder'] = 'm.album_id = 0';
 		}
 
@@ -827,7 +833,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['user_directory'] ) && true === $r['user_directory'] ) {
-			if ( ! empty( $r['folder_id'] ) && 'existing-document' != $r['folder_id'] ) {
+			if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
 				$where_conditions_folder['user_directory'] = "a.parent = {$r['folder_id']}";
 			} elseif ( ! empty( $r['group_id'] ) && bp_is_group_folders() && 'folder' === bp_action_variable( 0 ) && (int) bp_action_variable( 1 ) > 0 ) {
 				$folder_id                                   = (int) bp_action_variable( 1 );
@@ -871,9 +877,9 @@ class BP_Document {
 		}
 
 		// Join the where conditions together.
-		if ( ! empty( $scope_query['sql'] ) ) {
-			$where_sql_folder   = 'WHERE ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query['sql'] . ' )';
-			$where_sql_document = 'WHERE ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query['sql'] . ' )';
+		if ( ! empty( $scope_query_document['sql'] ) && !empty( $scope_query_folder['sql'] ) ) {
+			$where_sql_folder   = 'WHERE ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
+			$where_sql_document = 'WHERE ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
 		} else {
 			$where_sql_document = 'WHERE ' . join( ' AND ', $where_conditions_document );
 			$where_sql_folder   = 'WHERE ' . join( ' AND ', $where_conditions_folder );
@@ -1315,6 +1321,218 @@ class BP_Document {
 
 			$query = new BP_Document_Query( $query_args );
 			$sql   = $query->get_sql();
+			if ( ! empty( $sql ) ) {
+				$retval['sql'] = $sql;
+			}
+		}
+
+		if ( ! empty( $override ) ) {
+			$retval['override'] = $override;
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Get the SQL for the 'scope' param in BP_Document::get().
+	 *
+	 * A scope is a predetermined set of document arguments.  This method is used
+	 * to grab these document arguments and override any existing args if needed.
+	 *
+	 * Can handle multiple scopes.
+	 *
+	 * @param mixed $scope The document scope. Accepts string or array of scopes.
+	 * @param array $r Current activity arguments. Same as those of BP_document::get(),
+	 *                       but merged with defaults.
+	 *
+	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
+	 * @since BuddyBoss 1.1.9
+	 */
+	public static function get_scope_document_query_sql( $scope = false, $r = array() ) {
+
+		// Define arrays for future use.
+		$query_args = array();
+		$override   = array();
+		$retval     = array();
+
+		// Check for array of scopes.
+		if ( is_array( $scope ) ) {
+			$scopes = $scope;
+
+			// Explode a comma separated string of scopes.
+		} elseif ( is_string( $scope ) ) {
+			$scopes = explode( ',', $scope );
+		}
+
+		// Bail if no scope passed.
+		if ( empty( $scopes ) ) {
+			return false;
+		}
+
+		// Helper to easily grab the 'user_id'.
+		if ( ! empty( $r['filter']['user_id'] ) ) {
+			$r['user_id'] = $r['filter']['user_id'];
+		}
+
+		// Parse each scope; yes! we handle multiples!
+		foreach ( $scopes as $scope ) {
+			$scope_args = array();
+
+			/**
+			 * Plugins can hook here to set their document arguments for custom scopes.
+			 *
+			 * This is a dynamic filter based on the document scope. eg:
+			 *   - 'bp_document_set_groups_scope_args'
+			 *   - 'bp_document_set_friends_scope_args'
+			 *
+			 * To see how this filter is used, plugin devs should check out:
+			 *   - bp_groups_filter_document_scope() - used for 'groups' scope
+			 *   - bp_friends_filter_document_scope() - used for 'friends' scope
+			 *
+			 * @param array {
+			 *     Document query clauses.
+			 *
+			 * @type array {
+			 *         Document arguments for your custom scope.
+			 *         See {@link BP_Document_Query::_construct()} for more details.
+			 *     }
+			 * @type array $override Optional. Override existing document arguments passed by $r.
+			 *     }
+			 * }
+			 *
+			 * @param array $r Current activity arguments passed in BP_Document::get().
+			 *
+			 * @since BuddyBoss 1.1.9
+			 */
+			$scope_args = apply_filters( "bp_document_set_document_{$scope}_scope_args", array(), $r );
+
+			if ( ! empty( $scope_args ) ) {
+				// Merge override properties from other scopes
+				// this might be a problem...
+				if ( ! empty( $scope_args['override'] ) ) {
+					$override = array_merge( $override, $scope_args['override'] );
+					unset( $scope_args['override'] );
+				}
+
+				// Save scope args.
+				if ( ! empty( $scope_args ) ) {
+					$query_args[] = $scope_args;
+				}
+			}
+		}
+
+		if ( ! empty( $query_args ) ) {
+			// Set relation to OR.
+			$query_args['relation'] = 'OR';
+
+			$query = new BP_Document_Query( $query_args );
+			$sql   = $query->get_sql_document();
+			if ( ! empty( $sql ) ) {
+				$retval['sql'] = $sql;
+			}
+		}
+
+		if ( ! empty( $override ) ) {
+			$retval['override'] = $override;
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Get the SQL for the 'scope' param in BP_Document::get().
+	 *
+	 * A scope is a predetermined set of document arguments.  This method is used
+	 * to grab these document arguments and override any existing args if needed.
+	 *
+	 * Can handle multiple scopes.
+	 *
+	 * @param mixed $scope The document scope. Accepts string or array of scopes.
+	 * @param array $r Current activity arguments. Same as those of BP_document::get(),
+	 *                       but merged with defaults.
+	 *
+	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
+	 * @since BuddyBoss 1.1.9
+	 */
+	public static function get_scope_folder_query_sql( $scope = false, $r = array() ) {
+
+		// Define arrays for future use.
+		$query_args = array();
+		$override   = array();
+		$retval     = array();
+
+		// Check for array of scopes.
+		if ( is_array( $scope ) ) {
+			$scopes = $scope;
+
+			// Explode a comma separated string of scopes.
+		} elseif ( is_string( $scope ) ) {
+			$scopes = explode( ',', $scope );
+		}
+
+		// Bail if no scope passed.
+		if ( empty( $scopes ) ) {
+			return false;
+		}
+
+		// Helper to easily grab the 'user_id'.
+		if ( ! empty( $r['filter']['user_id'] ) ) {
+			$r['user_id'] = $r['filter']['user_id'];
+		}
+
+		// Parse each scope; yes! we handle multiples!
+		foreach ( $scopes as $scope ) {
+			$scope_args = array();
+
+			/**
+			 * Plugins can hook here to set their document arguments for custom scopes.
+			 *
+			 * This is a dynamic filter based on the document scope. eg:
+			 *   - 'bp_document_set_groups_scope_args'
+			 *   - 'bp_document_set_friends_scope_args'
+			 *
+			 * To see how this filter is used, plugin devs should check out:
+			 *   - bp_groups_filter_document_scope() - used for 'groups' scope
+			 *   - bp_friends_filter_document_scope() - used for 'friends' scope
+			 *
+			 * @param array {
+			 *     Document query clauses.
+			 *
+			 * @type array {
+			 *         Document arguments for your custom scope.
+			 *         See {@link BP_Document_Query::_construct()} for more details.
+			 *     }
+			 * @type array $override Optional. Override existing document arguments passed by $r.
+			 *     }
+			 * }
+			 *
+			 * @param array $r Current activity arguments passed in BP_Document::get().
+			 *
+			 * @since BuddyBoss 1.1.9
+			 */
+			$scope_args = apply_filters( "bp_document_set_folder_{$scope}_scope_args", array(), $r );
+
+			if ( ! empty( $scope_args ) ) {
+				// Merge override properties from other scopes
+				// this might be a problem...
+				if ( ! empty( $scope_args['override'] ) ) {
+					$override = array_merge( $override, $scope_args['override'] );
+					unset( $scope_args['override'] );
+				}
+
+				// Save scope args.
+				if ( ! empty( $scope_args ) ) {
+					$query_args[] = $scope_args;
+				}
+			}
+		}
+
+		if ( ! empty( $query_args ) ) {
+			// Set relation to OR.
+			$query_args['relation'] = 'OR';
+
+			$query = new BP_Document_Query( $query_args );
+			$sql   = $query->get_sql_folder();
 			if ( ! empty( $sql ) ) {
 				$retval['sql'] = $sql;
 			}

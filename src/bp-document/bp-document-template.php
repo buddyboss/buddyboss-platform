@@ -722,7 +722,7 @@ function bp_get_document_folder_id() {
 	 *
 	 * @param int $id The document folder ID.
 	 */
-	return apply_filters( 'bp_get_document_folder_id', $document_template->document->album_id );
+	return apply_filters( 'bp_get_document_folder_id', $document_template->document->id );
 }
 
 /**
@@ -1046,7 +1046,7 @@ function bp_has_folders( $args = '' ) {
 		// Searching.
 			'search_terms' => $search_terms_default,
 		),
-		'has_documents'
+		'has_folders'
 	);
 
 	if ( bp_is_group_single() && bp_is_group_folders() && false === $r['include'] ) {
@@ -1320,7 +1320,7 @@ function bp_folder_id() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ * @global object $document_template {@link BP_Document_Template}
  *
  * @return int The document folder ID.
  */
@@ -1351,12 +1351,12 @@ function bp_folder_title() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ * @global object $document_template {@link BP_Document_Template}
  *
  * @return string The document folder title.
  */
 function bp_get_folder_title() {
-	global $document_folder_template;
+	global $document_template;
 
 	/**
 	 * Filters the folder title being displayed.
@@ -1365,7 +1365,7 @@ function bp_get_folder_title() {
 	 *
 	 * @param int $id The document folder title.
 	 */
-	return apply_filters( 'bp_get_folder_title', $document_folder_template->folder->title );
+	return apply_filters( 'bp_get_folder_title', $document_template->document->title );
 }
 
 /**
@@ -1373,12 +1373,12 @@ function bp_get_folder_title() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ * @global object $document_template {@link BP_Document_Template}
  *
  * @return string The document folder privacy.
  */
 function bp_get_folder_privacy() {
-	global $document_folder_template;
+	global $document_template;
 
 	/**
 	 * Filters the folder privacy being displayed.
@@ -1387,7 +1387,7 @@ function bp_get_folder_privacy() {
 	 *
 	 * @param int $id The document folder privacy.
 	 */
-	return apply_filters( 'bp_get_folder_privacy', $document_folder_template->folder->privacy );
+	return apply_filters( 'bp_get_folder_privacy', $document_template->document->privacy );
 }
 
 /**
@@ -1404,7 +1404,7 @@ function bp_folder_link() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ * @global object $document_template {@link BP_Document_Template}
  *
  * @return string The document folder description.
  */
@@ -1412,13 +1412,11 @@ function bp_get_folder_link() {
 	global $document_template;
 
 	if ( bp_is_group() || $document_template->document->group_id > 0 ) {
-		$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
-		if ( '' === $group_link ) {
-			$group_link = bp_get_group_permalink( $document_template->document->group_id );
-		}
-		$url = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
+		$group      = groups_get_group( $document_template->document->group_id );
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
 	} else {
-		$url = trailingslashit( bp_displayed_user_domain() . 'document/folders/' . bp_get_folder_id() );
+		$url = trailingslashit( bp_core_get_user_domain( $document_template->document->user_id ) . 'document/folders/' . bp_get_folder_id() );
 	}
 
 	/**
@@ -1619,7 +1617,38 @@ function bp_get_document_group_id() {
 	 *
 	 * @param int $id The document group ID.
 	 */
-	return apply_filters( 'bp_get_document_group_id', $document_template->document->group_id );
+	return apply_filters( 'bp_get_document_group_id', (int) $document_template->document->group_id );
+}
+
+/**
+ * Output the document group ID.
+ *
+ * @since BuddyBoss 1.3.0
+ */
+function bp_document_folder_group_id() {
+	echo bp_get_document_folder_group_id();
+}
+
+/**
+ * Return the folder group ID.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return int The folder group ID.
+ */
+function bp_get_document_folder_group_id() {
+	global $document_template;
+
+	/**
+	 * Filters the folder group ID being displayed.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 *
+	 * @param int $id The folder group ID.
+	 */
+	return apply_filters( 'bp_get_document_group_id',  (int) $document_template->document->group_id );
 }
 
 /**
@@ -1718,7 +1747,7 @@ function bp_get_document_privacy() {
 	$document_privacy = bp_document_get_visibility_levels();
 	$document_privacy = $document_privacy[ $document_template->document->privacy ];
 
-	if ( empty( $document_privacy ) && function_exists( 'bp_get_current_group_id' ) && bp_get_current_group_id() > 0 ) {
+	if ( empty( $document_privacy ) && $document_template->document->group_id > 0 ) {
 		$document_privacy = esc_html__( 'Groups Only', 'buddyboss' );
 	}
 

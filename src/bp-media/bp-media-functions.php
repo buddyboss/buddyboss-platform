@@ -1136,7 +1136,7 @@ function albums_check_album_access( $album_id ) {
 			return true;
 		}
 
-		if ( bp_is_my_profile() && $album->user_id == bp_loggedin_user_domain() && 'onlyme' == $album->privacy ) {
+		if ( bp_is_my_profile() && $album->user_id == bp_loggedin_user_id() && 'onlyme' == $album->privacy ) {
 			return true;
 		}
 	}

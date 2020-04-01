@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Media Single Folder
+ * BuddyBoss - Document Single Folder
  *
  * @since BuddyBoss 1.0.0
  */
@@ -31,7 +31,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
                                 <input type="text" name="search" id="media_document_search" value="" placeholder="<?php esc_html_e( 'Search Documents', 'buddyboss' ); ?>" class="">
                             </div>
                             <?php
-                            if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
+                            if ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) : ?>
                                 <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
                                     <i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
                                 </a>

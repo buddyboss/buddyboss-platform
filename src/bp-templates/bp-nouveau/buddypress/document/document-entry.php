@@ -5,21 +5,35 @@
  * @since BuddyBoss 1.0.0
  */
 
-$attachment_id = bp_get_document_attachment_id();
-$extension     = '';
+$attachment_id    = bp_get_document_attachment_id();
+$extension        = '';
+$can_download_btn = false;
+$can_manage_btn   = false;
+$can_view         = false;
 if ( $attachment_id ) {
-	$extension     = bp_document_extension( $attachment_id );
-	$svg_icon      = bp_document_svg_icon( $extension );
-	$link          = bp_document_download_link( $attachment_id );
-	$move_class    = 'ac-document-move';
-	$listing_class = 'ac-document-list';
-	$type          = 'document';
+	$extension        = bp_document_extension( $attachment_id );
+	$svg_icon         = bp_document_svg_icon( $extension );
+	$link             = bp_document_download_link( $attachment_id );
+	$move_class       = 'ac-document-move';
+	$listing_class    = 'ac-document-list';
+	$type             = 'document';
+	$document_privacy = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
+	$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage_btn   = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_view         = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+	$group_id         = bp_get_document_group_id();
+	$title            = bp_get_document_title();
 } else {
-	$svg_icon      = bp_document_svg_icon( 'folder' );
-	$link          = bp_get_folder_link();
-	$move_class    = 'ac-folder-move';
-	$listing_class = 'ac-folder-list';
-	$type          = 'folder';
+	$svg_icon       = bp_document_svg_icon( 'folder' );
+	$link           = bp_get_folder_link();
+	$move_class     = 'ac-folder-move';
+	$listing_class  = 'ac-folder-list';
+	$type           = 'folder';
+	$folder_privacy = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
+	$can_manage_btn = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+	$can_view       = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
+	$group_id       = bp_get_document_folder_group_id();
+	$title          = bp_get_folder_title();
 }
 
 ?>
@@ -31,7 +45,7 @@ if ( $attachment_id ) {
 	</div>
 	<div class="media-folder_details">
 		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">
-			<span><?php bp_document_title(); ?></span><?php echo $extension ? '.' . $extension : ''; ?>
+			<span><?php echo $title; ?></span><?php echo $extension ? '.' . $extension : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo base64_encode( bp_get_document_id() ); ?>" style="display: none;"></i>
 			<i class="media-document-attachment-id" data-item-id="<?php echo base64_encode( bp_get_document_attachment_id() ); ?>" style="display: none;"></i>
 			<i class="media-document-type" data-item-id="<?php echo esc_attr( $type ); ?>" style="display: none;"></i>
@@ -66,26 +80,33 @@ if ( $attachment_id ) {
 			</select>
 		</div>
 	</div>
-	<?php
-    if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
-		<div class="media-folder_actions">
-			<a href="#" class="media-folder_action__anchor">
-				<i class="bb-icon-menu-dots-v"></i>
-			</a>
-			<div class="media-folder_action__list">
-				<ul>
-					<?php
-                    if ( $attachment_id ) { ?>
-						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a></li>
-					    <?php
-                    } ?>
-					<li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a></li>
-					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
-					<li class="privacy_file"><a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a></li>
-					<li class="delete_file"><a class="document-file-delete" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
-				</ul>
-			</div>
-		</div>
-	    <?php
-    endif; ?>
+    <div class="media-folder_actions">
+        <a href="#" class="media-folder_action__anchor">
+            <i class="bb-icon-menu-dots-v"></i>
+        </a>
+        <div class="media-folder_action__list">
+            <ul>
+                <?php
+                if ( $attachment_id && $can_download_btn ) { ?>
+                    <li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a></li>
+                    <?php
+                }
+                if ( $can_manage_btn ) {
+	                ?>
+	                <li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a></li>
+	                <li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+	                <?php
+	                if ( 'document' === $type && 0 === $group_id ) {
+		                ?>
+                        <li class="privacy_file"><a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a></li>
+		                <?php
+	                }
+	                ?>
+	                <li class="delete_file"><a class="document-file-delete" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+		            <?php
+                }
+                ?>
+            </ul>
+        </div>
+    </div>
 </div>
