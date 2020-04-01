@@ -71,7 +71,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
-			'exclude'         => bp_loggedin_user_id(),
+			'exclude'         => bb_get_exclude_member_ids(),
 		);
 
 		$total_online = 0;
@@ -287,7 +287,7 @@ if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
 			'max'             => 9999999,
 			'populate_extras' => false,
 			'search_terms'    => false,
-			'exclude'         => bp_loggedin_user_id(),
+			'exclude'         => bb_get_exclude_member_ids(),
 		);
 
 		$old_members_template = $members_template;
@@ -323,7 +323,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		'max'             => $number,
 		'populate_extras' => true,
 		'search_terms'    => false,
-		'exclude'         => bp_loggedin_user_id(),
+		'exclude'         => bb_get_exclude_member_ids(),
 	);
 
 	$total_online = 0;
