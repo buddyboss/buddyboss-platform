@@ -608,11 +608,13 @@
 	min-height: 10px;
 }
 
-.activity-url-thumb-nav .dashicons {
-	font-size: 14px;
+.activity-url-thumb-nav .bb-icons {
+	font-size: 23px;
 	line-height: 1;
 	position: relative;
-	top: 3px;
+	height: 20px;
+	width: 20px;
+	vertical-align: top;
 }
 
 #activity-url-scrapper-img-count {
@@ -639,6 +641,10 @@
 	top: 8px;
 	text-decoration: none;
 
+	.bb-icons.bb-icon-close {
+		font-size: 20px;
+	}
+
 	.activity-post-form-link-wp-embed & {
 		top: 30px;
 		left: 8px;
@@ -663,6 +669,11 @@
 	position: absolute;
 	top: 3px;
 	text-decoration: none;
+
+	.bb-icons.bb-icon-close {
+		font-size: 20px;
+	}
+
 }
 
 #activity-close-link-suggestion:focus,

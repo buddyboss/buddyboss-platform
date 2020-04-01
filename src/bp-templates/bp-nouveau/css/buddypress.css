@@ -2082,11 +2082,13 @@ input.search-query-input {
   min-height: 10px;
 }
 
-.activity-url-thumb-nav .dashicons {
-  font-size: 14px;
+.activity-url-thumb-nav .bb-icons {
+  font-size: 23px;
   line-height: 1;
   position: relative;
-  top: 3px;
+  height: 20px;
+  width: 20px;
+  vertical-align: top;
 }
 
 #activity-url-scrapper-img-count {
@@ -2114,6 +2116,10 @@ input.search-query-input {
   text-decoration: none;
 }
 
+#activity-close-link-suggestion .bb-icons.bb-icon-close {
+  font-size: 20px;
+}
+
 .activity-post-form-link-wp-embed #activity-close-link-suggestion {
   top: 30px;
   left: 8px;
@@ -2139,6 +2145,10 @@ input.search-query-input {
   position: absolute;
   top: 3px;
   text-decoration: none;
+}
+
+#activity-link-preview-close-image .bb-icons.bb-icon-close {
+  font-size: 20px;
 }
 
 #activity-close-link-suggestion:focus,
@@ -3966,6 +3976,13 @@ body.buddypress.bp-user #page #primary .entry-header {
   padding: 20px;
 }
 
+.bb-groups-invites-left .bb-icons.bb-icon-loader {
+  display: inline-block;
+  font-size: 16px;
+  vertical-align: top;
+  margin-top: 3px;
+}
+
 #item-body #group-invites-container li.selected {
   background: #f5f5f5;
 }
@@ -4043,6 +4060,11 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
   display: flex;
   align-items: center;
   line-height: 1;
+}
+
+.bb-groups-invites-right-top .bb-add-invites .bb-icons {
+  margin-right: 5px;
+  font-size: 18px;
 }
 
 .bb-invites-footer {
@@ -4337,7 +4359,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   margin-left: auto;
   margin-right: 10px;
   position: relative;
-  top: 10px;
+  top: 2px;
+}
+
+#bp-invites-submit-loader .bb-icons {
+  font-size: 16px;
 }
 
 #bp-invites-submit-loader .dashicons-update:before {
