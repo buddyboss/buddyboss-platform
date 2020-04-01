@@ -161,10 +161,10 @@ function groups_action_create_group() {
 			groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
 
 			/**
-			 * Filters the allowed media statuses.
+			* Filters the allowed media statuses.
 			 *
 			 * @since BuddyBoss 1.0.0
-			 *
+			                       *
 			 * @param array $value Array of statuses allowed.
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
@@ -173,6 +173,20 @@ function groups_action_create_group() {
 			$media_status         = ! empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
+
+			/**
+			 * Filters the allowed media statuses.
+			 *
+			 * @since BuddyBoss 1.0.0
+			 *
+			 * @param array $value Array of statuses allowed.
+			 *                     Possible values are 'members,
+			 *                     'mods', and 'admins'.
+			 */
+			$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
+			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
+
+			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $document_status );
 
 			/**
 			 * Filters the allowed album statuses.
