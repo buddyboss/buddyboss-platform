@@ -31,10 +31,10 @@ add_action( 'bbp_new_reply', 'bp_media_forums_save_gif_data', 999 );
 add_action( 'bbp_new_topic', 'bp_media_forums_save_gif_data', 999 );
 add_action( 'edit_post', 'bp_media_forums_save_gif_data', 999 );
 
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 20, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 20, 2 );
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 20, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 20, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 
 // Messages
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
