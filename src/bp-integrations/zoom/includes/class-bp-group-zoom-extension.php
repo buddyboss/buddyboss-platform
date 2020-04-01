@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Group_Zoom_Extension' ) ) {
+if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 	/**
 	 * Class BP_Group_Zoom_Extension
 	 */
@@ -79,8 +79,6 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) ) {
 		}
 	}
 
-	if ( bp_is_active( 'groups' ) ) {
-		bp_register_group_extension( 'BP_Group_Zoom_Extension' );
-	}
+	bp_register_group_extension( 'BP_Group_Zoom_Extension' );
 }
 
