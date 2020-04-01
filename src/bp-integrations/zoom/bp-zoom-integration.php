@@ -39,6 +39,7 @@ class BP_Zoom_Integration extends BP_Integration {
 	public function includes( $includes = array() ) {
 		parent::includes(
 			array(
+				'api/class-bp-zoom-api.php',
 				'functions',
 			)
 		);
