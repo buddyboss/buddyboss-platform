@@ -52,9 +52,6 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
-			//$.ajaxPrefilter( this.memberPreFilter );
-			//$.ajaxPrefilter( this.groupPreFilter );
-
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on( 'scroll resize',function(){
@@ -1512,22 +1509,6 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					$.magnificPopup.close();
 				});
-			}
-		},
-		groupPreFilter: function( options ) {
-			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=groups_filter') ) {
-				var	group_type = $('#group-type-order-by').find(':selected').val();
-				if (typeof group_type !== 'undefined') {
-					options.data += '&group_type=' + group_type;
-				}
-			}
-		},
-		memberPreFilter: function( options ) {
-			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
-				var	member_type_id = $('#member-type-order-by').find(':selected').val();
-				if (typeof member_type_id !== 'undefined') {
-					options.data += '&member_type_id=' + member_type_id;
-				}
 			}
 		},
 
