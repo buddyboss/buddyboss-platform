@@ -574,6 +574,78 @@ function bp_media_allowed_document_type() {
 			'description' => 'Zzazz Deck',
 			'is_default'  => true,
 			'is_active'   => true
+		),
+		array(
+			'name'        => 'yaml',
+			'extension'   => '.yaml',
+			'mime_type'   => 'text/yaml',
+			'description' => 'YAML Ain\'t Markup Language / Yet Another Markup Language',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xml',
+			'extension'   => '.xml',
+			'mime_type'   => 'application/rss+xml',
+			'description' => 'RSS - Really Simple Syndication',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'rss',
+			'extension'   => '.rss',
+			'mime_type'   => 'application/rss+xml',
+			'description' => 'RSS - Really Simple Syndication',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xlsb',
+			'extension'   => '.xlsb',
+			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
+			'description' => 'Microsoft Excel - Binary Workbook',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xlam',
+			'extension'   => '.xlam',
+			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
+			'description' => 'Microsoft Excel - Binary Workbook',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'vcf',
+			'extension'   => '.vcf',
+			'mime_type'   => 'text/x-vcard',
+			'description' => 'vCard',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'svg',
+			'extension'   => '.svg',
+			'mime_type'   => 'image/svg+xml',
+			'description' => 'Scalable Vector Graphics (SVG)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ai',
+			'extension'   => '.ai',
+			'mime_type'   => 'application/postscript',
+			'description' => 'PostScript',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'apk',
+			'extension'   => '.apk',
+			'mime_type'   => 'application/vnd.android.package-archive',
+			'description' => 'Android Package Archive',
+			'is_default'  => true,
+			'is_active'   => true
 		)
 	);
 
@@ -608,8 +680,8 @@ function bp_document_download_file( $attachment_id ) {
 	$allowed_file_type_with_mime_type = array();
 	foreach ( $all_extensions as $extension ) {
 		if ( true === (bool) $extension['is_active'] ) {
-			$extension_name         = ltrim( $extension['extension'], '.' );
-			$allowed_for_download[] = $extension_name;
+			$extension_name                                    = ltrim( $extension['extension'], '.' );
+			$allowed_for_download[]                            = $extension_name;
 			$allowed_file_type_with_mime_type[$extension_name] = $extension['mime_type'];
 		}
 	}
