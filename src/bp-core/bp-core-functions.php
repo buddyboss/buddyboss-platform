@@ -4385,6 +4385,8 @@ function bp_ajax_get_suggestions() {
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
+	} else if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+		$args['only_friends'] = true;
 	}
 
 	// Support per-Group suggestions.
