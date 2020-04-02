@@ -516,6 +516,12 @@ window.bp = window.bp || {};
 						extras       : extras
 					};
 
+					if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
+						queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
+					} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
+						queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+					}
+
 					// Populate the object list
 					self.objectRequest( queryData );
 				}
@@ -878,7 +884,7 @@ window.bp = window.bp || {};
 		 */
 		scopeQuery: function( event ) {
 			var self = event.data, target = $( event.currentTarget ).parent(),
-				scope = 'all', object, filter = null, search_terms = '', extras = null;
+				scope = 'all', object, filter = null, search_terms = '', extras = null, queryData = {};
 
 			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! target.attr( 'data-bp-scope' ) ) {
 				return event;
@@ -912,14 +918,22 @@ window.bp = window.bp || {};
 				target.find( 'a span' ).html('');
 			}
 
-			self.objectRequest( {
+			queryData = {
 				object       : object,
 				scope        : scope,
 				filter       : filter,
 				search_terms : search_terms,
 				page         : 1,
 				extras       : extras
-			} );
+			};
+
+			if ( $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).length ) {
+				queryData.member_type_id = $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val();
+			} else if ( $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).length ) {
+				queryData.group_type = $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val();
+			}
+
+			self.objectRequest( queryData );
 		},
 
 		/**
@@ -998,11 +1012,27 @@ window.bp = window.bp || {};
 		 */
 		typeGroupFilterQuery: function( event ) {
 			var self = event.data, object = $( event.target ).data( 'bp-group-type-filter' ),
-				scope = 'all', filter = $( event.target ).val(),
+				scope = 'all', filter = null, objectData = {}, extras = null,
 				search_terms = '', template = null;
 
 			if ( ! object ) {
 				return event;
+			}
+
+			objectData = self.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
+			if (  $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
+					$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+				} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
+					filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
+				}
 			}
 
 			if ( $( self.objectNavParent + ' [data-bp-object].selected' ).length ) {
@@ -1013,10 +1043,6 @@ window.bp = window.bp || {};
 				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
 			}
 
-			if ( 'friends' === object ) {
-				object = 'members';
-			}
-
 			self.objectRequest( {
 				object       : object,
 				scope        : scope,
@@ -1024,6 +1050,7 @@ window.bp = window.bp || {};
 				search_terms : search_terms,
 				page         : 1,
 				template     : template,
+				extras       : extras,
 				group_type   : $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val()
 			} );
 		},
@@ -1035,11 +1062,31 @@ window.bp = window.bp || {};
 		 */
 		typeMemberFilterQuery: function( event ) {
 			var self = event.data, object = $( event.target ).data( 'bp-member-type-filter' ),
-				scope = 'all', filter = $( event.target ).val(),
+				scope = 'all', filter = null, objectData = {}, extras = null,
 				search_terms = '', template = null;
 
 			if ( ! object ) {
 				return event;
+			}
+
+			if ( 'friends' === object ) {
+				object = 'members';
+			}
+
+			objectData = self.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
+			if (  $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
+					$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+				} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
+					filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
+				}
 			}
 
 			if ( $( self.objectNavParent + ' [data-bp-object].selected' ).length ) {
@@ -1050,10 +1097,6 @@ window.bp = window.bp || {};
 				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
 			}
 
-			if ( 'friends' === object ) {
-				object = 'members';
-			}
-
 			self.objectRequest( {
 				object         : object,
 				scope          : scope,
@@ -1061,6 +1104,7 @@ window.bp = window.bp || {};
 				search_terms   : search_terms,
 				page           : 1,
 				template       : template,
+				extras         : extras,
 				member_type_id : $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val()
 			} );
 		},
