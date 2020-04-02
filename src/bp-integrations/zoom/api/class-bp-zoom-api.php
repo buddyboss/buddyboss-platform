@@ -219,11 +219,11 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['duration']   = ! empty( $data['duration'] ) ? $data['duration'] : 60;
 			$args['settings']   = array(
 				'join_before_host'  => ! empty( $data['join_before_host'] ) ? true : false,
-				'host_video'        => ! empty( $data['option_host_video'] ) ? true : false,
-				'participant_video' => ! empty( $data['option_participants_video'] ) ? true : false,
-				'mute_upon_entry'   => ! empty( $data['option_mute_participants'] ) ? true : false,
-				'enforce_login'     => ! empty( $data['option_enforce_login'] ) ? true : false,
-				'auto_recording'    => ! empty( $data['option_auto_recording'] ) ? $data['option_auto_recording'] : 'none',
+				'host_video'        => ! empty( $data['host_video'] ) ? true : false,
+				'participant_video' => ! empty( $data['participants_video'] ) ? true : false,
+				'mute_upon_entry'   => ! empty( $data['mute_participants'] ) ? true : false,
+				'enforce_login'     => ! empty( $data['enforce_login'] ) ? true : false,
+				'auto_recording'    => ! empty( $data['auto_recording'] ) ? $data['auto_recording'] : 'none',
 				'alternative_hosts' => isset( $alternative_host_ids ) ? $alternative_host_ids : ''
 			);
 

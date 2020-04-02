@@ -142,6 +142,14 @@ class BP_Group_Zoom_Meeting {
 	var $zoom_start_url;
 
 	/**
+	 * zoom join url of the media item.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 * @var string
+	 */
+	var $zoom_join_url;
+
+	/**
 	 * zoom meeting id of the media item.
 	 *
 	 * @since BuddyBoss 1.2.10
@@ -197,7 +205,7 @@ class BP_Group_Zoom_Meeting {
 
 		if ( false === $row ) {
 			$bp  = buddypress();
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->groups->table_name_group_zoom_meetings} WHERE id = %d", $this->id ) );
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->table_prefix}bp_groups_zoom_meetings WHERE id = %d", $this->id ) );
 
 			wp_cache_set( $this->id, $row, 'bp_meeting' );
 		}
@@ -222,6 +230,7 @@ class BP_Group_Zoom_Meeting {
 		$this->alternative_host_ids = $row->alternative_host_ids;
 		$this->zoom_details         = $row->zoom_details;
 		$this->zoom_start_url       = $row->zoom_start_url;
+		$this->zoom_join_url        = $row->zoom_join_url;
 		$this->zoom_meeting_id      = $row->zoom_meeting_id;
 	}
 
@@ -253,6 +262,7 @@ class BP_Group_Zoom_Meeting {
 		$this->alternative_host_ids = apply_filters_ref_array( 'bp_group_zoom_meeting_alternative_host_ids_before_save', array( $this->alternative_host_ids, &$this ) );
 		$this->zoom_details         = apply_filters_ref_array( 'bp_group_zoom_meeting_zoom_details_before_save', array( $this->zoom_details, &$this ) );
 		$this->zoom_start_url       = apply_filters_ref_array( 'bp_group_zoom_meeting_zoom_start_url_before_save', array( $this->zoom_start_url, &$this ) );
+		$this->zoom_join_url        = apply_filters_ref_array( 'bp_group_zoom_meeting_zoom_join_url_before_save', array( $this->zoom_join_url, &$this ) );
 		$this->zoom_meeting_id      = apply_filters_ref_array( 'bp_group_zoom_meeting_zoom_meeting_id_before_save', array( $this->zoom_meeting_id, &$this ) );
 
 		/**
@@ -282,9 +292,9 @@ class BP_Group_Zoom_Meeting {
 
 		// If we have an existing ID, update the meeting item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->group->table_name_group_zoom_meetings} SET group_id = %d, title = %s, user_id = %s, start_date = %s, timezone = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, auto_recording = %s, alternative_host_ids = %s, zoom_details = %s, zoom_start_url = %d, zoom_meeting_id = %d WHERE id = %d", $this->title, $this->user_id, $this->start_date, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_meeting_id, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_groups_zoom_meetings SET group_id = %d, title = %s, user_id = %s, start_date = %s, timezone = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, auto_recording = %s, alternative_host_ids = %s, zoom_details = %s, zoom_start_url = %s, zoom_join_url = %s, zoom_meeting_id = %d WHERE id = %d", $this->title, $this->user_id, $this->start_date, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->group->table_name_group_zoom_meetings} ( group_id, title, user_id, start_date, timezone, duration, join_before_host, host_video, participants_video, mute_participants, auto_recording, alternative_host_ids, zoom_details, zoom_start_url, zoom_meeting_id ) VALUES ( %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %s, %s, %s, %s, %s )", $this->group_id, $this->title, $this->user_id, $this->start_date, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_meeting_id );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->table_prefix}bp_groups_zoom_meetings ( group_id, title, user_id, start_date, timezone, duration, join_before_host, host_video, participants_video, mute_participants, auto_recording, alternative_host_ids, zoom_details, zoom_start_url, zoom_join_url, zoom_meeting_id ) VALUES ( %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %s, %s, %s, %s, %s, %s )", $this->group_id, $this->title, $this->user_id, $this->start_date, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -359,7 +369,7 @@ class BP_Group_Zoom_Meeting {
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT m.id';
 
-		$from_sql = " FROM {$bp->groups->table_name_group_zoom_meetings} m";
+		$from_sql = " FROM {$bp->table_prefix}bp_groups_zoom_meetings m";
 
 		$join_sql = '';
 
@@ -504,7 +514,7 @@ class BP_Group_Zoom_Meeting {
 			 * @param string $where_sql MySQL WHERE statement portion.
 			 * @param string $sort      Sort direction for query.
 			 */
-			$total_meetings_sql = apply_filters( 'bp_group_zoom_meeting_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->groups->table_name_group_zoom_meetings} m {$join_sql} {$where_sql}", $where_sql, $sort );
+			$total_meetings_sql = apply_filters( 'bp_group_zoom_meeting_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->table_prefix}bp_groups_zoom_meetings m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached           = bp_core_get_incremented_cache( $total_meetings_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_meetings = $wpdb->get_var( $total_meetings_sql );
@@ -553,7 +563,7 @@ class BP_Group_Zoom_Meeting {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from meeting table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->groups->table_name_group_zoom_meetings} WHERE id IN ({$uncached_ids_sql})" );
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->table_prefix}bp_groups_zoom_meetings WHERE id IN ({$uncached_ids_sql})" );
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.

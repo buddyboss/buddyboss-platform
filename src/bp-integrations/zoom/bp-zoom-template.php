@@ -813,3 +813,34 @@ function bp_get_zoom_meeting_zoom_meeting_id() {
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_zoom_meeting_id', $zoom_meeting_template->meeting->zoom_meeting_id );
 }
+
+/**
+ * Output the meeting duration.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_meeting_zoom_join_url() {
+	echo bp_get_zoom_meeting_zoom_join_url();
+}
+
+/**
+ * Return the meeting duration.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ *
+ * @return int The meeting duration.
+ */
+function bp_get_zoom_meeting_zoom_join_url() {
+	global $zoom_meeting_template;
+
+	/**
+	 * Filters the meeting duration being displayed.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param int $id The meeting duration.
+	 */
+	return apply_filters( 'bp_get_zoom_meeting_zoom_join_url', $zoom_meeting_template->meeting->zoom_join_url );
+}

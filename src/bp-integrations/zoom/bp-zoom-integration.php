@@ -96,6 +96,7 @@ class BP_Zoom_Integration extends BP_Integration {
 				alternative_host_ids text NULL,
 				zoom_details text NOT NULL,
 				zoom_start_url text NOT NULL,
+				zoom_join_url text NOT NULL,
 				zoom_meeting_id text NOT NULL,
 				KEY group_id (group_id)
 			) {$charset_collate};";

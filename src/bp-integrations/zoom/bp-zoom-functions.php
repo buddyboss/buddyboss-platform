@@ -147,7 +147,7 @@ function bp_zoom_meeting_add( $args = '' ) {
 			'id'                   => false,                   // Pass an existing media ID to update an existing entry.
 			'group_id'             => false,   // Blog ID
 			'user_id'              => '',   // user_id of the uploader.
-			'title'                => '',                      // title of media being added.
+			'title'                => 'hello',                      // title of meeting being added.
 			'start_date'           => bp_core_current_time(),
 			'timezone'             => '',
 			'duration'             => false,
@@ -159,6 +159,7 @@ function bp_zoom_meeting_add( $args = '' ) {
 			'alternative_host_ids' => '',
 			'zoom_details'         => '',
 			'zoom_start_url'       => '',
+			'zoom_join_url'         => '',
 			'zoom_meeting_id'      => '',
 			'error_type'           => 'bool',
 		),
@@ -180,6 +181,7 @@ function bp_zoom_meeting_add( $args = '' ) {
 	$meeting->alternative_host_ids = $r['alternative_host_ids'];
 	$meeting->zoom_details         = $r['zoom_details'];
 	$meeting->zoom_start_url       = $r['zoom_start_url'];
+	$meeting->zoom_join_url        = $r['zoom_join_url'];
 	$meeting->zoom_meeting_id      = $r['zoom_meeting_id'];
 	$meeting->error_type           = $r['error_type'];
 
