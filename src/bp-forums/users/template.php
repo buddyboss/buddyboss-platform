@@ -1418,7 +1418,9 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 
 	// Pretty permalinks
 	if ( $wp_rewrite->using_permalinks() ) {
-		$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/' . bbp_get_topic_archive_slug();
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ) . bbp_get_topic_archive_slug();
+		$url = user_trailingslashit( $url );
+		/*$url  = $wp_rewrite->root . bbp_get_user_slug() . '/%' . bbp_get_user_rewrite_id() . '%/' . bbp_get_topic_archive_slug();
 		$user = get_userdata( $user_id );
 		if ( ! empty( $user->user_nicename ) ) {
 			$user_nicename = $user->user_nicename;
@@ -1426,7 +1428,7 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 			$user_nicename = $user->user_login;
 		}
 		$url = str_replace( '%' . bbp_get_user_rewrite_id() . '%', $user_nicename, $url );
-		$url = home_url( user_trailingslashit( $url ) );
+		$url = home_url( user_trailingslashit( $url ) );*/
 
 		// Unpretty permalinks
 	} else {
