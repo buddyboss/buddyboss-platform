@@ -40,9 +40,12 @@ class BP_Zoom_Integration extends BP_Integration {
 	public function includes( $includes = array() ) {
 		parent::includes(
 			array(
-				'api/class-bp-zoom-api.php',
-				'includes/class-bp-group-zoom-extension.php',
+				'template',
 				'functions',
+				'includes/class-bp-group-zoom-meeting-template.php',
+				'includes/class-bp-group-zoom-meeting.php',
+				'includes/class-bp-group-zoom-extension.php',
+				'api/class-bp-zoom-api.php',
 			)
 		);
 	}
@@ -79,7 +82,9 @@ class BP_Zoom_Integration extends BP_Integration {
 
 		$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_zoom_meetings (
 				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				user_id bigint(20) NOT NULL,
+				group_id bigint(20) NOT NULL,
+				title varchar(300) NOT NULL,
+				user_id varchar(150) NOT NULL,
 				start_date datetime NOT NULL,
 				timezone varchar(150) NOT NULL,
 				duration int(11) NOT NULL,
@@ -91,7 +96,8 @@ class BP_Zoom_Integration extends BP_Integration {
 				alternative_host_ids text NULL,
 				zoom_details text NOT NULL,
 				zoom_start_url text NOT NULL,
-				zoom_meeting_id text NOT NULL
+				zoom_meeting_id text NOT NULL,
+				KEY group_id (group_id)
 			) {$charset_collate};";
 
 		dbDelta( $sql );

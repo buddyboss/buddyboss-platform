@@ -33,7 +33,25 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 				$args['enable_nav_item'] = ( bool ) groups_get_groupmeta( bp_get_current_group_id(), 'bp-group-zoom-conference' );
 			}
 
+			$this->setup_filters();
+
 			parent::init( $args );
+		}
+
+		/**
+		 * Setup the group zoom class filters
+		 *
+		 * @since BuddyBoss 1.2.10
+		 */
+		private function setup_filters() {
+			$bp = buddypress();
+			add_filter( 'bp_' . $bp->groups->id . '_global_tables', array( $this, 'register_table' ) );
+		}
+
+		public function register_table( $tables ) {
+			$bp = buddypress();
+			$tables['table_name_group_zoom_meetings'] = $bp->table_prefix . 'bp_groups_zoom_meetings';
+			return $tables;
 		}
 
 		/**
