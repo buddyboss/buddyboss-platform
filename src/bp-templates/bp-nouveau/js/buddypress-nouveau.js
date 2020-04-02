@@ -153,49 +153,6 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * [setLocalStorage description]
-		 * @param {[type]} type     [description]
-		 * @param {[type]} property [description]
-		 * @param {[type]} value    [description]
-		 */
-		setLocalStorage: function( type, property, value ) {
-			var store = this.getLocalStorage( type );
-
-			if ( undefined === value && undefined !== store[ property ] ) {
-				delete store[ property ];
-			} else {
-				// Set property
-				store[ property ] = value;
-			}
-
-			localStorage.setItem( type, JSON.stringify( store ) );
-
-			return localStorage.getItem( type ) !== null;
-		},
-
-		/**
-		 * [getLocalStorage description]
-		 * @param  {[type]} type     [description]
-		 * @param  {[type]} property [description]
-		 * @return {[type]}          [description]
-		 */
-		getLocalStorage: function( type, property ) {
-			var store = localStorage.getItem( type );
-
-			if ( store ) {
-				store = JSON.parse( store );
-			} else {
-				store = {};
-			}
-
-			if ( undefined !== property ) {
-				return store[property] || false;
-			}
-
-			return store;
-		},
-
-		/**
 		 * [getLinkParams description]
 		 * @param  {[type]} url   [description]
 		 * @param  {[type]} param [description]
@@ -389,7 +346,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( null !== data.extras ) {
-				this.setLocalStorage( 'bp-' + data.object, 'extras', data.extras );
+				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
 			/* Set the correct selected nav and filter */
@@ -506,7 +463,7 @@ window.bp = window.bp || {};
 			var self = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null, filter = null;
 
 			$.each( this.objects, function( o, object ) {
-				objectData = self.getLocalStorage( 'bp-' + object );
+				objectData = self.getStorage( 'bp-' + object );
 
 				var typeType = window.location.hash.substr(1);
 				if ( undefined !== typeType && typeType == 'following' ) {
@@ -521,11 +478,11 @@ window.bp = window.bp || {};
 				}
 
 				if (  $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
-					if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
-						filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
-					} else if ( undefined !== objectData.filter ) {
-						filter = objectData.filter,
+					if ( undefined !== objectData.filter ) {
+						filter = objectData.filter;
 						$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+					} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
+						filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
 					}
 				}
 
@@ -629,16 +586,18 @@ window.bp = window.bp || {};
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
 		},
 
-                /**
+		/**
 		 * [switchGridList description]
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function() {
-            var _this = this;
+            var _this = this, group_members = false, object = $('.grid-filters').data('object');
 
-            var object = $('.grid-filters').data('object');
+            if ( 'group_members' === object ) {
+            	group_members = true;
+			}
 
-            if ( 'friends' === object || 'group_members' === object ) {
+            if ( 'friends' === object ) {
                 object = 'members';
             } else if ( 'group_requests' === object ) {
                 object = 'groups';
@@ -646,7 +605,7 @@ window.bp = window.bp || {};
                 object = 'members';
             }
 
-            var objectData = _this.getLocalStorage( 'bp-' + object );
+            var objectData = _this.getStorage( 'bp-' + object );
 
             var extras = {};
             if ( undefined !== objectData.extras ) {
@@ -678,10 +637,10 @@ window.bp = window.bp || {};
                 }
 
                 // Added this condition to fix the list and grid view on Groups members page pagination.
-				if ( true === $( 'body' ).hasClass('group-members' ) ) {
-					_this.setLocalStorage( 'bp-group_members', 'extras', extras );
+				if ( group_members ) {
+					_this.setStorage( 'bp-group_members', 'extras', extras );
 				} else {
-					_this.setLocalStorage( 'bp-' + object, 'extras', extras );
+					_this.setStorage( 'bp-' + object, 'extras', extras );
 				}
             });
 		},
@@ -935,7 +894,7 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
-			var objectData = self.getLocalStorage( 'bp-' + object );
+			var objectData = self.getStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -989,7 +948,7 @@ window.bp = window.bp || {};
 				object = 'members';
 			}
 
-			var objectData = self.getLocalStorage( 'bp-' + object );
+			var objectData = self.getStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -1129,7 +1088,7 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
-			var objectData = self.getLocalStorage( 'bp-' + object );
+			var objectData = self.getStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -1432,7 +1391,7 @@ window.bp = window.bp || {};
 
 			// Set the scope & filter for local storage
 			if ( null !== object ) {
-				objectData = self.getLocalStorage( 'bp-' + object );
+				objectData = self.getStorage( 'bp-' + object );
 
 				if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;

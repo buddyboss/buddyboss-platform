@@ -1553,8 +1553,11 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
 			// Concatenate the values.
 			$date_value = $_POST[ 'field_' . $field_id . '_day' ] . ' ' . $_POST[ 'field_' . $field_id . '_month' ] . ' ' . $_POST[ 'field_' . $field_id . '_year' ];
 
+			$timestamp = strtotime( $date_value );
+
 			// Check that the concatenated value can be turned into a timestamp.
-			if ( $timestamp = strtotime( $date_value ) ) {
+			if ( false !== $timestamp ) {
+
 				// Add the timestamp to the global $_POST that should contain the datebox data.
 				$_POST[ 'field_' . $field_id ] = date( 'Y-m-d H:i:s', $timestamp );
 			}
@@ -1827,6 +1830,13 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 		return false;
 	}
 
+	$user = get_userdata( $user_id );
+
+	// empty user or deleted user check.
+	if ( empty( $user ) ) {
+		return false;
+	}
+
 	$format = bp_get_option( 'bp-display-name-format' );
 
 	switch ( $format ) {
@@ -1849,7 +1859,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $nick_name ) ) {
-				$user = get_userdata( $user_id );
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
@@ -1899,7 +1908,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $nick_name ) ) {
-				$user = get_userdata( $user_id );
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
@@ -1919,7 +1927,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			$display_name = xprofile_get_field_data( $nickname_id, $user_id );
 
 			if ( '' === trim( $display_name ) ) {
-				$user = get_userdata( $user_id );
 				// make sure nickname is valid
 				$nickname = get_user_meta( $user_id, 'nickname', true );
 				$nickname = sanitize_title( $nickname );
