@@ -5223,6 +5223,15 @@ input#send-to-input {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.bp-close-compose-form {
+  color: rgba(18, 43, 70, 0.4);
+  line-height: 1;
+}
+
+.bp-close-compose-form .bb-icons {
+  font-size: 24px;
+}
+
 #message_content {
   margin-bottom: 10px;
 }
@@ -6364,7 +6373,17 @@ ul.bbp-stats .bbp-count {
 
 .buddypress-wrap ul.item-list li.selected .invite-button span.icons:before,
 .buddypress-wrap ul.item-list li .group-remove-invite-button span.icons:before {
-  content: "\f153";
+  content: "\e8f7";
+  font-family: bb-icons;
+  speak: none;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  list-style: none;
+  -webkit-font-smoothing: antialiased;
+  color: #939597;
 }
 
 .warn {
