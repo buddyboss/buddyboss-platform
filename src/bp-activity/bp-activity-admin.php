@@ -153,7 +153,7 @@ add_action( 'wp_ajax_bp-activity-admin-reply', 'bp_activity_admin_reply' );
  * @return string|int Option value. False to abandon update.
  */
 function bp_activity_admin_screen_options( $value, $option, $new_value ) {
-	if ( 'toplevel_page_bp_activity_per_page' != $option && 'toplevel_page_bp_activity_network_per_page' != $option ) {
+	if ( 'buddyboss_page_bp_activity_per_page' != $option && 'buddyboss_page_bp_activity_network_per_page' != $option ) {
 		return $value;
 	}
 
