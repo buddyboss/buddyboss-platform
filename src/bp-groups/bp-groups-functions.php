@@ -3232,21 +3232,29 @@ function bp_group_get_group_type_key( $post_id ) {
  * Get all active group types.
  *
  * @since BuddyBoss 1.0.0
+ * @param array $args Arguments
  *
- * @return type array
+ * @return array Group types
  */
-function bp_get_active_group_types() {
-	$query = new WP_Query(
-		array(
-			'posts_per_page' => -1,
-			'post_type'      => bp_groups_get_group_type_post_type(),
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-			'orderby'        => 'menu_order',
-		)
-	);
+function bp_get_active_group_types( $args = array() ) {
+	$bp_active_group_types = array();
 
-	return $query->posts;
+	$args = bp_parse_args( $args, array(
+		'posts_per_page' => - 1,
+		'post_type'      => bp_groups_get_group_type_post_type(),
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+		'fields'         => 'ids'
+	), 'group_types' );
+
+	$bp_active_group_types_query = new \WP_Query( $args );
+
+	if ( $bp_active_group_types_query->have_posts() ) {
+		$bp_active_group_types = $bp_active_group_types_query->posts;
+	}
+	wp_reset_postdata();
+
+	return apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
 }
 
 if ( true === bp_disable_group_type_creation() ) {
@@ -3268,34 +3276,34 @@ if ( true === bp_disable_group_type_creation() ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_register_active_group_types() {
+	$group_type_ids = bp_get_active_group_types();
 
-	$post_ids = bp_get_active_group_types();
+	if ( ! empty( $group_type_ids ) ) {
 
-	// update meta cache to avoid multiple db calls
-	update_meta_cache( 'post', $post_ids );
-
-	// build to register the group type
-	$group_types = array();
-
-	foreach ( $post_ids as $post_id ) {
-
-		$name          = get_post_meta( $post_id, '_bp_group_type_label_name', true );
-		$key           = get_post_meta( $post_id, '_bp_group_type_key', true );
-		$singular_name = get_post_meta( $post_id, '_bp_group_type_label_singular_name', true );
+		// Get all registered group types in BP.
 		$group_types   = bp_groups_get_group_types();
-		if ( ! in_array( $singular_name, $group_types, true ) ) {
-			$temp = array(
-				'labels'                => array(
-					'name'          => $name,
-					'singular_name' => $singular_name,
-				),
-				'has_directory'         => strtolower( $name ),
-				'show_in_create_screen' => true,
-				'show_in_list'          => true,
-				'description'           => '',
-				'create_screen_checked' => false,
-			);
-			bp_groups_register_group_type( $key, $temp );
+
+		foreach ( $group_type_ids as $group_type_id ) {
+			$name          = get_post_meta( $group_type_id, '_bp_group_type_label_name', true );
+			$key           = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+			$singular_name = get_post_meta( $group_type_id, '_bp_group_type_label_singular_name', true );
+
+			if ( ! in_array( $singular_name, $group_types, true ) ) {
+				$temp = array(
+					'labels'                => array(
+						'name'          => $name,
+						'singular_name' => $singular_name,
+					),
+					'has_directory'         => strtolower( $name ),
+					'show_in_create_screen' => true,
+					'show_in_list'          => true,
+					'description'           => '',
+					'create_screen_checked' => false,
+				);
+
+				// Register group type.
+				bp_groups_register_group_type( $key, $temp );
+			}
 		}
 	}
 }
