@@ -920,14 +920,30 @@ function groups_get_groups( $args = '' ) {
  * @return int
  */
 function groups_get_total_group_count() {
-	$count = wp_cache_get( 'bp_total_group_count', 'bp' );
-
-	if ( false === $count ) {
-		$count = BP_Groups_Group::get_total_group_count();
-		wp_cache_set( 'bp_total_group_count', $count, 'bp' );
-	}
+	add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
+	bp_has_groups( bp_ajax_querystring( 'groups' ) );
+	$count = $GLOBALS["groups_template"]->total_group_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
 	return $count;
+}
+
+/**
+ * Object template results members group all scope.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_group_object_template_results_groups_all_scope( $querystring, $object ) {
+	if ( 'groups' !== $object ) {
+		return $querystring;
+	}
+
+	$querystring             = wp_parse_args( $querystring );
+	$querystring['scope']    = 'all';
+	$querystring['page']     = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id']  = 0;
+	return http_build_query( $querystring );
 }
 
 /**
