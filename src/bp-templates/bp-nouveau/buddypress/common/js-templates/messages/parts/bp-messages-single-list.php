@@ -1,9 +1,19 @@
 <script type="text/html" id="tmpl-bp-messages-single-list">
+
+	<# if ( data.message_from && 'group' === data.message_from ) { #>
+	<div class="bp-single-message-wrap group-messages-highlight">
+	<# } else { #>
 	<div class="bp-single-message-wrap">
+	<# } #>
+
 		<div class="bp-avatar-wrap">
-			<a href="{{data.sender_link}}" class="bp-user-avatar">
+			<# if ( data.is_deleted ) { #>
 				<img class="avatar" src="{{data.sender_avatar}}" alt="" />
-			</a>
+			<# } else { #>
+				<a href="{{data.sender_link}}" class="bp-user-avatar">
+					<img class="avatar" src="{{data.sender_avatar}}" alt="" />
+				</a>
+			<# } #>
 		</div>
 
 		<div class="bp-single-message-content">
@@ -12,13 +22,22 @@
 				<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
 				<# } #>
 
-				<a href="{{data.sender_link}}" class="bp-user-link">
+				<# if ( data.is_deleted ) { #>
 					<# if ( data.sender_is_you ) { #>
 					<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
 					<# } else { #>
-					<strong>{{data.sender_name}}</strong>
+					<strong class="bp-user-deleted">{{data.sender_name}}</strong>
 					<# } #>
-				</a>
+				<# } else { #>
+					<a href="{{data.sender_link}}" class="bp-user-link">
+						<# if ( data.sender_is_you ) { #>
+						<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
+						<# } else { #>
+						<strong>{{data.sender_name}}</strong>
+						<# } #>
+					</a>
+				<# } #>
+
 
 				<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>
 
@@ -89,6 +108,9 @@
 			<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>
 			<# } #>
 
+			<# if ( data.group_text && data.message_from && 'group' === data.message_from ) { #>
+					<div class="bb-group-message-info">{{{data.group_text}}}</div>
+			<# } #>
 		</div>
 	</div>
 </script>

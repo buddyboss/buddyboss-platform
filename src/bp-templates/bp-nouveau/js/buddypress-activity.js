@@ -1360,45 +1360,45 @@ window.bp = window.bp || {};
 
 					// check media is enable in groups or not
 					if (BP_Nouveau.media.group_media === false) {
-						form.find('.ac-reply-toolbar .post-media').hide();
+						form.find('.ac-reply-toolbar .post-media').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-media').show();
+						form.find('.ac-reply-toolbar .post-media').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
 					}
 
 					// check gif is enable in groups or not
 					if (BP_Nouveau.media.gif.groups === false) {
-						form.find('.ac-reply-toolbar .post-gif').hide();
+						form.find('.ac-reply-toolbar .post-gif').hide().parent('.ac-reply-toolbar').addClass('post-gif-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-gif').show();
+						form.find('.ac-reply-toolbar .post-gif').show().parent('.ac-reply-toolbar').removeClass('post-gif-disabled');
 					}
 
 					// check emoji is enable in groups or not
 					if (BP_Nouveau.media.emoji.groups === false) {
-						form.find('.ac-reply-toolbar .post-emoji').hide();
+						form.find('.ac-reply-toolbar .post-emoji').hide().parent('.ac-reply-toolbar').addClass('post-emoji-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-emoji').show();
+						form.find('.ac-reply-toolbar .post-emoji').show().parent('.ac-reply-toolbar').removeClass('post-emoji-disabled');
 					}
 				} else {
 
 					// check media is enable in groups or not
 					if (BP_Nouveau.media.profile_media === false) {
-						form.find('.ac-reply-toolbar .post-media').hide();
+						form.find('.ac-reply-toolbar .post-media').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-media').show();
+						form.find('.ac-reply-toolbar .post-media').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
 					}
 
 					// check gif is enable in groups or not
 					if (BP_Nouveau.media.gif.profile === false) {
-						form.find('.ac-reply-toolbar .post-gif').hide();
+						form.find('.ac-reply-toolbar .post-gif').hide().parent('.ac-reply-toolbar').addClass('post-gif-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-gif').show();
+						form.find('.ac-reply-toolbar .post-gif').show().parent('.ac-reply-toolbar').removeClass('post-gif-disabled');
 					}
 
 					// check emoji is enable in groups or not
 					if (BP_Nouveau.media.emoji.profile === false) {
-						form.find('.ac-reply-toolbar .post-emoji').hide();
+						form.find('.ac-reply-toolbar .post-emoji').hide().parent('.ac-reply-toolbar').addClass('post-emoji-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-emoji').show();
+						form.find('.ac-reply-toolbar .post-emoji').show().parent('.ac-reply-toolbar').removeClass('post-emoji-disabled');
 					}
 				}
 			}

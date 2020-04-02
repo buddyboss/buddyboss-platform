@@ -351,7 +351,7 @@ function groups_edit_base_group_details( $args = array() ) {
  *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $album_status = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $album_status = false, $message_status = false ) {
 
 	$group               = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -394,6 +394,11 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the album status.
 	if ( $album_status ) {
 		groups_update_groupmeta( $group->id, 'album_status', $album_status );
+	}
+
+	// Set the message status.
+	if ( $message_status ) {
+		groups_update_groupmeta( $group->id, 'message_status', $message_status );
 	}
 
 	groups_update_groupmeta( $group->id, 'last_activity', bp_core_current_time() );
@@ -3772,6 +3777,44 @@ function groups_can_user_manage_document( $user_id, $group_id ) {
 	if ( 'members' == $status ) {
 		$is_allowed = true;
 	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' == $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
+ * Check whether a user is allowed to manage messages in a given group.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_messages( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status   = bp_group_get_message_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
 	} elseif ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;

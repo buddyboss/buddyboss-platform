@@ -192,7 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'messages', 'documents', 'folders' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -803,6 +803,35 @@ class BP_Groups_Component extends BP_Component {
 					'position'        => 85,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'documents',
+					'no_access_url'   => $group_link,
+				);
+			}
+
+			$message_status = groups_get_groupmeta( $this->current_group->id, 'message_status' );
+			$show = false;
+			if ( 'mods' === $message_status ) {
+				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
+				if ( $admin || $moderator ) {
+					$show = true;
+				}
+			} else {
+				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				if ( $admin ) {
+					$show = true;
+				}
+			}
+
+			if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) && $show ) {
+				$sub_nav[] = array(
+					'name'            => __( 'Send Messages', 'buddyboss' ),
+					'slug'            => 'messages',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_messages',
+					'item_css_id'     => 'group-messages',
+					'position'        => 70,
+					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
 				);
 			}

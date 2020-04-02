@@ -1245,3 +1245,15 @@ function bp_admin_registration_setting_tutorial() {
 
 	<?php
 }
+
+/**
+ * Enable group messages field markup.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_admin_setting_callback_group_messages() {
+	?>
+	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
+	<label for="bp-disable-group-messages"><?php _e( 'Allow group organizers and moderators to send group messages', 'buddyboss' ); ?></label>
+	<?php
+}

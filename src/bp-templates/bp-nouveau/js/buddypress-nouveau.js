@@ -634,6 +634,8 @@ window.bp = window.bp || {};
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( document ).on( 'click', '#buddypress table.invite-settings .field-actions .field-actions-remove, #buddypress table.invite-settings .field-actions-add', this, this.addRemoveInvite );
+			
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
@@ -1399,6 +1401,53 @@ window.bp = window.bp || {};
 					$(this).trigger('blur');
 				}
 			} );
+		},
+
+		/**
+		 * [addRemoveInvite description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		addRemoveInvite: function(event) {
+			
+			var currentTarget = event.currentTarget, currentDataTable = $(currentTarget).closest('tbody');
+
+			if( $(currentTarget).hasClass('field-actions-remove') ){
+
+				if( $(this).closest('tr').siblings().length > 1 ){
+					$(this).closest('tr').remove();
+					currentDataTable.find('.field-actions-add.disabled').removeClass('disabled');
+				} else{
+
+					return;
+					
+				}
+
+			}else if( $(currentTarget).hasClass('field-actions-add') ){
+
+				if( !$(currentTarget).hasClass('disabled') ){
+
+					var prev_data_row = $(this).closest('tr').prev('tr').html();
+					$( '<tr>' + prev_data_row + '</tr>' ).insertBefore( $(this).closest('tr') );
+					currentDataTable.find('tr').length > 20 ? $(currentTarget).addClass('disabled') : '' ; // Add Limit of 20
+
+				} else {
+
+					return;
+
+				}
+				
+			}
+
+			//reset the id of all inputs
+			var data_rows = currentDataTable.find('tr:not(:last-child)');
+			$.each( data_rows, function(index){
+				$(this).find('.field-name > input').attr('name','invitee['+ index +'][]');
+				$(this).find('.field-name > input').attr('id','invitee_'+ index +'_title');
+				$(this).find('.field-email > input').attr('name','email['+ index +'][]');
+				$(this).find('.field-email > input').attr('id','email_'+ index +'_email');
+				
+			});
 		},
 
 		/**

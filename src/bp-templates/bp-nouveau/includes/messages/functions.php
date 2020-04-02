@@ -116,7 +116,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'unstar' => __( 'Unstarring messages. Please wait.', 'buddyboss' ),
 		),
 		'type_message'        => __( 'Type message', 'buddyboss' ),
-		'delete_confirmation' => __( 'Are you sure you want to delete this conversation? This will permanently delete the conversation history and cannot be undone.', 'buddyboss' ),
+		'delete_confirmation' => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
 		'bulk_actions'        => bp_nouveau_messages_get_bulk_actions(),
 		'howtoBulk'           => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
 		'toOthers'            => array(
@@ -142,11 +142,6 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'star_counter'     => 0,
 			'unstar_counter'   => 0
 		) );
-	}
-
-	// Friends active for force friendship to message.
-	if ( bp_is_active( 'friends' ) ) {
-		$params['messages']['force_friendship_to_message'] = bp_force_friendship_to_message();
 	}
 
 	return $params;

@@ -197,13 +197,6 @@ window.bp = window.bp || {};
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
 
-						if ( typeof window.BP_Nouveau !== 'undefined' &&
-						typeof window.BP_Nouveau.messages !== 'undefined' &&
-						typeof window.BP_Nouveau.messages.force_friendship_to_message !== 'undefined' &&
-						window.BP_Nouveau.messages.force_friendship_to_message ) {
-							params.only_friends = 1;
-						}
-
 						if ( $.isNumeric( this.$inputor.data( 'suggestions-group-id' ) ) ) {
 							params['group-id'] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
 						}
@@ -241,6 +234,17 @@ window.bp = window.bp || {};
 								render_view( data );
 							}
 						);
+					},
+
+					/**
+					 * Before inserting selected value add space.
+					 *
+					 * @param {string} value @mention to search for.
+					 * @since BuddyBoss 1.2.9
+					 */
+					beforeInsert: function( value ) {
+						value += ' ';
+						return value;
 					}
 				},
 
@@ -267,6 +271,47 @@ window.bp = window.bp || {};
 			BP_Mentions_Options.extra_options,
 			mentions
 		);
+
+		// Remove atwho-query class from target to handle after save issues.
+		this.on( 'hidden.atwho', function( event ) {
+			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
+				var atwho_query = $( event.currentTarget ).find( 'span.atwho-query' );
+				for( var i = 0; i < atwho_query.length; i++ ) {
+					$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+				}
+			}
+		});
+
+		// Update medium editors when mention inserted into editor.
+		this.on( 'inserted.atwho', function( event ) {
+			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
+				var i = 0;
+				if ( typeof window.forums_medium_reply_editor !== 'undefined' ) {
+					var reply_editors = Object.keys(window.forums_medium_reply_editor);
+					if ( reply_editors.length ) {
+						for (i = 0; i < reply_editors.length; i++) {
+							window.forums_medium_reply_editor[reply_editors[i]].checkContentChanged();
+						}
+					}
+				}
+				if ( typeof window.forums_medium_topic_editor !== 'undefined' ) {
+					var topic_editors = Object.keys(window.forums_medium_topic_editor);
+					if ( topic_editors.length ) {
+						for (i = 0; i < topic_editors.length; i++) {
+							window.forums_medium_topic_editor[topic_editors[i]].checkContentChanged();
+						}
+					}
+				}
+				if ( typeof window.forums_medium_forum_editor !== 'undefined' ) {
+					var forum_editors = Object.keys(window.forums_medium_forum_editor);
+					if ( forum_editors.length ) {
+						for (i = 0; i < forum_editors.length; i++) {
+							window.forums_medium_forum_editor[forum_editors[i]].checkContentChanged();
+						}
+					}
+				}
+			}
+		});
 
 		var opts = $.extend( true, {}, suggestionsDefaults, mentionsDefaults, options );
 		return $.fn.atwho.call( this, opts );

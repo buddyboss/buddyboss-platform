@@ -290,6 +290,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 14801 ) {
 			bp_update_to_1_2_4();
 		}
+
+		if ( $raw_db_version < 14901 ) {
+			bp_update_to_1_2_9();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -964,6 +968,15 @@ function bp_core_fix_media_activities() {
 	if ( bp_is_active( 'activity' ) ) {
 		bp_activity_media_fix_data();
 	}
+}
+
+/**
+ * 1.2.8 update routine.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_update_to_1_2_9() {
+	bp_core_install_group_message_email();
 }
 
 /**

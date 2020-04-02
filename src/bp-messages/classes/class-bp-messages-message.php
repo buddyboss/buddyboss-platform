@@ -294,15 +294,30 @@ class BP_Messages_Message {
 
 		// Get the message ids in order to delete their metas.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		//Get the all thread ids for unread messages
+		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$message_deleted_text = '<p> </p>';
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
-			bp_messages_delete_meta( $message_id );
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+			// bp_messages_delete_meta( $message_id );
+			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
+			bp_messages_update_meta( $message_id, '_gif_data', '' );
+			bp_messages_update_meta( $message_id, 'bp_media_ids', '' );
+			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
 		}
+		// unread theread message.
+		if ( ! empty( $thread_ids ) ) {
+			$thread_ids = implode( ',', $thread_ids );
 
+			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
+		}
 		// delete all the meta recipients from user table.
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
+		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}
 
 	/**
@@ -351,5 +366,46 @@ class BP_Messages_Message {
 		}
 
 		return $thread_id;
+	}
+
+	/**
+	 * Get existsing threads which matches the recipients
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param  array   $recipient_ids
+	 * @param  integer $sender
+	 */
+	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// add the sender into the recipient list and order by id ascending
+		$recipient_ids[] = $sender;
+		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
+		sort( $recipient_ids );
+
+		$results = $wpdb->get_results(
+			$sql = $wpdb->prepare(
+				"SELECT
+				r.thread_id as thread_id,
+				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
+				MAX(m.date_sent) AS date_sent
+			FROM {$bp->messages->table_name_recipients} r
+			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
+			GROUP BY r.thread_id
+			HAVING recipient_list = %s
+			ORDER BY date_sent DESC
+			",
+				implode( ',', $recipient_ids )
+			)
+		);
+
+		if ( ! $results ) {
+			return null;
+		}
+
+		return $results;
 	}
 }

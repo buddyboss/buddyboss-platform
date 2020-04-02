@@ -1268,6 +1268,8 @@ function bp_nouveau_group_template_part() {
 			$template = 'documents';
 		} elseif ( bp_is_group_document() ) {
 			$template = 'documents';
+		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
+			$template = 'messages';
 		}
 
 		bp_nouveau_group_get_template_part( $template );

@@ -383,7 +383,7 @@ function bp_groups_admin_load() {
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
 		$album_status         = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
-		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $album_status ) ) {
+		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $album_status, $message_status ) ) {
 			$error = $group_id;
 		}
 
@@ -562,7 +562,7 @@ function bp_groups_admin_load() {
  * @return string|int Option value. False to abandon update.
  */
 function bp_groups_admin_screen_options( $value, $option, $new_value ) {
-	if ( 'toplevel_page_bp_groups_per_page' != $option && 'toplevel_page_bp_groups_network_per_page' != $option ) {
+	if ( 'buddyboss_page_bp_groups_per_page' != $option && 'buddyboss_page_bp_groups_network_per_page' != $option ) {
 		return $value;
 	}
 

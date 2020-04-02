@@ -1169,6 +1169,12 @@ function groups_screen_notification_settings() {
 	if ( ! $group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
 		$group_request_completed = 'yes';
 	}
+
+	if ( true === bp_disable_group_messages() ) {
+		if ( ! $group_message = bp_get_user_meta( bp_displayed_user_id(), 'notification_group_messages_new_message', true ) ) {
+			$group_message = 'yes';
+		}
+	}
 	?>
 
 	<table class="notification-settings" id="groups-notification-settings">
@@ -1262,6 +1268,29 @@ function groups_screen_notification_settings() {
 					</div>
 				</td>
 			</tr>
+
+			<?php
+				if ( true === bp_disable_group_messages() ) {
+					?>
+					<tr id="groups-notification-settings-request-messages">
+						<td></td>
+						<td><?php _e( 'Group Message', 'buddyboss' ); ?></td>
+						<td class="yes">
+							<div class="bp-radio-wrap">
+								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />
+								<label for="notification-groups-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+							</div>
+						</td>
+						<td class="no">
+							<div class="bp-radio-wrap">
+								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-no" class="bs-styled-radio" value="no" <?php checked( $group_message, 'no', true ); ?> />
+								<label for="notification-groups-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+							</div>
+						</td>
+					</tr>
+					<?php
+				}
+			?>
 
 			<?php
 
