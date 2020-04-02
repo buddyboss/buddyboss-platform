@@ -52,8 +52,8 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
-			$.ajaxPrefilter( this.memberPreFilter );
-			$.ajaxPrefilter( this.groupPreFilter );
+			//$.ajaxPrefilter( this.memberPreFilter );
+			//$.ajaxPrefilter( this.groupPreFilter );
 
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
