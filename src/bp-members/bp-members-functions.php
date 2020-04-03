@@ -3421,16 +3421,7 @@ function bp_get_users_of_removed_member_types() {
  * @since BuddyBoss 1.0.0
  */
 function bp_register_active_member_types() {
-	$member_type_ids = bp_get_active_member_types(
-		array(
-			'meta_query' => array(
-				array(
-					'key'   => '_bp_member_type_enable_filter',
-					'value' => 1,
-				),
-			)
-		)
-	);
+	$member_type_ids = bp_get_active_member_types();
 
 	if ( ! empty( $member_type_ids ) ) {
 
