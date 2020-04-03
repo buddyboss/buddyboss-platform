@@ -274,7 +274,7 @@ function bp_media_delete_activity_media( $activities ) {
  * @since BuddyBoss 1.0.0
  * @param $album
  */
-function bp_media_update_media_privacy( &$album ) {
+function bp_media_update_media_privacy( $album ) {
 
 	if ( ! empty( $album->id ) ) {
 
