@@ -4260,7 +4260,7 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 
 					// check if already member
 					$membership = new BP_Groups_Member( $user_id, $group_id );
-					if ( ! isset( $membership->ID ) ) {
+					if ( ! isset( $membership->id ) ) {
 						// add as member
 						groups_accept_invite( $user_id, $group_id );
 					}
