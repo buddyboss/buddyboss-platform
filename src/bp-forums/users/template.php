@@ -1410,10 +1410,10 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 		return false;
 	}
 
-	// Allow early overriding of the profile URL to cut down on processing
-	$early_url = apply_filters( 'bbp_pre_get_user_topics_created_url', (int) $user_id );
-	if ( is_string( $early_url ) ) {
-		return $early_url;
+	// Bail if intercepted
+	$intercept = bbp_maybe_intercept( 'bbp_pre_get_user_topics_created_url', func_get_args() );
+	if ( bbp_is_intercepted( $intercept ) ) {
+		return $intercept;
 	}
 
 	// Pretty permalinks
@@ -1468,10 +1468,10 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 		return false;
 	}
 
-	// Allow early overriding of the profile URL to cut down on processing
-	$early_url = apply_filters( 'bbp_pre_get_user_replies_created_url', (int) $user_id );
-	if ( is_string( $early_url ) ) {
-		return $early_url;
+	// Bail if intercepted
+	$intercept = bbp_maybe_intercept( 'bbp_pre_get_user_replies_created_url', func_get_args() );
+	if ( bbp_is_intercepted( $intercept ) ) {
+		return $intercept;
 	}
 
 	// Pretty permalinks

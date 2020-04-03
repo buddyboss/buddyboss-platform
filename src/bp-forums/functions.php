@@ -924,3 +924,85 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 		)
 	);
 }
+
+/**
+ * Allow interception of a method or function call.
+ *
+ * @since 1.2.9
+ *
+ * @param string $action Typically the name of the caller function
+ * @param array  $args   Typically the results of caller function func_get_args()
+ *
+ * @return mixed         Intercept results. Default bbp_default_intercept().
+ */
+function bbp_maybe_intercept( $action = '', $args = array() ) {
+
+	// Backwards compatibility juggle
+	$hook = ( false === strpos( $action, 'pre_' ) )
+		? "pre_{$action}"
+		: $action;
+
+	// Default value
+	$default = bbp_default_intercept();
+
+	// Parse args
+	$r = bbp_parse_args( (array) $args, array(), 'maybe_intercept' );
+
+	// Bail if no args
+	if ( empty( $r ) ) {
+		return $default;
+	}
+
+	// Filter
+	$args     = array_merge( array( $hook ), $r );
+	$filtered = call_user_func_array( 'apply_filters', $args );
+
+	// Return filtered value, or default if not intercepted
+	return ( $filtered === reset( $r ) )
+		? $default
+		: $filtered;
+}
+
+/**
+ * Generate a default intercept value.
+ *
+ * @since 1.2.9
+ *
+ * @staticvar mixed $rand Null by default, random string on first call
+ *
+ * @return string
+ */
+function bbp_default_intercept() {
+	static $rand = null;
+
+	// Generate a new random and unique string
+	if ( null === $rand ) {
+
+		// If ext/hash is not present, compat.php's hash_hmac() does not support sha256.
+		$algo = function_exists( 'hash' )
+			? 'sha256'
+			: 'sha1';
+
+		// Old WP installs may not have AUTH_SALT defined.
+		$salt = defined( 'AUTH_SALT' ) && AUTH_SALT
+			? AUTH_SALT
+			: (string) wp_rand();
+
+		// Create unique ID
+		$rand = hash_hmac( $algo, uniqid( $salt, true ), $salt );
+	}
+
+	// Return random string (from locally static variable)
+	return $rand;
+}
+
+/**
+ * Whether a value has been intercepted
+ *
+ * @since 1.2.9
+ *
+ * @param bool $value
+ */
+function bbp_is_intercepted( $value = '' ) {
+	return ( bbp_default_intercept() !== $value );
+}
