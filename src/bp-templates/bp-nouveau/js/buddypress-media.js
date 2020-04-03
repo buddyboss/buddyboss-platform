@@ -3435,7 +3435,9 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '.bb-open-media-theatre', this.openTheatre.bind( this ) );
+			$( document ).on( 'click', '.bb-open-document-theatre', this.openDocumentTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-close-media-theatre', this.closeTheatre.bind( this ) );
+			$( document ).on( 'click', '.bb-close-document-theatre', this.closeDocumentTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-prev-media', this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request', this.activityDeleted.bind( this ) );
@@ -3472,6 +3474,13 @@ window.bp = window.bp || {};
 			}
 		},
 
+		checkPressedKeyDocuments: function (e) {
+			e = e || window.event;	
+			if( e.keyCode == 27 ) {	
+				bp.Nouveau.Media.Theatre.closeDocumentTheatre( e );	
+			}	
+		},
+
 		openTheatre: function (event) {
 			event.preventDefault();
 			var target = $( event.currentTarget ), id, self = this;
@@ -3496,6 +3505,60 @@ window.bp = window.bp || {};
 			// document.addEventListener( 'click', self.documentClick.bind(self) );
 		},
 
+		openDocumentTheatre: function (event) {	
+			event.preventDefault();	
+			var target = $( event.currentTarget );	
+			var self = this;	
+			var media_elements = $( target ).closest( '.bb-media-container' ).find( '.document-theatre' );	
+			if( target.attr('data-extension') == 'css' || target.attr('data-extension') == 'txt' || target.attr('data-extension') == 'js' || target.attr('data-extension') == 'html' || target.attr('data-extension') == 'htm' || target.attr('data-extension') == 'csv' ) {	
+				//Show Document	
+				$.get(target.attr('data-text-preview'), function(data) {	
+					media_elements.find( '.bb-media-section' ).html( '<h3>'+ target.text() +'</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );	
+					media_elements.find( '.bb-media-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );	
+					media_elements.find( '.bb-media-section .document-text textarea' ).html( data.replace('n','' ) );	
+						
+					bp.Nouveau.Media.documentCodeMirror();	
+				});	
+			} else {	
+					
+				media_elements.find( '.bb-media-section' ).html( '<h3>'+ target.text() +'</h3><div class="img-section"> <img src="'+target.attr('data-preview')+'" /> </div>' );	
+			}	
+			var id = target.closest('.media-folder_items').data( 'activity-id' );
+			bp.Nouveau.Media.Theatre.getDocumentActivity(id);	
+				
+			self.is_open = true;	
+				
+			$( '.document-theatre' ).show();	
+			document.addEventListener( 'keyup', bp.Nouveau.Media.Theatre.checkPressedKeyDocuments( event ) );	
+		},
+
+		getDocumentActivity: function (activity_id) {
+
+			var self = this;
+
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
+			
+			self.activity_ajax = $.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'media_get_activity',
+						id: activity_id,
+						nonce: BP_Nouveau.nonces.media
+					},
+					success: function (response) {
+						if (response.success) {
+							$( '.bb-media-info-section .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
+							$( '.bb-media-info-section' ).show();
+							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+							jQuery( window ).scroll();
+						}
+					}
+				}
+			);
+		},
+
 		closeTheatre: function (event) {
 			event.preventDefault();
 			var self = this;
@@ -3505,6 +3568,18 @@ window.bp = window.bp || {};
 
 			document.removeEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 			// document.removeEventListener( 'click', self.documentClick.bind(self) );
+		},
+
+		closeDocumentTheatre: function (event) {	
+			event.preventDefault();	
+			var self = this;	
+			var target = $( event.currentTarget );	
+				
+			var media_elements = $( target ).closest( '.bb-media-container' ).find( '.document-theatre' );	
+			media_elements.find('.bb-media-section').html('');	
+			media_elements.hide();	
+			self.is_open = false;	
+			document.removeEventListener( 'keyup', bp.Nouveau.Media.Theatre.checkPressedKeyDocuments( event ) );	
 		},
 
 		setMedias: function (target) {

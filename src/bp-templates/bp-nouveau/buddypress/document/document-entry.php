@@ -14,6 +14,7 @@ if ( $attachment_id ) {
 	$extension        = bp_document_extension( $attachment_id );
 	$svg_icon         = bp_document_svg_icon( $extension );
 	$link             = bp_document_download_link( $attachment_id );
+	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$move_class       = 'ac-document-move';
 	$listing_class    = 'ac-document-list';
 	$type             = 'document';
@@ -23,6 +24,11 @@ if ( $attachment_id ) {
 	$can_view         = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$group_id         = bp_get_document_group_id();
 	$title            = bp_get_document_title();
+
+	if('pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension )  {
+		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id()  );
+	}
+
 } else {
 	$svg_icon       = bp_document_svg_icon( 'folder' );
 	$link           = bp_get_folder_link();
@@ -37,14 +43,19 @@ if ( $attachment_id ) {
 }
 
 ?>
-<div class="media-folder_items <?php echo $listing_class; ?>" data-id="<?php bp_document_id(); ?>">
+<div class="media-folder_items <?php echo $listing_class; ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
 		<a href="<?php echo esc_url( $link ); ?>">
 			<i class="<?php echo $svg_icon; ?>"></i>
 		</a>
 	</div>
 	<div class="media-folder_details">
-		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">
+		<a class="media-folder_name
+		<?php if( $attachment_id ) { echo 'bb-open-document-theatre'; }?>"
+		href="<?php echo esc_url( $link ); ?>"
+		data-extension="<?php echo $extension ? $extension : ''; ?>"
+		data-preview="<?php echo $attachment_url ? $attachment_url : ''; ?>"
+		data-text-preview="<?php echo $text_attachment_url ? $text_attachment_url : ''; ?>" >
 			<span><?php echo $title; ?></span><?php echo $extension ? '.' . $extension : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo base64_encode( bp_get_document_id() ); ?>" style="display: none;"></i>
 			<i class="media-document-attachment-id" data-item-id="<?php echo base64_encode( bp_get_document_attachment_id() ); ?>" style="display: none;"></i>

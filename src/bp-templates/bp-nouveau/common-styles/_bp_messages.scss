@@ -551,14 +551,16 @@ input#send-to-input {
 		-moz-osx-font-smoothing: grayscale;
 	}
 }
-.bp-close-compose-form {
-    color: rgba(18, 43, 70, 0.4);
-    line-height: 1;
 
-    .bb-icons {
-        font-size: 24px;
-    }
+.bp-close-compose-form {
+	color: rgba(18, 43, 70, 0.4);
+	line-height: 1;
+
+	.bb-icons {
+		font-size: 24px;
+	}
 }
+
 #message_content {
 	margin-bottom: 10px;
 }

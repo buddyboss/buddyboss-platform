@@ -68,7 +68,7 @@ $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : 
         </div><!-- .document-preview-wrap -->
         <?php
     }
-    if ( filesize( get_attached_file( $attachment_id ) ) / 1e+6 < 3 ) {
+    if ( filesize( get_attached_file( $attachment_id ) ) / 1e+6 < 2 ) {
         if ( 'css' === $extension || 'txt' === $extension || 'html' === $extension || 'htm' === $extension || 'js' === $extension || 'csv' === $extension ) {
             $data      = bp_document_get_preview_text_from_attachment( $attachment_id );
 	        $file_data = $data['text'];
