@@ -2933,3 +2933,17 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 
 // Set the forum slug on edit page from backend.
 add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
+
+function bp_document_ajax_check_file_mime_type() {
+	$response = array();
+    if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && !empty( $_FILES ) ) {
+	    $files = $_FILES;
+	    foreach ( $files as $input => $infoArr ) {
+		    foreach ($infoArr as $key => $valueArr) {
+			    $response[$key] = $valueArr;
+            }
+        }
+    }
+	wp_send_json_success( $response );
+}
+add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_file_mime_type' );
