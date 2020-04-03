@@ -533,6 +533,14 @@ function bp_activity_admin_load() {
 		// Activity content.
 		if ( isset( $_POST['bp-activities-content'] ) ) {
 			$activity->content = $_POST['bp-activities-content'];
+
+			//For embed URL if content have
+			$urls = wp_extract_urls( $activity->content );
+			if ( is_array( $urls ) && count( $urls ) > 0 ) {
+				$_POST['link_url']   = ! empty( $urls[0] ) ? filter_var( $urls[0], FILTER_VALIDATE_URL ) : '';
+				$_POST['link_embed'] = true;
+			}
+			
 		}
 
 		// Activity primary link.
