@@ -380,6 +380,12 @@ function bp_has_groups( $args = '' ) {
 		}
 	}
 
+	// Do not add default filter when group type filter selected.
+	$add_default_filder = 0;
+	if ( isset( $_POST['group_type'] ) && ! empty( $_POST['group_type'] ) ) {
+		$add_default_filder = 1;
+	}
+
 	// Default search string (too soon to escape here).
 	$search_query_arg = bp_core_get_component_search_query_arg( 'groups' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
@@ -395,7 +401,7 @@ function bp_has_groups( $args = '' ) {
 	$args = bp_parse_args( $args, array() );
 	// Exclude Group Types
 	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ! bp_is_user_groups() ) {
-		if ( wp_doing_ajax() ) {
+		if ( wp_doing_ajax() && 0 === $add_default_filder ) {
 			// get all excluded group types.
 			$bp_group_type_ids = bp_groups_get_excluded_group_types();
 			if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {

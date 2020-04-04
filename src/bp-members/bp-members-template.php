@@ -359,6 +359,12 @@ function bp_has_members( $args = array() ) {
 		}
 	}
 
+	// Do not add default filter when member type filter selected.
+    $add_default_filder = 0;
+	if ( isset( $_POST['member_type_id'] ) && ! empty( $_POST['member_type_id'] ) ) {
+		$add_default_filder = 1;
+	}
+
 	if ( empty( $member_type ) ) {
 		$member_type = bp_get_current_member_type();
     } elseif ( is_array( $member_type ) ) {
@@ -379,7 +385,7 @@ function bp_has_members( $args = array() ) {
 	$args = bp_parse_args( $args, array() );
 	// Exclude Member Types
 	if ( empty( $args['scope'] ) || 'all' === $args['scope'] ) {
-	    if ( ! bp_is_user() && '' === $member_type   ) {
+	    if ( ! bp_is_user() && '' === $member_type && 0 === $add_default_filder  ) {
 		    // get all excluded member types.
 		    $bp_member_type_ids = bp_get_removed_member_types();
 		    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {

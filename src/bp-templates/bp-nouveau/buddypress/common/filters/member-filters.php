@@ -13,16 +13,34 @@ if ( false === $is_member_type_enabled ) {
 }
 
 // Get active member types
-$member_types = bp_get_active_member_types(
-	array(
-		'meta_query' => array(
-			array(
-				'key'     => '_bp_member_type_enable_filter',
-				'value'   => 1,
-			),
+if ( bp_is_members_directory() ) {
+	$member_types = bp_get_active_member_types(
+		array(
+			'meta_query' => array(
+				array(
+					'key'   => '_bp_member_type_enable_filter',
+					'value' => 1,
+				),
+				array(
+					'key'   => '_bp_member_type_enable_remove',
+					'value' => 0,
+				),
+			)
 		)
-	)
-);
+	);
+} else {
+	$member_types = bp_get_active_member_types(
+		array(
+			'meta_query' => array(
+				array(
+					'key'   => '_bp_member_type_enable_filter',
+					'value' => 1,
+				)
+			)
+		)
+	);
+}
+
 
 if ( ! empty( $member_types ) ) {
 	?>

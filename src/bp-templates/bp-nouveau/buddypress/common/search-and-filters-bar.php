@@ -28,7 +28,7 @@
 		<?php bp_get_template_part( 'common/filters/directory-filters' ); ?>
 	<?php endif; ?>
 
-    <?php if ( 'members' === bp_current_component() || 'friends' === bp_current_component() ): ?>
+    <?php if ( 'members' === bp_current_component() || ( 'friends' === bp_current_component() && 'my-friends' === bp_current_action() ) ): ?>
         <?php bp_get_template_part( 'common/filters/member-filters' ); ?>
     <?php endif; ?>
 
