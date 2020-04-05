@@ -160,16 +160,15 @@
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to send group messages?', 'buddyboss' ); ?></p>
 
-			<label for="group-messages-status-mods">
-				<input type="radio" name="group-message-status" id="group-messages-status-mods" value="mods"<?php bp_group_show_messages_status_setting( 'mods' ); ?> />
-				<?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
-			</label>
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-message-status" id="group-messages-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_messages_status_setting( 'mods' ); ?> />
+				<label for="group-messages-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			</div>
 
-			<label for="group-messages-status-admins">
-				<input type="radio" name="group-message-status" id="group-messages-status-admins" value="admins"<?php bp_group_show_messages_status_setting( 'admins' ); ?> />
-				<?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
-			</label>
-
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-message-status" id="group-messages-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_messages_status_setting( 'admins' ); ?> />
+				<label for="group-messages-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</div>
 		</fieldset>
 
 	<?php endif; ?>
