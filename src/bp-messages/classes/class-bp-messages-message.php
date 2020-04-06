@@ -316,6 +316,16 @@ class BP_Messages_Message {
 
 			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
 		}
+
+		// Delete the thread of user.
+		if ( bp_has_message_threads( array( 'user_id' => $user_id, ) ) ) {
+			while ( bp_message_threads() ) :
+				bp_message_thread();
+				$thread_id = bp_get_message_thread_id();
+				messages_delete_thread( $thread_id, $user_id );
+			endwhile;
+		}
+
 		// delete all the meta recipients from user table.
 		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}

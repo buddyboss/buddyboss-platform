@@ -659,6 +659,19 @@ class BP_Messages_Thread {
 
 		if ( $thread_delete ) {
 
+			// Removed the thread id from the group meta.
+			if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) &&  true === bp_disable_group_messages() ) {
+				// Get the group id from the first message
+				$first_message    = BP_Messages_Thread::get_first_message( (int) $thread_id );
+				$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+				if ( $message_group_id > 0 ) {
+					$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
+					if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
+						groups_update_groupmeta( $message_group_id, 'group_message_thread', '' );
+					}
+				}
+			}
+
 			// Delete thread messages.
 			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
 			$wpdb->query( $query ); // db call ok; no-cache ok;
