@@ -20,14 +20,28 @@
 		<# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
-				<# for ( i in other_recipients ) { #>
+				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
 				<span class="participants-name">
-              <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
-            </span>
-				<# } #>
+					<# if ( data.is_deleted ) { #>
+						{{data.group_name}}
+					<# } else { #>
+						<a href="{{data.group_link}}">{{data.group_name}}</a>
+					<# } #>
 
-				<# if ( include_you ) { #>
-				<span class="participants-name"><a href="{{current_user.user_link}}"><?php esc_html_e( 'You', 'buddyboss' ); ?></a></span>
+				</span>
+				<# } else { #>
+					<# for ( i in other_recipients ) { #>
+						<span class="participants-name">
+                            <# if ( other_recipients[i].is_deleted ) { #>
+								{{other_recipients[i].user_name}}
+							<# } else { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
+		                </span>
+					<# } #>
+
+					<# if ( include_you ) { #>
+						<span class="participants-name"><a href="{{current_user.user_link}}"><?php esc_html_e( 'You', 'buddyboss' ); ?></a></span>
+					<# } #>
+
 				<# } #>
 			</dt>
 			<dd>
@@ -35,12 +49,11 @@
 			</dd>
 		</dl>
 		<# } #>
-
-		<div class="actions">
-			<button type="button" class="message-action-delete bp-icons" data-bp-action="delete" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Delete conversation', 'buddyboss' ); ?>">
-				<i class="dashicons dashicons-trash"></i>
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></span>
-			</button>
-		</div>
+        <div class="actions">
+            <button type="button" class="message-action-delete bp-icons" data-bp-action="delete" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Delete your messages', 'buddyboss' ); ?>">
+                <i class="dashicons dashicons-trash"></i>
+                <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></span>
+            </button>
+        </div>
 	</header>
 </script>

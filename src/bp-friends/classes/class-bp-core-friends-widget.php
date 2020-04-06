@@ -115,7 +115,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		$members_args = array(
 			'user_id'         => absint( $user_id ),
 			'type'            => sanitize_text_field( $instance['friend_default'] ),
-			'max'             => absint( $instance['max_friends'] ),
+			'per_page'        => absint( $instance['max_friends'] ),
 			'populate_extras' => 1,
 		);
 
@@ -191,6 +191,13 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 				<?php endwhile; ?>
 			</ul>
+			<?php if ( $members_template->total_member_count > absint( $instance['max_friends'] ) ) : ?>
+				<div class="more-block">
+					<a href="<?php echo esc_url( $link ); ?>" class="count-more more-connection"><?php _e( 'More', 'buddyboss' ); ?>
+						 <i class="bb-icon-angle-right"></i>
+					</a>
+				</div>
+			<?php endif; ?>
 			<?php wp_nonce_field( 'bp_core_widget_friends', '_wpnonce-friends' ); ?>
 			<input type="hidden" name="friends_widget_max" id="friends_widget_max" value="<?php echo absint( $instance['max_friends'] ); ?>" />
 
