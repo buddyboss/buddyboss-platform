@@ -62,6 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed minor issues when @mentioning other members in forums
 * Forums - Fixed settings for 'Disallow editing after' time limit not working
 * Messages - Improved the logic for deleting your messages from a conversation
+* Messages - When a member is deleted, notifications about their messages are removed
 * Activity - Fixed link preview image not always displaying in activity posts
 * Activity - Fixed video embeds not displaying after editing the post in admin
 * Connections - Display 'More' button on Connections widget when list is maxed
