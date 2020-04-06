@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.9 =
+* Compatibility - Fixed minor code issues with PHP 7.4
 
 = 1.2.8 =
 * Registration - New option to use any Custom URL as your registration form
