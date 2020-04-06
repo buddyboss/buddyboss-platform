@@ -23,7 +23,8 @@ TABLE OF CONTENTS:
 	6.1 - Mobile
 	6.2 - Desktop Small
 	6.3 - Desktop Medium
-	6.4 - Desktop Large
+  6.4 - Desktop Large
+7.0 - Document Mime Type check
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 - Typography and colour
@@ -384,4 +385,32 @@ TABLE OF CONTENTS:
     height: calc(100% - 120px);
     padding: 0;
   }
+}
+
+
+/**
+ * Document Mime Type check
+ */
+
+#document-upload-check-mime-type #bp-document-file-input,
+#document-upload-check-mime-type input[type="submit"] {
+  color: #0071a1;
+  border: 1px solid #0071a1;
+  background: #f3f5f6;
+  font-size: 13px;
+  border-radius: 3px;
+  padding: 0 10px;
+  line-height: 2.15;
+  display: block;
+  margin: 15px 0;
+}
+
+#document-upload-check-mime-type #bp-document-file-input {
+  line-height: 1;
+  padding: 10px;
+}
+
+.show-document-mime-type .type {
+  font-weight: 500;
+  font-size: 14px;
 }
