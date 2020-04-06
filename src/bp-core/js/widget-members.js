@@ -39,6 +39,18 @@ jQuery( document ).ready(
 					if ( jQuery( '#boss_whos_online_widget_heartbeat' ).length ) {
 							jQuery( '#boss_whos_online_widget_heartbeat' ).html( data.boss_whos_online_widget );
 					}
+					if ( jQuery( '#boss_whos_online_widget_connections' ).length ) {
+						jQuery( '#boss_whos_online_widget_connections' ).html( data.boss_whos_online_widget_connection );
+					}
+
+					if ( jQuery( '#who-online-members-list-options #online-members' ).length ) {
+						jQuery( '#who-online-members-list-options #online-members .widget-num-count' ).html( data.boss_whos_online_widget_total );
+					}
+
+					if ( jQuery( '#who-online-members-list-options #connection-members' ).length ) {
+						jQuery( '#who-online-members-list-options #connection-members .widget-num-count' ).html( data.boss_whos_online_widget_total_connection );
+					}
+
 					if ( jQuery( '#boss_recently_active_widget_heartbeat' ).length ) {
 						jQuery( '#boss_recently_active_widget_heartbeat' ).html( data.boss_recently_active_widget );
 					}
