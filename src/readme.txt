@@ -13,6 +13,8 @@ BuddyBoss Platform helps site builders & developers add community features to th
 
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
 - [Code Reference](https://www.buddyboss.com/resources/reference/)
+- [Github](https://github.com/buddyboss/buddyboss-platform/wiki)
+- [Roadmap](https://www.buddyboss.com/roadmap/)
 
 == Requirements ==
 
