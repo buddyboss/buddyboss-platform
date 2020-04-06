@@ -59,17 +59,17 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.9 =
 * Groups - Added new option to send messages to group members from the group
+* Messages - Improved the logic for deleting your messages from a conversation
+* Messages - When a member is deleted, notifications about their messages are removed
 * Profiles - Added 'Twitch' as option in 'Social Networks' profile field
 * Profiles - Fixed issue when saving 'Date' field to the date January 1, 1970
 * Forums - Fixed minor issues when @mentioning other members in forums
 * Forums - Fixed settings for 'Disallow editing after' time limit not working
-* Messages - Improved the logic for deleting your messages from a conversation
-* Messages - When a member is deleted, notifications about their messages are removed
 * Activity - Fixed link preview image not always displaying in activity posts
 * Activity - Fixed video embeds not displaying after editing the post in admin
-* Connections - Display 'More' button on Connections widget when list is maxed
+* Connections - Display 'More' button on Connections widget when list is maxed out
 * Connections - Fixed inconsistent display of Connections based on profile type 
-* Widgets - Fixed the member count showing incorrect in 'Who's Online' widget
+* Widgets - Fixed the member counts showing incorrect in 'Who's Online' widget
 * Email Invites - Added ability to invite between 1 to 20 members at once
 * Emails - Now sending emails through the WordPress core wp_mail function
 * Admin - Fixed 'Screen Options > Pagination' not saving in admin for Activity and Groups
