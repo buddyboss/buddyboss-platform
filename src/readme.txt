@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed settings for 'Disallow editing after' time limit not working
 * Messages - Improved the logic for deleting your messages from a conversation
 * Activity - Fixed link preview image not always displaying in activity posts
+* Activity - Fixed video embeds not displaying after editing the post in admin
 * Email Invites - Added ability to invite between 1 to 20 members at once
 * Emails - Now sending emails through the WordPress core wp_mail function
 * Admin - Fixed 'Screen Options > Pagination' not saving in admin for Activity and Groups
