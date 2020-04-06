@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Added new option to send messages to group members from the group
 * Profiles - Added 'Twitch' as option in 'Social Networks' profile field
 * Profiles - Fixed issue when saving 'Date' field to the date January 1, 1970
+* Activity - Fixed issue with 'Pagination' in Screen Options in admin Activity list
 * Forums - Fixed minor issues when @mentioning other members in forums
 * Messages - Improved the logic for deleting your messages from a conversation
 * Email Invites - Added ability to invite between 1 to 20 members at once
