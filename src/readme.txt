@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.9 =
+* Groups - Added new option to send messages to group members from the group
 * Profiles - Added 'Twitch' as option in 'Social Networks' profile field
 * Profiles - Fixed issue when saving 'Date' field to the date January 1, 1970
 * Forums - Fixed minor issues when @mentioning other members in forums
