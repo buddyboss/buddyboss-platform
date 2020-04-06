@@ -280,6 +280,16 @@
 		}
 	}
 
+	@media screen and ( max-width: 540px ) {
+
+		.single-message-thread-header .actions a[data-bp-tooltip][data-bp-tooltip-pos="left"]:after {
+			max-width: 100vw;
+			white-space: normal;
+			min-width: 200px;
+		}
+
+	}
+
 } // close .bp-messages-content
 
 // The single view of messages in a conversation thread

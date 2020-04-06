@@ -557,7 +557,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_topic'] ) && ( wp_create_nonce( 'bbp-unfiltered-html-topic_' . $topic_id ) === $_POST['_bbp_unfiltered_html_topic'] ) ) {
 		remove_filter( 'bbp_edit_topic_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_topic_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_edit_topic_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_edit_topic_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Topic Forum */
@@ -636,6 +636,11 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 	if ( ! bbp_check_for_blacklist( $anonymous_data, $topic_author, $topic_title, $topic_content ) ) {
 		bbp_add_error( 'bbp_topic_blacklist', __( '<strong>ERROR</strong>: Your discussion cannot be edited at this time.', 'buddyboss' ) );
+	}
+
+	// Topic past edit lock checking.
+	if ( ! current_user_can( 'edit_others_topics' ) && bbp_past_edit_lock( $topic->post_date_gmt ) ) {
+		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
 	}
 
 	/** Topic Status */

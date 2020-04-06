@@ -18,16 +18,6 @@
 				border-top: 1px solid $bp-border-color;
 				border-bottom: 0;
 				padding: $pad-med 0 0;
-
-				ul {
-					// indent any nested comments - comment to a comment
-					margin-left: 5%;
-
-					// When comment threading limit is reached, the comments should not indent
-					li.detached-comment-item {
-						margin-left: -5%;
-					}
-				}
 			}
 
 			li:first-child {
@@ -38,6 +28,10 @@
 				margin-bottom: 0;
 			}
 		} // close ul
+
+		> ul > li > ul {
+			margin-left: 5%;
+		}
 
 		div.acomment-avatar {
 			width: auto;
