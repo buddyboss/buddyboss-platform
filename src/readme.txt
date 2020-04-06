@@ -67,6 +67,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Connections - Display 'More' button on Connections widget when list is maxed
 * Email Invites - Added ability to invite between 1 to 20 members at once
 * Emails - Now sending emails through the WordPress core wp_mail function
+* Widgets - Fixed the member count showing incorrect in 'Who's Online' widget
 * Admin - Fixed 'Screen Options > Pagination' not saving in admin for Activity and Groups
 * Developers - Added code filter to extend DropzoneJS image resize options
 * Compatibility - Fixed minor code issues with PHP 7.4
