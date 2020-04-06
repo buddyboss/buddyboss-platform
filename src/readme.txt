@@ -62,6 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed minor issues when @mentioning other members in forums
 * Messages - Improved the logic for deleting your messages from a conversation
 * Email Invites - Added ability to invite between 1 to 20 members at once
+* Emails - Now sending emails through the WordPress core wp_mail function
 * Developers - Added code filter to extend DropzoneJS image resize options
 * Compatibility - Fixed minor code issues with PHP 7.4
 
