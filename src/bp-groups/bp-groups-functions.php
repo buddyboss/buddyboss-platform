@@ -3730,13 +3730,16 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 		return false;
 	}
 
-	$status   = bp_group_get_message_status( $group_id );
-	$is_admin = groups_is_user_admin( $user_id, $group_id );
-	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+	$status    = bp_group_get_message_status( $group_id );
+	$is_admin  = groups_is_user_admin( $user_id, $group_id );
+	$is_mod    = groups_is_user_mod( $user_id, $group_id );
+	$is_member = groups_is_user_member( $user_id, $group_id );
 
-	if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+	if ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' == $status && $is_admin ) {
+	} elseif ( 'members' === $status && ( $is_mod || $is_admin || $is_member ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
