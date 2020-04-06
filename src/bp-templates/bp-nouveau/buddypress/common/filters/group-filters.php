@@ -13,35 +13,24 @@ if ( false === bp_disable_group_type_creation() ) {
 	return '';
 }
 
+$args = array(
+	'meta_query' => array(
+		array(
+			'key'   => '_bp_group_type_enable_filter',
+			'value' => 1,
+		),
+	)
+);
+
 // Get active group types
 if ( bp_is_groups_directory() ) {
-	$group_types = bp_get_active_group_types(
-		array(
-			'meta_query' => array(
-				array(
-					'key'   => '_bp_group_type_enable_filter',
-					'value' => 1,
-				),
-				array(
-					'key'   => '_bp_group_type_enable_remove',
-					'value' => 0,
-				),
-			)
-		)
-	);
-} else {
-	$group_types = bp_get_active_group_types(
-		array(
-			'meta_query' => array(
-				array(
-					'key'   => '_bp_group_type_enable_filter',
-					'value' => 1,
-				)
-			)
-		)
+	$args['meta_query'][] = array(
+		'key'   => '_bp_group_type_enable_remove',
+		'value' => 0,
 	);
 }
 
+$group_types = bp_get_active_group_types( $args );
 
 if ( ! empty( $group_types ) ) {
 	?>

@@ -350,19 +350,13 @@ function bp_has_members( $args = array() ) {
 
 	$member_type = '';
 
-	if ( isset( $_GET['member_type'] ) && ! empty( $_GET['member_type'] ) ) {
-		if ( is_array( $_GET['member_type'] ) ) {
-			$member_type = $_GET['member_type'];
+	if ( isset( $_REQUEST['member_type'] ) && ! empty( $_REQUEST['member_type'] ) ) {
+		if ( is_array( $_REQUEST['member_type'] ) ) {
+			$member_type = $_REQUEST['member_type'];
 		} else {
 			// Can be a comma-separated list.
-			$member_type = explode( ',', $_GET['member_type'] );
+			$member_type = explode( ',', $_REQUEST['member_type'] );
 		}
-	}
-
-	// Do not add default filter when member type filter selected.
-    $add_default_filder = 0;
-	if ( isset( $_POST['member_type_id'] ) && ! empty( $_POST['member_type_id'] ) ) {
-		$add_default_filder = 1;
 	}
 
 	if ( empty( $member_type ) ) {
@@ -384,14 +378,12 @@ function bp_has_members( $args = array() ) {
 
 	$args = bp_parse_args( $args, array() );
 	// Exclude Member Types
-	if ( empty( $args['scope'] ) || 'all' === $args['scope'] ) {
-	    if ( ! bp_is_user() && '' === $member_type && 0 === $add_default_filder  ) {
-		    // get all excluded member types.
-		    $bp_member_type_ids = bp_get_removed_member_types();
-		    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
-			    foreach ( $bp_member_type_ids as $single ) {
-				    $member_type__not_in[] = $single['name'];
-			    }
+	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) ) ) {
+	    // get all excluded member types.
+	    $bp_member_type_ids = bp_get_removed_member_types();
+	    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+		    foreach ( $bp_member_type_ids as $single ) {
+			    $member_type__not_in[] = $single['name'];
 		    }
 	    }
 	}

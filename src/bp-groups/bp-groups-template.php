@@ -371,19 +371,13 @@ function bp_has_groups( $args = '' ) {
 	}
 
 	$group_type = bp_get_current_group_directory_type();
-	if ( ! $group_type && ! empty( $_GET['group_type'] ) ) {
-		if ( is_array( $_GET['group_type'] ) ) {
-			$group_type = $_GET['group_type'];
+	if ( ! $group_type && ! empty( $_REQUEST['group_type'] ) ) {
+		if ( is_array( $_REQUEST['group_type'] ) ) {
+			$group_type = $_REQUEST['group_type'];
 		} else {
 			// Can be a comma-separated list.
-			$group_type = explode( ',', $_GET['group_type'] );
+			$group_type = explode( ',', $_REQUEST['group_type'] );
 		}
-	}
-
-	// Do not add default filter when group type filter selected.
-	$add_default_filder = 0;
-	if ( isset( $_POST['group_type'] ) && ! empty( $_POST['group_type'] ) ) {
-		$add_default_filder = 1;
 	}
 
 	// Default search string (too soon to escape here).
@@ -400,14 +394,16 @@ function bp_has_groups( $args = '' ) {
 
 	$args = bp_parse_args( $args, array() );
 	// Exclude Group Types
-	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ! bp_is_user_groups() ) {
-		if ( wp_doing_ajax() && 0 === $add_default_filder ) {
-			// get all excluded group types.
-			$bp_group_type_ids = bp_groups_get_excluded_group_types();
-			if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
-				foreach ( $bp_group_type_ids as $single ) {
-					$group_type__not_in[] = $single['name'];
-				}
+	if (
+		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
+		! bp_is_user_groups() &&
+		( wp_doing_ajax() && empty( $group_type ) )
+	) {
+		// get all excluded group types.
+		$bp_group_type_ids = bp_groups_get_excluded_group_types();
+		if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
+			foreach ( $bp_group_type_ids as $single ) {
+				$group_type__not_in[] = $single['name'];
 			}
 		}
 	}
