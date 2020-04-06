@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed issue when saving 'Date' field to the date January 1, 1970
 * Forums - Fixed minor issues when @mentioning other members in forums
 * Messages - Improved the logic for deleting your messages from a conversation
+* Activity - Fixed link preview image not always displaying in activity posts
 * Email Invites - Added ability to invite between 1 to 20 members at once
 * Emails - Now sending emails through the WordPress core wp_mail function
 * Admin - Fixed 'Screen Options > Pagination' not saving in admin for Activity and Groups
