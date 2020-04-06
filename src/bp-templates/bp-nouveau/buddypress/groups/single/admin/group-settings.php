@@ -160,6 +160,11 @@
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to send group messages?', 'buddyboss' ); ?></p>
 
+            <div class="bp-radio-wrap">
+                <input type="radio" name="group-message-status" id="group-messages-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_messages_status_setting( 'members' ); ?> />
+                <label for="group-messages-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+            </div>
+
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-message-status" id="group-messages-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_messages_status_setting( 'mods' ); ?> />
 				<label for="group-messages-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
