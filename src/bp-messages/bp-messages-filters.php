@@ -91,7 +91,6 @@ add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_a
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 
-add_action( 'groups_before_delete_group', 'bp_group_messages_remove_thread', 10 );
 
 /**
  * Enforce limitations on viewing private message contents
@@ -534,23 +533,6 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 					bp_messages_update_meta( $last_message_id, 'group_id', $group_id );
 				}
 			}
-		}
-	}
-}
-
-/**
- * Remove the thread when group is deleted.
- *
- * @since BuddyBoss 1.2.9
- *
- * @param $group_id
- */
-function bp_group_messages_remove_thread( $group ) {
-
-	if ( bp_is_active( 'groups' ) ) {
-		$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
-		if ( $group_thread > 0 ) {
-			messages_delete_thread( $group_thread );
 		}
 	}
 }
