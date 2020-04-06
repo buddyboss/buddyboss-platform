@@ -1254,6 +1254,6 @@ function bp_admin_registration_setting_tutorial() {
 function bp_admin_setting_callback_group_messages() {
 	?>
 	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
-	<label for="bp-disable-group-messages"><?php _e( 'Allow group organizers and moderators to send group messages', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }
