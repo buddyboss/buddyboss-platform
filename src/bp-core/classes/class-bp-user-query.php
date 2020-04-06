@@ -706,7 +706,7 @@ class BP_User_Query {
 
 		// Set a last_activity value for each user, even if it's empty.
 		foreach ( $this->results as $user_id => $user ) {
-			$user_last_activity                       = is_array( $last_activities ) && isset( $user_id ) && $user_id > 0 && is_array( $last_activities[ "$user_id" ] ) && isset( $last_activities[ "$user_id" ] )  ? $last_activities[ "$user_id" ]['date_recorded'] : '';
+			$user_last_activity                       = ! empty( $last_activities[ $user_id ]['date_recorded'] ) ? $last_activities[ $user_id ]['date_recorded'] : '';
 			$this->results[ $user_id ]->last_activity = $user_last_activity;
 		}
 

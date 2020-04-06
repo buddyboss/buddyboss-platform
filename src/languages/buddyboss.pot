@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-06 06:08:15+00:00\n"
+"POT-Creation-Date: 2020-04-06 13:28:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2536,7 +2536,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:29
 #: bp-friends/classes/class-bp-friends-component.php:263
 #: bp-friends/classes/class-bp-friends-component.php:309
-#: bp-members/classes/class-bp-core-whos-online-widget.php:113
+#: bp-members/classes/class-bp-core-whos-online-widget.php:175
 #: bp-templates/bp-nouveau/includes/activity/functions.php:280
 #: bp-templates/bp-nouveau/includes/customizer.php:167
 msgid "Connections"
@@ -5734,9 +5734,10 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-widget.php:186
 #: bp-members/classes/class-bp-core-recently-active-widget.php:102
 #: bp-members/classes/class-bp-core-recently-active-widget.php:236
-#: bp-members/classes/class-bp-core-whos-online-widget.php:140
-#: bp-members/classes/class-bp-core-whos-online-widget.php:183
-#: bp-members/classes/class-bp-core-whos-online-widget.php:357
+#: bp-members/classes/class-bp-core-whos-online-widget.php:101
+#: bp-members/classes/class-bp-core-whos-online-widget.php:145
+#: bp-members/classes/class-bp-core-whos-online-widget.php:350
+#: bp-members/classes/class-bp-core-whos-online-widget.php:394
 msgid "More"
 msgstr ""
 
@@ -5744,7 +5745,7 @@ msgstr ""
 #: bp-core/classes/class-bp-core-follow-following-widget.php:162
 #: bp-members/classes/class-bp-core-members-widget.php:257
 #: bp-members/classes/class-bp-core-recently-active-widget.php:161
-#: bp-members/classes/class-bp-core-whos-online-widget.php:244
+#: bp-members/classes/class-bp-core-whos-online-widget.php:243
 msgid "Max members to show:"
 msgstr ""
 
@@ -5815,7 +5816,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-widget.php:232
 #: bp-members/classes/class-bp-core-members-widget.php:243
 #: bp-members/classes/class-bp-core-recently-active-widget.php:154
-#: bp-members/classes/class-bp-core-whos-online-widget.php:237
+#: bp-members/classes/class-bp-core-whos-online-widget.php:236
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:183
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:491
@@ -14270,21 +14271,18 @@ msgstr ""
 msgid "Profile photos of online users"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-whos-online-widget.php:94
-msgid "Online"
-msgstr ""
-
-#: bp-members/classes/class-bp-core-whos-online-widget.php:146
-#: bp-members/classes/class-bp-core-whos-online-widget.php:363
+#: bp-members/classes/class-bp-core-whos-online-widget.php:107
+#: bp-members/classes/class-bp-core-whos-online-widget.php:151
+#: bp-members/classes/class-bp-core-whos-online-widget.php:356
+#: bp-members/classes/class-bp-core-whos-online-widget.php:400
 msgid "There are no users currently online"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-whos-online-widget.php:190
-#: bp-templates/bp-nouveau/includes/functions.php:879
-msgid "Sorry, no members were found."
+#: bp-members/classes/class-bp-core-whos-online-widget.php:167
+msgid "Online"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-whos-online-widget.php:264
+#: bp-members/classes/class-bp-core-whos-online-widget.php:263
 msgid "Who's Online"
 msgstr ""
 
@@ -16952,6 +16950,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:875
 msgid "Loading members of the community. Please wait."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/functions.php:879
+msgid "Sorry, no members were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:883
