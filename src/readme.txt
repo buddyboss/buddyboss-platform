@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.9 =
+* Profiles - Added 'Twitch' as option in 'Social Networks' profile field
 * Developers - Added code filter to extend DropzoneJS image resize options
 * Compatibility - Fixed minor code issues with PHP 7.4
 
