@@ -589,7 +589,10 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('bp-message-content'),
+						static: true,
+						updateOnEmptySelection: true
 					},
 					paste: {
 						forcePlainText: false,
