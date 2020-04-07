@@ -614,10 +614,15 @@ function bp_core_get_userlink_by_username( $username ) {
  * @return int The total number of members.
  */
 function bp_core_get_total_member_count() {
-	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
-	bp_has_members( bp_ajax_querystring( 'members' ) );
-	$count = $GLOBALS["members_template"]->total_member_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+	global $wpdb;
+
+	$count = wp_cache_get( 'bp_total_member_count', 'bp' );
+
+	if ( false === $count ) {
+		$status_sql = bp_core_get_status_sql();
+		$count      = $wpdb->get_var( "SELECT COUNT(ID) FROM {$wpdb->users} WHERE {$status_sql}" );
+		wp_cache_set( 'bp_total_member_count', $count, 'bp' );
+	}
 
 	/**
 	 * Filters the total number of members for the installation.
@@ -627,6 +632,29 @@ function bp_core_get_total_member_count() {
 	 * @param int $count Total number of members.
 	 */
 	return apply_filters( 'bp_core_get_total_member_count', $count );
+}
+
+/**
+ * Return the total number of members for the installation.
+ *
+ * @since BuddyPress 1.2.9.1
+ *
+ * @return int The total number of members.
+ */
+function bp_core_get_all_member_count() {
+	add_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+	bp_has_members( bp_ajax_querystring( 'members' ) );
+	$count = $GLOBALS["members_template"]->total_member_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_member_object_template_results_members_all_scope', 20, 2 );
+
+	/**
+	 * Filters the total number of members for the installation.
+	 *
+	 * @since BuddyPress 1.2.9.1
+	 *
+	 * @param int $count Total number of members.
+	 */
+	return apply_filters( 'bp_core_get_all_member_count', $count );
 }
 
 /**
