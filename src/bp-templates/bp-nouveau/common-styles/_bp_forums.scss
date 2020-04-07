@@ -812,6 +812,22 @@ p.form-allowed-tags {
 	color: #aaa;
 }
 
+
+#bbpress-forums {
+
+	.bbp-topic-content,
+	.bbp-reply-content,
+	.bbp-reply-content {
+
+		.bb-activity-media-wrap + ul.bbp-topic-revision-log,
+		.bb-activity-media-wrap + .bbp-reply-revision-log {
+			margin-top: 15px;
+		}
+
+	}
+
+}
+
 #bbpress-forums .bbp-topic-content ul.bbp-topic-revision-log li,
 #bbpress-forums .bbp-reply-content ul.bbp-topic-revision-log li,
 #bbpress-forums .bbp-reply-content ul.bbp-reply-revision-log li {

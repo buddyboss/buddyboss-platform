@@ -188,6 +188,11 @@ function groups_action_create_group() {
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'album_status', $album_status );
 
+			$allowed_message_status = apply_filters( 'groups_allowed_message_status', array( 'mods', 'admins', 'members' ) );
+			$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'mods';
+
+			groups_update_groupmeta( $bp->groups->new_group_id, 'message_status', $message_status );
+
 		}
 
 		if ( 'group-invites' === bp_get_groups_current_create_step() ) {

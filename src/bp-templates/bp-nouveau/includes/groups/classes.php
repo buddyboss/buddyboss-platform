@@ -347,6 +347,31 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			);
 		}
 
+		if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() && groups_can_user_manage_messages( bp_loggedin_user_id(), $this->group->id ) ) {
+			$nav_items['messages'] = array(
+				'name'        => __( 'Send Messages', 'buddyboss' ),
+				'slug'        => 'messages',
+				'parent_slug' => $this->group->slug,
+				'position'    => 20,
+			);
+		}
+
+		if ( bp_is_active( 'media' ) ) {
+			$nav_items['photos'] = array(
+				'name'        => __( 'Photos', 'buddyboss' ),
+				'slug'        => 'photos',
+				'parent_slug' => $this->group->slug,
+				'position'    => 20,
+			);
+
+			$nav_items['albums'] = array(
+				'name'        => __( 'Albums', 'buddyboss' ),
+				'slug'        => 'albums',
+				'parent_slug' => $this->group->slug,
+				'position'    => 20,
+			);
+		}
+
 		// Required params
 		$required_params = array(
 			'slug'              => true,

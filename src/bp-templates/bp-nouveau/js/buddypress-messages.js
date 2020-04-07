@@ -63,6 +63,11 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+
+			//  if defined, add custom dropzone options
+			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+				Object.assign(this.dropzone_options, BP_Nouveau.media.dropzone_options);
+			}			
 		},
 
 		setupNav: function() {
@@ -1549,6 +1554,10 @@ window.bp = window.bp || {};
 				this.el.className += ' unread';
 			}
 
+			if ( this.model.get( 'is_group' ) && 1 === this.model.get( 'is_group_thread' ) ) {
+				this.el.className += ' group-thread';
+			}
+
 			if ( $('#thread-id').val() == this.model.get('id') ) {
 				this.el.className += ' current';
 			}
@@ -1736,6 +1745,7 @@ window.bp = window.bp || {};
 				success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
 			});
+
 		}
 	} );
 
@@ -1802,11 +1812,18 @@ window.bp = window.bp || {};
 
 				// Remove all views
 				if ( 'delete' === action ) {
-					//bp.Nouveau.Messages.clearViews();
-					// Navigate back to current box
-					bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
+
 					if ( bp.Nouveau.Messages.threads.length > 1 ) {
-						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+						if ( response.id && '' !== response.id ) {
+							//bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
+						} else {
+							//bp.Nouveau.Messages.clearViews();
+							// Navigate back to current box
+							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
+							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+						}
 					} else {
 						BP_Nouveau.messages.hasThreads = false;
 						bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
@@ -1946,6 +1963,10 @@ window.bp = window.bp || {};
 			} else {
 				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
 			}
+                        
+                        if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
+                            $('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
+                        }
 
 			$('#bp-message-load-more').removeClass('loading');
 
@@ -1965,6 +1986,12 @@ window.bp = window.bp || {};
 			if ( ! this.views.get( '#bp-message-thread-header' ) ) {
 				this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
 			}
+
+			$('#bp-message-thread-list li').each(function () {
+				$(this).removeClass( 'divider' );
+				$(this).removeAttr( 'data-divider' );
+			});
+
 		},
 
 		messages_scrolled: function( event ) {

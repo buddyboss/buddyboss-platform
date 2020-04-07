@@ -287,9 +287,13 @@ function bp_version_updater() {
 			bb_update_to_1_2_3();
 		}
 
-		// Version 1.2.5
-		if ( $raw_db_version < 14501 ) {
-			bb_update_to_1_2_5();
+		if ( $raw_db_version < 14901 ) {
+			bp_update_to_1_2_9();
+		}
+
+		// Version 1.3.1
+		if ( $raw_db_version < 15301 ) {
+			bb_update_to_1_3_1();
 		}
 	}
 
@@ -584,7 +588,6 @@ function bp_update_to_3_1_1() {
 	bp_core_install_media();
 }
 
-
 /**
  * 1.2.3 update routine.
  *
@@ -592,21 +595,6 @@ function bp_update_to_3_1_1() {
  */
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
-}
-
-/**
- * 1.2.5 update routine.
- *
- * - Create the invitations table.
- * - Migrate requests and invitations to the new table.
- *
- */
-function bb_update_to_1_2_5() {
-	bp_core_install_invitations();
-
-	if ( bp_is_active( 'groups' ) ) {
-		bp_groups_migrate_invitations();
-	}
 }
 
 /**
@@ -965,5 +953,29 @@ function bp_core_update_activity_favorites() {
 function bp_core_fix_media_activities() {
 	if ( bp_is_active( 'activity' ) ) {
 		bp_activity_media_fix_data();
+	}
+}
+
+/**
+ * 1.2.8 update routine.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_update_to_1_2_9() {
+	bp_core_install_group_message_email();
+}
+
+/**
+ * 1.3.1 update routine.
+ *
+ * - Create the invitations table.
+ * - Migrate requests and invitations to the new table.
+ *
+ */
+function bb_update_to_1_3_1() {
+	bp_core_install_invitations();
+
+	if ( bp_is_active( 'groups' ) ) {
+		bp_groups_migrate_invitations();
 	}
 }

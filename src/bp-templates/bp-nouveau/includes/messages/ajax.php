@@ -9,32 +9,95 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_init', function() {
-	$ajax_actions = array(
-		array( 'messages_send_message'             => array( 'function' => 'bp_nouveau_ajax_messages_send_message', 'nopriv' => false ) ),
-		array( 'messages_send_reply'               => array( 'function' => 'bp_nouveau_ajax_messages_send_reply', 'nopriv' => false ) ),
-		array( 'messages_get_user_message_threads' => array( 'function' => 'bp_nouveau_ajax_get_user_message_threads', 'nopriv' => false ) ),
-		array( 'messages_thread_read'              => array( 'function' => 'bp_nouveau_ajax_messages_thread_read', 'nopriv' => false ) ),
-		array( 'messages_get_thread_messages'      => array( 'function' => 'bp_nouveau_ajax_get_thread_messages', 'nopriv' => false ) ),
-		array( 'messages_delete'                   => array( 'function' => 'bp_nouveau_ajax_delete_thread_messages', 'nopriv' => false ) ),
-		array( 'messages_unstar'                   => array( 'function' => 'bp_nouveau_ajax_star_thread_messages', 'nopriv' => false ) ),
-		array( 'messages_star'                     => array( 'function' => 'bp_nouveau_ajax_star_thread_messages', 'nopriv' => false ) ),
-		array( 'messages_unread'                   => array( 'function' => 'bp_nouveau_ajax_readunread_thread_messages', 'nopriv' => false ) ),
-		array( 'messages_read'                     => array( 'function' => 'bp_nouveau_ajax_readunread_thread_messages', 'nopriv' => false ) ),
-		array( 'messages_dismiss_sitewide_notice'  => array( 'function' => 'bp_nouveau_ajax_dismiss_sitewide_notice', 'nopriv' => false ) ),
-		array( 'messages_search_recipients'        => array( 'function' => 'bp_nouveau_ajax_dsearch_recipients', 'nopriv' => false ) ),
-	);
+add_action( 'admin_init',
+	function () {
 
-	foreach ( $ajax_actions as $ajax_action ) {
-		$action = key( $ajax_action );
+		$ajax_actions = array(
+			array(
+				'messages_send_message' => array(
+					'function' => 'bp_nouveau_ajax_messages_send_message',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_send_reply' => array(
+					'function' => 'bp_nouveau_ajax_messages_send_reply',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_get_user_message_threads' => array(
+					'function' => 'bp_nouveau_ajax_get_user_message_threads',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_thread_read' => array(
+					'function' => 'bp_nouveau_ajax_messages_thread_read',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_get_thread_messages' => array(
+					'function' => 'bp_nouveau_ajax_get_thread_messages',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_delete' => array(
+					'function' => 'bp_nouveau_ajax_delete_thread_messages',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_unstar' => array(
+					'function' => 'bp_nouveau_ajax_star_thread_messages',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_star' => array(
+					'function' => 'bp_nouveau_ajax_star_thread_messages',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_unread' => array(
+					'function' => 'bp_nouveau_ajax_readunread_thread_messages',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_read' => array(
+					'function' => 'bp_nouveau_ajax_readunread_thread_messages',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_dismiss_sitewide_notice' => array(
+					'function' => 'bp_nouveau_ajax_dismiss_sitewide_notice',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'messages_search_recipients' => array(
+					'function' => 'bp_nouveau_ajax_dsearch_recipients',
+					'nopriv'   => false,
+				),
+			),
+		);
 
-		add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
 
-		if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
-			add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+
+			if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
+				add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			}
 		}
-	}
-}, 12 );
+	},
+	12 );
 
 /**
  * AJAX send message and display error.
@@ -72,19 +135,22 @@ function bp_nouveau_ajax_messages_send_message() {
 	/**
 	 * Filters the results of trimming of `@` characters from usernames for who is set to receive a message.
 	 *
-	 * @since BuddyPress 3.0.0
-	 *
 	 * @param array $value Array of trimmed usernames.
 	 * @param array $value Array of un-trimmed usernames submitted.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
 	 */
-	$recipients = apply_filters( 'bp_messages_recipients', array_map( function( $username ) {
-		return trim( $username, '@' );
-	}, $_POST['send_to'] ) );
+	$recipients = apply_filters( 'bp_messages_recipients',
+		array_map( function ( $username ) {
+			return trim( $username, '@' );
+		},
+			$_POST['send_to'] ) );
 
 	// Attempt to send the message.
 	$send = messages_new_message( array(
 		'recipients' => $recipients,
-		'subject'    => wp_trim_words($_POST['message_content'], messages_get_default_subject_length()),
+		'subject'    => wp_trim_words( $_POST['message_content'], messages_get_default_subject_length() ),
 		'content'    => $_POST['message_content'],
 		'error_type' => 'wp_error',
 	) );
@@ -102,8 +168,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				$response = array(
 					'id'            => bp_get_message_thread_id(),
 					'message_id'    => (int) $last_message_id,
-					'subject'       => strip_tags( bp_get_message_thread_subject() ),
-					'excerpt'       => strip_tags( bp_get_message_thread_excerpt() ),
+					'subject'       => wp_strip_all_tags( bp_get_message_thread_subject() ),
+					'excerpt'       => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
 					'content'       => do_shortcode( bp_get_message_thread_content() ),
 					'unread'        => bp_message_thread_has_unread(),
 					'sender_name'   => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
@@ -135,9 +201,10 @@ function bp_nouveau_ajax_messages_send_message() {
 									'height'  => BP_AVATAR_THUMB_HEIGHT,
 									'html'    => false,
 								) ) ),
-								'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-								'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
-								'is_you'    => $recipient->user_id == bp_loggedin_user_id()
+								'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+								'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+								'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+								'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 							);
 						}
 					}
@@ -181,12 +248,12 @@ function bp_nouveau_ajax_messages_send_message() {
 		}
 
 		wp_send_json_success( array(
-			'feedback'  => __( 'Message successfully sent.', 'buddyboss' ),
-			'type'      => 'success',
-			'thread'    => $response,
+			'feedback' => __( 'Message successfully sent.', 'buddyboss' ),
+			'type'     => 'success',
+			'thread'   => $response,
 		) );
 
-	// Message could not be sent.
+		// Message could not be sent.
 	} else {
 		$response['feedback'] = $send->get_error_message();
 
@@ -223,10 +290,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	$new_reply = messages_new_message( array(
-		'thread_id' => $thread_id,
-		'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-		'content'   => $_POST['content'],
-		'date_sent' => $date_sent = bp_core_current_time(),
+		'thread_id'  => $thread_id,
+		'subject'    => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
+		'content'    => $_POST['content'],
+		'date_sent'  => $date_sent = bp_core_current_time(),
 		'error_type' => 'wp_error',
 	) );
 
@@ -249,10 +316,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	bp_thread_has_messages( array( 'thread_id' => $thread_id , 'before' => $date_sent ) );
+	bp_thread_has_messages( array( 'thread_id' => $thread_id, 'before' => $date_sent ) );
 
 	// Set current message to current key.
-	$thread_template->current_message = -1;
+	$thread_template->current_message = - 1;
 
 	// Now manually iterate message like we're in the loop.
 	bp_thread_the_message();
@@ -267,6 +334,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'content'       => do_shortcode( bp_get_the_thread_message_content() ),
 		'sender_id'     => bp_get_the_thread_message_sender_id(),
 		'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
+		'is_deleted'    => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
 		'sender_link'   => bp_get_the_thread_message_sender_link(),
 		'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
 		'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
@@ -282,19 +350,25 @@ function bp_nouveau_ajax_messages_send_reply() {
 	);
 
 	if ( bp_is_active( 'messages', 'star' ) ) {
+
 		$star_link = bp_get_the_message_star_action_link( array(
 			'message_id' => bp_get_the_thread_message_id(),
-			'url_only'  => true,
+			'url_only'   => true,
 		) );
 
 		$reply['star_link']  = $star_link;
 		$reply['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
+
 	}
 
 	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 		$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
-		if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			) ) ) {
 			$reply['media'] = array();
 			while ( bp_media() ) {
 				bp_the_media();
@@ -314,11 +388,11 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
-			$preview_url = wp_get_attachment_url( $gif_data['still'] );
-			$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+			$preview_url  = wp_get_attachment_url( $gif_data['still'] );
+			$video_url    = wp_get_attachment_url( $gif_data['mp4'] );
 			$reply['gif'] = array(
 				'preview_url' => $preview_url,
-				'video_url' => $video_url,
+				'video_url'   => $video_url,
 			);
 		}
 	}
@@ -344,10 +418,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$reply['is_new'] = true;
 
 	wp_send_json_success( array(
-		'messages' => array( $reply ),
-		'feedback' => __( 'Your reply was sent successfully', 'buddyboss' ),
-		'type'     => 'success',
+		'messages'  => array( $reply ),
+		'thread_id' => $thread_id,
+		'feedback'  => __( 'Your reply was sent successfully', 'buddyboss' ),
+		'type'      => 'success',
 	) );
+
 }
 
 /**
@@ -356,12 +432,12 @@ function bp_nouveau_ajax_messages_send_reply() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_user_message_threads() {
-	global $messages_template;
+	global $messages_template, $wpdb;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
 			'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
-			'type'     => 'error'
+			'type'     => 'error',
 		) );
 	}
 
@@ -385,7 +461,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		wp_send_json_error( array(
 			'feedback' => __( 'Sorry, no messages were found.', 'buddyboss' ),
-			'type'     => 'info'
+			'type'     => 'info',
 		) );
 	}
 
@@ -404,23 +480,261 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	$i                = 0;
 
 	while ( bp_message_threads() ) : bp_message_thread();
-		$last_message_id = (int) $messages_template->thread->last_message_id;
+
+		if ( '' === trim( wp_strip_all_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
+			foreach ( $messages_template->thread->messages as $message ) {
+				$content = trim( wp_strip_all_tags( do_shortcode( $message->message ) ) );
+				if ( '' !== $content ) {
+
+					$messages_template->thread->last_message_id      = $message->id;
+					$messages_template->thread->thread_id            = $message->thread_id;
+					$messages_template->thread->last_message_subject = $message->subject;
+					$messages_template->thread->last_message_content = $message->message;
+					$messages_template->thread->last_sender_id       = $message->sender_id;
+					$messages_template->thread->last_message_date    = $message->date_sent;
+
+					break;
+				}
+			}
+		}
+
+		$last_message_id           = (int) $messages_template->thread->last_message_id;
+		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
+		$group_name                = '';
+		$group_avatar              = '';
+		$group_link                = '';
+		$group_message_users       = '';
+		$group_message_type        = '';
+		$group_message_thread_type = '';
+		$group_message_fresh       = '';
+
+		if ( ! empty( $group_id ) ) {
+			$group_message_users       = bp_messages_get_meta( $last_message_id, 'group_message_users', true );
+			$group_message_type        = bp_messages_get_meta( $last_message_id, 'group_message_type', true );
+			$group_message_thread_type = bp_messages_get_meta( $last_message_id, 'group_message_thread_type', true );
+			$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
+
+			if ( bp_is_active( 'groups' ) ) {
+				$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+				if ( empty( $group_name ) ) {
+					$group_link = 'javascript:void(0);';
+				} else {
+					$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+				}
+
+				$group_avatar = bp_core_fetch_avatar( array(
+					'item_id'    => $group_id,
+					'object'     => 'group',
+					'type'       => 'full',
+					'avatar_dir' => 'group-avatars',
+					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+					'title'      => $group_name,
+					'html'       => false,
+				) );
+			} else {
+
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_link               = 'javascript:void(0);';
+				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( ! empty( $group_name ) ) {
+					$group_link        = 'javascript:void(0);';
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					if ( file_exists( $avatar_folder_dir ) ) {
+
+						$group_avatar = '';
+
+						// Open directory.
+						if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+							// Stash files in an array once to check for one that matches.
+							$avatar_files = array();
+							while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+								// Only add files to the array (skip directories).
+								if ( 2 < strlen( $avatar_file ) ) {
+									$avatar_files[] = $avatar_file;
+								}
+							}
+
+							// Check for array.
+							if ( 0 < count( $avatar_files ) ) {
+
+								// Check for current avatar.
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $avatar_size ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+
+									// Legacy group avatar check.
+									if ( ! isset( $group_avatar ) ) {
+										foreach ( $avatar_files as $key => $value ) {
+											if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+												$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+											}
+										}
+									}
+								}
+							}
+						}
+						// Close the avatar directory.
+						closedir( $av_dir );
+					}
+				}
+			}
+
+			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+
+		}
+
+		$is_deleted_group = 0;
+		if ( ! $group_id ) {
+			$first_message = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+			$group_id      = ( isset( $first_message->id ) ) ? (int) bp_messages_get_meta( $first_message->id, 'group_id', true ) : 0;
+
+			if ( $group_id ) {
+				if ( bp_is_active( 'groups' ) ) {
+					$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+					$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+					$group_avatar = bp_core_fetch_avatar( array(
+						'item_id'    => $group_id,
+						'object'     => 'group',
+						'type'       => 'full',
+						'avatar_dir' => 'group-avatars',
+						'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+						'title'      => $group_name,
+						'html'       => false,
+					) );
+				} else {
+
+					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+					$groups_table             = $prefix . 'bp_groups';
+					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+					$group_link               = 'javascript:void(0);';
+					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+					$legacy_group_avatar_name = '-groupavatar-full';
+					$legacy_user_avatar_name  = '-avatar2';
+
+					if ( ! empty( $group_name ) ) {
+						$group_link        = 'javascript:void(0);';
+						$directory         = 'group-avatars';
+						$avatar_size       = '-bpfull';
+						$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+						$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+						if ( file_exists( $avatar_folder_dir ) ) {
+
+							$group_avatar = '';
+
+							// Open directory.
+							if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+								// Stash files in an array once to check for one that matches.
+								$avatar_files = array();
+								while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+									// Only add files to the array (skip directories).
+									if ( 2 < strlen( $avatar_file ) ) {
+										$avatar_files[] = $avatar_file;
+									}
+								}
+
+								// Check for array.
+								if ( 0 < count( $avatar_files ) ) {
+
+									// Check for current avatar.
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $avatar_size ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+
+									// Legacy avatar check.
+									if ( ! isset( $group_avatar ) ) {
+										foreach ( $avatar_files as $key => $value ) {
+											if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+												$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+											}
+										}
+
+										// Legacy group avatar check.
+										if ( ! isset( $group_avatar ) ) {
+											foreach ( $avatar_files as $key => $value ) {
+												if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+													$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+												}
+											}
+										}
+									}
+								}
+							}
+							// Close the avatar directory.
+							closedir( $av_dir );
+						}
+					}
+				}
+
+				$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
+				$group_name       = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+			}
+		}
+
+		$is_group_thread = 0;
+		if ( (int) $group_id > 0 ) {
+
+			$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
+			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+			$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual
+			$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
+			$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
+
+			if ( 'group' === $message_from && bp_get_message_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+				$is_group_thread = 1;
+			}
+		}
+
 
 		if ( ! $last_message_id ) {
 			continue;
 		}
 
 		$threads->threads[ $i ] = array(
-			'id'            => bp_get_message_thread_id(),
-			'message_id'    => (int) $last_message_id,
-			'subject'       => strip_tags( bp_get_message_thread_subject() ),
-			'excerpt'       => strip_tags( bp_get_message_thread_excerpt() ),
-			'content'       => do_shortcode( bp_get_message_thread_content() ),
-			'unread'        => bp_message_thread_has_unread(),
-			'sender_name'   => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
-			'sender_is_you' => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
-			'sender_link'   => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
-			'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
+			'id'                        => bp_get_message_thread_id(),
+			'message_id'                => (int) $last_message_id,
+			'subject'                   => wp_strip_all_tags( bp_get_message_thread_subject() ),
+			'group_avatar'              => $group_avatar,
+			'group_name'                => html_entity_decode( $group_name ),
+			'is_deleted'                => $is_deleted_group,
+			'is_group'                  => ! empty( $group_id ) ? true : false,
+			'is_group_thread'           => $is_group_thread,
+			'group_link'                => $group_link,
+			'group_message_users'       => $group_message_users,
+			'group_message_type'        => $group_message_type,
+			'group_message_thread_type' => $group_message_thread_type,
+			'group_message_fresh'       => $group_message_fresh,
+			'excerpt'                   => wp_strip_all_tags( bp_get_message_thread_excerpt() ),
+			'content'                   => do_shortcode( bp_get_message_thread_content() ),
+			'unread'                    => bp_message_thread_has_unread(),
+			'sender_name'               => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+			'sender_is_you'             => $messages_template->thread->last_sender_id === bp_loggedin_user_id(),
+			'sender_link'               => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
+			'sender_avatar'             => esc_url( bp_core_fetch_avatar( array(
 				'item_id' => $messages_template->thread->last_sender_id,
 				'object'  => 'user',
 				'type'    => 'thumb',
@@ -428,17 +742,17 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				'height'  => BP_AVATAR_THUMB_HEIGHT,
 				'html'    => false,
 			) ) ),
-			'count'         => bp_get_message_thread_total_count(),
-			'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
+			'count'                     => bp_get_message_thread_total_count(),
+			'date'                      => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
+			'display_date'              => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'started_date'              => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][] = array(
-						'avatar' => esc_url( bp_core_fetch_avatar( array(
+						'avatar'     => esc_url( bp_core_fetch_avatar( array(
 							'item_id' => $recipient->user_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
@@ -446,9 +760,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 							'height'  => BP_AVATAR_THUMB_HEIGHT,
 							'html'    => false,
 						) ) ),
-						'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
-						'is_you' => $recipient->user_id == bp_loggedin_user_id()
+						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 					);
 				}
 			}
@@ -460,9 +775,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				'url_only'  => true,
 			) );
 
-			$threads->threads[ $i ]['star_link']  = $star_link;
+			$threads->threads[ $i ]['star_link'] = $star_link;
 
-			$star_link_data = explode( '/', $star_link );
+			$star_link_data                       = explode( '/', $star_link );
 			$threads->threads[ $i ]['is_starred'] = array_search( 'unstar', $star_link_data );
 
 			// Defaults to last
@@ -553,7 +868,10 @@ function bp_nouveau_ajax_messages_thread_read() {
 
 	// Mark latest message as read
 	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(), (int) $message_id, buddypress()->messages->id, 'new_message' );
+		bp_notifications_mark_notifications_by_item_id( bp_loggedin_user_id(),
+			(int) $message_id,
+			buddypress()->messages->id,
+			'new_message' );
 	}
 
 	wp_send_json_success();
@@ -565,23 +883,23 @@ function bp_nouveau_ajax_messages_thread_read() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
-	global $thread_template, $media_template;
+	global $thread_template, $media_template, $wpdb;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
 			'feedback' => __( 'Unauthorized request.', 'buddyboss' ),
-			'type'     => 'error'
+			'type'     => 'error',
 		) );
 	}
 
 	$response = array(
 		'feedback' => __( 'Sorry, no messages were found.', 'buddyboss' ),
-		'type'     => 'info'
+		'type'     => 'info',
 	);
 
 	$response_no_more = array(
 		'feedback' => __( 'Sorry, no more messages can be loaded.', 'buddyboss' ),
-		'type'     => 'info'
+		'type'     => 'info',
 	);
 
 	if ( empty( $_POST['id'] ) ) {
@@ -611,44 +929,279 @@ function bp_nouveau_ajax_get_thread_messages() {
 		}
 
 		foreach ( $recipients as $recipient ) {
-			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(),
+					$recipient->user_id ) ) {
 				if ( sizeof( $recipients ) > 1 ) {
-					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+					$thread->feedback_error = array(
+						'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
+						'type'     => 'error',
+					);
 				} else {
-					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+					$thread->feedback_error = array(
+						'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
+						'type'     => 'error',
+					);
 				}
 				break;
 			}
 		}
 	}
 
-	// Simulate the loop.
+	$last_message_id           = $thread_template->thread->messages[0]->id;
+	$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
+	$group_name                = '';
+	$group_avatar              = '';
+	$group_link                = '';
+	$group_message_users       = '';
+	$group_message_type        = '';
+	$group_message_thread_type = '';
+	$group_message_fresh       = '';
+	$message_from              = '';
 
+	$is_deleted_group = 0;
+	if ( ! empty( $group_id ) ) {
+		$group_message_users       = bp_messages_get_meta( $last_message_id, 'group_message_users', true );
+		$group_message_type        = bp_messages_get_meta( $last_message_id, 'group_message_type', true );
+		$group_message_thread_type = bp_messages_get_meta( $last_message_id, 'group_message_thread_type', true );
+		$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
+		$message_from              = bp_messages_get_meta( $last_message_id, 'message_from', true );
+
+		if ( bp_is_active( 'groups' ) ) {
+			$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+			if ( empty( $group_name ) ) {
+				$group_link = 'javascript:void(0);';
+			} else {
+				$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+			}
+			$group_avatar = bp_core_fetch_avatar( array(
+				'item_id'    => $group_id,
+				'object'     => 'group',
+				'type'       => 'full',
+				'avatar_dir' => 'group-avatars',
+				'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+				'title'      => $group_name,
+				'html'       => false,
+			) );
+		} else {
+
+			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+			$groups_table             = $prefix . 'bp_groups';
+			$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+			$group_link               = 'javascript:void(0);';
+			$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+			$legacy_group_avatar_name = '-groupavatar-full';
+			$legacy_user_avatar_name  = '-avatar2';
+
+			if ( ! empty( $group_name ) ) {
+				$group_link        = 'javascript:void(0);';
+				$directory         = 'group-avatars';
+				$avatar_size       = '-bpfull';
+				$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+				$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+				if ( file_exists( $avatar_folder_dir ) ) {
+
+					$group_avatar = '';
+
+					// Open directory.
+					if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+						// Stash files in an array once to check for one that matches.
+						$avatar_files = array();
+						while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+							// Only add files to the array (skip directories).
+							if ( 2 < strlen( $avatar_file ) ) {
+								$avatar_files[] = $avatar_file;
+							}
+						}
+
+						// Check for array.
+						if ( 0 < count( $avatar_files ) ) {
+
+							// Check for current avatar.
+							foreach ( $avatar_files as $key => $value ) {
+								if ( strpos( $value, $avatar_size ) !== false ) {
+									$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+								}
+							}
+
+							// Legacy avatar check.
+							if ( ! isset( $group_avatar ) ) {
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy group avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+								}
+							}
+						}
+					}
+					// Close the avatar directory.
+					closedir( $av_dir );
+				}
+			}
+		}
+
+		$is_deleted_group = ( empty( $group_name ) ) ? 1 : 0;
+		$group_name       = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+
+	}
+
+	// Simulate the loop.
 	$args = [
 		'thread_id' => $thread_id,
-		'per_page' => isset($_POST['per_page']) && $_POST['per_page']? $_POST['per_page'] : 10,
-		'before' => isset($_POST['before']) && $_POST['before']? $_POST['before'] : null,
+		'per_page'  => isset( $_POST['per_page'] ) && $_POST['per_page'] ? $_POST['per_page'] : 10,
+		'before'    => isset( $_POST['before'] ) && $_POST['before'] ? $_POST['before'] : null,
 	];
 
 	if ( ! bp_thread_has_messages( $args ) ) {
 		// Remove the bp_current_action() override.
 		$bp->current_action = $reset_action;
 
-		wp_send_json_error( $args['before']? $response_no_more : $response );
+		wp_send_json_error( $args['before'] ? $response_no_more : $response );
 	}
 
-	if ( empty( $_POST['js_thread'] ) ) {
+	if ( ! $group_id ) {
+		$first_message           = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+
+		if ( $group_id ) {
+			if ( bp_is_active( 'groups' ) ) {
+				$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+				$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+				$group_avatar = bp_core_fetch_avatar( array(
+					'item_id'    => $group_id,
+					'object'     => 'group',
+					'type'       => 'full',
+					'avatar_dir' => 'group-avatars',
+					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+					'title'      => $group_name,
+					'html'       => false,
+				) );
+			} else {
+
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_link               = 'javascript:void(0);';
+				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( ! empty( $group_name ) ) {
+					$group_link        = 'javascript:void(0);';
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					if ( file_exists( $avatar_folder_dir ) ) {
+
+						$group_avatar = '';
+
+						// Open directory.
+						if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+							// Stash files in an array once to check for one that matches.
+							$avatar_files = array();
+							while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+								// Only add files to the array (skip directories).
+								if ( 2 < strlen( $avatar_file ) ) {
+									$avatar_files[] = $avatar_file;
+								}
+							}
+
+							// Check for array.
+							if ( 0 < count( $avatar_files ) ) {
+
+								// Check for current avatar.
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $avatar_size ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+
+									// Legacy group avatar check.
+									if ( ! isset( $group_avatar ) ) {
+										foreach ( $avatar_files as $key => $value ) {
+											if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+												$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+											}
+										}
+									}
+								}
+							}
+						}
+						// Close the avatar directory.
+						closedir( $av_dir );
+					}
+				}
+			}
+
+			$group_name = ( empty( $group_name ) ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
+		}
+	}
+
+	$is_group_thread = 0;
+	if ( (int) $group_id > 0 ) {
+
+		$first_message           = BP_Messages_Thread::get_first_message( bp_get_the_thread_id() );
+		$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
+		$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+		$message_users           = bp_messages_get_meta( $first_message->id, 'group_message_users', true ); // all - individual
+		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
+		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
+
+		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+			$is_group_thread = 1;
+		}
+	}
+
+	//if ( empty( $_POST['js_thread'] ) ) {
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$is_participated = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id = %d AND subject != %s", $thread_template->thread->thread_id, bp_loggedin_user_id(), $subject_deleted_text ) ); // WPCS: db call ok. // WPCS: cache ok.
+
 		$thread->thread = array(
-			'id'      => bp_get_the_thread_id(),
-			'subject' => strip_tags( bp_get_the_thread_subject() ),
-			'started_date' => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option('date_format') ),
+			'id'                        => bp_get_the_thread_id(),
+			'subject'                   => wp_strip_all_tags( bp_get_the_thread_subject() ),
+			'started_date'              => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option('date_format') ),
+			'group_id'                  => $group_id,
+			'group_name'                => html_entity_decode( ucwords( $group_name ) ),
+			'is_group_thread'           => $is_group_thread,
+			'is_deleted'                => $is_deleted_group,
+			'group_avatar'              => $group_avatar,
+			'group_link'                => $group_link,
+			'group_message_users'       => $group_message_users,
+			'group_message_type'        => $group_message_type,
+			'group_message_thread_type' => $group_message_thread_type,
+			'group_message_fresh'       => $group_message_fresh,
+			'message_from'              => $message_from,
+			'is_participated'           => empty( $is_participated ) ? 0 : 1
 		);
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
 			foreach ( $thread_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$thread->thread['recipients'][] = array(
-						'avatar' => esc_url( bp_core_fetch_avatar( array(
+						'avatar'      => esc_url( bp_core_fetch_avatar( array(
 							'item_id' => $recipient->user_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
@@ -656,42 +1209,238 @@ function bp_nouveau_ajax_get_thread_messages() {
 							'height'  => BP_AVATAR_THUMB_HEIGHT,
 							'html'    => false,
 						) ) ),
-						'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-						'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
-						'is_you' => $recipient->user_id == bp_loggedin_user_id()
+						'user_link'  => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name'  => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_deleted' => empty( get_userdata( $recipient->user_id ) ) ? 1 : 0,
+						'is_you'     => $recipient->user_id === bp_loggedin_user_id(),
 					);
 				}
 			}
 		}
-	}
+	//}
 
 	$thread->messages = array();
-	$i = 0;
+	$i                = 0;
 
 	while ( bp_thread_messages() ) : bp_thread_the_message();
-		$thread->messages[ $i ] = array(
-			'id'            => bp_get_the_thread_message_id(),
-			'content'       => do_shortcode( bp_get_the_thread_message_content() ),
-			'sender_id'     => bp_get_the_thread_message_sender_id(),
-			'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-			'sender_link'   => bp_get_the_thread_message_sender_link(),
-			'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-			'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
-				'item_id' => bp_get_the_thread_message_sender_id(),
-				'object'  => 'user',
-				'type'    => 'thumb',
-				'width'   => 32,
-				'height'  => 32,
-				'html'    => false,
-			) ) ),
-			'date'          => bp_get_the_thread_message_date_sent() * 1000,
-			'display_date'  => bp_get_the_thread_message_time_since(),
-		);
+
+		$group_id                  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_id',true );
+		$group_message_users       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_users', true );
+		$group_message_type        = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_type', true );
+		$group_message_thread_type = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_thread_type', true );
+		$group_message_fresh       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_fresh', true );
+		$message_from              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'message_from', true );
+		$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
+		$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
+		$message_banned            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_ban', true );
+		$message_unbanned            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
+		$message_deleted           = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
+
+		if ( $group_id && $message_from && 'group' === $message_from ) {
+
+			if ( bp_is_active( 'groups' ) ) {
+				$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+				if ( empty( $group_name ) ) {
+					$group_link = 'javascript:void(0);';
+				} else {
+					$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+				}
+				$group_avatar = bp_core_fetch_avatar( array(
+					'item_id'    => $group_id,
+					'object'     => 'group',
+					'type'       => 'full',
+					'avatar_dir' => 'group-avatars',
+					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+					'title'      => $group_name,
+					'html'       => false,
+				) );
+			} else {
+
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_link               = 'javascript:void(0);';
+				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( ! empty( $group_name ) ) {
+					$group_link        = 'javascript:void(0);';
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					if ( file_exists( $avatar_folder_dir ) ) {
+
+						$group_avatar = '';
+
+						// Open directory.
+						if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+							// Stash files in an array once to check for one that matches.
+							$avatar_files = array();
+							while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+								// Only add files to the array (skip directories).
+								if ( 2 < strlen( $avatar_file ) ) {
+									$avatar_files[] = $avatar_file;
+								}
+							}
+
+							// Check for array.
+							if ( 0 < count( $avatar_files ) ) {
+
+								// Check for current avatar.
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $avatar_size ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+
+									// Legacy group avatar check.
+									if ( ! isset( $group_avatar ) ) {
+										foreach ( $avatar_files as $key => $value ) {
+											if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+												$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+											}
+										}
+									}
+								}
+							}
+						}
+						// Close the avatar directory.
+						closedir( $av_dir );
+					}
+				}
+			}
+
+			if ( empty( $group_name )  ) {
+				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
+				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group %s to all group members.', 'buddyboss' ), $group_name );
+				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group %s to the people in this conversation.', 'buddyboss' ), $group_name );
+				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group %s individually to all group members.', 'buddyboss' ), $group_name );
+				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group %s to individual members.', 'buddyboss' ), $group_name );
+				}
+			} else {
+				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group <a href="%s">%s</a> to all group members.', 'buddyboss' ), $group_link, $group_name );
+				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group <a href="%s">%s</a> to the people in this conversation.', 'buddyboss' ), $group_link, $group_name );
+				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group <a href="%s">%s</a> individually to all group members.', 'buddyboss' ), $group_link, $group_name );
+				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
+					$group_text = sprintf( __( 'Sent from group <a href="%s">%s</a> to individual members.', 'buddyboss' ), $group_link, $group_name );
+				}
+			}
+
+			$content = '';
+			if ( $message_left && 'yes' === $message_left ) {
+				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
+				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) .'</p>';
+			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
+				$content = sprintf( __( '<p class="joined">Removed Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_banned && 'yes' === $message_banned ) {
+				$content = sprintf( __( '<p class="joined">Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
+				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) .'</p>';
+			} else {
+				$content = do_shortcode( bp_get_the_thread_message_content() );
+			}
+
+			$thread->messages[ $i ] = array(
+				'group_name'                => $group_name,
+				'is_deleted'                => $is_deleted_group,
+				'group_link'                => $group_link,
+				'group_avatar'              => $group_avatar,
+				'group_message_users'       => $group_message_users,
+				'group_message_type'        => $group_message_type,
+				'group_message_thread_type' => $group_message_thread_type,
+				'group_message_fresh'       => $group_message_fresh,
+				'message_from'              => $message_from,
+				'group_text'                => $group_text,
+				'id'                        => bp_get_the_thread_message_id(),
+				'content'                   => $content,
+				'sender_id'                 => bp_get_the_thread_message_sender_id(),
+				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_link'               => bp_get_the_thread_message_sender_link(),
+				'sender_is_you'             => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+				'sender_avatar'             => esc_url( bp_core_fetch_avatar( array(
+					'item_id' => bp_get_the_thread_message_sender_id(),
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 32,
+					'height'  => 32,
+					'html'    => false,
+				) ) ),
+				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
+				'display_date'              => bp_get_the_thread_message_time_since(),
+			);
+
+		} else {
+
+			$message_left    = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
+			$message_joined  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
+			$message_banned  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_ban', true );
+			$message_unbanned  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_un_ban', true );
+			$message_deleted = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
+
+			$content = '';
+			if ( $message_left && 'yes' === $message_left ) {
+				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
+				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) .'</p>';
+			} elseif ( $message_unbanned && 'yes' === $message_unbanned ) {
+				$content = sprintf( __( '<p class="joined">Removed Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_banned && 'yes' === $message_banned ) {
+				$content = sprintf( __( '<p class="joined">Ban "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
+				$content = '<p class="joined">' . wp_strip_all_tags(bp_get_the_thread_message_content() ) .'</p>';
+			} else {
+				$content = do_shortcode( bp_get_the_thread_message_content() );
+			}
+
+			$thread->messages[ $i ] = array(
+				'id'            => bp_get_the_thread_message_id(),
+				'content'       => $content,
+				'sender_id'     => bp_get_the_thread_message_sender_id(),
+				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
+				'is_deleted'    => empty( get_userdata( bp_get_the_thread_message_sender_id() ) ) ? 1 : 0,
+				'sender_link'   => bp_get_the_thread_message_sender_link(),
+				'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+				'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
+					'item_id' => bp_get_the_thread_message_sender_id(),
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 32,
+					'height'  => 32,
+					'html'    => false,
+				) ) ),
+				'date'          => bp_get_the_thread_message_date_sent() * 1000,
+				'display_date'  => bp_get_the_thread_message_time_since(),
+			);
+		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link( array(
 				'message_id' => bp_get_the_thread_message_id(),
-				'url_only'  => true,
+				'url_only'   => true,
 			) );
 
 			$thread->messages[ $i ]['star_link']  = $star_link;
@@ -702,7 +1451,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
-			if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
+			if ( ! empty( $media_ids ) && bp_has_media( array(
+					'include'  => $media_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				) ) ) {
 				$thread->messages[ $i ]['media'] = array();
 				while ( bp_media() ) {
 					bp_the_media();
@@ -722,11 +1475,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$preview_url = wp_get_attachment_url( $gif_data['still'] );
-				$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+				$preview_url                   = wp_get_attachment_url( $gif_data['still'] );
+				$video_url                     = wp_get_attachment_url( $gif_data['mp4'] );
 				$thread->messages[ $i ]['gif'] = array(
 					'preview_url' => $preview_url,
-					'video_url' => $video_url,
+					'video_url'   => $video_url,
 				);
 			}
 		}
@@ -751,9 +1504,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 	$bp->current_action = $reset_action;
 
 	// pagination
-	$thread->per_page = $thread_template->thread->messages_perpage;
-	$thread->messages_count = $thread_template->thread->total_messages;
-	$thread->next_messages_timestamp = $thread_template->thread->messages[count($thread_template->thread->messages) - 1]->date_sent;
+	$thread->per_page                = $thread_template->thread->messages_perpage;
+	$thread->messages_count          = $thread_template->thread->total_messages;
+	$thread->next_messages_timestamp = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 
 	wp_send_json_success( $thread );
 }
@@ -787,10 +1540,19 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		messages_delete_thread( $thread_id );
 	}
 
+	$thread_template = bp_get_thread( array( 'thread_id' => $thread_id ) );
+	if ( $thread_template->has_messages() ) {
+		$id = $thread_id;
+	} else {
+		$id = '';
+	}
+
 	wp_send_json_success( array(
 		'feedback' => __( 'Messages deleted', 'buddyboss' ),
+		'id'       => $id,
 		'type'     => 'success',
 	) );
+
 }
 
 /**
@@ -846,20 +1608,20 @@ function bp_nouveau_ajax_star_thread_messages() {
 				bp_messages_star_set_action( array(
 					'action'    => 'unstar',
 					'thread_id' => $thread_id,
-					'bulk'      => true
+					'bulk'      => true,
 				) );
 			}
 
 			$messages[ $mid ] = array(
-				'star_link' => bp_get_the_message_star_action_link( array(
+				'star_link'  => bp_get_the_message_star_action_link( array(
 					'message_id' => $mid,
-					'url_only'  => true,
+					'url_only'   => true,
 				) ),
 				'is_starred' => 'star' === $action,
 			);
 		}
 
-	// Use global star nonce for bulk actions involving one id or regular action
+		// Use global star nonce for bulk actions involving one id or regular action
 	} else {
 		$id = reset( $ids );
 
@@ -873,9 +1635,9 @@ function bp_nouveau_ajax_star_thread_messages() {
 		) );
 
 		$messages[ $id ] = array(
-			'star_link' => bp_get_the_message_star_action_link( array(
+			'star_link'  => bp_get_the_message_star_action_link( array(
 				'message_id' => $id,
-				'url_only'  => true,
+				'url_only'   => true,
 			) ),
 			'is_starred' => 'star' === $action,
 		);
@@ -970,7 +1732,8 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem dismissing the notice. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem dismissing the notice. Please try again.',
+				'buddyboss' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -983,9 +1746,7 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	}
 
 	// Check capability.
-	if (
-		! is_user_logged_in()
-		// || ! bp_core_can_edit_settings()
+	if ( ! is_user_logged_in() // || ! bp_core_can_edit_settings()
 	) {
 		wp_send_json_error( $response );
 	}
@@ -1007,7 +1768,8 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 		bp_update_user_meta( $user_id, 'closed_notices', array_map( 'absint', array_unique( $closed_notices ) ) );
 
 		wp_send_json_success( array(
-			'feedback' => '<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'Sitewide notice dismissed', 'buddyboss' ) . '</p></div>',
+			'feedback' => '<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'Sitewide notice dismissed',
+					'buddyboss' ) . '</p></div>',
 			'type'     => 'success',
 		) );
 	}
@@ -1024,7 +1786,8 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.',
+				'buddyboss' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -1046,12 +1809,13 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
 
 	wp_send_json_success( [
-		'results' => array_map( function($result) {
+		'results' => array_map( function ( $result ) {
 			return [
-				'id' => "@{$result->ID}",
-				'text' => $result->name
+				'id'   => "@{$result->ID}",
+				'text' => $result->name,
 			];
-		}, $results)
+		},
+			$results ),
 	] );
 }
 
@@ -1073,11 +1837,11 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 /**
  * Exclude members from messages suggestions list if require users to be connected before they can message each other
  *
- * @since BuddyBoss 1.0.0
- *
  * @param $results
  *
  * @return array
+ * @since BuddyBoss 1.0.0
+ *
  */
 function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
 
@@ -1089,8 +1853,10 @@ function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
 				$new_users[] = $user;
 			}
 		}
+
 		return $new_users;
 	}
+
 	return $results;
 }
 

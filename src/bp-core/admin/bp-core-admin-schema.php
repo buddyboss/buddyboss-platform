@@ -936,9 +936,61 @@ function bp_core_install_invites_email() {
 }
 
 /**
+ * Add default invites emails.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_core_install_group_message_email() {
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$emails       = bp_email_get_schema();
+	$descriptions = bp_email_get_type_schema( 'description' );
+
+	// Add these emails to the database.
+	foreach ( $emails as $id => $email ) {
+
+		if ( strpos( $id, 'group-message-', 0 ) === false ) {
+			continue;
+		}
+
+		// Some emails are multisite-only.
+		if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
+		}
+	}
+
+	/**
+	 * Fires after BuddyPress adds the posts for its bbp emails.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_core_install_group_message_email' );
+}
+
+/**
  * Install database tables for the Invitations API
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.1
  *
  * @since BuddyPress 5.0.0
  *

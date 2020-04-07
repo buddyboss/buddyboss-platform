@@ -1916,7 +1916,7 @@ function bbp_get_the_content( $args = array() ) {
 		add_filter( 'teeny_mce_buttons', 'bbp_get_teeny_mce_buttons' );
 		add_filter( 'quicktags_settings', 'bbp_get_quicktags_settings' );
 
-		$editor_unique_id = wp_unique_id( 'forums_editor_' );
+		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
 			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>">
