@@ -3067,7 +3067,19 @@ window.bp = window.bp || {};
 		/* jshint ignore:start */
 		sortDocuments: function (event) {
 
-			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data( 'filter' );
+			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data( 'target' );
+
+			switch (sortArg) {
+				case 'name':
+					console.log('name clicked');
+					break;
+				case 'modified':
+					console.log('Modified clicked');
+					break;
+				case 'visibility':
+					console.log('Visibility clicked');
+					break;
+			}
 
 			sortTarget.hasClass( 'asce' ) ? sortTarget.removeClass( 'asce' ) : sortTarget.addClass( 'asce' );
 
