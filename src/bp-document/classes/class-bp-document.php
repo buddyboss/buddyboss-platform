@@ -541,9 +541,9 @@ class BP_Document {
 		}
 
 		// existing-document check to query document which has no folders assigned
-		if ( ! empty( $r['folder_id'] ) && 'existing-document' != $r['folder_id'] ) {
+		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
 			$where_conditions['folder'] = "m.album_id = {$r['folder_id']}";
-		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' == $r['folder_id'] ) {
+		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
 			$where_conditions['folder'] = 'm.album_id = 0';
 		}
 

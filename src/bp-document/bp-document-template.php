@@ -158,7 +158,7 @@ function bp_has_document( $args = '' ) {
 			 * check if the login user is friends of the display user
 			 * OR check if the login user and the display user is the same
 			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
 				$privacy[] = 'friends';
 			}
 		}

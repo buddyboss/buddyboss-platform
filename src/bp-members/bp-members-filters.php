@@ -194,6 +194,11 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			'column' => 'privacy',
 			'value'  => 'onlyme',
 		),
+		( false !== $filter['search_terms'] ) ? array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		) : array(),
 	);
 
 	return $retval;
@@ -234,6 +239,11 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 			'column' => 'album_id',
 			'value'  => 0,
 		),
+		( false !== $filter['search_terms'] ) ? array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		) : array(),
 	);
 
 	return $retval;
@@ -274,6 +284,11 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 			'column' => 'parent',
 			'value'  => 0,
 		),
+		( false !== $filter['search_terms'] ) ? array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		) : array(),
 	);
 
 	return $retval;

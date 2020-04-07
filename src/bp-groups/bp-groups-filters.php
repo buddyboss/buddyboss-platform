@@ -584,6 +584,11 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 				'column' => 'privacy',
 				'value'  => 'grouponly',
 			),
+			( false !== $filter['search_terms'] ) ? array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			) : array(),
 		),
 	);
 
@@ -662,6 +667,11 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 				'column' => 'album_id',
 				'value'  => 0,
 			),
+			( false !== $filter['search_terms'] ) ? array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			) : array(),
 		),
 	);
 
@@ -731,6 +741,11 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 				'column' => 'parent',
 				'value'  => 0,
 			),
+			( false !== $filter['search_terms'] ) ? array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			) : array(),
 		),
 	);
 
