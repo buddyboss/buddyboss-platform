@@ -26,6 +26,22 @@
 				}
 			});
 		} );
+		$( document ).on('click','#meeting-item',function(e){
+			var target = $(e.currentTarget);
+			$.ajax({
+				type: 'GET',
+				url: ajaxurl,
+				data: {
+					'action': 'zoom_meeting_recordings',
+					'meeting_id': target.data('meeting-id'),
+				},
+				success: function (response) {
+					if (response.data.recordings){
+						target.closest('#meeting-item').find('.recording-list').html(response.data.recordings);
+					}
+				}
+			});
+		});
 	} );
 
 } )( jQuery );
