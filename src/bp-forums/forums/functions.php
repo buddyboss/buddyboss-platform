@@ -956,11 +956,10 @@ function bbp_hide_forum( $forum_id = 0, $current_visibility = '' ) {
  * @return array An array of the status code and the message
  */
 function bbp_repair_forum_visibility() {
-
 	// First, delete everything.
 	delete_option( '_bbp_private_forums' );
 	delete_option( '_bbp_hidden_forums' );
-
+	remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 	// Next, get all the private and hidden forums
 	$private_forums = new WP_Query(
 		array(
@@ -971,6 +970,8 @@ function bbp_repair_forum_visibility() {
 			'fields'           => 'ids',
 		)
 	);
+	// Reset the $post global
+	wp_reset_postdata();
 	$hidden_forums  = new WP_Query(
 		array(
 			'suppress_filters' => true,
@@ -980,19 +981,16 @@ function bbp_repair_forum_visibility() {
 			'fields'           => 'ids',
 		)
 	);
-
 	// Reset the $post global
 	wp_reset_postdata();
-
 	// Bail if queries returned errors
 	if ( is_wp_error( $private_forums ) || is_wp_error( $hidden_forums ) ) {
 		return false;
 	}
-
+	add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 	// Update the private/hidden options
 	update_option( '_bbp_private_forums', $private_forums->posts ); // Private forums
 	update_option( '_bbp_hidden_forums', $hidden_forums->posts ); // Hidden forums
-
 	// Complete results
 	return true;
 }
@@ -1847,7 +1845,7 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 
 	// Exclude for everyone but keymasters
 	if ( ! bbp_is_user_keymaster() ) {
-
+		//echo bbp_is_subscriptions() ;exit;
 		// Private forums
 		if ( ! current_user_can( 'read_private_forums' ) && ( ! bbp_is_favorites() && ! bbp_is_subscriptions() && ! bbp_is_replies_created() && ! bbp_is_topics_created() ) ) {
 			$private = bbp_get_private_forum_ids();
