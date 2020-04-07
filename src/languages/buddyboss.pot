@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-06 18:57:11+00:00\n"
+"POT-Creation-Date: 2020-04-07 07:15:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1867,8 +1867,8 @@ msgid "Shortcode"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1648
-#: bp-members/bp-members-functions.php:3039
-#: bp-members/bp-members-functions.php:3521
+#: bp-members/bp-members-functions.php:3067
+#: bp-members/bp-members-functions.php:3549
 #: bp-members/classes/class-bp-members-admin.php:969
 #: bp-members/classes/class-bp-members-admin.php:2671
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:22
@@ -1897,7 +1897,7 @@ msgid "e.g. Student"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1697
-#: bp-members/bp-members-functions.php:3524
+#: bp-members/bp-members-functions.php:3552
 msgid "Members Directory"
 msgstr ""
 
@@ -1965,7 +1965,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1976
-#: bp-groups/bp-groups-admin.php:2208 bp-members/bp-members-functions.php:3775
+#: bp-groups/bp-groups-admin.php:2208 bp-members/bp-members-functions.php:3803
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -3073,8 +3073,8 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:129
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:132
-#: bp-members/bp-members-functions.php:3031
-#: bp-members/bp-members-functions.php:3034
+#: bp-members/bp-members-functions.php:3059
+#: bp-members/bp-members-functions.php:3062
 #: bp-xprofile/bp-xprofile-admin.php:1109
 #: bp-xprofile/bp-xprofile-admin.php:1160
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1602
@@ -6709,7 +6709,7 @@ msgid "Field"
 msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2224
-#: bp-members/bp-members-functions.php:3522
+#: bp-members/bp-members-functions.php:3550
 msgid "Label"
 msgstr ""
 
@@ -10100,7 +10100,7 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3704
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:345
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:361
-#: bp-members/bp-members-functions.php:3797
+#: bp-members/bp-members-functions.php:3825
 #: bp-members/classes/class-bp-members-admin.php:951
 msgid "Member"
 msgstr ""
@@ -12089,14 +12089,14 @@ msgid "Groups Filter"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2252 bp-groups/bp-groups-admin.php:2263
-#: bp-members/bp-members-functions.php:3550
-#: bp-members/bp-members-functions.php:3561
+#: bp-members/bp-members-functions.php:3578
+#: bp-members/bp-members-functions.php:3589
 msgid "Show"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2254 bp-groups/bp-groups-admin.php:2261
-#: bp-members/bp-members-functions.php:3552
-#: bp-members/bp-members-functions.php:3559
+#: bp-members/bp-members-functions.php:3580
+#: bp-members/bp-members-functions.php:3587
 msgid "Hide"
 msgstr ""
 
@@ -13984,180 +13984,180 @@ msgstr ""
 msgid "Email Address"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1129
+#: bp-members/bp-members-functions.php:1157
 msgid ""
 "User last_activity data is no longer stored in usermeta. Use "
 "bp_get_user_last_activity() instead."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1164
+#: bp-members/bp-members-functions.php:1192
 msgid ""
 "User last_activity data is no longer stored in usermeta. Use "
 "bp_update_user_last_activity() instead."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1381
-#: bp-members/bp-members-functions.php:2499
+#: bp-members/bp-members-functions.php:1409
+#: bp-members/bp-members-functions.php:2527
 msgid "<strong>ERROR</strong>: Your account has been marked as a spammer."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1616
+#: bp-members/bp-members-functions.php:1644
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1620
-#: bp-members/bp-members-functions.php:1624
+#: bp-members/bp-members-functions.php:1648
+#: bp-members/bp-members-functions.php:1652
 msgid "Sorry, that email address is not allowed!"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1628
+#: bp-members/bp-members-functions.php:1656
 msgid "Sorry, that email address is already used!"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1668
+#: bp-members/bp-members-functions.php:1696
 msgid "Please enter a username"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1674
+#: bp-members/bp-members-functions.php:1702
 msgid "That username is not allowed"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1679
+#: bp-members/bp-members-functions.php:1707
 msgid "Usernames can contain only letters, numbers, ., -, and @"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1684
+#: bp-members/bp-members-functions.php:1712
 msgid "Username must be at least 3 characters"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1689
+#: bp-members/bp-members-functions.php:1717
 msgid "Sorry, usernames may not contain the character \"_\"!"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1696
+#: bp-members/bp-members-functions.php:1724
 msgid "Sorry, usernames must have letters too!"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1710
+#: bp-members/bp-members-functions.php:1738
 msgid "Sorry, that username already exists!"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1928
-#: bp-members/bp-members-functions.php:1955
+#: bp-members/bp-members-functions.php:1956
+#: bp-members/bp-members-functions.php:1983
 msgid "Invalid activation key."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1935
+#: bp-members/bp-members-functions.php:1963
 msgid "The user is already active."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1937
+#: bp-members/bp-members-functions.php:1965
 msgid "The site is already active."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1967
+#: bp-members/bp-members-functions.php:1995
 msgid "Could not create user"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:1983
+#: bp-members/bp-members-functions.php:2011
 msgid "That username is already activated."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2352
+#: bp-members/bp-members-functions.php:2380
 msgid ""
 "If you have not received an email yet, <a href=\"%s\">click here to resend "
 "it</a>."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2354
+#: bp-members/bp-members-functions.php:2382
 msgid ""
 "<strong>ERROR</strong>: Your account has not been activated. Check your "
 "email for the activation link."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2385
+#: bp-members/bp-members-functions.php:2413
 msgid "<strong>ERROR</strong>: Your account has already been activated."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2387
+#: bp-members/bp-members-functions.php:2415
 msgid "Activation email resent! Please check your inbox or spam folder."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2586
+#: bp-members/bp-members-functions.php:2614
 msgid "Profile type already exists."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2613
+#: bp-members/bp-members-functions.php:2641
 msgid "You may not register a profile type with this name."
 msgstr ""
 
-#: bp-members/bp-members-functions.php:2927
+#: bp-members/bp-members-functions.php:2955
 msgid "BuddyBoss profile type"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3030
-#: bp-members/bp-members-functions.php:3035
+#: bp-members/bp-members-functions.php:3058
+#: bp-members/bp-members-functions.php:3063
 msgid "New Profile Type"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3032
+#: bp-members/bp-members-functions.php:3060
 msgid "Edit Profile Type"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3033
-#: bp-members/bp-members-functions.php:3525
+#: bp-members/bp-members-functions.php:3061
+#: bp-members/bp-members-functions.php:3553
 #: bp-members/classes/class-bp-members-admin.php:2188
 #: bp-members/classes/class-bp-members-admin.php:2210
 msgid "Users"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3036
+#: bp-members/bp-members-functions.php:3064
 msgid "No Profile Types found"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3037
+#: bp-members/bp-members-functions.php:3065
 msgid "No Profile Types found in trash"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3038
+#: bp-members/bp-members-functions.php:3066
 msgid "Search Profile Types"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3523
+#: bp-members/bp-members-functions.php:3551
 msgid "Members Filter"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3770
+#: bp-members/bp-members-functions.php:3798
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3771
+#: bp-members/bp-members-functions.php:3799
 msgid ""
 "You have {total_users} members with this profile type, are you sure you "
 "would like to delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3772
+#: bp-members/bp-members-functions.php:3800
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "trash it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3773
+#: bp-members/bp-members-functions.php:3801
 msgid ""
 "You have members with these profile types, are you sure you would like to "
 "delete it?"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3774
+#: bp-members/bp-members-functions.php:3802
 msgid "Copied"
 msgstr ""
 
-#: bp-members/bp-members-functions.php:3837
-#: bp-members/bp-members-functions.php:3845
-#: bp-members/bp-members-functions.php:3851
+#: bp-members/bp-members-functions.php:3865
+#: bp-members/bp-members-functions.php:3873
+#: bp-members/bp-members-functions.php:3879
 msgid "their"
 msgstr ""
 
