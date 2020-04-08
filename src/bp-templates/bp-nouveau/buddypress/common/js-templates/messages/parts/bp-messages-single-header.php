@@ -49,24 +49,11 @@
 			</dd>
 		</dl>
 		<# } #>
-
-		<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
-		<div class="actions">
-			<a type="button" class="message-action-delete bp-icons" href="javascript:void(0);" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You need to leave the group to be removed from this conversation.', 'buddyboss' ); ?>">
-				<i class="bb-icon-trash"></i>
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'You need to leave the group to be removed from this conversation.', 'buddyboss' ); ?></span>
-			</a>
-		</div>
-		<# } else { #>
-		<# if ( data.is_participated ) { #>
-		<div class="actions">
-			<button type="button" class="message-action-delete bp-icons" data-bp-action="delete" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Delete your messages', 'buddyboss' ); ?>">
-				<i class="bb-icon-trash"></i>
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></span>
-			</button>
-		</div>
-		<# } #>
-		<# } #>
-
+        <div class="actions">
+            <button type="button" class="message-action-delete bp-icons" data-bp-action="delete" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Delete your messages', 'buddyboss' ); ?>">
+                <i class="dashicons dashicons-trash"></i>
+                <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></span>
+            </button>
+        </div>
 	</header>
 </script>

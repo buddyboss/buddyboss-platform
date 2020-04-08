@@ -91,6 +91,7 @@ add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_a
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 
+
 /**
  * Enforce limitations on viewing private message contents
  *

@@ -412,7 +412,7 @@ window.bp = window.bp || {};
 					'action'  	 	: 'groups_get_group_members_send_message',
 					'nonce'   	 	: BP_Nouveau.group_messages.nonces.send_messages_users,
 					'group'   	 	: BP_Nouveau.group_messages.group_id,
-					'content' 	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #group_message_content_hidden' ).val(),
+					'content' 	 	: window.group_messages_editor.getContent(),
 					'media'   	 	: media,
 					'users'   		: user,
 					'users_list'    : users_list,

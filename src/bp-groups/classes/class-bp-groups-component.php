@@ -807,12 +807,19 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			$message_status = groups_get_groupmeta( $this->current_group->id, 'message_status' );
-			$show = false;
+			$message_status = bp_group_get_message_status( $this->current_group->id );
+			$show           = false;
 			if ( 'mods' === $message_status ) {
-				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$admin     = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
 				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
 				if ( $admin || $moderator ) {
+					$show = true;
+				}
+			} elseif ( 'members' === $message_status ) {
+				$member    = groups_is_user_member( bp_loggedin_user_id(), $this->current_group->id );
+				$admin     = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
+				if ( $member || $admin || $moderator ) {
 					$show = true;
 				}
 			} else {
@@ -821,7 +828,6 @@ class BP_Groups_Component extends BP_Component {
 					$show = true;
 				}
 			}
-
 			if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) && $show ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Send Messages', 'buddyboss' ),

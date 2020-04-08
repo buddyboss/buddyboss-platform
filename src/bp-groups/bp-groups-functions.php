@@ -925,14 +925,30 @@ function groups_get_groups( $args = '' ) {
  * @return int
  */
 function groups_get_total_group_count() {
-	$count = wp_cache_get( 'bp_total_group_count', 'bp' );
-
-	if ( false === $count ) {
-		$count = BP_Groups_Group::get_total_group_count();
-		wp_cache_set( 'bp_total_group_count', $count, 'bp' );
-	}
+	add_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
+	bp_has_groups( bp_ajax_querystring( 'groups' ) );
+	$count = $GLOBALS["groups_template"]->total_group_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_group_object_template_results_groups_all_scope', 20, 2 );
 
 	return $count;
+}
+
+/**
+ * Object template results members group all scope.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_group_object_template_results_groups_all_scope( $querystring, $object ) {
+	if ( 'groups' !== $object ) {
+		return $querystring;
+	}
+
+	$querystring             = wp_parse_args( $querystring );
+	$querystring['scope']    = 'all';
+	$querystring['page']     = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id']  = 0;
+	return http_build_query( $querystring );
 }
 
 /**
@@ -3221,21 +3237,29 @@ function bp_group_get_group_type_key( $post_id ) {
  * Get all active group types.
  *
  * @since BuddyBoss 1.0.0
+ * @param array $args Arguments
  *
- * @return type array
+ * @return array Group types
  */
-function bp_get_active_group_types() {
-	$query = new WP_Query(
-		array(
-			'posts_per_page' => -1,
-			'post_type'      => bp_groups_get_group_type_post_type(),
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-			'orderby'        => 'menu_order',
-		)
-	);
+function bp_get_active_group_types( $args = array() ) {
+	$bp_active_group_types = array();
 
-	return $query->posts;
+	$args = bp_parse_args( $args, array(
+		'posts_per_page' => - 1,
+		'post_type'      => bp_groups_get_group_type_post_type(),
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+		'fields'         => 'ids'
+	), 'group_types' );
+
+	$bp_active_group_types_query = new \WP_Query( $args );
+
+	if ( $bp_active_group_types_query->have_posts() ) {
+		$bp_active_group_types = $bp_active_group_types_query->posts;
+	}
+	wp_reset_postdata();
+
+	return apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
 }
 
 if ( true === bp_disable_group_type_creation() ) {
@@ -3249,9 +3273,6 @@ if ( true === bp_disable_group_type_creation() ) {
 	// filter for adding body class where the shortcode added.
 	add_filter( 'body_class', 'bp_group_type_short_code_add_body_class' );
 
-	// remove groups of a specific group type from groups directory
-	add_action( 'bp_ajax_querystring', 'bp_groups_exclude_group_type', 999, 2 );
-
 }
 
 /**
@@ -3260,34 +3281,34 @@ if ( true === bp_disable_group_type_creation() ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_register_active_group_types() {
+	$group_type_ids = bp_get_active_group_types();
 
-	$post_ids = bp_get_active_group_types();
+	if ( ! empty( $group_type_ids ) ) {
 
-	// update meta cache to avoid multiple db calls
-	update_meta_cache( 'post', $post_ids );
-
-	// build to register the group type
-	$group_types = array();
-
-	foreach ( $post_ids as $post_id ) {
-
-		$name          = get_post_meta( $post_id, '_bp_group_type_label_name', true );
-		$key           = get_post_meta( $post_id, '_bp_group_type_key', true );
-		$singular_name = get_post_meta( $post_id, '_bp_group_type_label_singular_name', true );
+		// Get all registered group types in BP.
 		$group_types   = bp_groups_get_group_types();
-		if ( ! in_array( $singular_name, $group_types, true ) ) {
-			$temp = array(
-				'labels'                => array(
-					'name'          => $name,
-					'singular_name' => $singular_name,
-				),
-				'has_directory'         => strtolower( $name ),
-				'show_in_create_screen' => true,
-				'show_in_list'          => true,
-				'description'           => '',
-				'create_screen_checked' => false,
-			);
-			bp_groups_register_group_type( $key, $temp );
+
+		foreach ( $group_type_ids as $group_type_id ) {
+			$name          = get_post_meta( $group_type_id, '_bp_group_type_label_name', true );
+			$key           = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+			$singular_name = get_post_meta( $group_type_id, '_bp_group_type_label_singular_name', true );
+
+			if ( ! in_array( $singular_name, $group_types, true ) ) {
+				$temp = array(
+					'labels'                => array(
+						'name'          => $name,
+						'singular_name' => $singular_name,
+					),
+					'has_directory'         => strtolower( $name ),
+					'show_in_create_screen' => true,
+					'show_in_list'          => true,
+					'description'           => '',
+					'create_screen_checked' => false,
+				);
+
+				// Register group type.
+				bp_groups_register_group_type( $key, $temp );
+			}
 		}
 	}
 }
@@ -3362,20 +3383,6 @@ function bp_group_type_short_code_callback( $atts ) {
 						buddypress()->is_directory                   = true;
 					}
 
-					unset( $atts['type'] );
-					$bp_group_type_query = build_query( $atts );
-					if ( ! empty( $bp_group_type_query ) ) {
-						$bp_group_type_query = '&' . $bp_group_type_query;
-					}
-					update_option( 'bp_group_type_short_code_query_build', $bp_group_type_query );
-
-					add_filter(
-						'bp_ajax_querystring',
-						function ( $qs ) {
-							return $qs .= get_option( 'bp_group_type_short_code_query_build' );
-						}
-					);
-
 					// Get a BuddyPress groups-loop template part for display in a theme.
 					bp_get_template_part( 'groups/groups-loop' );
 					?>
@@ -3418,19 +3425,33 @@ function bp_group_type_short_code_add_body_class( $class ) {
  */
 function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
-	$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
+	$args = wp_parse_args( $qs );
 
-	if ( $object != 'groups' ) {
+	if ( $object !== 'groups' ) {
 		return $qs;
 	}
 
-	if ( bp_is_groups_directory() ) {
-		$args = wp_parse_args( $qs );
+	if ( bp_is_groups_directory() && isset( $args['scope'] ) && 'all' === $args['scope'] ) {
 
-		if ( ! empty( $args['exclude'] ) ) {
-			$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
+		// get removed group type post ids
+		$bp_group_type_ids = bp_groups_get_excluded_group_types();
+
+		// get removed group type names/slugs
+		$bp_group_type_names = array();
+		if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
+			foreach ( $bp_group_type_ids as $single ) {
+				$bp_group_type_names[] = $single['name'];
+			}
+		}
+
+		if ( ! empty( $args['group_type__not_in'] ) ) {
+			if ( is_array( $args['group_type__not_in'] ) ) {
+				$args['group_type__not_in'] = array_merge( $args['group_type__not_in'], $bp_group_type_names );
+			} else {
+				$args['group_type__not_in'] = $args['group_type__not_in'] . ',' . implode( ',', $bp_group_type_names );
+			}
 		} else {
-			$args['exclude'] = implode( ',', $exclude_group_ids );
+			$args['group_type__not_in'] = implode( ',', $bp_group_type_names );
 		}
 
 		$qs = build_query( $args );
@@ -3810,13 +3831,16 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 		return false;
 	}
 
-	$status   = bp_group_get_message_status( $group_id );
-	$is_admin = groups_is_user_admin( $user_id, $group_id );
-	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+	$status    = bp_group_get_message_status( $group_id );
+	$is_admin  = groups_is_user_admin( $user_id, $group_id );
+	$is_mod    = groups_is_user_mod( $user_id, $group_id );
+	$is_member = groups_is_user_member( $user_id, $group_id );
 
-	if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+	if ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' == $status && $is_admin ) {
+	} elseif ( 'members' === $status && ( $is_mod || $is_admin || $is_member ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
