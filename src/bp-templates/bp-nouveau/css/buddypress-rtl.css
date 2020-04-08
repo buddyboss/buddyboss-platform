@@ -12394,7 +12394,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   animation: spin 3s infinite linear;
 }
 
-#media-folder-document-data-table .bb-media-container .bb-media-section {
+.bb-media-container .bb-media-section {
   height: 90vh;
   overflow: auto;
   padding-left: 40px;
@@ -12402,21 +12402,21 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   position: relative;
 }
 
-#media-folder-document-data-table .bb-media-container .bb-media-section .img-section {
+.bb-media-container .bb-media-section .img-section {
   overflow: auto;
   height: calc(90vh - 40px);
 }
 
-#media-folder-document-data-table .bb-media-container .bb-media-section .img-section img {
+.bb-media-container .bb-media-section .img-section img {
   padding: 20px;
   background-color: #fff;
 }
 
-#media-folder-document-data-table .bb-media-container .bb-media-section .document-text {
+.bb-media-container .bb-media-section .document-text {
   width: 100%;
 }
 
-#media-folder-document-data-table .bb-media-container .bb-media-section h3 {
+.bb-media-container .bb-media-section h3 {
   background-color: #fff;
   display: block;
   margin-bottom: 0;
@@ -12429,11 +12429,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   border-bottom: 1px solid #ecedee;
 }
 
-#media-folder-document-data-table .bb-media-container .document-text-file-data-hidden {
+.bb-media-container .document-text-file-data-hidden {
   display: none;
 }
 
-#media-folder-document-data-table .bb-media-container .CodeMirror {
+.bb-media-container .CodeMirror {
   /* stylelint-disable-line */
   height: calc(90vh - 40px);
   border-top: 1px solid #ecedee;
