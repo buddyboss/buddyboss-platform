@@ -100,6 +100,7 @@ if ( $attachment_id ) {
                 <?php
                 if ( $attachment_id && $can_download_btn ) { ?>
                     <li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a></li>
+					<li class="copy_download_file_url"><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a></li>
                     <?php
                 }
                 if ( $can_manage_btn ) {

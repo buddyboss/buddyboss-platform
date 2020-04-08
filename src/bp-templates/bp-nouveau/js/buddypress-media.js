@@ -191,6 +191,7 @@ window.bp = window.bp || {};
 
 			// Documents
 			$( document ).on( 'click', '.directory.document  .media-folder_action__anchor, .directory.document  .media-folder_action__anchor li a, .bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
+			$( document ).on( 'click', '.media-folder_action__list .copy_download_file_url a', this.copyDownloadLink.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more, .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li a', this.fileActivityActionButton.bind( this ) );
 			$( document ).click( this.toggleFileActivityActionButton );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
@@ -3294,6 +3295,21 @@ window.bp = window.bp || {};
 
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.media-folder_items' ).toggleClass( 'is-visible' ).siblings( '.media-folder_items' ).removeClass( 'is-visible' );
+		},
+		
+		/**
+		 * File action Copy Download Link
+		 */
+		copyDownloadLink: function (event) {
+
+			var currentTarget = event.currentTarget, currentTargetCopy = 'document_copy_link';
+			$('body').append('<textarea style="position:absolute;opacity:0;" id="' + currentTargetCopy + '"></textarea>');
+			$('#'+currentTargetCopy).val( $(currentTarget).attr('href') );
+			$('#'+currentTargetCopy).select();
+			document.execCommand('copy');
+			$('#'+currentTargetCopy).remove();
+
+			event.preventDefault();
 		},
 
 		/**

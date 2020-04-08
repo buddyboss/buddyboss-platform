@@ -12508,7 +12508,12 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name > span {
-  white-space: pre;
+  max-width: calc(80% - 30px);
+  white-space: nowrap;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit_wrap {
@@ -12569,7 +12574,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   background: #fff;
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   border-radius: 4px;
-  width: 168px;
+  width: 198px;
   z-index: 1;
   opacity: 0;
   visibility: hidden;
@@ -12644,6 +12649,10 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before {
   content: "\e890";
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.copy_download_file_url a:before {
+  content: "\e8ac";
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.privacy_file a:before {
