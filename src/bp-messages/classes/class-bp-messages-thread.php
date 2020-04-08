@@ -371,21 +371,24 @@ class BP_Messages_Thread {
 	}
 
 	/**
-	 * Get a thread's first message
+	 * Get a thread first message
 	 *
-	 * @since Buddyboss 1.2.9
+	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param  int $thread_id
+	 * @param $thread_id
+	 *
+	 * @return object|stdClass
 	 */
 	public static function get_first_message( $thread_id ) {
 		global $wpdb;
 
 		$bp = buddypress();
 
-		$query    = $wpdb->prepare( "SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent ASC, m.id ASC LIMIT 1", $thread_id );
-		$messages = $wpdb->get_results( $query );
-
-		return $messages ? (object) $messages[0] : null;
+		$query            = $wpdb->prepare( "SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent ASC, m.id ASC LIMIT 1", $thread_id );
+		$messages         = $wpdb->get_results( $query );
+		$blank_object     = new stdClass();
+		$blank_object->id = 0;
+		return $messages ? (object) $messages[0] : $blank_object;
 	}
 
 	/**
