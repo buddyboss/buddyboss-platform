@@ -357,14 +357,22 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @param  int $thread_id
+	 * @param $thread_id
+	 *
+	 * @return object|null
 	 */
 	public static function get_last_message( $thread_id ) {
 		global $wpdb;
 
 		$bp = buddypress();
 
-		$query    = $wpdb->prepare("SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent DESC, m.id DESC LIMIT 1", $thread_id );
+		$is_group_thread = self::get_first_message( $thread_id );
+		if ( $is_group_thread->id > 0 ) {
+			$query = $wpdb->prepare("SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent DESC, m.id DESC LIMIT 1", $thread_id );
+		} else {
+			$query = $wpdb->prepare("SELECT * FROM {$bp->messages->table_name_messages} WHERE thread_id = %d ORDER BY date_sent DESC, id DESC LIMIT 1", $thread_id );
+		}
+
 		$messages = $wpdb->get_results( $query );
 
 		return $messages ? (object) $messages[0] : null;
