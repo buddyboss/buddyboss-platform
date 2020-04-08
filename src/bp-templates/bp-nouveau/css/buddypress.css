@@ -13437,6 +13437,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   height: 300px;
   color: black;
   direction: ltr;
+  text-align: left;
 }
 
 /* PADDING */

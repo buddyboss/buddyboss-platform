@@ -76,11 +76,7 @@ $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : 
             ?>
             <div class="document-text-wrap">
                 <div class="document-text" data-extension="<?php echo $extension; ?>">
-                    <textarea class="document-text-file-data-hidden" style="display: none;">
-                    <?php
-                    echo $file_data;
-                    ?>
-                    </textarea>
+                    <textarea class="document-text-file-data-hidden" style="display: none;"><?php echo $file_data; ?></textarea>
                 </div>
                 <div class="document-expand">
                     <a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?></a>
