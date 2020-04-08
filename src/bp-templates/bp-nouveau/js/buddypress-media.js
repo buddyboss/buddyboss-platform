@@ -190,7 +190,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.gif-image-container', this.playVideo.bind( this ) );
 
 			// Documents
-			$( document ).on( 'click', '.bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
+			$( document ).on( 'click', '.directory.document  .media-folder_action__anchor, .directory.document  .media-folder_action__anchor li a, .bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more, .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li a', this.fileActivityActionButton.bind( this ) );
 			$( document ).click( this.toggleFileActivityActionButton );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
@@ -3521,7 +3521,7 @@ window.bp = window.bp || {};
 			event.preventDefault();	
 			var target = $( event.currentTarget );	
 			var self = this;	
-			var media_elements = $( target ).closest( '.bb-media-container' ).find( '.document-theatre' );	
+			var media_elements = $( target ).closest( '.bb-media-container' ).length ?  $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
 			if( target.attr('data-extension') == 'css' || target.attr('data-extension') == 'txt' || target.attr('data-extension') == 'js' || target.attr('data-extension') == 'html' || target.attr('data-extension') == 'htm' || target.attr('data-extension') == 'csv' ) {	
 				//Show Document	
 				$.get(target.attr('data-text-preview'), function(data) {	
