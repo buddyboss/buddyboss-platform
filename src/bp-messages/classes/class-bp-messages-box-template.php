@@ -170,7 +170,7 @@ class BP_Messages_Box_Template {
 				)
 			);
 
-			$this->threads            = ( $threads ) ? $threads['threads'] : array();
+			$this->threads            = ( $threads ) ? $threads['threads'] : false;
 			$this->total_thread_count = ( $threads ) ? $threads['total'] : 0;
 		}
 
