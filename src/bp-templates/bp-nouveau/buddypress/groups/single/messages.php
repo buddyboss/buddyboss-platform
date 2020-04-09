@@ -24,7 +24,7 @@ $group_members = groups_get_group_members( $args );
 					</div>
 					<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
 						<div>
-							<i class="dashicons dashicons-update animate-spin"></i>
+							<i class="bb-icon-loader animate-spin"></i>
 						</div>
 					</div>
 				</div>
@@ -35,7 +35,7 @@ $group_members = groups_get_group_members( $args );
 							<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
 							<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
 							<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit">
-								<span class="dashicons dashicons-search" aria-hidden="true"></span>
+								<span class="bb-icon-search" aria-hidden="true"></span>
 								<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
 							</button>
 						</form>
@@ -67,7 +67,7 @@ $group_members = groups_get_group_members( $args );
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php _e( 'New Group Message', 'buddyboss' ); ?></h2>
-					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="dashicons dashicons-plus-alt"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
+					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="bb-icon-plus-circle"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
 					<div class="bp-messages-feedback bp-messages-feedback-hide">
@@ -100,7 +100,7 @@ $group_members = groups_get_group_members( $args );
 										<img src="" alt="">
 									</div>
 									<div class="gif-image-remove gif-image-overlay">
-										<span class="dashicons dashicons-no"></span>
+										<span class="bb-icon-close"></span>
 									</div>
 								</div>
 								<input name="bp_group_messages_gif" id="bp_group_messages_gif" type="hidden" value=""/>
@@ -110,7 +110,7 @@ $group_members = groups_get_group_members( $args );
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) : ?>
 								<div class="post-elements-buttons-item post-media">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
-										<span class="dashicons dashicons-admin-media"></span>
+										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
 							<?php endif; ?>
@@ -118,7 +118,7 @@ $group_members = groups_get_group_members( $args );
 								<div class="post-elements-buttons-item post-gif">
 									<div class="gif-media-search">
 										<a href="#" id="bp-group-messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Post a GIF', 'buddyboss' ); ?>">
-											<span class="dashicons dashicons-smiley"></span>
+											<span class="bb-icon bb-icon-gif"></span>
 										</a>
 										<div class="gif-media-search-dropdown">
 											<div class="bp-group-messages-attached-gif-container">
