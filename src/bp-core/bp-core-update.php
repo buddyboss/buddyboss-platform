@@ -294,6 +294,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 14901 ) {
 			bp_update_to_1_2_9();
 		}
+
+		if ( $raw_db_version < 15100 ) {
+			bp_update_to_1_3_1();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -595,6 +599,10 @@ function bp_update_to_3_1_1() {
  * @since BuddyBoss 1.2.3
  */
 function bp_update_to_1_2_4() {
+	bp_core_install_media();
+}
+
+function bp_update_to_1_3_1() {
 	bp_core_install_media();
 }
 
