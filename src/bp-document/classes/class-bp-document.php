@@ -777,7 +777,7 @@ class BP_Document {
 
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query_document = self::get_scope_document_query_sql( $r['scope'], $r );
-			$scope_query_folder   = self::get_scope_folder_query_sql( $r['scope'], $r );
+			//$scope_query_folder   = self::get_scope_folder_query_sql( $r['scope'], $r );
 
 			// Override some arguments if needed.
 			if ( ! empty( $scope_query_document['override'] ) ) {
@@ -795,6 +795,11 @@ class BP_Document {
 			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_conditions_document['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'a.title LIKE %s', $search_terms_like );
+
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.file_name = %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.caption = %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.description = %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.extension = %s', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
