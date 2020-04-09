@@ -143,6 +143,37 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 		),
 	);
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'extension',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'file_name',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'caption',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+		);
+	}
+
 	return $retval;
 }
 add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_document_scope', 10, 2 );
@@ -191,14 +222,17 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 			array(
 				'column' => 'parent',
 				'value'  => 0,
-			),
-			( false !== $filter['search_terms'] ) ? array(
+			)
+		),
+	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
 				'column'  => 'title',
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
-			) : array(),
-		),
-	);
+			);
+	}
 
 	return $retval;
 }

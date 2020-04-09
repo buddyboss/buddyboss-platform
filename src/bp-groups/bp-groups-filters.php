@@ -665,6 +665,37 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		),
 	);
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+			'relation' => 'OR',
+			array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'extension',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'file_name',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'caption',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+		);
+	}
+
 	return $retval;
 }
 
@@ -738,6 +769,14 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 			) : array(),
 		),
 	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			);
+	}
 
 	return $retval;
 }

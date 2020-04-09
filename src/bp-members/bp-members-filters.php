@@ -249,6 +249,21 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
 			),
+			array(
+				'column'  => 'file_name',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'caption',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
+			array(
+				'column'  => 'description',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms'],
+			),
 		);
 	}
 
@@ -289,13 +304,16 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 		array(
 			'column' => 'parent',
 			'value'  => 0,
-		),
-		( false !== $filter['search_terms'] ) ? array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
-		) : array(),
+		)
 	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+				'column'  => 'title',
+				'compare' => 'LIKE',
+				'value'   => $filter['search_terms']
+		);
+	}
 
 	return $retval;
 }

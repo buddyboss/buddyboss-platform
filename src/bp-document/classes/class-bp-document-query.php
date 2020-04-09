@@ -56,7 +56,13 @@ class BP_Document_Query extends BP_Recursive_Query {
 		'privacy',
 		'menu_order',
 		'date_created',
-		'extension'
+		'type',
+		'preview_attachment_id',
+		'date_modified',
+		'file_name',
+		'caption',
+		'description',
+		'extension',
 	);
 
 	/**
