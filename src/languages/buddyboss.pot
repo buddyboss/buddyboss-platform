@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-07 08:13:41+00:00\n"
+"POT-Creation-Date: 2020-04-09 09:28:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -967,7 +967,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-membership-requests-template.php:91
 #: bp-groups/classes/class-bp-groups-template.php:134
 #: bp-messages/classes/class-bp-messages-box-template.php:112
-#: bp-messages/classes/class-bp-messages-thread.php:719
+#: bp-messages/classes/class-bp-messages-thread.php:730
 #: bp-xprofile/classes/class-bp-xprofile-data-template.php:130
 msgid ""
 "Arguments passed to %1$s should be in an associative array. See the inline "
@@ -6148,13 +6148,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -10112,7 +10112,7 @@ msgstr ""
 #: bp-forums/replies/functions.php:2430 bp-members/bp-members-functions.php:539
 #: bp-messages/bp-messages-template.php:1791
 #: bp-messages/bp-messages-template.php:2056
-#: bp-messages/classes/class-bp-messages-thread.php:1159
+#: bp-messages/classes/class-bp-messages-thread.php:1170
 msgid "Deleted User"
 msgstr ""
 
@@ -15127,7 +15127,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1150
+#: bp-messages/classes/class-bp-messages-thread.php:1161
 msgid "%s Recipients"
 msgstr ""
 
