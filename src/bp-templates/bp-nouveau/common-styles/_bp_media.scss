@@ -1640,12 +1640,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 
 }
 
-.bb-media-container {
+.bb-document-theater {
 
 	.bb-media-section {
 		height: 90vh;
 		overflow: auto;
-		padding-right: 40px;
 		align-items: flex-end;
 		position: relative;
 
@@ -1672,7 +1671,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 			top: 0;
 			left: 0;
 			padding: 6px 0;
-			right: 40px;
+			right: 0;
 			text-align: center;
 			border-bottom: 1px solid #ecedee;
 		}
@@ -1686,6 +1685,17 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 	.CodeMirror {/* stylelint-disable-line */
 		height: calc(90vh - 40px);
 		border-top: 1px solid #ecedee;
+	}
+
+	@media screen and (min-width: 768px) {
+
+		.bb-media-section {
+			padding-right: 40px;
+
+			h3 {
+				right: 40px;
+			}
+		}
 	}
 
 }

@@ -3562,6 +3562,13 @@ window.bp = window.bp || {};
 
 		getDocumentActivity: function (activity_id) {
 
+			if ( !activity_id ) {
+				$('.bb-document-theater .bb-media-info-section').hide();
+				return;
+			}
+
+			$('.bb-document-theater .bb-media-info-section').show();
+
 			var self = this;
 
 			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
