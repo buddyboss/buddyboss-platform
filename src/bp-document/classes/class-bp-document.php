@@ -777,7 +777,7 @@ class BP_Document {
 
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query_document = self::get_scope_document_query_sql( $r['scope'], $r );
-			//$scope_query_folder   = self::get_scope_folder_query_sql( $r['scope'], $r );
+			$scope_query_folder   = self::get_scope_folder_query_sql( $r['scope'], $r );
 
 			// Override some arguments if needed.
 			if ( ! empty( $scope_query_document['override'] ) ) {
