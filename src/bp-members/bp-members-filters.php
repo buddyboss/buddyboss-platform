@@ -234,7 +234,10 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 			'column' => 'album_id',
 			'value'  => 0,
 		),
-		array(
+	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
 			'relation' => 'OR',
 			array(
 				'column'  => 'title',
@@ -246,8 +249,8 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
 			),
-		),
-	);
+		);
+	}
 
 	return $retval;
 }
