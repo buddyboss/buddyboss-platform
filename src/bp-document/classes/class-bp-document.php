@@ -717,6 +717,7 @@ class BP_Document {
 				'count_total'    => false,           // Whether or not to use count_total.
 				'folder'         => true,
 				'user_directory' => true,
+				'folder_id'      => true,
 			)
 		);
 
@@ -987,6 +988,8 @@ class BP_Document {
 		} else {
 			$retval['documents'] = $documents;
 		}
+
+		$retval['total'] = count( $retval['documents'] );
 
 		return $retval;
 	}

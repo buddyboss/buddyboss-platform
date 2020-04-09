@@ -52,7 +52,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * The acceptable visibility levels for media.
 	 *
-	 * @see bp_media_get_visibility_levels()
+	 * @see bp_document_get_visibility_levels()
 	 *
 	 * @since BuddyBoss 1.3.0
 	 * @var array
@@ -162,6 +162,10 @@ class BP_Document_Component extends BP_Component {
 
 		if ( bp_is_active( 'friends' ) ) {
 			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		}
+
+		if ( bp_is_active( 'groups' ) ) {
+			$this->visibility_levels['grouponly'] = __( 'Groups Only', 'buddyboss' );
 		}
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );

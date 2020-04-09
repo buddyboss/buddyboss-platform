@@ -500,7 +500,15 @@ function bp_document_id() {
  * @return int The document ID.
  */
 function bp_get_document_id() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	$id = 0;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
+		$id = $document_template->document->id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->id ) ) {
+		$id = $document_folder_template->folder->id;
+	}
 
 	/**
 	 * Filters the document ID being displayed.
@@ -509,7 +517,7 @@ function bp_get_document_id() {
 	 *
 	 * @param int $id The document ID.
 	 */
-	return apply_filters( 'bp_get_document_id', $document_template->document->id );
+	return apply_filters( 'bp_get_document_id', $id );
 }
 
 /**
@@ -562,7 +570,15 @@ function bp_document_user_id() {
  * @return int The document user ID.
  */
 function bp_get_document_user_id() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	$user_id = 0;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->user_id ) ) {
+		$user_id = $document_template->document->user_id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->user_id ) ) {
+		$user_id = $document_folder_template->folder->user_id;
+	}
 
 	/**
 	 * Filters the document ID being displayed.
@@ -571,7 +587,7 @@ function bp_get_document_user_id() {
 	 *
 	 * @param int $id The document user ID.
 	 */
-	return apply_filters( 'bp_get_document_user_id', $document_template->document->user_id );
+	return apply_filters( 'bp_get_document_user_id', $user_id );
 }
 
 /**
@@ -632,7 +648,15 @@ function bp_document_title() {
  * @return int The document title.
  */
 function bp_get_document_title() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	$title = '';
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->title ) ) {
+		$title = $document_template->document->title;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->title ) ) {
+		$title = $document_folder_template->folder->title;
+	}
 
 	/**
 	 * Filters the document title being displayed.
@@ -641,7 +665,7 @@ function bp_get_document_title() {
 	 *
 	 * @param int $id The document title.
 	 */
-	return apply_filters( 'bp_get_document_title', $document_template->document->title );
+	return apply_filters( 'bp_get_document_title', $title );
 }
 
 /**
@@ -713,7 +737,15 @@ function bp_document_folder_id() {
  * @return int The document folder ID.
  */
 function bp_get_document_folder_id() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	$id = 0;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
+		$id = $document_template->document->id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->id ) ) {
+		$id = $document_folder_template->folder->id;
+	}
 
 	/**
 	 * Filters the document folder ID being displayed.
@@ -722,7 +754,7 @@ function bp_get_document_folder_id() {
 	 *
 	 * @param int $id The document folder ID.
 	 */
-	return apply_filters( 'bp_get_document_folder_id', $document_template->document->id );
+	return apply_filters( 'bp_get_document_folder_id', $id );
 }
 
 /**
@@ -1356,7 +1388,13 @@ function bp_folder_title() {
  * @return string The document folder title.
  */
 function bp_get_folder_title() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->title ) ) {
+		$title = $document_template->document->title;
+	} else {
+		$title = $document_folder_template->folder->title;
+	}
 
 	/**
 	 * Filters the folder title being displayed.
@@ -1365,7 +1403,7 @@ function bp_get_folder_title() {
 	 *
 	 * @param int $id The document folder title.
 	 */
-	return apply_filters( 'bp_get_folder_title', $document_template->document->title );
+	return apply_filters( 'bp_get_folder_title', $title );
 }
 
 /**
