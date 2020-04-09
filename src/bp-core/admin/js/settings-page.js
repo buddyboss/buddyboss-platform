@@ -810,6 +810,8 @@
 					});
 
 					totalCount = parseInt( $('.extension-listing tr.default-extension').length );
+
+					parent.find('.check-mimetype.hidden').show().removeClass('hidden');
 					
 				}
 			);
@@ -856,11 +858,33 @@
 						type: 'post',
 						success: function( response ){
 							$( '.show-document-mime-type' ).show();
-							$( '.show-document-mime-type span.type' ).text( response.data.type );
+							$( '.show-document-mime-type input.type' ).val( response.data.type );
 						}
 					});
 				}
 			);
+
+			$( document ).on(
+				'click',
+				'.show-document-mime-type .mime-copy',
+				function(e) {
+					e.preventDefault();
+					if( $(this).hasClass('copying') ){
+						return;
+					}
+					$(this).siblings('.type').select();
+					document.execCommand('copy');
+					$(this).parent().append('<span class="mimeCopied">Copied</span>');
+					$('.mimeCopied').fadeOut(1000);
+					$(this).addClass('copying');
+					setTimeout( function() {
+						$('.mimeCopied').remove();
+						$('.mime-copy.copying').removeClass('copying');
+					},1000 );
+				}
+			);
+
+
 		}
 	);
 

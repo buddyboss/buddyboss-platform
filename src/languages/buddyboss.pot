@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-08 10:10:50+00:00\n"
+"POT-Creation-Date: 2020-04-09 06:53:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -906,7 +906,7 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:13
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:47
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:102
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:98
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:117
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
@@ -977,7 +977,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-membership-requests-template.php:91
 #: bp-groups/classes/class-bp-groups-template.php:134
 #: bp-messages/classes/class-bp-messages-box-template.php:112
-#: bp-messages/classes/class-bp-messages-thread.php:719
+#: bp-messages/classes/class-bp-messages-thread.php:730
 #: bp-xprofile/classes/class-bp-xprofile-data-template.php:130
 msgid ""
 "Arguments passed to %1$s should be in an associative array. See the inline "
@@ -1547,7 +1547,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:283
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:118
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:186
-#: bp-core/bp-core-functions.php:780 bp-core/bp-core-update.php:679
+#: bp-core/bp-core-functions.php:780 bp-core/bp-core-update.php:687
 msgid "Sites"
 msgstr ""
 
@@ -2596,7 +2596,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
 #: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:781
-#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:681
+#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:689
 #: bp-core/classes/class-bp-email-tokens.php:394 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1365 bp-groups/bp-groups-admin.php:2021
 #: bp-groups/bp-groups-functions.php:3662
@@ -2650,7 +2650,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:111
 #: bp-core/admin/settings/bp-admin-setting-groups.php:23
 #: bp-core/bp-core-functions.php:779 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:680 bp-core/gdpr/class-bp-group-export.php:27
+#: bp-core/bp-core-update.php:688 bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
 #: bp-groups/bp-groups-admin.php:38 bp-groups/bp-groups-admin.php:48
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
@@ -5192,7 +5192,7 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:678
+#: bp-core/bp-core-update.php:686
 msgid "Site-Wide Activity"
 msgstr ""
 
@@ -10324,7 +10324,7 @@ msgstr ""
 #: bp-forums/replies/functions.php:2431 bp-members/bp-members-functions.php:539
 #: bp-messages/bp-messages-template.php:1791
 #: bp-messages/bp-messages-template.php:2056
-#: bp-messages/classes/class-bp-messages-thread.php:1159
+#: bp-messages/classes/class-bp-messages-thread.php:1170
 msgid "Deleted User"
 msgstr ""
 
@@ -10395,7 +10395,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:57
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:51
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:46
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:101
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:97
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:109
 msgid "Move"
 msgstr ""
@@ -14015,7 +14015,7 @@ msgstr ""
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:1264
+#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:1274
 msgid "Extensions"
 msgstr ""
 
@@ -14134,11 +14134,11 @@ msgstr ""
 msgid "Mime Type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1185
+#: bp-media/bp-media-settings.php:1195
 msgid "Click <a href=\"%s\">here</a> add/edit/delete more extensions.."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1221
+#: bp-media/bp-media-settings.php:1231
 msgid "Document Extensions"
 msgstr ""
 
@@ -15366,7 +15366,7 @@ msgstr ""
 msgid "Display Sitewide Notices posted by the site administrator"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-thread.php:1150
+#: bp-messages/classes/class-bp-messages-thread.php:1161
 msgid "%s Recipients"
 msgstr ""
 
@@ -16062,13 +16062,13 @@ msgid "- Click to Download"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:36
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:91
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:87
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:102
 msgid "Download"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:41
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:96
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:92
 msgid "More actions"
 msgstr ""
 
@@ -16076,15 +16076,15 @@ msgstr ""
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:86
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:82
 msgid "Click to expand"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:90
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:86
 msgid "Collapse"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:113
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:109
 msgid ""
 "This file was truncated for preview. Please <a href=\"%s\">download</a> to "
 "view the full file."

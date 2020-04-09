@@ -1164,6 +1164,16 @@ function bp_media_settings_callback_extension_document_support() {
 			</tr>
 		</tbody>
 		<tfoot>
+			<tr style="display: none;" class="check-mimetype hidden">
+				<td></td>
+                <td></td>
+				<td></td>
+				<td style="text-align:left;">
+					<a href="/wp-admin/admin.php?page=bp-settings&tab=bp-document&mime_type=check_mime_type" target="_blank">Check Mime Type</a>
+				</td>
+				<td></td>
+				<td></td>
+			</tr>
 			<tr>
 				<td colspan="5">
 					

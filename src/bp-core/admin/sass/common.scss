@@ -542,10 +542,6 @@ table.extension-listing td #btn-remove-extensions {
 	cursor: pointer;
 }
 
-table.extension-listing tfoot td {
-	text-align: center;
-}
-
 table.extension-listing td #btn-add-extensions {
 	cursor: pointer;
 	font-size: 22px;
@@ -561,6 +557,14 @@ table.extension-listing td input[type="text"] {
 
 .section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
 	display: table-cell;
+}
+
+table.extension-listing tfoot tr.check-mimetype td a {
+	color: #fff;
+	text-decoration: none;
+	background-color: #444;
+	padding: 5px 15px;
+	border-radius: 5px;
 }
 
 /* Pages */
