@@ -111,6 +111,38 @@ class BP_Document {
 	var $date_created;
 
 	/**
+	 * Upload document file name.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var string
+	 */
+	var $file_name;
+
+	/**
+	 * Upload document caption.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var string
+	 */
+	var $caption;
+
+	/**
+	 * Upload document description.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var string
+	 */
+	var $description;
+
+	/**
+	 * Upload document extension.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var string
+	 */
+	var $extension;
+
+	/**
 	 * Error holder.
 	 *
 	 * @since BuddyBoss 1.3.0
@@ -180,6 +212,10 @@ class BP_Document {
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+		$this->file_name     = $row->file_name;
+		$this->caption       = $row->caption;
+		$this->description   = $row->description;
+		$this->extension     = $row->extension;
 	}
 
 	/**
@@ -206,6 +242,10 @@ class BP_Document {
 		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->file_name     = apply_filters_ref_array( 'bp_document_file_name_before_save', array( $this->file_name, &$this ) );
+		$this->caption       = apply_filters_ref_array( 'bp_document_caption_before_save', array( $this->caption, &$this ) );
+		$this->description   = apply_filters_ref_array( 'bp_document_description_before_save', array( $this->description, &$this ) );
+		$this->extension     = apply_filters_ref_array( 'bp_document_extension_before_save', array( $this->extension, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.
@@ -313,10 +353,10 @@ class BP_Document {
 						$resolution    = '300';
 						$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
 						$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
-						$exec_command  .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
-						$exec_command  .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
-						$exec_command  .= '-r' . $resolution . ' ';
-						$exec_command  .= '-sOutputFile=' . $output_file . " '" . $filename . "'";
+						$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
+						$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
+						$exec_command .= '-r' . $resolution . ' ';
+						$exec_command .= '-sOutputFile=' . $output_file . " '" . $filename . "'";
 
 						exec( $exec_command, $command_output, $return_val );
 
@@ -360,9 +400,9 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, type = %s, preview_attachment_id = %d WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, type = %s, preview_attachment_id = %d, file_name = %s, caption = %s, description = %s, extension = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type, preview_attachment_id ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %d )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type, preview_attachment_id, file_name, caption, description, extension ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %d, %s, %s, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {

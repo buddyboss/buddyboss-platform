@@ -283,6 +283,10 @@ function bp_document_add( $args = '' ) {
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded
 			'error_type'    => 'bool',
+			'file_name'     => '',
+			'caption'       => '',
+			'description'   => '',
+			'extension'     => '',
 		),
 		'document_add'
 	);
@@ -300,6 +304,10 @@ function bp_document_add( $args = '' ) {
 	$document->menu_order    = $r['menu_order'];
 	$document->date_created  = $r['date_created'];
 	$document->error_type    = $r['error_type'];
+	$document->file_name     = $r['file_name'];
+	$document->caption       = $r['caption'];
+	$document->description   = $r['description'];
+	$document->extension     = $r['extension'];
 
 	// groups document always have privacy to `grouponly`
 	if ( ! empty( $document->group_id ) ) {
@@ -359,6 +367,11 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 		// save  document
 		foreach ( $documents as $document ) {
 
+			$attachment_data = get_post( $document['id'] );
+			$file            = get_attached_file( $document['id'] );
+			$file_type       = wp_check_filetype( $file );
+			$file_name       = basename( $file );
+
 			$document_id = bp_document_add(
 				array(
 					'activity_id'   => $activity_id,
@@ -366,6 +379,10 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 					'title'         => $document['name'],
 					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
 					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
+					'file_name'     => $file_name,
+					'caption'       => $attachment_data->post_excerpt,
+					'description'   => $attachment_data->post_content,
+					'extension'     => '.' . $file_type['ext'],
 					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 				)
 			);
@@ -1577,7 +1594,7 @@ function bp_document_get_visibility_levels() {
  *
  * @return bool|int
  */
-function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0, $title = '' ) {
+function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0, $title = '', $caption = '', $description = '', $backend = false ) {
 
 	global $wpdb, $bp;
 
@@ -1585,19 +1602,48 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
+	$file_name = sanitize_title( $title );
+
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET file_name = %s, title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $file_name, $title, bp_core_current_time(), $document_id, $attachment_document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
+
+	if ( '' !== $caption ) {
+		$query_caption = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET caption = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $caption, bp_core_current_time(), $document_id, $attachment_document_id );
+		$query_caption = $wpdb->query( $query_caption ); // db call ok; no-cache ok;
+	}
+
+	if ( '' !== $description ) {
+		$query_description = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET description = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $description, bp_core_current_time(), $document_id, $attachment_document_id );
+		$query_description = $wpdb->query( $query_description ); // db call ok; no-cache ok;
+	}
 
 	if ( false === $query ) {
 		return false;
 	}
 
-	$post = get_post( $attachment_document_id, ARRAY_A );
-
-	if ( isset( $title ) ) {
-		$post['post_title'] = $title;
-		wp_update_post( $post );
+	// Do not update title if already updated from backend.
+	if ( false === $backend ) {
+		$post = get_post( $attachment_document_id, ARRAY_A );
+		if ( isset( $title ) ) {
+			$post['post_title'] = $title;
+			wp_update_post( $post );
+		}
 	}
+
+	// Rename filename based on the title.
+	$file          = get_attached_file( $attachment_document_id );
+	$path          = pathinfo( $file );
+	$new_file_name = $file_name;
+	$new_file_name = wp_unique_filename( $path['dirname'], $new_file_name . '.' . $path['extension'] );
+	$new_file      = $path['dirname'] . '/' . $new_file_name;
+
+	rename( $file, $new_file );
+	update_attached_file( $attachment_document_id, $new_file );
+
+	$extension = '.' . $path['extension'];
+
+	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET file_name = %s, extension = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $new_file_name, $extension, bp_core_current_time(), $document_id, $attachment_document_id );
+	$rename_file_name_query = $wpdb->query( $rename_file_name_query ); // db call ok; no-cache ok;
 
 	return $document_id;
 }

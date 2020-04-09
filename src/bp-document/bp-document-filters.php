@@ -37,6 +37,9 @@ add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_atta
 // Download Document
 add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
 
+// Sync Attachment data
+add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
+
 /**
  * Add document theatre template for activity pages
  */
@@ -342,12 +345,21 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 				}
 			}
 
+			$attachment_data = get_post( $document['id'] );
+			$file            = get_attached_file( $document['id'] );
+			$file_type       = wp_check_filetype( $file );
+			$file_name       = basename( $file );
+
 			$document_id = bp_document_add(
 				array(
 					'attachment_id' => $attachment_id,
 					'title'         => $title,
 					'folder_id'     => $folder_id,
 					'group_id'      => $group_id,
+					'file_name'     => $file_name,
+					'caption'       => $attachment_data->post_excerpt,
+					'description'   => $attachment_data->post_content,
+					'extension'     => '.' . $file_type['ext'],
 					'error_type'    => 'wp_error',
 				)
 			);
@@ -438,11 +450,20 @@ function bp_document_attach_document_to_message( &$message ) {
 			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
 			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
 
+			$attachment_data = get_post( $document['id'] );
+			$file            = get_attached_file( $document['id'] );
+			$file_type       = wp_check_filetype( $file );
+			$file_name       = basename( $file );
+
 			$document_id = bp_document_add(
 				array(
+					'attachment_id' => $attachment_id,
 					'title'         => $title,
 					'privacy'       => 'message',
-					'attachment_id' => $attachment_id,
+					'file_name'     => $file_name,
+					'caption'       => $attachment_data->post_excerpt,
+					'description'   => $attachment_data->post_content,
+					'extension'     => '.' . $file_type['ext'],
 				)
 			);
 
@@ -515,5 +536,22 @@ function bp_document_download_url_file() {
 
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+	}
+}
+
+function bp_document_sync_document_data( $attachment_id ) {
+
+	global $wpdb, $bp;
+
+	// Check if media is attached to a document
+	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE type = %s AND attachment_id = %d", 'document', $attachment_id ) ); // db call ok; no-cache ok;
+
+    if ( $document  ) {
+
+	    $document_post = get_post( $attachment_id );
+
+
+		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, $document_post->post_excerpt, $document_post->post_content, true );
+
 	}
 }
