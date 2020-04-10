@@ -816,7 +816,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
-	global $thread_template, $media_template, $wpdb;
+	global $thread_template, $media_template, $wpdb, $bp;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
@@ -840,8 +840,12 @@ function bp_nouveau_ajax_get_thread_messages() {
 	}
 
 	$thread_id = (int) $_POST['id'];
-	$post      = $_POST;
-	$thread    = bp_nouveau_get_thread_messages( $thread_id, $post );
+
+	// Mark thread active if it's in hidden mode.
+	$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, bp_loggedin_user_id() ) );
+
+	$post   = $_POST;
+	$thread = bp_nouveau_get_thread_messages( $thread_id, $post );
 
 	wp_send_json_success( $thread );
 }

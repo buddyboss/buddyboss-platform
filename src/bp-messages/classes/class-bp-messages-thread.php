@@ -754,6 +754,7 @@ class BP_Messages_Thread {
 				'page'         => null,
 				'search_terms' => '',
 				'include'      => false,
+				'is_hidden'    => false,
 				'meta_query'   => array(),
 			)
 		);
@@ -775,15 +776,31 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['include'] ) ) {
 			$user_threads_query = $r['include'];
 		} else {
-			$user_threads_query = $wpdb->prepare(
-				"
+
+			// Do not include hidden threads.
+			if ( false === $r['is_hidden'] && '' === $r['search_terms'] ) {
+				$user_threads_query = $wpdb->prepare(
+					"
+			SELECT DISTINCT(thread_id)
+			FROM {$bp->messages->table_name_recipients}
+			WHERE user_id = %d
+			AND is_deleted = 0
+			AND is_hidden = 0
+		",
+					$r['user_id']
+				);
+			} else{
+				$user_threads_query = $wpdb->prepare(
+					"
 			SELECT DISTINCT(thread_id)
 			FROM {$bp->messages->table_name_recipients}
 			WHERE user_id = %d
 			AND is_deleted = 0
 		",
-				$r['user_id']
-			);
+					$r['user_id']
+				);
+			}
+
 		}
 
 		if ( ! empty( $r['search_terms'] ) ) {

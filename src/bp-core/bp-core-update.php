@@ -289,6 +289,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 14901 ) {
 			bp_update_to_1_2_9();
 		}
+
+		if ( $raw_db_version < 15200 ) {
+			bp_update_to_1_2_9_2();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -958,4 +962,8 @@ function bp_core_fix_media_activities() {
  */
 function bp_update_to_1_2_9() {
 	bp_core_install_group_message_email();
+}
+
+function bp_update_to_1_2_9_2() {
+	bp_core_install_private_messaging();
 }
