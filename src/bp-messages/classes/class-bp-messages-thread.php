@@ -683,6 +683,9 @@ class BP_Messages_Thread {
 				}
 			}
 
+			// Delete Message Notifications
+			bp_messages_message_delete_notifications( $thread_id, $message_ids );
+
 			// Delete thread messages.
 			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
 			$wpdb->query( $query ); // db call ok; no-cache ok;

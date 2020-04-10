@@ -18,11 +18,12 @@
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
-			<span class="recipients-count">13</span>
-			<# if ( data.group_avatar.length > 1 && data.is_group_thread ) { #>
+
+			<# if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
 				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
+					<span class="recipients-count">{{other_recipients.length}}</span>
 					<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
@@ -36,7 +37,7 @@
 		<div class="thread-content" data-thread-id="{{data.id}}">
 			<div class="thread-to">
 
-				<# if ( data.group_name.length && data.is_group_thread ) { #>
+				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 
