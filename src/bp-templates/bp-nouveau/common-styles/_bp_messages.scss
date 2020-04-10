@@ -490,7 +490,7 @@ input#send-to-input {
 		visibility: visible;
 		z-index: 99;
 		background-color: transparent;
-		opacity: 0.6;
+		opacity: 0.3;
 
 		&.medium-editor-toolbar-active {
 			opacity: 1;
@@ -523,7 +523,8 @@ input#send-to-input {
 		border-top: 1px solid #ebe9e6;
 		width: 100%;
 	}
-	#whats-new-messages-toolbar	{
+
+	#whats-new-messages-toolbar {
 		padding: 0 15px 15px;
 		justify-content: flex-end;
 	}

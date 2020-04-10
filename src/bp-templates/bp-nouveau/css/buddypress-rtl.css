@@ -4367,6 +4367,51 @@ input#send-to-input {
 
 .bp-messages-content #bp-message-content {
   margin-top: 20px;
+  position: relative;
+  padding: 20px;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar {
+  top: inherit;
+  bottom: 80px;
+  visibility: visible;
+  z-index: 99;
+  background-color: transparent;
+  opacity: 0.3;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
+  opacity: 1;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions {
+  background-color: transparent;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 12px;
+  border: 0;
+  background-color: transparent !important;
+  color: rgba(18, 43, 70, 0.4) !important;
+}
+
+.bp-messages-content #bp-message-content #message-reply-form-submit-wrapper {
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 0 -20px;
+}
+
+.bp-messages-content #bp-message-content #message-reply-new-submit {
+  padding: 20px 20px 0;
+  text-align: left;
+  border-top: 1px solid #ebe9e6;
+  width: 100%;
+}
+
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar {
+  padding: 0 15px 15px;
+  justify-content: flex-end;
 }
 
 .messages .select2-dropdown {

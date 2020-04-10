@@ -4377,7 +4377,7 @@ input#send-to-input {
   visibility: visible;
   z-index: 99;
   background-color: transparent;
-  opacity: 0.6;
+  opacity: 0.3;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
