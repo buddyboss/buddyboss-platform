@@ -524,6 +524,24 @@ span.icons:before {
 			top: 2px;
 		}
 	}
+
+	.thread-avatar {
+		position: relative;
+
+		.recipients-count {
+			position: absolute;
+			top: 2px;
+			right: -5px;
+			background: #fff;
+			color: #939597;
+			border-radius: 50%;
+			border: 1px solid;
+			font-size: 11px;
+			line-height: normal;
+			padding: 1px;
+		}
+	}
+
 }
 
 /* Rounded sliders */

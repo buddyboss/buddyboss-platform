@@ -18,7 +18,7 @@
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
-
+			<span class="recipients-count">13</span>
 			<# if ( data.group_avatar.length > 1 && data.is_group_thread ) { #>
 				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>

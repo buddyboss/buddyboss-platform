@@ -4124,6 +4124,68 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   font-size: 26px;
 }
 
+.bp-messages-content .actions .message_actions .message_action__anchor {
+  color: #555;
+}
+
+.bp-messages-content .actions .message_actions .message_action__list {
+  display: none;
+  margin: 0;
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 190px;
+  left: -20px;
+  top: 35px;
+  z-index: 119;
+  list-style: none;
+}
+
+.bp-messages-content .actions .message_actions .message_action__list.open {
+  display: block;
+}
+
+.bp-messages-content .actions .message_actions .message_action__list ul {
+  margin: 0;
+}
+
+.bp-messages-content .actions .message_actions .message_action__list li {
+  cursor: pointer;
+  line-height: 1;
+  margin: 0;
+  padding: 6px 14px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1px;
+}
+
+.bp-messages-content .actions .message_actions .message_action__list li a {
+  color: #7f868f;
+  font-size: 14px;
+}
+
+.bp-messages-content .actions .message_actions .message_action__list:before {
+  content: " ";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 0;
+  left: 20px;
+  border: 6px solid #000;
+  border-color: #fff #fff transparent transparent;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+  z-index: 1002;
+}
+
 .bp-messages-content form.send-reply .avatar-box {
   padding: 0.7em 0;
 }
@@ -12243,6 +12305,23 @@ span.icons:before {
   line-height: 1;
   right: -6px;
   top: 2px;
+}
+
+.message-lists .thread-avatar {
+  position: relative;
+}
+
+.message-lists .thread-avatar .recipients-count {
+  position: absolute;
+  top: 2px;
+  right: -5px;
+  background: #fff;
+  color: #939597;
+  border-radius: 50%;
+  border: 1px solid;
+  font-size: 11px;
+  line-height: normal;
+  padding: 1px;
 }
 
 /* Rounded sliders */

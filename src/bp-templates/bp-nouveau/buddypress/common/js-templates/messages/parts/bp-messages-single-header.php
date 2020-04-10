@@ -55,7 +55,7 @@
 		        ?>
 		        <div class="message_actions">
 			        <a href="#" class="message_action__anchor">
-				        <i class="bb-icon-trash"></i>
+				        <i class="dashicons dashicons-trash"></i>
 			        </a>
 			        <div class="message_action__list">
 				        <ul>
