@@ -481,7 +481,6 @@ input#send-to-input {
 
 .bp-messages-content #bp-message-content {
 	margin-top: $marg-lrg;
-	position: relative;
 	padding: 20px;
 
 	.medium-editor-toolbar {
@@ -491,6 +490,7 @@ input#send-to-input {
 		z-index: 99;
 		background-color: transparent;
 		opacity: 0.3;
+		transition: opacity ease 0.2s;
 
 		&.medium-editor-toolbar-active {
 			opacity: 1;
@@ -501,7 +501,7 @@ input#send-to-input {
 
 			button {
 				box-shadow: none;
-				padding: 10px 12px;
+				padding: 10px 10px 10px;
 				border: 0;
 				background-color: transparent !important;
 				color: rgba(18, 43, 70, 0.4) !important;

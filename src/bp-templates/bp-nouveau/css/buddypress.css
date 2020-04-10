@@ -4367,7 +4367,6 @@ input#send-to-input {
 
 .bp-messages-content #bp-message-content {
   margin-top: 20px;
-  position: relative;
   padding: 20px;
 }
 
@@ -4378,6 +4377,7 @@ input#send-to-input {
   z-index: 99;
   background-color: transparent;
   opacity: 0.3;
+  transition: opacity ease 0.2s;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
@@ -4390,7 +4390,7 @@ input#send-to-input {
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
   box-shadow: none;
-  padding: 10px 12px;
+  padding: 10px 10px 10px;
   border: 0;
   background-color: transparent !important;
   color: rgba(18, 43, 70, 0.4) !important;
