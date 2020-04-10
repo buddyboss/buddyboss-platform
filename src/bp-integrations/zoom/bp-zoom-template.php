@@ -67,12 +67,14 @@ function bp_has_zoom_meetings( $args = '' ) {
 		$group_id = bp_get_current_group_id();
 	}
 
+	$sort  = 'ASC';
 	$since = gmdate( 'Y-m-d H:i:s' );
 	$from  = false;
 	if ( bp_is_current_action( 'zoom' ) ) {
 		if ( ! empty( bp_action_variable( 0 ) ) && 'past-meetings' === bp_action_variable( 0 ) ) {
-			$from = gmdate( 'Y-m-d H:i:s' );
+			$from  = gmdate( 'Y-m-d H:i:s' );
 			$since = false;
+			$sort  = 'DESC';
 		}
 	}
 
@@ -87,7 +89,7 @@ function bp_has_zoom_meetings( $args = '' ) {
 		array(
 			'include'      => false,           // Pass an meeting_id or string of IDs comma-separated.
 			'exclude'      => false,           // Pass an activity_id or string of IDs comma-separated.
-			'sort'         => 'DESC',          // Sort DESC or ASC.
+			'sort'         => $sort,          // Sort DESC or ASC.
 			'order_by'     => false,           // Order by. Default: id
 			'page'         => 1,               // Which page to load.
 			'per_page'     => 20,              // Number of items per page.
