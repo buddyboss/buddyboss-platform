@@ -182,7 +182,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 			}
 
 			?>
-			<table class="form-table">
+			<table class="profile-settings bp-tables-user">
 				<tbody>
 				<tr>
 					<th scope="row"><label for="userId">Meeting Host *</label></th>
