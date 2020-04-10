@@ -377,8 +377,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 						                                                                name="join_before_host"
 						                                                                id="join_before_host" value="1"
 						                                                                checked="checked"
-						                                                                class="regular-text">Join
-							meeting before host start the meeting. Only for scheduled or recurring meetings.</p>
+						                                                                class="regular-text">Join meeting before the host starts the meeting. Only for scheduled or recurring meetings.</p>
 					</td>
 				</tr>
 				<tr>
@@ -387,8 +386,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 						<p class="description" id="option_host_video-description"><input type="checkbox"
 						                                                                 name="option_host_video"
 						                                                                 id="option_host_video"
-						                                                                 value="1" class="regular-text">Start
-							video when host join meeting.</p>
+						                                                                 value="1" class="regular-text">Start video when host joins the meeting.</p>
 					</td>
 				</tr>
 				<tr>
@@ -398,8 +396,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 						                                                                         name="option_participants_video"
 						                                                                         id="participants_video"
 						                                                                         value="1"
-						                                                                         class="regular-text">Start
-							video when participants join meeting.</p>
+						                                                                         class="regular-text">Start video when participants join the meeting.</p>
 					</td>
 				</tr>
 				<tr>
@@ -411,8 +408,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 						                                                                       id="mute_participants"
 						                                                                       value="1"
 						                                                                       checked="checked"
-						                                                                       class="regular-text">Mutes
-							Participants when entering the meeting.</p>
+						                                                                       class="regular-text">Mute participants when entering the meeting.</p>
 					</td>
 				</tr>
 				<tr>
@@ -423,8 +419,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 							<option value="local">Local</option>
 							<option value="cloud" selected="selected">Cloud</option>
 						</select>
-						<p class="description" id="option_auto_recording_description">Set what type of auto recording
-							feature you want to add. Default is none.</p>
+						<p class="description" id="option_auto_recording_description">Set what type of auto recording feature you want to add. Default is none.</p>
 					</td>
 				</tr>
 				</tbody>
