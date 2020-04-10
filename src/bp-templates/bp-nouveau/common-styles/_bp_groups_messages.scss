@@ -544,6 +544,25 @@ span.icons:before {
 		}
 	}
 
+	.thread-item {
+		position: relative;
+
+		.close-conversation {
+			color: #939597;
+			position: absolute;
+			right: 22px;
+			bottom: 0;
+			opacity: 0;
+			visibility: hidden;
+			transition: all ease 0.3s;
+		}
+
+		&:hover .close-conversation {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+
 }
 
 /* Rounded sliders */

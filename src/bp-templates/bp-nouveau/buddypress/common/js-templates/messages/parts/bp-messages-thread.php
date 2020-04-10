@@ -16,6 +16,7 @@
 	}
 	#>
 
+	<a href="#" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
 
