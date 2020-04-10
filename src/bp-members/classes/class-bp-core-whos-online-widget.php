@@ -65,7 +65,9 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		// Back up global.
 		$old_members_template = $members_template;
-
+		$online_count         = 0;
+		$connection_count     = 0;
+		
 		// Setup args for querying members.
 		$online_args = array(
 			'user_id'         => 0,
