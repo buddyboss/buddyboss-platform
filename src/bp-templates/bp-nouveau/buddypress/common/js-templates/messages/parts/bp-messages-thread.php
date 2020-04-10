@@ -16,7 +16,7 @@
 	}
 	#>
 
-	<a href="#" data-bp-action="hide_thread" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
+	<a href="javascript:void(0);" data-bp-thread-id="{{data.id}}" data-bp-action="hide_thread" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
 
@@ -61,8 +61,6 @@
 
 			<div class="thread-subject">
 				<span class="last-message-sender">
-                    <# console.log( data.sender_is_you ); #>
-                    <# console.log( other_recipients.length ); #>
 				  <# if ( data.sender_is_you ) { #>
 					<?php _e('You', 'buddyboss'); ?>:
 				  <# } else if ( other_recipients && other_recipients.length ) { #>

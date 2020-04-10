@@ -1001,11 +1001,12 @@ function bp_nouveau_ajax_groups_send_message() {
 				remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 				add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 				$new_reply = messages_new_message( array(
-					'thread_id'  => $group_thread,
-					'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-					'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-					'date_sent'  => $date_sent = bp_core_current_time(),
-					'error_type' => 'wp_error',
+					'thread_id'    => $group_thread,
+					'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+					'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+					'date_sent'    => $date_sent = bp_core_current_time(),
+					'mark_visible' => true,
+					'error_type'   => 'wp_error',
 				) );
 				remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 				add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1070,11 +1071,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$new_reply = messages_new_message( array(
-							'thread_id'  => $thread_id,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $thread_id,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1154,7 +1156,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 				}
 			}
-			// "Individual Members" Selected.
+		// "Individual Members" Selected.
 		} else {
 
 			$meta = array(
@@ -1251,11 +1253,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$new_reply = messages_new_message( array(
-							'thread_id'  => $thread_id,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $thread_id,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1330,11 +1333,12 @@ function bp_nouveau_ajax_groups_send_message() {
 								remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 								add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 								$new_reply = messages_new_message( array(
-									'thread_id'  => $existing_thread,
-									'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-									'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-									'date_sent'  => $date_sent = bp_core_current_time(),
-									'error_type' => 'wp_error',
+									'thread_id'    => $existing_thread,
+									'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+									'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+									'date_sent'    => $date_sent = bp_core_current_time(),
+									'mark_visible' => true,
+									'error_type'   => 'wp_error',
 								) );
 								remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 								add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1461,11 +1465,12 @@ function bp_nouveau_ajax_groups_send_message() {
 							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							$new_reply = messages_new_message( array(
-								'thread_id'  => $existing_thread,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
+								'thread_id'    => $existing_thread,
+								'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'    => $date_sent = bp_core_current_time(),
+								'mark_visible' => true,
+								'error_type'   => 'wp_error',
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1595,11 +1600,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$new_reply = messages_new_message( array(
-							'thread_id'  => $existing_thread,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $existing_thread,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );

@@ -1379,7 +1379,8 @@ window.bp = window.bp || {};
 
 		events: {
 			'click .bp-message-link' : 'changePreview',
-			'scroll' : 'scrolled'
+			'scroll' : 'scrolled',
+			'click .close-conversation' : 'doAction'
 		},
 
 		initialize: function() {
@@ -1536,7 +1537,40 @@ window.bp = window.bp || {};
 
 			target.addClass('current');
 			target.parents('.bp-messages-container').removeClass('bp-compose-message').addClass('bp-view-message');
-		}
+		},
+
+		doAction: function( event ) {
+			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
+				id		 = $( event.currentTarget ).data( 'bp-thread-id' ),
+				feedback = BP_Nouveau.messages.doingAction;
+
+			if ( ! action ) {
+				return event;
+			}
+
+			event.preventDefault();
+
+			if ( ! _.isUndefined( feedback[ action ] ) ) {
+				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
+			}
+
+			bp.Nouveau.Messages.threads.doAction( action, id, options ).done( function() {
+
+				// Remove previous feedback.
+				bp.Nouveau.Messages.removeFeedback();
+
+				if ( 'hide_thread' === action ) {
+					bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
+					bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+				}
+
+			} ).fail( function( response ) {
+				// Remove previous feedback.
+				bp.Nouveau.Messages.removeFeedback();
+
+				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+			} );
+		},
 	} );
 
 	bp.Views.userThread = bp.Nouveau.Messages.View.extend( {
@@ -1756,14 +1790,14 @@ window.bp = window.bp || {};
 			'click .actions a' : 'doAction',
 			'click .actions button' : 'doAction',
 			'click .bp-back-to-thread-list' : 'navigateToList',
-			'click .message_actions .message_action__anchor' : 'showOptions'
+			'click .message_actions .message_action__anchor' : 'showOptions',
 		},
 
-                navigateToList: function( event ) {
-                        event.preventDefault();
-                        bp.Nouveau.Messages.router.navigate( '/' );
-                        $('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
-                },
+		navigateToList: function( event ) {
+				event.preventDefault();
+				bp.Nouveau.Messages.router.navigate( '/' );
+				$('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
+		},
 
 		doAction: function( event ) {
 			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},

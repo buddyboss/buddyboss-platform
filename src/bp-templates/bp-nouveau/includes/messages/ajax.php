@@ -56,6 +56,12 @@ add_action( 'admin_init',
 				),
 			),
 			array(
+				'messages_hide_thread' => array(
+					'function' => 'bp_nouveau_ajax_hide_thread',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'messages_unstar' => array(
 					'function' => 'bp_nouveau_ajax_star_thread_messages',
 					'nopriv'   => false,
@@ -155,10 +161,11 @@ function bp_nouveau_ajax_messages_send_message() {
 
 	// Attempt to send the message.
 	$send = messages_new_message( array(
-		'recipients' => $recipients,
-		'subject'    => wp_trim_words( $_POST['message_content'], messages_get_default_subject_length() ),
-		'content'    => $_POST['message_content'],
-		'error_type' => 'wp_error',
+		'recipients'   => $recipients,
+		'subject'      => wp_trim_words( $_POST['message_content'], messages_get_default_subject_length() ),
+		'content'      => $_POST['message_content'],
+		'error_type'   => 'wp_error',
+		'mark_visible' => true,
 	) );
 
 	// Send the message.
@@ -1741,4 +1748,33 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->next_messages_timestamp = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 
 	return $thread;
+}
+
+function bp_nouveau_ajax_hide_thread() {
+
+	global $bp, $wpdb;
+
+	$response = array(
+		'feedback' => __( 'There was a problem deleting your messages. Please try again.', 'buddyboss' ),
+		'type'     => 'error',
+	);
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	foreach ( $thread_ids as $thread_id ) {
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
+	}
+
+	wp_send_json_success( array(
+		'type'     => 'success',
+		'messages' => 'Thread removed successfully.',
+	) );
 }
