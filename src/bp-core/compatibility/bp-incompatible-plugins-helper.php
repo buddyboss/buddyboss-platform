@@ -85,15 +85,34 @@ function bp_helper_plugins_loaded_callback() {
 		 */
 		function bp_core_fix_wpml_redirection( $q ) {
 
-			if ( ! bp_is_my_profile() || ! bp_current_component() ) {
-				return $q;
-			}
-
-			if ( in_array( bp_current_component(), array( 'forums', 'photos', 'groups' ) ) ) {
-				if ( isset( bp_core_get_directory_pages()->members->id ) ) {
-					$q->set( 'page_id', bp_core_get_directory_pages()->members->id );
+			if ( ! defined( 'DOING_AJAX' ) && ! bp_is_blog_page() && (bool) $q->get( 'page_id' ) === false && (bool) $q->get( 'pagename' ) === true ) {
+				$bp_current_component = bp_current_component();
+				$bp_current_action    = bp_current_action();
+				$bp_pages             = bp_core_get_directory_pages();
+				if ( $bp_current_component == 'photos' && $bp_current_action == 'my-media' ) {
+					if ( isset( $bp_pages->media->id ) ) {
+						$q->set( 'page_id', $bp_pages->media->id );
+					}
+				} elseif ( $bp_current_component == 'forums' && $bp_current_action == 'discussions' ) {
+					if ( isset( $bp_pages->members->id ) ) {
+						$q->set( 'page_id', $bp_pages->members->id );
+					}
+				} elseif ( $bp_current_component == 'groups' && $bp_current_action == 'photos' ) {
+					if ( isset( $bp_pages->media->id ) ) {
+						$q->set( 'page_id', $bp_pages->media->id );
+					}
+				} else {
+					$page_id = apply_filters( 'bpml_redirection_page_id',
+						null,
+						$bp_current_component,
+						$bp_current_action,
+						$bp_pages );
+					if ( $page_id ) {
+						$q->set( 'page_id', $page_id );
+					}
 				}
 			}
+			return $q;
 		}
 
 		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
