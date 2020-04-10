@@ -12321,7 +12321,9 @@ span.icons:before {
   border: 1px solid;
   font-size: 11px;
   line-height: normal;
-  padding: 1px;
+  min-width: 19px;
+  padding: 2px;
+  text-align: center;
 }
 
 /* Rounded sliders */
