@@ -58,6 +58,13 @@ class BP_Messages_Message {
 	public $date_sent;
 
 	/**
+	 * Thread is hidden
+	 *
+	 * @var bool
+	 */
+	public $is_hidden;
+
+	/**
 	 * Message recipients.
 	 *
 	 * @var bool|array
@@ -113,6 +120,7 @@ class BP_Messages_Message {
 		$this->subject   = apply_filters( 'messages_message_subject_before_save', $this->subject, $this->id );
 		$this->message   = apply_filters( 'messages_message_content_before_save', $this->message, $this->id );
 		$this->date_sent = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
+		$this->is_hidden = apply_filters( 'messages_message_is_hidden_before_save', $this->is_hidden, $this->id );
 
 		/**
 		 * Fires before the current message item gets saved.
@@ -158,6 +166,12 @@ class BP_Messages_Message {
 			if ( ! in_array( $this->sender_id, $recipient_ids ) ) {
 				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id ) VALUES ( %d, %d )", $this->sender_id, $this->thread_id ) );
 			}
+
+			// Mark Hidden thread for sender if `is_hidden` passed.
+			if ( true === $this->is_hidden ) {
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, $this->thread_id, $this->sender_id ) );
+			}
+
 		} else {
 			// Update the unread count for all recipients.
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );

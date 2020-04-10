@@ -33,6 +33,7 @@ defined( 'ABSPATH' ) || exit;
  *                              threads, 'No Subject' will be used if no $subject is provided.
  *     @type string $content    Content of the message. Cannot be empty.
  *     @type string $date_sent  Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
+ *     @type bool   $is_hidden  Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
  *     @type string $error_type Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  *
@@ -52,6 +53,7 @@ function messages_new_message( $args = '' ) {
 			'content'       => false,
 			'date_sent'     => bp_core_current_time(),
 			'append_thread' => true,
+			'is_hidden'     => false,
 			'error_type'    => 'bool',
 		),
 		'messages_new_message'
@@ -82,6 +84,7 @@ function messages_new_message( $args = '' ) {
 	$message->subject   = $r['subject'];
 	$message->message   = $r['content'];
 	$message->date_sent = $r['date_sent'];
+	$message->is_hidden = $r['is_hidden'];
 
 	$new_reply = false;
 	// If we have a thread ID...

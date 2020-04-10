@@ -1671,7 +1671,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			}
 		}
 
-		// Else "Private Reply (BCC)" selected.
+    // Else "Private Reply (BCC)" selected.
 	} else {
 
 		// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
@@ -1861,6 +1861,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 								'content'       => $_POST['content'],
 								'error_type'    => 'wp_error',
+								'is_hidden'     => true,
 								'append_thread' => false,
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -1879,6 +1880,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 							'content'       => $_POST['content'],
 							'error_type'    => 'wp_error',
+							'is_hidden'     => true,
 							'append_thread' => false,
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -1968,6 +1970,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 							'content'       => $_POST['content'],
 							'error_type'    => 'wp_error',
+							'is_hidden'     => true,
 							'append_thread' => false,
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -1985,6 +1988,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 						'content'       => $_POST['content'],
 						'error_type'    => 'wp_error',
+						'is_hidden'     => true,
 						'append_thread' => false,
 					) );
 					remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );

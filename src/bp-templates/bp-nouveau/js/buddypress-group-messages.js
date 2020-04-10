@@ -433,7 +433,13 @@ window.bp = window.bp || {};
 							$( '#item-body #group-messages-container .bb-groups-messages-right .select2-container' ).hide();
 							$( '#item-body #group-messages-container .bb-groups-messages-right .bb-groups-messages-right-bottom' ).hide();
 							$( '#item-body #group-messages-container .remove-after-few-seconds' ).remove();
-							var feedbackHtmlSuccess = '<div class="bp-feedback success bp-feedback-content-no-error remove-after-few-seconds"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + response.data.redirect_link  + ' </p></div>';
+
+							if ( 'all' === user && 'private' === type ) {
+								var feedbackHtmlSuccess = '<div class="bp-feedback success bp-feedback-content-no-error remove-after-few-seconds"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + ' </p></div>';
+							} else {
+								var feedbackHtmlSuccess = '<div class="bp-feedback success bp-feedback-content-no-error remove-after-few-seconds"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + response.data.redirect_link  + ' </p></div>';
+							}
+
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').hide();
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').after( feedbackHtmlSuccess );
 

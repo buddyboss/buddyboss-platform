@@ -61,9 +61,11 @@
 
 			<div class="thread-subject">
 				<span class="last-message-sender">
+                    <# console.log( data.sender_is_you ); #>
+                    <# console.log( other_recipients.length ); #>
 				  <# if ( data.sender_is_you ) { #>
 					<?php _e('You', 'buddyboss'); ?>:
-				  <# } else if ( other_recipients.length > 1 ) { #>
+				  <# } else if ( other_recipients && other_recipients.length ) { #>
 					{{ data.sender_name }}:
 				  <# } #>
 				</span>
