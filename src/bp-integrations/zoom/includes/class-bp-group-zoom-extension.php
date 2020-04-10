@@ -446,7 +446,7 @@ if ( ! class_exists( 'BP_Group_Zoom_Extension' ) && bp_is_active( 'groups' ) ) {
 				<input type="checkbox" name="bp-group-zoom-conference" id="bp-group-zoom-conference"
 				       class="bs-styled-checkbox" value="1" <?php echo checked( $setting ); ?> />
 				<label for="bp-group-zoom-conference"
-				       class="bp-label-text"><?php esc_html_e( 'Enable Zoom Conference' ); ?></label>
+				       class="bp-label-text"><?php esc_html_e( 'Enable Zoom Conference', 'buddyboss' ); ?></label>
 			</p>
 			<?php
 		}
