@@ -349,7 +349,7 @@ class BP_Group_Zoom_Meeting {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
+		$r = wp_parse_args(
 			$args,
 			array(
 				'page'         => 1,               // The current page.
@@ -362,7 +362,9 @@ class BP_Group_Zoom_Meeting {
 				'in'           => false,           // Array of ids to limit query by (IN).
 				'search_terms' => false,           // Terms to search by.
 				'count_total'  => false,           // Whether or not to use count_total.
-				'group_id'     => false,           // Whether or not to use count_total.
+				'group_id'     => false,           // filter results by group id.
+				'since'        => false,           // return items since date.
+				'from'         => false,           // return items from date.
 			)
 		);
 
@@ -408,6 +410,24 @@ class BP_Group_Zoom_Meeting {
 			// we want to disable limit query when include media ids
 			$r['page']     = false;
 			$r['per_page'] = false;
+		}
+
+		if ( ! empty( $r['since'] ) ) {
+			// Validate that this is a proper Y-m-d H:i:s date.
+			// Trick: parse to UNIX date then translate back.
+			$translated_date = date( 'Y-m-d H:i:s', strtotime( $r['since'] ) );
+			if ( $translated_date === $r['since'] ) {
+				$where_conditions['date_filter'] = "m.start_date > '{$translated_date}'";
+			}
+		}
+
+		if ( ! empty( $r['from'] ) ) {
+			// Validate that this is a proper Y-m-d H:i:s date.
+			// Trick: parse to UNIX date then translate back.
+			$translated_date = date( 'Y-m-d H:i:s', strtotime( $r['from'] ) );
+			if ( $translated_date === $r['from'] ) {
+				$where_conditions['date_filter'] = "m.start_date < '{$translated_date}'";
+			}
 		}
 
 		/**

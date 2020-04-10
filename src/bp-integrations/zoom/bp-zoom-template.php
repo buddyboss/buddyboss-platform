@@ -67,6 +67,15 @@ function bp_has_zoom_meetings( $args = '' ) {
 		$group_id = bp_get_current_group_id();
 	}
 
+	$since = gmdate( 'Y-m-d H:i:s' );
+	$from  = false;
+	if ( bp_is_current_action( 'zoom' ) ) {
+		if ( ! empty( bp_action_variable( 0 ) ) && 'past-meetings' === bp_action_variable( 0 ) ) {
+			$from = gmdate( 'Y-m-d H:i:s' );
+			$since = false;
+		}
+	}
+
 	/*
 	 * Parse Args.
 	 */
@@ -89,6 +98,8 @@ function bp_has_zoom_meetings( $args = '' ) {
 
 			// Filtering
 			'group_id'     => $group_id,       // group_id to filter on.
+			'since'        => $since,           // Return only items recorded since this Y-m-d H:i:s date.
+			'from'         => $from,           // Return only items recorded from this Y-m-d H:i:s date.
 
 			// Searching.
 			'search_terms' => $search_terms_default,

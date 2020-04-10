@@ -10,6 +10,24 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Returns LearnDash path.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_zoom_integration_path( $path = '' ) {
+	return trailingslashit( buddypress()->integrations['zoom']->path ) . trim( $path, '/\\' );
+}
+
+/**
+ * Returns LearnDash url.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_zoom_integration_url( $path = '' ) {
+	return trailingslashit( buddypress()->integrations['zoom']->url ) . trim( $path, '/\\' );
+}
+
+/**
  * Retrieve an meeting or meetings.
  *
  * The bp_zoom_meeting_get() function shares all arguments with BP_Group_Zoom_Meeting::get().
@@ -39,7 +57,9 @@ function bp_zoom_meeting_get( $args = '' ) {
 			'order_by'     => false,       // order by
 
 			// want to limit the query.
-			'group_id'      => false,
+			'group_id'     => false,
+			'since'        => false,
+			'from'         => false,
 			'search_terms' => false,        // Pass search terms as a string
 			'count_total'  => false,
 		),
@@ -51,6 +71,8 @@ function bp_zoom_meeting_get( $args = '' ) {
 			'page'         => $r['page'],
 			'per_page'     => $r['per_page'],
 			'group_id'     => $r['group_id'],
+			'since'        => $r['since'],
+			'from'         => $r['from'],
 			'max'          => $r['max'],
 			'sort'         => $r['sort'],
 			'order_by'     => $r['order_by'],
@@ -93,11 +115,14 @@ function bp_zoom_meeting_get_specific( $args = '' ) {
 		$args,
 		array(
 			'meeting_ids' => false,      // A single meeting_id or array of IDs.
-			'max'       => false,      // Maximum number of results to return.
-			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'  => false,      // Results per page.
-			'sort'      => 'DESC',     // Sort ASC or DESC
-			'order_by'  => false,     // Sort ASC or DESC
+			'max'         => false,      // Maximum number of results to return.
+			'page'        => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'    => false,      // Results per page.
+			'sort'        => 'DESC',     // Sort ASC or DESC
+			'order_by'    => false,     // Order by
+			'group_id'    => false,     // Filter by group id
+			'since'       => false,     // Return item since date
+			'from'        => false,     // Return item from date
 		),
 		'meeting_get_specific'
 	);
@@ -109,6 +134,9 @@ function bp_zoom_meeting_get_specific( $args = '' ) {
 		'per_page' => $r['per_page'],
 		'sort'     => $r['sort'],
 		'order_by' => $r['order_by'],
+		'group_id' => $r['group_id'],
+		'since'    => $r['since'],
+		'from'     => $r['from'],
 	);
 
 	/**
@@ -263,4 +291,66 @@ function bp_zoom_settings_callback_api_secret_field() {
  */
 function bp_zoom_api_secret( $default = '' ) {
 	return apply_filters( 'bp_zoom_api_secret', bp_get_option( 'bp-zoom-api-secret', $default ) );
+}
+
+/**
+ * Group zoom meeting slug for sub nav items.
+ *
+ * @since BuddyBoss 1.2.10
+ * @param $slug
+ *
+ * @return string slug of nav
+ */
+function bp_zoom_nouveau_group_secondary_nav_parent_slug( $slug ) {
+	if ( ! bp_is_group() ) {
+		return $slug;
+	}
+	return bp_get_current_group_slug() . '_zoom';
+}
+
+/**
+ * Selected and current class for current nav item in group zoom tabs.
+ *
+ * @since BuddyBoss 1.2.10
+ * @param $classes_str
+ * @param $classes
+ * @param $nav_item
+ *
+ * @return string classes for the nav items
+ */
+function bp_zoom_nouveau_group_secondary_nav_selected_classes( $classes_str, $classes, $nav_item ) {
+
+	if ( bp_is_current_action( 'zoom' ) ) {
+		if ( ( empty( bp_action_variable( 0 ) ) || 'meetings' === bp_action_variable( 0 ) ) && 'meetings' === $nav_item->slug ) {
+			$classes = array_merge( $classes, array( 'current', 'selected' ) );
+		} else if ( 'create-meeting' === bp_action_variable( 0 ) && 'create-meeting' === $nav_item->slug ) {
+			$classes = array_merge( $classes, array( 'current', 'selected' ) );
+		} else if ( 'past-meetings' === bp_action_variable( 0 ) && 'past-meetings' === $nav_item->slug ) {
+			$classes = array_merge( $classes, array( 'current', 'selected' ) );
+		}
+		return join( ' ', $classes );
+	}
+	return $classes_str;
+}
+
+/**
+ * Check if current request is groups zoom or not.
+ *
+ * @since BuddyBoss 1.2.10
+ * @return bool $is_zoom return true if group zoom page otherwise false
+ */
+function bp_zoom_is_groups_zoom() {
+	$is_zoom = false;
+	if ( bp_is_groups_component() && bp_is_group() && bp_is_current_action( 'zoom' ) ) {
+		$is_zoom = true;
+	}
+
+	/**
+	 * Filters the current group zoom page or not.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param bool $is_zoom Current page is groups zoom page or not.
+	 */
+	return apply_filters( 'bp_zoom_is_groups_zoom', $is_zoom );
 }

@@ -40,12 +40,13 @@ class BP_Zoom_Integration extends BP_Integration {
 	public function includes( $includes = array() ) {
 		parent::includes(
 			array(
+				'lib/firebase/php-jwt/src/JWT.php',
 				'template',
 				'functions',
+				'api/class-bp-zoom-api.php',
 				'includes/class-bp-group-zoom-meeting-template.php',
 				'includes/class-bp-group-zoom-meeting.php',
-				'includes/class-bp-group-zoom-extension.php',
-				'api/class-bp-zoom-api.php',
+				'includes/class-bp-group-zoom.php',
 			)
 		);
 	}

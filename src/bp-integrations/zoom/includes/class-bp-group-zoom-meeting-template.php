@@ -139,6 +139,9 @@ class BP_Group_Zoom_Meeting_Template {
 			'include'      => false,
 			'exclude'      => false,
 			'search_terms' => false,
+			'group_id'     => false,
+			'since'        => false,
+			'from'         => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -151,13 +154,16 @@ class BP_Group_Zoom_Meeting_Template {
 		if ( ! empty( $include ) ) {
 			$this->meetings = bp_zoom_meeting_get_specific(
 				array(
-					'meeting_ids'   => explode( ',', $include ),
+					'meeting_ids' => explode( ',', $include ),
 					'max'         => $max,
 					'count_total' => $count_total,
 					'page'        => $this->pag_page,
 					'per_page'    => $this->pag_num,
 					'sort'        => $sort,
 					'order_by'    => $order_by,
+					'group_id'    => $group_id,
+					'since'       => $since,
+					'from'        => $from,
 				)
 			);
 
@@ -173,6 +179,9 @@ class BP_Group_Zoom_Meeting_Template {
 					'order_by'     => $order_by,
 					'search_terms' => $search_terms,
 					'exclude'      => $exclude,
+					'group_id'     => $group_id,
+					'since'        => $since,
+					'from'         => $from,
 				)
 			);
 		}
