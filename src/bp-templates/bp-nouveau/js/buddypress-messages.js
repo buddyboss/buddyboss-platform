@@ -1540,7 +1540,7 @@ window.bp = window.bp || {};
 		},
 
 		doAction: function( event ) {
-			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
+			var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
 				id		 = $( event.currentTarget ).data( 'bp-thread-id' ),
 				feedback = BP_Nouveau.messages.doingAction;
 
