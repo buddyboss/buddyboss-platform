@@ -29,12 +29,12 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function() {
-			this.views          = new Backbone.Collection();
-			this.threads        = new bp.Collections.Threads();
-			this.messages       = new bp.Collections.Messages();
-			this.router         = new bp.Nouveau.Messages.Router();
-			this.box            = 'inbox';
-			this.mediumEditor    = false;
+			this.views        = new Backbone.Collection();
+			this.threads      = new bp.Collections.Threads();
+			this.messages     = new bp.Collections.Messages();
+			this.router       = new bp.Nouveau.Messages.Router();
+			this.box          = 'inbox';
+			this.mediumEditor = false;
 
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -1800,6 +1800,13 @@ window.bp = window.bp || {};
 
 			if ( 'delete' === action ) {
 				if (! confirm(BP_Nouveau.messages.delete_confirmation) ) {
+					bp.Nouveau.Messages.removeFeedback();
+					return;
+				}
+			}
+
+			if ( 'delete_thread' === action ) {
+				if (! confirm(BP_Nouveau.messages.delete_thread_confirmation) ) {
 					bp.Nouveau.Messages.removeFeedback();
 					return;
 				}

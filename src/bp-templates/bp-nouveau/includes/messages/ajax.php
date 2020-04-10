@@ -50,6 +50,12 @@ add_action( 'admin_init',
 				),
 			),
 			array(
+				'messages_delete_thread' => array(
+					'function' => 'bp_nouveau_ajax_delete_thread',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'messages_unstar' => array(
 					'function' => 'bp_nouveau_ajax_star_thread_messages',
 					'nopriv'   => false,
@@ -1512,7 +1518,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 }
 
 /**
- * AJAX delete entire message thread.
+ * AJAX delete logged in user entire messages of given thread.
  *
  * @since BuddyPress 3.0.0
  */
@@ -1549,6 +1555,79 @@ function bp_nouveau_ajax_delete_thread_messages() {
 
 	wp_send_json_success( array(
 		'feedback' => __( 'Messages deleted', 'buddyboss' ),
+		'id'       => $id,
+		'type'     => 'success',
+	) );
+
+}
+
+/**
+ * AJAX delete entire thread.
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_ajax_delete_thread() {
+
+	global $wpdb, $bp;
+
+	$response = array(
+		'feedback' => __( 'There was a problem deleting your messages. Please try again.', 'buddyboss' ),
+		'type'     => 'error',
+	);
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$thread_ids = wp_parse_id_list( $_POST['id'] );
+
+	foreach ( $thread_ids as $thread_id ) {
+		if ( ! messages_check_thread_access( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+			wp_send_json_error( $response );
+		}
+
+		// Removed the thread id from the group meta.
+		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) &&  true === bp_disable_group_messages() ) {
+			// Get the group id from the first message
+			$first_message    = BP_Messages_Thread::get_first_message( (int) $thread_id );
+			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+			if ( $message_group_id > 0 ) {
+				$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
+				if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
+					groups_update_groupmeta( $message_group_id, 'group_message_thread', '' );
+				}
+			}
+		}
+
+		// Get the message ids in order to pass to the action.
+		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) ); // WPCS: db call ok. // WPCS: cache ok.
+
+		// Delete thread messages.
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
+		$wpdb->query( $query ); // db call ok; no-cache ok;
+
+		// Delete messages meta.
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode(',', $message_ids ) );
+		$wpdb->query( $query ); // db call ok; no-cache ok;
+
+		// Delete thread.
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+		$wpdb->query( $query ); // db call ok; no-cache ok;
+	}
+
+	$thread_template = bp_get_thread( array( 'thread_id' => $thread_id ) );
+	if ( $thread_template->has_messages() ) {
+		$id = $thread_id;
+	} else {
+		$id = '';
+	}
+
+	wp_send_json_success( array(
+		'feedback' => __( 'Thread deleted', 'buddyboss' ),
 		'id'       => $id,
 		'type'     => 'success',
 	) );

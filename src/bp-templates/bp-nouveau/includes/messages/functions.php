@@ -98,43 +98,44 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	}
 
 	$params['messages'] = array(
-		'errors'              => array(
+		'errors'                     => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
 			'no_messages'     => __( 'Sorry, no messages were found.', 'buddyboss' ),
 		),
-		'nonces'              => array(
+		'nonces'                     => array(
 			'send'           => wp_create_nonce( 'messages_send_message' ),
 			'load_recipient' => wp_create_nonce( 'messages_load_recipient' ),
 		),
-		'loading'             => __( 'Loading messages. Please wait.', 'buddyboss' ),
-		'doingAction'         => array(
+		'loading'                    => __( 'Loading messages. Please wait.', 'buddyboss' ),
+		'doingAction'                => array(
 			'read'   => __( 'Marking messages as read. Please wait.', 'buddyboss' ),
 			'unread' => __( 'Marking messages as unread. Please wait.', 'buddyboss' ),
 			'delete' => __( 'Deleting messages. Please wait.', 'buddyboss' ),
 			'star'   => __( 'Starring messages. Please wait.', 'buddyboss' ),
 			'unstar' => __( 'Unstarring messages. Please wait.', 'buddyboss' ),
 		),
-		'type_message'        => __( 'Type message', 'buddyboss' ),
-		'delete_confirmation' => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
-		'bulk_actions'        => bp_nouveau_messages_get_bulk_actions(),
-		'howtoBulk'           => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
-		'toOthers'            => array(
+		'type_message'               => __( 'Type message', 'buddyboss' ),
+		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
+		'delete_thread_confirmation' => __( 'Deleting a conversation will permanently delete all of its messages. This cannot be undone. Are you sure you want to delete this conversation?', 'buddyboss' ),
+		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
+		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
+		'toOthers'                   => array(
 			'one'  => __( '1 other', 'buddyboss' ),
 			'more' => __( '%d others', 'buddyboss' ),
 		),
-		'rootUrl'             => parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
-		'hasThreads'          => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
+		'rootUrl'                    => wp_parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
+		'hasThreads'                 => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
 	);
 
 	// Star private messages.
 	if ( bp_is_active( 'messages', 'star' ) ) {
 		$params['messages'] = array_merge( $params['messages'], array(
-			'strings' => array(
-				'text_unstar'  => __( 'Unstar', 'buddyboss' ),
-				'text_star'    => __( 'Star', 'buddyboss' ),
-				'title_unstar' => __( 'Starred', 'buddyboss' ),
-				'title_star'   => __( 'Not starred', 'buddyboss' ),
+			'strings'          => array(
+				'text_unstar'         => __( 'Unstar', 'buddyboss' ),
+				'text_star'           => __( 'Star', 'buddyboss' ),
+				'title_unstar'        => __( 'Starred', 'buddyboss' ),
+				'title_star'          => __( 'Not starred', 'buddyboss' ),
 				'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
 				'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
 			),
