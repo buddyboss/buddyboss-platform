@@ -91,6 +91,51 @@
 	}
 }
 
+.bbp-topic-form #whats-new-toolbar {
+	-webkit-box-pack: end;
+	-ms-flex-pack: end;
+	justify-content: flex-end;
+
+	.medium-editor-toolbar {
+		top: inherit;
+		bottom: 6px;
+		left: 0;
+		visibility: visible;
+		z-index: 99;
+		background-color: transparent;
+		opacity: 0.3;
+		transition: opacity ease 0.2s;
+
+		&.medium-editor-toolbar-active {
+			opacity: 1;
+		}
+
+		.medium-editor-toolbar-actions {
+			background-color: transparent;
+
+			button {
+				box-shadow: none;
+				padding: 10px 10px 10px 0;
+				min-width: 30px;
+				border: 0;
+				background-color: transparent !important;
+				color: rgba(18, 43, 70, 0.4) !important;
+
+				&.medium-editor-button-active {
+					color: #122b46 !important;
+				}
+
+			}
+
+		}
+
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			width: 220px;
+		}
+
+	}
+}
+
 // these ID's need replacing with this!
 //.textarea-wrap { // #whats-new-textarea
 

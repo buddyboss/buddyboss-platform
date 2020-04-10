@@ -4,7 +4,10 @@ jQuery( document ).ready(
 		if ( typeof window.MediumEditor !== 'undefined' ) {
 
 			  var toolbarOptions = {
-					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+					relativeContainer: document.getElementById('whats-new-toolbar'),
+					static: true,
+					updateOnEmptySelection: true
 			};
 			if ( jQuery( '.bbp_editor_forum_content' ).length ) {
 				window.forums_medium_forum_editor = [];

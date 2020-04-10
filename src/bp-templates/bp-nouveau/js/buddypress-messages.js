@@ -590,7 +590,7 @@ window.bp = window.bp || {};
 					},
 					toolbar: {
 						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-						relativeContainer: document.getElementById('bp-message-content'),
+						relativeContainer: document.getElementById('whats-new-messages-toolbar'),
 						static: true,
 						updateOnEmptySelection: true
 					},
