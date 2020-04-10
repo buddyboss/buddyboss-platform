@@ -296,11 +296,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	$new_reply = messages_new_message( array(
-		'thread_id'  => $thread_id,
-		'subject'    => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-		'content'    => $_POST['content'],
-		'date_sent'  => $date_sent = bp_core_current_time(),
-		'error_type' => 'wp_error',
+		'thread_id'    => $thread_id,
+		'subject'      => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
+		'content'      => $_POST['content'],
+		'date_sent'    => $date_sent = bp_core_current_time(),
+		'mark_visible' => true,
+		'error_type'   => 'wp_error',
 	) );
 
 	if ( is_wp_error( $new_reply ) ) {

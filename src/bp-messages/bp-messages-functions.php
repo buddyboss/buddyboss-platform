@@ -21,20 +21,21 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param array|string $args {
  *     Array of arguments.
- *     @type int    $sender_id  Optional. ID of the user who is sending the
- *                              message. Default: ID of the logged-in user.
- *     @type int    $thread_id  Optional. ID of the parent thread. Leave blank to
- *                              create a new thread for the message.
- *     @type array  $recipients IDs or usernames of message recipients. If this
- *                              is an existing thread, it is unnecessary to pass a $recipients
- *                              argument - existing thread recipients will be assumed.
- *     @type string $subject    Optional. Subject line for the message. For
- *                              existing threads, the existing subject will be used. For new
- *                              threads, 'No Subject' will be used if no $subject is provided.
- *     @type string $content    Content of the message. Cannot be empty.
- *     @type string $date_sent  Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
- *     @type bool   $is_hidden  Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
- *     @type string $error_type Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ *     @type int    $sender_id     Optional. ID of the user who is sending the
+ *                                 message. Default: ID of the logged-in user.
+ *     @type int    $thread_id     Optional. ID of the parent thread. Leave blank to
+ *                                 create a new thread for the message.
+ *     @type array  $recipients    IDs or usernames of message recipients. If this
+ *                                 is an existing thread, it is unnecessary to pass a $recipients
+ *                                 argument - existing thread recipients will be assumed.
+ *     @type string $subject       Optional. Subject line for the message. For
+ *                                 existing threads, the existing subject will be used. For new
+ *                                 threads, 'No Subject' will be used if no $subject is provided.
+ *     @type string $content       Content of the message. Cannot be empty.
+ *     @type string $date_sent     Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
+ *     @type bool   $is_hidden     Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
+ *     @type bool   $mark_visible  Optional. Whether to mark thread visible to all other participants. Default: false.
+ *     @type string $error_type    Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  *
  * @return int|bool|WP_Error ID of the message thread on success, false on failure.
@@ -54,6 +55,7 @@ function messages_new_message( $args = '' ) {
 			'date_sent'     => bp_core_current_time(),
 			'append_thread' => true,
 			'is_hidden'     => false,
+			'mark_visible'  => false,
 			'error_type'    => 'bool',
 		),
 		'messages_new_message'
@@ -78,13 +80,14 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Create a new message object.
-	$message            = new BP_Messages_Message();
-	$message->thread_id = $r['thread_id'];
-	$message->sender_id = $r['sender_id'];
-	$message->subject   = $r['subject'];
-	$message->message   = $r['content'];
-	$message->date_sent = $r['date_sent'];
-	$message->is_hidden = $r['is_hidden'];
+	$message               = new BP_Messages_Message();
+	$message->thread_id    = $r['thread_id'];
+	$message->sender_id    = $r['sender_id'];
+	$message->subject      = $r['subject'];
+	$message->message      = $r['content'];
+	$message->date_sent    = $r['date_sent'];
+	$message->is_hidden    = $r['is_hidden'];
+	$message->mark_visible = $r['mark_visible'];
 
 	$new_reply = false;
 	// If we have a thread ID...
