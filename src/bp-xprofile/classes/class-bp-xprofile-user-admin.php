@@ -495,7 +495,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+		<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
