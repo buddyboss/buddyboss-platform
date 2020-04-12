@@ -3,29 +3,30 @@
 ( function( $ ){
 
 	$( document ).ready( function() {
-		$( document ).on( 'click', '#save-meeting', function(e){
+		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
 			e.preventDefault();
+
+			var form_data = $('#bp-new-zoom-meeting-form').serializeArray();
+			var data = {
+				'action': 'zoom_meeting_add',
+			};
+			for( var i in form_data ) {
+				data[form_data[i].name] = form_data[i].value;
+			}
 
 			$.ajax({
 				type: 'POST',
 				url: ajaxurl,
-				data: {
-					'action': 'zoom_meeting_add',
-					'group_id': $('#group-id').val(),
-					'user_id': $('#user-id').val(),
-					'start_date': $('#start_date').val(),
-					'timezone': $('#timezone').val(),
-					'duration': $('#duration').val(),
-					'join_before_host': $('#join_before_host:checked').length,
-					'host_video': $('#option_host_video:checked').length,
-					'participants_video': $('#participants_video:checked').length,
-					'mute_participants': $('#mute_participants:checked').length,
-					'auto_recording': $('#auto_recording').val(),
-				},
-				success: function () {
+				data: data,
+				success: function ( response ) {
+					if ( typeof response.data !== 'undefined' && response.data.redirect_url ) {
+						window.location.href = response.data.redirect_url;
+						return false;
+					}
 				}
 			});
 		} );
+
 		$( document ).on('click','#meeting-item',function(e){
 			var target = $(e.currentTarget);
 			$.ajax({
