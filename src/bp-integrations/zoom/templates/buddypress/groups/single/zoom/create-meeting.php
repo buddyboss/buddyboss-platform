@@ -32,7 +32,7 @@
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-duration"><?php _e( 'Duration', 'buddyboss' ); ?></label><br />
-					<input type="number" id="bp-zoom-meeting-duration" value="" tabindex="4" name="bp-zoom-meeting-duration" />
+					<input type="number" id="bp-zoom-meeting-duration" value="" tabindex="4" name="bp-zoom-meeting-duration" min="0" />
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-timezone"><?php _e( 'Timezone', 'buddyboss' ); ?></label><br />
