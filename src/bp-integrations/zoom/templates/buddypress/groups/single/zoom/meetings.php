@@ -34,6 +34,12 @@ if ( bp_has_zoom_meetings() ) {
 	}
 
 	if ( bp_zoom_meeting_has_more_items() ) {
-		echo "more item here";
+		?>
+		<li class="load-more">
+			<a class="button outline full" href="<?php bp_zoom_meeting_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+		</li>
+		<?php
 	}
+} else {
+	bp_nouveau_user_feedback( 'meetings-loop-none' );
 }

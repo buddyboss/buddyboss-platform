@@ -520,3 +520,12 @@ function bp_zoom_get_users() {
 	}
 	return $users;
 }
+
+function bp_zoom_nouveau_feedback_messages( $messages ) {
+	$messages['meetings-loop-none'] = array(
+		'type'    => 'info',
+		'message' => __( 'Sorry, no meetings were found.', 'buddyboss' ),
+	);
+	return $messages;
+}
+add_filter( 'bp_nouveau_feedback_messages', 'bp_zoom_nouveau_feedback_messages' );
