@@ -15,11 +15,10 @@
 					<input type="text" id="bp-zoom-meeting-title" value="<?php _e( 'My Meeting', 'buddyboss' ); ?>" tabindex="1" name="bp-zoom-meeting-title" />
 				</p>
 				<p>
-					<?php $users = bp_zoom_get_users(); ?>
 					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label><br />
 					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
 						<?php
-
+						$users = bp_zoom_get_users();
 						foreach ( $users as $user ): ?>
 							<option
 								value="<?php echo $user->id; ?>"><?php echo $user->first_name . ' ( ' . $user->email . ' )'; ?></option>
