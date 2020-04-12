@@ -3,6 +3,12 @@
 ( function( $ ){
 
 	$( document ).ready( function() {
+
+		$('#bp-zoom-meeting-start-date').datetimepicker({
+			format:'Y-m-d H:i:s',
+			minDateTime:0,
+		});
+
 		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
 			e.preventDefault();
 

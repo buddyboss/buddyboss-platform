@@ -155,6 +155,8 @@ if ( bp_is_active( 'groups' ) ) {
 			if ( ! bp_zoom_is_groups_zoom() ) {
 				return;
 			}
+			wp_enqueue_style( 'jquery-datetimepicker' );
+			wp_enqueue_script( 'jquery-datetimepicker' );
 			wp_enqueue_script( 'bp-group-zoom-meeting-js', bp_zoom_integration_url( '/assets/js/bp-group-zoom-meeting.js' ), array( 'jquery' ), bp_get_version(), true );
 		}
 
