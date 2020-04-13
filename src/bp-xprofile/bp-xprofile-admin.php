@@ -3,7 +3,7 @@
  * BuddyPress XProfile Admin.
  *
  * @package BuddyBoss\XProfile
- * @since BuddyPress 1.0.0
+ * @since   BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,9 +13,9 @@ defined( 'ABSPATH' ) || exit;
  * Creates the administration interface menus and checks to see if the DB
  * tables are set up.
  *
+ * @return bool
  * @since BuddyPress 1.0.0
  *
- * @return bool
  */
 function xprofile_add_admin_menu() {
 
@@ -25,57 +25,59 @@ function xprofile_add_admin_menu() {
 	}
 
 	add_submenu_page(
-		'buddyboss-platform',
-		__( 'Profiles', 'buddyboss' ),
-		__( 'Profiles', 'buddyboss' ),
-		'bp_moderate',
-		'bp-profile-setup',
-		'xprofile_admin'
+			'buddyboss-platform',
+			__( 'Profiles', 'buddyboss' ),
+			__( 'Profiles', 'buddyboss' ),
+			'bp_moderate',
+			'bp-profile-setup',
+			'xprofile_admin'
 	);
 
 }
+
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
 /**
  * Handles all actions for the admin area for creating, editing and deleting
  * profile groups and fields.
  *
- * @since BuddyPress 1.0.0
- *
  * @param string $message Message to display.
  * @param string $type    Type of action to be displayed.
+ *
+ * @since BuddyPress 1.0.0
+ *
  */
 function xprofile_admin( $message = '', $type = 'error' ) {
 
 	// What mode?
 	$mode = ! empty( $_GET['mode'] )
-		? sanitize_key( $_GET['mode'] )
-		: false;
+			? sanitize_key( $_GET['mode'] )
+			: false;
 
 	// Group ID
 	$group_id = ! empty( $_GET['group_id'] )
-		? intval( $_GET['group_id'] )
-		: false;
+			? intval( $_GET['group_id'] )
+			: false;
 
 	// Field ID
 	$field_id = ! empty( $_GET['field_id'] )
-		? intval( $_GET['field_id'] )
-		: false;
+			? intval( $_GET['field_id'] )
+			: false;
 
 	// Option ID
 	$option_id = ! empty( $_GET['option_id'] )
-		? intval( $_GET['option_id'] )
-		: false;
+			? intval( $_GET['option_id'] )
+			: false;
 
 	// Allowed modes
 	$allowed_modes = array(
-		'add_group',
-		'edit_group',
-		'delete_group',
-		'add_field',
-		'edit_field',
-		'delete_field',
-		'delete_option',
+			'add_group',
+			'edit_group',
+			'delete_group',
+			'add_field',
+			'edit_field',
+			'delete_field',
+			'delete_option',
 	);
 
 	// Is an allowed mode
@@ -121,12 +123,12 @@ function xprofile_admin( $message = '', $type = 'error' ) {
 /**
  * Output the main XProfile management screen.
  *
- * @since BuddyPress 2.3.0
- *
  * @param string $message Feedback message.
  * @param string $type    Feedback type.
  *
- * @todo Improve error message output
+ * @since BuddyPress 2.3.0
+ *
+ * @todo  Improve error message output
  */
 function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
@@ -135,11 +137,11 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 	// Add Group
 	$add_group_url = add_query_arg(
-		array(
-			'page' => 'bp-profile-setup',
-			'mode' => 'add_group',
-		),
-		$url
+			array(
+					'page' => 'bp-profile-setup',
+					'mode' => 'add_group',
+			),
+			$url
 	);
 
 	// Validate type.
@@ -147,18 +149,18 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 	// Get all of the profile groups & fields.
 	$groups = bp_xprofile_get_groups(
-		array(
-			'fetch_fields' => true,
-		)
+			array(
+					'fetch_fields' => true,
+			)
 	); ?>
 
 	<div class="wrap">
 		<?php
-			$users_tab = count( bp_core_get_users_admin_tabs() );
+		$users_tab = count( bp_core_get_users_admin_tabs() );
 		if ( $users_tab > 1 ) {
 			?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
-																			<?php
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
+			<?php
 		}
 		?>
 	</div>
@@ -167,7 +169,8 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1 class="wp-heading-inline"><?php _e( 'Profile Fields', 'buddyboss' ); ?></h1>
 
-				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
+			<a id="add_group" class="page-title-action"
+			   href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
 
 			<hr class="wp-header-end">
 
@@ -175,7 +178,8 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1>
 				<?php _e( 'Profile Fields', 'buddyboss' ); ?>
-				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
+				<a id="add_group" class="add-new-h2"
+				   href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
 			</h1>
 
 		<?php endif; ?>
@@ -205,23 +209,23 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 						foreach ( $groups as $group ) :
 							?>
 
-						<li id="group_<?php echo esc_attr( $group->id ); ?>">
-							<a href="#tabs-<?php echo esc_attr( $group->id ); ?>" class="ui-tab">
-								<?php
-								/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
-								echo esc_html( apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
-								?>
+							<li id="group_<?php echo esc_attr( $group->id ); ?>">
+								<a href="#tabs-<?php echo esc_attr( $group->id ); ?>" class="ui-tab">
+									<?php
+									/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
+									echo esc_html( apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
+									?>
 
-								<?php if ( ! $group->can_delete ) : ?>
-									<span><?php _e( '(Signup)', 'buddyboss' ); ?></span>
-								<?php endif; ?>
+									<?php if ( ! $group->can_delete ) : ?>
+										<span><?php _e( '(Signup)', 'buddyboss' ); ?></span>
+									<?php endif; ?>
 
-							</a>
-						</li>
+								</a>
+							</li>
 
-											<?php
-					endforeach;
-endif;
+						<?php
+						endforeach;
+					endif;
 					?>
 
 				</ul>
@@ -232,162 +236,170 @@ endif;
 
 						// Add Field to Group URL
 						$add_field_url = add_query_arg(
-							array(
-								'page'     => 'bp-profile-setup',
-								'mode'     => 'add_field',
-								'group_id' => (int) $group->id,
-							),
-							$url
+								array(
+										'page'     => 'bp-profile-setup',
+										'mode'     => 'add_field',
+										'group_id' => (int) $group->id,
+								),
+								$url
 						);
 
-											// Edit Group URL
-											$edit_group_url = add_query_arg(
-												array(
-													'page' => 'bp-profile-setup',
-													'mode' => 'edit_group',
-													'group_id' => (int) $group->id,
-												),
-												$url
-											);
+						// Edit Group URL
+						$edit_group_url = add_query_arg(
+								array(
+										'page'     => 'bp-profile-setup',
+										'mode'     => 'edit_group',
+										'group_id' => (int) $group->id,
+								),
+								$url
+						);
 
-											// Delete Group URL
-											$delete_group_url = wp_nonce_url(
-												add_query_arg(
-													array(
-														'page' => 'bp-profile-setup',
-														'mode' => 'delete_group',
-														'group_id' => (int) $group->id,
-													),
-													$url
-												),
-												'bp_xprofile_delete_group'
-											);
+						// Delete Group URL
+						$delete_group_url = wp_nonce_url(
+								add_query_arg(
+										array(
+												'page'     => 'bp-profile-setup',
+												'mode'     => 'delete_group',
+												'group_id' => (int) $group->id,
+										),
+										$url
+								),
+								'bp_xprofile_delete_group'
+						);
 						?>
 
-					<noscript>
-						<h3>
-						<?php
-						/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
-						echo esc_html( apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
-						?>
-						</h3>
-					</noscript>
+						<noscript>
+							<h3>
+								<?php
+								/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
+								echo esc_html( apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
+								?>
+							</h3>
+						</noscript>
 
-					<div id="tabs-<?php echo esc_attr( $group->id ); ?>" class="tab-wrapper">
-						<div class="tab-toolbar">
-							<div class="tab-toolbar-left">
-								<a class="button-primary" href="<?php echo esc_url( $add_field_url ); ?>"><?php _e( 'Add New Field', 'buddyboss' ); ?></a>
-								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _e( 'Edit Field Set', 'buddyboss' ); ?></a>
+						<div id="tabs-<?php echo esc_attr( $group->id ); ?>" class="tab-wrapper">
+							<div class="tab-toolbar">
+								<div class="tab-toolbar-left">
+									<a class="button-primary"
+									   href="<?php echo esc_url( $add_field_url ); ?>"><?php _e( 'Add New Field', 'buddyboss' ); ?></a>
+									<a class="button edit"
+									   href="<?php echo esc_url( $edit_group_url ); ?>"><?php _e( 'Edit Field Set', 'buddyboss' ); ?></a>
 
-								<?php if ( $group->can_delete ) : ?>
+									<?php if ( $group->can_delete ) : ?>
 
-									<div class="delete-button">
-										<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _e( 'Delete Field Set', 'buddyboss' ); ?></a>
-									</div>
+										<div class="delete-button">
+											<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group"
+											   href="<?php echo esc_url( $delete_group_url ); ?>"><?php _e( 'Delete Field Set', 'buddyboss' ); ?></a>
+										</div>
 
+									<?php endif; ?>
+
+									<?php
+
+									/**
+									 * Fires at end of action buttons in xprofile management admin.
+									 *
+									 * @param BP_XProfile_Group $group BP_XProfile_Group object
+									 *                                 for the current group.
+									 *
+									 * @since BuddyPress 2.2.0
+									 *
+									 */
+									do_action( 'xprofile_admin_group_action', $group );
+									?>
+
+								</div>
+							</div>
+
+							<fieldset id="<?php echo esc_attr( $group->id ); ?>" class="connectedSortable field-group"
+									  aria-live="polite" aria-atomic="true" aria-relevant="all">
+								<?php if ( ! empty( $group->description ) ) : ?>
+									<p class="bp-profile-group-description">
+										<?php
+										/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
+										echo esc_html( apply_filters( 'bp_get_the_profile_group_description', $group->description ) );
+										?>
+									</p>
 								<?php endif; ?>
+
+								<legend class="screen-reader-text">
+									<?php
+									/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
+									/* translators: accessibility text */
+									printf( esc_html__( 'Fields for "%s" Field Set', 'buddyboss' ), apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
+									?>
+								</legend>
 
 								<?php
 
-								/**
-								 * Fires at end of action buttons in xprofile management admin.
-								 *
-								 * @since BuddyPress 2.2.0
-								 *
-								 * @param BP_XProfile_Group $group BP_XProfile_Group object
-								 *                                 for the current group.
-								 */
-								do_action( 'xprofile_admin_group_action', $group );
+								if ( ! empty( $group->fields ) ) :
+									foreach ( $group->fields as $field ) {
+
+										if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+											if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $field->id === bp_get_xprofile_member_type_field_id() ) {
+												continue;
+											}
+										}
+
+										// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+										$current_value = bp_get_option( 'bp-display-name-format' );
+
+										// If First Name selected then do not add last name field.
+										if ( 'first_name' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
+											if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+												continue;
+											}
+											// If Nick Name selected then do not add first & last name field.
+										} elseif ( 'nickname' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
+											if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+												continue;
+											}
+										} elseif ( 'nickname' === $current_value && $field->id === bp_xprofile_firstname_field_id() ) {
+											if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+												continue;
+											}
+										}
+
+										// Load the field.
+										$field = xprofile_get_field( $field->id );
+
+										$class = '';
+										if ( empty( $field->can_delete ) ) {
+											$class = ' core';
+										}
+
+										/**
+										 * This function handles the WYSIWYG profile field
+										 * display for the xprofile admin setup screen.
+										 */
+										xprofile_admin_field( $field, $group, $class );
+
+									} // end for
+
+								else : // !$group->fields
+									?>
+
+									<p class="nodrag nofields"><?php _e( 'There are no fields in this field set.', 'buddyboss' ); ?></p>
+
+								<?php endif; // End $group->fields.
 								?>
 
-							</div>
-						</div>
+							</fieldset>
 
-						<fieldset id="<?php echo esc_attr( $group->id ); ?>" class="connectedSortable field-group" aria-live="polite" aria-atomic="true" aria-relevant="all">
-												<?php if ( ! empty( $group->description ) ) : ?>
-								<p class="bp-profile-group-description">
-													<?php
-													/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
-													echo esc_html( apply_filters( 'bp_get_the_profile_group_description', $group->description ) );
-													?>
-								</p>
+							<?php if ( empty( $group->can_delete ) ) : ?>
+
+								<p><?php esc_html_e( '* These fields appear on the signup page. The (Signup) fields cannot be deleted or moved, as they are needed for the signup process.', 'buddyboss' ); ?></p>
+
 							<?php endif; ?>
 
-							<legend class="screen-reader-text">
-												<?php
-												/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
-												/* translators: accessibility text */
-												printf( esc_html__( 'Fields for "%s" Field Set', 'buddyboss' ), apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
-												?>
-							</legend>
+						</div>
 
-												<?php
-
-												if ( ! empty( $group->fields ) ) :
-													foreach ( $group->fields as $field ) {
-
-														if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-															if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $field->id === bp_get_xprofile_member_type_field_id() ) {
-																continue;
-															}
-														}
-
-														// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-														$current_value = bp_get_option( 'bp-display-name-format' );
-
-														// If First Name selected then do not add last name field.
-														if ( 'first_name' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
-															if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-																continue;
-															}
-															// If Nick Name selected then do not add first & last name field.
-														} elseif ( 'nickname' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
-															if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-																continue;
-															}
-														} elseif ( 'nickname' === $current_value && $field->id === bp_xprofile_firstname_field_id() ) {
-															if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-																continue;
-															}
-														}
-
-														// Load the field.
-														$field = xprofile_get_field( $field->id );
-
-														$class = '';
-														if ( empty( $field->can_delete ) ) {
-															$class = ' core';
-														}
-
-														/**
-														 * This function handles the WYSIWYG profile field
-														 * display for the xprofile admin setup screen.
-														 */
-														xprofile_admin_field( $field, $group, $class );
-
-													} // end for
-
-												else : // !$group->fields
-													?>
-
-								<p class="nodrag nofields"><?php _e( 'There are no fields in this field set.', 'buddyboss' ); ?></p>
-
-							<?php endif; // End $group->fields. ?>
-
-						</fieldset>
-
-											<?php if ( empty( $group->can_delete ) ) : ?>
-
-							<p><?php esc_html_e( '* These fields appear on the signup page. The (Signup) fields cannot be deleted or moved, as they are needed for the signup process.', 'buddyboss' ); ?></p>
-
-						<?php endif; ?>
-
-					</div>
-
-									<?php endforeach; else : ?>
+					<?php endforeach; else : ?>
 
 					<div id="message" class="error"><p><?php _e( 'You have no field sets.', 'buddyboss' ); ?></p></div>
-					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a></p>
+					<p>
+						<a href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
+					</p>
 
 				<?php endif; ?>
 
@@ -401,9 +413,10 @@ endif;
 /**
  * Handles the adding or editing of groups.
  *
+ * @param int|null $group_id Group ID to manage.
+ *
  * @since BuddyPress 1.0.0
  *
- * @param int|null $group_id Group ID to manage.
  */
 function xprofile_admin_manage_group( $group_id = null ) {
 	global $message, $type;
@@ -448,9 +461,10 @@ function xprofile_admin_manage_group( $group_id = null ) {
 				/**
 				 * Fires at the end of the group adding/saving process, if successful.
 				 *
+				 * @param BP_XProfile_Group $group Current BP_XProfile_Group object.
+				 *
 				 * @since BuddyPress 1.0.0
 				 *
-				 * @param BP_XProfile_Group $group Current BP_XProfile_Group object.
 				 */
 				do_action( 'xprofile_groups_saved_group', $group );
 			}
@@ -468,9 +482,10 @@ function xprofile_admin_manage_group( $group_id = null ) {
 /**
  * Handles the deletion of profile data groups.
  *
+ * @param int $group_id ID of the group to delete.
+ *
  * @since BuddyPress 1.0.0
  *
- * @param int $group_id ID of the group to delete.
  */
 function xprofile_admin_delete_group( $group_id ) {
 	global $message, $type;
@@ -489,9 +504,10 @@ function xprofile_admin_delete_group( $group_id ) {
 		/**
 		 * Fires at the end of group deletion process, if successful.
 		 *
+		 * @param BP_XProfile_Group $group Current BP_XProfile_Group object.
+		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_XProfile_Group $group Current BP_XProfile_Group object.
 		 */
 		do_action( 'xprofile_groups_deleted_group', $group );
 	}
@@ -502,13 +518,14 @@ function xprofile_admin_delete_group( $group_id ) {
 /**
  * Handles the adding or editing of profile field data for a user.
  *
- * @since BuddyPress 1.0.0
- * @since BuddyBoss 1.0.0
- * Updated to continue showing the field-edit form, after field is saved/updated.
- * Updated to exclude repeater field IDs while determining field_order for new field.
- *
  * @param int      $group_id ID of the group.
  * @param int|null $field_id ID of the field being managed.
+ *
+ * @since BuddyPress 1.0.0
+ * @since BuddyBoss 1.0.0
+ *        Updated to continue showing the field-edit form, after field is saved/updated.
+ *        Updated to exclude repeater field IDs while determining field_order for new field.
+ *
  */
 function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 	global $wpdb, $message, $groups;
@@ -560,19 +577,19 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				$field->description = '';
 			}
 
-			if ( ! empty( $_POST[ "sort_order_{$field->type}" ] ) ) {
-				$field->order_by = $_POST[ "sort_order_{$field->type}" ];
+			if ( ! empty( $_POST["sort_order_{$field->type}"] ) ) {
+				$field->order_by = $_POST["sort_order_{$field->type}"];
 			}
 
 			$field->field_order = $wpdb->get_var( $wpdb->prepare( "SELECT field_order FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ) );
 			if ( ! is_numeric( $field->field_order ) || is_wp_error( $field->field_order ) ) {
 				// cloned fields should not be considered when determining the max order of fields in given group
 				$cloned_field_ids = $wpdb->get_col(
-					$wpdb->prepare(
-						"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id "
-						. " WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1 ",
-						$group_id
-					)
+						$wpdb->prepare(
+								"SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id "
+								. " WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1 ",
+								$group_id
+						)
 				);
 
 				if ( ! empty( $cloned_field_ids ) ) {
@@ -580,7 +597,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				} else {
 					$field->field_order = (int) $wpdb->get_var( $wpdb->prepare( "SELECT max(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
 				}
-				$field->field_order++;
+				$field->field_order ++;
 			}
 
 			// For new profile fields, set the $field_id. For existing profile
@@ -592,16 +609,19 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 					$message = __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' );
 					$type    = 'error';
 					$field->render_admin_form( $message, $type );
+
 					return false;
 				} elseif ( 'gender' === $field->type ) {
 					$message = __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' );
 					$type    = 'error';
 					$field->render_admin_form( $message, $type );
+
 					return false;
 				} elseif ( 'socialnetworks' === $field->type ) {
 					$message = __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' );
 					$type    = 'error';
 					$field->render_admin_form( $message, $type );
+
 					return false;
 				} else {
 					$message = __( 'There was an error saving the field. Please try again.', 'buddyboss' );
@@ -627,7 +647,10 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				}
 
 				// Validate custom visibility.
-				if ( ! empty( $_POST['allow-custom-visibility'] ) && in_array( $_POST['allow-custom-visibility'], array( 'allowed', 'disabled' ) ) ) {
+				if ( ! empty( $_POST['allow-custom-visibility'] ) && in_array( $_POST['allow-custom-visibility'], array(
+								'allowed',
+								'disabled'
+						) ) ) {
 					bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $_POST['allow-custom-visibility'] );
 				}
 
@@ -650,9 +673,10 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				/**
 				 * Fires at the end of the process to save a field for a user, if successful.
 				 *
+				 * @param BP_XProfile_Field $field Current BP_XProfile_Field object.
+				 *
 				 * @since BuddyPress 1.0.0
 				 *
-				 * @param BP_XProfile_Field $field Current BP_XProfile_Field object.
 				 */
 				do_action( 'xprofile_fields_saved_field', $field );
 
@@ -664,14 +688,14 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 			// Users Admin URL
 			$users_url = bp_get_admin_url( 'admin.php' );
 			$redirect  = add_query_arg(
-				array(
-					'page'     => 'bp-profile-setup',
-					'mode'     => 'edit_field',
-					'group_id' => (int) $group_id,
-					'type'     => $type,
-					'field_id' => (int) $field_id,
-				),
-				$users_url
+					array(
+							'page'     => 'bp-profile-setup',
+							'mode'     => 'edit_field',
+							'group_id' => (int) $group_id,
+							'type'     => $type,
+							'field_id' => (int) $field_id,
+					),
+					$users_url
 			);
 
 			// wp_safe_redirect( $redirect );
@@ -688,14 +712,15 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 /**
  * Handles the deletion of a profile field (or field option).
  *
+ * @param int     $field_id    The field to delete.
+ * @param string  $field_type  The type of field being deleted.
+ * @param bool    $delete_data Should the field data be deleted too.
+ *
  * @since BuddyPress 1.0.0
  *
- * @global string $message The feedback message to show.
- * @global string $type The type of feedback message to show.
+ * @global string $message     The feedback message to show.
+ * @global string $type        The type of feedback message to show.
  *
- * @param int    $field_id    The field to delete.
- * @param string $field_type  The type of field being deleted.
- * @param bool   $delete_data Should the field data be deleted too.
  */
 function xprofile_admin_delete_field( $field_id, $field_type = 'field', $delete_data = false ) {
 	global $message, $type;
@@ -715,9 +740,10 @@ function xprofile_admin_delete_field( $field_id, $field_type = 'field', $delete_
 		/**
 		 * Fires at the end of the field deletion process, if successful.
 		 *
+		 * @param BP_XProfile_Field $field Current BP_XProfile_Field object.
+		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param BP_XProfile_Field $field Current BP_XProfile_Field object.
 		 */
 		do_action( 'xprofile_fields_deleted_field', $field );
 	}
@@ -747,6 +773,7 @@ function xprofile_ajax_reorder_fields() {
 		xprofile_update_field_position( (int) $field_id, (int) $position, (int) $field_group_id );
 	}
 }
+
 add_action( 'wp_ajax_xprofile_reorder_fields', 'xprofile_ajax_reorder_fields' );
 
 /**
@@ -769,6 +796,7 @@ function xprofile_ajax_reorder_field_groups() {
 		xprofile_update_field_group_position( (int) $field_group_id, (int) $position );
 	}
 }
+
 add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_groups' );
 
 /**
@@ -812,16 +840,18 @@ function xprofile_check_gender_added_previously() {
 	echo wp_json_encode( $response );
 	wp_die();
 }
+
 add_action( 'wp_ajax_xprofile_check_gender_added_previously', 'xprofile_check_gender_added_previously' );
 
 /**
  * Handles the WYSIWYG display of each profile field on the edit screen.
  *
- * @since BuddyPress 1.5.0
- *
  * @param BP_XProfile_Field $admin_field Admin field.
  * @param object            $admin_group Admin group object.
  * @param string            $class       Classes to append to output.
+ *
+ * @since BuddyPress 1.5.0
+ *
  */
 function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 	global $field;
@@ -833,24 +863,24 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 
 	// Edit
 	$field_edit_url = add_query_arg(
-		array(
-			'page'     => 'bp-profile-setup',
-			'mode'     => 'edit_field',
-			'group_id' => (int) $field->group_id,
-			'field_id' => (int) $field->id,
-		),
-		$url
+			array(
+					'page'     => 'bp-profile-setup',
+					'mode'     => 'edit_field',
+					'group_id' => (int) $field->group_id,
+					'field_id' => (int) $field->id,
+			),
+			$url
 	);
 
 	// Delete
 	if ( $field->can_delete ) {
 		$field_delete_url = add_query_arg(
-			array(
-				'page'     => 'bp-profile-setup',
-				'mode'     => 'delete_field',
-				'field_id' => (int) $field->id,
-			),
-			$url . '#tabs-' . (int) $field->group_id
+				array(
+						'page'     => 'bp-profile-setup',
+						'mode'     => 'delete_field',
+						'field_id' => (int) $field->id,
+				),
+				$url . '#tabs-' . (int) $field->group_id
 		);
 	}
 
@@ -858,21 +888,22 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 
 	// sortable class
 	$fieldset_class[] = in_array(
-		$field->id,
-		array_filter(
-			array(
-				bp_xprofile_firstname_field_id(),
-				bp_xprofile_lastname_field_id(),
-				bp_xprofile_nickname_field_id(),
+			$field->id,
+			array_filter(
+					array(
+							bp_xprofile_firstname_field_id(),
+							bp_xprofile_lastname_field_id(),
+							bp_xprofile_nickname_field_id(),
+					)
 			)
-		)
 	) ? 'primary_field sortable' : 'sortable';
 
 	$fieldset_class[] = ! empty( $class ) ? $class : '';
 	$fieldset_class   = array_filter( $fieldset_class );
 	?>
 
-	<fieldset id="draggable_field_<?php echo esc_attr( $field->id ); ?>" class="<?php echo implode( ' ', $fieldset_class ); ?>">
+	<fieldset id="draggable_field_<?php echo esc_attr( $field->id ); ?>"
+			  class="<?php echo implode( ' ', $fieldset_class ); ?>">
 		<legend>
 			<span>
 				<span class="field-name"><?php bp_the_profile_field_name(); ?></span>
@@ -881,21 +912,21 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 					<span class="bp-signup-field-label">
 					<?php
 					esc_html_e( '(Signup)', 'buddyboss' );
-endif;
-				?>
+					endif;
+					?>
 				</span>
 				<?php bp_the_profile_field_required_label(); ?>
 				<?php if ( bp_xprofile_get_meta( $field->id, 'field', 'signup_position' ) ) : ?>
 					<span class="bp-signup-field-label">
 					<?php
 					esc_html_e( '(Signup)', 'buddyboss' );
-endif;
-				?>
+					endif;
+					?>
 				</span>
 				<?php
 				if ( bp_get_member_types() ) :
 					echo $field->get_member_type_label();
-endif;
+				endif;
 				?>
 
 				<?php
@@ -903,10 +934,11 @@ endif;
 				/**
 				 * Fires at end of legend above the name field in base xprofile group.
 				 *
-				 * @since BuddyPress 2.2.0
-				 *
 				 * @param BP_XProfile_Field $field Current BP_XProfile_Field
 				 *                                 object being rendered.
+				 *
+				 * @since BuddyPress 2.2.0
+				 *
 				 */
 				do_action( 'xprofile_admin_field_name_legend', $field );
 				?>
@@ -921,12 +953,14 @@ endif;
 			<?php endif; ?>
 
 			<div class="actions">
-				<a class="button edit" href="<?php echo esc_url( $field_edit_url ); ?>"><?php _e( 'Edit', 'buddyboss' ); ?></a>
+				<a class="button edit"
+				   href="<?php echo esc_url( $field_edit_url ); ?>"><?php _e( 'Edit', 'buddyboss' ); ?></a>
 
 				<?php if ( $field->can_delete ) : ?>
 
 					<div class="delete-button">
-						<a class="confirm submit-delete deletion" href="<?php echo esc_url( $field_delete_url ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+						<a class="confirm submit-delete deletion"
+						   href="<?php echo esc_url( $field_delete_url ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
 					</div>
 
 				<?php endif; ?>
@@ -936,10 +970,11 @@ endif;
 				/**
 				 * Fires at end of field management links in xprofile management admin.
 				 *
-				 * @since BuddyPress 2.2.0
-				 *
 				 * @param BP_XProfile_Group $group BP_XProfile_Group object
 				 *                                 for the current group.
+				 *
+				 * @since BuddyPress 2.2.0
+				 *
 				 */
 				do_action( 'xprofile_admin_field_action', $field );
 				?>
@@ -954,10 +989,11 @@ endif;
 /**
  * Print <option> elements containing the xprofile field types.
  *
- * @since BuddyPress 2.0.0
- *
  * @param string $select_field_type The name of the field type that should be selected.
  *                                  Will defaults to "textbox" if NULL is passed.
+ *
+ * @since BuddyPress 2.0.0
+ *
  */
 function bp_xprofile_admin_form_field_types( $select_field_type ) {
 	$categories = array();
@@ -1007,10 +1043,10 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 		// Sort these fields types alphabetically.
 		uasort(
-			$fields,
-			function( $a, $b ) {
-				return strnatcmp( $a[1]->name, $b[1]->name );
-			}
+				$fields,
+				function ( $a, $b ) {
+					return strnatcmp( $a[1]->name, $b[1]->name );
+				}
 		);
 
 		foreach ( $fields as $field_type_obj ) {
@@ -1035,9 +1071,10 @@ add_action( 'bp_init', array( 'BP_XProfile_User_Admin', 'register_xprofile_user_
 /**
  * Output the tabs in the admin area.
  *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ *
  * @since BuddyBoss 1.0.0
  *
- * @param string $active_tab Name of the tab that is active. Optional.
  */
 function bp_core_admin_users_tabs( $active_tab = '' ) {
 
@@ -1048,9 +1085,10 @@ function bp_core_admin_users_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the admin tabs to be displayed.
 	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $value Array of tabs to output to the admin area.
 	 */
 	$tabs = apply_filters( 'bp_core_admin_users_tabs', bp_core_get_users_admin_tabs( $active_tab ) );
 
@@ -1058,7 +1096,7 @@ function bp_core_admin_users_tabs( $active_tab = '' ) {
 	foreach ( array_values( $tabs ) as $tab_data ) {
 		$is_current = (bool) ( $tab_data['name'] == $active_tab );
 		$tab_class  = $is_current ? $tab_data['class'] . ' ' . $active_class : $tab_data['class'] . ' ' . $idle_class;
-		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
+		$tabs_html  .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
 	echo $tabs_html;
@@ -1076,9 +1114,9 @@ function bp_core_admin_users_tabs( $active_tab = '' ) {
  *
  * @param string $active_tab
  *
+ * @return array
  * @since BuddyBoss 1.0.0
  *
- * @return array
  */
 function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 
@@ -1091,9 +1129,9 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 	$is_profile_search_enabled = bp_disable_advanced_profile_search();
 
 	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-profile-setup' ), 'admin.php' ) ),
-		'name'  => __( 'Profile Fields', 'buddyboss' ),
-		'class' => 'bp-profile-fields',
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-profile-setup' ), 'admin.php' ) ),
+			'name'  => __( 'Profile Fields', 'buddyboss' ),
+			'class' => 'bp-profile-fields',
 	);
 
 	if ( true === $is_member_type_enabled ) {
@@ -1105,34 +1143,35 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
 		}
 
 		$tabs[] = array(
-			'href'  => $profile_url,
-			'name'  => __( 'Profile Types', 'buddyboss' ),
-			'class' => 'bp-profile-types',
+				'href'  => $profile_url,
+				'name'  => __( 'Profile Types', 'buddyboss' ),
+				'class' => 'bp-profile-types',
 		);
 	}
 
 	if ( false === $is_profile_search_enabled ) {
 		$tabs[] = array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp_ps_form' ), 'edit.php' ) ),
-			'name'  => __( 'Profile Search', 'buddyboss' ),
-			'class' => 'bp-profile-search',
+				'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp_ps_form' ), 'edit.php' ) ),
+				'name'  => __( 'Profile Search', 'buddyboss' ),
+				'class' => 'bp-profile-search',
 		);
 	}
 
 	$query['autofocus[section]'] = 'bp_nouveau_user_primary_nav';
 	$section_link                = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[]                      = array(
-		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Profile Navigation', 'buddyboss' ),
-		'class' => 'bp-user-customizer',
+			'href'  => esc_url( $section_link ),
+			'name'  => __( 'Profile Navigation', 'buddyboss' ),
+			'class' => 'bp-user-customizer',
 	);
 
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
+	 * @param array $tabs Tab data.
+	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $tabs Tab data.
 	 */
 	return apply_filters( 'bp_core_get_users_admin_tabs', $tabs );
 }
@@ -1143,7 +1182,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_users_admin_profile_types_listing_add_users_tab() {
-	global $pagenow ,$post;
+	global $pagenow, $post;
 
 	// Check profile type enabled.
 	$is_member_type_enabled = bp_member_type_enable_disable();
@@ -1158,7 +1197,7 @@ function bp_users_admin_profile_types_listing_add_users_tab() {
 				if ( $users_tab > 1 ) {
 					?>
 					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddyboss' ) ); ?></h2>
-																				<?php
+					<?php
 				}
 				?>
 			</div>
@@ -1166,6 +1205,7 @@ function bp_users_admin_profile_types_listing_add_users_tab() {
 		}
 	}
 }
+
 add_action( 'admin_notices', 'bp_users_admin_profile_types_listing_add_users_tab' );
 
 add_filter( 'parent_file', 'bp_profile_type_set_platform_tab_submenu_active' );
@@ -1184,6 +1224,7 @@ function bp_profile_type_set_platform_tab_submenu_active( $parent_file ) {
 			$parent_file = 'buddyboss-platform';
 		}
 	}
+
 	return $parent_file;
 }
 
@@ -1227,6 +1268,7 @@ function xprofile_check_social_networks_added_previously() {
 	echo wp_json_encode( $response );
 	wp_die();
 }
+
 add_action( 'wp_ajax_xprofile_check_social_networks_added_previously', 'xprofile_check_social_networks_added_previously' );
 
 /**
@@ -1270,4 +1312,5 @@ function xprofile_check_member_type_added_previously() {
 	echo wp_json_encode( $response );
 	wp_die();
 }
+
 add_action( 'wp_ajax_xprofile_check_member_type_added_previously', 'xprofile_check_member_type_added_previously' );
