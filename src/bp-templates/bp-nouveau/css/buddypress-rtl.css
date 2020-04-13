@@ -4136,8 +4136,8 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   border-radius: 4px;
   padding: 5px 0;
-  min-width: 190px;
-  right: -20px;
+  min-width: 165px;
+  left: -20px;
   top: 35px;
   z-index: 119;
   list-style: none;
@@ -4152,19 +4152,19 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 }
 
 .bp-messages-content .actions .message_actions .message_action__list li {
-  cursor: pointer;
-  line-height: 1;
   margin: 0;
-  padding: 6px 14px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-bottom: 1px;
+  list-style: none;
 }
 
 .bp-messages-content .actions .message_actions .message_action__list li a {
-  color: #7f868f;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: inherit;
+  color: #939597;
+  letter-spacing: -0.24px;
+  line-height: 1;
+  margin-bottom: 1px;
+  padding: 0.5625rem 0.9375rem;
+  display: block;
 }
 
 .bp-messages-content .actions .message_actions .message_action__list:before {
@@ -4173,7 +4173,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   width: 0;
   height: 0;
   top: 0;
-  right: 20px;
+  left: 27px;
   border: 6px solid #000;
   border-color: #fff transparent transparent #fff;
   -webkit-transform-origin: 100% 0;
