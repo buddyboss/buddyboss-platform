@@ -396,9 +396,10 @@ if ( bp_is_active( 'groups' ) ) {
 			$checked = is_admin() ? bp_zoom_group_is_zoom_enabled( $group_id ) : false || bp_zoom_group_is_zoom_enabled( bp_get_group_id() ); ?>
 
 			<h4><?php esc_html_e( 'Group Zoom Settings', 'buddyboss' ); ?></h4>
+			<legend class="screen-reader-text"><?php esc_html_e( 'Group Zoom Settings', 'buddyboss' ); ?></legend>
 
 			<fieldset>
-				<legend class="screen-reader-text"><?php esc_html_e( 'Group Zoom Settings', 'buddyboss' ); ?></legend>
+
 				<div class="field-group">
 					<p class="checkbox bp-checkbox-wrap">
 						<input type="checkbox" name="bp-edit-group-zoom" id="bp-edit-group-zoom" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
@@ -409,8 +410,6 @@ if ( bp_is_active( 'groups' ) ) {
 			</fieldset>
 
 			<fieldset class="radio group-media">
-				<legend><?php esc_html_e( 'Group Zoom Settings', 'buddyboss' ); ?></legend>
-
 				<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage zoom?', 'buddyboss' ); ?></p>
 
 				<div class="bp-radio-wrap">
