@@ -648,8 +648,9 @@ class SyncGenerator {
 		if ( $remove ) {
 
 			$group_thread = (int) groups_get_groupmeta( (int) $this->bpGroupId, 'group_message_thread' );
-
-			if ( $group_thread > 0 ) {
+			$recipients   = \BP_Messages_Thread::get_recipients_for_thread( (int) $group_thread );
+			$recipients   = wp_list_pluck( $recipients, 'user_id' );
+			if ( $group_thread > 0 && in_array( (int) $userId, $recipients, true ) ) {
 				$first_message     = \BP_Messages_Thread::get_first_message( $group_thread );
 				$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 
@@ -683,7 +684,7 @@ class SyncGenerator {
 						}
 					}
 				}
-				$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $userId, (int) $group_thread ) );
 
 			}
 			return $groupMember->remove();
@@ -708,15 +709,15 @@ class SyncGenerator {
 
 			$group_thread = (int) groups_get_groupmeta( (int) $groupMember->group_id, 'group_message_thread' );
 
-			$is_active_recipient = \BP_Messages_Thread::is_thread_recipient( (int) $group_thread, (int) $userId );
-
-			if ( $group_thread > 0 && false === $is_active_recipient ) {
+			$recipients = \BP_Messages_Thread::get_recipients_for_thread( (int) $group_thread );
+			$recipients = wp_list_pluck( $recipients, 'user_id' );
+			if ( $group_thread > 0 && ! in_array( (int) $userId, $recipients, true ) ) {
 
 				$first_message = \BP_Messages_Thread::get_first_message( $group_thread );
 
 				$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 				$message_users_ids = explode( ',', $message_users_ids );
-				array_push( $message_users_ids, $user_id );
+				array_push( $message_users_ids, $userId );
 				$group_name = bp_get_group_name( groups_get_group( $groupMember->group_id ) );
 				$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
 
