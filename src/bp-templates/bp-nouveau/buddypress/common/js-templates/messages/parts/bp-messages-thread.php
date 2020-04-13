@@ -16,7 +16,9 @@
 	}
 	#>
 
+	<# if ( ! data.is_search ) { #>
 	<a href="javascript:void(0);" data-bp-thread-id="{{data.id}}" data-bp-action="hide_thread" class="close-conversation"> <i class="dashicons dashicons-no-alt"></i> </a>
+	<# } #>
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
 
@@ -44,12 +46,8 @@
 
 					<# for ( i in first_three ) { #>
 						<span class="user-name">
-							{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
+							{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && data.toOthers ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
 						</span>
-					<# } #>
-
-					<# if ( include_you ) { #>
-						<span class="user-name"><?php _e('You', 'buddyboss'); ?><# if ( data.toOthers ) { #><?php _e(',', 'buddyboss'); ?><# } #></span>
 					<# } #>
 
 					<# if ( data.toOthers ) { #>

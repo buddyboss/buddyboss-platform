@@ -762,6 +762,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ] = array_merge( $threads->threads[ $i ], $thread_extra_content );
 		}
 
+		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false;
+
 		$i += 1;
 	endwhile;
 

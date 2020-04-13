@@ -34,12 +34,8 @@
 						<span class="participants-name">
                             <# if ( other_recipients[i].is_deleted ) { #>
 								{{other_recipients[i].user_name}}
-							<# } else { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
+							<# } else { #><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# } #><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 ) && data.toOthers ) { #><?php _e(',', 'buddyboss'); ?><# } #>
 		                </span>
-					<# } #>
-
-					<# if ( include_you ) { #>
-						<span class="participants-name"><a href="{{current_user.user_link}}"><?php esc_html_e( 'You', 'buddyboss' ); ?></a></span>
 					<# } #>
 
 				<# } #>
