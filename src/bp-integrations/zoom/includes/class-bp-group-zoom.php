@@ -21,14 +21,19 @@ if ( bp_is_active( 'groups' ) ) {
 		 * @since BuddyBoss 1.2.10
 		 */
 		function __construct() {
+			// setup zoom.
+			bp_zoom_conference()->zoom_api_key    = bp_zoom_api_key();
+			bp_zoom_conference()->zoom_api_secret = bp_zoom_api_secret();
+
+			if ( empty( bp_zoom_conference()->zoom_api_key ) || empty( bp_zoom_conference()->zoom_api_secret ) ) {
+				return false;
+			}
+
 			$this->setup_filters();
 			$this->setup_actions();
 
 			// Register the template stack for buddyboss so that theme can overrride.
 			bp_register_template_stack( array( $this, 'register_template' ) );
-
-			bp_zoom_conference()->zoom_api_key    = bp_zoom_api_key();
-			bp_zoom_conference()->zoom_api_secret = bp_zoom_api_secret();
 		}
 
 		/**
