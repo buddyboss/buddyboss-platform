@@ -12388,6 +12388,23 @@ span.icons:before {
   background-color: #fff;
 }
 
+#group-messages-container .bb-groups-messages-right .group-messages-compose {
+  font-size: 0;
+  display: none;
+  line-height: 0;
+}
+
+#group-messages-container .bb-groups-messages-right .group-messages-compose:after {
+  content: "\f465";
+  font-size: 20px;
+  font-family: dashicons;
+  vertical-align: top;
+  text-align: center;
+  transition: color 0.1s ease-in;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 @media screen and (min-width: 1081px) {
   .bb-groups-messages-left {
     border-right: 1px solid #e7e9ec;
