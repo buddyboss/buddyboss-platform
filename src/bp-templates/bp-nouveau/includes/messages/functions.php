@@ -118,7 +118,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		),
 		'type_message'               => __( 'Type message', 'buddyboss' ),
 		'delete_confirmation'        => __( 'Are you sure you want to permanently delete all of your messages from this conversation? This cannot be undone.', 'buddyboss' ),
-		'delete_thread_confirmation' => __( 'Deleting this conversation will permanently delete all of its messages. This cannot be undone. Are you sure you want to delete this conversation?', 'buddyboss' ),
+		'delete_thread_confirmation' => __( 'Only site admins can delete conversations. Deleting this conversation will permanently delete all of its messages. Are you sure you want to delete this conversation?', 'buddyboss' ),
 		'bulk_actions'               => bp_nouveau_messages_get_bulk_actions(),
 		'howtoBulk'                  => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
 		'toOthers'                   => array(
