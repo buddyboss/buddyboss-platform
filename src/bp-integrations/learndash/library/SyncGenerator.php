@@ -411,7 +411,12 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncLdUser( $userId, $remove = false ) {
-		$ldGroupAdmins = learndash_get_groups_administrator_ids( $this->ldGroupid );
+
+		if ( ! isset( $this->ldGroupId ) ) {
+			return $this;
+		}
+
+		$ldGroupAdmins = learndash_get_groups_administrator_ids( $this->ldGroupId );
 
 		// if this user is learndash leader, we don't want to downgrad them (bp only allow 1 user)
 		if ( in_array( $userId, $ldGroupAdmins ) ) {
@@ -635,10 +640,52 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function addUserToBpGroup( $userId, $type, $remove ) {
+		global $wpdb, $bp, $messages_template;
+
 		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
 		$syncTo      = $this->getLdSyncToRole( $type );
 
 		if ( $remove ) {
+
+			$group_thread = (int) groups_get_groupmeta( (int) $this->bpGroupId, 'group_message_thread' );
+
+			if ( $group_thread > 0 ) {
+				$first_message     = \BP_Messages_Thread::get_first_message( $group_thread );
+				$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+
+				$message_users_ids = explode( ',', $message_users_ids );
+				$group_name        = bp_get_group_name( groups_get_group( (int) $this->bpGroupId ) );
+				$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
+				if ( ( $key = array_search( $userId, $message_users_ids ) ) !== false ) {
+					unset( $message_users_ids[ $key ] );
+				}
+
+				bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
+
+				remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+				$new_reply = messages_new_message( array(
+					'sender_id'  => $userId,
+					'thread_id'  => $group_thread,
+					'subject'    => '',
+					'content'    => '<p> </p>',
+					'date_sent'  => $date_sent = bp_core_current_time(),
+					'error_type' => 'wp_error',
+				) );
+				add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
+				if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
+					if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+						while ( bp_message_threads() ) {
+							bp_message_thread();
+							$last_message_id = (int) $messages_template->thread->last_message_id;
+							bp_messages_update_meta( $last_message_id, 'group_message_group_left', 'yes' );
+							bp_messages_update_meta( $last_message_id, 'group_id', (int) $this->bpGroupId );
+						}
+					}
+				}
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
+
+			}
 			return $groupMember->remove();
 		}
 
@@ -649,12 +696,57 @@ class SyncGenerator {
 		$groupMember->is_confirmed  = 1;
 		$groupMember->date_modified = bp_core_current_time();
 
-		if ( 'user' != $syncTo ) {
+		if ( 'user' !== $syncTo ) {
 			$var               = "is_{$syncTo}";
 			$groupMember->$var = 1;
 		}
 
 		$groupMember->save();
+
+		// Add Member to group messages thread.
+		if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) ) {
+
+			$group_thread = (int) groups_get_groupmeta( (int) $groupMember->group_id, 'group_message_thread' );
+
+			$is_active_recipient = \BP_Messages_Thread::is_thread_recipient( (int) $group_thread, (int) $userId );
+
+			if ( $group_thread > 0 && false === $is_active_recipient ) {
+
+				$first_message = \BP_Messages_Thread::get_first_message( $group_thread );
+
+				$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+				$message_users_ids = explode( ',', $message_users_ids );
+				array_push( $message_users_ids, $user_id );
+				$group_name = bp_get_group_name( groups_get_group( $groupMember->group_id ) );
+				$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
+
+				bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
+
+				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $userId, $group_thread ) );
+
+				remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+				$new_reply = messages_new_message( array(
+					'thread_id'  => $group_thread,
+					'sender_id'  => $userId,
+					'subject'    => '',
+					'content'    => '<p> </p>',
+					'date_sent'  => $date_sent = bp_core_current_time(),
+					'error_type' => 'wp_error',
+				) );
+				add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+				if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
+					if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+						while ( bp_message_threads() ) {
+							bp_message_thread();
+							$last_message_id = (int) $messages_template->thread->last_message_id;
+							bp_messages_update_meta( $last_message_id, 'group_message_group_joined', 'yes' );
+							bp_messages_update_meta( $last_message_id, 'group_id', $groupMember->group_id );
+						}
+					}
+				}
+			}
+
+		}
 	}
 
 	/**

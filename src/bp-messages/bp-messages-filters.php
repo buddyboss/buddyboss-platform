@@ -238,8 +238,8 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
-		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
-		$text              = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
+		$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+		$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
@@ -247,11 +247,11 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 		$new_reply = messages_new_message( array(
-			'thread_id' => $group_thread,
-			'sender_id' => $user_id,
-			'subject'   => '',
-			'content'   => '<p> </p>',
-			'date_sent' => $date_sent = bp_core_current_time(),
+			'thread_id'  => $group_thread,
+			'sender_id'  => $user_id,
+			'subject'    => '',
+			'content'    => '<p> </p>',
+			'date_sent'  => $date_sent = bp_core_current_time(),
 			'error_type' => 'wp_error',
 		) );
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
