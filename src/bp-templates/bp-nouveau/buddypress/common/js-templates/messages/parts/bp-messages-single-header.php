@@ -55,7 +55,7 @@
 		        ?>
 		        <div class="message_actions">
 			        <a href="#" class="message_action__anchor">
-				        <i class="dashicons dashicons-trash"></i>
+				        <i class="dashicons dashicons-menu"></i>
 			        </a>
 			        <div class="message_action__list">
 				        <ul>
@@ -67,10 +67,16 @@
 		        <?php
 	        } else {
 	        	?>
-		        <button type="button" class="message-action-delete bp-icons" data-bp-action="delete" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Delete your messages', 'buddyboss' ); ?>">
-			        <i class="dashicons dashicons-trash"></i>
-			        <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></span>
-		        </button>
+				<div class="message_actions">
+			        <a href="#" class="message_action__anchor">
+				        <i class="dashicons dashicons-menu"></i>
+			        </a>
+			        <div class="message_action__list">
+				        <ul>
+					        <li class="message-action-delete bp-icons" data-bp-action="delete"><a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a></li>
+				        </ul>
+			        </div>
+		        </div>
 	            <?php
 	        }
 	        ?>
