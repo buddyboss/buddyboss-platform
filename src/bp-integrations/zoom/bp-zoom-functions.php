@@ -593,3 +593,71 @@ function bp_zoom_group_is_zoom_enabled( $group_id ) {
 	}
 	return groups_get_groupmeta( $group_id, 'bp-group-zoom', true );
 }
+
+/**
+ * Output the 'checked' value, if needed, for a given status on the group admin screen
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_zoom_group_show_manager_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$status = bp_zoom_group_get_manager( $group_id );
+
+	if ( $setting === $status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
+ * Get the zoom manager of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group zoom manager, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_zoom_group_get_manager( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$manager = groups_get_groupmeta( $group_id, 'bp-group-zoom-manager', true );
+
+	// Backward compatibility. When '$manager' is not set, fall back to a default value.
+	if ( ! $manager ) {
+		$manager = apply_filters( 'bp_zoom_group_manager_fallback', 'admins' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param string $manager Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose manager is being checked.
+	 */
+	return apply_filters( 'bp_zoom_group_get_manager', $manager, $group_id );
+}

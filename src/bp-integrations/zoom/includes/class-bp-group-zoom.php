@@ -404,11 +404,32 @@ if ( bp_is_active( 'groups' ) ) {
 					</p>
 				</div>
 
-				<?php if ( ! is_admin() ) : ?>
-					<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-				<?php endif; ?>
-
 			</fieldset>
+
+			<fieldset class="radio group-media">
+				<legend><?php esc_html_e( 'Group Zoom Settings', 'buddyboss' ); ?></legend>
+
+				<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage zoom?', 'buddyboss' ); ?></p>
+
+				<div class="bp-radio-wrap">
+					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-members" class="bs-styled-radio" value="members"<?php bp_zoom_group_show_manager_setting( 'members' ); ?> />
+					<label for="group-zoom-manager-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+				</div>
+
+				<div class="bp-radio-wrap">
+					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-mods" class="bs-styled-radio" value="mods"<?php bp_zoom_group_show_manager_setting( 'mods' ); ?> />
+					<label for="group-zoom-manager-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+				</div>
+
+				<div class="bp-radio-wrap">
+					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-admins" class="bs-styled-radio" value="admins"<?php bp_zoom_group_show_manager_setting( 'admins' ); ?> />
+					<label for="group-zoom-manager-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+				</div>
+			</fieldset>
+
+			<?php if ( ! is_admin() ) : ?>
+				<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
+			<?php endif; ?>
 
 			<?php
 
@@ -443,9 +464,11 @@ if ( bp_is_active( 'groups' ) ) {
 			}
 
 			$edit_zoom = ! empty( $_POST['bp-edit-group-zoom'] ) ? true : false;
+			$manager   = ! empty( $_POST['bp-group-zoom-manager'] ) ? $_POST['bp-group-zoom-manager'] : bp_zoom_group_get_manager( $group_id );
 			$group_id  = ! empty( $group_id ) ? $group_id : bp_get_current_group_id();
 
 			groups_update_groupmeta( $group_id, 'bp-group-zoom', $edit_zoom );
+			groups_update_groupmeta( $group_id, 'bp-group-zoom-manager', $manager );
 
 			/**
 			 * Add action that fire before user redirect
