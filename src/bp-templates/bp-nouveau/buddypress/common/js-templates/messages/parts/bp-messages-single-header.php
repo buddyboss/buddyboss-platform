@@ -57,6 +57,8 @@
 				        <ul>
 					        <li class="delete_messages"><a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a></li>
 					        <li class="delete_thread"><a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a></li>
+					        <li class="hide_thread"><a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Hide conversation', 'buddyboss' ); ?></a></li>
+					        <li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread conversation', 'buddyboss' ); ?></a></li>
 				        </ul>
 			        </div>
 		        </div>
@@ -70,6 +72,8 @@
 			        <div class="message_action__list">
 				        <ul>
 					        <li class="message-action-delete bp-icons" data-bp-action="delete"><a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a></li>
+					        <li class="hide_thread"><a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Hide conversation', 'buddyboss' ); ?></a></li>
+					        <li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread conversation', 'buddyboss' ); ?></a></li>
 				        </ul>
 			        </div>
 		        </div>

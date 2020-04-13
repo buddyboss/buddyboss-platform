@@ -1591,6 +1591,9 @@ window.bp = window.bp || {};
 				this.el.className += ' group-thread';
 			}
 
+			// Add thread id into the li class
+			this.el.className += ' ' + this.model.get( 'id' );
+
 			if ( $('#thread-id').val() == this.model.get('id') ) {
 				this.el.className += ' current';
 			}
@@ -1858,7 +1861,7 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.removeFeedback();
 
 				// Remove all views
-				if ( 'delete_thread' === action ) {
+				if ( 'delete_thread' === action || 'hide_thread' === action ) {
 					if ( bp.Nouveau.Messages.threads.length > 1 ) {
 						//bp.Nouveau.Messages.clearViews();
 						// Navigate back to current box
@@ -1879,6 +1882,15 @@ window.bp = window.bp || {};
 
 					// Display the feedback
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+
+					if ( 'unread' === action && ! _.isUndefined( response.ids ) ) {
+						$.each( response.ids, function( index, value ) {
+							$('#bp-messages-threads-list .message-lists .thread-item.' + value ).addClass( 'unread' );
+						});
+					}
+
+					bp.Nouveau.Messages.removeFeedback();
+
 				}
 
 			} ).fail( function( response ) {

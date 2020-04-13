@@ -1127,6 +1127,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 	}
 
 	$response['type'] = 'success';
+	$response['ids']  = $thread_ids;
 
 	wp_send_json_success( $response );
 }
