@@ -586,3 +586,10 @@ function bp_zoom_nouveau_feedback_messages( $messages ) {
 	return $messages;
 }
 add_filter( 'bp_nouveau_feedback_messages', 'bp_zoom_nouveau_feedback_messages' );
+
+function bp_zoom_group_is_zoom_enabled( $group_id ) {
+	if ( ! bp_is_active( 'groups' ) ) {
+		return false;
+	}
+	return groups_get_groupmeta( $group_id, 'bp-group-zoom', true );
+}
