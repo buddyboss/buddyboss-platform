@@ -91,6 +91,10 @@
 	}
 }
 
+.bbp-the-content pre {
+	padding: 1rem 1.5rem;
+}
+
 .bbp-topic-form #whats-new-toolbar {
 	-webkit-box-pack: end;
 	-ms-flex-pack: end;
@@ -131,9 +135,38 @@
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
 			width: 220px;
+			margin-bottom: 0;
+			background-color: #fff;
+			border: 1px solid #dedfe2;
+			color: #4d5c6d;
+
+			&::-webkit-input-placeholder {
+				color: #4d5c6d;
+			}
 		}
 
 	}
+
+	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+		right: -20px;
+		left: inherit;
+
+		.emojionearea-wrapper:after {
+			right: 22px;
+			left: inherit;
+		}
+	}
+
+	.gif-media-search-dropdown {
+		right: 0;
+		left: inherit;
+
+		&:before {
+			right: 6px;
+			left: inherit;
+		}
+	}
+
 }
 
 // these ID's need replacing with this!

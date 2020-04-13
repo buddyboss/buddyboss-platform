@@ -372,6 +372,72 @@ span.icons:before {
 	display: flex;
 }
 
+#group_message_content pre {
+	padding: 1rem 1.5rem;
+}
+
+#group-messages-container #whats-new-toolbar {
+	text-align: right;
+	display: block;
+
+	.post-elements-buttons-item {
+		display: inline-block;
+		margin-right: 6px;
+	}
+
+	#group-messages-new-submit {
+		border-top: 1px solid #ebe9e6;
+		padding: 10px 20px 0;
+		margin: 10px -20px -10px;
+		-webkit-box-pack: justify;
+		-ms-flex-pack: justify;
+		justify-content: space-between;
+
+		.group-messages-type {
+			width: auto;
+		}
+	}
+
+	.medium-editor-toolbar {
+		top: inherit;
+		bottom: 35px;
+		left: -20px;
+		visibility: visible;
+		z-index: 99;
+		background-color: transparent;
+		opacity: 0.3;
+		transition: opacity ease 0.2s;
+
+		&.medium-editor-toolbar-active {
+			opacity: 1;
+		}
+
+		.medium-editor-toolbar-actions {
+			background-color: transparent;
+
+			button {
+				box-shadow: none;
+				padding: 10px 10px 10px 0;
+				min-width: 30px;
+				border: 0;
+				background-color: transparent !important;
+				color: rgba(18, 43, 70, 0.4) !important;
+
+				&.medium-editor-button-active {
+					color: #122b46 !important;
+				}
+
+			}
+
+		}
+
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			width: 220px;
+		}
+
+	}
+}
+
 #group-messages-container select.group-messages-type {
 	margin-right: 10px;
 }

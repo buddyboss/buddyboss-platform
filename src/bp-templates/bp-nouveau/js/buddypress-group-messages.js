@@ -576,7 +576,10 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-toolbar'),
+						static: true,
+						updateOnEmptySelection: true
 					}
 				});
 

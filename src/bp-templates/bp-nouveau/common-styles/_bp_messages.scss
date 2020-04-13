@@ -479,6 +479,10 @@ input#send-to-input {
 	}
 }
 
+.bp-messages-content pre {
+	padding: 1rem 1.5rem;
+}
+
 .bp-messages-content #bp-message-content {
 	margin-top: $marg-lrg;
 	padding: 20px;
