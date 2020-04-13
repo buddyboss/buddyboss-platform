@@ -203,16 +203,6 @@ if ( bp_is_active( 'groups' ) ) {
 		}
 
 		/**
-		 * Display zoom admin page content.
-		 *
-		 * @since BuddyBoss 1.2.10
-		 */
-		function zoom_admin_page_content() {
-			do_action( 'template_notices' );
-			echo "hello";
-		}
-
-		/**
 		 * Enqueue scripts for zoom meeting pages.
 		 *
 		 * @since BuddyBoss 1.2.10
