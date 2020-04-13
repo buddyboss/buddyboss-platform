@@ -9,7 +9,7 @@ if ( bp_has_zoom_meetings() ) {
 	while ( bp_zoom_meeting() ) {
 		bp_the_zoom_meeting();
 		?>
-		<div class="clearfix" id="meeting-item" data-id="<?php bp_zoom_meeting_id(); ?>"
+		<div class="clearfix meeting-item" data-id="<?php bp_zoom_meeting_id(); ?>"
 		     data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>">
 			<div class="list-col mtg-date">
 				<?php bp_zoom_meeting_start_date(); ?><br/>
@@ -23,7 +23,8 @@ if ( bp_has_zoom_meetings() ) {
 			<div class="list-col mtg-action">
 				<a role="button" target="_blank" href="<?php bp_zoom_meeting_zoom_start_url(); ?>"
 				   class="btn btn-default btn-sm">Start</a>
-				<a role="button" href="#" class="btn btn-default btn-sm">Delete</a>
+				<a role="button" id="bp-zoom-meeting-delete" data-nonce="<?php echo wp_create_nonce( 'bp_zoom_meeting_delete' ); ?>" href="#" class="btn btn-default btn-sm">Delete</a>
+				<a role="button" id="bp-zoom-meeting-view-recordings" href="#" class="btn btn-default btn-sm">View Recordings</a>
 			</div>
 			<div class="form-group recording-list">
 

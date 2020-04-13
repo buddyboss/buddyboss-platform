@@ -82,13 +82,10 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 				$response     = wp_remote_get( $request_url, $args );
 			}
 
-			$response = wp_remote_retrieve_body( $response );
+			$response_code = wp_remote_retrieve_response_code( $response );
+			$response      = wp_remote_retrieve_body( $response );
 
-			if ( ! $response ) {
-				return false;
-			}
-
-			return $response;
+			return array( 'response' => $response, 'code' => $response_code );
 		}
 
 		/**
@@ -294,7 +291,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 		 *
 		 * @return array
 		 */
-		public function deleteAMeeting( $meeting_id ) {
+		public function delete_meeting( $meeting_id ) {
 			$args = array();
 
 			return $this->send_request( 'meetings/' . $meeting_id, $args, 'DELETE' );

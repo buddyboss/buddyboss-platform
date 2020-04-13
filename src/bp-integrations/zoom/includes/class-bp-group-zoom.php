@@ -47,6 +47,7 @@ if ( bp_is_active( 'groups' ) ) {
 			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'wp_ajax_zoom_meeting_add', array( $this, 'zoom_meeting_add' ) );
+			add_action( 'wp_ajax_zoom_meeting_delete', array( $this, 'zoom_meeting_delete' ) );
 			add_action( 'wp_ajax_zoom_meeting_recordings', array( $this, 'zoom_meeting_recordings' ) );
 		}
 
@@ -162,8 +163,15 @@ if ( bp_is_active( 'groups' ) ) {
 
 		public function zoom_meeting_recordings() {
 			$meeting_id = filter_input( INPUT_GET, 'meeting_id' );
-			$recordings = json_decode( bp_zoom_conference()->recordings_by_meeting( $meeting_id ) );
-			if ( empty( $recordings->error ) && $recordings->recording_count > 0 ) {
+			$recordings = bp_zoom_conference()->recordings_by_meeting( $meeting_id );
+
+			if ( ! empty( $recordings['response'] ) ) {
+				$recordings = json_decode( $recordings['response'] );
+			} else {
+				wp_send_json_error( array( 'error' => true ) );
+			}
+
+			if ( ! empty( $recordings->recording_count ) && $recordings->recording_count > 0 ) {
 
 				$count = 1;
 				ob_start();
@@ -197,8 +205,9 @@ if ( bp_is_active( 'groups' ) ) {
 				}
 
 				wp_send_json_success( array( 'recordings' => ob_get_clean() ) );
+			} else {
+				wp_send_json_error( array( 'error' => $recordings->message ) );
 			}
-			wp_send_json_error( array( 'error' => $recordings->error ) );
 		}
 
 		public function zoom_meeting_add() {
@@ -247,9 +256,9 @@ if ( bp_is_active( 'groups' ) ) {
 				'meeting_topic'          => $meeting_topic,
 			);
 
-			$meeting_created = json_decode( bp_zoom_conference()->create_meeting( $data ) );
-			if ( empty( $meeting_created->error ) ) {
-				$data['zoom_details']    = serialize( $meeting_created );
+			$meeting_created = bp_zoom_conference()->create_meeting( $data );
+			if ( ! empty( $meeting_created['code'] ) && 201 === $meeting_created['code'] ) {
+				$data['zoom_details']    = serialize( $meeting_created['response'] );
 				$data['zoom_join_url']   = $meeting_created->join_url;
 				$data['zoom_start_url']  = $meeting_created->start_url;
 				$data['zoom_meeting_id'] = $meeting_created->id;
@@ -263,6 +272,28 @@ if ( bp_is_active( 'groups' ) ) {
 
 			$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
 			wp_send_json_success( array( 'redirect_url' => trailingslashit( $group_link . 'zoom' ) ) );
+		}
+
+		public function zoom_meeting_delete() {
+			if ( ! bp_is_post_request() ) {
+				return;
+			}
+
+			// Nonce check!
+			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_zoom_meeting_delete' ) ) {
+				return;
+			}
+
+			$id         = ! empty( $_POST['id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'id' ) ) : false;
+			$meeting_id = ! empty( $_POST['meeting_id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'meeting_id' ) ) : false;
+
+			$meeting_deleted = bp_zoom_conference()->delete_meeting( $meeting_id );
+
+			if ( isset( $meeting_deleted['code'] ) && 204 === $meeting_deleted['code'] && bp_zoom_meeting_delete( array( 'id' => $id ) ) ) {
+				wp_send_json_success( array( 'deleted' => true ) );
+			}
+
+			wp_send_json_success( array( 'deleted' => $meeting_deleted ) );
 		}
 	}
 

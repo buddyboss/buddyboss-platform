@@ -236,6 +236,63 @@ function bp_zoom_meeting_add( $args = '' ) {
 }
 
 /**
+ * Delete meeting.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @param array|string $args To delete specific meeting items, use
+ *                           $args = array( 'id' => $ids ); Otherwise, to use
+ *                           filters for item deletion, the argument format is
+ *                           the same as BP_Group_Zoom_Meeting::get().
+ *                           See that method for a description.
+ *
+ * @return bool|int The ID of the meeting on success. False on error.
+ */
+function bp_zoom_meeting_delete( $args = '' ) {
+
+	// Pass one or more the of following variables to delete by those variables.
+	$args = bp_parse_args( $args, array(
+		'id'         => false,
+		'meeting_id' => false,
+		'group_id'   => false,
+	) );
+
+	/**
+	 * Fires before an meeting item proceeds to be deleted.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param array $args Array of arguments to be used with the meeting deletion.
+	 */
+	do_action( 'bp_before_zoom_meeting_delete', $args );
+
+	$meeting_ids_deleted = BP_Group_Zoom_Meeting::delete( $args );
+	if ( empty( $meeting_ids_deleted ) ) {
+		return false;
+	}
+
+	/**
+	 * Fires after the meeting item has been deleted.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param array $args Array of arguments used with the meeting deletion.
+	 */
+	do_action( 'bp_zoom_meeting_delete', $args );
+
+	/**
+	 * Fires after the meeting item has been deleted.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param array $meeting_ids_deleted Array of affected meeting item IDs.
+	 */
+	do_action( 'bp_zoom_meeting_deleted_meetings', $meeting_ids_deleted );
+
+	return true;
+}
+
+/**
  * Callback function for api key in zoom integration.
  *
  * @since BuddyBoss 1.2.10

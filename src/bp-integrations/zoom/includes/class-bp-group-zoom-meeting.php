@@ -611,4 +611,98 @@ class BP_Group_Zoom_Meeting {
 
 		return $meetings;
 	}
+
+	/**
+	 * Delete meeting items from the database.
+	 *
+	 * To delete a specific meeting item, pass an 'id' parameter.
+	 * Otherwise use the filters.
+	 *
+	 * @param array $args {
+	 * @int    $id                Optional. The ID of a specific item to delete.
+	 * @int    $meeting_id           Optional. The meeting ID to filter by.
+	 * @int    $group_id           Optional. The group ID to filter by.
+	 * }
+	 *
+	 * @return array|bool An array of deleted meeting IDs on success, false on failure.
+	 * @since BuddyBoss 1.2.10
+	 *
+	 */
+	public static function delete( $args = array(), $from = false ) {
+		global $wpdb;
+
+		$bp = buddypress();
+		$r  = wp_parse_args(
+			$args,
+			array(
+				'id'         => false,
+				'meeting_id' => false,
+				'group_id'   => false,
+			)
+		);
+
+		// Setup empty array from where query arguments.
+		$where_args = array();
+
+		// ID.
+		if ( ! empty( $r['id'] ) ) {
+			$where_args[] = $wpdb->prepare( 'id = %d', $r['id'] );
+		}
+
+		// meeting ID.
+		if ( ! empty( $r['meeting_id'] ) ) {
+			$where_args[] = $wpdb->prepare( 'meeting_id = %d', $r['meeting_id'] );
+		}
+
+		// group ID.
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_args[] = $wpdb->prepare( 'group_id = %d', $r['group_id'] );
+		}
+
+		// Bail if no where arguments.
+		if ( empty( $where_args ) ) {
+			return false;
+		}
+
+		// Join the where arguments for querying.
+		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
+
+		// Fetch all meeting being deleted so we can perform more actions.
+		$meetings = $wpdb->get_results( "SELECT * FROM {$bp->table_prefix}bp_groups_zoom_meetings {$where_sql}" );
+
+		/**
+		 * Action to allow intercepting meeting items to be deleted.
+		 *
+		 * @param array $meetings Array of meeting.
+		 * @param array $r Array of parsed arguments.
+		 *
+		 * @since BuddyBoss 1.2.10
+		 *
+		 */
+		do_action_ref_array( 'bp_zoom_meeting_before_delete', array( $meetings, $r ) );
+
+		// Attempt to delete meeting from the database.
+		$deleted = $wpdb->query( "DELETE FROM {$bp->table_prefix}bp_groups_zoom_meetings {$where_sql}" );
+
+		// Bail if nothing was deleted.
+		if ( empty( $deleted ) ) {
+			return false;
+		}
+
+		/**
+		 * Action to allow intercepting meeting items just deleted.
+		 *
+		 * @param array $meetings Array of meeting.
+		 * @param array $r Array of parsed arguments.
+		 *
+		 * @since BuddyBoss 1.2.10
+		 *
+		 */
+		do_action_ref_array( 'bp_zoom_meeting_after_delete', array( $meetings, $r ) );
+
+		// Pluck the meeting IDs out of the $meetings array.
+		$meeting_ids = wp_parse_id_list( wp_list_pluck( $meetings, 'id' ) );
+
+		return $meeting_ids;
+	}
 }

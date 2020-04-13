@@ -33,18 +33,43 @@
 			});
 		} );
 
-		$( document ).on('click','#meeting-item',function(e){
-			var target = $(e.currentTarget);
+		$( '.meeting-item' ).on('click','#bp-zoom-meeting-view-recordings',function(e){
+			var target = $(e.target), meeting_item = target.closest('.meeting-item');
+			e.preventDefault();
+
 			$.ajax({
 				type: 'GET',
 				url: ajaxurl,
 				data: {
 					'action': 'zoom_meeting_recordings',
-					'meeting_id': target.data('meeting-id'),
+					'meeting_id': meeting_item.data('meeting-id'),
 				},
 				success: function (response) {
-					if (response.data.recordings){
-						target.closest('#meeting-item').find('.recording-list').html(response.data.recordings);
+					if ( response.success && response.data.recordings){
+						meeting_item.find('.recording-list').html(response.data.recordings);
+					} else {
+						meeting_item.find('.recording-list').html(response.data.error);
+					}
+				},
+			});
+		});
+
+		$('.meeting-item').on( 'click', '#bp-zoom-meeting-delete', function(e){
+			var target = $( e.target ), meeting_item = target.closest('.meeting-item'), meeting_id = meeting_item.data('meeting-id'), id = meeting_item.data('id'), nonce = target.data('nonce');
+			e.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					'action': 'zoom_meeting_delete',
+					'meeting_id': meeting_id,
+					'id': id,
+					'_wpnonce': nonce,
+				},
+				success: function (response) {
+					if ( true === response.data.deleted ) {
+						$(meeting_item).remove();
 					}
 				}
 			});
