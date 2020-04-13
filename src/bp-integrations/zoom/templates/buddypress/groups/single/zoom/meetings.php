@@ -23,7 +23,9 @@ if ( bp_has_zoom_meetings() ) {
 			<div class="list-col mtg-action">
 				<a role="button" target="_blank" href="<?php bp_zoom_meeting_zoom_start_url(); ?>"
 				   class="btn btn-default btn-sm">Start</a>
+				<?php if ( bp_zoom_groups_can_user_manage_zoom( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
 				<a role="button" id="bp-zoom-meeting-delete" data-nonce="<?php echo wp_create_nonce( 'bp_zoom_meeting_delete' ); ?>" href="#" class="btn btn-default btn-sm">Delete</a>
+				<?php } ?>
 				<a role="button" id="bp-zoom-meeting-view-recordings" href="#" class="btn btn-default btn-sm">View Recordings</a>
 			</div>
 			<div class="form-group recording-list">

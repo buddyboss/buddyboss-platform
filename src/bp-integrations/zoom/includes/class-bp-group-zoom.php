@@ -116,14 +116,16 @@ if ( bp_is_active( 'groups' ) ) {
 					$default_args
 				);
 
-				$sub_nav[] = array_merge(
-					array(
-						'name'     => __( 'Create Meeting', 'buddyboss' ),
-						'slug'     => 'create-meeting',
-						'position' => 30,
-					),
-					$default_args
-				);
+				if ( bp_zoom_groups_can_user_manage_zoom( bp_loggedin_user_id(), $current_group->id ) ) {
+					$sub_nav[] = array_merge(
+						array(
+							'name'     => __( 'Create Meeting', 'buddyboss' ),
+							'slug'     => 'create-meeting',
+							'position' => 30,
+						),
+						$default_args
+					);
+				}
 			}
 
 			// If the user is a group admin, then show the group admin nav item.
