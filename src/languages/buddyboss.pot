@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-09 12:00:05+00:00\n"
+"POT-Creation-Date: 2020-04-14 09:24:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2549,9 +2549,9 @@ msgid "Profile Dashboard"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
-#: bp-document/bp-document-functions.php:1448
-#: bp-document/bp-document-functions.php:1495
-#: bp-document/bp-document-functions.php:1498
+#: bp-document/bp-document-functions.php:1465
+#: bp-document/bp-document-functions.php:1512
+#: bp-document/bp-document-functions.php:1515
 #: bp-document/classes/class-bp-document-component.php:70
 #: bp-document/classes/class-bp-document-component.php:269
 #: bp-document/classes/class-bp-document-component.php:323
@@ -5776,31 +5776,31 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1196
+#: bp-document/bp-document-functions.php:1213
 #: bp-media/bp-media-functions.php:117
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1197
+#: bp-document/bp-document-functions.php:1214
 #: bp-media/bp-media-functions.php:118
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1199
+#: bp-document/bp-document-functions.php:1216
 #: bp-media/bp-media-functions.php:120
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1200
+#: bp-document/bp-document-functions.php:1217
 #: bp-media/bp-media-functions.php:121
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1201
+#: bp-document/bp-document-functions.php:1218
 #: bp-media/bp-media-functions.php:122
 msgid "File upload stopped by extension."
 msgstr ""
@@ -6302,13 +6302,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -7180,21 +7180,21 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1138
+#: bp-document/bp-document-functions.php:1155
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1194
-#: bp-document/bp-document-functions.php:1195
+#: bp-document/bp-document-functions.php:1211
+#: bp-document/bp-document-functions.php:1212
 #: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1219
+#: bp-document/bp-document-functions.php:1236
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1502
+#: bp-document/bp-document-functions.php:1519
 msgid "..."
 msgstr ""
 

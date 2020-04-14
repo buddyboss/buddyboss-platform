@@ -203,13 +203,14 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.modal-container .bb-field-uploader-actions', this.uploadDocumentNavigate.bind( this ) );
 			$( document ).on( 'click', '.modal-container #bp-media-edit-child-folder-submit', this.renameChildFolder.bind( this ) );
 			//Document move option
+			var mediaStream = $( '#bb-media-model-container .activity-list, #media-stream' );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
-			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
-			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
-			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
-			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
-			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
+			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
+			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
+			mediaStream.on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
+			mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
+			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
 			// document delete
 			$( document ).on( 'click', '.document-file-delete', this.deleteDocument.bind( this ) );
@@ -262,9 +263,6 @@ window.bp = window.bp || {};
 
 			var currentFolderId = target.attr( 'id' );
 			var folderMoveToId  = $( '#media-folder-document-data-table #bp-media-move-folder .modal-mask .modal-wrapper #boss-media-create-album-popup .bb-field-wrap .bb-folder-selected-id' ).val();
-
-			console.log( currentFolderId );
-			console.log( folderMoveToId );
 
 			if ( '' === currentFolderId || '' === folderMoveToId ){
 				alert( BP_Nouveau.media.i18n_strings.folder_move_error );
@@ -2047,17 +2045,15 @@ window.bp = window.bp || {};
 		 */
 		renameDocumentSubmit: function( event ) {
 
-			var document_edit 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
-			var document_name 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
-			var document_id   			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-id').attr( 'data-item-id' );
-			var attachment_document_id   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-attachment-id').attr( 'data-item-id' );
-			var documentType		    = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-type').attr( 'data-item-id' );
-			var document_name_val 		 =  document_edit.val().trim(); // trim to remove whitespace around name
-			var pattern 				 = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
-
-
-			var matches = pattern.exec(document_name_val);
-			var matchStatus = Boolean(matches);
+			var document_edit 		   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
+			var document_name 		   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
+			var document_id   		   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-id').attr( 'data-item-id' );
+			var attachment_document_id = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-attachment-id').attr( 'data-item-id' );
+			var documentType		   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-type').attr( 'data-item-id' );
+			var document_name_val 	   =  document_edit.val().trim(); // trim to remove whitespace around name
+			var pattern 			   = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
+			var matches 			   = pattern.exec(document_name_val);
+			var matchStatus 		   = Boolean(matches);
 
 			if( matchStatus ){ // If any not supported character found add error class
 				document_edit.removeClass('error');
