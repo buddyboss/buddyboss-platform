@@ -803,6 +803,11 @@ function bp_friends_prime_mentions_results() {
 		return;
 	}
 
+	// Bail if single group page.
+	if ( bp_is_group() ) {
+		return;
+	}
+
 	if ( friends_get_total_friend_count( get_current_user_id() ) > 30 ) {
 		return;
 	}

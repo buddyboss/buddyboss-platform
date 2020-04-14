@@ -3766,3 +3766,55 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+function bp_groups_prime_mentions_results() {
+
+	// Stop here if user is not logged in.
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Bail out if the site has a ton of users.
+	if ( bp_is_large_install() ) {
+		return;
+	}
+
+	// Bail if single group page.
+	if ( ! bp_is_group() ) {
+		return;
+	}
+
+	$members = groups_get_group_members();
+	$results       = array();
+
+	if ( ! empty( $members['members'] ) ) {
+		foreach( $members['members'] as $user ) {
+			$result        = new stdClass();
+			$result->ID    = get_user_meta( $user->ID, 'nickname', true ) ?: $user->user_nicename;
+			$result->image = bp_core_fetch_avatar(
+				array(
+					'html'    => false,
+					'item_id' => $user->ID,
+				)
+			);
+
+			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			} else {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			}
+
+			$results[] = $result;
+		}
+
+		wp_localize_script(
+			'bp-mentions',
+			'BP_Suggestions',
+			array(
+				'members' => $results,
+			)
+		);
+	}
+}
+add_action( 'bp_activity_mentions_prime_results', 'bp_groups_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bp_groups_prime_mentions_results' );
