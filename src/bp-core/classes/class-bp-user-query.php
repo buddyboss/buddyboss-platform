@@ -441,17 +441,8 @@ class BP_User_Query {
 			$member_type_clause = $this->get_sql_clause_for_member_types( $member_type__not_in, 'NOT IN' );
 
 			// Profile types to include.
-		}
-		if ( ! empty( $member_type ) ) {
-			/*
-			 * Added for profile type filter
-			 * filter issue solved when profile type has checked '[]Hide all members of this type from Members Directory'
-			 */
-			if ( ! empty( $member_type__not_in ) ) {
-				$member_type_clause .= ' AND '.$this->get_sql_clause_for_member_types( $member_type, 'IN' );
-			}else{
-				$member_type_clause = $this->get_sql_clause_for_member_types( $member_type, 'IN' );
-			}
+		} elseif ( ! empty( $member_type ) ) {
+			$member_type_clause = $this->get_sql_clause_for_member_types( $member_type, 'IN' );
 		}
 
 		if ( ! empty( $member_type_clause ) ) {
