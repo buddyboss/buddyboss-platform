@@ -555,11 +555,11 @@ function bp_messages_add_user_to_group_message_thread( $group_id, $user_id ) {
 
 		$group_thread = (int) groups_get_groupmeta( (int) $group_id, 'group_message_thread' );
 
-		$recipients = \BP_Messages_Thread::get_recipients_for_thread( (int) $group_thread );
+		$recipients = BP_Messages_Thread::get_recipients_for_thread( (int) $group_thread );
 		$recipients = wp_list_pluck( $recipients, 'user_id' );
 		if ( $group_thread > 0 && ! in_array( (int) $user_id, $recipients, true ) ) {
 
-			$first_message = \BP_Messages_Thread::get_first_message( $group_thread );
+			$first_message = BP_Messages_Thread::get_first_message( $group_thread );
 
 			$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 			$message_users_ids = explode( ',', $message_users_ids );
