@@ -1164,6 +1164,64 @@ a.layout-grid-view {
   left: inherit;
 }
 
+.activity-update-form #whats-new-toolbar {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar {
+  opacity: 0.3;
+}
+
+.activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.medium-editor-toolbar-active {
+  opacity: 1;
+}
+
+.activity-update-form #whats-new-content {
+  position: relative;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar {
+  top: inherit;
+  bottom: -52px;
+  left: 0;
+  visibility: visible;
+  z-index: 99;
+  background-color: transparent;
+  opacity: 0;
+  transition: opacity ease 0.2s;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
+  background-color: transparent;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 10px 10px 0;
+  min-width: 30px;
+  border: 0;
+  background-color: transparent !important;
+  color: rgba(18, 43, 70, 0.4) !important;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+  color: #122b46 !important;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  width: 220px;
+  margin-bottom: 0;
+  background-color: #fff;
+  border: 1px solid #dedfe2;
+  color: #4d5c6d;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
+  color: #4d5c6d;
+}
+
 #whats-new-textarea [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   color: #bbb;
@@ -4665,7 +4723,7 @@ input#send-to-input {
 }
 
 body .bp-messages-user-threads {
-  max-height: 80vh;
+  max-height: 69vh;
   overflow: auto;
 }
 
@@ -11910,6 +11968,12 @@ img.emojioneemoji {
   }
 }
 
+.bp-vertical-navs .bb-groups-messages-left {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 260px;
+  flex: 0 0 260px;
+}
+
 .bb-panel-head {
   border-bottom: 1px solid #e7e9ec;
   padding: 15px 20px;
@@ -12290,6 +12354,28 @@ span.icons:before {
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
   width: 220px;
+}
+
+#group-messages-container #whats-new-toolbar .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+  left: inherit;
+  right: -30px;
+}
+
+#group-messages-container #whats-new-toolbar .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  left: inherit;
+  right: 32px;
+}
+
+#group-messages-container #whats-new-toolbar .gif-media-search-dropdown {
+  right: -66px;
+}
+
+#group-messages-container #whats-new-toolbar .gif-media-search-dropdown:before {
+  left: inherit;
+  top: auto;
+  bottom: -11px;
+  transform: rotate(135deg);
+  right: 57px;
 }
 
 #group-messages-container select.group-messages-type {

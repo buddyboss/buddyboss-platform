@@ -667,6 +667,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
+			this.on( 'ready', this.activateTinyMce, this );
 			this.options.activity.on( 'change:content', this.resetContent, this );
 			this.linkTimeout = null;
 
@@ -865,6 +866,35 @@ window.bp = window.bp || {};
 					link_error: true,
 					link_error_msg: response.error
 				});
+			}
+		},
+		activateTinyMce: function() {
+			
+			if ( !_.isUndefined(window.MediumEditor) ) {
+
+				window.group_messages_editor = new window.MediumEditor('#whats-new',{
+					placeholder: {
+						text: '',
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-content'),
+						static: true,
+						updateOnEmptySelection: true
+					}
+				});
+
+				// check for mentions in the url, if set any then focus to editor
+				var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
+
+				// Check for mention
+				if ( ! _.isNull( mention ) ) {
+					$('#message_content').focus();
+				}
+
+			} else if ( typeof tinymce !== 'undefined' ) {
+				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'whats-new' ); // jshint ignore:line
 			}
 		}
 	} );

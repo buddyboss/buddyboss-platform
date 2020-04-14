@@ -49,6 +49,12 @@
 	}
 }
 
+.bp-vertical-navs .bb-groups-messages-left {
+	-webkit-box-flex: 0;
+	-ms-flex: 0 0 260px;
+	flex: 0 0 260px;
+}
+
 .bb-panel-head {
 	border-bottom: 1px solid #e7e9ec;
 	padding: 15px 20px;
@@ -435,6 +441,28 @@ span.icons:before {
 			width: 220px;
 		}
 
+	}
+
+	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+		left: inherit;
+		right: -30px;
+	}
+
+	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+		left: inherit;
+		right: 32px;
+	}
+
+	.gif-media-search-dropdown {
+		right: -66px;
+	}
+
+	.gif-media-search-dropdown:before {
+		left: inherit;
+		top: auto;
+		bottom: -11px;
+		transform: rotate(135deg);
+		right: 57px;
 	}
 }
 
