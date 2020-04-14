@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-13 12:06:30+00:00\n"
+"POT-Creation-Date: 2020-04-14 02:20:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2536,7 +2536,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:29
 #: bp-friends/classes/class-bp-friends-component.php:263
 #: bp-friends/classes/class-bp-friends-component.php:309
-#: bp-members/classes/class-bp-core-whos-online-widget.php:175
+#: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-templates/bp-nouveau/includes/activity/functions.php:280
 #: bp-templates/bp-nouveau/includes/customizer.php:167
 msgid "Connections"
@@ -5734,10 +5734,10 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-widget.php:186
 #: bp-members/classes/class-bp-core-recently-active-widget.php:102
 #: bp-members/classes/class-bp-core-recently-active-widget.php:236
-#: bp-members/classes/class-bp-core-whos-online-widget.php:101
-#: bp-members/classes/class-bp-core-whos-online-widget.php:145
-#: bp-members/classes/class-bp-core-whos-online-widget.php:350
-#: bp-members/classes/class-bp-core-whos-online-widget.php:394
+#: bp-members/classes/class-bp-core-whos-online-widget.php:103
+#: bp-members/classes/class-bp-core-whos-online-widget.php:147
+#: bp-members/classes/class-bp-core-whos-online-widget.php:352
+#: bp-members/classes/class-bp-core-whos-online-widget.php:396
 msgid "More"
 msgstr ""
 
@@ -5745,7 +5745,7 @@ msgstr ""
 #: bp-core/classes/class-bp-core-follow-following-widget.php:162
 #: bp-members/classes/class-bp-core-members-widget.php:257
 #: bp-members/classes/class-bp-core-recently-active-widget.php:161
-#: bp-members/classes/class-bp-core-whos-online-widget.php:243
+#: bp-members/classes/class-bp-core-whos-online-widget.php:245
 msgid "Max members to show:"
 msgstr ""
 
@@ -5816,7 +5816,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-widget.php:232
 #: bp-members/classes/class-bp-core-members-widget.php:243
 #: bp-members/classes/class-bp-core-recently-active-widget.php:154
-#: bp-members/classes/class-bp-core-whos-online-widget.php:236
+#: bp-members/classes/class-bp-core-whos-online-widget.php:238
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:183
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:491
@@ -14272,18 +14272,18 @@ msgstr ""
 msgid "Profile photos of online users"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-whos-online-widget.php:107
-#: bp-members/classes/class-bp-core-whos-online-widget.php:151
-#: bp-members/classes/class-bp-core-whos-online-widget.php:356
-#: bp-members/classes/class-bp-core-whos-online-widget.php:400
+#: bp-members/classes/class-bp-core-whos-online-widget.php:109
+#: bp-members/classes/class-bp-core-whos-online-widget.php:153
+#: bp-members/classes/class-bp-core-whos-online-widget.php:358
+#: bp-members/classes/class-bp-core-whos-online-widget.php:402
 msgid "There are no users currently online"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-whos-online-widget.php:167
+#: bp-members/classes/class-bp-core-whos-online-widget.php:169
 msgid "Online"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-whos-online-widget.php:263
+#: bp-members/classes/class-bp-core-whos-online-widget.php:265
 msgid "Who's Online"
 msgstr ""
 
@@ -14395,8 +14395,8 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:1267
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:498
 msgid ""
-"%s has been marked as a spammer. All BuddyPress data associated with the "
-"user has been removed"
+"%s has been marked as a spammer. All BuddyBoss data associated with the "
+"user has been removed."
 msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:1298
@@ -14812,15 +14812,16 @@ msgstr ""
 msgid "There was a problem sending your reply. Please try again."
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:186
-#: bp-messages/bp-messages-filters.php:242
-#: bp-messages/bp-messages-filters.php:350
+#: bp-messages/bp-messages-filters.php:185
+#: bp-messages/bp-messages-filters.php:239
+#: bp-messages/bp-messages-filters.php:348
+#: bp-messages/bp-messages-filters.php:568
 msgid "Joined \"%s\" "
 msgstr ""
 
-#: bp-messages/bp-messages-filters.php:293
-#: bp-messages/bp-messages-filters.php:401
-#: bp-messages/bp-messages-filters.php:454
+#: bp-messages/bp-messages-filters.php:291
+#: bp-messages/bp-messages-filters.php:399
+#: bp-messages/bp-messages-filters.php:453
 msgid "Left \"%s\" "
 msgstr ""
 
@@ -15009,6 +15010,8 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1056
 #: bp-notifications/bp-notifications-template.php:1036
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:61
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:76
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:112
 msgid "Mark unread"
 msgstr ""
@@ -15670,11 +15673,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:60
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:75
 msgid "Hide conversation"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:61
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:76
-msgid "Mark unread conversation"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-load-more.php:2

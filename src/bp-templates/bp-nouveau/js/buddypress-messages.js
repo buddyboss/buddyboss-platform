@@ -2243,7 +2243,10 @@ window.bp = window.bp || {};
 			$.each( $( '.thread-content' ), function() {
 				var _this = $(this);
 				if ( _this.data('thread-id') == thread_id ) {
-					_this.closest('.thread-item').addClass('current');
+					_this.closest('.thread-item').addClass( 'current' );
+					if ( _this.closest('.thread-item').hasClass( 'unread' ) ) {
+						_this.closest('.thread-item').removeClass( 'unread' );
+					}
 				} else {
 					_this.closest('.thread-item').removeClass('current');
 				}
