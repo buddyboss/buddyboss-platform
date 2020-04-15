@@ -87,6 +87,10 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'page'  => 'zoom',
 				'title' => __( 'Zoom Conference', 'buddyboss' ),
 			),
+			'bp_zoom_users_section' => array(
+				'page'  => 'zoom',
+				'title' => __( 'Zoom Users', 'buddyboss' ),
+			),
 		);
 
 		return $settings;
@@ -140,6 +144,19 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'bp-zoom-api-check-connection' => array(
 				'title'    => __( '&#160;', 'buddyboss' ),
 				'callback' => 'bp_zoom_api_check_connection_button',
+			)
+
+		);
+
+		$fields['bp_zoom_users_section'] = array(
+
+			'bp-zoom-add-user' => array(
+				'title'    => __( '&#160;', 'buddyboss' ),
+				'callback' => 'bp_zoom_admin_add_user_callback',
+			),
+			'bp-zoom-users-list' => array(
+				'title'    => __( '&#160;', 'buddyboss' ),
+				'callback' => 'bp_zoom_admin_users_list_callback',
 			)
 
 		);
