@@ -495,3 +495,14 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 // Import Group Messages screens
 
 @import "../common-styles/_bp_groups_messages";
+
+
+/*
+*-----------------------------------------
+* @section 17.0 - Zoom Meeting
+*-----------------------------------------
+*/
+
+// Import Zoom Meeting
+
+@import "../../../bp-integrations/zoom/assets/css/bp-group-zoom-meeting.scss";

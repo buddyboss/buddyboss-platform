@@ -12,6 +12,8 @@
 		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
 			e.preventDefault();
 
+			$(this).addClass('loading');
+
 			var form_data = $('#bp-new-zoom-meeting-form').serializeArray();
 			var data = {
 				'action': 'zoom_meeting_add',
