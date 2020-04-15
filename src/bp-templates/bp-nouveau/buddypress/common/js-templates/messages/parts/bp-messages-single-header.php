@@ -64,6 +64,11 @@
 		        </div>
 		        <?php
 	        } else {
+
+		        $old_user = false;
+		        if ( class_exists( 'BP_Core_Members_Switching' ) ) {
+			        $old_user = BP_Core_Members_Switching::get_old_user();
+		        }
 	        	?>
 				<div class="message_actions">
 			        <a href="#" class="message_action__anchor">
@@ -74,6 +79,13 @@
 				        	<li class="unread"><a data-bp-action="unread" href="#"><?php esc_html_e( 'Mark unread', 'buddyboss' ); ?></a></li>
 				        	<li class="hide_thread"><a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Hide conversation', 'buddyboss' ); ?></a></li>
 					        <li class="delete_messages" data-bp-action="delete"><a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a></li>
+					        <?php
+					        if ( ! empty( $old_user ) ) {
+					        	?>
+						        <li class="delete_thread"><a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a></li>
+					            <?php
+					        }
+					        ?>
 				        </ul>
 			        </div>
 		        </div>

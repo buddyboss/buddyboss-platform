@@ -789,7 +789,7 @@ class BP_Messages_Thread {
 		",
 					$r['user_id']
 				);
-			} else{
+			} else {
 				$user_threads_query = $wpdb->prepare(
 					"
 			SELECT DISTINCT(thread_id)
@@ -803,36 +803,155 @@ class BP_Messages_Thread {
 
 		}
 
+		$group_thread_in = array();
 		if ( ! empty( $r['search_terms'] ) ) {
-			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
 
-			$current_user_participants = $wpdb->get_results(
-				$q                     = $wpdb->prepare(
-					"
+			// Search in xprofile field.
+			if (  bp_is_active( 'xprofile' ) ) {
+				// Explode the value if there is a space in search term.
+				$split_name = explode( ' ', $r['search_terms'] );
+
+				// If space found then add spd.value 2 times in {$bp->profile->table_name_data} table due to first & last name.
+				if ( isset( $split_name ) && isset( $split_name[0] ) && isset( $split_name[1] ) && !empty( $split_name ) && !empty( trim( $split_name[0] ) ) && !empty( trim( $split_name[1] ) ) ) {
+					$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+					$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
+
+					$current_user_participants = $wpdb->get_results(
+						$q                     = $wpdb->prepare(
+							"
+				SELECT DISTINCT(r.user_id), u.display_name, spd.value
+				FROM {$bp->messages->table_name_recipients} r
+				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
+				LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id
+				WHERE r.thread_id IN ($user_threads_query) AND
+				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s OR spd.value LIKE %s OR spd.value LIKE %s )
+			",
+							$search_terms_like,
+							$search_terms_like,
+							$search_terms_like,
+							$split_name[0],
+							$split_name[1]
+						)
+					);
+				// else single search without space in search_terms
+				} else {
+					$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+					$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
+
+					$current_user_participants = $wpdb->get_results(
+						$q                     = $wpdb->prepare(
+							"
+				SELECT DISTINCT(r.user_id), u.display_name, spd.value
+				FROM {$bp->messages->table_name_recipients} r
+				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
+				LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id
+				WHERE r.thread_id IN ($user_threads_query) AND
+				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s OR spd.value LIKE %s )
+			",
+							$search_terms_like,
+							$search_terms_like,
+							$search_terms_like,
+							$search_terms_like
+						)
+					);
+				}
+			// Default search if xprofile not active.
+			} else {
+				$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+				$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
+
+				$current_user_participants = $wpdb->get_results(
+					$q                     = $wpdb->prepare(
+						"
 				SELECT DISTINCT(r.user_id), u.display_name
 				FROM {$bp->messages->table_name_recipients} r
 				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
 				WHERE r.thread_id IN ($user_threads_query) AND
 				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s )
 			",
-					$search_terms_like,
-					$search_terms_like,
-					$search_terms_like
-				)
-			);
+						$search_terms_like,
+						$search_terms_like,
+						$search_terms_like
+					)
+				);
+			}
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
 			$current_user_participants_ids = array_diff( $current_user_participants_ids, array( bp_loggedin_user_id() ) );
 
+			// Search Group Thread via Group Name via search_terms
+			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$groups            = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->groups->table_name} g WHERE g.name LIKE %s", $search_terms_like ) );
+			$group_creator_ids = array_map( 'intval', wp_list_pluck( $groups, 'creator_id' ) );
+
+			// If Group Found
+			if ( !empty( $group_creator_ids ) ) {
+				if ( is_array( $current_user_participants_ids ) ) {
+					$current_user_participants_ids = array_merge( $current_user_participants_ids, $group_creator_ids );
+				} else {
+					$current_user_participants_ids = $group_creator_ids;
+				}
+			}
+
+			// Search for deleted Group OR Deleted Users.
+			$value = "(deleted)|(group)|(Deleted)|(group)|(user)|(User)|(del)|(Del)|(dele)|(Dele)|(dele)|(Dele)|(delet)|(Delet)|(use)|(Use)";
+			if ( preg_match_all( '/\b' . $value . '\b/i', $r['search_terms'], $dest ) ) {
+
+				// For deleted users.
+				$current_user_participants = $wpdb->get_results( 'SELECT DISTINCT user_id FROM ' . $bp->messages->table_name_recipients . ' WHERE user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')');
+				if ( !empty( $current_user_participants ) ) {
+					$deleted_user_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
+					if ( is_array( $current_user_participants_ids ) ) {
+						$current_user_participants_ids = array_merge( $current_user_participants_ids, $deleted_user_ids );
+					} else {
+						$current_user_participants_ids = $deleted_user_ids;
+					}
+				}
+
+				// For deleted groups fetch all thread first.
+				$threads    = $wpdb->get_results("SELECT DISTINCT thread_id FROM {$bp->messages->table_name_recipients} " );
+				$thread_ids = array_map( 'intval', wp_list_pluck( $threads, 'thread_id' ) );
+
+				// If Group Found
+				if ( !empty( $thread_ids ) ) {
+					foreach ( $thread_ids as $thread ) {
+						// Get the group id from the first message
+						$first_message    = BP_Messages_Thread::get_first_message( $thread );
+						$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+						if ( $message_group_id ) {
+							if ( bp_is_active( 'groups' ) ) {
+								$group_name = bp_get_group_name( groups_get_group( $message_group_id ) );
+							} else {
+								$group_name = $wpdb->get_var( "SELECT name FROM {$groups_table} WHERE id = '{$message_group_id}';" ); // db call ok; no-cache ok;
+							}
+							if ( empty( $group_name ) ) {
+								$group_thread_in[] = $thread;
+							}
+						}
+					}
+				}
+
+			}
+
 			if ( $current_user_participants_ids ) {
 				$user_ids  = implode( ',', array_unique( $current_user_participants_ids ) );
-				$where_sql = $wpdb->prepare(
-					"
+				if ( !empty( $group_thread_in ) ) {
+					$thread_in = implode( ',', $group_thread_in );
+					$where_sql = $wpdb->prepare(
+						"
+					(m.message LIKE %s OR r.user_id IN ({$user_ids}) OR r.thread_id IN ({$thread_in}) )
+				",
+						$search_terms_like
+					);
+				} else {
+					$where_sql = $wpdb->prepare(
+						"
 					(m.message LIKE %s OR r.user_id IN ({$user_ids}))
 				",
-					$search_terms_like
-				);
+						$search_terms_like
+					);
+				}
+
 			}
 		}
 
