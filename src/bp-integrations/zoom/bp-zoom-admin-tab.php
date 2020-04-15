@@ -151,7 +151,7 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'args'              => array(),
 			);
 
-			$fields['bp_zoom_api_check_connection']['bp-zoom-api-secret'] = array(
+			$fields['bp_zoom_settings_section']['bp_zoom_api_check_connection'] = array(
 				'title'    => __( '&#160;', 'buddyboss' ),
 				'callback' => 'bp_zoom_api_check_connection_button',
 			);
