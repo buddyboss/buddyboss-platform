@@ -137,6 +137,10 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'sanitize_callback' => 'string',
 				'args'              => array(),
 			),
+			'bp-zoom-api-check-connection' => array(
+				'title'    => __( '&#160;', 'buddyboss' ),
+				'callback' => 'bp_zoom_api_check_connection_button',
+			)
 
 		);
 

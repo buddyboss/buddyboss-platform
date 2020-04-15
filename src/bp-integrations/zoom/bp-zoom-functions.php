@@ -350,6 +350,51 @@ function bp_zoom_api_secret( $default = '' ) {
 	return apply_filters( 'bp_zoom_api_secret', bp_get_option( 'bp-zoom-api-secret', $default ) );
 }
 
+function bp_zoom_api_check_connection() {
+	$test = bp_zoom_conference()->list_users();
+	$test = ! empty( $test['response'] ) ? json_decode( $test['response'] ) : false;
+	if ( ! empty( $test ) ) {
+		if ( $test->code === 124 ) {
+			wp_send_json_success( array( 'message' => $test->message ) );
+		}
+
+		if ( ! empty( $test->error ) ) {
+			wp_send_json_success( array( 'message' => 'Please check your API keys!' ) );
+		}
+
+		wp_send_json_success( array( 'message' => 'API Connection is good!' ) );
+	}
+
+	wp_send_json_success( array( 'message' => 'Please check your API keys!' ) );
+}
+add_action( 'wp_ajax_zoom_api_check_connection', 'bp_zoom_api_check_connection' );
+add_action( 'wp_ajax_nopriv_zoom_api_check_connection', 'bp_zoom_api_check_connection' );
+
+function bp_zoom_api_check_connection_button() {
+	?>
+	<p>
+		<a class="button" href="#" id="bp-zoom-check-connection"><?php _e( 'Check Connection', 'buddyboss' ); ?></a>
+	</p>
+	<script>
+		jQuery(document).ready(function(){
+			jQuery(document).on( 'click', '#bp-zoom-check-connection', function(e){
+				e.preventDefault();
+				jQuery.ajax({
+					type: 'GET',
+					url: '<?php echo admin_url( 'admin-ajax.php' ); ?>',
+					data: { action: 'zoom_api_check_connection' },
+					success: function ( response ) {
+						if ( typeof response.data !== 'undefined' && response.data.message ) {
+							alert(response.data.message);
+						}
+					}
+				});
+			});
+		});
+	</script>
+	<?php
+}
+
 /**
  * Group zoom meeting slug for sub nav items.
  *
