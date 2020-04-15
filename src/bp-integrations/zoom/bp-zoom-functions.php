@@ -569,7 +569,7 @@ function bp_zoom_get_users() {
 
 	if ( empty( $users ) ) {
 		$encoded_users = bp_zoom_conference()->list_users();
-		$encoded_users = json_decode( $encoded_users );
+		$encoded_users = json_decode( $encoded_users['response'] );
 		if ( ! empty( $encoded_users->users ) ) {
 			$users = $encoded_users->users;
 		}
