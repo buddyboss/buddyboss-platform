@@ -10,9 +10,9 @@
 	if ( bp_has_zoom_meetings() ) { ?>
 		<div class="meeting-item-table">
 			<div class="meeting-item-header">
-				<div class="meeting-item-head">Date</div>
-				<div class="meeting-item-head">Topic</div>
-				<div class="meeting-item-head">Meeting ID</div>
+				<div class="meeting-item-head"><?php _e( 'Date', 'buddyboss' ); ?></div>
+				<div class="meeting-item-head"><?php _e( 'Topic', 'buddyboss' ); ?></div>
+				<div class="meeting-item-head"><?php _e( 'Meeting ID', 'buddyboss' ); ?></div>
 				<div class="meeting-item-head"></div>
 			</div>
 			<?php
