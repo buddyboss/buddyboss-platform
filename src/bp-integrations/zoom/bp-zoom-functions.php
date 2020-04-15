@@ -293,6 +293,38 @@ function bp_zoom_meeting_delete( $args = '' ) {
 }
 
 /**
+ * Integration > Zoom Conference > Enable
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_settings_callback_enable_field() {
+	?>
+	<input name="bp-zoom-enable"
+		   id="bp-zoom-enable"
+		   type="checkbox"
+		   value="1"
+			<?php checked( bp_zoom_is_zoom_enabled() ); ?>
+	/>
+	<label for="bp-zoom-enable">
+		<?php _e( 'Allow Zoom Conference on site', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if zoom is enabled.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @param $default integer
+ *
+ * @return bool Is zoom enabled or not
+ */
+function bp_zoom_is_zoom_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_zoom_is_zoom_enabled', (bool) bp_get_option( 'bp-zoom-enable', $default ) );
+}
+
+/**
  * Callback function for api key in zoom integration.
  *
  * @since BuddyBoss 1.2.10
@@ -400,7 +432,7 @@ function bp_zoom_admin_users_list_callback() {
 }
 
 function bp_zoom_admin_add_user_callback() {
-	require_once bp_zoom_integration_path() . '/templates/admin/add-user.php';
+	//require_once bp_zoom_integration_path() . '/templates/admin/add-user.php';
 }
 
 /**
