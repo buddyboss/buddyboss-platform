@@ -26,7 +26,7 @@
 				<div class="meeting-item" data-id="<?php bp_zoom_meeting_id(); ?>"
 					data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>">
 					<div class="meeting-item-col meeting-date">
-						<?php bp_zoom_meeting_start_date(); ?><br/>
+						<?php echo bp_core_get_format_date( bp_get_zoom_meeting_start_date(), bp_core_date_format( true, true ) ); ?><br/>
 						<?php bp_zoom_meeting_timezone(); ?>
 					</div>
 					<div class="meeting-item-col meeting-topic">
