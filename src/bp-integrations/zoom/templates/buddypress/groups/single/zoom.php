@@ -23,7 +23,11 @@ switch ( $tab ) :
 	case 'zoom':
 	case 'meetings':
 	case 'past-meetings':
-		bp_get_template_part( 'groups/single/zoom/meetings' );
+		if ( bp_zoom_is_single_meeting() ) {
+			bp_get_template_part( 'groups/single/zoom/single-meeting' );
+		} else {
+			bp_get_template_part( 'groups/single/zoom/meetings' );
+		}
 		break;
 
 	// create meeting.

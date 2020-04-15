@@ -8,6 +8,10 @@
 if ( bp_has_zoom_meetings() ) {
 	while ( bp_zoom_meeting() ) {
 		bp_the_zoom_meeting();
+
+		$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
+		$url        = trailingslashit( $group_link . '/zoom/meetings/' . bp_get_zoom_meeting_id() );
+
 		?>
 		<div class="clearfix meeting-item" data-id="<?php bp_zoom_meeting_id(); ?>"
 		     data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>">
@@ -16,7 +20,7 @@ if ( bp_has_zoom_meetings() ) {
 				<?php bp_zoom_meeting_timezone(); ?>
 			</div>
 			<div class="list-col mtg-topic">
-				<a href="<?php bp_zoom_meeting_zoom_join_url(); ?>" class="sort-headers"
+				<a href="<?php echo $url; ?>" class="sort-headers"
 				   data="topic"><?php bp_zoom_meeting_title(); ?></a>
 			</div>
 			<div class="list-col mtg-id"><?php bp_zoom_meeting_zoom_meeting_id(); ?></div>

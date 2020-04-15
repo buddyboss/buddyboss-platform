@@ -701,3 +701,31 @@ function bp_zoom_groups_can_user_manage_zoom( $user_id, $group_id ) {
 
 	return apply_filters( 'bp_zoom_groups_can_user_manage_zoom', $is_allowed );
 }
+
+/**
+ * Check if single meeting page
+ *
+ * @since BuddyBoss 1.2.10
+ * @return bool true if single meeting page otherwise false.
+ */
+function bp_zoom_is_single_meeting() {
+	return bp_zoom_is_groups_zoom() && is_numeric( bp_action_variable( 1 ) );
+}
+
+/**
+ * Get single meeting.
+ *
+ * @since BuddyBoss 1.2.10
+ * @return object|bool object of the meeting or false if not found.
+ */
+function bp_zoom_get_current_meeting() {
+	if ( bp_zoom_is_single_meeting() ) {
+		$meeting_id = (int) bp_action_variable( 1 );
+		$meeting = new BP_Group_Zoom_Meeting( $meeting_id );
+
+		if ( ! empty( $meeting->id ) ) {
+			return $meeting;
+		}
+	}
+	return false;
+}
