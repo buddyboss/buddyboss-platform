@@ -487,6 +487,12 @@ input#send-to-input {
 	margin-top: $marg-lrg;
 	padding: 20px;
 
+	#whats-new-messages-toolbar {
+		-webkit-box-pack: start;
+		-ms-flex-pack: start;
+		justify-content: flex-start;
+	}
+
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 5px;
@@ -515,6 +521,10 @@ input#send-to-input {
 					color: #122b46 !important;
 				}
 
+				&.medium-editor-action-close {
+					padding-right: 0;
+				}
+
 			}
 
 		}
@@ -525,6 +535,7 @@ input#send-to-input {
 
 	}
 
+	#message-form-submit-wrapper,
 	#message-reply-form-submit-wrapper {
 		flex-direction: column;
 		-webkit-box-pack: end;
@@ -533,6 +544,7 @@ input#send-to-input {
 		margin: 0 -20px;
 	}
 
+	#message-new-submit,
 	#message-reply-new-submit {
 		padding: 20px 20px 0;
 		text-align: right;
@@ -544,6 +556,11 @@ input#send-to-input {
 		padding: 0 15px 15px;
 		justify-content: flex-end;
 		width: 100%;
+
+		.medium-editor-action-close,
+		.show-toolbar {
+			display: none;
+		}
 	}
 
 }
@@ -755,5 +772,41 @@ body .bp-messages-user-threads {
 	.bp-messages-user-threads,
 	#bp-message-thread-list {
 		max-height: 400px;
+	}
+
+	.bp-messages-content #bp-message-content #whats-new-messages-toolbar {
+
+		.medium-editor-action-close,
+		.show-toolbar {
+			display: block;
+		}
+
+		.medium-editor-toolbar {
+			visibility: hidden;
+			opacity: 0;
+			transition: all ease 0.3s;
+			height: 0;
+			right: 0;
+			overflow: hidden;
+
+			.medium-editor-toolbar-actions {
+				height: auto;
+			}
+
+			&.active {
+				display: block;
+				background-color: #f2f2f2;
+				border-radius: 0;
+				z-index: 112;
+				opacity: 1;
+				visibility: visible;
+				bottom: 0;
+				height: 40px;
+			}
+		}
+	}
+
+	.medium-editor-action-close b:before {
+		content: "\f153";
 	}
 }

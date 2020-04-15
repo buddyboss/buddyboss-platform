@@ -964,7 +964,9 @@ window.bp = window.bp || {};
 		template: bp.template( 'whats-new-messages-toolbar' ),
 		events: {
 			'click #messages-media-button': 'toggleMediaSelector',
-			'click #messages-gif-button': 'toggleGifSelector'
+			'click #messages-gif-button': 'toggleGifSelector',
+			'click #show-toolbar-button': 'toggleToolbarSelector',
+			'click .medium-editor-toolbar li.close-btn': 'toggleToolbarSelector'
 		},
 
 		initialize: function() {
@@ -1003,6 +1005,15 @@ window.bp = window.bp || {};
 			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
 			$(e.currentTarget).toggleClass('active');
+		},
+
+		toggleToolbarSelector: function( e ) {
+			e.preventDefault();
+			var medium_editor = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
+			if( !medium_editor.find('li.close-btn').length ) {
+				medium_editor.find('ul').prepend('<li class="close-btn"><button class="medium-editor-action medium-editor-action-close"><b></b></button></li>');
+			}
+			medium_editor.toggleClass('active');
 		},
 
 		closeGifSelector: function() {
