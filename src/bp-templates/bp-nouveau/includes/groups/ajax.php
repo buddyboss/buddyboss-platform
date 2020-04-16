@@ -2011,7 +2011,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
 			if ( 'all' !== $_POST['users'] ) {
-				$response['feedback'] = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
+				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
 			} else {
 				$response['feedback'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
 			}
