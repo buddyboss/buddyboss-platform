@@ -1410,15 +1410,15 @@ function bbp_get_user_topics_created_url( $user_id = 0 ) {
 		return false;
 	}
 
-	// Bail if intercepted
-	$intercept = bbp_maybe_intercept( 'bbp_pre_get_user_topics_created_url', func_get_args() );
-	if ( bbp_is_intercepted( $intercept ) ) {
-		return $intercept;
+	// Allow early overriding of the profile URL to cut down on processing
+	$early_url = apply_filters( 'bbp_pre_get_user_topics_created_url', (int) $user_id );
+	if ( is_string( $early_url ) ) {
+		return $early_url;
 	}
 
 	// Pretty permalinks
 	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ) . bbp_get_topic_archive_slug();
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
@@ -1468,15 +1468,15 @@ function bbp_get_user_replies_created_url( $user_id = 0 ) {
 		return false;
 	}
 
-	// Bail if intercepted
-	$intercept = bbp_maybe_intercept( 'bbp_pre_get_user_replies_created_url', func_get_args() );
-	if ( bbp_is_intercepted( $intercept ) ) {
-		return $intercept;
+	// Allow early overriding of the profile URL to cut down on processing
+	$early_url = apply_filters( 'bbp_pre_get_user_replies_created_url', (int) $user_id );
+	if ( is_string( $early_url ) ) {
+		return $early_url;
 	}
 
 	// Pretty permalinks
 	if ( $wp_rewrite->using_permalinks() ) {
-		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) ) . bbp_get_reply_archive_slug();
+		$url = trailingslashit( bbp_get_user_profile_url( $user_id ) );
 		$url = user_trailingslashit( $url );
 
 		// Unpretty permalinks
