@@ -12367,6 +12367,7 @@ span.icons:before {
   display: flex;
   -ms-flex-flow: column;
   flex-flow: column;
+  overflow: auto;
 }
 
 .meeting-item-container h2 {
@@ -12387,6 +12388,10 @@ span.icons:before {
 
 #buddypress .meeting-item-container .load-more .button {
   display: block;
+}
+
+.meeting-item-table {
+  min-width: 600px;
 }
 
 .meeting-item-table .meeting-item-header {
@@ -12428,6 +12433,7 @@ span.icons:before {
   font-size: 14px;
   line-height: 1.3;
   color: #4d5c6d;
+  padding: 0 5px;
 }
 
 .meeting-item-table .meeting-item .meeting-item-col .meeting-link {
@@ -12437,11 +12443,15 @@ span.icons:before {
 
 .meeting-item-table .meeting-item .meeting-item-col.meeting-action {
   text-align: center;
-  padding: 0 15px;
+  padding: 0 5px;
 }
 
 .meeting-item-table .meeting-item .meeting-item-col.meeting-action #bp-zoom-meeting-view-recordings {
   margin-top: 10px;
+}
+
+.single-meeting-item-table {
+  min-width: auto;
 }
 
 .single-meeting-item-table .single-meeting-item {
