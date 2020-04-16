@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.0 =
 * Activity - Fixed photo popup not opening on single activity permalink
+* Profiles - Added 'VK' as option in 'Social Networks' profile field
 * Translations - Added German (formal) language files
 
 = 1.2.9.1 =
