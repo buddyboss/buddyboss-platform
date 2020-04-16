@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.0 =
+* Translations - Added German (formal) language files
 
 = 1.2.9.1 =
 * Groups - Fixed emoji in message content
