@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ?>
 <div class="wrap">
-	<h1><?php _e( 'Add a User', 'video-conferencing-with-zoom-api' ); ?></h1>
+	<h1><?php _e( 'Add a User', 'buddyboss' ); ?></h1>
 	<div class="notice">
 		<p style="color:red;">What does this do ? Check out <a href="https://support.zoom.us/hc/en-us/articles/201363183-Managing-users">Zoom website</a>. Please note this may
 			require a PRO account.</p>
@@ -17,16 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<table class="form-table">
 			<tbody>
 			<tr>
-				<th scope="row"><label for="action"><?php _e( 'Action (Required).', 'video-conferencing-with-zoom-api' ); ?></label></th>
+				<th scope="row"><label for="action"><?php _e( 'Action (Required).', 'buddyboss' ); ?></label></th>
 				<td>
 					<select name="action" id="action">
-						<option value="create"><?php _e( 'Create', 'video-conferencing-with-zoom-api' ); ?></option>
-						<option value="autoCreate"><?php _e( 'Auto Create', 'video-conferencing-with-zoom-api' ); ?></option>
-						<option value="custCreate"><?php _e( 'Cust Create', 'video-conferencing-with-zoom-api' ); ?></option>
-						<option value="ssoCreate"><?php _e( 'SSO Create', 'video-conferencing-with-zoom-api' ); ?></option>
+						<option value="create"><?php _e( 'Create', 'buddyboss' ); ?></option>
+						<option value="autoCreate"><?php _e( 'Auto Create', 'buddyboss' ); ?></option>
+						<option value="custCreate"><?php _e( 'Cust Create', 'buddyboss' ); ?></option>
+						<option value="ssoCreate"><?php _e( 'SSO Create', 'buddyboss' ); ?></option>
 					</select>
 					<div id="type-description">
-						<p class="description"><?php _e( 'Type of User (Required)', 'video-conferencing-with-zoom-api' ); ?></p>
+						<p class="description"><?php _e( 'Type of User (Required)', 'buddyboss' ); ?></p>
 						<p class="description">1. <strong>"Create"</strong> - User will get an email sent from Zoom. There is a confirmation link in
 							this email. User will then need to click this link to activate their account to the Zoom service. The user can set or
 							change their password in Zoom.</p>
@@ -45,32 +45,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="email"><?php _e( 'Email Address', 'video-conferencing-with-zoom-api' ); ?></label></th>
+				<th scope="row"><label for="email"><?php _e( 'Email Address', 'buddyboss' ); ?></label></th>
 				<td><input name="email" type="email" required placeholder="john@doe.com" class="regular-text ltr">
-					<p class="description" id="email-description"><?php _e( 'This address is used for zoom (Required).', 'video-conferencing-with-zoom-api' ); ?></p>
+					<p class="description" id="email-description"><?php _e( 'This address is used for zoom (Required).', 'buddyboss' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="first_name"><?php _e( 'First Name', 'video-conferencing-with-zoom-api' ); ?></label></th>
+				<th scope="row"><label for="first_name"><?php _e( 'First Name', 'buddyboss' ); ?></label></th>
 				<td>
 					<input type="text" name="first_name" id="first_name" class="regular-text">
-					<p class="description" id="first_name-description"><?php _e( 'First Name of the User (Required).', 'video-conferencing-with-zoom-api' ); ?></p>
+					<p class="description" id="first_name-description"><?php _e( 'First Name of the User (Required).', 'buddyboss' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="last_name"><?php _e( 'Last Name', 'video-conferencing-with-zoom-api' ); ?></label></th>
+				<th scope="row"><label for="last_name"><?php _e( 'Last Name', 'buddyboss' ); ?></label></th>
 				<td><input type="text" name="last_name" id="last_name" class="regular-text">
-					<p class="description" id="last_name-description"><?php _e( 'Last Name of the User (Required).', 'video-conferencing-with-zoom-api' ); ?></p>
+					<p class="description" id="last_name-description"><?php _e( 'Last Name of the User (Required).', 'buddyboss' ); ?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><label for="type"><?php _e( 'User Type (Required).', 'video-conferencing-with-zoom-api' ); ?></label></th>
+				<th scope="row"><label for="type"><?php _e( 'User Type (Required).', 'buddyboss' ); ?></label></th>
 				<td>
 					<select name="type" id="type">
-						<option value="1"><?php _e( 'Basic User', 'video-conferencing-with-zoom-api' ); ?></option>
-						<option value="2"><?php _e( 'Pro User', 'video-conferencing-with-zoom-api' ); ?></option>
+						<option value="1"><?php _e( 'Basic User', 'buddyboss' ); ?></option>
+						<option value="2"><?php _e( 'Pro User', 'buddyboss' ); ?></option>
 					</select>
-					<p class="description" id="type-description"><?php _e( 'Type of User (Required)', 'video-conferencing-with-zoom-api' ); ?></p>
+					<p class="description" id="type-description"><?php _e( 'Type of User (Required)', 'buddyboss' ); ?></p>
 				</td>
 			</tr>
 			</tbody>
