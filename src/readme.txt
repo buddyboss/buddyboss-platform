@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.0 =
+* Media - Fixed media popup not opening on activity permalink
 * Translations - Added German (formal) language files
 
 = 1.2.9.1 =
