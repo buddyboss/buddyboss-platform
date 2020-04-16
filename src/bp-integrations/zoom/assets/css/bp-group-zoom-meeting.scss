@@ -100,7 +100,7 @@
 		border-bottom: 1px solid #e7e9ec;
 		margin-bottom: 15px;
 		padding: 0 0 15px 10px;
-	
+
 		.meeting-item-head {
 			display: inline-block;
 			width: 220px;
@@ -108,42 +108,42 @@
 			color: #939597;
 			margin-bottom: 0;
 		}
-	
+
 		&.last-col {
 			border-bottom: 0;
 		}
-	
+
 		.meeting-item-col {
 			display: inline-block;
 			font-size: 15px;
 			line-height: 1.3;
 			color: #4d5c6d;
-	
+
 			&.last-col {
 				border-bottom: 0;
-	
+
 				.button {
-	
+
 					#buddypress .meeting-item-container & {
 						margin-top: 0;
-	
+
 					}
 				}
-	
+
 			}
-	
+
 			&.full {
 				width: 100%;
 			}
-	
+
 			.pull-right {
 				float: right;
 			}
-	
+
 			&.meeting-action button {
 				margin-top: 0;
 			}
-	
+
 			a.delete {
 				margin-top: 7px;
 				display: inline-block;
@@ -151,9 +151,6 @@
 		}
 	}
 }
-
-
-
 
 @media screen and ( max-width: 768px ) {
 
