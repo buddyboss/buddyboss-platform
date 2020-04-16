@@ -183,7 +183,7 @@ body.groups.messages span.select2-dropdown.select2-dropdown--below {
 }
 
 .bb-groups-messages-right-top {
-	padding: 20px 20px 0;
+	padding: 20px;
 }
 
 .bb-groups-messages-right-bottom {
@@ -193,10 +193,6 @@ body.groups.messages span.select2-dropdown.select2-dropdown--below {
 
 .bp-select-members-wrap {
 	min-height: 45px;
-
-	.select2 {
-		margin-bottom: 20px;
-	}
 }
 
 body.groups.messages #send_group_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
