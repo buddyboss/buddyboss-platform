@@ -684,7 +684,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 	$user_id  = (int) $_POST['user'];
 	$group_id = bp_get_current_group_id();
 
-	// Verify nonce
+	// Verify nonce.
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( array(
 				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
@@ -985,7 +985,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						wp_send_json_error( $response );
 					} elseif ( ! empty( $send ) ) {
 						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['feedback']      = __( 'Your message was sent successfully to all group members.', 'buddyboss' );
 						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 						$response['type']          = 'success';
 						wp_send_json_success( $response );
@@ -1015,7 +1015,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					$response['feedback'] = $new_reply->get_error_message();
 					wp_send_json_error( $response );
 				} elseif ( ! empty( $new_reply ) ) {
-					$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+					$response['feedback']      = __( 'Your message was sent successfully to all group members.', 'buddyboss' );
 					$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 					$response['type']          = 'success';
 					wp_send_json_success( $response );
@@ -1085,7 +1085,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $new_reply->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent successfully to all group members.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1117,7 +1117,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
 
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent successfully to all group members.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1149,7 +1149,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						wp_send_json_error( $response );
 					} elseif ( ! empty( $send ) ) {
 						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['feedback']      = __( 'Your message was sent successfully to all group members.', 'buddyboss' );
 						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 						$response['type']          = 'success';
 						wp_send_json_success( $response );
@@ -1267,7 +1267,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $new_reply->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1347,7 +1347,7 @@ function bp_nouveau_ajax_groups_send_message() {
 									$response['feedback'] = $new_reply->get_error_message();
 									wp_send_json_error( $response );
 								} elseif ( ! empty( $new_reply ) ) {
-									$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+									$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 									$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 									$response['type']          = 'success';
 									wp_send_json_success( $response );
@@ -1373,7 +1373,7 @@ function bp_nouveau_ajax_groups_send_message() {
 									$response['feedback'] = $send->get_error_message();
 									wp_send_json_error( $response );
 								} elseif ( ! empty( $send ) ) {
-									$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+									$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 									$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 									$response['type']          = 'success';
 									wp_send_json_success( $response );
@@ -1400,7 +1400,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$response['feedback'] = $send->get_error_message();
 								wp_send_json_error( $response );
 							} elseif ( ! empty( $send ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+								$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 								$response['type']          = 'success';
 								wp_send_json_success( $response );
@@ -1479,7 +1479,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$response['feedback'] = $new_reply->get_error_message();
 								wp_send_json_error( $response );
 							} elseif ( ! empty( $new_reply ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+								$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 								$response['type']          = 'success';
 								wp_send_json_success( $response );
@@ -1505,7 +1505,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$response['feedback'] = $send->get_error_message();
 								wp_send_json_error( $response );
 							} elseif ( ! empty( $send ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+								$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 								$response['type']          = 'success';
 								wp_send_json_success( $response );
@@ -1532,7 +1532,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $send->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $send ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1614,7 +1614,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $new_reply->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1640,7 +1640,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $send->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $send ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1668,7 +1668,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						$response['feedback'] = $send->get_error_message();
 						wp_send_json_error( $response );
 					} elseif ( ! empty( $send ) ) {
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['feedback']      = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
 						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 						$response['type']          = 'success';
 						wp_send_json_success( $response );
@@ -2010,7 +2010,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			$response['feedback'] = $message->get_error_message();
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
-			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+			if ( 'all' !== $_POST['users'] ) {
+				$response['feedback'] = __( 'Your message was sent successfully to individual %%count%% group members.', 'buddyboss' );
+			} else {
+				$response['feedback'] = __( 'Your message was sent successfully individually to all group members.', 'buddyboss' );
+			}
+
 			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
