@@ -107,6 +107,11 @@ $group_members = groups_get_group_members( $args );
 							<?php endif; ?>
 						</div>
 						<div id="whats-new-toolbar">
+							<div class="post-elements-buttons-item show-toolbar">
+								<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+									<span class="dashicons dashicons-editor-textcolor"></span>
+								</a>
+							</div>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) : ?>
 								<div class="post-elements-buttons-item post-media">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">

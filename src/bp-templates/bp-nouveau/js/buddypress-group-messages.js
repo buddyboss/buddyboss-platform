@@ -558,6 +558,15 @@ window.bp = window.bp || {};
                                 e.preventDefault();
 				$('.bb-groups-messages-left').addClass('bb-select-member-view');
 			});
+
+			$( document ).on( 'click', '#group-messages-container .show-toolbar, #group-messages-container li.close-btn', function(e) {
+				e.preventDefault();
+				var medium_editor = $(e.currentTarget).closest('#bp-group-message-content').find('.medium-editor-toolbar');
+				if( !medium_editor.find('li.close-btn').length ) {
+					medium_editor.find('ul').prepend('<li class="close-btn"><button class="medium-editor-action medium-editor-action-close"><b></b></button></li>');
+				}
+				medium_editor.toggleClass('active');
+			});
 		},
 
 		/**

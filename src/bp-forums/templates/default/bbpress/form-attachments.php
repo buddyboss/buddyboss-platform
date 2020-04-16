@@ -33,6 +33,12 @@
 
 <div id="whats-new-toolbar">
 
+	<div class="post-elements-buttons-item show-toolbar">
+		<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+			<span class="dashicons dashicons-editor-textcolor"></span>
+		</a>
+	</div>
+
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() ) : ?>
 
 		<div class="post-elements-buttons-item post-media">

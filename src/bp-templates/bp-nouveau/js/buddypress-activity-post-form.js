@@ -1055,10 +1055,18 @@ window.bp = window.bp || {};
 	bp.Views.FormContent = bp.View.extend( {
 		tagName  : 'div',
 		id       : 'whats-new-content',
+		events: {
+			'click .medium-editor-toolbar li.close-btn': 'hideToolbarSelector',
+		},
 
 		initialize: function() {
 			this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 			this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
+		},
+		hideToolbarSelector: function ( e ) {
+			e.preventDefault();
+			var medium_editor = $(e.currentTarget).closest('#whats-new-form').find('.medium-editor-toolbar');
+			medium_editor.removeClass('active');
 		}
 	} );
 
@@ -1207,7 +1215,8 @@ window.bp = window.bp || {};
 			'click #activity-link-preview-button': 'toggleURLInput',
 			'click #activity-gif-button': 'toggleGifSelector',
 			'click #activity-media-button': 'toggleMediaSelector',
-			'click .post-elements-buttons-item': 'activeButton'
+			'click .post-elements-buttons-item': 'activeButton',
+			'click .show-toolbar': 'toggleToolbarSelector',
 		},
 
 		initialize: function() {
@@ -1294,6 +1303,15 @@ window.bp = window.bp || {};
 		activeButton: function (event) {
 			this.$el.find('.post-elements-buttons-item').removeClass('active');
 			event.currentTarget.classList.add('active');
+		},
+
+		toggleToolbarSelector: function( e ) {
+			e.preventDefault();
+			var medium_editor = $(e.currentTarget).closest('#whats-new-form').find('.medium-editor-toolbar');
+			if( !medium_editor.find('li.close-btn').length ) {
+				medium_editor.find('ul').prepend('<li class="close-btn"><button class="medium-editor-action medium-editor-action-close"><b></b></button></li>');
+			}
+			medium_editor.toggleClass('active');
 		}
 	} );
 

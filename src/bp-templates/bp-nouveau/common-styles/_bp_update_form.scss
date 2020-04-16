@@ -129,6 +129,10 @@
 					color: #122b46 !important;
 				}
 
+				&.medium-editor-action-close {
+					padding-right: 0;
+				}
+
 			}
 
 		}
@@ -167,6 +171,11 @@
 		}
 	}
 
+	.medium-editor-action-close,
+	.show-toolbar {
+		display: none;
+	}
+
 }
 
 .activity-update-form #whats-new-toolbar {
@@ -196,7 +205,6 @@
 			z-index: 99;
 			background-color: transparent;
 			opacity: 0;
-			transition: opacity ease 0.2s;
 
 			.medium-editor-toolbar-actions {
 				background-color: transparent;
@@ -211,6 +219,10 @@
 
 					&.medium-editor-button-active {
 						color: #122b46 !important;
+					}
+
+					&.medium-editor-action-close {
+						padding-right: 0;
 					}
 
 				}
@@ -230,6 +242,15 @@
 			}
 
 		}
+
+		.medium-editor-action-close,
+		.show-toolbar {
+			display: none;
+		}
+	}
+
+	#whats-new-toolbar .show-toolbar {
+		display: none;
 	}
 }
 
@@ -421,6 +442,7 @@ div[class*="attached-gif-container"] {
 	.gif-media-search-dropdown.open {
 		width: 360px;
 	}
+
 }
 
 .gif-search-query {
@@ -488,4 +510,54 @@ input.search-query-input {
 
 #content .toolbar-button {
 	box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+
+	.activity-update-form .activity-form.focus-in #whats-new-content,
+	.bbp-topic-form #whats-new-toolbar {
+
+		.medium-editor-action-close,
+		.show-toolbar {
+			display: block;
+		}
+
+		.medium-editor-toolbar {
+			visibility: hidden;
+			opacity: 0;
+			transition: all ease 0.3s;
+			height: 0;
+			right: 0;
+			overflow: hidden;
+
+			.medium-editor-toolbar-actions {
+				height: auto;
+			}
+
+			&.active {
+				display: block;
+				background-color: #f2f2f2;
+				border-radius: 0;
+				z-index: 112;
+				opacity: 1;
+				visibility: visible;
+				bottom: 0;
+				height: 40px;
+
+				div & {
+					bottom: -52px;
+				}
+
+			}
+		}
+	}
+
+	.activity-update-form #whats-new-toolbar .show-toolbar {
+		display: block;
+	}
+
+	.activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.active {
+		opacity: 1;
+	}
+
 }
