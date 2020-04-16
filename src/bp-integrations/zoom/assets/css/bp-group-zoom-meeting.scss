@@ -9,6 +9,11 @@
 	display: flex;
 	-ms-flex-flow: column;
 	flex-flow: column;
+	overflow: auto;
+
+	h2 {
+		text-transform: capitalize;
+	}
 
 	.load-more {
 		margin: 0 auto 10px;
@@ -28,6 +33,7 @@
 }
 
 .meeting-item-table {
+	min-width: 600px;
 
 	.meeting-item-header {
 		display: -webkit-box;
@@ -40,7 +46,7 @@
 			font-size: 12px;
 			color: #939597;
 			ms-flex-preferred-size: 25%;/* stylelint-disable-line */
-			flex-basis: 60%;
+			flex-basis: 25%;
 			text-transform: uppercase;
 		}
 	}
@@ -66,6 +72,7 @@
 			font-size: 14px;
 			line-height: 1.3;
 			color: #4d5c6d;
+			padding: 0 5px;
 
 			.meeting-link {
 				font-size: 15px;
@@ -74,12 +81,109 @@
 
 			&.meeting-action {
 				text-align: center;
+				padding: 0 5px;
 
 				#bp-zoom-meeting-view-recordings {
 					margin-top: 10px;
 				}
 			}
+
 		}
 	}
 
+}
+
+.single-meeting-item-table {
+	min-width: auto;
+
+	.single-meeting-item {
+		border-bottom: 1px solid #e7e9ec;
+		margin-bottom: 15px;
+		padding: 0 0 15px 10px;
+	
+		.meeting-item-head {
+			display: inline-block;
+			width: 220px;
+			font-size: 15px;
+			color: #939597;
+			margin-bottom: 0;
+		}
+	
+		&.last-col {
+			border-bottom: 0;
+		}
+	
+		.meeting-item-col {
+			display: inline-block;
+			font-size: 15px;
+			line-height: 1.3;
+			color: #4d5c6d;
+	
+			&.last-col {
+				border-bottom: 0;
+	
+				.button {
+	
+					#buddypress .meeting-item-container & {
+						margin-top: 0;
+	
+					}
+				}
+	
+			}
+	
+			&.full {
+				width: 100%;
+			}
+	
+			.pull-right {
+				float: right;
+			}
+	
+			&.meeting-action button {
+				margin-top: 0;
+			}
+	
+			a.delete {
+				margin-top: 7px;
+				display: inline-block;
+			}
+		}
+	}
+}
+
+
+
+
+@media screen and ( max-width: 768px ) {
+
+	.single-meeting-item-table .single-meeting-item {
+
+		.meeting-item-col {
+			width: 100%;
+
+			&.last-col {
+				text-align: center;
+
+				.pull-right {
+					width: 100%;
+				}
+
+				.button {
+
+					#buddypress .meeting-item-container & {
+						margin: 5px 0;
+					}
+				}
+			}
+		}
+
+		.meeting-item-head {
+			width: 100%;
+
+			&:empty {
+				display: none;
+			}
+		}
+	}
 }

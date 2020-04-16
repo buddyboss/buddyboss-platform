@@ -12369,6 +12369,10 @@ span.icons:before {
   flex-flow: column;
 }
 
+.meeting-item-container h2 {
+  text-transform: capitalize;
+}
+
 .meeting-item-container .load-more {
   margin: 0 auto 10px;
   width: 100%;
@@ -12398,7 +12402,7 @@ span.icons:before {
   color: #939597;
   ms-flex-preferred-size: 25%;
   /* stylelint-disable-line */
-  flex-basis: 60%;
+  flex-basis: 25%;
   text-transform: uppercase;
 }
 
@@ -12433,8 +12437,80 @@ span.icons:before {
 
 .meeting-item-table .meeting-item .meeting-item-col.meeting-action {
   text-align: center;
+  padding: 0 15px;
 }
 
 .meeting-item-table .meeting-item .meeting-item-col.meeting-action #bp-zoom-meeting-view-recordings {
   margin-top: 10px;
+}
+
+.single-meeting-item-table .single-meeting-item {
+  border-bottom: 1px solid #e7e9ec;
+  margin-bottom: 15px;
+  padding: 0 10px 15px 0;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-head {
+  display: inline-block;
+  width: 220px;
+  font-size: 15px;
+  color: #939597;
+  margin-bottom: 0;
+}
+
+.single-meeting-item-table .single-meeting-item.last-col {
+  border-bottom: 0;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-col {
+  display: inline-block;
+  font-size: 15px;
+  line-height: 1.3;
+  color: #4d5c6d;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-col.last-col {
+  border-bottom: 0;
+}
+
+#buddypress .meeting-item-container .single-meeting-item-table .single-meeting-item .meeting-item-col.last-col .button {
+  margin-top: 0;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-col.full {
+  width: 100%;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-col .pull-right {
+  float: left;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-col.meeting-action button {
+  margin-top: 0;
+}
+
+.single-meeting-item-table .single-meeting-item .meeting-item-col a.delete {
+  margin-top: 7px;
+  display: inline-block;
+}
+
+@media screen and (max-width: 768px) {
+  .single-meeting-item-table .single-meeting-item .meeting-item-col {
+    width: 100%;
+  }
+  .single-meeting-item-table .single-meeting-item .meeting-item-col.last-col {
+    text-align: center;
+  }
+  .single-meeting-item-table .single-meeting-item .meeting-item-col.last-col .pull-right {
+    width: 100%;
+  }
+  #buddypress .meeting-item-container .single-meeting-item-table .single-meeting-item .meeting-item-col.last-col .button {
+    margin: 5px 0;
+  }
+  .single-meeting-item-table .single-meeting-item .meeting-item-head {
+    width: 100%;
+  }
+  .single-meeting-item-table .single-meeting-item .meeting-item-head:empty {
+    display: none;
+  }
 }
