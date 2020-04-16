@@ -9,6 +9,11 @@ add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
+
+/**
+ * Action for add media theatre template for single activity page
+ */
+add_action( 'bp_after_activity_entry', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
@@ -53,6 +58,9 @@ add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_re
  * Add media theatre template for activity pages
  */
 function bp_media_add_theatre_template() {
+	if ( !bp_is_single_activity() ) {
+		remove_action( 'bp_after_activity_entry', 'bp_media_add_theatre_template' );
+	}
 	bp_get_template_part( 'media/theatre' );
 }
 
@@ -274,7 +282,7 @@ function bp_media_delete_activity_media( $activities ) {
  * @since BuddyBoss 1.0.0
  * @param $album
  */
-function bp_media_update_media_privacy( &$album ) {
+function bp_media_update_media_privacy( $album ) {
 
 	if ( ! empty( $album->id ) ) {
 
@@ -1007,10 +1015,10 @@ function bp_media_messages_save_group_data( &$message ) {
 	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list
 	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply
 
-	if ( '' === $message_meta_users_list ) {
+	if ( '' === $message_meta_users_list && isset( $group ) &&  '' !== $group ) {
 		$args = array(
 			'per_page'            => 99999999999999,
-			'group'               => $_POST['group'],
+			'group'               => $group,
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
@@ -1036,7 +1044,7 @@ function bp_media_messages_save_group_data( &$message ) {
 
 		$args = [
 			'thread_id' => $message->thread_id,
-			'per_page' => 99999999999999,
+			'per_page'  => 99999999999999,
 		];
 
 		if ( bp_thread_has_messages( $args ) ) {

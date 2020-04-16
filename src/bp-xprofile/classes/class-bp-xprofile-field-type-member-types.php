@@ -175,27 +175,21 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			}
 		}
 
-		// Get posts of custom post type selected.
-		$posts = new \WP_Query(
-			array(
-				'posts_per_page' => - 1,
-				'post_type'      => bp_get_member_type_post_type(),
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-			)
-		);
-		if ( $posts ) {
+		// Get all active member types.
+		$bp_active_member_types = bp_get_active_member_types();
+
+		if ( ! empty( $bp_active_member_types ) ) {
 
 			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
 
-			foreach ( $posts->posts as $post ) {
-				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
-				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
+			foreach ( $bp_active_member_types as $bp_active_member_type ) {
+				$enabled = get_post_meta( $bp_active_member_type, '_bp_member_type_enable_profile_field', true );
+				$name    = get_post_meta( $bp_active_member_type, '_bp_member_type_label_singular_name', true );
 				if ( '' === $enabled || '1' === $enabled ) {
 					$html .= sprintf(
 						'<option value="%s" %s>%s</option>',
-						$post->ID,
-						( $post_selected == $post->ID ) ? ' selected="selected"' : '',
+						$bp_active_member_type,
+						( $post_selected == $bp_active_member_type ) ? ' selected="selected"' : '',
 						$name
 					);
 				}

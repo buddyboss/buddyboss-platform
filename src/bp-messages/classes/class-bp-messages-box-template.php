@@ -136,6 +136,7 @@ class BP_Messages_Box_Template {
 				'max'          => false,
 				'search_terms' => '',
 				'include'      => false,
+				'is_hidden'    => false,
 				'meta_query'   => array(),
 			)
 		);
@@ -148,6 +149,7 @@ class BP_Messages_Box_Template {
 		$this->type         = $r['type'];
 		$this->search_terms = $r['search_terms'];
 		$this->include      = $r['include'];
+		$this->is_hidden    = $r['is_hidden'];
 
 		if ( 'notices' === $this->box ) {
 			$this->threads = BP_Messages_Notice::get_notices(
@@ -166,12 +168,13 @@ class BP_Messages_Box_Template {
 					'page'         => $this->pag_page,
 					'search_terms' => $this->search_terms,
 					'include'      => $this->include,
+					'is_hidden'    => $this->is_hidden,
 					'meta_query'   => $r['meta_query'],
 				)
 			);
 
-			$this->threads            = $threads['threads'];
-			$this->total_thread_count = $threads['total'];
+			$this->threads            = ( $threads ) ? $threads['threads'] : false;
+			$this->total_thread_count = ( $threads ) ? $threads['total'] : 0;
 		}
 
 		if ( ! $this->threads ) {

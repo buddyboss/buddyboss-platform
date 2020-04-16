@@ -154,6 +154,18 @@ div#community-profile-page p.not-activated {
 	width: auto;
 }
 
+.field_type_checkbox input,
+.field_type_radio input{
+	margin-right: 200px;
+    float: right;
+    margin-top: 3px;
+}
+
+.bp-profile-field .input-options .bp-radio-wrap:first-child > input,
+.bp-profile-field .input-options .bp-checkbox-wrap:first-child > input {
+	margin-right: 4px;
+}
+
 .field_type_checkbox .radio label,
 .field_type_radio .radio label {
 	margin-right: 0;
