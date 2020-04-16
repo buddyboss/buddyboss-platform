@@ -58,6 +58,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.0 =
+* Messages - New dropdown option to 'Mark unread' in inbox
+* Messages - New dropdown option to 'Hide Conversation' in inbox
+* Messages - New dropdown option to 'Delete Conversation' for admins only
+* Messages - Display number bubble for conversations with 2+ other people
+* Group Messages - Hiding bulk sent messages in inbox, until recipients reply back
+* Group Messages - Improved the sent message confirmation screen
 * Activity - Fixed photo popup not opening on single activity permalink
 * Profiles - Added 'VK' as option in 'Social Networks' profile field
 * Translations - Added German (formal) language files
