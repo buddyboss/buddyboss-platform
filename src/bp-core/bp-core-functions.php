@@ -4514,7 +4514,7 @@ function bp_unique_id( $prefix = '' ) {
  * section if previously group thread created then will show the actual group avatar
  * in messages view.
  *
- * @since BuddyBoss 1.2.9.2
+ * @since BuddyBoss 1.3.0
  *
  * @param $avatar_size
  * @param $avatar_folder_dir

@@ -1276,7 +1276,7 @@ add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients
 /**
  * messages for each thread.
  *
- * @since BuddyBoss 1.2.9.2
+ * @since BuddyBoss 1.3.0
  */
 function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	global $thread_template, $media_template, $wpdb;
