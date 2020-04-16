@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-16 07:47:37+00:00\n"
+"POT-Creation-Date: 2020-04-16 07:54:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18088,6 +18088,10 @@ msgid "Twitter"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-functions.php:1721
+msgid "VK"
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-functions.php:1728
 msgid "YouTube"
 msgstr ""
 
