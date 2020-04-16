@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.9.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-16 07:07:59+00:00\n"
+"POT-Creation-Date: 2020-04-16 07:24:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17261,7 +17261,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1088
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1120
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1152
-msgid "Your message was sent successfully to all group members."
+msgid "Your message was sent to all members of this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:989
@@ -17293,12 +17293,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1617
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1643
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:1671
+msgid "Your message was sent to %%count%% members of this group."
+msgstr ""
+
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:2014
-msgid "Your message was sent successfully to individual %%count%% group members."
+msgid "Your message was sent privately to %%count%% members of this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:2016
-msgid "Your message was sent successfully individually to all group members."
+msgid "Your message was sent privately to all members of this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:165
