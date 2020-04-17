@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.2.10
  */
-class BP_Group_Zoom_Meeting_Template {
+class BP_Zoom_Meeting_Template {
 
 	/**
 	 * The loop iterator.
@@ -101,16 +101,16 @@ class BP_Group_Zoom_Meeting_Template {
 	 * Constructor method.
 	 *
 	 * The arguments passed to this class constructor are of the same
-	 * format as {@link BP_Group_Zoom_Meeting::get()}.
+	 * format as {@link BP_Zoom_Meeting::get()}.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @see BP_Group_Zoom_Meeting::get() for a description of the argument
+	 * @see BP_Zoom_Meeting::get() for a description of the argument
 	 *      structure, as well as default values.
 	 *
 	 * @param array $args {
 	 *     Array of arguments. Supports all arguments from
-	 *     BP_Group_Zoom_Meeting::get(), as well as 'page_arg' and
+	 *     BP_Zoom_Meeting::get(), as well as 'page_arg' and
 	 *     'include'. Default values for 'per_page'
 	 *     differ from the originating function, and are described below.
 	 *     @type string      $page_arg         The string used as a query parameter in

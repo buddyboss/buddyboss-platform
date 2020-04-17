@@ -30,19 +30,19 @@ function bp_zoom_integration_url( $path = '' ) {
 /**
  * Retrieve an meeting or meetings.
  *
- * The bp_zoom_meeting_get() function shares all arguments with BP_Group_Zoom_Meeting::get().
+ * The bp_zoom_meeting_get() function shares all arguments with BP_Zoom_Meeting::get().
  * The following is a list of bp_zoom_meeting_get() parameters that have different
- * default values from BP_Group_Zoom_Meeting::get() (value in parentheses is
+ * default values from BP_Zoom_Meeting::get() (value in parentheses is
  * the default for the bp_zoom_meeting_get()).
  *   - 'per_page' (false)
  *
  * @since BuddyBoss 1.2.10
  *
- * @see BP_Group_Zoom_Meeting::get() For more information on accepted arguments
+ * @see BP_Zoom_Meeting::get() For more information on accepted arguments
  *      and the format of the returned value.
  *
- * @param array|string $args See BP_Group_Zoom_Meeting::get() for description.
- * @return array $meeting See BP_Group_Zoom_Meeting::get() for description.
+ * @param array|string $args See BP_Zoom_Meeting::get() for description.
+ * @return array $meeting See BP_Zoom_Meeting::get() for description.
  */
 function bp_zoom_meeting_get( $args = '' ) {
 
@@ -66,7 +66,7 @@ function bp_zoom_meeting_get( $args = '' ) {
 		'meeting_get'
 	);
 
-	$meeting = BP_Group_Zoom_Meeting::get(
+	$meeting = BP_Zoom_Meeting::get(
 		array(
 			'page'         => $r['page'],
 			'per_page'     => $r['per_page'],
@@ -88,7 +88,7 @@ function bp_zoom_meeting_get( $args = '' ) {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param BP_Group_Zoom_Meeting  $meeting Requested meeting object.
+	 * @param BP_Zoom_Meeting  $meeting Requested meeting object.
 	 * @param array     $r     Arguments used for the meeting query.
 	 */
 	return apply_filters_ref_array( 'bp_zoom_meeting_get', array( &$meeting, &$r ) );
@@ -99,15 +99,15 @@ function bp_zoom_meeting_get( $args = '' ) {
  *
  * @since BuddyBoss 1.2.10
  *
- * @see BP_Group_Zoom_Meeting::get() For more information on accepted arguments.
+ * @see BP_Zoom_Meeting::get() For more information on accepted arguments.
  *
  * @param array|string $args {
- *     All arguments and defaults are shared with BP_Group_Zoom_Meeting::get(),
+ *     All arguments and defaults are shared with BP_Zoom_Meeting::get(),
  *     except for the following:
  *     @type string|int|array Single meeting ID, comma-separated list of IDs,
  *                            or array of IDs.
  * }
- * @return array $activity See BP_Group_Zoom_Meeting::get() for description.
+ * @return array $activity See BP_Zoom_Meeting::get() for description.
  */
 function bp_zoom_meeting_get_specific( $args = '' ) {
 
@@ -144,11 +144,11 @@ function bp_zoom_meeting_get_specific( $args = '' ) {
 	 *
 	 * @since BuddyBoss
 	 *
-	 * @param BP_Group_Zoom_Meeting      $meeting    Requested meeting object.
+	 * @param BP_Zoom_Meeting      $meeting    Requested meeting object.
 	 * @param array         $args     Original passed in arguments.
 	 * @param array         $get_args Constructed arguments used with request.
 	 */
-	return apply_filters( 'bp_zoom_meeting_get_specific', BP_Group_Zoom_Meeting::get( $get_args ), $args, $get_args );
+	return apply_filters( 'bp_zoom_meeting_get_specific', BP_Zoom_Meeting::get( $get_args ), $args, $get_args );
 }
 
 /**
@@ -195,7 +195,7 @@ function bp_zoom_meeting_add( $args = '' ) {
 	);
 
 	// Setup meeting to be added.
-	$meeting                       = new BP_Group_Zoom_Meeting( $r['id'] );
+	$meeting                       = new BP_Zoom_Meeting( $r['id'] );
 	$meeting->group_id             = (int) $r['group_id'];
 	$meeting->title                = $r['title'];
 	$meeting->start_date           = $r['start_date'];
@@ -243,7 +243,7 @@ function bp_zoom_meeting_add( $args = '' ) {
  * @param array|string $args To delete specific meeting items, use
  *                           $args = array( 'id' => $ids ); Otherwise, to use
  *                           filters for item deletion, the argument format is
- *                           the same as BP_Group_Zoom_Meeting::get().
+ *                           the same as BP_Zoom_Meeting::get().
  *                           See that method for a description.
  *
  * @return bool|int The ID of the meeting on success. False on error.
@@ -266,7 +266,7 @@ function bp_zoom_meeting_delete( $args = '' ) {
 	 */
 	do_action( 'bp_before_zoom_meeting_delete', $args );
 
-	$meeting_ids_deleted = BP_Group_Zoom_Meeting::delete( $args );
+	$meeting_ids_deleted = BP_Zoom_Meeting::delete( $args );
 	if ( empty( $meeting_ids_deleted ) ) {
 		return false;
 	}
@@ -882,7 +882,7 @@ function bp_zoom_is_single_meeting() {
 function bp_zoom_get_current_meeting() {
 	if ( bp_zoom_is_single_meeting() ) {
 		$meeting_id = (int) bp_action_variable( 1 );
-		$meeting = new BP_Group_Zoom_Meeting( $meeting_id );
+		$meeting = new BP_Zoom_Meeting( $meeting_id );
 
 		if ( ! empty( $meeting->id ) ) {
 			return $meeting;

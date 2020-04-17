@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.2.10
 
- * @global object $meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @param array|string $args {
  *     Arguments for limiting the contents of the meeting loop. Most arguments
- *     are in the same format as {@link BP_Group_Zoom_Meeting::get()}. However,
+ *     are in the same format as {@link BP_Zoom_Meeting::get()}. However,
  *     because the format of the arguments accepted here differs in a number of
  *     ways, and because bp_has_zoom_meetings() determines some default arguments in
  *     a dynamic fashion, we list all accepted arguments here as well.
@@ -127,7 +127,7 @@ function bp_has_zoom_meetings( $args = '' ) {
 	 * Query
 	 */
 
-	$zoom_meeting_template = new BP_Group_Zoom_Meeting_Template( $r );
+	$zoom_meeting_template = new BP_Zoom_Meeting_Template( $r );
 
 	/**
 	 * Filters whether or not there are meeting items to display.
@@ -136,7 +136,7 @@ function bp_has_zoom_meetings( $args = '' ) {
 	 *
 	 * @param bool   $value               Whether or not there are meeting items to display.
 	 * @param string $zoom_meeting_template      Current meeting template being used.
-	 * @param array  $r                   Array of arguments passed into the BP_Group_Zoom_Meeting_Template class.
+	 * @param array  $r                   Array of arguments passed into the BP_Zoom_Meeting_Template class.
 	 */
 	return apply_filters( 'bp_has_zoom_meetings', $zoom_meeting_template->has_meeting(), $zoom_meeting_template, $r );
 }
@@ -146,7 +146,7 @@ function bp_has_zoom_meetings( $args = '' ) {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return bool Returns true when meeting are found.
  */
@@ -160,7 +160,7 @@ function bp_zoom_meeting() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return object The current meeting within the loop.
  */
@@ -207,7 +207,7 @@ function bp_get_zoom_meeting_load_more_link() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  */
 function bp_zoom_meeting_pagination_count() {
 	echo bp_get_zoom_meeting_pagination_count();
@@ -218,7 +218,7 @@ function bp_zoom_meeting_pagination_count() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return string The pagination text.
  */
@@ -249,7 +249,7 @@ function bp_zoom_meeting_pagination_links() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return string The pagination links.
  */
@@ -271,7 +271,7 @@ function bp_get_zoom_meeting_pagination_links() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return bool $has_more_items True if more items, false if not.
  */
@@ -314,7 +314,7 @@ function bp_zoom_meeting_count() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting count.
  */
@@ -345,7 +345,7 @@ function bp_zoom_meeting_per_page() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting per page.
  */
@@ -376,7 +376,7 @@ function bp_zoom_meeting_id() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting ID.
  */
@@ -407,7 +407,7 @@ function bp_zoom_meeting_group_id() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting group ID.
  */
@@ -438,7 +438,7 @@ function bp_zoom_meeting_title() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting title.
  */
@@ -469,7 +469,7 @@ function bp_zoom_meeting_start_date() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting start date.
  */
@@ -500,7 +500,7 @@ function bp_zoom_meeting_timezone() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting timezone.
  */
@@ -531,7 +531,7 @@ function bp_zoom_meeting_duration() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -562,7 +562,7 @@ function bp_zoom_meeting_join_before_host() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -593,7 +593,7 @@ function bp_zoom_meeting_host_video() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -624,7 +624,7 @@ function bp_zoom_meeting_participants_video() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -655,7 +655,7 @@ function bp_zoom_meeting_mute_participants() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -686,7 +686,7 @@ function bp_zoom_meeting_auto_recording() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -717,7 +717,7 @@ function bp_zoom_meeting_alternative_host_ids() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -748,7 +748,7 @@ function bp_zoom_meeting_zoom_details() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -779,7 +779,7 @@ function bp_zoom_meeting_zoom_start_url() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -810,7 +810,7 @@ function bp_zoom_meeting_zoom_meeting_id() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */
@@ -841,7 +841,7 @@ function bp_zoom_meeting_zoom_join_url() {
  *
  * @since BuddyBoss 1.2.10
  *
- * @global object $zoom_meeting_template {@link BP_Group_Zoom_Meeting_Template}
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
  * @return int The meeting duration.
  */

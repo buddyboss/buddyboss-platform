@@ -200,7 +200,7 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 		$bp_prefix       = bp_core_get_table_prefix();
 
-		$sql[] = "CREATE TABLE {$bp_prefix}bp_groups_zoom_meetings (
+		$sql[] = "CREATE TABLE {$bp_prefix}bp_zoom_meetings (
 				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				group_id bigint(20) NOT NULL,
 				title varchar(300) NOT NULL,
