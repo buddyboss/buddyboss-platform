@@ -223,7 +223,7 @@ if ( bp_is_active( 'groups' ) ) {
 			$recordings = bp_zoom_conference()->recordings_by_meeting( $meeting_id );
 
 			if ( ! empty( $recordings['response'] ) ) {
-				$recordings = json_decode( $recordings['response'] );
+				$recordings = $recordings['response'];
 			} else {
 				wp_send_json_error( array( 'error' => true ) );
 			}
@@ -315,7 +315,7 @@ if ( bp_is_active( 'groups' ) ) {
 
 			$meeting_created = bp_zoom_conference()->create_meeting( $data );
 			if ( ! empty( $meeting_created['code'] ) && 201 === $meeting_created['code'] ) {
-				$data['zoom_details']    = serialize( $meeting_created['response'] );
+				$data['zoom_details']    = $meeting_created['response'];
 				$data['zoom_join_url']   = $meeting_created->join_url;
 				$data['zoom_start_url']  = $meeting_created->start_url;
 				$data['zoom_meeting_id'] = $meeting_created->id;

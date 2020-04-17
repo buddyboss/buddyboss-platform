@@ -85,7 +85,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$response_code = wp_remote_retrieve_response_code( $response );
 			$response      = wp_remote_retrieve_body( $response );
 
-			return array( 'response' => $response, 'code' => $response_code );
+			return array( 'response' => json_decode( $response ), 'code' => $response_code );
 		}
 
 		/**

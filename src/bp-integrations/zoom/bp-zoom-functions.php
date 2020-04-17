@@ -384,7 +384,7 @@ function bp_zoom_api_secret( $default = '' ) {
 
 function bp_zoom_api_check_connection() {
 	$test = bp_zoom_conference()->list_users();
-	$test = ! empty( $test['response'] ) ? json_decode( $test['response'] ) : false;
+	$test = ! empty( $test['response'] ) ? $test['response'] : false;
 	if ( ! empty( $test ) ) {
 		if ( $test->code === 124 ) {
 			wp_send_json_success( array( 'message' => $test->message ) );
@@ -434,6 +434,81 @@ function bp_zoom_admin_users_list_callback() {
 function bp_zoom_admin_add_user_callback() {
 	//require_once bp_zoom_integration_path() . '/templates/admin/add-user.php';
 }
+
+/**
+ * Add zoom user field to edit profile.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @param $user
+ */
+function bp_zoom_add_zoom_user_profile_field( $user ) {
+	$bp_zoom_user    = get_user_meta( $user->ID, 'bp_zoom_user', true );
+	?>
+	<h2><?php _e( 'Zoom User', 'buddyboss' ); ?></h2>
+	<table class="form-table">
+		<tr class="bp-zoom-user">
+			<th scope="row"><?php _e( 'Zoom', 'buddyboss' ); ?></th>
+			<td>
+				<label for="bp_zoom_user">
+					<input name="bp_zoom_user" type="checkbox" id="bp_zoom_user" value="1" <?php checked( '1', $bp_zoom_user ); ?> />
+					<?php _e( 'Add to Zoom Conference.', 'buddyboss' ); ?>
+				</label><br>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
+add_action( 'edit_user_profile', 'bp_zoom_add_zoom_user_profile_field', 9 );
+
+/**
+ * Save user to zoom conference
+ *
+ * @since BuddyBoss 1.2.10
+ * @param $user_id
+ *
+ * @return bool
+ */
+function bp_zoom_save_zoom_user_profile_field( $user_id ) {
+	if ( ! current_user_can( 'edit_user', $user_id ) ) {
+		return false;
+	}
+
+	$bp_zoom_user_id = get_user_meta( $user_id, 'bp_zoom_user_id', true );
+
+	if ( isset( $_POST['bp_zoom_user'] ) ) {
+		if ( empty( $bp_zoom_user_id ) ) {
+			$user = get_userdata( $user_id );
+
+			$create_user = bp_zoom_conference()->create_user(
+					array(
+							'action'     => 'create',
+							'email'      => $user->user_email,
+							'type'       => 1,
+							'first_name' => ! empty( $user->user_firstname ) ? $user->user_firstname : '',
+							'last_name'  => ! empty( $user->user_lastname ) ? $user->user_lastname : '',
+					)
+			);
+
+			if ( ! empty( $create_user['code'] ) && 201 === $create_user['code'] && ! empty( $create_user['response'] ) ) {
+				$bp_zoom_user_id = $create_user['response']->id;
+				update_user_meta( $user_id, 'bp_zoom_user_id', $bp_zoom_user_id );
+				update_user_meta( $user_id, 'bp_zoom_user', $_POST['bp_zoom_user'] );
+			}
+		}
+	} else {
+		if ( ! empty( $bp_zoom_user_id ) ) {
+			$delete_user = bp_zoom_conference()->delete_user( $bp_zoom_user_id );
+
+			if ( ! empty( $delete_user['code'] ) && ( 204 === $delete_user['code'] || 429 === $delete_user['code'] ) ) {
+				delete_user_meta( $user_id, 'bp_zoom_user_id' );
+				delete_user_meta( $user_id, 'bp_zoom_user' );
+			}
+		}
+	}
+}
+add_action( 'personal_options_update', 'bp_zoom_save_zoom_user_profile_field', 999 );
+add_action( 'edit_user_profile_update', 'bp_zoom_save_zoom_user_profile_field', 999 );
 
 /**
  * Group zoom meeting slug for sub nav items.
@@ -654,7 +729,7 @@ function bp_zoom_get_users() {
 
 	if ( empty( $users ) ) {
 		$encoded_users = bp_zoom_conference()->list_users();
-		$encoded_users = json_decode( $encoded_users['response'] );
+		$encoded_users = $encoded_users['response'];
 		if ( ! empty( $encoded_users->users ) ) {
 			$users = $encoded_users->users;
 		}
