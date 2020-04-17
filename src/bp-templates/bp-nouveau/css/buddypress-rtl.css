@@ -12589,6 +12589,17 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 #media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit_wrap {
   display: none;
   padding-left: 5px;
+  position: relative;
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit_wrap.submitting {
+  padding-left: 30px;
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit_wrap.submitting .bb-icon-loader {
+  position: absolute;
+  left: 15px;
+  top: 9px;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit_wrap > a {

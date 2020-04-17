@@ -2051,7 +2051,7 @@ window.bp = window.bp || {};
 			var attachment_document_id = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-attachment-id').attr( 'data-item-id' );
 			var documentType		   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > i.media-document-type').attr( 'data-item-id' );
 			var document_name_val 	   =  document_edit.val().trim(); // trim to remove whitespace around name
-			var pattern 			   = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
+			var pattern 			   = /^[-\w^&'@{}[\],$=!#().%+~]+$/; // regex to find not supported characters
 			var matches 			   = pattern.exec(document_name_val);
 			var matchStatus 		   = Boolean(matches);
 
@@ -2074,7 +2074,7 @@ window.bp = window.bp || {};
 					return; // prevent user to add not supported characters
 				}
 
-				document_name.text( document_name_val );
+				document_edit.parent().addClass('submitting').append('<i class="animate-spin bb-icon-loader"></i>');
 
 				// Make ajax call to save new file name here.
 				//use variable 'document_name_val' as a new name while making an ajax call.
@@ -2089,10 +2089,11 @@ window.bp = window.bp || {};
 						name: document_name_val
 					},success : function( response ) {
 						document_name.text( response.data.response.title );
+						document_edit.removeClass('submitting');
+						document_edit.parent().find('.animate-spin').remove();
+						document_edit.parent().hide().siblings('.media-folder_name').show();
 					}
 				});
-
-				document_edit.parent().hide().siblings('.media-folder_name').show();
 
 			}
 
