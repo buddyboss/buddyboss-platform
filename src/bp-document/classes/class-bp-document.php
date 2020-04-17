@@ -1036,21 +1036,9 @@ class BP_Document {
 		$direction = 'SORT_' . $sort;
 		self::array_sort_by_column( $documents, $r['order_by'], $direction );
 
-		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
-
-		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $retval['has_more_items'] ) {
-			$total                    = count( $documents );
-			$current_page             = $r['page'];
-			$item_per_page            = $r['per_page'];
-			$start                    = ( $current_page - 1 ) * $item_per_page;
-			$documents                = array_slice( $documents, $start, $item_per_page );
-			$retval['has_more_items'] = $total > ( $current_page * $item_per_page );
-			$retval['documents']      = $documents;
-		} else {
-			$retval['documents'] = $documents;
-		}
-
-		$retval['total'] = count( $retval['documents'] );
+		$retval['has_more_items'] = ! empty( $per_page ) && count( $documents ) > $per_page;
+		$retval['documents']      = $documents;
+		$retval['total']          = count( $retval['documents'] );
 
 		return $retval;
 	}
