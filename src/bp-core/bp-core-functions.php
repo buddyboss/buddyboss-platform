@@ -4536,3 +4536,72 @@ function bp_array_flatten( $array ) {
 	}
 	return $result;
 }
+/**
+ * Get Group avatar.
+ *
+ * This function will give you the group avatar if previously group is created and
+ * group is not deleted but if admin disabled group component then in Messages
+ * section if previously group thread created then will show the actual group avatar
+ * in messages view.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $avatar_size
+ * @param $avatar_folder_dir
+ * @param $avatar_folder_url
+ *
+ * @return mixed
+ */
+function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url ) {
+
+	$group_avatar = '';
+
+	if ( file_exists( $avatar_folder_dir ) ) {
+
+		// Open directory.
+		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+			// Stash files in an array once to check for one that matches.
+			$avatar_files = array();
+			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+				// Only add files to the array (skip directories).
+				if ( 2 < strlen( $avatar_file ) ) {
+					$avatar_files[] = $avatar_file;
+				}
+			}
+
+			// Check for array.
+			if ( 0 < count( $avatar_files ) ) {
+
+				// Check for current avatar.
+				foreach ( $avatar_files as $key => $value ) {
+					if ( strpos( $value, $avatar_size ) !== false ) {
+						$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+					}
+				}
+
+				// Legacy avatar check.
+				if ( ! isset( $group_avatar ) ) {
+					foreach ( $avatar_files as $key => $value ) {
+						if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+							$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+						}
+					}
+
+					// Legacy group avatar check.
+					if ( ! isset( $group_avatar ) ) {
+						foreach ( $avatar_files as $key => $value ) {
+							if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+								$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+							}
+						}
+					}
+				}
+			}
+		}
+		// Close the avatar directory.
+		closedir( $av_dir );
+	}
+
+	return $group_avatar;
+}

@@ -295,7 +295,11 @@ function bp_version_updater() {
 			bp_update_to_1_2_9();
 		}
 
-		if ( $raw_db_version < 15100 ) {
+		if ( $raw_db_version < 15200 ) {
+			bp_update_to_1_3_0();
+		}
+
+		if ( $raw_db_version < 15300 ) {
 			bp_update_to_1_3_1();
 		}
 	}
@@ -996,4 +1000,8 @@ function bp_core_fix_forums_media() {
 	if ( bp_is_active( 'forums' ) && bp_is_active( 'media' ) ) {
 		bbp_fix_forums_media();
 	}
+}
+
+function bp_update_to_1_3_0() {
+	bp_core_install_private_messaging();
 }

@@ -192,7 +192,7 @@ body.groups.messages span.select2-dropdown.select2-dropdown--below {
 }
 
 .bp-select-members-wrap {
-	min-height: 94px;
+	min-height: 45px;
 }
 
 body.groups.messages #send_group_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -524,6 +524,45 @@ span.icons:before {
 			top: 2px;
 		}
 	}
+
+	.thread-avatar {
+		position: relative;
+
+		.recipients-count {
+			position: absolute;
+			top: 2px;
+			right: -5px;
+			background: #fff;
+			color: #939597;
+			border-radius: 50%;
+			border: 1px solid;
+			font-size: 11px;
+			line-height: normal;
+			min-width: 19px;
+			padding: 2px;
+			text-align: center;
+		}
+	}
+
+	.thread-item {
+		position: relative;
+
+		.close-conversation {
+			color: #939597;
+			position: absolute;
+			right: 22px;
+			bottom: 0;
+			opacity: 0;
+			visibility: hidden;
+			transition: all ease 0.3s;
+		}
+
+		&:hover .close-conversation {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+
 }
 
 /* Rounded sliders */
@@ -569,6 +608,24 @@ span.icons:before {
 		color: #818078;
 		background-color: #fff;
 	}
+}
+
+#group-messages-container .bb-groups-messages-right .group-messages-compose {
+	font-size: 0;
+	display: none;
+	line-height: 0;
+
+	&:after {
+		content: "\f465";
+		font-size: 20px;
+		font-family: dashicons;
+		vertical-align: top;
+		text-align: center;
+		transition: color 0.1s ease-in;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
 }
 
 
