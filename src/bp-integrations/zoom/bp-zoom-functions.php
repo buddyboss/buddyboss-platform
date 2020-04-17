@@ -471,7 +471,7 @@ add_action( 'edit_user_profile', 'bp_zoom_add_zoom_user_profile_field', 9 );
  * @return bool
  */
 function bp_zoom_save_zoom_user_profile_field( $user_id ) {
-	if ( ! current_user_can( 'edit_user', $user_id ) ) {
+	if ( ! current_user_can( 'edit_user', $user_id ) || ! current_user_can( 'create_users' ) ) {
 		return false;
 	}
 
