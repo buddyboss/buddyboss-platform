@@ -924,11 +924,11 @@ class BP_Document {
 
 		// Join the where conditions together.
 		if ( ! empty( $scope_query_document['sql'] ) && !empty( $scope_query_folder['sql'] ) ) {
-			$where_sql_folder   = 'WHERE m.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
+			$where_sql_folder   = 'WHERE a.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
 			$where_sql_document = 'WHERE m.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
 		} else {
 			$where_sql_document = 'WHERE m.type = \'document\' AND ' . join( ' AND ', $where_conditions_document );
-			$where_sql_folder   = 'WHERE m.type = \'document\' AND ' . join( ' AND ', $where_conditions_folder );
+			$where_sql_folder   = 'WHERE a.type = \'document\' AND ' . join( ' AND ', $where_conditions_folder );
 		}
 
 		/**
