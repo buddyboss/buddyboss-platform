@@ -427,12 +427,13 @@ function bp_zoom_api_check_connection_button() {
 	<?php
 }
 
+/**
+ * Zoom users list in Settings > Intgrations > Zoom Conference
+ *
+ * @since BuddyBoss 1.2.10
+ */
 function bp_zoom_admin_users_list_callback() {
 	require_once bp_zoom_integration_path() . '/templates/admin/users.php';
-}
-
-function bp_zoom_admin_add_user_callback() {
-	//require_once bp_zoom_integration_path() . '/templates/admin/add-user.php';
 }
 
 /**

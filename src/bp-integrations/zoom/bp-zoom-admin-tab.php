@@ -158,10 +158,6 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 			$fields['bp_zoom_users_section'] = array(
 
-				'bp-zoom-add-user' => array(
-					'title'    => __( '&#160;', 'buddyboss' ),
-					'callback' => 'bp_zoom_admin_add_user_callback',
-				),
 				'bp-zoom-users-list' => array(
 					'title'    => __( '&#160;', 'buddyboss' ),
 					'callback' => 'bp_zoom_admin_users_list_callback',
