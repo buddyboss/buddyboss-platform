@@ -1243,12 +1243,12 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on('success', function(file, response) {
 						if ( response.data.id ) {
-							file.id = response.id;
-							response.data.uuid = file.upload.uuid;
+							file.id 				 = response.id;
+							response.data.uuid 		 = file.upload.uuid;
 							response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
-							response.data.album_id = self.album_id;
-							response.data.group_id = self.group_id;
-							response.data.saved    = false;
+							response.data.album_id 	 = self.album_id;
+							response.data.group_id 	 = self.group_id;
+							response.data.saved    	 = false;
 							self.dropzone_media.push( response.data );
 							self.addMediaIdsToGroupMessagesForm();
 						}
@@ -2087,8 +2087,8 @@ window.bp = window.bp || {};
 						attachment_document_id: attachment_document_id,
 						document_type: documentType,
 						name: document_name_val
-					},success : function() {
-
+					},success : function( response ) {
+						document_name.text( response.data.response.title );
 					}
 				});
 

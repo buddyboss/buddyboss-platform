@@ -1640,12 +1640,22 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	rename( $file, $new_file );
 	update_attached_file( $attachment_document_id, $new_file );
 
-	$extension = '.' . $path['extension'];
-
-	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET file_name = %s, extension = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $new_file_name, $extension, bp_core_current_time(), $document_id, $attachment_document_id );
+	$extension              = '.' . $path['extension'];
+	$title                  = basename( $new_file, $extension );
+	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, file_name = %s, extension = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, $new_file_name, $extension, bp_core_current_time(), $document_id, $attachment_document_id );
 	$rename_file_name_query = $wpdb->query( $rename_file_name_query ); // db call ok; no-cache ok;
 
-	return $document_id;
+
+	$response = apply_filters( 'bp_document_rename_file', array(
+		'document_id'            => $document_id,
+		'attachment_document_id' => $attachment_document_id,
+		'title'                  => $title,
+		'caption'                => $caption,
+		'description'            => $description,
+		'backendn'               => $backend
+	) );
+
+	return $response;
 }
 
 /**

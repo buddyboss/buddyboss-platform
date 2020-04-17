@@ -924,11 +924,11 @@ class BP_Document {
 
 		// Join the where conditions together.
 		if ( ! empty( $scope_query_document['sql'] ) && !empty( $scope_query_folder['sql'] ) ) {
-			$where_sql_folder   = 'WHERE ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
-			$where_sql_document = 'WHERE ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
+			$where_sql_folder   = 'WHERE m.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
+			$where_sql_document = 'WHERE m.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
 		} else {
-			$where_sql_document = 'WHERE ' . join( ' AND ', $where_conditions_document );
-			$where_sql_folder   = 'WHERE ' . join( ' AND ', $where_conditions_folder );
+			$where_sql_document = 'WHERE m.type = \'document\' AND ' . join( ' AND ', $where_conditions_document );
+			$where_sql_folder   = 'WHERE m.type = \'document\' AND ' . join( ' AND ', $where_conditions_folder );
 		}
 
 		/**
@@ -966,8 +966,8 @@ class BP_Document {
 		);
 
 		// Query first for document IDs.
-		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} ORDER BY {$order_by_folder} {$sort}, a.id {$sort}";
-		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} ORDER BY {$order_by_document} {$sort}, m.id {$sort}";
+		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND a.type = 'document' ORDER BY {$order_by_folder} {$sort}, a.id {$sort}";
+		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND m.type = 'document' ORDER BY {$order_by_document} {$sort}, m.id {$sort}";
 
 		/**
 		 * Filters the paged document MySQL statement.

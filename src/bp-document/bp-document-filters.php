@@ -541,6 +541,10 @@ function bp_document_download_url_file() {
 
 function bp_document_sync_document_data( $attachment_id ) {
 
+    if ( ! is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
 	global $wpdb, $bp;
 
 	// Check if media is attached to a document
