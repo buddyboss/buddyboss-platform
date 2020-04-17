@@ -832,6 +832,7 @@ class BP_Document {
 			case 'title':
 			case 'folder_id':
 			case 'activity_id':
+			case 'privacy':
 			case 'group_id':
 			case 'menu_order':
 				break;
@@ -841,7 +842,7 @@ class BP_Document {
 				break;
 		}
 		$order_by_document = 'm.' . $r['order_by'];
-		$order_by_folder   = 'a.date_created';
+		$order_by_folder   = 'a.' . $r['order_by'];
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
@@ -959,6 +960,13 @@ class BP_Document {
 			$where_sql_document
 		);
 
+		// Sanitize page and per_page parameters.
+		$page     = absint( $r['page'] );
+		$per_page = absint( $r['per_page'] );
+
+		error_log( $page );
+		error_log( $per_page );
+
 		$retval = array(
 			'documents'      => null,
 			'total'          => null,
@@ -966,8 +974,15 @@ class BP_Document {
 		);
 
 		// Query first for document IDs.
-		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND a.type = 'document' ORDER BY {$order_by_folder} {$sort}, a.id {$sort}";
-		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND m.type = 'document' ORDER BY {$order_by_document} {$sort}, m.id {$sort}";
+		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND a.type = 'document' ORDER BY {$order_by_folder} {$sort}";
+		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND m.type = 'document' ORDER BY {$order_by_document} {$sort}";
+
+		if ( ! empty( $per_page ) && ! empty( $page ) ) {
+			// We query for $per_page + 1 items in order to
+			// populate the has_more_items flag.
+			$document_ids_sql_folder   .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
+			$document_ids_sql_document .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
+		}
 
 		/**
 		 * Filters the paged document MySQL statement.
@@ -1018,7 +1033,8 @@ class BP_Document {
 			$documents = self::prefetch_object_data( $documents );
 		}
 
-		self::array_sort_by_column( $documents, 'date_created' );
+		$direction = 'SORT_' . $sort;
+		self::array_sort_by_column( $documents, $r['order_by'], $direction );
 
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 

@@ -638,9 +638,9 @@ function bp_document_get_total_group_folder_count( $group_id = 0 ) {
  */
 function bp_get_total_document_count() {
 
-	add_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
+	//add_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
 	bp_has_document( bp_ajax_querystring( 'document' ) );
-	remove_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
+	//remove_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
 	$count = $GLOBALS['document_template']->total_document_count;
 
 	/**

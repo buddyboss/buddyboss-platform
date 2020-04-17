@@ -3065,21 +3065,54 @@ window.bp = window.bp || {};
 		/* jshint ignore:start */
 		sortDocuments: function (event) {
 
-			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data( 'target' );
+			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data( 'target' ), search_terms = '', order_by = 'date_created', sort = '', next_page = 1;
 
 			switch (sortArg) {
 				case 'name':
-					console.log('name clicked');
+					order_by = 'title';
 					break;
 				case 'modified':
-					console.log('Modified clicked');
+					order_by = 'date_created';
 					break;
 				case 'visibility':
-					console.log('Visibility clicked');
+					order_by = 'privacy';
 					break;
 			}
 
 			sortTarget.hasClass( 'asce' ) ? sortTarget.removeClass( 'asce' ) : sortTarget.addClass( 'asce' );
+			var sort = sortTarget.hasClass( 'asce' ) ? 'DESC' : 'ASC';
+
+
+			var store = bp.Nouveau.getStorage( 'bp-media' ),
+				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
+
+
+			if ($( '#buddypress .dir-search input[type=search]' ).length) {
+				search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+			}
+
+			sort = 'ASC';
+			order_by = 'title';
+
+			bp.Nouveau.objectRequest(
+				{
+					object: 'document',
+					scope: scope,
+					filter: filter,
+					search_terms: search_terms,
+					page: next_page,
+					order_by: order_by,
+					sort: sort,
+					method: 'reset',
+					target: '#buddypress [data-bp-list]'
+				}
+			).done(
+				function (response) {
+					if ( 'DESC' === sort ) {
+
+					}
+				}
+			);
 
 		},
 		/* jshint ignore:end */
