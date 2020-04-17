@@ -3066,7 +3066,7 @@ window.bp = window.bp || {};
 		sortDocuments: function (event) {
 
 			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data( 'target' ), search_terms = '', order_by = 'date_created', sort = '', next_page = 1;
-
+			var currentFilter = sortTarget.attr('class');
 			switch (sortArg) {
 				case 'name':
 					order_by = 'title';
@@ -3091,9 +3091,6 @@ window.bp = window.bp || {};
 				search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 			}
 
-			sort = 'ASC';
-			order_by = 'title';
-
 			bp.Nouveau.objectRequest(
 				{
 					object: 'document',
@@ -3108,9 +3105,11 @@ window.bp = window.bp || {};
 				}
 			).done(
 				function (response) {
-					if ( 'DESC' === sort ) {
-
-					}
+					setTimeout( function(){
+						currentFilterTarget = '.'+currentFilter.replace(' ','.');
+						$( currentFilterTarget ).hasClass('asce') ? $( currentFilterTarget ).removeClass('asce') : $( currentFilterTarget ).addClass('asce');
+					},300);
+					
 				}
 			);
 
