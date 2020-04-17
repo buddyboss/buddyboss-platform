@@ -3083,7 +3083,7 @@ window.bp = window.bp || {};
 			var sort = sortTarget.hasClass( 'asce' ) ? 'DESC' : 'ASC';
 
 
-			var store = bp.Nouveau.getStorage( 'bp-media' ),
+			var store = bp.Nouveau.getStorage( 'bp-document' ),
 				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
 
 
