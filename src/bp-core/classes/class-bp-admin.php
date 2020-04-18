@@ -379,7 +379,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		if ( is_multisite() && bp_is_network_activated() ) {
 			$hooks[] = add_menu_page(
 				__( 'BuddyBoss', 'buddyboss' ),
-				__( 'BuddyBoss', 'buddyboss' ),
 				$this->capability,
 				$this->settings_page,
 				'bp_core_admin_backpat_menu',
