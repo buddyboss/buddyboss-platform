@@ -296,7 +296,6 @@ if ( bp_is_active( 'groups' ) ) {
 
 			$data = array(
 				'user_id'                => $user_id,
-				'group_id'               => $group_id,
 				'start_date'             => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
@@ -314,11 +313,16 @@ if ( bp_is_active( 'groups' ) ) {
 			);
 
 			$meeting_created = bp_zoom_conference()->create_meeting( $data );
-			if ( ! empty( $meeting_created['code'] ) && 201 === $meeting_created['code'] ) {
-				$data['zoom_details']    = $meeting_created['response'];
-				$data['zoom_join_url']   = $meeting_created->join_url;
-				$data['zoom_start_url']  = $meeting_created->start_url;
-				$data['zoom_meeting_id'] = $meeting_created->id;
+
+			if ( ! empty( $meeting_created['code'] ) && 201 === $meeting_created['code'] && ! empty( $meeting_created['response'] ) ) {
+				$data['zoom_details']    = serialize( $meeting_created['response'] );
+				$data['zoom_join_url']   = $meeting_created['response']->join_url;
+				$data['zoom_start_url']  = $meeting_created['response']->start_url;
+				$data['zoom_meeting_id'] = $meeting_created['response']->id;
+
+				if ( ! empty( $group_id ) ) {
+					$data['group_id'] = $group_id;
+				}
 
 				$meeting_id = bp_zoom_meeting_add( $data );
 

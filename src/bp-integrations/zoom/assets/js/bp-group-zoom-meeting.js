@@ -9,6 +9,14 @@
 			minDateTime:0,
 		});
 
+		$('#bp-zoom-meeting-host').select2({
+			minimumInputLength: 0,
+			closeOnSelect: true,
+			language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+			dropdownCssClass: 'bb-select-dropdown',
+			containerCssClass: 'bb-select-container',
+		});
+
 		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
 			e.preventDefault();
 

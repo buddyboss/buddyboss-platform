@@ -196,6 +196,7 @@ function bp_zoom_meeting_add( $args = '' ) {
 
 	// Setup meeting to be added.
 	$meeting                       = new BP_Zoom_Meeting( $r['id'] );
+	$meeting->user_id              = $r['user_id'];
 	$meeting->group_id             = (int) $r['group_id'];
 	$meeting->title                = $r['title'];
 	$meeting->start_date           = $r['start_date'];

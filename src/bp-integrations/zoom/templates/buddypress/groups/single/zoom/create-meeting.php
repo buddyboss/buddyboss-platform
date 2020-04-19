@@ -4,6 +4,12 @@
  *
  * @since BuddyBoss 1.2.10
  */
+
+wp_enqueue_script( 'bp-select2' );
+if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
+	wp_enqueue_script( 'bp-select2-local' );
+}
+wp_enqueue_style( 'bp-select2' );
 ?>
 <div id="bp-new-zoom-meeting" class="bp-new-zoom-meeting-form">
 	<form id="bp-new-zoom-meeting-form" name="bp-new-zoom-meeting-form" class="standard-form" method="post" action="">
@@ -15,14 +21,20 @@
 					<input type="text" id="bp-zoom-meeting-title" value="<?php _e( 'My Meeting', 'buddyboss' ); ?>" tabindex="1" name="bp-zoom-meeting-title" />
 				</p>
 				<p>
+					<?php $users = groups_get_group_members( array( 'group_role' => array( 'member', 'mod', 'admin' ) ) ); ?>
 					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
+						<option><?php _e( 'Select host', 'buddyboss' ); ?></option>
 						<?php
-						$users = bp_zoom_get_users();
-						foreach ( $users as $user ): ?>
-							<option
-								value="<?php echo $user->id; ?>"><?php echo $user->first_name . ' ( ' . $user->email . ' )'; ?></option>
-						<?php endforeach;
+						if ( ! empty( $users['members'] ) ) :
+							foreach ( $users['members'] as $user ):
+								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
+								if ( ! empty( $bp_zoom_user_id ) ) : ?>
+									<option
+											value="<?php echo $bp_zoom_user_id; ?>"><?php echo bp_core_get_user_displayname( $user->ID ) . ' ( ' . $user->user_email . ' )'; ?></option>
+								<?php endif;
+							endforeach;
+						endif;
 						?>
 					</select>
 				</p>
@@ -47,14 +59,14 @@
 					<label aria-hidden="true"><?php _e( 'Registration', 'buddyboss' ); ?></label>
 					<input type="checkbox" name="bp-zoom-meeting-registration" id="bp-zoom-meeting-registration" value="1" class="bs-styled-checkbox" tabindex="6"/>
 					<label for="bp-zoom-meeting-registration"><?php _e( 'Required', 'buddyboss' ); ?></label>
-					
+
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-password"><?php _e( 'Meeting Password', 'buddyboss' ); ?></label>
 					<input type="text" id="bp-zoom-meeting-password" value="" tabindex="7" name="bp-zoom-meeting-password" />
 				</p>
 				<p>
-					
+
 					<label aria-hidden="true"><?php _e( 'Host Video', 'buddyboss' ); ?></label>
 					<input type="checkbox" id="bp-zoom-meeting-host-video" value="" tabindex="8" name="bp-zoom-meeting-host-video" class="bs-styled-checkbox" />
 					<label for="bp-zoom-meeting-host-video"><?php _e( 'Start video when host join meeting.', 'buddyboss' ); ?></label>
