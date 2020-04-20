@@ -120,8 +120,8 @@ $meeting = bp_zoom_get_current_meeting();
 			<div class="meeting-item-col meeting-action last-col full">
 				<a role="button" data-nonce="<?php echo wp_create_nonce( 'bp_zoom_meeting_delete' ); ?>" class="btn delete bp-zoom-meeting-delete" href="javascript:;"><?php _e( 'Delete this Meeting', 'buddyboss' ); ?></a>
 				<div class="pull-right">
-					<a role="button" class="button small outline" href="https://zoom.us/meeting/92551641574/edit">Edit this Meeting</a>
-					<a type="button" class="button small outline" href="<?php echo $meeting->zoom_start_url; ?>">Start this Meeting</a>
+					<a role="button" class="button small outline" href="#"><?php _e( 'Edit this Meeting', 'buddyboss' ); ?></a>
+					<a type="button" class="button small outline" href="<?php echo $meeting->zoom_start_url; ?>"><?php _e( 'Start this Meeting', 'buddyboss' ); ?></a>
 				</div>
 			</div>
 		</div>
