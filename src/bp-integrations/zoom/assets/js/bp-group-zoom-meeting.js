@@ -101,6 +101,30 @@
 				meeting_row.find('.hide-password').show();
 			}
 		});
+
+		$('#bp-zoom-single-meeting').on('click', '#copy-invitation',function(e){
+			var _this = $(this);
+			e.preventDefault();
+
+			var textArea = document.createElement("textarea");
+			textArea.value = _this.data('join-url');
+			document.body.appendChild(textArea);
+			textArea.select();
+			try {
+				var successful = document.execCommand('copy');
+				//var msg = successful ? 'successful' : 'unsuccessful';
+				if ( successful ) {
+					_this.addClass('copied');
+
+					setTimeout(function(){
+						_this.removeClass('copied');
+					},3000);
+				}
+			} catch (err) {
+				console.log('Oops, unable to copy');
+			}
+			document.body.removeChild(textArea);
+		});
 	} );
 
 } )( jQuery );

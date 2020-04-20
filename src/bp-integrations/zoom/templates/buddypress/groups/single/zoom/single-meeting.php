@@ -50,8 +50,8 @@ $meeting = bp_zoom_get_current_meeting();
 			<div class="meeting-item-col">
 				<?php _e( 'Join URL:', 'buddyboss' ); ?> <a target="_blank" href="<?php echo $meeting->zoom_join_url; ?>"><?php echo $meeting->zoom_join_url; ?></a>
 				<span>
-					<a id="copyInvitation" class="edit" href="javascript:;" role="button">
-						Copy the invitation
+					<a id="copy-invitation" class="edit" href="#" role="button" data-join-url="<?php echo $meeting->zoom_join_url; ?>">
+						<?php _e( 'Copy the invitation', 'buddyboss' ); ?>
 					</a>
 				</span>
 			</div>
