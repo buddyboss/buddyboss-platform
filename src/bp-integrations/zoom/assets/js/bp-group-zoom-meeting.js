@@ -32,7 +32,7 @@
 
 			$.ajax({
 				type: 'POST',
-				url: ajaxurl,
+				url: bp_group_zoom_meeting_vars.ajax_url,
 				data: data,
 				success: function ( response ) {
 					if ( typeof response.data !== 'undefined' && response.data.redirect_url ) {
@@ -49,7 +49,7 @@
 
 			$.ajax({
 				type: 'GET',
-				url: ajaxurl,
+				url: bp_group_zoom_meeting_vars.ajax_url,
 				data: {
 					'action': 'zoom_meeting_recordings',
 					'meeting_id': meeting_item.data('meeting-id'),
@@ -64,13 +64,13 @@
 			});
 		});
 
-		$('.meeting-item').on( 'click', '#bp-zoom-meeting-delete', function(e){
+		$('.meeting-item').on( 'click', '.bp-zoom-meeting-delete', function(e){
 			var target = $( e.target ), meeting_item = target.closest('.meeting-item'), meeting_id = meeting_item.data('meeting-id'), id = meeting_item.data('id'), nonce = target.data('nonce');
 			e.preventDefault();
 
 			$.ajax({
 				type: 'POST',
-				url: ajaxurl,
+				url: bp_group_zoom_meeting_vars.ajax_url,
 				data: {
 					'action': 'zoom_meeting_delete',
 					'meeting_id': meeting_id,
@@ -79,7 +79,12 @@
 				},
 				success: function (response) {
 					if ( true === response.data.deleted ) {
-						$(meeting_item).remove();
+						if ( '1' === bp_group_zoom_meeting_vars.is_single_meeting && bp_group_zoom_meeting_vars.group_meetings_url !== '' ) {
+							window.location.href = bp_group_zoom_meeting_vars.group_meetings_url;
+							return false;
+						} else {
+							$(meeting_item).remove();
+						}
 					}
 				}
 			});

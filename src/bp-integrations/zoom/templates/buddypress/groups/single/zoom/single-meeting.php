@@ -9,7 +9,8 @@ $meeting = bp_zoom_get_current_meeting();
 ?>
 <div class="meeting-item-container">
 	<h2><?php echo $meeting->title; ?></h2>
-	<div id="bp-zoom-single-meeting" class="meeting-item-table single-meeting-item-table">
+	<div id="bp-zoom-single-meeting" class="meeting-item meeting-item-table single-meeting-item-table" data-id="<?php echo $meeting->id; ?>"
+		 data-meeting-id="<?php echo $meeting->zoom_meeting_id; ?>">
 		<div class="single-meeting-item">
 			<label class="meeting-item-head"><?php _e( 'Topic', 'buddyboss' ); ?></label>
 			<div class="meeting-item-col">
@@ -75,7 +76,7 @@ $meeting = bp_zoom_get_current_meeting();
 				<div class="meeting-item-head"><?php _e( 'Meeting Options', 'buddyboss' ); ?></div>
 				<div class="meeting-item-col">
 					<span>
-						<i class="dashicons <?php echo false ? 'dashicons-yes' : 'dashicons-no-alt'; ?>"></i>
+						<i class="dashicons <?php echo $meeting->join_before_host ? 'dashicons-yes' : 'dashicons-no-alt'; ?>"></i>
 						<?php _e( 'Enable join before host', 'buddyboss' ); ?>
 					</span>
 				</div>
@@ -84,7 +85,7 @@ $meeting = bp_zoom_get_current_meeting();
 				<div class="meeting-item-head"></div>
 				<div class="meeting-item-col">
 					<span>
-						<i class="dashicons <?php echo false ? 'dashicons-yes' : 'dashicons-no-alt'; ?>"></i>
+						<i class="dashicons <?php echo $meeting->mute_participants ? 'dashicons-yes' : 'dashicons-no-alt'; ?>"></i>
 						<?php _e( 'Mute participants upon entry', 'buddyboss' ); ?>
 					</span>
 				</div>
@@ -93,7 +94,7 @@ $meeting = bp_zoom_get_current_meeting();
 				<div class="meeting-item-head"></div>
 				<div class="meeting-item-col">
 					<span>
-						<i class="dashicons <?php echo false ? 'dashicons-yes' : 'dashicons-no-alt';?>"></i><?php _e( 'Enable waiting room', 'buddyboss' ); ?>
+						<i class="dashicons <?php echo $meeting->waiting_room ? 'dashicons-yes' : 'dashicons-no-alt';?>"></i><?php _e( 'Enable waiting room', 'buddyboss' ); ?>
 					</span>
 				</div>
 			</div>
@@ -101,7 +102,7 @@ $meeting = bp_zoom_get_current_meeting();
 				<div class="meeting-item-head"></div>
 				<div class="meeting-item-col">
 					<span>
-						<i class="dashicons <?php echo false ? 'dashicons-yes' : 'dashicons-no-alt';?>"></i><?php _e( 'Only authenticated users can join', 'buddyboss' ); ?>
+						<i class="dashicons <?php echo $meeting->enforce_login ? 'dashicons-yes' : 'dashicons-no-alt';?>"></i><?php _e( 'Only authenticated users can join', 'buddyboss' ); ?>
 					</span>
 				</div>
 			</div>
@@ -110,14 +111,14 @@ $meeting = bp_zoom_get_current_meeting();
 				<div class="meeting-item-col">
 					<span for="option_autorec">
 						<i class="dashicons <?php echo $meeting->auto_recording === 'cloud' ? 'dashicons-yes' : 'dashicons-no-alt';?>"></i>
-						<span>Record the meeting automatically in the cloud</span>
+						<span><?php _e( 'Record the meeting automatically in the cloud', 'buddyboss' ); ?></span>
 					</span>
 				</div>
 			</div>
 		</div>
 		<div class="single-meeting-item last-col">
 			<div class="meeting-item-col meeting-action last-col full">
-				<a role="button" id="btn_Delete_meeting" class="btn delete" href="javascript:;">Delete this Meeting</a>
+				<a role="button" data-nonce="<?php echo wp_create_nonce( 'bp_zoom_meeting_delete' ); ?>" class="btn delete bp-zoom-meeting-delete" href="javascript:;"><?php _e( 'Delete this Meeting', 'buddyboss' ); ?></a>
 				<div class="pull-right">
 					<a role="button" class="button small outline" href="https://zoom.us/meeting/92551641574/edit">Edit this Meeting</a>
 					<a type="button" class="button small outline" href="<?php echo $meeting->zoom_start_url; ?>">Start this Meeting</a>
