@@ -901,6 +901,19 @@ function bp_zoom_get_current_meeting() {
 }
 
 /**
+ * Get single meeting id.
+ *
+ * @since BuddyBoss 1.2.10
+ * @return int|bool ID of the meeting or false if not found.
+ */
+function bp_zoom_get_current_meeting_id() {
+	if ( bp_zoom_is_single_meeting() ) {
+		$meeting_id = (int) bp_action_variable( 1 );
+	}
+	return false;
+}
+
+/**
  * Check if current user has permission to start meeting.
  *
  * @since BuddyBoss 1.2.10
