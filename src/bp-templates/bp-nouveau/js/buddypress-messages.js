@@ -1796,6 +1796,20 @@ window.bp = window.bp || {};
 			'click .message_actions .message_action__anchor' : 'showOptions',
 		},
 
+		initialize: function() {
+
+			$( document ).on('click', '.messages', function(event) {
+
+				if( $(event.target ).hasClass( 'message_action__anchor' ) || $(event.target ).parent().hasClass('message_action__anchor') ) {
+					return event;
+				} else {
+					$('.message_action__list.open').removeClass('open');
+				}
+			
+			});
+
+		},
+
 		navigateToList: function( event ) {
 				event.preventDefault();
 				bp.Nouveau.Messages.router.navigate( '/' );
@@ -1804,7 +1818,9 @@ window.bp = window.bp || {};
 
 		doAction: function( event ) {
 			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
-			    feedback = BP_Nouveau.messages.doingAction;
+				feedback = BP_Nouveau.messages.doingAction;
+				
+				$( event.currentTarget ).closest( '.message_action__list' ).removeClass('open');
 
 			if ( ! action ) {
 				return event;
@@ -1884,6 +1900,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 
 					if ( 'unread' === action && ! _.isUndefined( response.ids ) ) {
+						$( '.bp-compose-message.bp-messages-container, .bp-view-message.bp-messages-container' ).removeClass( 'bp-compose-message bp-view-message' );
 						$.each( response.ids, function( index, value ) {
 							$('#bp-messages-threads-list .message-lists .thread-item.' + value ).addClass( 'unread' );
 						});
