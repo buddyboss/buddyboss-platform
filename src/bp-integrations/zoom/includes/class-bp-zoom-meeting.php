@@ -70,6 +70,14 @@ class BP_Zoom_Meeting {
 	var $timezone;
 
 	/**
+	 * password of the meeting item.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 * @var string
+	 */
+	var $password;
+
+	/**
 	 * duration of the meeting item.
 	 *
 	 * @since BuddyBoss 1.2.10
@@ -108,6 +116,30 @@ class BP_Zoom_Meeting {
 	 * @var bool
 	 */
 	var $mute_participants;
+
+	/**
+	 * Meeting authetication.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 * @var bool
+	 */
+	var $meeting_authentication;
+
+	/**
+	 * Enforce login.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 * @var bool
+	 */
+	var $enforce_login;
+
+	/**
+	 * Waiting room.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 * @var bool
+	 */
+	var $waiting_room;
 
 	/**
 	 * Auto recording of the media item.
@@ -215,23 +247,27 @@ class BP_Zoom_Meeting {
 			return;
 		}
 
-		$this->id                   = (int) $row->id;
-		$this->group_id             = (int) $row->group_id;
-		$this->title                = $row->title;
-		$this->user_id              = $row->user_id;
-		$this->start_date           = $row->start_date;
-		$this->timezone             = $row->timezone;
-		$this->duration             = $row->duration;
-		$this->join_before_host     = (bool) $row->join_before_host;
-		$this->host_video           = (bool) $row->host_video;
-		$this->participants_video   = (bool) $row->participants_video;
-		$this->mute_participants    = (bool) $row->mute_participants;
-		$this->auto_recording       = $row->auto_recording;
-		$this->alternative_host_ids = $row->alternative_host_ids;
-		$this->zoom_details         = $row->zoom_details;
-		$this->zoom_start_url       = $row->zoom_start_url;
-		$this->zoom_join_url        = $row->zoom_join_url;
-		$this->zoom_meeting_id      = $row->zoom_meeting_id;
+		$this->id                     = (int) $row->id;
+		$this->group_id               = (int) $row->group_id;
+		$this->title                  = $row->title;
+		$this->user_id                = $row->user_id;
+		$this->start_date             = $row->start_date;
+		$this->timezone               = $row->timezone;
+		$this->password               = $row->password;
+		$this->duration               = $row->duration;
+		$this->join_before_host       = (bool) $row->join_before_host;
+		$this->host_video             = (bool) $row->host_video;
+		$this->participants_video     = (bool) $row->participants_video;
+		$this->mute_participants      = (bool) $row->mute_participants;
+		$this->meeting_authentication = (bool) $row->meeting_authentication;
+		$this->enforce_login          = (bool) $row->enforce_login;
+		$this->waiting_room           = (bool) $row->waiting_room;
+		$this->auto_recording         = $row->auto_recording;
+		$this->alternative_host_ids   = $row->alternative_host_ids;
+		$this->zoom_details           = $row->zoom_details;
+		$this->zoom_start_url         = $row->zoom_start_url;
+		$this->zoom_join_url          = $row->zoom_join_url;
+		$this->zoom_meeting_id        = $row->zoom_meeting_id;
 	}
 
 	/**
@@ -247,23 +283,90 @@ class BP_Zoom_Meeting {
 
 		$bp = buddypress();
 
-		$this->id                   = apply_filters_ref_array( 'bp_zoom_meeting_id_before_save', array( $this->id, &$this ) );
-		$this->group_id             = apply_filters_ref_array( 'bp_zoom_meeting_group_id_before_save', array( $this->group_id, &$this ) );
-		$this->title                = apply_filters_ref_array( 'bp_zoom_meeting_title_before_save', array( $this->title, &$this ) );
-		$this->user_id              = apply_filters_ref_array( 'bp_zoom_meeting_user_id_before_save', array( $this->user_id, &$this ) );
-		$this->start_date           = apply_filters_ref_array( 'bp_zoom_meeting_start_date_before_save', array( $this->start_date, &$this ) );
-		$this->timezone             = apply_filters_ref_array( 'bp_zoom_meeting_timezone_before_save', array( $this->timezone, &$this ) );
-		$this->duration             = apply_filters_ref_array( 'bp_zoom_meeting_duration_before_save', array( $this->duration, &$this ) );
-		$this->join_before_host     = apply_filters_ref_array( 'bp_zoom_meeting_join_before_host_before_save', array( $this->join_before_host, &$this ) );
-		$this->host_video           = apply_filters_ref_array( 'bp_zoom_meeting_host_video_before_save', array( $this->host_video, &$this ) );
-		$this->participants_video   = apply_filters_ref_array( 'bp_zoom_meeting_participants_video_before_save', array( $this->participants_video, &$this ) );
-		$this->mute_participants    = apply_filters_ref_array( 'bp_zoom_meeting_mute_participants_before_save', array( $this->mute_participants, &$this ) );
-		$this->auto_recording       = apply_filters_ref_array( 'bp_zoom_meeting_auto_recording_before_save', array( $this->auto_recording, &$this ) );
-		$this->alternative_host_ids = apply_filters_ref_array( 'bp_zoom_meeting_alternative_host_ids_before_save', array( $this->alternative_host_ids, &$this ) );
-		$this->zoom_details         = apply_filters_ref_array( 'bp_zoom_meeting_zoom_details_before_save', array( $this->zoom_details, &$this ) );
-		$this->zoom_start_url       = apply_filters_ref_array( 'bp_zoom_meeting_zoom_start_url_before_save', array( $this->zoom_start_url, &$this ) );
-		$this->zoom_join_url        = apply_filters_ref_array( 'bp_zoom_meeting_zoom_join_url_before_save', array( $this->zoom_join_url, &$this ) );
-		$this->zoom_meeting_id      = apply_filters_ref_array( 'bp_zoom_meeting_zoom_meeting_id_before_save', array( $this->zoom_meeting_id, &$this ) );
+		$this->id                     = apply_filters_ref_array( 'bp_zoom_meeting_id_before_save', array(
+			$this->id,
+			&$this
+		) );
+		$this->group_id               = apply_filters_ref_array( 'bp_zoom_meeting_group_id_before_save', array(
+			$this->group_id,
+			&$this
+		) );
+		$this->title                  = apply_filters_ref_array( 'bp_zoom_meeting_title_before_save', array(
+			$this->title,
+			&$this
+		) );
+		$this->user_id                = apply_filters_ref_array( 'bp_zoom_meeting_user_id_before_save', array(
+			$this->user_id,
+			&$this
+		) );
+		$this->start_date             = apply_filters_ref_array( 'bp_zoom_meeting_start_date_before_save', array(
+			$this->start_date,
+			&$this
+		) );
+		$this->timezone               = apply_filters_ref_array( 'bp_zoom_meeting_timezone_before_save', array(
+			$this->timezone,
+			&$this
+		) );
+		$this->password               = apply_filters_ref_array( 'bp_zoom_meeting_password_before_save', array(
+			$this->password,
+			&$this
+		) );
+		$this->duration               = apply_filters_ref_array( 'bp_zoom_meeting_duration_before_save', array(
+			$this->duration,
+			&$this
+		) );
+		$this->join_before_host       = apply_filters_ref_array( 'bp_zoom_meeting_join_before_host_before_save', array(
+			$this->join_before_host,
+			&$this
+		) );
+		$this->host_video             = apply_filters_ref_array( 'bp_zoom_meeting_host_video_before_save', array(
+			$this->host_video,
+			&$this
+		) );
+		$this->participants_video     = apply_filters_ref_array( 'bp_zoom_meeting_participants_video_before_save', array(
+			$this->participants_video,
+			&$this
+		) );
+		$this->mute_participants      = apply_filters_ref_array( 'bp_zoom_meeting_mute_participants_before_save', array(
+			$this->mute_participants,
+			&$this
+		) );
+		$this->meeting_authentication = apply_filters_ref_array( 'bp_zoom_meeting_meeting_authentication_before_save', array(
+			$this->meeting_authentication,
+			&$this
+		) );
+		$this->enforce_login          = apply_filters_ref_array( 'bp_zoom_meeting_enforce_login_before_save', array(
+			$this->enforce_login,
+			&$this
+		) );
+		$this->waiting_room           = apply_filters_ref_array( 'bp_zoom_meeting_waiting_room_before_save', array(
+			$this->waiting_room,
+			&$this
+		) );
+		$this->auto_recording         = apply_filters_ref_array( 'bp_zoom_meeting_auto_recording_before_save', array(
+			$this->auto_recording,
+			&$this
+		) );
+		$this->alternative_host_ids   = apply_filters_ref_array( 'bp_zoom_meeting_alternative_host_ids_before_save', array(
+			$this->alternative_host_ids,
+			&$this
+		) );
+		$this->zoom_details           = apply_filters_ref_array( 'bp_zoom_meeting_zoom_details_before_save', array(
+			$this->zoom_details,
+			&$this
+		) );
+		$this->zoom_start_url         = apply_filters_ref_array( 'bp_zoom_meeting_zoom_start_url_before_save', array(
+			$this->zoom_start_url,
+			&$this
+		) );
+		$this->zoom_join_url          = apply_filters_ref_array( 'bp_zoom_meeting_zoom_join_url_before_save', array(
+			$this->zoom_join_url,
+			&$this
+		) );
+		$this->zoom_meeting_id        = apply_filters_ref_array( 'bp_zoom_meeting_zoom_meeting_id_before_save', array(
+			$this->zoom_meeting_id,
+			&$this
+		) );
 
 		/**
 		 * Fires before the current meeting item gets saved.
@@ -280,11 +383,11 @@ class BP_Zoom_Meeting {
 			return $this->errors;
 		}
 
-		if ( empty( $this->group_id ) ) {
+		if ( empty( $this->user_id ) ) {
 			if ( 'bool' === $this->error_type ) {
 				return false;
 			} else {
-				$this->errors->add( 'bp_zoom_meeting_missing_group_id' );
+				$this->errors->add( 'bp_zoom_meeting_missing_user_id' );
 
 				return $this->errors;
 			}
@@ -292,9 +395,9 @@ class BP_Zoom_Meeting {
 
 		// If we have an existing ID, update the meeting item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_zoom_meetings SET group_id = %d, title = %s, user_id = %s, start_date = %s, timezone = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, auto_recording = %s, alternative_host_ids = %s, zoom_details = %s, zoom_start_url = %s, zoom_join_url = %s, zoom_meeting_id = %d WHERE id = %d", $this->title, $this->user_id, $this->start_date, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_zoom_meetings SET group_id = %d, title = %s, user_id = %s, start_date = %s, meeting_authentication = %d, password = %s, timezone = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, waiting_room = %d, enforce_login = %d, auto_recording = %s, alternative_host_ids = %s, zoom_details = %s, zoom_start_url = %s, zoom_join_url = %s, zoom_meeting_id = %d WHERE id = %d", $this->title, $this->user_id, $this->start_date, $this->timezone, $this->meeting_authentication, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->enforce_login, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->table_prefix}bp_zoom_meetings ( group_id, title, user_id, start_date, timezone, duration, join_before_host, host_video, participants_video, mute_participants, auto_recording, alternative_host_ids, zoom_details, zoom_start_url, zoom_join_url, zoom_meeting_id ) VALUES ( %d, %s, %s, %s, %s, %d, %d, %d, %d, %d, %s, %s, %s, %s, %s, %s )", $this->group_id, $this->title, $this->user_id, $this->start_date, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->table_prefix}bp_zoom_meetings ( group_id, title, user_id, start_date, meeting_authentication, password, timezone, duration, join_before_host, host_video, participants_video, mute_participants, waiting_room, enforce_login, auto_recording, alternative_host_ids, zoom_details, zoom_start_url, zoom_join_url, zoom_meeting_id ) VALUES ( %d, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s, %s, %s )", $this->group_id, $this->title, $this->user_id, $this->start_date, $this->timezone, $this->meeting_authentication, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->enforce_login, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -597,13 +700,16 @@ class BP_Zoom_Meeting {
 			// Integer casting.
 			$meeting = wp_cache_get( $media_id, 'bp_meeting' );
 			if ( ! empty( $meeting ) ) {
-				$meeting->id                 = (int) $meeting->id;
-				$meeting->group_id           = (int) $meeting->group_id;
-				$meeting->duration           = (int) $meeting->duration;
-				$meeting->join_before_host   = (bool) $meeting->join_before_host;
-				$meeting->host_video         = (bool) $meeting->host_video;
-				$meeting->participants_video = (bool) $meeting->participants_video;
-				$meeting->mute_participants  = (bool) $meeting->mute_participants;
+				$meeting->id                     = (int) $meeting->id;
+				$meeting->group_id               = (int) $meeting->group_id;
+				$meeting->duration               = (int) $meeting->duration;
+				$meeting->join_before_host       = (bool) $meeting->join_before_host;
+				$meeting->host_video             = (bool) $meeting->host_video;
+				$meeting->participants_video     = (bool) $meeting->participants_video;
+				$meeting->mute_participants      = (bool) $meeting->mute_participants;
+				$meeting->meeting_authentication = (bool) $meeting->meeting_authentication;
+				$meeting->enforce_login          = (bool) $meeting->enforce_login;
+				$meeting->waiting_room           = (bool) $meeting->waiting_room;
 			}
 
 			$meetings[] = $meeting;

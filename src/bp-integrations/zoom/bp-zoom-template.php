@@ -518,6 +518,103 @@ function bp_get_zoom_meeting_timezone() {
 }
 
 /**
+ * Return the meeting authentication.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
+ *
+ * @return int The meeting authentication.
+ */
+function bp_get_zoom_meeting_authentication() {
+	global $zoom_meeting_template;
+
+	/**
+	 * Filters the meeting authentication being displayed.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param int $id The meeting authentication.
+	 */
+	return apply_filters( 'bp_get_zoom_meeting_authentication', $zoom_meeting_template->meeting->meeting_authentication );
+}
+
+/**
+ * Output the meeting password.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_meeting_password() {
+	echo bp_get_zoom_meeting_password();
+}
+
+/**
+ * Return the meeting password.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
+ *
+ * @return int The meeting password.
+ */
+function bp_get_zoom_meeting_password() {
+	global $zoom_meeting_template;
+
+	/**
+	 * Filters the meeting password being displayed.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param int $id The meeting password.
+	 */
+	return apply_filters( 'bp_get_zoom_meeting_password', $zoom_meeting_template->meeting->password );
+}
+
+/**
+ * Return the meeting password.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
+ *
+ * @return int The meeting password.
+ */
+function bp_get_zoom_meeting_enforce_login() {
+	global $zoom_meeting_template;
+
+	/**
+	 * Filters the meeting password being displayed.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param int $id The meeting password.
+	 */
+	return apply_filters( 'bp_get_zoom_meeting_enforce_login', $zoom_meeting_template->meeting->enforce_login );
+}
+
+/**
+ * Return the meeting password.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
+ *
+ * @return int The meeting password.
+ */
+function bp_get_zoom_meeting_waiting_room() {
+	global $zoom_meeting_template;
+
+	/**
+	 * Filters the meeting password being displayed.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param int $id The meeting password.
+	 */
+	return apply_filters( 'bp_get_zoom_meeting_waiting_room', $zoom_meeting_template->meeting->waiting_room );
+}
+
+/**
  * Output the meeting duration.
  *
  * @since BuddyBoss 1.2.10

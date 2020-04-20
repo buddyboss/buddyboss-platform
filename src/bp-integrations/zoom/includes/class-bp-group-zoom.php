@@ -283,13 +283,13 @@ if ( bp_is_active( 'groups' ) ) {
 			$timezone               = ! empty( $_POST['bp-zoom-meeting-timezone'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-timezone' ) ) : '';
 			$duration               = ! empty( $_POST['bp-zoom-meeting-duration'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-duration' ) ) : '';
 			$password               = ! empty( $_POST['bp-zoom-meeting-password'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-password' ) ) : '';
-			$enforce_login          = ! empty( $_POST['bp-zoom-meeting-registration'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-registration' ) : false;
+			$meeting_authentication = ! empty( $_POST['bp-zoom-meeting-registration'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-registration' ) : false;
 			$join_before_host       = ! empty( $_POST['bp-zoom-meeting-join-before-host'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-join-before-host' ) : false;
 			$host_video             = ! empty( $_POST['bp-zoom-meeting-host-video'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-host-video' ) : false;
 			$participants_video     = ! empty( $_POST['bp-zoom-meeting-participants-video'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-participants-video' ) : false;
 			$mute_participants      = ! empty( $_POST['bp-zoom-meeting-mute-participants'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-mute-participants' ) : false;
 			$waiting_room           = ! empty( $_POST['bp-zoom-meeting-waiting-room'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-waiting-room' ) : false;
-			$meeting_authentication = ! empty( $_POST['bp-zoom-meeting-authentication'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-authentication' ) : false;
+			$enforce_login          = ! empty( $_POST['bp-zoom-meeting-authentication'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-authentication' ) : false;
 			$auto_recording         = ! empty( $_POST['bp-zoom-meeting-recording'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-recording' ) ) : 'none';
 			$alternative_host_ids   = ! empty( $_POST['bp-zoom-meeting-alt-host-ids'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-alt-host-ids' ) ) : '';
 			$meeting_topic          = ! empty( $_POST['bp-zoom-meeting-title'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-title' ) ) : '';

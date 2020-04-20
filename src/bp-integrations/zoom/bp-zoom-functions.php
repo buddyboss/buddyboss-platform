@@ -172,47 +172,55 @@ function bp_zoom_meeting_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'                   => false,                   // Pass an existing media ID to update an existing entry.
-			'group_id'             => false,   // Blog ID
-			'user_id'              => '',   // user_id of the uploader.
-			'title'                => 'hello',                      // title of meeting being added.
-			'start_date'           => bp_core_current_time(),
-			'timezone'             => '',
-			'duration'             => false,
-			'join_before_host'     => false,
-			'host_video'           => false,
-			'participants_video'   => false,
-			'mute_participants'    => false,
-			'auto_recording'       => 'none',
-			'alternative_host_ids' => '',
-			'zoom_details'         => '',
-			'zoom_start_url'       => '',
-			'zoom_join_url'         => '',
-			'zoom_meeting_id'      => '',
-			'error_type'           => 'bool',
+			'id'                     => false,
+			'group_id'               => false,
+			'user_id'                => '',
+			'title'                  => '',
+			'start_date'             => bp_core_current_time(),
+			'timezone'               => '',
+			'duration'               => false,
+			'meeting_authentication' => false,
+			'enforce_login'          => false,
+			'password'               => false,
+			'join_before_host'       => false,
+			'waiting_room'           => false,
+			'host_video'             => false,
+			'participants_video'     => false,
+			'mute_participants'      => false,
+			'auto_recording'         => 'none',
+			'alternative_host_ids'   => '',
+			'zoom_details'           => '',
+			'zoom_start_url'         => '',
+			'zoom_join_url'          => '',
+			'zoom_meeting_id'        => '',
+			'error_type'             => 'bool',
 		),
 		'meeting_add'
 	);
 
 	// Setup meeting to be added.
-	$meeting                       = new BP_Zoom_Meeting( $r['id'] );
-	$meeting->user_id              = $r['user_id'];
-	$meeting->group_id             = (int) $r['group_id'];
-	$meeting->title                = $r['title'];
-	$meeting->start_date           = $r['start_date'];
-	$meeting->timezone             = $r['timezone'];
-	$meeting->duration             = (int) $r['duration'];
-	$meeting->join_before_host     = (bool) $r['join_before_host'];
-	$meeting->host_video           = (bool) $r['host_video'];
-	$meeting->participants_video   = (bool) $r['participants_video'];
-	$meeting->mute_participants    = (bool) $r['mute_participants'];
-	$meeting->auto_recording       = $r['auto_recording'];
-	$meeting->alternative_host_ids = $r['alternative_host_ids'];
-	$meeting->zoom_details         = $r['zoom_details'];
-	$meeting->zoom_start_url       = $r['zoom_start_url'];
-	$meeting->zoom_join_url        = $r['zoom_join_url'];
-	$meeting->zoom_meeting_id      = $r['zoom_meeting_id'];
-	$meeting->error_type           = $r['error_type'];
+	$meeting                         = new BP_Zoom_Meeting( $r['id'] );
+	$meeting->user_id                = $r['user_id'];
+	$meeting->group_id               = (int) $r['group_id'];
+	$meeting->title                  = $r['title'];
+	$meeting->start_date             = $r['start_date'];
+	$meeting->timezone               = $r['timezone'];
+	$meeting->duration               = (int) $r['duration'];
+	$meeting->meeting_authentication = (bool) $r['meeting_authentication'];
+	$meeting->enforce_login          = (bool) $r['enforce_login'];
+	$meeting->waiting_room           = (bool) $r['waiting_room'];
+	$meeting->join_before_host       = (bool) $r['join_before_host'];
+	$meeting->host_video             = (bool) $r['host_video'];
+	$meeting->participants_video     = (bool) $r['participants_video'];
+	$meeting->mute_participants      = (bool) $r['mute_participants'];
+	$meeting->auto_recording         = $r['auto_recording'];
+	$meeting->password               = $r['password'];
+	$meeting->alternative_host_ids   = $r['alternative_host_ids'];
+	$meeting->zoom_details           = $r['zoom_details'];
+	$meeting->zoom_start_url         = $r['zoom_start_url'];
+	$meeting->zoom_join_url          = $r['zoom_join_url'];
+	$meeting->zoom_meeting_id        = $r['zoom_meeting_id'];
+	$meeting->error_type             = $r['error_type'];
 
 
 	// save media
