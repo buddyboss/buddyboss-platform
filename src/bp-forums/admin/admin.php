@@ -588,6 +588,325 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			global $wp_styles;
 			$wp_styles->registered['colors']->deps[] = 'colors-fresh';
 		}
+
+		/**
+		 * Hide theme compat package selection if only 1 package is registered
+		 *
+		 * @since bbPress (r4315)
+		 *
+		 * @param array $sections Forums settings sections
+		 * @return array
+		 */
+		public function hide_theme_compat_packages( $sections = array() ) {
+			if ( count( bbpress()->theme_compat->packages ) <= 1 ) {
+				unset( $sections['bbp_settings_theme_compat'] );
+			}
+
+			return $sections;
+		}
+
+		/**
+		 * Allow keymaster role to save Forums settings
+		 *
+		 * @since bbPress (r4678)
+		 *
+		 * @param string $capability
+		 * @return string Return 'keep_gate' capability
+		 */
+		public function option_page_capability_bbpress( $capability = 'manage_options' ) {
+			$capability = 'keep_gate';
+			return $capability;
+		}
+
+		/** Ajax ******************************************************************/
+
+		/**
+		 * Ajax action for facilitating the discussion auto-suggest
+		 *
+		 * @since bbPress (r4261)
+		 *
+		 * @uses get_posts()
+		 * @uses bbp_get_topic_post_type()
+		 * @uses bbp_get_topic_id()
+		 * @uses bbp_get_topic_title()
+		 */
+		public function suggest_topic() {
+
+			$html = '<option value="0">' . esc_html__( '-- Select Discussion --', 'buddyboss' ) . '</option>';
+
+			$posts = get_posts(
+				array(
+					'post_type'   => bbp_get_topic_post_type(),
+					'post_status' => 'publish',
+					'post_parent' => $_POST['post_parent'],
+					'numberposts' => -1,
+					'orderby'     => 'title',
+					'order'       => 'ASC',
+					'walker'      => '',
+				)
+			);
+
+			add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
+			$html .= walk_page_dropdown_tree( $posts, 0 );
+			remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
+
+			echo $html;
+			wp_die();
+		}
+
+		/**
+		 * Ajax action for facilitating the reply auto-suggest
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @uses get_posts()
+		 * @uses bbp_get_topic_post_type()
+		 * @uses bbp_get_topic_id()
+		 * @uses bbp_get_topic_title()
+		 */
+		public function suggest_reply() {
+
+			$html = '<option value="0">' . esc_html__( '-- Select Reply --', 'buddyboss' ) . '</option>';
+
+			$posts = get_posts(
+				array(
+					'post_type'   => bbp_get_reply_post_type(),
+					'post_status' => 'publish',
+					'post_parent' => $_POST['post_parent'],
+					'numberposts' => -1,
+					'orderby'     => 'title',
+					'order'       => 'ASC',
+					'walker'      => '',
+				)
+			);
+
+			add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
+			$html .= walk_page_dropdown_tree( $posts, 0 );
+			remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
+
+			echo $html;
+			wp_die();
+		}
+
+		/**
+		 * Ajax action for facilitating the topic and reply author auto-suggest
+		 *
+		 * @since bbPress (r5014)
+		 */
+		public function suggest_user() {
+			global $wpdb;
+
+			// Bail early if no request
+			if ( empty( $_REQUEST['q'] ) ) {
+				wp_die( '0' );
+			}
+
+			// Bail if user cannot moderate - only moderators can change authorship
+			if ( ! current_user_can( 'moderate' ) ) {
+				wp_die( '0' );
+			}
+
+			// Check the ajax nonce
+			check_ajax_referer( 'bbp_suggest_user_nonce' );
+
+			// Try to get some users
+			$users_query = new WP_User_Query(
+				array(
+					'search'         => '*' . $wpdb->esc_like( $_REQUEST['q'] ) . '*',
+					'fields'         => array( 'ID', 'user_nicename' ),
+					'search_columns' => array( 'ID', 'user_nicename', 'user_email' ),
+					'orderby'        => 'ID',
+				)
+			);
+
+			// If we found some users, loop through and display them
+			if ( ! empty( $users_query->results ) ) {
+				foreach ( (array) $users_query->results as $user ) {
+					printf( esc_html__( '%1$s - %2$s', 'buddyboss' ), bbp_get_user_id( $user->ID ), bbp_get_user_nicename( $user->ID, array( 'force' => $user->user_nicename ) ) . "\n" );
+				}
+			}
+			die();
+		}
+
+		/** Updaters **************************************************************/
+
+		/**
+		 * Update all forums across all sites
+		 *
+		 * @since bbPress (r3689)
+		 *
+		 * @global wpdb $wpdb WordPress database abstraction object.
+		 * @uses get_blog_option()
+		 * @uses wp_remote_get()
+		 */
+		public static function update_screen() {
+
+			// Get action
+			$action = isset( $_GET['action'] ) ? $_GET['action'] : ''; ?>
+
+			<div class="wrap">
+				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
+				<h2><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></h2>
+
+				<?php
+
+				// Taking action
+				switch ( $action ) {
+					case 'bbp-update':
+						// Run the full updater
+						bbp_version_updater();
+						?>
+
+						<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
+						<a class="button" href="index.php?page=bbp-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
+
+						<?php
+
+						break;
+
+					case 'show':
+					default:
+						?>
+
+						<p><?php esc_html_e( 'You can update your forum through this page. Hit the link below to update.', 'buddyboss' ); ?></p>
+						<p><a class="button" href="index.php?page=bbp-update&amp;action=bbp-update"><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></a></p>
+
+						<?php
+						break;
+
+				}
+				?>
+
+			</div>
+			<?php
+		}
+
+		/**
+		 * Update all forums across all sites
+		 *
+		 * @since bbPress (r3689)
+		 *
+		 * @global wpdb $wpdb WordPress database abstraction object.
+		 * @uses get_blog_option()
+		 * @uses wp_remote_get()
+		 */
+		public static function network_update_screen() {
+			global $wpdb;
+
+			// Get action
+			$action = isset( $_GET['action'] ) ? $_GET['action'] : '';
+			?>
+
+			<div class="wrap">
+				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
+				<h2><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></h2>
+
+				<?php
+
+				// Taking action
+				switch ( $action ) {
+				case 'bbpress-update':
+					// Site counter
+					$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
+
+					// Get blogs 5 at a time
+					$blogs = $wpdb->get_results( "SELECT * FROM {$wpdb->blogs} WHERE site_id = '{$wpdb->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
+
+					// No blogs so all done!
+				if ( empty( $blogs ) ) :
+					?>
+
+					<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
+					<a class="button" href="update-core.php?page=bbpress-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
+
+				<?php
+
+				// Still have sites to loop through
+				else :
+				?>
+
+					<ul>
+
+						<?php
+						foreach ( (array) $blogs as $details ) :
+
+							$siteurl = get_blog_option( $details['blog_id'], 'siteurl' );
+							?>
+
+							<li><?php echo $siteurl; ?></li>
+
+							<?php
+
+							// Get the response of the Forums update on this site
+							$response = wp_remote_get(
+								trailingslashit( $siteurl ) . 'wp-admin/index.php?page=bbp-update&action=bbp-update',
+								array(
+									'timeout'     => 30,
+									'httpversion' => '1.1',
+								)
+							);
+
+							// Site errored out, no response?
+							if ( is_wp_error( $response ) ) {
+								wp_die( sprintf( __( 'Warning! Problem updating %1$s. Your server may not be able to connect to sites running on it. Error message: <em>%2$s</em>', 'buddyboss' ), $siteurl, $response->get_error_message() ) );
+							}
+
+							// Switch to the new blog
+							switch_to_blog( $details['blog_id'] );
+
+							$basename = bbpress()->basename;
+
+							// Run the updater on this site
+							if ( is_plugin_active_for_network( $basename ) || is_plugin_active( $basename ) ) {
+								bbp_version_updater();
+							}
+
+							// restore original blog
+							restore_current_blog();
+
+							// Do some actions to allow plugins to do things too
+							do_action( 'after_bbpress_upgrade', $response );
+							do_action( 'bbp_upgrade_site', $details['blog_id'] );
+
+						endforeach;
+						?>
+
+					</ul>
+
+					<p>
+						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
+						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
+					</p>
+					<script type='text/javascript'>
+                        <!--
+                        function nextpage() {
+                            location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo ( $n + 5 ); ?>';
+                        }
+                        setTimeout( 'nextpage()', 250 );
+                        //-->
+					</script>
+				<?php
+
+				endif;
+
+				break;
+
+				case 'show':
+				default:
+				?>
+
+					<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss' ); ?></p>
+					<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></a></p>
+
+					<?php
+					break;
+
+				}
+				?>
+
+			</div>
+			<?php
+		}
 	}
 endif; // class_exists check
 
