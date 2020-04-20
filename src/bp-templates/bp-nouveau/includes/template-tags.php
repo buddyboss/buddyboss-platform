@@ -512,61 +512,59 @@ function bp_nouveau_loop_classes() {
 	echo esc_attr( bp_nouveau_get_loop_classes() );
 }
 
-	/**
-	 * Get the component's loop classes
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @return string space separated value of classes.
-	 */
-	function bp_nouveau_get_loop_classes() {
-		$bp_nouveau = bp_nouveau();
+/**
+ * Get the component's loop classes
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string space separated value of classes.
+ */
+function bp_nouveau_get_loop_classes() {
+	// @todo: this function could do with passing args so we can pass simple strings in or array of strings
 
-		// @todo: this function could do with passing args so we can pass simple strings in or array of strings
+	// The $component is faked if it's the single group member loop
+	if ( ! bp_is_directory() && ( bp_is_group() && 'members' === bp_current_action() ) ) {
+		$component = 'members_group';
+	} elseif ( ! bp_is_directory() && ( bp_is_user() && ( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() ) ) ) {
+		$component = 'members_friends';
+	} else {
+		$component = sanitize_key( bp_current_component() );
+	}
 
-		// The $component is faked if it's the single group member loop
-		if ( ! bp_is_directory() && ( bp_is_group() && 'members' === bp_current_action() ) ) {
-			$component = 'members_group';
-		} elseif ( ! bp_is_directory() && ( bp_is_user() && ( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() ) ) ) {
-			$component = 'members_friends';
-		} else {
-			$component = sanitize_key( bp_current_component() );
-		}
+	$classes = array(
+		'item-list',
+		sprintf( '%s-list', str_replace( '_', '-', $component ) ),
+		'bp-list',
+	);
 
-		$classes = array(
-			'item-list',
-			sprintf( '%s-list', str_replace( '_', '-', $component ) ),
-			'bp-list',
-		);
+	if ( bp_is_user() && 'my-friends' === bp_current_action() ) {
+		$classes[] = 'members-list';
+	}
 
-		if ( bp_is_user() && 'my-friends' === bp_current_action() ) {
-			$classes[] = 'members-list';
-		}
+	if ( bp_is_user() && 'requests' === bp_current_action() ) {
+		$classes[] = 'friends-request-list';
+	}
 
-		if ( bp_is_user() && 'requests' === bp_current_action() ) {
-			$classes[] = 'friends-request-list';
-		}
+	if ( bp_is_user() && 'mutual' === bp_current_action() ) {
+		$classes[] = 'friends-mutual-list';
+	}
 
-		if ( bp_is_user() && 'mutual' === bp_current_action() ) {
-			$classes[] = 'friends-mutual-list';
-		}
+	$available_components = array(
+		'members'         => true,
+		'groups'          => true,
+		'blogs'           => true,
 
-		$available_components = array(
-			'members' => true,
-			'groups'  => true,
-			'blogs'   => true,
+		/*
+		 * Technically not a component but allows us to check the single group members loop as a seperate loop.
+		 */
+		'members_group'   => true,
+		'members_friends' => true,
+	);
 
-			/*
-			 * Technically not a component but allows us to check the single group members loop as a seperate loop.
-			 */
-			'members_group'   => true,
-			'members_friends' => true,
-		);
+	// Only the available components supports custom layouts.
+	if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
 
-		// Only the available components supports custom layouts.
-		if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
-
-			// check for layout options in browsers storage
+		// check for layout options in browsers storage
 		if ( bp_is_members_directory() || bp_is_user() ) {
 			if ( ! bp_is_user_groups() ) {
 				$current_value = bp_get_option( 'bp-profile-layout-format' );
@@ -627,13 +625,6 @@ function bp_nouveau_loop_classes() {
 					'list',
 				)
 			);
-		} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
-			$classes = array_merge(
-				$classes,
-				array(
-					$_POST['extras']['layout'],
-				)
-			);
 		} else {
 			$classes = array_merge(
 				$classes,
@@ -644,20 +635,21 @@ function bp_nouveau_loop_classes() {
 		}
 	}
 
-		/**
-		 * Filter to edit/add classes.
-		 *
-		 * NB: you can also directly add classes into the template parts.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $classes   The list of classes.
-		 * @param string $component The current component's loop.
-		 */
-		$class_list = (array) apply_filters( 'bp_nouveau_get_loop_classes', $classes, $component );
+	/**
+	 * Filter to edit/add classes.
+	 *
+	 * NB: you can also directly add classes into the template parts.
+	 *
+	 * @param array $classes The list of classes.
+	 * @param string $component The current component's loop.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 */
+	$class_list = (array) apply_filters( 'bp_nouveau_get_loop_classes', $classes, $component );
 
-		return join( ' ', array_map( 'sanitize_html_class', $class_list ) );
-	}
+	return join( ' ', array_map( 'sanitize_html_class', $class_list ) );
+}
 
 
 /**
@@ -1682,6 +1674,10 @@ function bp_nouveau_single_item_subnav_classes() {
 			$classes[] = 'bp-invites-nav';
 		}
 
+		if ( ( bp_is_group() && 'messages' === bp_current_action() ) ) {
+			$classes[] = 'bp-messages-nav';
+		}
+
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
@@ -2554,7 +2550,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
+			echo apply_filters( 'the_content',  $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
@@ -2570,7 +2566,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
+			echo apply_filters( 'the_content',  $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
@@ -2586,7 +2582,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
+			echo apply_filters( 'the_content',  $get_terms->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
@@ -2594,7 +2590,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
+			echo apply_filters( 'the_content',  $get_privacy->post_content );
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>

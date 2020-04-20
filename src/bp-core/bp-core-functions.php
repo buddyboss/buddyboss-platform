@@ -3316,75 +3316,114 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param bool $use_wp_mail Whether to fallback to the regular wp_mail() function or not.
+	 * @param bool $wp_html_emails || ! $is_default_wpmail $is_default_wpmail Whether to fallback to the regular wp_mail() function or not.
 	 */
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
+	/**
+	 * Filter to forcefully use template
+	 *
+	 * This is done if wp_mail_content_type() has been configured for HTML,
+	 * or if wp_mail() has been redeclared (it's a pluggable function).
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param bool true default fallback will be always true.
+	 */
+	$force_use_template = apply_filters( 'bp_email_force_use_templates', true );
+
+	if ( $force_use_template ) {
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+	}
+
 	if ( $must_use_wpmail ) {
+
 		$to = $email->get( 'to' );
 
 		return wp_mail(
 			array_shift( $to )->get_address(),
 			$email->get( 'subject', 'replace-tokens' ),
-			$email->get( 'content_plaintext', 'replace-tokens' )
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
 		);
 	}
 
-	/*
-	 * Send the email.
-	 */
+	$must_use_bp_mail = apply_filters( 'bp_email_use_bp_mail', false );
 
-	/**
-	 * Filter the email delivery class.
-	 *
-	 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
-	 *
-	 * @since BuddyPress 2.5.0
-	 *
-	 * @param string       $deliver_class The email delivery class name.
-	 * @param string       $email_type    Type of email being sent.
-	 * @param array|string $to            Array or comma-separated list of email addresses to the email to.
-	 * @param array        $args {
-	 *     Optional. Array of extra parameters.
-	 *
-	 *     @type array $tokens Optional. Assocative arrays of string replacements for the email.
-	 * }
-	 */
-	$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
-	if ( ! class_exists( $delivery_class ) ) {
-		return new WP_Error( 'missing_class', __CLASS__, $this );
-	}
+	if ( $must_use_bp_mail ) {
 
-	$delivery = new $delivery_class();
-	$status   = $delivery->bp_email( $email );
-
-	if ( is_wp_error( $status ) ) {
+		/*
+		 * Send the email.
+		 */
 
 		/**
-		 * Fires after BuddyPress has tried - and failed - to send an email.
+		 * Filter the email delivery class.
 		 *
+		 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
+		 *
+		 * @param string $deliver_class The email delivery class name.
+		 * @param string $email_type Type of email being sent.
+		 * @param array|string $to Array or comma-separated list of email addresses to the email to.
+		 * @param array $args {
+		 *     Optional. Array of extra parameters.
+		 *
+		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
+		 * }
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
-		 *                         will vary based on the email delivery class you are using.
-		 * @param BP_Email $email  The email we tried to send.
 		 */
-		do_action( 'bp_send_email_failure', $status, $email );
+		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
+		if ( ! class_exists( $delivery_class ) ) {
+			return new WP_Error( 'missing_class', 'No class found by that name', $delivery_class );
+		}
+
+		$delivery = new $delivery_class();
+		$status   = $delivery->bp_email( $email );
+
+		if ( is_wp_error( $status ) ) {
+
+			/**
+			 * Fires after BuddyPress has tried - and failed - to send an email.
+			 *
+			 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
+			 *                         will vary based on the email delivery class you are using.
+			 * @param BP_Email $email The email we tried to send.
+			 *
+			 * @since BuddyPress 2.5.0
+			 *
+			 */
+			do_action( 'bp_send_email_failure', $status, $email );
+
+		} else {
+
+			/**
+			 * Fires after BuddyPress has succesfully sent an email.
+			 *
+			 * @param bool $status True if the email was sent successfully.
+			 * @param BP_Email $email The email sent.
+			 *
+			 * @since BuddyPress 2.5.0
+			 *
+			 */
+			do_action( 'bp_send_email_success', $status, $email );
+		}
+
+		return $status;
 
 	} else {
 
-		/**
-		 * Fires after BuddyPress has succesfully sent an email.
-		 *
-		 * @since BuddyPress 2.5.0
-		 *
-		 * @param bool     $status True if the email was sent successfully.
-		 * @param BP_Email $email  The email sent.
-		 */
-		do_action( 'bp_send_email_success', $status, $email );
-	}
+		$to = $email->get( 'to' );
 
-	return $status;
+		return wp_mail(
+			array_shift( $to )->get_address(),
+			$email->get( 'subject', 'replace-tokens' ),
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
+		);
+
+	}
 }
 
 /**
@@ -3675,6 +3714,14 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
+		'group-message-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+		),
 	);
 }
 
@@ -3838,6 +3885,14 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
+	$group_message_email = array(
+		'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
+		'unsubscribe' => array(
+		'meta_key' => 'notification_group_messages_new_message',
+		'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+	),
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -3858,6 +3913,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
+		'group-message-email'                => $group_message_email,
 	);
 
 	if ( $field !== 'all' ) {
@@ -4329,6 +4385,8 @@ function bp_ajax_get_suggestions() {
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
+	} else if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+		$args['only_friends'] = true;
 	}
 
 	// Support per-Group suggestions.
@@ -4426,4 +4484,94 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 	}
 
 	return $user_id;
+}
+
+/**
+ * Get unique ID.
+ *
+ * This is a PHP implementation of Underscore's uniqueId method. A static variable
+ * contains an integer that is incremented with each call. This number is returned
+ * with the optional prefix. As such the returned value is not universally unique,
+ * but it is unique across the life of the PHP process.
+ *
+ * @since 1.2.10
+ *
+ * @staticvar int $id_counter
+ *
+ * @param string $prefix Prefix for the returned ID.
+ * @return string Unique ID.
+ */
+function bp_unique_id( $prefix = '' ) {
+	static $id_counter = 0;
+	return $prefix . (string) ++$id_counter;
+}
+
+/**
+ * Get Group avatar.
+ *
+ * This function will give you the group avatar if previously group is created and
+ * group is not deleted but if admin disabled group component then in Messages
+ * section if previously group thread created then will show the actual group avatar
+ * in messages view.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $avatar_size
+ * @param $avatar_folder_dir
+ * @param $avatar_folder_url
+ *
+ * @return mixed
+ */
+function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url ) {
+
+	$group_avatar = '';
+
+	if ( file_exists( $avatar_folder_dir ) ) {
+
+		// Open directory.
+		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+			// Stash files in an array once to check for one that matches.
+			$avatar_files = array();
+			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+				// Only add files to the array (skip directories).
+				if ( 2 < strlen( $avatar_file ) ) {
+					$avatar_files[] = $avatar_file;
+				}
+			}
+
+			// Check for array.
+			if ( 0 < count( $avatar_files ) ) {
+
+				// Check for current avatar.
+				foreach ( $avatar_files as $key => $value ) {
+					if ( strpos( $value, $avatar_size ) !== false ) {
+						$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+					}
+				}
+
+				// Legacy avatar check.
+				if ( ! isset( $group_avatar ) ) {
+					foreach ( $avatar_files as $key => $value ) {
+						if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+							$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+						}
+					}
+
+					// Legacy group avatar check.
+					if ( ! isset( $group_avatar ) ) {
+						foreach ( $avatar_files as $key => $value ) {
+							if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+								$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+							}
+						}
+					}
+				}
+			}
+		}
+		// Close the avatar directory.
+		closedir( $av_dir );
+	}
+
+	return $group_avatar;
 }

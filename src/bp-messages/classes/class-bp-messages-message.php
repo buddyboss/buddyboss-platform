@@ -58,6 +58,20 @@ class BP_Messages_Message {
 	public $date_sent;
 
 	/**
+	 * Thread is hidden.
+	 *
+	 * @var bool
+	 */
+	public $is_hidden;
+
+	/**
+	 * Mark thread to visible for other participants.
+	 *
+	 * @var bool
+	 */
+	public $mark_visible;
+
+	/**
 	 * Message recipients.
 	 *
 	 * @var bool|array
@@ -108,11 +122,13 @@ class BP_Messages_Message {
 
 		$bp = buddypress();
 
-		$this->sender_id = apply_filters( 'messages_message_sender_id_before_save', $this->sender_id, $this->id );
-		$this->thread_id = apply_filters( 'messages_message_thread_id_before_save', $this->thread_id, $this->id );
-		$this->subject   = apply_filters( 'messages_message_subject_before_save', $this->subject, $this->id );
-		$this->message   = apply_filters( 'messages_message_content_before_save', $this->message, $this->id );
-		$this->date_sent = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
+		$this->sender_id    = apply_filters( 'messages_message_sender_id_before_save', $this->sender_id, $this->id );
+		$this->thread_id    = apply_filters( 'messages_message_thread_id_before_save', $this->thread_id, $this->id );
+		$this->subject      = apply_filters( 'messages_message_subject_before_save', $this->subject, $this->id );
+		$this->message      = apply_filters( 'messages_message_content_before_save', $this->message, $this->id );
+		$this->date_sent    = apply_filters( 'messages_message_date_sent_before_save', $this->date_sent, $this->id );
+		$this->is_hidden    = apply_filters( 'messages_message_is_hidden_before_save', $this->is_hidden, $this->id );
+		$this->mark_visible = apply_filters( 'messages_message_mark_visible_before_save', $this->mark_visible, $this->id );
 
 		/**
 		 * Fires before the current message item gets saved.
@@ -158,9 +174,20 @@ class BP_Messages_Message {
 			if ( ! in_array( $this->sender_id, $recipient_ids ) ) {
 				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id ) VALUES ( %d, %d )", $this->sender_id, $this->thread_id ) );
 			}
+
+			// Mark Hidden thread for sender if `is_hidden` passed.
+			if ( true === $this->is_hidden ) {
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, $this->thread_id, $this->sender_id ) );
+			}
+
 		} else {
 			// Update the unread count for all recipients.
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+
+			if ( true === $this->mark_visible ) {
+				// Mark the thread to visible for all recipients.
+				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id != %d", 0, $this->thread_id, $this->sender_id ) );
+			}
 		}
 
 		messages_remove_callback_values();
@@ -294,15 +321,40 @@ class BP_Messages_Message {
 
 		// Get the message ids in order to delete their metas.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		//Get the all thread ids for unread messages
+		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$message_deleted_text = '<p> </p>';
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
-			bp_messages_delete_meta( $message_id );
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+			// bp_messages_delete_meta( $message_id );
+			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
+			bp_messages_update_meta( $message_id, '_gif_data', '' );
+			bp_messages_update_meta( $message_id, 'bp_media_ids', '' );
+			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+		}
+		// unread theread message.
+		if ( ! empty( $thread_ids ) ) {
+			$thread_ids = implode( ',', $thread_ids );
+
+			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
+		}
+
+		// Delete the thread of user.
+		if ( bp_has_message_threads( array( 'user_id' => $user_id, ) ) ) {
+			while ( bp_message_threads() ) :
+				bp_message_thread();
+				$thread_id = bp_get_message_thread_id();
+				messages_delete_thread( $thread_id, $user_id );
+			endwhile;
 		}
 
 		// delete all the meta recipients from user table.
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
+		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}
 
 	/**
@@ -351,5 +403,46 @@ class BP_Messages_Message {
 		}
 
 		return $thread_id;
+	}
+
+	/**
+	 * Get existsing threads which matches the recipients
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param  array   $recipient_ids
+	 * @param  integer $sender
+	 */
+	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// add the sender into the recipient list and order by id ascending
+		$recipient_ids[] = $sender;
+		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
+		sort( $recipient_ids );
+
+		$results = $wpdb->get_results(
+			$sql = $wpdb->prepare(
+				"SELECT
+				r.thread_id as thread_id,
+				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
+				MAX(m.date_sent) AS date_sent
+			FROM {$bp->messages->table_name_recipients} r
+			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
+			GROUP BY r.thread_id
+			HAVING recipient_list = %s
+			ORDER BY date_sent DESC
+			",
+				implode( ',', $recipient_ids )
+			)
+		);
+
+		if ( ! $results ) {
+			return null;
+		}
+
+		return $results;
 	}
 }

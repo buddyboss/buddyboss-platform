@@ -783,11 +783,14 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
 
-	// Check user has same login or not.
-	$user = get_user_by( 'login', $value );
+	// Register page validation for username.
+	if ( ! is_user_logged_in() ) {
+		// Check user has same login or not.
+		$user = get_user_by( 'login', $value );
 
-	if ( false !== $user ) {
-		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
+		if ( false !== $user ) {
+			return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
+		}
 	}
 
 	$where = array(
