@@ -47,11 +47,46 @@ defined( 'ABSPATH' ) || exit;
 
 		<h2><?php esc_html_e( 'Below are some resources to help you get started:', 'buddyboss' ); ?></h2>
 		<ul class="bp-hello-list">
-			<li><?php _e( '<a href="https://www.buddyboss.com/resources/docs/" target="_blank">Documentation</a>', 'buddyboss' ); ?></li>
-			<li><?php _e( '<a href="https://www.buddyboss.com/roadmap/" target="_blank">Roadmap</a>', 'buddyboss' ); ?></li>
-			<li><?php _e( '<a href="https://www.buddyboss.com/resources/buddyboss-platform-releases/" target="_blank">Release Notes</a>', 'buddyboss' ); ?></li>
-			<li><?php _e( '<a href="https://www.buddyboss.com/resources/reference/" target="_blank">Code Reference</a>', 'buddyboss' ); ?></li>
-			<li><?php _e( '<a href="https://github.com/buddyboss/buddyboss-platform/wiki" target="_blank">Github</a>', 'buddyboss' ); ?></li>
+			<li>
+				<?php
+				printf(
+					__( '<a href="%s" target="_blank">Documentation</a>', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/resources/docs/' )
+				);
+				?>
+			</li>
+			<li>
+				<?php
+				printf(
+					__( '<a href="%s" target="_blank">Roadmap</a>', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/roadmap/' )
+				);
+				?>
+			</li>
+			<li>
+				<?php
+				printf(
+					__( '<a href="%s" target="_blank">Release Notes</a>', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/resources/buddyboss-platform-releases/' )
+				);
+				?>
+			</li>
+			<li>
+				<?php
+				printf(
+					__( '<a href="%s" target="_blank">Code Reference</a>', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/resources/reference/' )
+				);
+				?>
+			</li>
+			<li>
+				<?php
+				printf(
+					__( '<a href="%s" target="_blank">Github</a>', 'buddyboss' ),
+					esc_url( 'https://github.com/buddyboss/buddyboss-platform/wiki' )
+				);
+				?>
+			</li>
 		</ul>
 
 		<br /><br />
