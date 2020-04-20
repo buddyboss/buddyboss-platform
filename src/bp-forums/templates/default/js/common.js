@@ -144,6 +144,7 @@ jQuery( document ).ready(
 				medium_editor.find('ul').prepend('<li class="close-btn"><button class="medium-editor-action medium-editor-action-close"><b></b></button></li>');
 			}
 			medium_editor.toggleClass('active');
+			medium_editor.addClass( 'medium-editor-toolbar-active' );
 		});
 	}
 );

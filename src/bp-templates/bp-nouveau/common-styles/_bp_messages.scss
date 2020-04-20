@@ -483,6 +483,10 @@ input#send-to-input {
 	padding: 1rem 1.5rem;
 }
 
+.medium-editor-action-close b:before {
+	content: "\f153";
+}
+
 .bp-messages-content #bp-message-content {
 	margin-top: $marg-lrg;
 	padding: 20px;
@@ -496,18 +500,33 @@ input#send-to-input {
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 5px;
-		visibility: visible;
 		z-index: 99;
-		background-color: transparent;
-		opacity: 0.3;
-		transition: opacity ease 0.2s;
+		background-color: #fff;
+		visibility: hidden;
+		opacity: 0;
+		transition: all ease 0.3s;
+		height: 0;
+		right: 0;
+		overflow: hidden;
 
 		&.medium-editor-toolbar-active {
 			opacity: 1;
 		}
 
+		&.active {
+			display: block;
+			border-radius: 0;
+			z-index: 112;
+			opacity: 1;
+			visibility: visible;
+			bottom: 0;
+			height: 40px;
+		}
+
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
+			height: auto;
+			padding: 0 10px 10px;
 
 			button {
 				box-shadow: none;
@@ -553,14 +572,8 @@ input#send-to-input {
 	}
 
 	#whats-new-messages-toolbar {
-		padding: 0 15px 15px;
-		justify-content: flex-end;
+		padding: 0 15px 10px;
 		width: 100%;
-
-		.medium-editor-action-close,
-		.show-toolbar {
-			display: none;
-		}
 	}
 
 }
@@ -774,39 +787,34 @@ body .bp-messages-user-threads {
 		max-height: 400px;
 	}
 
-	.bp-messages-content #bp-message-content #whats-new-messages-toolbar {
+	.bp-messages-content #bp-message-content .medium-editor-toolbar {
 
-		.medium-editor-action-close,
-		.show-toolbar {
-			display: block;
-		}
+		.medium-editor-toolbar-actions button {
+			padding: 10px 5px 10px 0;
 
-		.medium-editor-toolbar {
-			visibility: hidden;
-			opacity: 0;
-			transition: all ease 0.3s;
-			height: 0;
-			right: 0;
-			overflow: hidden;
-
-			.medium-editor-toolbar-actions {
-				height: auto;
+			&.medium-editor-button-first {
+				padding-left: 5px !important;
 			}
 
-			&.active {
-				display: block;
-				background-color: #f2f2f2;
-				border-radius: 0;
-				z-index: 112;
-				opacity: 1;
-				visibility: visible;
-				bottom: 0;
-				height: 40px;
-			}
 		}
+
 	}
 
-	.medium-editor-action-close b:before {
-		content: "\f153";
+}
+
+
+@media screen and (max-width: 560px) {
+
+	.bp-messages-content #bp-message-content .medium-editor-toolbar {
+
+		.medium-editor-toolbar-actions {
+			padding: 0 6px 10px;
+
+			button {
+				padding: 10px 0;
+			}
+
+		}
+
 	}
 }

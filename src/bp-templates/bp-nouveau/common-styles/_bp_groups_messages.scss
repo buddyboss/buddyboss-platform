@@ -399,7 +399,6 @@ span.icons:before {
 }
 
 #group-messages-container #whats-new-toolbar {
-	text-align: right;
 	display: block;
 
 	.post-elements-buttons-item {
@@ -424,11 +423,26 @@ span.icons:before {
 		top: inherit;
 		bottom: 45px;
 		left: -20px;
-		visibility: visible;
+		visibility: hidden;
 		z-index: 99;
-		background-color: transparent;
-		opacity: 0.3;
-		transition: opacity ease 0.2s;
+		background-color: #fff;
+		opacity: 0;
+		transition: all ease 0.3s;
+		height: 0;
+		right: 0;
+		overflow: hidden;
+		border-radius: 0;
+
+		&.active {
+			display: block;
+			border-radius: 0;
+			z-index: 112;
+			opacity: 1;
+			visibility: visible;
+			bottom: 35px;
+			height: 40px;
+			right: -20px;
+		}
 
 		&.medium-editor-toolbar-active {
 			opacity: 1;
@@ -436,6 +450,8 @@ span.icons:before {
 
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
+			height: auto;
+			padding: 0 15px 10px;
 
 			button {
 				box-shadow: none;
@@ -449,6 +465,10 @@ span.icons:before {
 					color: #122b46 !important;
 				}
 
+				&.medium-editor-action-close {
+					padding-right: 0;
+				}
+
 			}
 
 		}
@@ -459,32 +479,6 @@ span.icons:before {
 
 	}
 
-	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
-		left: inherit;
-		right: -30px;
-	}
-
-	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
-		left: inherit;
-		right: 32px;
-	}
-
-	.gif-media-search-dropdown {
-		right: -66px;
-	}
-
-	.gif-media-search-dropdown:before {
-		left: inherit;
-		top: auto;
-		bottom: -11px;
-		transform: rotate(135deg);
-		right: 57px;
-	}
-
-	.medium-editor-action-close,
-	.show-toolbar {
-		display: none;
-	}
 }
 
 #group-messages-container select.group-messages-type {
@@ -773,39 +767,30 @@ span.icons:before {
 	}
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
 
 	#group-messages-container #whats-new-toolbar {
 
-		.medium-editor-action-close,
-		.show-toolbar {
-			display: inline-block;
-		}
+		.medium-editor-toolbar .medium-editor-toolbar-actions button {
+			padding: 10px 5px 10px 0;
 
-		.medium-editor-toolbar {
-			visibility: hidden;
-			opacity: 0;
-			transition: all ease 0.3s;
-			height: 0;
-			right: 0;
-			overflow: hidden;
-
-			.medium-editor-toolbar-actions {
-				height: auto;
+			&.medium-editor-button-first {
+				padding-left: 5px !important;
 			}
 
-			&.active {
-				display: block;
-				background-color: #f2f2f2;
-				border-radius: 0;
-				z-index: 112;
-				opacity: 1;
-				visibility: visible;
-				bottom: 45px;
-				height: 40px;
-				right: -20px;
-			}
 		}
+
 	}
 
+}
+
+@media screen and (max-width: 560px) {
+
+	#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
+		padding: 0 6px 10px;
+
+		button {
+			padding: 10px 0;
+		}
+	}
 }

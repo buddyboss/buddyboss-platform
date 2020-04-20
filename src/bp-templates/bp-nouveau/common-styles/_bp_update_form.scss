@@ -96,19 +96,34 @@
 }
 
 .bbp-topic-form #whats-new-toolbar {
-	-webkit-box-pack: end;
-	-ms-flex-pack: end;
-	justify-content: flex-end;
 
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 6px;
 		left: 0;
-		visibility: visible;
+		visibility: hidden;
 		z-index: 99;
-		background-color: transparent;
-		opacity: 0.3;
-		transition: opacity ease 0.2s;
+		background-color: #fff;
+		opacity: 0;
+		transition: all ease 0.3s;
+		height: 0;
+		right: 0;
+		overflow: hidden;
+		border-radius: 0;
+
+		&.active {
+			display: block;
+			border-radius: 0;
+			z-index: 112;
+			opacity: 1;
+			visibility: visible;
+			bottom: 0;
+			height: 40px;
+
+			div & {
+				bottom: 0;
+			}
+		}
 
 		&.medium-editor-toolbar-active {
 			opacity: 1;
@@ -116,6 +131,7 @@
 
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
+			height: auto;
 
 			button {
 				box-shadow: none;
@@ -148,51 +164,10 @@
 				color: #4d5c6d;
 			}
 		}
-
 	}
-
-	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
-		right: -20px;
-		left: inherit;
-
-		.emojionearea-wrapper:after {
-			right: 22px;
-			left: inherit;
-		}
-	}
-
-	.gif-media-search-dropdown {
-		right: 0;
-		left: inherit;
-
-		&:before {
-			right: 6px;
-			left: inherit;
-		}
-	}
-
-	.medium-editor-action-close,
-	.show-toolbar {
-		display: none;
-	}
-
-}
-
-.activity-update-form #whats-new-toolbar {
-	-webkit-box-pack: end;
-	-ms-flex-pack: end;
-	justify-content: flex-end;
 }
 
 .activity-update-form {
-
-	.activity-form.focus-in #whats-new-content .medium-editor-toolbar {
-		opacity: 0.3;
-
-		&.medium-editor-toolbar-active {
-			opacity: 1;
-		}
-	}
 
 	#whats-new-content {
 		position: relative;
@@ -201,10 +176,28 @@
 			top: inherit;
 			bottom: -52px;
 			left: 0;
-			visibility: visible;
+			visibility: hidden;
 			z-index: 99;
-			background-color: transparent;
+			background-color: #fff;
 			opacity: 0;
+			transition: all ease 0.3s;
+			height: 0;
+			right: 0;
+			overflow: hidden;
+
+			&.active {
+				display: block;
+				border-radius: 0;
+				z-index: 112;
+				opacity: 1;
+				visibility: visible;
+				bottom: 0;
+				height: 40px;
+
+				div & {
+					bottom: -52px;
+				}
+			}
 
 			.medium-editor-toolbar-actions {
 				background-color: transparent;
@@ -243,15 +236,8 @@
 
 		}
 
-		.medium-editor-action-close,
-		.show-toolbar {
-			display: none;
-		}
 	}
 
-	#whats-new-toolbar .show-toolbar {
-		display: none;
-	}
 }
 
 // these ID's need replacing with this!
@@ -517,47 +503,38 @@ input.search-query-input {
 	.activity-update-form .activity-form.focus-in #whats-new-content,
 	.bbp-topic-form #whats-new-toolbar {
 
-		.medium-editor-action-close,
-		.show-toolbar {
-			display: block;
-		}
+		.medium-editor-toolbar-actions {
 
-		.medium-editor-toolbar {
-			visibility: hidden;
-			opacity: 0;
-			transition: all ease 0.3s;
-			height: 0;
-			right: 0;
-			overflow: hidden;
+			button {
+				padding: 10px 5px 10px 0;
 
-			.medium-editor-toolbar-actions {
-				height: auto;
-			}
-
-			&.active {
-				display: block;
-				background-color: #f2f2f2;
-				border-radius: 0;
-				z-index: 112;
-				opacity: 1;
-				visibility: visible;
-				bottom: 0;
-				height: 40px;
-
-				div & {
-					bottom: -52px;
+				&.medium-editor-button-first {
+					padding-left: 5px !important;
 				}
-
 			}
 		}
-	}
 
-	.activity-update-form #whats-new-toolbar .show-toolbar {
-		display: block;
 	}
 
 	.activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.active {
 		opacity: 1;
 	}
 
+}
+
+@media screen and (max-width: 560px) {
+
+	.activity-update-form .activity-form.focus-in #whats-new-content,
+	.bbp-topic-form #whats-new-toolbar {
+
+		.medium-editor-toolbar-actions {
+			padding: 0 6px 10px;
+
+			button {
+				padding: 10px 0;
+			}
+
+		}
+
+	}
 }
