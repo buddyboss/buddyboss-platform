@@ -908,7 +908,7 @@ function bp_zoom_get_current_meeting() {
  */
 function bp_zoom_get_current_meeting_id() {
 	if ( bp_zoom_is_single_meeting() ) {
-		$meeting_id = (int) bp_action_variable( 1 );
+		return (int) bp_action_variable( 1 );
 	}
 	return false;
 }
