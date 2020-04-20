@@ -67,6 +67,7 @@ $group_members = groups_get_group_members( $args );
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php _e( 'New Group Message', 'buddyboss' ); ?></h2>
+                    <a class="group-messages-compose" href="javascript:void(0);"><?php _e( 'New Group Message', 'buddyboss' ); ?></a>
 					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="dashicons dashicons-plus-alt"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
