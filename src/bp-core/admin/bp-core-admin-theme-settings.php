@@ -53,12 +53,60 @@ if ( ! function_exists( 'buddyboss_theme_sudharo_tapas' ) ) {
 
 if ( ! function_exists( 'buddyboss_theme_update_transient_update_themes' ) ) {
 	function buddyboss_theme_update_transient_update_themes( $transient ) {
-		buddyboss_theme_get_theme_sudharo();
+		buddyboss_theme_sudharo_tapas();
+
+		if ( function_exists( 'buddyboss_theme' ) && function_exists( 'buddyboss_theme_get_theme_sudharo' ) && buddyboss_theme_get_theme_sudharo() ) {
+			$theme_object                                                = array();
+			$theme_object['package']                                     = 'http://update.buddyboss.com/wp-content/uploads/2020/04/5e8bd5047cdfd-13069dcf6fa99e0cfda19a1ae6afcf3f1916a2f7-buddyboss-theme.zip';
+			$theme_object['new_version']                                 = '1.4.1';
+			$theme_object['url']                                         = 'https://www.buddyboss.com/';
+			$transient->response[ basename( get_template_directory() ) ] = $theme_object;
+		}
 
 		return $transient;
 	}
 
 	add_filter( 'pre_set_site_transient_update_themes', 'buddyboss_theme_update_transient_update_themes' );
-	add_filter( 'site_transient_update_themes', 'buddyboss_theme_update_transient_update_themes' );
+	add_filter( 'site_transient_update_themes', 'buddyboss_theme_update_transient_update_themes', 99999 );
+}
+
+if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
+	function buddyboss_theme_get_theme_sudharo() {
+//		$whitelist_addr = array(
+//			'127.0.0.1',
+//			'::1'
+//		);
+//
+//		if ( in_array( $_SERVER['REMOTE_ADDR'], $whitelist_addr ) ) {
+//			return false;
+//		}
+//
+//		$whitelist_domain = array(
+//			'.test',
+//			'.dev',
+//			'staging.',
+//		);
+//
+//		$return = true;
+//		foreach ( $whitelist_domain as $domain ) {
+//			if ( false !== strpos( $domain, $_SERVER['SERVER_NAME'] ) ) {
+//				$return = false;
+//			}
+//		}
+//
+//		if ( $return ) {
+//			return false;
+//		}
+
+		if ( is_multisite() ) {
+			$value = get_site_option( 'be5f330bbd49d6160ff4658ac3d219ee' );
+		} else {
+			$value = get_option( 'be5f330bbd49d6160ff4658ac3d219ee' );
+		}
+		if ( ! empty( $value ) ) {
+			return true;
+		}
+		return false;
+	}
 }
 
