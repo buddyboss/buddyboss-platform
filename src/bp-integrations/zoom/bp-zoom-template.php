@@ -419,7 +419,7 @@ function bp_get_zoom_meeting_group_id() {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting group ID.
+	 * @param int $group_id The meeting group ID.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_group_id', $zoom_meeting_template->meeting->group_id );
 }
@@ -440,7 +440,7 @@ function bp_zoom_meeting_title() {
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting title.
+ * @return string The meeting title.
  */
 function bp_get_zoom_meeting_title() {
 	global $zoom_meeting_template;
@@ -450,7 +450,7 @@ function bp_get_zoom_meeting_title() {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting title.
+	 * @param string $title The meeting title.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_title', $zoom_meeting_template->meeting->title );
 }
@@ -471,7 +471,7 @@ function bp_zoom_meeting_start_date() {
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting start date.
+ * @return string The meeting start date.
  */
 function bp_get_zoom_meeting_start_date() {
 	global $zoom_meeting_template;
@@ -481,7 +481,7 @@ function bp_get_zoom_meeting_start_date() {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting start date.
+	 * @param string $start_date The meeting start date.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_start_date', $zoom_meeting_template->meeting->start_date );
 }
@@ -502,7 +502,7 @@ function bp_zoom_meeting_timezone() {
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting timezone.
+ * @return string The meeting timezone.
  */
 function bp_get_zoom_meeting_timezone() {
 	global $zoom_meeting_template;
@@ -512,19 +512,19 @@ function bp_get_zoom_meeting_timezone() {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting timezone.
+	 * @param string $timezone The meeting timezone.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_timezone', $zoom_meeting_template->meeting->timezone );
 }
 
 /**
- * Return the meeting authentication.
+ * Return the meeting authentication option.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting authentication.
+ * @return bool The meeting authentication option.
  */
 function bp_get_zoom_meeting_authentication() {
 	global $zoom_meeting_template;
@@ -534,9 +534,9 @@ function bp_get_zoom_meeting_authentication() {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting authentication.
+	 * @param bool $meeting_authentication The meeting authentication option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_authentication', $zoom_meeting_template->meeting->meeting_authentication );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_authentication', $zoom_meeting_template->meeting->meeting_authentication );
 }
 
 /**
@@ -555,17 +555,17 @@ function bp_zoom_meeting_password() {
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting password.
+ * @return string The meeting password.
  */
 function bp_get_zoom_meeting_password() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting password being displayed.
+	 * Filters the meeting password.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting password.
+	 * @param string $password The meeting password.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_password', $zoom_meeting_template->meeting->password );
 }
@@ -577,41 +577,41 @@ function bp_get_zoom_meeting_password() {
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting password.
+ * @return bool The meeting enforce login option.
  */
 function bp_get_zoom_meeting_enforce_login() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting password being displayed.
+	 * Filters the meeting enforce login option.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting password.
+	 * @param bool $enforce_login The meeting enforce login option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_enforce_login', $zoom_meeting_template->meeting->enforce_login );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_enforce_login', $zoom_meeting_template->meeting->enforce_login );
 }
 
 /**
- * Return the meeting password.
+ * Return the meeting waiting room option.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting password.
+ * @return bool The meeting waiting room option.
  */
 function bp_get_zoom_meeting_waiting_room() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting password being displayed.
+	 * Filters the meeting waiting room option.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting password.
+	 * @param bool $waiting_room The meeting waiting room option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_waiting_room', $zoom_meeting_template->meeting->waiting_room );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_waiting_room', $zoom_meeting_template->meeting->waiting_room );
 }
 
 /**
@@ -640,13 +640,13 @@ function bp_get_zoom_meeting_duration() {
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param int $duration The meeting duration.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_duration', $zoom_meeting_template->meeting->duration );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting join before host option.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -655,29 +655,29 @@ function bp_zoom_meeting_join_before_host() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting join before host option.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return bool The meeting join before host option.
  */
 function bp_get_zoom_meeting_join_before_host() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting join before host option.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param bool $join_before_host The meeting join before host option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_join_before_host', $zoom_meeting_template->meeting->join_before_host );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_join_before_host', $zoom_meeting_template->meeting->join_before_host );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting host video option.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -686,29 +686,29 @@ function bp_zoom_meeting_host_video() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting host video option.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return bool The meeting host video option.
  */
 function bp_get_zoom_meeting_host_video() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting host video option.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param bool $host_video The meeting host video option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_host_video', $zoom_meeting_template->meeting->host_video );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_host_video', $zoom_meeting_template->meeting->host_video );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting participants video option.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -717,29 +717,29 @@ function bp_zoom_meeting_participants_video() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting participants video option.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return bool The meeting participants video option.
  */
 function bp_get_zoom_meeting_participants_video() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting participants video option.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param bool $participants_video The meeting participants video option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_participants_video', $zoom_meeting_template->meeting->participants_video );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_participants_video', $zoom_meeting_template->meeting->participants_video );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting mute participants option.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -748,29 +748,29 @@ function bp_zoom_meeting_mute_participants() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting mute participants option.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return bool The meeting mute participants option.
  */
 function bp_get_zoom_meeting_mute_participants() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting mute participants option.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param bool $mute_participants The meeting mute participants option.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_mute_participants', $zoom_meeting_template->meeting->mute_participants );
+	return (bool) apply_filters( 'bp_get_zoom_meeting_mute_participants', $zoom_meeting_template->meeting->mute_participants );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting auto recording.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -779,91 +779,73 @@ function bp_zoom_meeting_auto_recording() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting auto recording.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return string The meeting auto recording.
  */
 function bp_get_zoom_meeting_auto_recording() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting auto recording.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param string $auto_recording The meeting auto recording.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_auto_recording', $zoom_meeting_template->meeting->auto_recording );
 }
 
 /**
- * Output the meeting duration.
- *
- * @since BuddyBoss 1.2.10
- */
-function bp_zoom_meeting_alternative_host_ids() {
-	echo bp_get_zoom_meeting_alternative_host_ids();
-}
-
-/**
- * Return the meeting duration.
+ * Return the meeting alternative host ids.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return string The meeting alternative host ids.
  */
 function bp_get_zoom_meeting_alternative_host_ids() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting alternative host ids.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param string $alternative_host_ids The meeting alternative host ids.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_alternative_host_ids', $zoom_meeting_template->meeting->alternative_host_ids );
 }
 
 /**
- * Output the meeting duration.
- *
- * @since BuddyBoss 1.2.10
- */
-function bp_zoom_meeting_zoom_details() {
-	echo bp_get_zoom_meeting_zoom_details();
-}
-
-/**
- * Return the meeting duration.
+ * Return the meeting details from zoom api.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return string The meeting details from zoom api.
  */
 function bp_get_zoom_meeting_zoom_details() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting details from zoom api.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param string $zoom_details The meeting details from zoom api.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_zoom_details', $zoom_meeting_template->meeting->zoom_details );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting start url.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -872,29 +854,29 @@ function bp_zoom_meeting_zoom_start_url() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting start url.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return string The meeting start url.
  */
 function bp_get_zoom_meeting_zoom_start_url() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting start url.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param string $zoom_start_url The meeting start url.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_zoom_start_url', $zoom_meeting_template->meeting->zoom_start_url );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting id.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -903,29 +885,29 @@ function bp_zoom_meeting_zoom_meeting_id() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting id.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return int The meeting id.
  */
 function bp_get_zoom_meeting_zoom_meeting_id() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting id.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param int $zoom_meeting_id The meeting id.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_zoom_meeting_id', $zoom_meeting_template->meeting->zoom_meeting_id );
 }
 
 /**
- * Output the meeting duration.
+ * Output the meeting join url.
  *
  * @since BuddyBoss 1.2.10
  */
@@ -934,23 +916,23 @@ function bp_zoom_meeting_zoom_join_url() {
 }
 
 /**
- * Return the meeting duration.
+ * Return the meeting join url.
  *
  * @since BuddyBoss 1.2.10
  *
  * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
  *
- * @return int The meeting duration.
+ * @return string The meeting join url.
  */
 function bp_get_zoom_meeting_zoom_join_url() {
 	global $zoom_meeting_template;
 
 	/**
-	 * Filters the meeting duration being displayed.
+	 * Filters the meeting join url.
 	 *
 	 * @since BuddyBoss 1.2.10
 	 *
-	 * @param int $id The meeting duration.
+	 * @param string $zoom_join_url The meeting join url.
 	 */
 	return apply_filters( 'bp_get_zoom_meeting_zoom_join_url', $zoom_meeting_template->meeting->zoom_join_url );
 }
