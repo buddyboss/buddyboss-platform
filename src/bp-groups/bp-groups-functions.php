@@ -3767,6 +3767,11 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 	return $is_allowed;
 }
 
+/**
+ * Mentions results for groups.
+ *
+ * @since BuddyBoss 1.3.2
+ */
 function bp_groups_prime_mentions_results() {
 
 	// Stop here if user is not logged in.
@@ -3785,7 +3790,7 @@ function bp_groups_prime_mentions_results() {
 	}
 
 	$members = groups_get_group_members();
-	$results       = array();
+	$results = array();
 
 	if ( ! empty( $members['members'] ) ) {
 		foreach( $members['members'] as $user ) {
