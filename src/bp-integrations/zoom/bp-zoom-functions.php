@@ -899,3 +899,42 @@ function bp_zoom_get_current_meeting() {
 	}
 	return false;
 }
+
+/**
+ * Check if current user has permission to start meeting.
+ *
+ * @since BuddyBoss 1.2.10
+ * @param $meeting_id
+ *
+ * @return bool true if user has permission otherwise false.
+ */
+function bp_zoom_can_current_user_start_meeting( $meeting_id ) {
+	// check is user loggedin.
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// get meeting exists.
+	$meeting = new BP_Zoom_Meeting( $meeting_id );
+
+	// check meeting exists.
+	if ( empty( $meeting->id ) ) {
+		return false;
+	}
+
+	// get user zoom id.
+	$bp_zoom_user_id = get_user_meta( get_current_user_id(), 'bp_zoom_user_id', true );
+
+	// check user has zoom id or not.
+	if ( empty( $bp_zoom_user_id ) ) {
+		return false;
+	}
+
+	// check meeting user id is equal to current user's id or not.
+	if ( $meeting->user_id === $bp_zoom_user_id ) {
+		return true;
+	}
+
+	// return false atleast.
+	return false;
+}
