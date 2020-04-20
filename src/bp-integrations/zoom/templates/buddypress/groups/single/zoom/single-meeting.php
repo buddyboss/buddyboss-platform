@@ -32,7 +32,17 @@ $meeting = bp_zoom_get_current_meeting();
 		<div class="single-meeting-item">
 			<label class="meeting-item-head"><?php _e( 'Meeting Password', 'buddyboss' ); ?></label>
 			<div class="meeting-item-col">
-				password
+				<?php if ( ! empty( $meeting->password ) ) : ?>
+					<div class="z-form-row-action" style="display: inline-block;">
+						<span class="hide-password" style="display:inline-block;"><strong>********</strong></span>
+						<span class="show-password" style="display:none;margin-right: 16px;font-size:13px;"><strong><?php echo $meeting->password; ?></strong></span>
+						<a href="javascript:;" class="toggle-password show-pass" style="display: inline;"><?php _e( 'Show', 'buddyboss' ); ?></a>
+						<a href="javascript:;" class="toggle-password hide-pass" style="display: none;"><?php _e( 'Hide', 'buddyboss' ); ?></a>
+					</div>
+				<?php else: ?>
+					<label id="label_option_password" class="checkbox" style="margin-top: -7px;"><i class="status-icon"></i><?php _e( 'Require meeting password', 'buddyboss' ); ?>
+					</label>
+				<?php endif; ?>
 			</div>
 		</div>
 		<div class="single-meeting-item">
@@ -50,14 +60,14 @@ $meeting = bp_zoom_get_current_meeting();
 			<div>
 				<label class="meeting-item-head"><?php _e( 'Video', 'buddyboss' ); ?></label>
 				<div class="meeting-item-col">
-					<?php _e( 'Host', 'buddyboss' ); ?> 
+					<?php _e( 'Host', 'buddyboss' ); ?>
 					 <?php echo $meeting->host_video ? __( ' On', 'buddyboss' ) : __( 'Off', 'buddyboss' ); ?>
 				</div>
 			</div>
 			<div>
 				<label class="meeting-item-head"></label>
 				<div class="meeting-item-col">
-					<?php _e( 'Participant', 'buddyboss' ); ?> 
+					<?php _e( 'Participant', 'buddyboss' ); ?>
 					<?php echo $meeting->participants_video ? __( 'On', 'buddyboss' ) : __( 'Off', 'buddyboss' ); ?>
 				</div>
 			</div>

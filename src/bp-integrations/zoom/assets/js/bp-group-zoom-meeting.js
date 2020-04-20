@@ -84,6 +84,23 @@
 				}
 			});
 		});
+
+		$('#bp-zoom-single-meeting').on('click', '.toggle-password',function(e){
+			var _this = $(this), meeting_row = _this.closest('.single-meeting-item');
+			e.preventDefault();
+
+			if ( _this.hasClass( 'show-pass' ) ) {
+				_this.hide();
+				meeting_row.find('.toggle-password.hide-pass').show();
+				meeting_row.find('.hide-password').hide();
+				meeting_row.find('.show-password').show();
+			} else {
+				_this.hide();
+				meeting_row.find('.toggle-password.show-pass').show();
+				meeting_row.find('.show-password').hide();
+				meeting_row.find('.hide-password').show();
+			}
+		});
 	} );
 
 } )( jQuery );
