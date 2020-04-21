@@ -1186,11 +1186,11 @@ div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
   opacity: 1;
   visibility: visible;
   bottom: 0;
-  height: 40px;
+  height: 44px;
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: -47px;
+  bottom: -50px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1490,13 +1490,14 @@ input.search-query-input {
 }
 
 @media screen and (max-width: 560px) {
-  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions,
-  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions {
-    padding: 0 0 10px;
-  }
   .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button,
   .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
+  }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-form .medium-editor-toolbar-input,
+  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+    max-width: calc(100% - 90px);
+    width: auto;
   }
 }
 
@@ -4638,7 +4639,7 @@ input#send-to-input {
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
   height: auto;
-  padding: 0 10px 10px 0;
+  padding: 0 10px 0 0;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
@@ -4901,12 +4902,13 @@ body .bp-messages-user-threads {
   .bp-messages-content #bp-message-content .medium-editor-toolbar {
     left: 45px;
   }
-  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions {
-    padding: 0 0 10px;
-  }
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
     min-width: 30px;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+    max-width: calc(100% - 90px);
+    width: auto;
   }
 }
 
@@ -12505,7 +12507,7 @@ span.icons:before {
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
   height: auto;
-  padding: 0 0 10px;
+  padding: 0;
 }
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
@@ -12861,9 +12863,13 @@ span.icons:before {
 
 @media screen and (max-width: 560px) {
   #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
-    padding: 0 6px 10px;
+    padding: 0 6px;
   }
   #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
     padding: 10px 0;
+  }
+  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+    max-width: calc(100% - 90px);
+    width: auto;
   }
 }

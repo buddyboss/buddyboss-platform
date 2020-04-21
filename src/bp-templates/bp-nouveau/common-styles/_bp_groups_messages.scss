@@ -447,7 +447,7 @@ span.icons:before {
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
 			height: auto;
-			padding: 0 0 10px;
+			padding: 0;
 
 			button {
 				box-shadow: none;
@@ -839,11 +839,20 @@ span.icons:before {
 
 @media screen and (max-width: 560px) {
 
-	#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
-		padding: 0 6px 10px;
+	#group-messages-container #whats-new-toolbar .medium-editor-toolbar {
 
-		button {
-			padding: 10px 0;
+		.medium-editor-toolbar-actions {
+			padding: 0 6px;
+
+			button {
+				padding: 10px 0;
+			}
 		}
+
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			max-width: calc(100% - 90px);
+			width: auto;
+		}
+
 	}
 }

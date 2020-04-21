@@ -192,10 +192,10 @@
 				opacity: 1;
 				visibility: visible;
 				bottom: 0;
-				height: 40px;
+				height: 44px;
 
 				div & {
-					bottom: -47px;
+					bottom: -50px;
 				}
 			}
 
@@ -527,14 +527,13 @@ input.search-query-input {
 	.activity-update-form .activity-form.focus-in #whats-new-content,
 	.bbp-topic-form #whats-new-toolbar {
 
-		.medium-editor-toolbar-actions {
-			padding: 0 0 10px;
-
-			button {
-				padding: 10px 0;
-			}
-
+		.medium-editor-toolbar-actions button {
+			padding: 10px 0;
 		}
 
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			max-width: calc(100% - 90px);
+			width: auto;
+		}
 	}
 }

@@ -593,7 +593,7 @@ input#send-to-input {
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
 			height: auto;
-			padding: 0 10px 10px 0;
+			padding: 0 10px 0 0;
 
 			button {
 				box-shadow: none;
@@ -883,14 +883,14 @@ body .bp-messages-user-threads {
 		.medium-editor-toolbar {
 			left: 45px;
 
-			.medium-editor-toolbar-actions {
-				padding: 0 0 10px;
+			.medium-editor-toolbar-actions button {
+				padding: 10px 0;
+				min-width: 30px;
+			}
 
-				button {
-					padding: 10px 0;
-					min-width: 30px;
-				}
-
+			.medium-editor-toolbar-form .medium-editor-toolbar-input {
+				max-width: calc(100% - 90px);
+				width: auto;
 			}
 
 		}
