@@ -100,7 +100,7 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 6px;
-		left: 0;
+		left: 38px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
@@ -117,11 +117,11 @@
 			z-index: 112;
 			opacity: 1;
 			visibility: visible;
-			bottom: 0;
+			bottom: 10px;
 			height: 40px;
 
 			div & {
-				bottom: 0;
+				bottom: 10px;
 			}
 		}
 
@@ -175,7 +175,7 @@
 		.medium-editor-toolbar {
 			top: inherit;
 			bottom: -52px;
-			left: 0;
+			left: 38px;
 			visibility: hidden;
 			z-index: 99;
 			background-color: #fff;
@@ -195,7 +195,7 @@
 				height: 40px;
 
 				div & {
-					bottom: -52px;
+					bottom: -47px;
 				}
 			}
 

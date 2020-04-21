@@ -966,7 +966,6 @@ window.bp = window.bp || {};
 			'click #messages-media-button': 'toggleMediaSelector',
 			'click #messages-gif-button': 'toggleGifSelector',
 			'click #show-toolbar-button': 'toggleToolbarSelector',
-			'click .medium-editor-toolbar li.close-btn': 'toggleToolbarSelector'
 		},
 
 		initialize: function() {

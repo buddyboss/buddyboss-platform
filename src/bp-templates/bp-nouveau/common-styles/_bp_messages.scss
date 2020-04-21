@@ -855,16 +855,44 @@ body .bp-messages-user-threads {
 
 @media screen and (max-width: 560px) {
 
-	.bp-messages-content #bp-message-content .medium-editor-toolbar {
+	.bp-messages-content #bp-message-content {
 
-		.medium-editor-toolbar-actions {
-			padding: 0 6px 10px;
+		#message-reply-form-submit-wrapper {
+			-webkit-box-orient: vertical;
+			-webkit-box-direction: normal;
+			-ms-flex-direction: column;
+			flex-direction: column;
+			-webkit-box-align: end;
+			-ms-flex-align: end;
+			align-items: flex-end;
+			margin: 0 -20px;
 
-			button {
-				padding: 10px 0;
+			#whats-new-messages-toolbar {
+				padding: 0 15px 0 20px;
+			}
+
+			#message-reply-new-submit {
+				padding: 20px 20px 0;
+				text-align: right;
+				border-top: 1px solid #ebe9e6;
+				width: 100%;
+				margin-top: 10px;
+			}
+		}
+
+		.medium-editor-toolbar {
+			left: 45px;
+
+			.medium-editor-toolbar-actions {
+				padding: 0 0 10px;
+
+				button {
+					padding: 10px 0;
+					min-width: 30px;
+				}
+
 			}
 
 		}
-
 	}
 }

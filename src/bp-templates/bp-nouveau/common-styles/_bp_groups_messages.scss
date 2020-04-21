@@ -31,7 +31,7 @@
 				bottom: 65px;
 
 				&.active {
-					bottom: 79px;
+					bottom: 88px;
 				}
 			}
 		}
@@ -422,7 +422,7 @@ span.icons:before {
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 45px;
-		left: -20px;
+		left: 23px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
@@ -439,19 +439,15 @@ span.icons:before {
 			z-index: 112;
 			opacity: 1;
 			visibility: visible;
-			bottom: 35px;
+			bottom: 40px;
 			height: 40px;
 			right: -20px;
-		}
-
-		&.medium-editor-toolbar-active {
-			opacity: 1;
 		}
 
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
 			height: auto;
-			padding: 0 15px 10px;
+			padding: 0 0 10px;
 
 			button {
 				box-shadow: none;
