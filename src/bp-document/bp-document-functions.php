@@ -1395,7 +1395,7 @@ function bp_document_svg_icon( $extension ) {
 	return apply_filters( 'bp_document_svg_icon', $svg, $extension );
 }
 
-function bp_document_user_document_folder_tree_view_li_html( $user_id, $group_id = 0 ) {
+function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 

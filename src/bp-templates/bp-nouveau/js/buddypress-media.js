@@ -1938,32 +1938,47 @@ window.bp = window.bp || {};
 
 			var currentTarget;
 			var currentTargetName = $(event.currentTarget).closest('.bb-activity-media-elem').find('.document-title').text();
+			var id 				  = $( event.currentTarget ).attr( 'id' );
+			var type 			  = $( event.currentTarget ).attr( 'data-type' );
 
-			// For Activity Feed
-			currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
-			$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
+			if ( '' !== id ) {
+				$.ajax( {
+					url : BP_Nouveau.ajaxurl,
+					type : 'post',
+					data : {
+						action: 'document_get_folder_view',
+						id: id,
+						type: type,
+					},success : function( response ) {
 
-			// Change if this is not from Activity Page
-			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
-				/* jshint ignore:start */
-				var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
-				/* jshint ignore:end */
-				if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
-					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
-					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
-				}else{
-					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
-					$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+						$( '.location-folder-list-wrap .location-folder-list' ).remove();
+						$( '.location-folder-list-wrap' ).append( response.data.html );
+						// For Activity Feed
+						currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
+						$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
 
-				}
+						// Change if this is not from Activity Page
+						if($(event.currentTarget).closest('.media-folder_items').length > 0) {
+							/* jshint ignore:start */
+							var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
+							/* jshint ignore:end */
+							if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
+								currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
+								$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+							}else{
+								currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
+								$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+
+							}
+						}
+						if(this.folderLocationUI){
+							this.folderLocationUI(currentTarget);
+						}
+						$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
+						$(currentTarget).show();
+					}
+				});
 			}
-			if(this.folderLocationUI){
-				this.folderLocationUI(currentTarget);
-			}
-
-			$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
-
-			$(currentTarget).show();
 		},
 
 		/**

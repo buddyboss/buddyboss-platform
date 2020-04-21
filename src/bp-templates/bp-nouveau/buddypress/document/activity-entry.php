@@ -24,9 +24,11 @@ $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : 
 
 $group_id = bp_get_document_group_id();
 if ( $group_id > 0 ) {
-	$move_id = 'group_' . $group_id;
+	$move_id   = $group_id;
+	$move_type = 'group';
 } else {
-	$move_id = 'profile_' . bp_get_document_user_id();
+	$move_id   = bp_get_document_user_id();
+	$move_type = 'profile';
 }
 
 ?>
@@ -54,7 +56,7 @@ if ( $group_id > 0 ) {
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<li class="move_file"><a href="#" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
 					<li class="delete_file"><a href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
@@ -108,7 +110,7 @@ if ( $group_id > 0 ) {
 					</a>
 					<div class="document-action_list">
 						<ul>
-							<li class="move_file"><a href="#" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+							<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"  id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
 							<li class="delete_file"><a href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						</ul>
 					</div>

@@ -14,6 +14,7 @@ $can_view            = false;
 $attachment_url      = '';
 $text_attachment_url = '';
 $move_id             = '';
+$move_type           = '';
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension );
@@ -30,9 +31,11 @@ if ( $attachment_id ) {
 	$document_title      = bp_get_document_title();
 
 	if ( $group_id > 0 ) {
-		$move_id = 'group_' . $group_id;
+		$move_id   = $group_id;
+		$move_type = 'group';
 	} else {
-		$move_id = 'profile_' . bp_get_document_user_id();
+		$move_id   = bp_get_document_user_id();
+		$move_type = 'profile';
 	}
 
 	if ( 'pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension ) {
@@ -51,9 +54,11 @@ if ( $attachment_id ) {
 	$document_title = bp_get_folder_title();
 
 	if ( $group_id > 0 ) {
-		$move_id = 'group_' . $group_id;
+		$move_id   = $group_id;
+		$move_type = 'group';
 	} else {
-		$move_id = 'profile_' . bp_get_document_user_id();
+		$move_id   = bp_get_document_user_id();
+		$move_type = 'profile';
 	}
 }
 
@@ -139,14 +144,12 @@ if ( $attachment_id ) {
 					?>
 					<li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
 					</li>
-					<li class="move_file"><a href="#" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"  id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</li>
 					<?php
 					if ( 'document' === $document_type && 0 === $group_id ) {
 						?>
-						<li class="privacy_file"><a href="#"
-													class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
-						</li>
+						<li class="privacy_file"><a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a></li>
 						<?php
 					}
 					?>
