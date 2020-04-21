@@ -534,6 +534,43 @@ add_action( 'personal_options_update', 'bp_zoom_save_zoom_user_profile_field', 9
 add_action( 'edit_user_profile_update', 'bp_zoom_save_zoom_user_profile_field', 999 );
 
 /**
+ * WP Users list add zoom user status column.
+ *
+ * @since BuddyBoss 1.2.10
+ * @param $column
+ *
+ * @return mixed
+ */
+function bp_zoom_user_list_add_status_column( $column ) {
+	$column['bp_zoom_user_status'] = __( 'Zoom', 'buddyboss' );
+
+	return $column;
+}
+add_filter( 'manage_users_columns', 'bp_zoom_user_list_add_status_column' );
+add_filter( 'wpmu_users_columns', 'bp_zoom_user_list_add_status_column' );
+
+/**
+ * WP Users list zoom user status column
+ *
+ * @since BuddyBoss 1.2.10
+ * @param $val
+ * @param $column_name
+ * @param $user_id
+ *
+ * @return string
+ */
+function bp_zoom_user_list_status_row( $val, $column_name, $user_id ) {
+	switch ( $column_name ) {
+		case 'bp_zoom_user_status' :
+			return get_the_author_meta( 'bp_zoom_user_status', $user_id );
+		default:
+	}
+
+	return $val;
+}
+add_filter( 'manage_users_custom_column', 'bp_zoom_user_list_status_row', 10, 3 );
+
+/**
  * Group zoom meeting slug for sub nav items.
  *
  * @since BuddyBoss 1.2.10
