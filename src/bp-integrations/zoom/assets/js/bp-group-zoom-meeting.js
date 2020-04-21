@@ -20,6 +20,10 @@
 		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
 			e.preventDefault();
 
+			if ( $(this).hasClass('loading') ) {
+				return false;
+			}
+
 			$(this).addClass('loading');
 
 			var form_data = $('#bp-new-zoom-meeting-form').serializeArray();

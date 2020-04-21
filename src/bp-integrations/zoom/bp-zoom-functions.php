@@ -883,6 +883,37 @@ function bp_zoom_is_single_meeting() {
 }
 
 /**
+ * Check if current request is create meeting.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_is_create_meeting() {
+	if ( bp_zoom_is_groups_zoom()() && 'create-meeting' === bp_action_variable( 0 ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check if current request is create meeting.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_is_edit_meeting() {
+	if ( bp_zoom_is_groups_zoom() && 'meetings' === bp_action_variable( 0 ) && 'edit' === bp_action_variable( 1 ) ) {
+		return true;
+	}
+	return false;
+}
+
+function bp_zoom_get_edit_meeting_id() {
+	if ( bp_zoom_is_edit_meeting() ) {
+		return ( int ) bp_action_variable( 2 );
+	}
+	return false;
+}
+
+/**
  * Get single meeting.
  *
  * @since BuddyBoss 1.2.10

@@ -20,7 +20,7 @@
 				bp_the_zoom_meeting();
 
 				$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
-				$url        = trailingslashit( $group_link . '/zoom/meetings/' . bp_get_zoom_meeting_id() );
+				$url        = trailingslashit( $group_link . 'zoom/meetings/' . bp_get_zoom_meeting_id() );
 
 				?>
 				<div class="meeting-item" data-id="<?php bp_zoom_meeting_id(); ?>"

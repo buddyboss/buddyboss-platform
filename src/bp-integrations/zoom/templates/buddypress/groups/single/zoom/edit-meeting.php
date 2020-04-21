@@ -4,25 +4,18 @@
  *
  * @since BuddyBoss 1.2.10
  */
-$edit = false;
-$meeting = false;
-$edit_host = false;
-if ( bp_zoom_is_edit_meeting() && bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) ) ) {
-	$meeting = new BP_Zoom_Meeting( $_GET['edit'] );
-	if ( empty( $meeting->id ) ) {
-		return;
-	}
-	$edit_users = get_users( array( 'meta_key' => 'bp_zoom_user_id', 'meta_value' => $meeting->user_id ) );
-	if( ! empty( $edit_users ) ) {
-		$edit_host = $edit_users[0]->data;
-	}
-	$edit = true;
-}
 wp_enqueue_script( 'bp-select2' );
 if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
 	wp_enqueue_script( 'bp-select2-local' );
 }
 wp_enqueue_style( 'bp-select2' );
+if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) ) ) :
+	while ( bp_zoom_meeting() ) : bp_the_zoom_meeting();
+		$edit_users = get_users( array( 'meta_key' => 'bp_zoom_user_id', 'meta_value' => bp_get_zoom_meeting_user_id() ) );
+		$edit_host = false;
+		if( ! empty( $edit_users ) ) {
+			$edit_host = $edit_users[0]->data;
+		}
 ?>
 <div id="bp-new-zoom-meeting" class="bp-new-zoom-meeting-form">
 	<form id="bp-new-zoom-meeting-form" name="bp-new-zoom-meeting-form" class="standard-form" method="post" action="">
@@ -31,20 +24,21 @@ wp_enqueue_style( 'bp-select2' );
 			<div class="bp-zoom-meeting-form-wrap">
 				<p>
 					<label for="bp-zoom-meeting-title"><?php _e( 'Title', 'buddyboss' ); ?></label>
-					<input type="text" id="bp-zoom-meeting-title" value="<?php _e( 'My Meeting', 'buddyboss' ); ?>" tabindex="1" name="bp-zoom-meeting-title" />
+					<input type="text" id="bp-zoom-meeting-title" value="<?php bp_zoom_meeting_title(); ?>" tabindex="1" name="bp-zoom-meeting-title" />
 				</p>
 				<p>
 					<?php $users = groups_get_group_members( array( 'group_role' => array( 'member', 'mod', 'admin' ) ) ); ?>
 					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
 						<option><?php _e( 'Select host', 'buddyboss' ); ?></option>
-						<?php if ( $edit && ! empty( $edit_host ) ) : ?>
-							<option value="<?php echo $meeting->user_id; ?>" selected><?php echo bp_core_get_user_displayname( $edit_host->ID ) . ' ( ' . $edit_host->user_email . ' )'; ?></option>
+						<?php if ( ! empty( $edit_host ) ) : ?>
+						<option value="<?php bp_zoom_meeting_user_id(); ?>" selected><?php echo bp_core_get_user_displayname( $edit_host->ID ) . ' ( ' . $edit_host->user_email . ' )'; ?></option>
 						<?php endif; ?>
+
 						<?php
 						if ( ! empty( $users['members'] ) ) :
 							foreach ( $users['members'] as $user ):
-								if ( $edit && ! empty( $edit_host ) && $user->ID === (int) $edit_host->ID ) {
+								if ( ! empty( $edit_host ) && $user->ID === (int) $edit_host->ID ) {
 									continue;
 								}
 								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
@@ -59,68 +53,68 @@ wp_enqueue_style( 'bp-select2' );
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-start-date"><?php _e( 'When', 'buddyboss' ); ?></label>
-					<input type="text" id="bp-zoom-meeting-start-date" value="<?php echo ! empty( $meeting->start_date ) ? $meeting->start_date : ''; ?>" tabindex="3" name="bp-zoom-meeting-start-date" />
+					<input type="text" id="bp-zoom-meeting-start-date" value="<?php bp_zoom_meeting_start_date(); ?>" tabindex="3" name="bp-zoom-meeting-start-date" />
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-duration"><?php _e( 'Duration', 'buddyboss' ); ?></label>
-					<input type="number" id="bp-zoom-meeting-duration" value="<?php echo ! empty( $meeting->duration ) ? $meeting->duration : ''; ?>" tabindex="4" name="bp-zoom-meeting-duration" min="0" />
+					<input type="number" id="bp-zoom-meeting-duration" value="<?php bp_zoom_meeting_duration(); ?>" tabindex="4" name="bp-zoom-meeting-duration" min="0" />
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-timezone"><?php _e( 'Timezone', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-timezone" name="bp-zoom-meeting-timezone" tabindex="5">
 						<?php $timezones = bp_zoom_get_timezone_options(); ?>
 						<?php foreach ( $timezones as $k => $timezone ) { ?>
-							<option value="<?php echo $k; ?>"><?php echo $timezone; ?></option>
+							<option value="<?php echo $k; ?>" <?php echo bp_get_zoom_meeting_timezone() === $k ? 'selected' : ''; ?>><?php echo $timezone; ?></option>
 						<?php } ?>
 					</select>
 				</p>
 				<p>
 					<label aria-hidden="true"><?php _e( 'Registration', 'buddyboss' ); ?></label>
-					<input type="checkbox" name="bp-zoom-meeting-registration" id="bp-zoom-meeting-registration" value="1" class="bs-styled-checkbox" tabindex="6"/>
+					<input type="checkbox" name="bp-zoom-meeting-registration" id="bp-zoom-meeting-registration" value="1" class="bs-styled-checkbox" tabindex="6" <?php checked( 1, bp_get_zoom_meeting_authentication() ); ?> />
 					<label for="bp-zoom-meeting-registration"><?php _e( 'Required', 'buddyboss' ); ?></label>
 
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-password"><?php _e( 'Meeting Password', 'buddyboss' ); ?></label>
-					<input type="text" id="bp-zoom-meeting-password" value="" tabindex="7" name="bp-zoom-meeting-password" />
+					<input type="text" id="bp-zoom-meeting-password" value="<?php bp_zoom_meeting_password(); ?>" tabindex="7" name="bp-zoom-meeting-password" />
 				</p>
 				<p>
 
 					<label aria-hidden="true"><?php _e( 'Host Video', 'buddyboss' ); ?></label>
-					<input type="checkbox" id="bp-zoom-meeting-host-video" value="" tabindex="8" name="bp-zoom-meeting-host-video" class="bs-styled-checkbox" />
+					<input type="checkbox" id="bp-zoom-meeting-host-video" value="" tabindex="8" name="bp-zoom-meeting-host-video" class="bs-styled-checkbox" <?php checked( 1, bp_get_zoom_meeting_host_video() ); ?> />
 					<label for="bp-zoom-meeting-host-video"><?php _e( 'Start video when host join meeting.', 'buddyboss' ); ?></label>
 				</p>
 				<p>
 					<label aria-hidden="true"><?php _e( 'Participants Video', 'buddyboss' ); ?></label>
-					<input type="checkbox" id="bp-zoom-meeting-participants-video" value="" tabindex="9" name="bp-zoom-meeting-participants-video" class="bs-styled-checkbox" />
+					<input type="checkbox" id="bp-zoom-meeting-participants-video" value="" tabindex="9" name="bp-zoom-meeting-participants-video" class="bs-styled-checkbox" <?php checked( 1, bp_get_zoom_meeting_participants_video() ); ?> />
 					<label for="bp-zoom-meeting-participants-video"><?php _e( 'Start video when participants join meeting.', 'buddyboss' ); ?></label>
 				</p>
 				<p>
 					<label aria-hidden="true"><?php _e( 'Join Before Host', 'buddyboss' ); ?></label>
-					<input type="checkbox" id="bp-zoom-meeting-join-before-host" value="" tabindex="10" name="bp-zoom-meeting-join-before-host" class="bs-styled-checkbox" />
+					<input type="checkbox" id="bp-zoom-meeting-join-before-host" value="" tabindex="10" name="bp-zoom-meeting-join-before-host" class="bs-styled-checkbox" <?php checked( 1, bp_get_zoom_meeting_join_before_host() ); ?> />
 					<label for="bp-zoom-meeting-join-before-host"><?php _e( 'Enable join before host.', 'buddyboss' ); ?></label>
 				</p>
 				<p>
 					<label aria-hidden="true"><?php _e( 'Mute Participants', 'buddyboss' ); ?></label>
-					<input type="checkbox" id="bp-zoom-meeting-mute-participants" value="" tabindex="11" name="bp-zoom-meeting-mute-participants" class="bs-styled-checkbox" />
+					<input type="checkbox" id="bp-zoom-meeting-mute-participants" value="" tabindex="11" name="bp-zoom-meeting-mute-participants" class="bs-styled-checkbox" <?php checked( 1, bp_get_zoom_meeting_mute_participants() ); ?> />
 					<label for="bp-zoom-meeting-mute-participants"><?php _e( 'Mute participants upon entry.', 'buddyboss' ); ?></label>
 				</p>
 				<p>
 					<label aria-hidden="true"><?php _e( 'Waiting Room', 'buddyboss' ); ?></label>
-					<input type="checkbox" id="bp-zoom-meeting-waiting-room" value="" tabindex="12" name="bp-zoom-meeting-waiting-room" class="bs-styled-checkbox" />
+					<input type="checkbox" id="bp-zoom-meeting-waiting-room" value="" tabindex="12" name="bp-zoom-meeting-waiting-room" class="bs-styled-checkbox" <?php checked( 1, bp_get_zoom_meeting_waiting_room() ); ?> />
 					<label for="bp-zoom-meeting-waiting-room"><?php _e( 'Enable waiting room.', 'buddyboss' ); ?></label>
 				</p>
 				<p>
 					<label aria-hidden="true"><?php _e( 'Authenticated Users', 'buddyboss' ); ?></label>
-					<input type="checkbox" id="bp-zoom-meeting-authentication" value="" tabindex="13" name="bp-zoom-meeting-authentication" class="bs-styled-checkbox" />
+					<input type="checkbox" id="bp-zoom-meeting-authentication" value="" tabindex="13" name="bp-zoom-meeting-authentication" class="bs-styled-checkbox" <?php checked( 1, bp_get_zoom_meeting_enforce_login() ); ?> />
 					<label for="bp-zoom-meeting-authentication"><?php _e( 'Only authenticated users can join.', 'buddyboss' ); ?></label>
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-recording"><?php _e( 'Auto Recording', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-recording" name="bp-zoom-meeting-recording" tabindex="14">
-						<option value="none" selected="selected"><?php _e( 'No Recordings', 'buddyboss' ); ?></option>
-						<option value="local"><?php _e( 'Local', 'buddyboss' ); ?></option>
-						<option value="cloud"><?php _e( 'Cloud', 'buddyboss' ); ?></option>
+						<option value="none" <?php echo 'none' === bp_get_zoom_meeting_auto_recording() ? 'selected' : ''; ?>><?php _e( 'No Recordings', 'buddyboss' ); ?></option>
+						<option value="local" <?php echo 'local' === bp_get_zoom_meeting_auto_recording() ? 'selected' : ''; ?>><?php _e( 'Local', 'buddyboss' ); ?></option>
+						<option value="cloud" <?php echo 'cloud' === bp_get_zoom_meeting_auto_recording() ? 'selected' : ''; ?>><?php _e( 'Cloud', 'buddyboss' ); ?></option>
 					</select><br />
 					<small><?php _e( 'Set what type of auto recording feature you want to add. Default is none.', 'buddyboss' ); ?></small>
 				</p>
@@ -132,11 +126,15 @@ wp_enqueue_style( 'bp-select2' );
 
 				<div class="bp-zoom-meeting-form-submit-wrapper">
 					<?php wp_nonce_field( 'bp_zoom_meeting' ); ?>
-					<input type="hidden" id="bp-zoom-meeting-group-id" name="bp-zoom-meeting-group-id" value="<?php echo bp_get_group_id(); ?>"/>
-					<button type="submit" tabindex="15" id="bp-zoom-meeting-form-submit" name="bp-zoom-meeting-form-submit" class="button submit"><?php _e( 'Create Meeting', 'buddyboss' ); ?></button>
+					<input type="hidden" id="bp-zoom-meeting-id" name="bp-zoom-meeting-id" value="<?php bp_zoom_meeting_id(); ?>"/>
+					<input type="hidden" id="bp-zoom-meeting-zoom-id" name="bp-zoom-meeting-zoom-id" value="<?php bp_zoom_meeting_zoom_meeting_id(); ?>"/>
+					<input type="hidden" id="bp-zoom-meeting-group-id" name="bp-zoom-meeting-group-id" value="<?php bp_zoom_meeting_group_id(); ?>"/>
+					<button type="submit" tabindex="15" id="bp-zoom-meeting-form-submit" name="bp-zoom-meeting-form-submit" class="button submit"><?php _e( 'Update Meeting', 'buddyboss' ); ?></button>
 				</div>
 
 			</div>
 		</fieldset>
 	</form>
 </div>
+<?php endwhile;
+endif;

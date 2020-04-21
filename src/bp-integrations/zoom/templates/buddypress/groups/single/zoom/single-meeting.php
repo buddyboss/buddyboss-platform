@@ -131,7 +131,7 @@ if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_current_meeting_id() 
 						   href="javascript:;"><?php _e( 'Delete this Meeting', 'buddyboss' ); ?></a>
 						<div class="pull-right">
 							<a role="button" class="button small outline"
-							   href="#"><?php _e( 'Edit this Meeting', 'buddyboss' ); ?></a>
+							   href="<?php echo trailingslashit( bp_get_group_permalink( groups_get_group( bp_get_zoom_meeting_group_id() ) ) . 'zoom/meetings/edit/' . bp_get_zoom_meeting_id() ); ?>"><?php _e( 'Edit this Meeting', 'buddyboss' ); ?></a>
 							<a type="button" class="button small outline"
 							   href="<?php echo bp_get_zoom_meeting_zoom_start_url(); ?>"><?php _e( 'Start this Meeting', 'buddyboss' ); ?></a>
 						</div>

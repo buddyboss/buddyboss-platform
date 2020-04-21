@@ -395,7 +395,7 @@ class BP_Zoom_Meeting {
 
 		// If we have an existing ID, update the meeting item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_zoom_meetings SET group_id = %d, title = %s, user_id = %s, start_date = %s, meeting_authentication = %d, password = %s, timezone = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, waiting_room = %d, enforce_login = %d, auto_recording = %s, alternative_host_ids = %s, zoom_details = %s, zoom_start_url = %s, zoom_join_url = %s, zoom_meeting_id = %d WHERE id = %d", $this->title, $this->user_id, $this->start_date, $this->timezone, $this->meeting_authentication, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->enforce_login, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_zoom_meetings SET group_id = %d, title = %s, user_id = %s, start_date = %s, meeting_authentication = %d, password = %s, timezone = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, waiting_room = %d, enforce_login = %d, auto_recording = %s, alternative_host_ids = %s, zoom_details = %s, zoom_start_url = %s, zoom_join_url = %s, zoom_meeting_id = %d WHERE id = %d", $this->group_id, $this->title, $this->user_id, $this->start_date, $this->meeting_authentication, $this->password, $this->timezone, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->enforce_login, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id, $this->id );
 		} else {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->table_prefix}bp_zoom_meetings ( group_id, title, user_id, start_date, meeting_authentication, password, timezone, duration, join_before_host, host_video, participants_video, mute_participants, waiting_room, enforce_login, auto_recording, alternative_host_ids, zoom_details, zoom_start_url, zoom_join_url, zoom_meeting_id ) VALUES ( %d, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s, %s, %s )", $this->group_id, $this->title, $this->user_id, $this->start_date, $this->timezone, $this->meeting_authentication, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->enforce_login, $this->auto_recording, $this->alternative_host_ids, $this->zoom_details, $this->zoom_start_url, $this->zoom_join_url, $this->zoom_meeting_id );
 		}
@@ -515,7 +515,7 @@ class BP_Zoom_Meeting {
 			$r['per_page'] = false;
 		}
 
-		if ( ! empty( $r['since'] ) ) {
+		if ( ! empty( $r['since'] ) && empty( $r['in'] ) ) {
 			// Validate that this is a proper Y-m-d H:i:s date.
 			// Trick: parse to UNIX date then translate back.
 			$translated_date = date( 'Y-m-d H:i:s', strtotime( $r['since'] ) );

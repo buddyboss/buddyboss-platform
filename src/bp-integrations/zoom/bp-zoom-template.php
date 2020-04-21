@@ -425,6 +425,37 @@ function bp_get_zoom_meeting_group_id() {
 }
 
 /**
+ * Output the meeting user id.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_meeting_user_id() {
+	echo bp_get_zoom_meeting_user_id();
+}
+
+/**
+ * Return the meeting user id.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @global object $zoom_meeting_template {@link BP_Zoom_Meeting_Template}
+ *
+ * @return string The meeting user id.
+ */
+function bp_get_zoom_meeting_user_id() {
+	global $zoom_meeting_template;
+
+	/**
+	 * Filters the meeting user id.
+	 *
+	 * @since BuddyBoss 1.2.10
+	 *
+	 * @param string $user_id The meeting user id.
+	 */
+	return apply_filters( 'bp_get_zoom_meeting_title', $zoom_meeting_template->meeting->user_id );
+}
+
+/**
  * Output the meeting title.
  *
  * @since BuddyBoss 1.2.10

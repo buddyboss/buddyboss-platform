@@ -284,10 +284,12 @@ if ( bp_is_active( 'groups' ) ) {
 			}
 
 			// Nonce check!
-			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_zoom_new_meeting' ) ) {
+			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_zoom_meeting' ) ) {
 				return;
 			}
 
+			$id             		= ! empty( $_POST['bp-zoom-meeting-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-id' ) ) : false;
+			$meeting_id        		= ! empty( $_POST['bp-zoom-meeting-zoom-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id' ) ) : false;
 			$user_id                = ! empty( $_POST['bp-zoom-meeting-host'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-host' ) ) : '';
 			$group_id               = ! empty( $_POST['bp-zoom-meeting-group-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-group-id' ) ) : false;
 			$start_date             = ! empty( $_POST['bp-zoom-meeting-start-date'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-start-date' ) ) : bp_core_current_time();
@@ -303,7 +305,7 @@ if ( bp_is_active( 'groups' ) ) {
 			$enforce_login          = ! empty( $_POST['bp-zoom-meeting-authentication'] ) ? filter_input( INPUT_POST, 'bp-zoom-meeting-authentication' ) : false;
 			$auto_recording         = ! empty( $_POST['bp-zoom-meeting-recording'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-recording' ) ) : 'none';
 			$alternative_host_ids   = ! empty( $_POST['bp-zoom-meeting-alt-host-ids'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-alt-host-ids' ) ) : '';
-			$meeting_topic          = ! empty( $_POST['bp-zoom-meeting-title'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-title' ) ) : '';
+			$title          		= ! empty( $_POST['bp-zoom-meeting-title'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-title' ) ) : '';
 
 			$data = array(
 				'user_id'                => $user_id,
@@ -320,30 +322,46 @@ if ( bp_is_active( 'groups' ) ) {
 				'meeting_authentication' => $meeting_authentication,
 				'auto_recording'         => $auto_recording,
 				'alternative_host_ids'   => $alternative_host_ids,
-				'meeting_topic'          => $meeting_topic,
+				'title'          		 => $title,
 			);
 
-			$meeting_created = bp_zoom_conference()->create_meeting( $data );
+			if ( ! empty( $meeting_id ) ) {
+				$data['meeting_id'] = $meeting_id;
+				$zoom_meeting = bp_zoom_conference()->update_meeting( $data );
+			} else {
+				$zoom_meeting = bp_zoom_conference()->create_meeting( $data );
+			}
 
-			if ( ! empty( $meeting_created['code'] ) && 201 === $meeting_created['code'] && ! empty( $meeting_created['response'] ) ) {
-				$data['zoom_details']    = serialize( $meeting_created['response'] );
-				$data['zoom_join_url']   = $meeting_created['response']->join_url;
-				$data['zoom_start_url']  = $meeting_created['response']->start_url;
-				$data['zoom_meeting_id'] = $meeting_created['response']->id;
+			if ( ! empty( $zoom_meeting['code'] ) && in_array( $zoom_meeting['code'], array( 201, 204 ), true ) ) {
+				if ( ! empty( $zoom_meeting['response'] ) ) {
+					$data['zoom_details']    = serialize( $zoom_meeting['response'] );
+					$data['zoom_join_url']   = $zoom_meeting['response']->join_url;
+					$data['zoom_start_url']  = $zoom_meeting['response']->start_url;
+					$data['zoom_meeting_id'] = $zoom_meeting['response']->id;
+				}
+
+				if ( ! empty( $id ) ) {
+					$data['id'] = $id;
+				}
+
+				if ( ! empty( $meeting_id ) ) {
+					$data['zoom_meeting_id'] = $meeting_id;
+				}
 
 				if ( ! empty( $group_id ) ) {
 					$data['group_id'] = $group_id;
 				}
 
-				$meeting_id = bp_zoom_meeting_add( $data );
+				$id = bp_zoom_meeting_add( $data );
 
-				if ( ! $meeting_id ) {
+				if ( ! $id ) {
 					wp_send_json_error( array() );
 				}
 			}
 
 			$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
-			wp_send_json_success( array( 'redirect_url' => trailingslashit( $group_link . 'zoom' ) ) );
+			$redirect_url = trailingslashit( $group_link . 'zoom/meetings/' . $id );
+			wp_send_json_success( array( 'redirect_url' => $redirect_url ) );
 		}
 
 		public function zoom_meeting_delete() {

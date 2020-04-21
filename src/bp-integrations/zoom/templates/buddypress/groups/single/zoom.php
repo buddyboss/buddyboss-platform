@@ -25,6 +25,8 @@ switch ( $tab ) :
 	case 'past-meetings':
 		if ( bp_zoom_is_single_meeting() ) {
 			bp_get_template_part( 'groups/single/zoom/single-meeting' );
+		} else if ( bp_zoom_is_edit_meeting() ) {
+			bp_get_template_part( 'groups/single/zoom/edit-meeting' );
 		} else {
 			bp_get_template_part( 'groups/single/zoom/meetings' );
 		}

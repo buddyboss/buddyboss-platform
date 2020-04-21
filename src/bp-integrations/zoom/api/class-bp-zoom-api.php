@@ -207,7 +207,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 				}
 			}
 
-			$args['topic']      = $data['meeting_topic'];
+			$args['topic']      = ! empty( $data['title'] ) ? $data['title'] : '';
 			$args['agenda']     = ! empty( $data['agenda'] ) ? $data['agenda'] : '';
 			$args['type']       = ! empty( $data['type'] ) ? $data['type'] : 2; //Scheduled
 			$args['start_time'] = $start_time;
@@ -215,13 +215,15 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['password']   = ! empty( $data['password'] ) ? $data['password'] : '';
 			$args['duration']   = ! empty( $data['duration'] ) ? $data['duration'] : 60;
 			$args['settings']   = array(
-				'join_before_host'  => ! empty( $data['join_before_host'] ) ? true : false,
-				'host_video'        => ! empty( $data['host_video'] ) ? true : false,
-				'participant_video' => ! empty( $data['participants_video'] ) ? true : false,
-				'mute_upon_entry'   => ! empty( $data['mute_participants'] ) ? true : false,
-				'enforce_login'     => ! empty( $data['enforce_login'] ) ? true : false,
-				'auto_recording'    => ! empty( $data['auto_recording'] ) ? $data['auto_recording'] : 'none',
-				'alternative_hosts' => isset( $alternative_host_ids ) ? $alternative_host_ids : ''
+				'join_before_host'       => ! empty( $data['join_before_host'] ) ? true : false,
+				'host_video'             => ! empty( $data['host_video'] ) ? true : false,
+				'participant_video'      => ! empty( $data['participants_video'] ) ? true : false,
+				'mute_upon_entry'        => ! empty( $data['mute_participants'] ) ? true : false,
+				'enforce_login'          => ! empty( $data['enforce_login'] ) ? true : false,
+				'meeting_authentication' => ! empty( $data['meeting_authentication'] ) ? true : false,
+				'waiting_room'           => ! empty( $data['waiting_room'] ) ? true : false,
+				'auto_recording'         => ! empty( $data['auto_recording'] ) ? $data['auto_recording'] : 'none',
+				'alternative_hosts'      => isset( $alternative_host_ids ) ? $alternative_host_ids : ''
 			);
 
 			return $this->send_request( 'users/' . $data['user_id'] . '/meetings', $args, 'POST' );
@@ -235,7 +237,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 		 *
 		 * @return array
 		 */
-		public function update_meeting_info( $update_data = array() ) {
+		public function update_meeting( $update_data = array() ) {
 			$post_time  = $update_data['start_date'];
 			$start_time = gmdate( "Y-m-d\TH:i:s", strtotime( $post_time ) );
 
@@ -249,7 +251,7 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 				}
 			}
 
-			$args['topic']      = $update_data['topic'];
+			$args['topic']      = ! empty( $update_data['title'] ) ? $update_data['title'] : '';
 			$args['agenda']     = ! empty( $update_data['agenda'] ) ? $update_data['agenda'] : '';
 			$args['type']       = ! empty( $update_data['type'] ) ? $update_data['type'] : 2; //Scheduled
 			$args['start_time'] = $start_time;
@@ -257,13 +259,15 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 			$args['password']   = ! empty( $update_data['password'] ) ? $update_data['password'] : '';
 			$args['duration']   = ! empty( $update_data['duration'] ) ? $update_data['duration'] : 60;
 			$args['settings']   = array(
-				'join_before_host'  => ! empty( $update_data['option_jbh'] ) ? true : false,
-				'host_video'        => ! empty( $update_data['option_host_video'] ) ? true : false,
-				'participant_video' => ! empty( $update_data['option_participants_video'] ) ? true : false,
-				'mute_upon_entry'   => ! empty( $update_data['option_mute_participants'] ) ? true : false,
-				'enforce_login'     => ! empty( $update_data['option_enforce_login'] ) ? true : false,
-				'auto_recording'    => ! empty( $update_data['option_auto_recording'] ) ? $update_data['option_auto_recording'] : 'none',
-				'alternative_hosts' => isset( $alternative_host_ids ) ? $alternative_host_ids : ''
+				'join_before_host'       => ! empty( $update_data['join_before_host'] ) ? true : false,
+				'host_video'             => ! empty( $update_data['host_video'] ) ? true : false,
+				'participant_video'      => ! empty( $update_data['participant_video'] ) ? true : false,
+				'mute_upon_entry'        => ! empty( $update_data['mute_participants'] ) ? true : false,
+				'enforce_login'          => ! empty( $update_data['enforce_login'] ) ? true : false,
+				'meeting_authentication' => ! empty( $update_data['meeting_authentication'] ) ? true : false,
+				'waiting_room'           => ! empty( $update_data['waiting_room'] ) ? true : false,
+				'auto_recording'         => ! empty( $update_data['auto_recording'] ) ? $update_data['auto_recording'] : 'none',
+				'alternative_hosts'      => isset( $alternative_host_ids ) ? $alternative_host_ids : ''
 			);
 
 			return $this->send_request( 'meetings/' . $update_data['meeting_id'], $args, 'PATCH' );
