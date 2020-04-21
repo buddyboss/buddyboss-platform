@@ -3,6 +3,7 @@
  * BuddyBoss - Document Edit Child Folder
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss/Core
  */
 
 global $media_album_template;
@@ -29,19 +30,28 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 							<input id="bb-album-child-title" type="text" value="<?php bp_folder_title(); ?>" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>"/>
 						</div>
 						<?php
-                        if ( ! bp_is_group() ) : ?>
+						if ( ! bp_is_group() ) :
+							?>
 							<div class="bb-field-wrap">
 								<label for="bb-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
 								<div class="bb-dropdown-wrap">
 									<select id="bb-folder-privacy">
-										<?php foreach ( bp_document_get_visibility_levels() as $key => $privacy ) : ?>
-											<option value="<?php echo $key; ?>"><?php echo $privacy; ?></option>
-										<?php endforeach; ?>
+										<?php
+										foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
+											if ( 'grouponly' === $key ) {
+												continue;
+											}
+											?>
+											<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $privacy ); ?></option>
+											<?php
+										endforeach;
+										?>
 									</select>
 								</div>
 							</div>
-						    <?php
-                        endif; ?>
+							<?php
+						endif;
+						?>
 						<a class="button bb-field-steps-next bb-field-steps-actions" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
 					</div>
 					<div class="bb-field-steps bb-field-steps-2">
@@ -61,16 +71,17 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 										<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 										<?php
 										if ( '' !== $ul ) {
-											echo $ul;
-										} else { ?>
+											echo esc_html( $ul );
+										} else {
+											?>
 											<ul class="location-folder-list">
 												<li data-id="0">
 													<span class="selected disabled"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 												</li>
 											</ul>
-									<?php 
+											<?php
 										}
-									?>
+										?>
 									</div> <!-- .location-folder-list-wrap -->
 									<div class="ac_document_search_folder_list" style="display: none;">
 										<ul class="location-folder-list"></ul>

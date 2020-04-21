@@ -165,7 +165,7 @@ class BP_Document_Component extends BP_Component {
 		}
 
 		if ( bp_is_active( 'groups' ) ) {
-			$this->visibility_levels['grouponly'] = __( 'Groups Only', 'buddyboss' );
+			$this->visibility_levels['grouponly'] = __( 'Group members', 'buddyboss' );
 		}
 
 		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );

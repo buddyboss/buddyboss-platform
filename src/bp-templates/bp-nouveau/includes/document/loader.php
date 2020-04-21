@@ -4,6 +4,7 @@
  *
  * @since BuddyBoss 1.0.0
  * @version 1.0.0
+ * @package BuddyBoss\Core
  */
 
 // Exit if accessed directly.
@@ -49,13 +50,16 @@ class BP_Nouveau_Document {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'document_' ) ) {
-					require $this->dir . 'ajax.php';
+			add_action(
+				'admin_init',
+				function() {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && isset(  $_REQUEST['action'] ) && 0 === strpos( $_REQUEST['action'], 'document_' ) ) {
+						require $this->dir . 'ajax.php';
+					}
 				}
-			} );
+			);
 		}
 	}
 
@@ -65,8 +69,8 @@ class BP_Nouveau_Document {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function setup_actions() {
-		// Enqueue the scripts for the new UI
-		add_action( 'bp_nouveau_enqueue_scripts',                       'bp_nouveau_document_enqueue_scripts'                          );
+		// Enqueue the scripts for the new UI.
+		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_document_enqueue_scripts' );
 	}
 
 	/**
@@ -76,7 +80,7 @@ class BP_Nouveau_Document {
 	 */
 	protected function setup_filters() {
 
-		// Localize Scripts
+		// Localize Scripts.
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_document_localize_scripts', 10, 1 );
 	}
 }
@@ -84,6 +88,7 @@ class BP_Nouveau_Document {
 /**
  * Launch the Media loader class.
  *
+ * @param null $bp_nouveau
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_document( $bp_nouveau = null ) {

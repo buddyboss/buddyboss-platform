@@ -3,6 +3,7 @@
  * Media functions
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
 
 // Exit if accessed directly.
@@ -31,7 +32,7 @@ function bp_nouveau_document_enqueue_scripts() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array $params Associative array containing the JS Strings needed by scripts
+ * @param  array $params Associative array containing the JS Strings needed by scripts.
  * @return array         The same array with specific strings for the messages UI if needed.
  */
 function bp_nouveau_document_localize_scripts( $params = array() ) {
@@ -44,7 +45,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		}
 	}
 
-	//initialize media vars because it is used globally
+	// initialize media vars because it is used globally.
 	$params['media'] = array(
 		'max_upload_size' => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_document_support_enabled(),
@@ -63,7 +64,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$params['media']['group_id'] = bp_get_current_group_id();
-    }
+	}
 
 	$params['media']['emoji']            = array(
 		'profile'  => bp_is_profiles_emoji_support_enabled(),
@@ -91,7 +92,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'no_photos_found'       => __( 'Sorry, no photos were found', 'buddyboss' ),
 		'upload'                => __( 'Upload', 'buddyboss' ),
 		'uploading'             => __( 'Uploading', 'buddyboss' ),
-		'upload_status'         => __( '%d out of %d uploaded', 'buddyboss' ),
+		'upload_status'         => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm'  => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'folder_delete_confirm' => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted.', 'buddyboss' ),
 		'album_delete_error'    => __( 'There was a problem deleting the album.', 'buddyboss' ),
@@ -117,7 +118,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 
 		$nav_items['all'] = array(
 			'component' => 'media',
-			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_get_media_directory_permalink(),
 			'text'      => __( 'All Photos', 'buddyboss' ),
@@ -128,7 +129,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 		if ( is_user_logged_in() ) {
 			$nav_items['personal'] = array(
 				'component' => 'media',
-				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
 				'text'      => __( 'My Photos', 'buddyboss' ),
@@ -136,12 +137,11 @@ function bp_nouveau_get_document_directory_nav_items() {
 				'position'  => 15,
 			);
 		}
-
 	} else {
 
 		$nav_items['all'] = array(
 			'component' => 'document',
-			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_get_media_directory_permalink(),
 			'text'      => __( 'All Documents', 'buddyboss' ),
@@ -152,7 +152,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 		if ( is_user_logged_in() ) {
 			$nav_items['personal'] = array(
 				'component' => 'document',
-				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
 				'text'      => __( 'My Documents', 'buddyboss' ),
@@ -160,7 +160,6 @@ function bp_nouveau_get_document_directory_nav_items() {
 				'position'  => 15,
 			);
 		}
-
 	}
 
 	/**
@@ -189,7 +188,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/csv',
 			'description' => 'Comma-Seperated Values',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'css',
@@ -197,7 +196,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/css',
 			'description' => 'Cascading Style Sheets (CSS)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'doc',
@@ -205,7 +204,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/msword',
 			'description' => 'Microsoft Word',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'docm',
@@ -213,7 +212,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
 			'description' => 'Microsoft Word - Macro-Enabled Document',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'docm',
@@ -221,7 +220,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Microsoft Word - Macro-Enabled Document',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'docx',
@@ -229,7 +228,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Microsoft Office - OOXML - Word Document',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'dotx',
@@ -237,7 +236,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Microsoft Office - OOXML - Word Document Template',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'dotm',
@@ -245,7 +244,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-word.template.macroenabled.12',
 			'description' => 'Microsoft Word - Macro-Enabled Template',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'gzip',
@@ -253,7 +252,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/gzip',
 			'description' => 'Zip File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'htm',
@@ -261,7 +260,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/html',
 			'description' => 'HyperText Markup Language (HTML)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'html',
@@ -269,7 +268,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/html',
 			'description' => 'HyperText Markup Language (HTML)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ics',
@@ -277,7 +276,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/calendar',
 			'description' => 'iCalendar',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ico',
@@ -285,7 +284,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'image/x-icon',
 			'description' => 'Icon Image',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'jar',
@@ -293,7 +292,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/java-archive',
 			'description' => 'Java Archive',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'js',
@@ -301,7 +300,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/javascript',
 			'description' => 'JavaScript',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'mp3',
@@ -309,7 +308,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'audio/mpeg',
 			'description' => 'MP3 File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ods',
@@ -317,7 +316,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.oasis.opendocument.spreadsheet',
 			'description' => 'OpenDocument Spreadsheet',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'odt',
@@ -325,7 +324,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.oasis.opendocument.text',
 			'description' => 'OpenDocument Text',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'pdf',
@@ -333,7 +332,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/pdf',
 			'description' => 'Adobe Portable Document Format',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'psd',
@@ -341,7 +340,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'image/vnd.adobe.photoshop',
 			'description' => 'Photoshop Document',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ppt',
@@ -349,7 +348,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-powerpoint',
 			'description' => 'Microsoft PowerPoint',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'pptx',
@@ -357,7 +356,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'Microsoft Office - OOXML - Presentation',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ppsx',
@@ -365,7 +364,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
 			'description' => 'Microsoft Office - OOXML - Presentation (Slideshow)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ppsx',
@@ -373,7 +372,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'Microsoft Office - OOXML - Presentation (Slideshow)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'pptm',
@@ -381,7 +380,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
 			'description' => 'Microsoft PowerPoint - Macro-Enabled Presentation File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'pptm',
@@ -389,7 +388,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/octet-stream',
 			'description' => 'Microsoft PowerPoint - Macro-Enabled Presentation File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'potx',
@@ -397,7 +396,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.template',
 			'description' => 'Microsoft Office - OOXML - Presentation Template',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'potm',
@@ -405,7 +404,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-powerpoint.template.macroenabled.12',
 			'description' => 'Microsoft PowerPoint - Macro-Enabled Template File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'rar',
@@ -413,7 +412,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/x-rar-compressed',
 			'description' => 'RAR Archive',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'rtf',
@@ -421,7 +420,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/rtf',
 			'description' => 'Rich Text Format',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'tar',
@@ -429,7 +428,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/x-tar',
 			'description' => 'Tar File (Tape Archive)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'txt',
@@ -437,7 +436,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/plain',
 			'description' => 'Text File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xls',
@@ -445,7 +444,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-excel',
 			'description' => 'Microsoft Excel',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'wav',
@@ -453,7 +452,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'audio/x-wav',
 			'description' => 'Waveform Audio File Format (WAV)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xlsx',
@@ -461,7 +460,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Microsoft Office - OOXML - Spreadsheet',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xlsm',
@@ -469,7 +468,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
 			'description' => 'Microsoft Excel - Macro-Enabled Workbook',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xltx',
@@ -477,7 +476,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Microsoft Office - OOXML - Spreadsheet Template	a',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xltm',
@@ -485,7 +484,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
 			'description' => 'Microsoft Excel - Macro-Enabled Template File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => '7z',
@@ -493,7 +492,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/x-7z-compressed',
 			'description' => '7-Zip',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'abw',
@@ -501,7 +500,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/x-abiword',
 			'description' => 'AbiWord',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ace',
@@ -509,7 +508,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/x-ace-compressed',
 			'description' => 'Ace Archive',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'acc',
@@ -517,7 +516,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.americandynamics.acc',
 			'description' => 'Active Content Compression',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'acu',
@@ -525,7 +524,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.acucobol',
 			'description' => 'ACU Cobol',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'atc',
@@ -533,7 +532,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.acucorp',
 			'description' => 'ACU Cobol',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'adp',
@@ -541,7 +540,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'audio/adpcm',
 			'description' => 'Adaptive differential pulse-code modulation',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'zip',
@@ -549,7 +548,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/zip',
 			'description' => 'Zip File',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'zir',
@@ -557,7 +556,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.zul',
 			'description' => 'Z.U.L. Geometry',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'zaz',
@@ -565,7 +564,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.zzazz.deck+xml',
 			'description' => 'Zzazz Deck',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'zaz',
@@ -573,7 +572,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.zzazz.deck+xml',
 			'description' => 'Zzazz Deck',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'yaml',
@@ -581,7 +580,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/yaml',
 			'description' => 'YAML Ain\'t Markup Language / Yet Another Markup Language',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xml',
@@ -589,7 +588,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'RSS - Really Simple Syndication',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'rss',
@@ -597,7 +596,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'RSS - Really Simple Syndication',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xlsb',
@@ -605,7 +604,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Microsoft Excel - Binary Workbook',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'xlam',
@@ -613,7 +612,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Microsoft Excel - Binary Workbook',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'vcf',
@@ -621,7 +620,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'text/x-vcard',
 			'description' => 'vCard',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'svg',
@@ -629,7 +628,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'image/svg+xml',
 			'description' => 'Scalable Vector Graphics (SVG)',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'ai',
@@ -637,7 +636,7 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/postscript',
 			'description' => 'PostScript',
 			'is_default'  => true,
-			'is_active'   => true
+			'is_active'   => true,
 		),
 		array(
 			'name'        => 'apk',
@@ -645,8 +644,8 @@ function bp_media_allowed_document_type() {
 			'mime_type'   => 'application/vnd.android.package-archive',
 			'description' => 'Android Package Archive',
 			'is_default'  => true,
-			'is_active'   => true
-		)
+			'is_active'   => true,
+		),
 	);
 
 	$extension_lists = apply_filters( 'bp_media_allowed_document_type', $extension_lists );
@@ -662,16 +661,16 @@ function bp_document_download_file( $attachment_id ) {
 		return;
 	}
 
-	//clean the fileurl
+	// clean the file url.
 	$file_url = stripslashes( trim( $the_file ) );
 
-	//get filename
+	// get filename.
 	$file_name = basename( $the_file );
 
-	//get fileextension
+	// get file extension.
 	$file_extension = pathinfo( $file_name );
 
-	//security check
+	// security check.
 	$fileName = strtolower( $file_url );
 
 	// Get all allowed document extensions.
@@ -680,9 +679,9 @@ function bp_document_download_file( $attachment_id ) {
 	$allowed_file_type_with_mime_type = array();
 	foreach ( $all_extensions as $extension ) {
 		if ( true === (bool) $extension['is_active'] ) {
-			$extension_name                                    = ltrim( $extension['extension'], '.' );
-			$allowed_for_download[]                            = $extension_name;
-			$allowed_file_type_with_mime_type[$extension_name] = $extension['mime_type'];
+			$extension_name                                      = ltrim( $extension['extension'], '.' );
+			$allowed_for_download[]                              = $extension_name;
+			$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
 		}
 	}
 
@@ -694,40 +693,43 @@ function bp_document_download_file( $attachment_id ) {
 
 	$file_new_name = $file_name;
 	$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
-	$content_type  = apply_filters( "bp_document_download_file_content_type", $content_type, $file_extension['extension'] );
+	$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
 
-	header( "Expires: 0" );
-	header( "Cache-Control: no-cache, no-store, must-revalidate" );
+	header( 'Expires: 0' );
+	header( 'Cache-Control: no-cache, no-store, must-revalidate' );
 	header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-	header( "Pragma: no-cache" );
+	header( 'Pragma: no-cache' );
 	header( "Content-type: {$content_type}" );
 	header( "Content-Disposition:attachment; filename={$file_new_name}" );
-	header( "Content-Type: application/force-download" );
+	header( 'Content-Type: application/force-download' );
 
 	readfile( "{$file_url}" );
 	exit();
 }
 
 function bp_document_preview_extension_list() {
-	$extension_arr = apply_filters( 'bp_document_preview_extension_list', array(
-		'xlsm',
-		'potx',
-		'pps',
-		'docm',
-		'dotx',
-		'doc',
-		'docx',
-		'xls',
-		'xlsx',
-		'xlr',
-		'wps',
-		'wpd',
-		'rtf',
-		'pptx',
-		'ppt',
-		'pps',
-		'odt'
-	) );
+	$extension_arr = apply_filters(
+		'bp_document_preview_extension_list',
+		array(
+			'xlsm',
+			'potx',
+			'pps',
+			'docm',
+			'dotx',
+			'doc',
+			'docx',
+			'xls',
+			'xlsx',
+			'xlr',
+			'wps',
+			'wpd',
+			'rtf',
+			'pptx',
+			'ppt',
+			'pps',
+			'odt',
+		)
+	);
 
 	return $extension_arr;
 }
@@ -747,5 +749,5 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 	$data['text']      = $file_data;
 	$data['more_text'] = $more_text;
 
-	return apply_filters( 'bp_document_get_preview_text_from_attachment', $data, $attachment_id);
+	return apply_filters( 'bp_document_get_preview_text_from_attachment', $data, $attachment_id );
 }

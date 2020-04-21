@@ -3,6 +3,7 @@
  * BuddyBoss - Document Single Folder
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
 
 global $document_folder_template;
@@ -19,50 +20,52 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 		$total_media = $document_folder_template->folder->document['total'];
 		?>
 		<div id="bp-media-single-folder">
-			<div class="album-single-view" <?php echo $total_media == 0 ? 'no-photos' : ''; ?>>
+			<div class="album-single-view" <?php echo 0 === $total_media ? esc_attr( 'no-photos' ) : ''; ?>>
 				<div class="bp-media-header-wrap">
 					<div class="bp-media-header-wrap-inner">
 						<div class="bb-single-album-header text-center">
 							<h4 class="bb-title" id="bp-single-album-title"><?php bp_folder_title(); ?></h4>
 						</div> <!-- .bb-single-album-header -->
-                        <div class="bb-media-actions">
-                            <div id="search-documents-form" class="media-search-form">
-                                <label for="media_document_search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
-                                <input type="text" name="search" id="media_document_search" value="" placeholder="<?php esc_html_e( 'Search Documents', 'buddyboss' ); ?>" class="">
-                            </div>
-                            <?php
-                            if ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) : ?>
-                                <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-                                    <i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
-                                </a>
-                                <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
-                                    <i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
-                                </a>
-                                <div class="media-folder_items">
-                                    <div class="media-folder_actions">
-                                        <a href="#" class="media-folder_action__anchor">
-                                            <i class="bb-icon-menu-dots-v"></i>
-                                        </a>
-                                        <div class="media-folder_action__list">
-                                            <ul>
-                                                <li>
-                                                    <a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> <?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?></a>
-                                                </li>
-                                                <li><a href="#" id="bb-delete-folder"><i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div> <!-- .media-folder_items -->
-                                <?php
-                                bp_get_template_part( 'document/document-uploader' );
-                                bp_get_template_part( 'document/create-child-folder' );
-                                bp_get_template_part( 'document/edit-child-folder' );
-                            endif; ?>
-                        </div> <!-- .bb-media-actions -->
+						<div class="bb-media-actions">
+							<div id="search-documents-form" class="media-search-form">
+								<label for="media_document_search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+								<input type="text" name="search" id="media_document_search" value="" placeholder="<?php esc_html_e( 'Search Documents', 'buddyboss' ); ?>" class="">
+							</div>
+							<?php
+							if ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) :
+								?>
+								<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
+									<i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+								</a>
+								<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
+									<i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
+								</a>
+								<div class="media-folder_items">
+									<div class="media-folder_actions">
+										<a href="#" class="media-folder_action__anchor">
+											<i class="bb-icon-menu-dots-v"></i>
+										</a>
+										<div class="media-folder_action__list">
+											<ul>
+												<li>
+													<a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> <?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?></a>
+												</li>
+												<li><a href="#" id="bb-delete-folder"><i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?></a></li>
+											</ul>
+										</div>
+									</div>
+								</div> <!-- .media-folder_items -->
+								<?php
+								bp_get_template_part( 'document/document-uploader' );
+								bp_get_template_part( 'document/create-child-folder' );
+								bp_get_template_part( 'document/edit-child-folder' );
+							endif;
+							?>
+						</div> <!-- .bb-media-actions -->
 					</div>
 					<?php
 					if ( '' !== $bradcrumbs ) {
-					    echo $bradcrumbs;
+						echo esc_html( $bradcrumbs );
 					}
 					?>
 				</div> <!-- .bp-media-header-wrap -->
@@ -71,6 +74,6 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 				</div>
 			</div>
 		</div>
-	    <?php
-    endwhile;
+		<?php
+	endwhile;
 endif;

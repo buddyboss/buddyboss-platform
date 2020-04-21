@@ -3,7 +3,9 @@
  * BuddyBoss - Document Activity Folder Move
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
+
 ?>
 <div class="bp-media-move-file" style="display: none;" id="bp-media-move-file-<?php bp_document_id(); ?>" data-activity-id="">
 	<transition name="modal">
@@ -27,16 +29,17 @@
 									<span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
 									<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 									<?php
-										if ( '' !== $ul ) {
-											echo $ul;
-										} else { ?>
+									if ( '' !== $ul ) {
+										echo esc_html( $ul );
+									} else {
+										?>
 											<ul class="location-folder-list">
 												<li data-id="0">
 													<span class="selected disabled"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 												</li>
 											</ul>
-									<?php 
-										}
+										<?php
+									}
 									?>
 								</div> <!-- .location-folder-list-wrap -->
 								<div class="ac_document_search_folder_list" style="display: none;">

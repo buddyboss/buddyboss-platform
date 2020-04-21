@@ -3,6 +3,7 @@
  * BuddyBoss - Activity Document Folder Move
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
 
 ?>
@@ -18,7 +19,7 @@
 					<?php
 					if ( ! bp_is_group() ) :
 						$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-					?>
+						?>
 					<div class="bb-field-wrap bb-field-wrap-search">
 						<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folder', 'buddyboss' ); ?>" />
 					</div>
@@ -30,17 +31,18 @@
 									<span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
 									<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 									<?php
-										if ( '' !== $ul ) {
-											echo $ul;
-										} else { ?>
+									if ( '' !== $ul ) {
+										echo esc_html( $ul );
+									} else {
+										?>
 											<ul class="location-folder-list">
 												<li data-id="0">
 													<span class="selected disabled"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 												</li>
 											</ul>
-										<?php 
-											}
-										?>
+										<?php
+									}
+									?>
 								</div> <!-- .location-folder-list-wrap -->
 								<div class="ac_document_search_folder_list" style="display: none;">
 									<ul class="location-folder-list"></ul>
@@ -49,7 +51,7 @@
 							</div>
 						</div>
 					</div>
-					<?php
+						<?php
 						endif;
 					?>
 					<footer class="bb-model-footer">

@@ -3,7 +3,9 @@
  * BuddyBoss - Document Uploader
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
+
 ?>
 <div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
 	<transition name="modal">
@@ -22,7 +24,7 @@
 							<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
 								<?php if ( bp_is_active( 'forums' ) && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
 								<div class="media-uploader-post-content">
-									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : _e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+									<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? esc_html_e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : esc_html_e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
 								</div>
 								<?php endif; ?>
 								<div class="media-uploader-wrapper">
@@ -49,16 +51,17 @@
 										<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 										<?php
 										if ( '' !== $ul ) {
-											echo $ul;
-										} else { ?>
+											echo esc_html( $ul );
+										} else {
+											?>
 											<ul class="location-folder-list">
 												<li data-id="0">
 													<span class="selected disabled"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 												</li>
 											</ul>
-									<?php 
+											<?php
 										}
-									?>
+										?>
 									</div> <!-- .location-folder-list-wrap -->
 									<div class="ac_document_search_folder_list" style="display: none;">
 										<ul class="location-folder-list"></ul>

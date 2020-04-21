@@ -3,6 +3,7 @@
  * BuddyBoss - Add Document
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
 
 if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
@@ -12,5 +13,5 @@ if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
 		</div>
 	</div>
 	<?php
-    bp_get_template_part( 'document/document-uploader' );
+	bp_get_template_part( 'document/document-uploader' );
 endif;

@@ -3,6 +3,7 @@
  * Document Template tags
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
 
 // Exit if accessed directly.
@@ -78,7 +79,7 @@ function bp_nouveau_document_hook( $when = '', $suffix = '' ) {
 		$hook[] = $when;
 	}
 
-	// It's an media entry hook
+	// It's an media entry hook.
 	$hook[] = 'document';
 
 	if ( $suffix ) {

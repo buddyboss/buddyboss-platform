@@ -3,7 +3,9 @@
  * BuddyBoss - Add Media
  *
  * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
  */
+
 ?>
 
 <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>

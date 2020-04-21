@@ -1794,7 +1794,7 @@ function bp_get_document_privacy() {
 	$document_privacy = $document_privacy[ $document_template->document->privacy ];
 
 	if ( empty( $document_privacy ) && $document_template->document->group_id > 0 ) {
-		$document_privacy = esc_html__( 'Groups Only', 'buddyboss' );
+		$document_privacy = esc_html__( 'Group members', 'buddyboss' );
 	}
 
 	/**
