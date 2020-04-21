@@ -5060,6 +5060,19 @@ function bp_activity_action_parse_url() {
 
 			$meta_tags = $parser->getMetaTags( false );
 
+			if ( empty( $meta_tags ) ) {
+				$doc = new DOMDocument();
+				$doc->loadHTML( $parser->content );
+				$xpath = new DOMXPath( $doc );
+				$query = '//*/meta[starts-with(@property, \'og:\')]';
+				$metas = $xpath->query( $query );
+				foreach ( $metas as $meta ) {
+					$property    = $meta->getAttribute( 'property' );
+					$content     = $meta->getAttribute( 'content' );
+					$meta_tags[] = array( $property, $content );
+				}
+			}
+
 			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
 				foreach ( $meta_tags as $tag ) {
 					if ( is_array( $tag ) && ! empty( $tag ) ) {
@@ -5077,24 +5090,21 @@ function bp_activity_action_parse_url() {
 					}
 				}
 			}
+
 			if ( $title == '' ) {
 				$title = $parser->getTitle( false );
 			}
-			if ( empty( $images ) ) {
-				$images = $parser->getImageSources( false );
-			}
-			if ( ! empty( $images ) ) {
-				$images_obj = [];
 
-				foreach ( $images as $key => $img ) {
+			$images_sources = $parser->getImageSources( false );
+			if ( ! empty( $images_sources ) ) {
+				foreach ( $images_sources as $key => $img ) {
 					if ( strpos( $url, 'youtube.com' ) > 0 ) {
 						$img = 'https://www.youtube.com' . $img;
 					}
 					if ( @fopen( $img, 'r' ) ) {
-						$images_obj[] = $img;
+						$images[] = $img;
 					}
 				}
-				$images = $images_obj;
 			}
 
 			// Generate Image URL Previews
@@ -5109,6 +5119,8 @@ function bp_activity_action_parse_url() {
 			$json_data['description'] = $description;
 			$json_data['images']      = $images;
 			$json_data['error']       = '';
+
+			set_transient( $cache_key, $json_data, DAY_IN_SECONDS );
 		} else {
 			// Extract HTML using curl
 			$ch = curl_init();
@@ -5125,58 +5137,91 @@ function bp_activity_action_parse_url() {
 			$dom = new DOMDocument();
 			@$dom->loadHTML( $data );
 
-			// Parse DOM to get Title
-			$nodes = $dom->getElementsByTagName( 'title' );
-			$title = $nodes->item( 0 )->nodeValue;
+			// Parse DOM to get Meta Description
+			$metas       = $dom->getElementsByTagName( 'meta' );
+			$meta_tags   = array();
+			$images      = array();
+			$description = '';
+			$title       = '';
 
-			if ( '' === $title || null === $title ) {
+			$xpath = new DOMXPath( $dom );
+			$query = '//*/meta[starts-with(@property, \'og:\')]';
+			$metas_query = $xpath->query( $query );
+			foreach ( $metas_query as $meta ) {
+				$property    = $meta->getAttribute( 'property' );
+				$content     = $meta->getAttribute( 'content' );
+				$meta_tags[] = array( $property, $content );
+			}
+
+			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+				foreach ( $meta_tags as $tag ) {
+					if ( is_array( $tag ) && ! empty( $tag ) ) {
+						if ( $tag[0] == 'og:title' ) {
+							$title = $tag[1];
+						}
+						if ( $tag[0] == 'og:description' || 'description' === strtolower( $tag[0] ) ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
+						}
+						if ( $tag[0] == 'og:image' ) {
+							$images[] = $tag[1];
+						}
+					}
+				}
+			}
+
+			if ( empty( $title ) ) {
+				// Parse DOM to get Title
+				$nodes = $dom->getElementsByTagName( 'title' );
+				$title = $nodes->item( 0 )->nodeValue;
+			}
+
+			if ( empty( $title ) ) {
 				$nodes = $dom->getElementsByTagName( 'h1' );
 				$title = $nodes->item( 0 )->nodeValue;
 			}
 
-			if ( '' === $title || null === $title ) {
+			if ( empty( $title ) ) {
 				$nodes = $dom->getElementsByTagName( 'h2' );
 				$title = $nodes->item( 0 )->nodeValue;
 			}
 
-			// Parse DOM to get Meta Description
-			$metas = $dom->getElementsByTagName( 'meta' );
-			$body  = '';
-			for ( $i = 0; $i < $metas->length; $i ++ ) {
-				$meta = $metas->item( $i );
-				if ( $meta->getAttribute( 'name' ) == 'description' ) {
-					$body = $meta->getAttribute( 'content' );
+			if ( empty( $description ) ) {
+				for ( $i = 0; $i < $metas->length; $i ++ ) {
+					$meta = $metas->item( $i );
+					if ( $meta->getAttribute( 'name' ) == 'description' ) {
+						$description = $meta->getAttribute( 'content' );
+					}
 				}
 			}
 
 			// Parse DOM to get Images
-			$image_urls = array();
-			$images     = $dom->getElementsByTagName( 'img' );
-
-			for ( $i = 0; $i < $images->length; $i ++ ) {
-				$image = $images->item( $i );
+			$image_elements = $dom->getElementsByTagName( 'img' );
+			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+				$image = $image_elements->item( $i );
 				$src   = $image->getAttribute( 'src' );
 
 				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
-					$image_src[] = $src;
+					$images[] = $src;
 				}
 			}
 
-			if ( isset( $image_src ) && isset( $body ) && '' === trim( $title ) ) {
-				$title = $body;
+			if ( isset( $images ) && isset( $description ) && '' === trim( $title ) ) {
+				$title = $description;
 			}
 
-			if ( isset( $title ) && isset( $body ) && isset( $image_src ) ) {
+			if ( isset( $title ) && isset( $description ) && isset( $images ) ) {
 				$json_data['title']       = $title;
-				$json_data['description'] = $body;
-				$json_data['images']      = $image_src;
+				$json_data['description'] = $description;
+				$json_data['images']      = $images;
 				$json_data['error']       = '';
+
+				set_transient( $cache_key, $json_data, DAY_IN_SECONDS );
 			} else {
-				$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+				$json_data['error'] = __( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' );
 			}
 		}
 	} else {
-		$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+		$json_data['error'] = __( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' );
 	}
 
 	wp_send_json( $json_data );
