@@ -453,22 +453,35 @@ function bp_zoom_admin_users_list_callback() {
  * @param $user
  */
 function bp_zoom_add_zoom_user_profile_field( $user ) {
-	$bp_zoom_user    = get_user_meta( $user->ID, 'bp_zoom_user', true );
+	$bp_zoom_user        = get_user_meta( $user->ID, 'bp_zoom_user', true );
+	$bp_zoom_user_id     = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
+	$bp_zoom_user_status = get_user_meta( $user->ID, 'bp_zoom_user_status', true );
+	if ( ! empty( $bp_zoom_user_id ) && 'active' !== $bp_zoom_user_status ) {
+		$zoom_user_info = bp_zoom_conference()->get_user_info( $bp_zoom_user_id );
+		if ( ! empty( $zoom_user_info['code'] ) && 200 === $zoom_user_info['code'] && ! empty( $zoom_user_info['response'] ) ) {
+			$bp_zoom_user_status = $zoom_user_info['response']->status;
+			update_user_meta( $user->ID, 'bp_zoom_user_status', $bp_zoom_user_status );
+		}
+	}
 	?>
-	<h2><?php _e( 'Zoom User', 'buddyboss' ); ?></h2>
+	<h2><?php _e( 'Zoom', 'buddyboss' ); ?></h2>
 	<table class="form-table">
 		<tr class="bp-zoom-user">
-			<th scope="row"><?php _e( 'Zoom', 'buddyboss' ); ?></th>
+			<th scope="row"><?php _e( 'Zoom User', 'buddyboss' ); ?></th>
 			<td>
 				<label for="bp_zoom_user">
-					<input name="bp_zoom_user" type="checkbox" id="bp_zoom_user" value="1" <?php checked( '1', $bp_zoom_user ); ?> />
-					<?php _e( 'Add to Zoom Conference.', 'buddyboss' ); ?>
-				</label><br>
+					<?php if ( current_user_can( 'create_users' ) ) : ?>
+						<input name="bp_zoom_user" type="checkbox" id="bp_zoom_user" value="1" <?php checked( '1', $bp_zoom_user ); ?> />
+						<?php _e( 'Add to Zoom Conference.', 'buddyboss' ); ?>
+					<?php endif; ?>
+					<?php echo '[' . $bp_zoom_user_status . ']'; ?>
+				</label>
 			</td>
 		</tr>
 	</table>
 	<?php
 }
+add_action( 'show_user_profile', 'bp_zoom_add_zoom_user_profile_field', 9 );
 add_action( 'edit_user_profile', 'bp_zoom_add_zoom_user_profile_field', 9 );
 
 /**
