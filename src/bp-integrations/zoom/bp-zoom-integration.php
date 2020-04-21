@@ -40,6 +40,7 @@ class BP_Zoom_Integration extends BP_Integration {
 		parent::includes(
 			array(
 				'lib/firebase/php-jwt/src/JWT.php',
+				'cache',
 				'template',
 				'functions',
 				'api/class-bp-zoom-api.php',
