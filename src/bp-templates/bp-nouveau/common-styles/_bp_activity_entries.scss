@@ -325,6 +325,39 @@
 				color: #800;
 			}
 
+			.buddyboss_edit_activity,
+			.buddyboss_edit_activity_cancel {
+				color: #555;
+				cursor: pointer;
+				font-size: 12px;
+				outline: none;
+				line-height: 1.3;
+				text-align: center;
+				text-decoration: none;
+				width: auto;
+				font-weight: 600;
+
+				#buddypress &.button {
+					box-shadow: none;
+					margin-bottom: 5px;
+					margin-right: 15px;
+				}
+
+				&:before {
+					font-family: dashicons;
+					font-size: 18px;
+					vertical-align: middle;
+				}
+			}
+
+			.buddyboss_edit_activity:before {
+				content: "\f464";
+			}
+
+			.buddyboss_edit_activity_cancel:before {
+				content: "\f335";
+			}
+
 			.button {
 				border: 0;
 				box-shadow: none;

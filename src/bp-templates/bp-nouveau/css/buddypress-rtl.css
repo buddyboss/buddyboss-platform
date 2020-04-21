@@ -1628,6 +1628,36 @@ input.search-query-input {
   color: #800;
 }
 
+.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity,
+.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity_cancel {
+  color: #555;
+  cursor: pointer;
+  font-size: 12px;
+  outline: none;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  width: auto;
+  font-weight: 600;
+  margin-bottom: 5px;
+  margin-left: 15px;
+}
+
+.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity:before,
+.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity_cancel:before {
+  font-family: dashicons;
+  font-size: 18px;
+  vertical-align: middle;
+}
+
+.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity:before {
+  content: "\f464";
+}
+
+.activity-list .activity-item .bp-generic-meta.action .buddyboss_edit_activity_cancel:before {
+  content: "\f335";
+}
+
 .activity-list .activity-item .bp-generic-meta.action .button {
   border: 0;
   box-shadow: none;
