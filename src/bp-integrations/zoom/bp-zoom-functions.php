@@ -456,7 +456,7 @@ function bp_zoom_add_zoom_user_profile_field( $user ) {
 	$bp_zoom_user        = get_user_meta( $user->ID, 'bp_zoom_user', true );
 	$bp_zoom_user_id     = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
 	$bp_zoom_user_status = get_user_meta( $user->ID, 'bp_zoom_user_status', true );
-	if ( ! empty( $bp_zoom_user_id ) && 'active' !== $bp_zoom_user_status ) {
+	if ( ! empty( $bp_zoom_user_id ) && ! in_array( $bp_zoom_user_status, array( 'active', 'deleted' ), true ) ) {
 		$zoom_user_info = bp_zoom_conference()->get_user_info( $bp_zoom_user_id );
 		if ( ! empty( $zoom_user_info['code'] ) && 200 === $zoom_user_info['code'] && ! empty( $zoom_user_info['response'] ) ) {
 			$bp_zoom_user_status = $zoom_user_info['response']->status;
@@ -526,6 +526,7 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 			if ( ! empty( $delete_user['code'] ) && ( 204 === $delete_user['code'] || 429 === $delete_user['code'] ) ) {
 				delete_user_meta( $user_id, 'bp_zoom_user_id' );
 				delete_user_meta( $user_id, 'bp_zoom_user' );
+				update_user_meta( $user_id, 'bp_zoom_user_status', 'deleted' );
 			}
 		}
 	}
