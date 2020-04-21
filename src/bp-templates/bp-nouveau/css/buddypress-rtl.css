@@ -4618,6 +4618,7 @@ input#send-to-input {
   height: 0;
   left: 0;
   overflow: hidden;
+  right: 25px;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
@@ -4630,14 +4631,14 @@ input#send-to-input {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 0;
+  bottom: -5px;
   height: 40px;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
   height: auto;
-  padding: 0 10px 10px;
+  padding: 0 0 10px 10px;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
@@ -4661,25 +4662,8 @@ input#send-to-input {
   width: 220px;
 }
 
-.bp-messages-content #bp-message-content #message-form-submit-wrapper,
-.bp-messages-content #bp-message-content #message-reply-form-submit-wrapper {
-  flex-direction: column;
-  -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  margin: 0 -20px;
-}
-
-.bp-messages-content #bp-message-content #message-new-submit,
-.bp-messages-content #bp-message-content #message-reply-new-submit {
-  padding: 20px 20px 0;
-  text-align: left;
-  border-top: 1px solid #ebe9e6;
-  width: 100%;
-}
-
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
-  padding: 0 15px 10px;
+  padding: 0 0 0 15px;
   width: 100%;
 }
 

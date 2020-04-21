@@ -574,6 +574,7 @@ input#send-to-input {
 		height: 0;
 		right: 0;
 		overflow: hidden;
+		left: 25px;
 
 		&.medium-editor-toolbar-active {
 			opacity: 1;
@@ -585,14 +586,14 @@ input#send-to-input {
 			z-index: 112;
 			opacity: 1;
 			visibility: visible;
-			bottom: 0;
+			bottom: -5px;
 			height: 40px;
 		}
 
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
 			height: auto;
-			padding: 0 10px 10px;
+			padding: 0 10px 10px 0;
 
 			button {
 				box-shadow: none;
@@ -620,25 +621,8 @@ input#send-to-input {
 
 	}
 
-	#message-form-submit-wrapper,
-	#message-reply-form-submit-wrapper {
-		flex-direction: column;
-		-webkit-box-pack: end;
-		-ms-flex-pack: end;
-		justify-content: flex-end;
-		margin: 0 -20px;
-	}
-
-	#message-new-submit,
-	#message-reply-new-submit {
-		padding: 20px 20px 0;
-		text-align: right;
-		border-top: 1px solid #ebe9e6;
-		width: 100%;
-	}
-
 	#whats-new-messages-toolbar {
-		padding: 0 15px 10px;
+		padding: 0 15px 0 0;
 		width: 100%;
 	}
 

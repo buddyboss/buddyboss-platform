@@ -1009,10 +1009,8 @@ window.bp = window.bp || {};
 
 		toggleToolbarSelector: function( e ) {
 			e.preventDefault();
+			$(e.currentTarget).toggleClass('active');
 			var medium_editor = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
-			if( !medium_editor.find('li.close-btn').length ) {
-				medium_editor.find('ul').prepend('<li class="close-btn"><button class="medium-editor-action medium-editor-action-close"><b></b></button></li>');
-			}
 			medium_editor.toggleClass('active');
 			medium_editor.addClass( 'medium-editor-toolbar-active' );
 		},
