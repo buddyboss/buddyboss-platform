@@ -1253,7 +1253,22 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 function bp_activity_favorites_upgrade_data() {
 	$bp_activity_favorites = bp_get_option( 'bp_activity_favorites', false );
 
-	if ( ! $bp_activity_favorites ) {
+	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
+
+		if ( bp_is_large_install( 100 ) ) {
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$notice    = sprintf(
+				'%1$s <a href="%2$s">%3$s</a> %4$s',
+				__( 'Due to the large users you must need to update users activity favorites via BuddyBoss > ', 'buddyboss' ),
+				esc_url( $admin_url ),
+				__( 'Tools', 'buddyboss' ),
+				__( ' > Repair Community and check the checkobx "Update activity favorites data." and click on Repair Items. ', 'buddyboss' ),
+			);
+
+			bp_core_add_admin_notice( $notice, 'error' );
+			return;
+		}
+
 		$args = array(
 			'fields' => 'ID',
 		);
