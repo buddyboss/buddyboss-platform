@@ -960,8 +960,6 @@ function bbp_repair_forum_visibility() {
 	delete_option( '_bbp_private_forums' );
 	delete_option( '_bbp_hidden_forums' );
 
-	//Conflicted with wp query so removed
-	remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 	// Next, get all the private and hidden forums
 	$private_forums = new WP_Query(
 		array(
@@ -989,8 +987,6 @@ function bbp_repair_forum_visibility() {
 	if ( is_wp_error( $private_forums ) || is_wp_error( $hidden_forums ) ) {
 		return false;
 	}
-	//added again after complete wp-query
-	add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 	// Update the private/hidden options
 	update_option( '_bbp_private_forums', $private_forums->posts ); // Private forums
 	update_option( '_bbp_hidden_forums', $hidden_forums->posts ); // Hidden forums
