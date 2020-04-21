@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-20 11:38:25+00:00\n"
+"POT-Creation-Date: 2020-04-21 12:07:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4822,39 +4822,39 @@ msgid ""
 "email settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4268
+#: bp-core/bp-core-functions.php:4269
 msgid "Member changes their profile photo"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4272
+#: bp-core/bp-core-functions.php:4273
 msgid "Member updates their profile details"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4276
+#: bp-core/bp-core-functions.php:4277
 msgid "Member registers to the site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4280
+#: bp-core/bp-core-functions.php:4281
 msgid "Two members become connected"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4284
+#: bp-core/bp-core-functions.php:4285
 msgid "Member creates a group"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4288
+#: bp-core/bp-core-functions.php:4289
 msgid "Member joins a group"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4292
+#: bp-core/bp-core-functions.php:4293
 msgid "Group details are updated"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4296
+#: bp-core/bp-core-functions.php:4297
 msgid "Member creates a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4300
+#: bp-core/bp-core-functions.php:4301
 msgid "Member replies to a forum discussion"
 msgstr ""
 
