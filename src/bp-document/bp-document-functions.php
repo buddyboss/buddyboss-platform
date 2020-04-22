@@ -1942,7 +1942,11 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 
 		case 'loggedin':
 
-			if ( bp_loggedin_user_id() === $user_id ) {
+			if ( $document->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
 				$can_download = true;
@@ -1954,6 +1958,10 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			$is_friend = friends_check_friendship( $document->user_id, $user_id );
 			if ( $is_friend ) {
 				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $document->user_id === $user_id ) {
+				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 			}

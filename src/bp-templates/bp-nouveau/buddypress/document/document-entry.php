@@ -62,6 +62,8 @@ if ( $attachment_id ) {
 	}
 }
 
+$document_id = bp_get_document_id();
+
 ?>
 <div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
@@ -109,7 +111,7 @@ if ( $attachment_id ) {
 	<div class="media-folder_visibility">
 		<div class="media-folder_details__bottom">
 			<span><?php bp_document_privacy(); ?></span>
-			<select id="bb-folder-privacy" class="hide">
+			<select data-item-type="<?php echo esc_attr( $document_type ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-folder-privacy" class="hide">
 				<?php
 				foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
 					if ( 'grouponly' === $key ) {
@@ -132,11 +134,9 @@ if ( $attachment_id ) {
 				<?php
 				if ( $attachment_id && $can_download_btn ) {
 					?>
-					<li class="download_file"><a
-								href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
+					<li class="download_file"><a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
 					</li>
-					<li class="copy_download_file_url"><a
-								href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+					<li class="copy_download_file_url"><a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 					</li>
 					<?php
 				}
@@ -147,7 +147,7 @@ if ( $attachment_id ) {
 					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"  id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</li>
 					<?php
-					if ( 'document' === $document_type && 0 === $group_id ) {
+					if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id ) {
 						?>
 						<li class="privacy_file"><a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a></li>
 						<?php

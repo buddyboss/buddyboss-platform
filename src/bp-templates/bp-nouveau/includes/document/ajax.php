@@ -79,6 +79,12 @@ add_action(
 		            'nopriv'   => true,
 	            )
             ),
+			array(
+				'document_save_privacy' => array(
+					'function' => 'bp_nouveau_ajax_document_save_privacy',
+					'nopriv'   => true,
+				)
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -1441,4 +1447,28 @@ function bp_nouveau_ajax_document_get_folder_view(){
 			'html'    => $ul,
 		)
 	);
+}
+
+function bp_nouveau_ajax_document_save_privacy(){
+    global $wpdb, $bp;
+
+	$id      = filter_input( INPUT_POST, 'itemId', FILTER_VALIDATE_INT );
+	$type    = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$privacy = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
+
+	if ( 'folder' === $type ) {
+		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $id );
+    } else {
+		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
+    }
+
+	$wpdb->query( $q );
+
+	wp_send_json_success(
+		array(
+			'message' => 'success',
+			'html'    => $type,
+		)
+	);
+
 }

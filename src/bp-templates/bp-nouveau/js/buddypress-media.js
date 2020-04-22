@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
 			bpNouveau.on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
-			bpNouveau.on( 'change', '#bp-media-single-folder select#bb-folder-privacy', this.saveFolder.bind( this ) );
+			bpNouveau.on( 'change', '.bb-media-container select#bb-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
 
@@ -257,6 +257,38 @@ window.bp = window.bp || {};
 
 		},
 
+		savePrivacy: function( event ) {
+			var target = $( event.currentTarget ), itemId = 0, type = '', value = '';
+			event.preventDefault();
+
+			itemId = parseInt( target.data( 'item-id' ) );
+			type   = target.data( 'item-type' );
+			value  = target.val();
+
+			if ( itemId > 0 ) {
+				var data = {
+					'action'	: 'document_save_privacy',
+					'itemId'	: itemId,
+					'type'		: type,
+					'value'		: value,
+				};
+
+				$.ajax(
+					{
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: data,
+						success: function (response) {
+							if (response.success) {
+
+							}
+						}
+					}
+				);
+			}
+
+		},
+
 		folderMove: function( event ) {
 			var target = $( event.currentTarget );
 			event.preventDefault();
@@ -270,9 +302,9 @@ window.bp = window.bp || {};
 			}
 
 			var data = {
-				'action': 'document_folder_move',
-				'currentFolderId': currentFolderId,
-				'folderMoveToId': folderMoveToId
+				'action'			: 'document_folder_move',
+				'currentFolderId'	: currentFolderId,
+				'folderMoveToId'	: folderMoveToId
 			};
 
 			$.ajax(
@@ -307,11 +339,11 @@ window.bp = window.bp || {};
 			}
 
 			var data = {
-				'action': 'document_delete',
-				'id': id,
-				'preview_attachment_id': preview_attachment_id,
-				'type': type,
-				'attachment_id': attachment_id
+				'action'				: 'document_delete',
+				'id'					: id,
+				'preview_attachment_id'	: preview_attachment_id,
+				'type'					: type,
+				'attachment_id'			: attachment_id
 			};
 
 			$.ajax(
@@ -369,10 +401,10 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var data = {
-				'action': 'document_move',
-				'_wpnonce': BP_Nouveau.nonces.media,
-				'document_id': document_id,
-				'folder_id': folder_id
+				'action'		: 'document_move',
+				'_wpnonce'		: BP_Nouveau.nonces.media,
+				'document_id'	: document_id,
+				'folder_id'		: folder_id
 			};
 
 			$.ajax(
@@ -415,9 +447,9 @@ window.bp = window.bp || {};
 			$( '#buddypress .media-list .bp-feedback' ).remove();
 
 			var data = {
-				'action': 'media_delete',
-				'_wpnonce': BP_Nouveau.nonces.media,
-				'media': media
+				'action'	: 'media_delete',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'media'		: media
 			};
 
 			$.ajax(
@@ -562,9 +594,9 @@ window.bp = window.bp || {};
 			if (el.scrollTop + el.offsetHeight >= el.scrollHeight && ! $forums_gif_container.hasClass( 'loading' )) {
 				if (self.gif_data[gif_container_key].total_count > 0 && self.gif_data[gif_container_key].offset <= self.gif_data[gif_container_key].total_count) {
 					var params = {
-						offset: self.gif_data[gif_container_key].offset,
-						fmt: 'json',
-						limit: self.gif_data[gif_container_key].limit
+						offset	: self.gif_data[gif_container_key].offset,
+						fmt		: 'json',
+						limit	: self.gif_data[gif_container_key].limit
 					};
 
 					$forums_gif_container.addClass( 'loading' );
@@ -591,9 +623,9 @@ window.bp = window.bp || {};
 			if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! $(e.target).closest('.bp-group-messages-attached-gif-container').hasClass('loading') ) {
 				if ( self.gif_total_count > 0 && self.gif_offset <= self.gif_total_count ) {
 					var params = {
-							offset: self.gif_offset,
-							fmt: 'json',
-							limit: self.gif_limit
+							offset	: self.gif_offset,
+							fmt		: 'json',
+							limit	: self.gif_limit
 						};
 
 					$(e.target).closest('.bp-group-messages-attached-gif-container').addClass('loading');
@@ -675,7 +707,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			var forumGifContainer = $( '#whats-new-attachments .forums-attached-gif-container' );
+			var forumGifContainer 					   = $( '#whats-new-attachments .forums-attached-gif-container' );
 			forumGifContainer[0].style.backgroundImage = 'url(' + gif_data.images.fixed_width.url + ')';
 			forumGifContainer[0].style.backgroundSize  = 'contain';
 			forumGifContainer[0].style.height          = gif_data.images.original.height + 'px';
@@ -727,9 +759,9 @@ window.bp = window.bp || {};
 					if ( self.gif_data[i].id == e.currentTarget.dataset.id ) {
 
 						containerAttachmentGif[0].style.backgroundImage = 'url(' + self.gif_data[i].images.fixed_width.url + ')';
-						containerAttachmentGif[0].style.backgroundSize = 'contain';
-						containerAttachmentGif[0].style.height = self.gif_data[i].images.original.height + 'px';
-						containerAttachmentGif[0].style.width = self.gif_data[i].images.original.width + 'px';
+						containerAttachmentGif[0].style.backgroundSize  = 'contain';
+						containerAttachmentGif[0].style.height 			= self.gif_data[i].images.original.height + 'px';
+						containerAttachmentGif[0].style.width 			= self.gif_data[i].images.original.width + 'px';
 						containerAttachmentGif.find( '.gif-image-container img' ).attr( 'src' ,self.gif_data[i].images.original.url );
 						containerAttachmentGif.removeClass( 'closed' );
 						if( inputHiddenGif.length ) {
@@ -813,19 +845,19 @@ window.bp = window.bp || {};
 		},
 
 		searchGroupMessagesGifRequest: function( e ) {
-			var self = this;
-			self.gif_q = e.target.value;
+			var self 		= this;
+			self.gif_q 		= e.target.value;
 			self.gif_offset = 0;
-			var i = 0;
+			var i 			= 0;
 
 			self.clearGifRequests();
 			$(e.target).closest('.bp-group-messages-attached-gif-container').addClass('loading');
 
 			var request = self.giphy.search( {
-					q: self.gif_q,
-					offset: self.gif_offset,
-					fmt: 'json',
-					limit: self.gif_limit
+					q		: self.gif_q,
+					offset	: self.gif_offset,
+					fmt		: 'json',
+					limit	: self.gif_limit
 				},
 				function( response ) {
 					if ( typeof response.data !== 'undefined' && response.data.length ) {
@@ -869,10 +901,10 @@ window.bp = window.bp || {};
 
 			var request = self.giphy.search(
 				{
-					q: self.gif_data[gif_container_key].q,
-					offset: self.gif_data[gif_container_key].offset,
-					fmt: 'json',
-					limit: self.gif_data[gif_container_key].limit
+					q		: self.gif_data[gif_container_key].q,
+					offset	: self.gif_data[gif_container_key].offset,
+					fmt		: 'json',
+					limit	: self.gif_data[gif_container_key].limit
 				},
 				function (response) {
 					if (typeof response.data !== 'undefined' && response.data.length) {
@@ -933,12 +965,12 @@ window.bp = window.bp || {};
 				self.clearGifRequests( gif_container_key );
 
 				self.gif_data[gif_container_key] = {
-					q: null,
-					offset: 0,
-					limit: 20,
-					requests: [],
-					total_count: 0,
-					data: []
+					q			: null,
+					offset		: 0,
+					limit		: 20,
+					requests	: [],
+					total_count	: 0,
+					data		: []
 				};
 
 				var request = self.giphy.trending(
@@ -990,12 +1022,12 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( typeof window.Giphy !== 'undefined' && typeof BP_Nouveau.media.gif_api_key !== 'undefined' && self.giphy == null ) {
-				self.giphy = new window.Giphy(BP_Nouveau.media.gif_api_key);
-				self.gif_offset = 0;
-				self.gif_q = null;
-				self.gif_limit = 20;
-				self.gif_requests = [];
-				self.gif_data = [];
+				self.giphy 			= new window.Giphy(	BP_Nouveau.media.gif_api_key );
+				self.gif_offset 	= 0;
+				self.gif_q 			= null;
+				self.gif_limit 		= 20;
+				self.gif_requests 	= [];
+				self.gif_data		= [];
 				self.clearGifRequests();
 				$('.gif-search-query').closest('.bp-group-messages-attached-gif-container').addClass('loading');
 
@@ -1170,27 +1202,27 @@ window.bp = window.bp || {};
 								mock_file = false;
 								self.dropzone_media[dropzone_obj_key].push(
 									{
-										'id': edit_medias[i].attachment_id,
-										'media_id': edit_medias[i].id,
-										'name': edit_medias[i].title,
-										'thumb': edit_medias[i].thumb,
-										'url': edit_medias[i].full,
-										'uuid': edit_medias[i].id,
+										'id'		: edit_medias[i].attachment_id,
+										'media_id'	: edit_medias[i].id,
+										'name'		: edit_medias[i].title,
+										'thumb'		: edit_medias[i].thumb,
+										'url'		: edit_medias[i].full,
+										'uuid'		: edit_medias[i].id,
 										'menu_order': i,
-										'saved': true
+										'saved'		: true
 									}
 								);
 
 								mock_file = {
-									name: edit_medias[i].title,
+									name	: edit_medias[i].title,
 									accepted: true,
-									kind: 'image',
-									upload: {
-										filename: edit_medias[i].title,
-										uuid: edit_medias[i].id
+									kind	: 'image',
+									upload	: {
+										filename	: edit_medias[i].title,
+										uuid		: edit_medias[i].id
 									},
-									dataURL: edit_medias[i].url,
-									id: edit_medias[i].id
+									dataURL	: edit_medias[i].url,
+									id		: edit_medias[i].id
 								};
 
 								self.dropzone_obj[dropzone_obj_key].files.push( mock_file );
@@ -1287,14 +1319,14 @@ window.bp = window.bp || {};
 							for( var i = 0; i < edit_medias.length; i++ ) {
 								mock_file = false;
 								self.dropzone_media.push({
-									'id': edit_medias[i].attachment_id,
-									'media_id': edit_medias[i].id,
-									'name': edit_medias[i].title,
-									'thumb': edit_medias[i].thumb,
-									'url': edit_medias[i].full,
-									'uuid': edit_medias[i].id,
+									'id'		: edit_medias[i].attachment_id,
+									'media_id'	: edit_medias[i].id,
+									'name'		: edit_medias[i].title,
+									'thumb'		: edit_medias[i].thumb,
+									'url'		: edit_medias[i].full,
+									'uuid'		: edit_medias[i].id,
 									'menu_order': i,
-									'saved': true
+									'saved'		: true
 								});
 
 								mock_file = {
@@ -1303,7 +1335,7 @@ window.bp = window.bp || {};
 									kind: 'image',
 									upload: {
 										filename: edit_medias[i].title,
-										uuid: edit_medias[i].id
+										uuid	: edit_medias[i].id
 									},
 									dataURL: edit_medias[i].url,
 									id: edit_medias[i].id
@@ -1420,16 +1452,15 @@ window.bp = window.bp || {};
 								mock_file = false;
 								self.dropzone_media[dropzone_obj_key].push(
 									{
-										'id': edit_documents[d].attachment_id,
-										'media_id': edit_documents[d].id,
-										'name': edit_documents[d].name,
-										'title': edit_documents[d].name,
-										'size': edit_documents[d].size,
-										// 'thumb': edit_documents[d].thumb,
-										'url': edit_documents[d].url,
-										'uuid': edit_documents[d].id,
-										'menu_order': d,
-										'saved': true
+										'id'			: edit_documents[d].attachment_id,
+										'media_id'		: edit_documents[d].id,
+										'name'			: edit_documents[d].name,
+										'title'			: edit_documents[d].name,
+										'size'			: edit_documents[d].size,
+										'url'			: edit_documents[d].url,
+										'uuid'			: edit_documents[d].id,
+										'menu_order'	: d,
+										'saved'			: true
 									}
 								);
 
@@ -2009,8 +2040,8 @@ window.bp = window.bp || {};
 		 */
 		renameDocument: function( event ) {
 
-			var current_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
-			var current_name_text = current_name.children('span').text();
+			var current_name 		= $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
+			var current_name_text 	= current_name.children('span').text();
 
 			current_name.hide().siblings('.media-folder_name_edit_wrap').show().children('.media-folder_name_edit').val(current_name_text).focus().select();
 
@@ -2094,14 +2125,14 @@ window.bp = window.bp || {};
 				// Make ajax call to save new file name here.
 				//use variable 'document_name_val' as a new name while making an ajax call.
 				$.ajax( {
-					url : BP_Nouveau.ajaxurl,
-					type : 'post',
-					data : {
-						action: 'document_update_file_name',
-						document_id: document_id,
-						attachment_document_id: attachment_document_id,
-						document_type: documentType,
-						name: document_name_val
+					url 	: BP_Nouveau.ajaxurl,
+					type 	: 'post',
+					data 	: {
+						action					: 'document_update_file_name',
+						document_id				: document_id,
+						attachment_document_id	: attachment_document_id,
+						document_type			: documentType,
+						name					: document_name_val
 					},success : function( response ) {
 						document_name.text( response.data.response.title );
 						document_edit.removeClass('submitting');
@@ -2380,9 +2411,9 @@ window.bp = window.bp || {};
 
 				$.ajax(
 					{
-						type: 'POST',
-						url: BP_Nouveau.ajaxurl,
-						data: data,
+						type	: 'POST',
+						url		: BP_Nouveau.ajaxurl,
+						data	: data,
 						success: function (response) {
 							if (response.success) {
 
@@ -2660,11 +2691,11 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true );
 
 			var data = {
-				'action': 'media_album_save',
-				'_wpnonce': BP_Nouveau.nonces.media,
-				'title': title.val(),
-				'medias': self.dropzone_media,
-				'privacy': privacy.val()
+				'action'	: 'media_album_save',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'title'		: title.val(),
+				'medias'	: self.dropzone_media,
+				'privacy'	: privacy.val()
 			};
 
 			if (self.album_id) {
@@ -2738,12 +2769,12 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true ).addClass( 'loading' );
 
 			var data = {
-				'action': 'document_folder_save',
-				'_wpnonce': BP_Nouveau.nonces.media,
-				'title': title.val().trim(),
-				'medias': self.dropzone_media,
-				'privacy': privacy.val(),
-				'parent': parent
+				'action'	: 'document_folder_save',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'title'		: title.val().trim(),
+				'medias'	: self.dropzone_media,
+				'privacy'	: privacy.val(),
+				'parent'	: parent
 			};
 
 			if (self.album_id) {
@@ -2815,12 +2846,12 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true );
 
 			var data = {
-				'action': 'document_folder_save',
-				'_wpnonce': BP_Nouveau.nonces.media,
-				'title': title.val(),
-				'medias': self.dropzone_media,
-				'privacy': privacy.val(),
-				'parent': parent.val()
+				'action'	: 'document_folder_save',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'title'		: title.val(),
+				'medias'	: self.dropzone_media,
+				'privacy'	: privacy.val(),
+				'parent'	: parent.val()
 			};
 
 			if (self.album_id) {
@@ -2888,12 +2919,12 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true );
 
 			var data = {
-				'action': 'document_edit_folder',
-				'_wpnonce': BP_Nouveau.nonces.media,
-				'title': title.val(),
-				'privacy': privacy.val(),
-				'parent': parent.val(),
-				'moveTo': moveTo.val()
+				'action'	: 'document_edit_folder',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'title'		: title.val(),
+				'privacy'	: privacy.val(),
+				'parent'	: parent.val(),
+				'moveTo'	: moveTo.val()
 			};
 
 			if (self.album_id) {
@@ -3452,31 +3483,31 @@ window.bp = window.bp || {};
 		 */
 		documentCodeMirror: function(){
 			$('.document-text:not(.loaded)').each(function(){
-				var $this = $(this);
-				var data_extension = $this.attr('data-extension');
-				var fileMode = $this.attr('data-extension');
+				var $this 			= $(this);
+				var data_extension 	= $this.attr('data-extension');
+				var fileMode 		= $this.attr('data-extension');
 				if(data_extension == 'html' || data_extension == 'htm'){ // HTML file need specific mode.
 					fileMode = 'text/html';
 				}
 				if(data_extension == 'js'){ //mode not needed for javascript file.
 					/* jshint ignore:start */
 					var myCodeMirror = CodeMirror($this[0], {
-						value: $this.find('.document-text-file-data-hidden').val(),
-						lineNumbers: true,
-						theme: 'default',
-						readOnly: true,
+						value		: $this.find('.document-text-file-data-hidden').val(),
+						lineNumbers	: true,
+						theme		: 'default',
+						readOnly	: true,
 						lineWrapping: true,
 					});
 					/* jshint ignore:end */
 				}else{
 					/* jshint ignore:start */
 					var myCodeMirror = CodeMirror($this[0], {
-						value: $this.find('.document-text-file-data-hidden').val(),
-						mode:  fileMode,
-						lineNumbers: true,
-						theme: 'default',
-						readOnly: true,
-						lineWrapping: true,
+						value			: $this.find('.document-text-file-data-hidden').val(),
+						mode			:  fileMode,
+						lineNumbers		: true,
+						theme			: 'default',
+						readOnly		: true,
+						lineWrapping	: true,
 					});
 					/* jshint ignore:end */
 				}
@@ -3610,9 +3641,9 @@ window.bp = window.bp || {};
 
 		openDocumentTheatre: function (event) {	
 			event.preventDefault();	
-			var target = $( event.currentTarget );	
-			var self = this;	
-			var media_elements = $( target ).closest( '.bb-media-container' ).length ?  $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
+			var target 			= $( event.currentTarget );
+			var self 			= this;
+			var media_elements 	= $( target ).closest( '.bb-media-container' ).length ?  $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
 			if( target.attr('data-extension') == 'css' || target.attr('data-extension') == 'txt' || target.attr('data-extension') == 'js' || target.attr('data-extension') == 'html' || target.attr('data-extension') == 'htm' || target.attr('data-extension') == 'csv' ) {	
 				//Show Document	
 				$.get(target.attr('data-text-preview'), function(data) {	
@@ -3682,8 +3713,8 @@ window.bp = window.bp || {};
 
 		closeDocumentTheatre: function (event) {	
 			event.preventDefault();	
-			var self = this;	
-			var target = $( event.currentTarget );	
+			var self 	= this;
+			var target 	= $( event.currentTarget );
 				
 			var media_elements = $( target ).closest( '.bb-media-container' ).find( '.document-theatre' );	
 			media_elements.find('.bb-media-section').html('');	
@@ -3707,14 +3738,14 @@ window.bp = window.bp || {};
 					if ( ! media_element.closest( '#bp-existing-media-content' ).length) {
 
 						var m = {
-							id: media_element.data( 'id' ),
-							attachment: media_element.data( 'attachment-full' ),
-							activity_id: media_element.data( 'activity-id' ),
-							privacy: media_element.data( 'privacy' ),
-							parent_activity_id: media_element.data( 'parent-activity-id' ),
-							album_id: media_element.data( 'album-id' ),
-							group_id: media_element.data( 'group-id' ),
-							is_forum: false
+							id					: media_element.data( 'id' ),
+							attachment			: media_element.data( 'attachment-full' ),
+							activity_id			: media_element.data( 'activity-id' ),
+							privacy				: media_element.data( 'privacy' ),
+							parent_activity_id	: media_element.data( 'parent-activity-id' ),
+							album_id			: media_element.data( 'album-id' ),
+							group_id			: media_element.data( 'group-id' ),
+							is_forum			: false
 						};
 
 						if (media_element.closest( '.forums-media-wrap' ).length) {
@@ -3851,12 +3882,12 @@ window.bp = window.bp || {};
 
 				self.activity_ajax = $.ajax(
 					{
-						type: 'POST',
-						url: BP_Nouveau.ajaxurl,
-						data: {
-							action: 'media_get_activity',
-							id: self.current_media.activity_id,
-							nonce: BP_Nouveau.nonces.media
+						type	: 'POST',
+						url		: BP_Nouveau.ajaxurl,
+						data	: {
+							action	: 'media_get_activity',
+							id		: self.current_media.activity_id,
+							nonce	: BP_Nouveau.nonces.media
 						},
 						success: function (response) {
 							if (response.success) {
