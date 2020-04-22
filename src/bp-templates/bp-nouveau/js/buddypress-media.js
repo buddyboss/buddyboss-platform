@@ -1951,8 +1951,6 @@ window.bp = window.bp || {};
 						type: type,
 					},success : function( response ) {
 
-						$( '.location-folder-list-wrap .location-folder-list' ).remove();
-						$( '.location-folder-list-wrap' ).append( response.data.html );
 						// For Activity Feed
 						currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
 						$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
@@ -1963,16 +1961,18 @@ window.bp = window.bp || {};
 							var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
 							/* jshint ignore:end */
 							if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
-								currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
+								currentTarget = '.bp-media-move-file';
 								$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
 							}else{
-								currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
+								currentTarget = '.bp-media-move-folder';
 								$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
 
 							}
 						}
-						if(this.folderLocationUI){
-							this.folderLocationUI(currentTarget);
+						$(currentTarget).find( '.location-folder-list-wrap .location-folder-list' ).remove();
+						$(currentTarget).find( '.location-folder-list-wrap' ).append( response.data.html );
+						if(bp.Nouveau.Media.folderLocationUI){
+							bp.Nouveau.Media.folderLocationUI(currentTarget);
 						}
 						$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
 						$(currentTarget).show();
@@ -2193,12 +2193,6 @@ window.bp = window.bp || {};
 
 					$( targetPopup ).find( '.location-folder-list-wrap' ).addClass( 'is_loaded' );
 
-					$( targetPopup ).find( '.location-folder-list li' ).each(
-						function () {
-							$( this ).children( 'ul' ).parent().addClass( 'has-ul' ).append( '<i class="bb-icon-angle-right sub-menu-anchor"></i>' );
-						}
-					);
-
 					$( document ).on(
 						'click',
 						targetPopup + ' .location-folder-list li i',
@@ -2293,6 +2287,12 @@ window.bp = window.bp || {};
 					}
 
 				}
+
+				$( targetPopup ).find( '.location-folder-list li' ).each(
+					function () {
+						$( this ).children( 'ul' ).parent().addClass( 'has-ul' ).append( '<i class="bb-icon-angle-right sub-menu-anchor"></i>' );
+					}
+				);
 
 			}
 		},

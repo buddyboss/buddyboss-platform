@@ -30,19 +30,6 @@
 								<div class="location-folder-list-wrap">
 									<span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
 									<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
-									<?php
-									if ( '' !== $ul ) {
-										echo wp_kses_post( $ul );
-									} else {
-										?>
-											<ul class="location-folder-list">
-												<li data-id="0">
-													<span class="selected disabled"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
-												</li>
-											</ul>
-										<?php
-									}
-									?>
 								</div> <!-- .location-folder-list-wrap -->
 								<div class="ac_document_search_folder_list" style="display: none;">
 									<ul class="location-folder-list"></ul>
