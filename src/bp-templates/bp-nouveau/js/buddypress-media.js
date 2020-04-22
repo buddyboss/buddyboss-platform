@@ -2240,7 +2240,7 @@ window.bp = window.bp || {};
 								$( this ).removeClass( 'selected' );
 								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '...' );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-destination' ).val( '' );
-								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-selected-id' ).val( '' );
+								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-selected-id' ).val( '0' );
 							} else {
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.location-folder-list li span' ).removeClass( 'selected' );
 								$( this ).addClass( 'selected' );
@@ -2311,7 +2311,7 @@ window.bp = window.bp || {};
 
 				closest_parent.find( '.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li' ).show().children( 'span, i' ).show();
 				closest_parent.find( '.location-folder-title' ).text( 'Documents' );
-				closest_parent.find( '.location-folder-back' ).hide().closest( '.has-folderlocationUI' ).find( '.bb-folder-selected-id' ).val( '' );
+				closest_parent.find( '.location-folder-back' ).hide().closest( '.has-folderlocationUI' ).find( '.bb-folder-selected-id' ).val( '0' );
 				closest_parent.find( '.ac_document_search_folder' ).val( '' );
 				closest_parent.find( '.bb-model-header h4 span' ).text( '...' );
 				closest_parent.find( '.ac_document_search_folder_list ul' ).html( '' ).parent().hide().siblings( '.location-folder-list-wrap' ).find( '.location-folder-list' ).show();
@@ -2332,7 +2332,7 @@ window.bp = window.bp || {};
 			this.closeUploader( event );
 			$( '#bp-media-create-folder, #bp-media-create-child-folder' ).hide();
 			$( '#bb-album-title, #bb-album-child-title' ).val( '' );
-			$( '#bp-media-create-folder .bb-folder-selected-id' ).val( '' );
+			$( '#bp-media-create-folder .bb-folder-selected-id' ).val( '0' );
 			$( '#bp-media-create-folder .bb-field-steps-1, #bp-media-create-child-folder .bb-field-steps-1' ).show().siblings( '.bb-field-steps' ).hide();
 
 		},
@@ -2398,7 +2398,7 @@ window.bp = window.bp || {};
 								}
 
 								$( '#bp-media-post-content' ).val( '' );
-								$( '.bb-folder-selected-id' ).val( 0 );
+								$( '.bb-folder-selected-id' ).val( '0' );
 
 								for (var i = 0; i < self.dropzone_media.length; i++) {
 									self.dropzone_media[i].saved = true;
@@ -2455,7 +2455,7 @@ window.bp = window.bp || {};
 								}
 
 								$( '#bp-media-post-content' ).val( '' );
-								$( '.bb-folder-selected-id' ).val( 0 );
+								$( '.bb-folder-selected-id' ).val( '0' );
 
 								// remove selected media from existing media list
 								$( '.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked' ).each(
@@ -2496,14 +2496,15 @@ window.bp = window.bp || {};
 
 			target.addClass( 'saving' );
 
+			folderId = self.album_id;
+
+			if ( false === folderId ) {
+				folderId = $( '.bb-folder-selected-id' ).val();
+			}
+
 			if (self.current_tab === 'bp-dropzone-content') {
 
 				var post_content = $( '#bp-media-post-content' ).val();
-				    folderId	 = self.album_id;
-
-				if ( false === folderId ) {
-					folderId = $( '.bb-folder-selected-id' ).val();
-				}
 
 				data = {
 					'action'	: 'document_document_save',
@@ -2537,7 +2538,7 @@ window.bp = window.bp || {};
 								}
 
 								$( '#bp-media-post-content' ).val( '' );
-								$( '.bb-folder-selected-id' ).val( 0 );
+								$( '.bb-folder-selected-id' ).val( '0' );
 
 								for (var i = 0; i < self.dropzone_media.length; i++) {
 									self.dropzone_media[i].saved = true;
@@ -2571,11 +2572,6 @@ window.bp = window.bp || {};
 					}
 				);
 
-				folderId = self.album_id;
-				if ( false === folderId ) {
-					folderId = $( '.bb-folder-selected-id' ).val();
-				}
-
 				data = {
 					'action'	: 'media_move_to_album',
 					'_wpnonce'	: BP_Nouveau.nonces.media,
@@ -2606,7 +2602,7 @@ window.bp = window.bp || {};
 								}
 
 								$( '#bp-media-post-content' ).val( '' );
-								$( '.bb-folder-selected-id' ).val( 0 );
+								$( '.bb-folder-selected-id' ).val( '0' );
 
 								// remove selected media from existing media list
 								$( '.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked' ).each(
@@ -2936,8 +2932,6 @@ window.bp = window.bp || {};
 					}
 				}
 			);
-
-			console.log( 'click 1 1' );
 
 		},
 
