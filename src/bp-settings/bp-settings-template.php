@@ -104,16 +104,3 @@ function bp_settings_pending_email_notice() {
 	<?php
 }
 add_action( 'bp_before_member_settings_template', 'bp_settings_pending_email_notice' );
-
-/**
- * Removed WC filter to the settings page when its active.
- *
- * @since BuddyBoss 1.3.1
- */
-function bp_settings_remove_wc_lostpassword_url() {
-
-	if ( class_exists( 'woocommerce' ) ) {
-		remove_filter( 'lostpassword_url', 'wc_lostpassword_url', 10, 1 );
-	}
-}
-add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
