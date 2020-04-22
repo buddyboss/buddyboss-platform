@@ -1172,18 +1172,16 @@ div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
-  opacity: 0;
   transition: all ease 0.3s;
   height: 0;
   right: 0;
   overflow: hidden;
+  display: none;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  display: block;
   border-radius: 0;
   z-index: 112;
-  opacity: 1;
   visibility: visible;
   bottom: 0;
   height: 44px;
@@ -1224,6 +1222,10 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
   color: #4d5c6d;
+}
+
+.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+  display: block;
 }
 
 #whats-new-textarea [contenteditable="true"]:empty:before {
@@ -4589,10 +4591,6 @@ input#send-to-input {
   padding: 0 5px;
 }
 
-.bp-messages-content pre {
-  padding: 1rem 1.5rem;
-}
-
 .medium-editor-action-close b:before {
   content: "\f153";
 }
@@ -4614,7 +4612,6 @@ input#send-to-input {
   z-index: 99;
   background-color: #fff;
   visibility: hidden;
-  opacity: 0;
   transition: all ease 0.3s;
   height: 0;
   right: 0;
@@ -4622,15 +4619,10 @@ input#send-to-input {
   left: 25px;
 }
 
-.bp-messages-content #bp-message-content .medium-editor-toolbar.medium-editor-toolbar-active {
-  opacity: 1;
-}
-
 .bp-messages-content #bp-message-content .medium-editor-toolbar.active {
   display: block;
   border-radius: 0;
   z-index: 112;
-  opacity: 1;
   visibility: visible;
   bottom: -5px;
   height: 40px;
@@ -4666,6 +4658,18 @@ input#send-to-input {
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
   padding: 0 15px 0 0;
   width: 100%;
+}
+
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar .medium-editor-toolbar-actions {
+  opacity: 0;
+}
+
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active .medium-editor-toolbar-actions {
+  opacity: 0.4;
+}
+
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+  opacity: 1;
 }
 
 .messages .select2-dropdown {
@@ -12494,7 +12498,6 @@ span.icons:before {
 }
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar.active {
-  display: block;
   border-radius: 0;
   z-index: 112;
   opacity: 1;

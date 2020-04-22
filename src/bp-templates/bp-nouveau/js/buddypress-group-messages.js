@@ -590,7 +590,6 @@ window.bp = window.bp || {};
 				var medium_editor = $(e.currentTarget).closest('#bp-group-message-content').find('.medium-editor-toolbar');
 				$(e.currentTarget).find('.toolbar-button').toggleClass('active');
 				medium_editor.toggleClass('active');
-				medium_editor.addClass( 'medium-editor-toolbar-active' );
 			});
 		},
 

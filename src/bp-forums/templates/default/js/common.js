@@ -77,6 +77,11 @@ jQuery( document ).ready(
 		$tagsSelect.val('');
 		$tagsSelect.trigger( 'change' ); // Notify any JS components that the value changed
 		jQuery( 'body' ).removeClass( 'popup-modal-reply' );
+		jQuery('.medium-editor-toolbar').removeClass('active medium-editor-toolbar-active');
+		jQuery('#show-toolbar-button').removeClass('active');
+		jQuery('medium-editor-action').removeClass('medium-editor-button-active');
+		jQuery('.medium-editor-toolbar-actions').show();
+		jQuery('.medium-editor-toolbar-form').removeClass('medium-editor-toolbar-form-active');
 	});
 
 			var topicReplyButton = jQuery( 'body .bbp-topic-reply-link' );
@@ -142,7 +147,6 @@ jQuery( document ).ready(
 			var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
 			jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
 			medium_editor.toggleClass('active');
-			medium_editor.addClass( 'medium-editor-toolbar-active' );
 		});
 	}
 );

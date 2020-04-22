@@ -1009,9 +1009,8 @@ window.bp = window.bp || {};
 		toggleToolbarSelector: function( e ) {
 			e.preventDefault();
 			$(e.currentTarget).toggleClass('active');
-			var medium_editor = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
-			medium_editor.toggleClass('active');
-			medium_editor.addClass( 'medium-editor-toolbar-active' );
+			var medium_editor_toolbar = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
+			medium_editor_toolbar.toggleClass('active');
 		},
 
 		closeGifSelector: function() {

@@ -1203,6 +1203,7 @@ window.bp = window.bp || {};
 						$('#whats-new-toolbar .post-emoji').show();
 					}
 				}
+				$('.medium-editor-toolbar').removeClass('active medium-editor-toolbar-active');
 			}
 		}
 	} );
@@ -1310,7 +1311,6 @@ window.bp = window.bp || {};
 			var medium_editor = $(e.currentTarget).closest('#whats-new-form').find('.medium-editor-toolbar');
 			$(e.currentTarget).find('.toolbar-button').toggleClass('active');
 			medium_editor.toggleClass('active');
-			medium_editor.addClass( 'medium-editor-toolbar-active' );
 		}
 	} );
 
@@ -1612,6 +1612,11 @@ window.bp = window.bp || {};
 			// Reset the model
 			this.model.clear();
 			this.model.set( this.resetModel.attributes );
+			$('.medium-editor-toolbar').removeClass('active medium-editor-toolbar-active');
+			$('#show-toolbar-button').removeClass('active');
+			$('medium-editor-action').removeClass('medium-editor-button-active');
+			$('.medium-editor-toolbar-actions').show();
+			$('.medium-editor-toolbar-form').removeClass('medium-editor-toolbar-form-active');
 		},
 
 		cleanFeedback: function() {

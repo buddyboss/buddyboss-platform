@@ -179,17 +179,15 @@
 			visibility: hidden;
 			z-index: 99;
 			background-color: #fff;
-			opacity: 0;
 			transition: all ease 0.3s;
 			height: 0;
 			right: 0;
 			overflow: hidden;
+			display: none;
 
 			&.active {
-				display: block;
 				border-radius: 0;
 				z-index: 112;
-				opacity: 1;
 				visibility: visible;
 				bottom: 0;
 				height: 44px;
@@ -238,6 +236,10 @@
 
 	}
 
+}
+
+.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+	display: block;
 }
 
 // these ID's need replacing with this!

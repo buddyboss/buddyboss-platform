@@ -545,10 +545,6 @@ input#send-to-input {
 	}
 }
 
-.bp-messages-content pre {
-	padding: 1rem 1.5rem;
-}
-
 .medium-editor-action-close b:before {
 	content: "\f153";
 }
@@ -569,22 +565,16 @@ input#send-to-input {
 		z-index: 99;
 		background-color: #fff;
 		visibility: hidden;
-		opacity: 0;
 		transition: all ease 0.3s;
 		height: 0;
 		right: 0;
 		overflow: hidden;
 		left: 25px;
 
-		&.medium-editor-toolbar-active {
-			opacity: 1;
-		}
-
 		&.active {
 			display: block;
 			border-radius: 0;
 			z-index: 112;
-			opacity: 1;
 			visibility: visible;
 			bottom: -5px;
 			height: 40px;
@@ -624,6 +614,22 @@ input#send-to-input {
 	#whats-new-messages-toolbar {
 		padding: 0 15px 0 0;
 		width: 100%;
+	}
+
+}
+
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar {
+
+	.medium-editor-toolbar-actions {
+		opacity: 0;
+	}
+
+	&.active .medium-editor-toolbar-actions {
+		opacity: 0.4;
+	}
+
+	&.active.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+		opacity: 1;
 	}
 
 }
