@@ -65,7 +65,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 					</div>
 					<?php
 					if ( '' !== $bradcrumbs ) {
-						echo esc_html( $bradcrumbs );
+						echo wp_kses_post( $bradcrumbs );
 					}
 					?>
 				</div> <!-- .bp-media-header-wrap -->

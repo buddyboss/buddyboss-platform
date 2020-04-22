@@ -71,7 +71,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 										<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 										<?php
 										if ( '' !== $ul ) {
-											echo esc_html( $ul );
+											echo wp_kses_post( $ul );
 										} else {
 											?>
 											<ul class="location-folder-list">
