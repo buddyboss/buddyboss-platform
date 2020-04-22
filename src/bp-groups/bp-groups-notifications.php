@@ -457,7 +457,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 				}
 			} else {
 				$user_fullname     = bp_core_get_user_displayname( $requesting_user_id );
-				$text              = sprintf( __( '%s requests group membership', 'buddyboss' ), $user_fullname );
+				$text              = sprintf( __( '%1$s requests membership for the group: %2$s', 'buddyboss' ), $user_fullname, $group->name );
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
 				if ( 'string' == $format ) {
