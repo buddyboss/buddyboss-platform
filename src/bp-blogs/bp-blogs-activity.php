@@ -132,17 +132,17 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		// Exclude BP CPT
 		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 
-		$bp_excluded_cpt = array();
+		$bp_allowed_cpt = array();
 		foreach ( $post_types as $post_type ) {
 			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array( $post_type, $bp_exclude_cpt ) ) {
+			if ( in_array( $post_type, $bp_exclude_cpt, true ) ) {
 				continue;
 			}
 
-			$bp_excluded_cpt[] = $post_type;
+			$bp_allowed_cpt[] = $post_type;
 		}
 
-		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_excluded_cpt );
+		$comment_post_types       = apply_filters( 'bp_blogs_record_comment_post_types', $bp_allowed_cpt );
 		$comment_post_types_array = array_flip( $comment_post_types );
 
 		if ( isset( $comment_post_types_array[ $post_type ] ) ) {
