@@ -1821,6 +1821,9 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			if ( $is_friend ) {
 				$can_manage = false;
 				$can_view   = true;
+			} elseif ( $folder->user_id === $user_id ) {
+				$can_manage = true;
+				$can_view   = true;
 			}
 			break;
 

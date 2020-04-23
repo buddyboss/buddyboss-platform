@@ -960,10 +960,6 @@ class BP_Document {
 			$where_sql_document
 		);
 
-		// Sanitize page and per_page parameters.
-		$page     = absint( $r['page'] );
-		$per_page = absint( $r['per_page'] );
-
 		$retval = array(
 			'documents'      => null,
 			'total'          => null,
@@ -1024,7 +1020,8 @@ class BP_Document {
 		}
 
 		$direction = 'SORT_' . $sort;
-		self::array_sort_by_column( $documents, $r['order_by'], $direction );
+		//self::array_sort_by_column( $documents, $r['order_by'], $direction );
+		array_multisort( array_column( $documents, $r['order_by'] ), $direction, $documents );
 
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 

@@ -189,6 +189,8 @@ function bp_has_document( $args = '' ) {
 		if ( is_user_logged_in() ) {
 			$scope[] = 'personal';
 		}
+
+		$privacy[] = 'friends';
 	}
 
 	/*

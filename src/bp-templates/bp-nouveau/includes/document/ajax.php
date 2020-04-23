@@ -277,7 +277,7 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$media = filter_input( INPUT_POST, 'media', FILTER_REQUIRE_ARRAY );
+	$media = $_POST['media'];
 
 	$media_ids = array();
 	foreach ( $media as $media_id ) {
@@ -362,7 +362,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 	}
 
 	// save media.
-	$medias    = filter_input( INPUT_POST, 'medias', FILTER_REQUIRE_ARRAY );
+	$medias    = $_POST['medias'];
 	$media_ids = array();
 	foreach ( $medias as $media_id ) {
 
@@ -466,7 +466,7 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$medias = filter_input( INPUT_POST, 'medias', FILTER_REQUIRE_ARRAY );
+	$medias = $_POST['medias'];
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 		// set album id for media.
 		foreach ( $medias as $key => $media ) {
@@ -906,7 +906,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	$medias = filter_input( INPUT_POST, 'medias', FILTER_REQUIRE_ARRAY );
+	$medias = $_POST['medias'];
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 		// set album id for media.
 		foreach ( $medias as $key => $media ) {
@@ -1106,10 +1106,16 @@ function bp_nouveau_ajax_document_update_file_name() {
 
 		$folder = bp_document_rename_folder( $document_id, $title );
 
+		$response = array(
+			'document_id' => $document_id,
+			'title'       => $title,
+		);
+
 		if ( $folder > 0 ) {
 			wp_send_json_success(
 				array(
-					'message' => 'success',
+					'message'  => 'success',
+					'response' => $response,
 				)
 			);
 		} else {
