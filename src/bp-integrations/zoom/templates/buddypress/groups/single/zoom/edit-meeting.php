@@ -4,11 +4,7 @@
  *
  * @since BuddyBoss 1.2.10
  */
-wp_enqueue_script( 'bp-select2' );
-if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-	wp_enqueue_script( 'bp-select2-local' );
-}
-wp_enqueue_style( 'bp-select2' );
+
 if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) ) ) :
 	while ( bp_zoom_meeting() ) : bp_the_zoom_meeting();
 		$edit_users = get_users( array( 'meta_key' => 'bp_zoom_user_id', 'meta_value' => bp_get_zoom_meeting_user_id() ) );

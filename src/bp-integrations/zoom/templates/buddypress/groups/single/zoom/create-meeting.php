@@ -4,25 +4,6 @@
  *
  * @since BuddyBoss 1.2.10
  */
-$edit = false;
-$meeting = false;
-$edit_host = false;
-if ( bp_zoom_is_edit_meeting() && bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) ) ) {
-	$meeting = new BP_Zoom_Meeting( $_GET['edit'] );
-	if ( empty( $meeting->id ) ) {
-		return;
-	}
-	$edit_users = get_users( array( 'meta_key' => 'bp_zoom_user_id', 'meta_value' => $meeting->user_id ) );
-	if( ! empty( $edit_users ) ) {
-		$edit_host = $edit_users[0]->data;
-	}
-	$edit = true;
-}
-wp_enqueue_script( 'bp-select2' );
-if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
-	wp_enqueue_script( 'bp-select2-local' );
-}
-wp_enqueue_style( 'bp-select2' );
 ?>
 <div id="bp-new-zoom-meeting" class="bp-new-zoom-meeting-form">
 	<form id="bp-new-zoom-meeting-form" name="bp-new-zoom-meeting-form" class="standard-form" method="post" action="">
@@ -38,15 +19,9 @@ wp_enqueue_style( 'bp-select2' );
 					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
 						<option><?php _e( 'Select host', 'buddyboss' ); ?></option>
-						<?php if ( $edit && ! empty( $edit_host ) ) : ?>
-							<option value="<?php echo $meeting->user_id; ?>" selected><?php echo bp_core_get_user_displayname( $edit_host->ID ) . ' ( ' . $edit_host->user_email . ' )'; ?></option>
-						<?php endif; ?>
 						<?php
 						if ( ! empty( $users['members'] ) ) :
 							foreach ( $users['members'] as $user ):
-								if ( $edit && ! empty( $edit_host ) && $user->ID === (int) $edit_host->ID ) {
-									continue;
-								}
 								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
 								if ( ! empty( $bp_zoom_user_id ) ) : ?>
 									<option
@@ -59,11 +34,11 @@ wp_enqueue_style( 'bp-select2' );
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-start-date"><?php _e( 'When', 'buddyboss' ); ?></label>
-					<input type="text" id="bp-zoom-meeting-start-date" value="<?php echo ! empty( $meeting->start_date ) ? $meeting->start_date : ''; ?>" tabindex="3" name="bp-zoom-meeting-start-date" />
+					<input type="text" id="bp-zoom-meeting-start-date" value="" tabindex="3" name="bp-zoom-meeting-start-date" />
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-duration"><?php _e( 'Duration', 'buddyboss' ); ?></label>
-					<input type="number" id="bp-zoom-meeting-duration" value="<?php echo ! empty( $meeting->duration ) ? $meeting->duration : ''; ?>" tabindex="4" name="bp-zoom-meeting-duration" min="0" />
+					<input type="number" id="bp-zoom-meeting-duration" value="" tabindex="4" name="bp-zoom-meeting-duration" min="0" />
 				</p>
 				<p>
 					<label for="bp-zoom-meeting-timezone"><?php _e( 'Timezone', 'buddyboss' ); ?></label>

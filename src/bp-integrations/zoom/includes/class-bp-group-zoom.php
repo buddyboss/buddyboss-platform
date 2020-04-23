@@ -227,6 +227,11 @@ if ( bp_is_active( 'groups' ) ) {
 			}
 			wp_enqueue_style( 'jquery-datetimepicker' );
 			wp_enqueue_script( 'jquery-datetimepicker' );
+			wp_enqueue_script( 'bp-select2' );
+			if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
+				wp_enqueue_script( 'bp-select2-local' );
+			}
+			wp_enqueue_style( 'bp-select2' );
 			wp_enqueue_script( 'bp-group-zoom-meeting-js', bp_zoom_integration_url( '/assets/js/bp-group-zoom-meeting.js' ), array( 'jquery' ), bp_get_version(), true );
 
 			$current_group = groups_get_current_group();
