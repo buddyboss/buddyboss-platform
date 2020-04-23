@@ -173,6 +173,18 @@ if ( bp_is_active( 'groups' ) ) {
 		 * @since BuddyBoss 1.2.10
 		 */
 		public function zoom_page() {
+			// if single meeting page and meeting does not exists return 404.
+			if ( bp_zoom_is_single_meeting() && false === bp_zoom_get_current_meeting() ) {
+				bp_do_404();
+				return;
+			}
+
+			// if edit meeting page and meeting does not exists return 404.
+			if ( bp_zoom_is_edit_meeting() && false === bp_zoom_get_edit_meeting() ) {
+				bp_do_404();
+				return;
+			}
+
 			add_action( 'bp_template_content', array( $this, 'zoom_page_content' ) );
 			bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'groups/single/home' ) );
 		}

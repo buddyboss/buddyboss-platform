@@ -965,6 +965,24 @@ function bp_zoom_get_edit_meeting_id() {
 }
 
 /**
+ * Get edit meeting.
+ *
+ * @since BuddyBoss 1.2.10
+ * @return object|bool object of the meeting or false if not found.
+ */
+function bp_zoom_get_edit_meeting() {
+	$meeting_id = bp_zoom_get_edit_meeting_id();
+	if ( $meeting_id ) {
+		$meeting = new BP_Zoom_Meeting( $meeting_id );
+
+		if ( ! empty( $meeting->id ) ) {
+			return $meeting;
+		}
+	}
+	return false;
+}
+
+/**
  * Get single meeting.
  *
  * @since BuddyBoss 1.2.10
