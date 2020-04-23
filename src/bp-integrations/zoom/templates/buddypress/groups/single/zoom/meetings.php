@@ -26,12 +26,10 @@
 				<div class="meeting-item" data-id="<?php bp_zoom_meeting_id(); ?>"
 					data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>">
 					<div class="meeting-item-col meeting-date">
-						<?php echo bp_core_get_format_date( bp_get_zoom_meeting_start_date(), bp_core_date_format( true, true ) ); ?><br/>
-						<?php bp_zoom_meeting_timezone(); ?>
+						<?php echo bp_zoom_get_date_time_label( bp_get_zoom_meeting_start_date(), bp_get_zoom_meeting_timezone() ); ?>
 					</div>
 					<div class="meeting-item-col meeting-topic">
-						<a href="<?php echo $url; ?>" class="sort-headers meeting-link"
-						data="topic"><?php bp_zoom_meeting_title(); ?></a>
+						<a href="<?php echo $url; ?>" class="sort-headers meeting-link"><?php bp_zoom_meeting_title(); ?></a>
 					</div>
 					<div class="meeting-item-col meeting-id"><?php bp_zoom_meeting_zoom_meeting_id(); ?></div>
 					<div class="meeting-item-col meeting-action">

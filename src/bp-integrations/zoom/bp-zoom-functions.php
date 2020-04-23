@@ -740,7 +740,6 @@ function bp_zoom_get_timezone_options() {
 		"Asia/Baku"                      => "(GMT+5:00) Baku, Tbilisi, Yerevan ",
 		"Asia/Yekaterinburg"             => "(GMT+5:00) Yekaterinburg ",
 		"Asia/Tashkent"                  => "(GMT+5:00) Islamabad, Karachi, Tashkent ",
-		"Asia/Calcutta"                  => "(GMT+5:30) India ",
 		"Asia/Kolkata"                   => "(GMT+5:30) Mumbai, Kolkata, New Delhi ",
 		"Asia/Kathmandu"                 => "(GMT+5:45) Kathmandu ",
 		"Asia/Novosibirsk"               => "(GMT+6:00) Novosibirsk ",
@@ -777,6 +776,31 @@ function bp_zoom_get_timezone_options() {
 	);
 
 	return apply_filters( 'bp_zoom_get_timezone_options', $zones );
+}
+
+function bp_zoom_get_date_time_label( $start_date, $timezone ) {
+	$label              = '';
+	$datetime           = new DateTime( $start_date, new DateTimeZone( $timezone ) );
+	$timezone_date_time = $datetime->format( bp_core_date_format( true, true ) );
+	$timezone_date      = $datetime->format( bp_core_date_format( false, true ) );
+	$timezone_time      = $datetime->format( bp_core_date_format( true, false ) );
+
+	$datetime->setTimezone( wp_timezone() );
+	$wp_timezone_date_time = $datetime->format( bp_core_date_format( true, true ) );
+	$label                 .= $wp_timezone_date_time;
+	$label                 .= '<br/><br/>';
+	$wp_timezone_date      = $datetime->format( bp_core_date_format( false, true ) );
+
+	$timezones = bp_zoom_get_timezone_options();
+	if ( $timezone_date !== $wp_timezone_date ) {
+		$label .= $timezone_date_time . ' ' . substr( $timezones[$timezone], strpos( $timezones[$timezone], ' ' ), strlen( $timezones[$timezone] ) );
+	} else if ( $timezone_date_time !== $wp_timezone_date_time ) {
+		$label .= $timezone_time . ' ' . substr( $timezones[$timezone], strpos( $timezones[$timezone], ' ' ), strlen( $timezones[$timezone] ) );
+	} else {
+		$label .= substr( $timezones[$timezone], strpos( $timezones[$timezone], ' ' ), strlen( $timezones[$timezone] ) );
+	}
+
+	return $label;
 }
 
 /**
