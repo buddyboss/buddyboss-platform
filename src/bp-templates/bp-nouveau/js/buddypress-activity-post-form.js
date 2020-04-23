@@ -1673,6 +1673,11 @@ window.bp = window.bp || {};
 			// Post content
 			var $whatsNew = this.$el.find('#whats-new');
 
+			var atwho_query = $whatsNew.find( 'span.atwho-query' );
+			for( var i = 0; i < atwho_query.length; i++ ) {
+				$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+			}
+
 			// Transform emoji image into emoji unicode
 			$whatsNew.find('img.emojioneemoji').replaceWith(function () {
 				return this.dataset.emojiChar;

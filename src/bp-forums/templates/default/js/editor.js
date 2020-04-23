@@ -39,7 +39,12 @@ jQuery( document ).ready(
 								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
 								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
 							}
-							jQuery(element).closest('form').find( '#bbp_forum_content' ).val( window.forums_medium_forum_editor[key].getContent() );
+							var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
+							bbp_forum_content.val( window.forums_medium_forum_editor[key].getContent() );
+							var atwho_query = bbp_forum_content.find( 'span.atwho-query' );
+							for( var i = 0; i < atwho_query.length; i++ ) {
+								jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+							}
 						}
 					);
 				});
@@ -74,7 +79,12 @@ jQuery( document ).ready(
 								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
 								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
 							}
-							jQuery(element).closest('form').find( '#bbp_reply_content' ).val( window.forums_medium_reply_editor[key].getContent() );
+							var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
+							bbp_reply_content.val( window.forums_medium_reply_editor[key].getContent() );
+							var atwho_query = bbp_reply_content.find( 'span.atwho-query' );
+							for( var i = 0; i < atwho_query.length; i++ ) {
+								jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+							}
 						}
 					);
 				});
@@ -110,6 +120,12 @@ jQuery( document ).ready(
 								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
 							}
 							jQuery(element).closest('form').find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
+							var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
+							bbp_topic_content.val( window.forums_medium_topic_editor[key].getContent() );
+							var atwho_query = bbp_topic_content.find( 'span.atwho-query' );
+							for( var i = 0; i < atwho_query.length; i++ ) {
+								jQuery(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+							}
 						}
 					);
 				});
