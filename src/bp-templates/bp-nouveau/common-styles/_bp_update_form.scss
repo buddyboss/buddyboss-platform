@@ -251,10 +251,12 @@
 
 		.medium-editor-toolbar-actions {
 			opacity: 0.4;
+			pointer-events: none;
 		}
 
 		&.medium-editor-toolbar-active .medium-editor-toolbar-actions {
 			opacity: 1;
+			pointer-events: auto;
 		}
 
 	}

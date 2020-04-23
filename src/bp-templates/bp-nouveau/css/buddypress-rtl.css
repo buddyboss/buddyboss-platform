@@ -1247,12 +1247,14 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 .buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions,
 .buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions {
   opacity: 0.4;
+  pointer-events: none;
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
 .buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
 .buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
@@ -4701,10 +4703,12 @@ input#send-to-input {
 
 .buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active .medium-editor-toolbar-actions {
   opacity: 0.4;
+  pointer-events: none;
 }
 
 .buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active.medium-editor-toolbar-active .medium-editor-toolbar-actions {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .messages .select2-dropdown {
@@ -12582,10 +12586,12 @@ span.icons:before {
 
 #group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions {
   opacity: 0.4;
+  pointer-events: none;
 }
 
 #group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions {
   opacity: 1;
+  pointer-events: auto;
 }
 
 #group-messages-container select.group-messages-type {
