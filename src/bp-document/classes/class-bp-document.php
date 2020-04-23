@@ -790,16 +790,26 @@ class BP_Document {
 			}
 		}
 
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions_document['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions_folder['user']   = "a.user_id = {$r['user_id']}";
+		}
+
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_conditions_document['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions_folder['user']   = "a.group_id = {$r['group_id']}";
+		}
+
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions_document['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] = $wpdb->prepare( ' ( m.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'a.title LIKE %s', $search_terms_like );
 
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.file_name = %s', $search_terms_like );
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.caption = %s', $search_terms_like );
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.description = %s', $search_terms_like );
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.extension = %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.file_name LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.caption LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.description LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.extension LIKE %s )', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.

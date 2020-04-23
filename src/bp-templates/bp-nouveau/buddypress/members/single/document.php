@@ -25,10 +25,16 @@
 							bp_get_template_part( 'document/add-document' );
 							bp_get_template_part( 'document/add-folder' );
 						?>
-						<div id="search-documents-form" class="media-search-form">
-							<label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
-							<input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
-						</div>
+                        <div id="search-documents-form" class="media-search-form" data-bp-search="document">
+                            <form action="" method="get" class="bp-dir-search-form" id="group-document-search-form" autocomplete="off">
+                                <button type="submit" id="group-document-search-submit" class="nouveau-search-submit" name="group_document_search_submit">
+                                    <span class="dashicons dashicons-search" aria-hidden="true"></span>
+                                    <span id="button-text" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></span>
+                                </button>
+                                <label for="group-document-search" class="bp-screen-reader-text"><?php _e( 'Search Documents…', 'buddyboss' ); ?></label>
+                                <input id="group-document-search" name="document_search" type="search" placeholder="<?php _e( 'Search Documents…', 'buddyboss' ); ?>">
+                            </form>
+                        </div>
 
 					</div>
 				</div><!-- .bp-document-listing -->
