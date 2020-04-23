@@ -1094,6 +1094,7 @@ a.layout-grid-view {
   padding: 1rem 1.5rem;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
   top: inherit;
   bottom: 6px;
@@ -1109,6 +1110,7 @@ a.layout-grid-view {
   border-radius: 0;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
   display: block;
   border-radius: 0;
@@ -1119,19 +1121,23 @@ a.layout-grid-view {
   height: 40px;
 }
 
-div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
+div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
   bottom: 10px;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active {
   opacity: 1;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
   height: auto;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
   box-shadow: none;
   padding: 10px 10px 10px 0;
@@ -1141,22 +1147,26 @@ div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
   color: rgba(18, 43, 70, 0.4) !important;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
   padding-right: 0;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 220px;
+  width: 210px;
   margin-bottom: 0;
   background-color: #fff;
   border: 1px solid #dedfe2;
   color: #4d5c6d;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
   color: #4d5c6d;
 }
@@ -1213,7 +1223,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
-  width: 220px;
+  width: 210px;
   margin-bottom: 0;
   background-color: #fff;
   border: 1px solid #dedfe2;
@@ -1222,6 +1232,31 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
   color: #4d5c6d;
+}
+
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar {
+  visibility: visible;
+  height: 44px;
+  left: 0;
+  opacity: 1;
+}
+
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions {
+  opacity: 0.4;
+}
+
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+  opacity: 1;
+}
+
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+  bottom: -25px;
 }
 
 .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
@@ -12100,6 +12135,9 @@ img.emojioneemoji {
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
     bottom: 88px;
   }
+  #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
+    bottom: 88px;
+  }
 }
 
 .bb-groups-messages-right {
@@ -12532,6 +12570,22 @@ span.icons:before {
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
   width: 220px;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar {
+  visibility: visible;
+  height: 44px;
+  left: -15px;
+  opacity: 1;
+  bottom: 35px;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions {
+  opacity: 0.4;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+  opacity: 1;
 }
 
 #group-messages-container select.group-messages-type {

@@ -35,6 +35,12 @@
 				}
 			}
 		}
+
+		.bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
+			bottom: 88px;
+		}
+
+
 	}
 }
 
@@ -474,6 +480,26 @@ span.icons:before {
 
 	}
 
+}
+
+#group-messages-container #whats-new-toolbar.media-off {
+
+	.medium-editor-toolbar {
+		visibility: visible;
+		height: 44px;
+		left: -15px;
+		opacity: 1;
+		bottom: 35px;
+
+		.medium-editor-toolbar-actions {
+			opacity: 0.4;
+		}
+
+		&.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+			opacity: 1;
+		}
+
+	}
 }
 
 #group-messages-container select.group-messages-type {

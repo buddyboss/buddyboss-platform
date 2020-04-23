@@ -34,7 +34,11 @@ jQuery( document ).ready(
 
 					window.forums_medium_forum_editor[key].subscribe(
 						'editableInput',
-						function () {
+						function ( event ) {
+							if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
+								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
+								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
+							}
 							jQuery(element).closest('form').find( '#bbp_forum_content' ).val( window.forums_medium_forum_editor[key].getContent() );
 						}
 					);
@@ -65,7 +69,11 @@ jQuery( document ).ready(
 
 					window.forums_medium_reply_editor[key].subscribe(
 						'editableInput',
-						function () {
+						function ( event ) {
+							if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
+								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
+								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
+							}
 							jQuery(element).closest('form').find( '#bbp_reply_content' ).val( window.forums_medium_reply_editor[key].getContent() );
 						}
 					);
@@ -96,7 +104,11 @@ jQuery( document ).ready(
 
 					window.forums_medium_topic_editor[key].subscribe(
 						'editableInput',
-						function () {
+						function ( event ) {
+							if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
+								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
+								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
+							}
 							jQuery(element).closest('form').find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
 						}
 					);
