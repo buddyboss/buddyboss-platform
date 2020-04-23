@@ -17,4 +17,6 @@
 
 		</ul>
 
+		<?php do_action( 'bp_after_single_activity_content' ); ?>
+
 	</div>
