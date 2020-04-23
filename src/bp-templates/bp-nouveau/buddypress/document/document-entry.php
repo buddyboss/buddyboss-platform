@@ -102,7 +102,7 @@ $document_id = bp_get_document_id();
 			<?php
 			if ( ! bp_is_user() ) {
 				?>
-				<span class="media-folder_author"><?php esc_html_e( 'by', 'buddyboss' ); ?><?php bp_document_author(); ?></span>
+				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><?php bp_document_author(); ?></span>
 				<?php
 			}
 			?>

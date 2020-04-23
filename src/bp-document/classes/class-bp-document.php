@@ -964,9 +964,6 @@ class BP_Document {
 		$page     = absint( $r['page'] );
 		$per_page = absint( $r['per_page'] );
 
-		error_log( $page );
-		error_log( $per_page );
-
 		$retval = array(
 			'documents'      => null,
 			'total'          => null,
@@ -976,13 +973,6 @@ class BP_Document {
 		// Query first for document IDs.
 		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND a.type = 'document' ORDER BY {$order_by_folder} {$sort}";
 		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND m.type = 'document' ORDER BY {$order_by_document} {$sort}";
-
-		if ( ! empty( $per_page ) && ! empty( $page ) ) {
-			// We query for $per_page + 1 items in order to
-			// populate the has_more_items flag.
-			$document_ids_sql_folder   .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
-			$document_ids_sql_document .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
-		}
 
 		/**
 		 * Filters the paged document MySQL statement.
@@ -1036,9 +1026,21 @@ class BP_Document {
 		$direction = 'SORT_' . $sort;
 		self::array_sort_by_column( $documents, $r['order_by'], $direction );
 
-		$retval['has_more_items'] = ! empty( $per_page ) && count( $documents ) > $per_page;
-		$retval['documents']      = $documents;
-		$retval['total']          = count( $retval['documents'] );
+		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
+
+		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $retval['has_more_items'] ) {
+			$total                    = count( $documents );
+			$current_page             = $r['page'];
+			$item_per_page            = $r['per_page'];
+			$start                    = ( $current_page - 1 ) * $item_per_page;
+			$documents                = array_slice( $documents, $start, $item_per_page );
+			$retval['has_more_items'] = $total > ( $current_page * $item_per_page );
+			$retval['documents']      = $documents;
+		} else {
+			$retval['documents'] = $documents;
+		}
+
+		$retval['total'] = count( $retval['documents'] );
 
 		return $retval;
 	}
