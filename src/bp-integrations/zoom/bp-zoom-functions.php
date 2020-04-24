@@ -518,6 +518,15 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 				update_user_meta( $user_id, 'bp_zoom_user_id', $bp_zoom_user_id );
 				update_user_meta( $user_id, 'bp_zoom_user', $_POST['bp_zoom_user'] );
 			}
+
+			if ( ! empty( $create_user['code'] ) && 409 === $create_user['code'] ) {
+				$zoom_user_info = bp_zoom_conference()->get_user_info( $user->user_email );
+				if ( ! empty( $zoom_user_info['code'] ) && 200 === $zoom_user_info['code'] && ! empty( $zoom_user_info['response'] ) ) {
+					update_user_meta( $user_id, 'bp_zoom_user_status', $zoom_user_info['response']->status );
+					update_user_meta( $user_id, 'bp_zoom_user_id', $zoom_user_info['response']->id );
+					update_user_meta( $user_id, 'bp_zoom_user', $_POST['bp_zoom_user'] );
+				}
+			}
 		}
 	} else {
 		if ( ! empty( $bp_zoom_user_id ) ) {
