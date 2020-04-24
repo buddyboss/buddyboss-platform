@@ -91,10 +91,6 @@
 	}
 }
 
-.bbp-the-content pre {
-	padding: 1rem 1.5rem;
-}
-
 .bbp-reply-form #whats-new-toolbar,
 .bbp-topic-form #whats-new-toolbar {
 
@@ -235,10 +231,17 @@
 
 		}
 
+		.medium-editor-toolbar .medium-editor-toolbar-form-active {
+			position: absolute;
+			bottom: -6px;
+			box-shadow: none;
+		}
+
 	}
 
 }
 
+.bbpress #bbpress-forums #whats-new-toolbar.media-off,
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off +,
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content,
 .buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off,
@@ -249,6 +252,7 @@
 		height: 44px;
 		left: 0;
 		opacity: 1;
+		border-radius: 0;
 
 		.medium-editor-toolbar-actions {
 			opacity: 0.4;

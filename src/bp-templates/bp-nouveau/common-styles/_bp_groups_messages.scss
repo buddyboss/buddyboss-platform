@@ -54,6 +54,7 @@
 		max-height: 50vh;
 		overflow-y: auto;
 		overflow-x: hidden;
+		margin-bottom: 15px;
 	}
 }
 
@@ -400,10 +401,6 @@ span.icons:before {
 	display: flex;
 }
 
-#group_message_content pre {
-	padding: 1rem 1.5rem;
-}
-
 #group-messages-container #whats-new-toolbar {
 	display: block;
 
@@ -509,7 +506,15 @@ span.icons:before {
 
 		}
 
+		.medium-editor-toolbar-form.medium-editor-toolbar-form-active {
+			position: absolute;
+			box-shadow: none;
+			bottom: -6px;
+		}
+
 	}
+
+
 }
 
 #group-messages-container select.group-messages-type {
