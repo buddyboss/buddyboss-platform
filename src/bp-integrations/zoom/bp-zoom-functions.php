@@ -474,7 +474,7 @@ function bp_zoom_add_zoom_user_profile_field( $user ) {
 						<input name="bp_zoom_user" type="checkbox" id="bp_zoom_user" value="1" <?php checked( '1', $bp_zoom_user ); ?> />
 						<?php _e( 'Add to Zoom Conference.', 'buddyboss' ); ?>
 					<?php endif; ?>
-					<?php echo '[' . $bp_zoom_user_status . ']'; ?>
+					<?php if ( ! empty( $bp_zoom_user_status ) ) { echo '[' . $bp_zoom_user_status . ']'; } ?>
 				</label>
 			</td>
 		</tr>
