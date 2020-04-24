@@ -52,6 +52,20 @@ function bp_has_profile( $args = '' ) {
 		$fetch_visibility_level_default = false;
 	}
 
+	/**
+	 * For get all the disable fields ids and exclude if user is not logged and it is displayed users.
+	 */
+	$fields_id__not_in = false;
+	if ( !bp_is_my_profile() && bp_displayed_user_id() ) {
+		// get all excluded fields id.
+		$fields_id__not_in = [];
+		$default_visibility_levels = BP_XProfile_Group::fetch_default_visibility_levels();
+		foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
+			if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
+				$fields_id__not_in[] = $d_field_id;
+			}
+		}
+	}
 	// Parse arguments.
 	$r = bp_parse_args(
 		$args,
@@ -65,7 +79,7 @@ function bp_has_profile( $args = '' ) {
 			'fetch_field_data'       => true,
 			'fetch_visibility_level' => $fetch_visibility_level_default,
 			'exclude_groups'         => false, // Comma-separated list of profile field group IDs to exclude.
-			'exclude_fields'         => false, // Comma-separated list of profile field IDs to exclude.
+			'exclude_fields'         => $fields_id__not_in, // Comma-separated list of profile field IDs to exclude.
 			'include_fields'         => false, // Comma-separated list of profile field IDs to include.
 			'update_meta_cache'      => true,
 		),
