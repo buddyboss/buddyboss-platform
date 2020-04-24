@@ -194,7 +194,7 @@
 				height: 44px;
 
 				div & {
-					bottom: -50px;
+					bottom: -51px;
 				}
 			}
 
@@ -239,6 +239,7 @@
 
 }
 
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off +,
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content,
 .buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off,
 .buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off {
@@ -251,12 +252,19 @@
 
 		.medium-editor-toolbar-actions {
 			opacity: 0.4;
-			pointer-events: none;
+
+			li {
+				pointer-events: none;
+			}
 		}
 
 		&.medium-editor-toolbar-active .medium-editor-toolbar-actions {
 			opacity: 1;
-			pointer-events: auto;
+
+			li {
+				pointer-events: auto;
+			}
+
 		}
 
 	}
@@ -264,6 +272,11 @@
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
 	bottom: -25px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
+	bottom: -24px;
+	left: -15px;
 }
 
 .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {

@@ -1063,6 +1063,7 @@ window.bp = window.bp || {};
 		tagName  : 'div',
 		id       : 'whats-new-content',
 		events: {
+			'click .medium-editor-toolbar-actions': 'focusEditor',
 			'click .medium-editor-toolbar li.close-btn': 'hideToolbarSelector',
 		},
 
@@ -1072,8 +1073,12 @@ window.bp = window.bp || {};
 		},
 		hideToolbarSelector: function ( e ) {
 			e.preventDefault();
-			var medium_editor = $(e.currentTarget).closest('#whats-new-form').find('.medium-editor-toolbar');
-			medium_editor.removeClass('active');
+			var medium_editor = $( e.currentTarget ).closest( '#whats-new-form' ).find( '.medium-editor-toolbar' );
+			medium_editor.removeClass( 'active' );
+		},
+
+		focusEditor: function ( e ) {
+			$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
 		}
 	} );
 
@@ -1224,7 +1229,7 @@ window.bp = window.bp || {};
 			'click #activity-gif-button': 'toggleGifSelector',
 			'click #activity-media-button': 'toggleMediaSelector',
 			'click .post-elements-buttons-item': 'activeButton',
-			'click .show-toolbar': 'toggleToolbarSelector',
+			'click .show-toolbar': 'toggleToolbarSelector'
 		},
 
 		initialize: function() {

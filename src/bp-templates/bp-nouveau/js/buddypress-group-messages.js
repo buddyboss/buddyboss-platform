@@ -591,6 +591,9 @@ window.bp = window.bp || {};
 				$(e.currentTarget).find('.toolbar-button').toggleClass('active');
 				medium_editor.toggleClass('active');
 			});
+			$( document ).on( 'click', '#group-messages-container .medium-editor-toolbar-actions', function(e) {
+				$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+			});
 		},
 
 		/**

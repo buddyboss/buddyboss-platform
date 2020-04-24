@@ -1,5 +1,9 @@
 <script type="text/html" id="tmpl-whats-new-messages-toolbar">
 
+<?php if ( !bp_is_active( 'media' ) ): ?>
+<div class="media-off">
+<?php endif; ?>
+
     <?php if ( bp_is_active( 'media' ) ): ?>
 
         <div class="post-elements-buttons-item show-toolbar">
@@ -32,4 +36,9 @@
 		<?php endif; ?>
 
 	<?php endif; ?>
+
+<?php if ( !bp_is_active( 'media' ) ): ?>
+</div>
+<?php endif; ?>
+
 </script>

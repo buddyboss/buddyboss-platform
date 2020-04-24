@@ -973,6 +973,7 @@ window.bp = window.bp || {};
 			'click #messages-media-button': 'toggleMediaSelector',
 			'click #messages-gif-button': 'toggleGifSelector',
 			'click #show-toolbar-button': 'toggleToolbarSelector',
+			'click .medium-editor-toolbar-actions': 'focusEditor',
 		},
 
 		initialize: function() {
@@ -1018,6 +1019,10 @@ window.bp = window.bp || {};
 			$(e.currentTarget).toggleClass('active');
 			var medium_editor_toolbar = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
 			medium_editor_toolbar.toggleClass('active');
+		},
+
+		focusEditor: function ( e ) {
+			$(e.currentTarget).closest('.bp-message-content-wrap').find('#bp-message-content #message_content').focus();
 		},
 
 		closeGifSelector: function() {

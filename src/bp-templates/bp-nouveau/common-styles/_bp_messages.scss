@@ -626,12 +626,20 @@ input#send-to-input {
 
 	&.active .medium-editor-toolbar-actions {
 		opacity: 0.4;
-		pointer-events: none;
+
+		li {
+			pointer-events: none;
+		}
+
 	}
 
 	&.active.medium-editor-toolbar-active .medium-editor-toolbar-actions {
 		opacity: 1;
-		pointer-events: auto;
+
+		li {
+			pointer-events: auto;
+		}
+
 	}
 
 }
@@ -902,5 +910,9 @@ body .bp-messages-user-threads {
 			}
 
 		}
+	}
+
+	.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
+		left: 10px;
 	}
 }
