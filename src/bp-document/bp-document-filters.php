@@ -22,8 +22,6 @@ add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' )
 // Forums
 add_action( 'bbp_template_after_single_topic', 'bp_document_add_theatre_template' );
 add_action( 'bbp_new_reply', 'bp_document_forums_new_post_document_save', 999 );
-add_action( 'bbp_new_reply', 'bp_document_forums_new_post_document_save', 999 );
-add_action( 'bbp_new_topic', 'bp_document_forums_new_post_document_save', 999 );
 add_action( 'bbp_new_topic', 'bp_document_forums_new_post_document_save', 999 );
 add_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
 
@@ -357,6 +355,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 					'folder_id'     => $folder_id,
 					'group_id'      => $group_id,
 					'file_name'     => $file_name,
+					'privacy'       => 'forums',
 					'caption'       => $attachment_data->post_excerpt,
 					'description'   => $attachment_data->post_content,
 					'extension'     => '.' . $file_type['ext'],
@@ -401,7 +400,6 @@ function bp_document_forums_new_post_document_save( $post_id ) {
  * @return string
  */
 function bp_document_forums_embed_attachments( $content, $id ) {
-	global $document_template;
 
 	// Do not embed attachment in wp-admin area
 	if ( is_admin() ) {
@@ -415,6 +413,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 			'include'  => $document_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',
+			'privacy'  => array( 'forums' ),
 		)
 	) ) {
 		ob_start();

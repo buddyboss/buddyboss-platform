@@ -532,11 +532,12 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		return $content;
 	}
 
-	$media_ids           = get_post_meta( $id, 'bp_media_ids', true );
+	$media_ids = get_post_meta( $id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array(
 					'include'  => $media_ids,
 					'order_by' => 'menu_order',
+					'privacy'  => array( 'forums' ),
 					'sort'     => 'ASC',
 				) ) ) {
 			ob_start();

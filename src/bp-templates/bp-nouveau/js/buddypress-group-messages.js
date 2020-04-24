@@ -395,11 +395,12 @@ window.bp = window.bp || {};
 				}
 
 				var media   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
+				var document   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val();
 				var gif     	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_gif' ).val();
 				var contentError   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-content-no-error' );
 				var recipientError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-recipient-no-error' );
 
-				if  ( '' === content && '' === media && '' === gif ) {
+				if  ( '' === content && '' === media && '' === document && '' === gif ) {
 					if ( ! contentError.length ) {
 						var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + BP_Nouveau.group_messages.no_content + ' </p></div>';
 						$('#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback').append(feedbackHtml);
@@ -429,6 +430,7 @@ window.bp = window.bp || {};
 					'group'   	 	: BP_Nouveau.group_messages.group_id,
 					'content' 	 	: window.group_messages_editor.getContent(),
 					'media'   	 	: media,
+					'document'   	: document,
 					'users'   		: user,
 					'users_list'    : users_list,
 					'type'    		: type,
@@ -480,6 +482,9 @@ window.bp = window.bp || {};
 								});
 								$( 'div#bp-group-messages-post-media-uploader' ).html('');
 								$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
+
+								$( 'div#bp-group-messages-post-document-uploader' ).html('');
+								$( 'div#bp-group-messages-post-document-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 							}
 
 							setTimeout(function() {
