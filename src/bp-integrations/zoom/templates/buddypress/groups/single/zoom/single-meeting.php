@@ -21,8 +21,7 @@ if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_current_meeting_id() 
 				<div class="single-meeting-item">
 					<label class="meeting-item-head"><?php _e( 'Time', 'buddyboss' ); ?></label>
 					<div class="meeting-item-col">
-						<?php echo bp_core_get_format_date( bp_get_zoom_meeting_start_date(), bp_core_date_format( true, true ) ); ?>
-						<?php bp_zoom_meeting_timezone(); ?>
+						<?php echo bp_zoom_get_date_time_label( bp_get_zoom_meeting_start_date(), bp_get_zoom_meeting_timezone() ); ?>
 					</div>
 				</div>
 				<div class="single-meeting-item">
