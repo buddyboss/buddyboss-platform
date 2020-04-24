@@ -12450,6 +12450,17 @@ span.icons:before {
   margin-top: 10px;
 }
 
+.meeting-item-table .recording-list {
+  display: flex;
+  flex: auto;
+  border-bottom: 1px solid #e7e9ec;
+  padding: 15px 0;
+}
+
+.meeting-item-table .recording-list:empty {
+  display: none;
+}
+
 .single-meeting-item-table {
   min-width: auto;
 }

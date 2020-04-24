@@ -64,8 +64,8 @@
 			});
 		} );
 
-		$( '.meeting-item' ).on('click','#bp-zoom-meeting-view-recordings',function(e){
-			var target = $(e.target), meeting_item = target.closest('.meeting-item');
+		$( '.meeting-item-wrap' ).on('click','#bp-zoom-meeting-view-recordings',function(e){
+			var target = $(e.target), meeting_item = target.closest('.meeting-item-wrap');
 			e.preventDefault();
 
 			$.ajax({
@@ -85,8 +85,8 @@
 			});
 		});
 
-		$('.meeting-item').on( 'click', '.bp-zoom-meeting-delete', function(e){
-			var target = $( e.target ), meeting_item = target.closest('.meeting-item'), meeting_id = meeting_item.data('meeting-id'), id = meeting_item.data('id'), nonce = target.data('nonce');
+		$('.meeting-item-wrap').on( 'click', '.bp-zoom-meeting-delete', function(e){
+			var target = $( e.target ), meeting_item = target.closest('.meeting-item-wrap'), meeting_id = meeting_item.data('meeting-id'), id = meeting_item.data('id'), nonce = target.data('nonce');
 			e.preventDefault();
 
 			$.ajax({

@@ -91,6 +91,17 @@
 		}
 	}
 
+	.recording-list {
+		display: flex;
+		flex: auto;
+		border-bottom: 1px solid #e7e9ec;
+		padding: 15px 0;
+
+		&:empty {
+			display: none;
+		}
+	}
+
 }
 
 .single-meeting-item-table {
