@@ -4885,7 +4885,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
 
 			if ( isset( $src[0] ) ) {
-				$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( $src[0] ) );
 			}
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {

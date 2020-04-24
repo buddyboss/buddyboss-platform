@@ -9,11 +9,6 @@ add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
-
-/**
- * Action for add media theatre template for single activity page
- */
-add_action( 'bp_after_activity_entry', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_single_activity', 'bp_media_add_theatre_template' );
@@ -60,9 +55,6 @@ add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_re
  * Add media theatre template for activity pages
  */
 function bp_media_add_theatre_template() {
-	if ( !bp_is_single_activity() ) {
-		remove_action( 'bp_after_activity_entry', 'bp_media_add_theatre_template' );
-	}
 	bp_get_template_part( 'media/theatre' );
 }
 
