@@ -1161,7 +1161,7 @@ function bp_document_upload() {
 		return $attachment;
 	}
 
-	$name = $attachment->post_title;
+	$name = $attachment->post_name;
 
 	$result = array(
 		'id'   => (int) $attachment->ID,

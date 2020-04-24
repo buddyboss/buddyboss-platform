@@ -91,7 +91,7 @@ if ( $group_id > 0 ) {
 			?>
 			<div class="document-text-wrap">
 				<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-					<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo esc_html( $file_data ); ?></textarea>
+					<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
 				</div>
 				<div class="document-expand">
 					<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?></a>
@@ -126,7 +126,7 @@ if ( $group_id > 0 ) {
 					'<div class="more_text_view">%s</div>',
 					sprintf(
 						/* translators: %s: download url */
-						esc_html__( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+						wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
 						esc_url( $download_url )
 					)
 				);

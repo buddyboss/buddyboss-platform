@@ -757,10 +757,10 @@ window.bp = window.bp || {};
 		tagName: 'div',
 		className: 'messages-document-container',
 		template: bp.template( 'messages-document' ),
-		media : [],
+		document : [],
 
 		initialize: function () {
-			this.model.set( 'document', this.media );
+			this.model.set( 'document', this.document );
 			document.addEventListener( 'messages_document_toggle', this.toggle_document_uploader.bind(this) );
 			document.addEventListener( 'messages_document_close', this.destroy.bind(this) );
 		},
@@ -780,8 +780,8 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.dropzone.destroy();
 				self.$el.find('#messages-post-document-uploader').html('');
 			}
-			self.media = [];
-			self.model.set( 'media', self.media );
+			self.document = [];
+			self.model.set( 'document', self.document );
 			self.$el.find('#messages-post-document-uploader').removeClass('open').addClass('closed');
 
 			document.removeEventListener( 'messages_document_toggle', this.toggle_document_uploader.bind(this) );
@@ -807,12 +807,12 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.dropzone.on('success', function(file, response) {
 				if ( response.data.id ) {
-					file.id = response.data.id;
-					response.data.uuid = file.upload.uuid;
+					file.id 				 = response.data.id;
+					response.data.uuid 		 = file.upload.uuid;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
-					response.data.saved = false;
-					self.media.push( response.data );
-					self.model.set( 'document', self.media );
+					response.data.saved 	 = false;
+					self.document.push( response.data );
+					self.model.set( 'document', self.document );
 				}
 			});
 
@@ -827,14 +827,14 @@ window.bp = window.bp || {};
 			});
 
 			bp.Nouveau.Messages.dropzone.on('removedfile', function(file) {
-				if ( self.media.length ) {
-					for ( var i in self.media ) {
-						if ( file.id === self.media[i].id ) {
-							if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
+				if ( self.document.length ) {
+					for ( var i in self.document ) {
+						if ( file.id === self.document[i].id ) {
+							if ( typeof self.document[i].saved !== 'undefined' && ! self.document[i].saved ) {
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
-							self.media.splice( i, 1 );
-							self.model.set( 'document', self.media );
+							self.document.splice( i, 1 );
+							self.model.set( 'document', self.document );
 						}
 					}
 				}
@@ -2283,10 +2283,20 @@ window.bp = window.bp || {};
 				jQuery('#message_content').addClass('loading');
 			}
 
+
+			console.log( 'chetan');
+			console.log( this.model.get('document') );
+			console.log( 'media' );
+			console.log( this.model.get('media') );
+
 			//check message content empty
-			if ( content === '' && ( ( typeof this.model.get('media') !== 'undefined' && ! this.model.get('media').length ) && ( typeof this.model.get('gif_data') !== 'undefined' && ! Object.keys(this.model.get('gif_data')).length ) ) ) {
+			if ( content === '' && ( ( typeof this.model.get('document') !== 'undefined' && ! this.model.get('document').length ) && ( typeof this.model.get('media') !== 'undefined' && ! this.model.get('media').length ) && ( typeof this.model.get('gif_data') !== 'undefined' && ! Object.keys(this.model.get('gif_data')).length ) ) ) {
 				errors.push( 'message_content' );
 			}
+
+			console.log( 'chetan');
+			console.log( errors );
+
 
 			if ( errors.length ) {
 				var feedback = '';
@@ -2298,9 +2308,14 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			if ( content === '' && ( ( typeof this.model.get('media') !== 'undefined' && this.model.get('media').length ) || ( typeof this.model.get('gif_data') !== 'undefined' && Object.keys(this.model.get('gif_data')).length ) ) ) {
+
+
+			if ( content === '' && ( ( typeof this.model.get('document') !== 'undefined' && this.model.get('document').length ) || ( typeof this.model.get('media') !== 'undefined' && this.model.get('media').length ) || ( typeof this.model.get('gif_data') !== 'undefined' && Object.keys(this.model.get('gif_data')).length ) ) ) {
 				content = '&nbsp;';
 			}
+
+			console.log( 'chetan');
+			console.log( content );
 
 			this.model.set ( {
 				thread_id : this.options.thread.get( 'id' ),
@@ -2337,6 +2352,14 @@ window.bp = window.bp || {};
 					medias[k].saved = true;
 				}
 				this.model.set('media',medias);
+			}
+
+			var documents = this.model.get('document');
+			if ( typeof documents !== 'undefined' && documents.length ) {
+				for( var d = 0; d < documents.length; d++ ) {
+					documents[d].saved = true;
+				}
+				this.model.set('document',documents);
 			}
 
 			if (this.messageAttachments.onClose){

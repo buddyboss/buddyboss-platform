@@ -443,6 +443,12 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 function bp_document_attach_document_to_message( &$message ) {
 
 	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
+
+
+		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+
 		$document_list = $_POST['document'];
 		$document_ids  = array();
 
@@ -479,6 +485,9 @@ function bp_document_attach_document_to_message( &$message ) {
 
 		// save document meta for message
 		bp_messages_update_meta( $message->id, 'bp_document_ids', $document_ids );
+
+		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 	}
 }
 
