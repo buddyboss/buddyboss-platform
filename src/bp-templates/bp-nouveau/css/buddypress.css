@@ -13318,6 +13318,18 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   padding: 0 10px;
 }
 
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.is-loading,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.is-loading .bb-icon-loader,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading .bb-icon-loader {
+  font-size: 20px;
+}
+
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.has-error,
 .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.has-error {
   border-color: #f00;

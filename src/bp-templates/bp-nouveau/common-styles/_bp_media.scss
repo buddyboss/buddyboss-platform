@@ -2602,6 +2602,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			border-radius: 4px;
 			padding: 0 10px;
 
+			&.is-loading {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				.bb-icon-loader {
+					font-size: 20px;
+				}
+			}
+
 			&.has-error {
 				border-color: #f00;
 			}

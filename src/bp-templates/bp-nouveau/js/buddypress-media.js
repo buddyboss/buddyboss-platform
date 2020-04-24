@@ -2125,6 +2125,34 @@ window.bp = window.bp || {};
 			var id 				  = $( event.currentTarget ).attr( 'id' );
 			var type 			  = $( event.currentTarget ).attr( 'data-type' );
 
+			// For Activity Feed
+			currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
+			$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
+
+			// Change if this is not from Activity Page
+			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
+				/* jshint ignore:start */
+				var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
+				/* jshint ignore:end */
+				if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
+					currentTarget = '.bp-media-move-file';
+					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+				}else{
+					currentTarget = '.bp-media-move-folder';
+					$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+
+				}
+			}
+
+			$(currentTarget).find( '.location-folder-list-wrap .location-folder-list' ).remove();
+
+			$(currentTarget).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-loader animate-spin"></i></li></ul>' );
+
+			
+			$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
+			$(currentTarget).show();
+			
+
 			if ( '' !== id ) {
 				$.ajax( {
 					url : BP_Nouveau.ajaxurl,
@@ -2135,31 +2163,12 @@ window.bp = window.bp || {};
 						type: type,
 					},success : function( response ) {
 
-						// For Activity Feed
-						currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
-						$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
-
-						// Change if this is not from Activity Page
-						if($(event.currentTarget).closest('.media-folder_items').length > 0) {
-							/* jshint ignore:start */
-							var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
-							/* jshint ignore:end */
-							if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
-								currentTarget = '.bp-media-move-file';
-								$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
-							}else{
-								currentTarget = '.bp-media-move-folder';
-								$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
-
-							}
-						}
+						
 						$(currentTarget).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 						$(currentTarget).find( '.location-folder-list-wrap' ).append( response.data.html );
 						if(bp.Nouveau.Media.folderLocationUI){
 							bp.Nouveau.Media.folderLocationUI(currentTarget);
 						}
-						$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
-						$(currentTarget).show();
 					}
 				});
 			}
