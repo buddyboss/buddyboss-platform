@@ -17,6 +17,14 @@
 			containerCssClass: 'bb-select-container',
 		});
 
+		$('#bp-zoom-meeting-alt-host-ids').select2({
+			minimumInputLength: 0,
+			closeOnSelect: true,
+			language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+			dropdownCssClass: 'bb-select-dropdown',
+			containerCssClass: 'bb-select-container',
+		});
+
 		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
 			e.preventDefault();
 
@@ -31,8 +39,17 @@
 				'action': 'zoom_meeting_add',
 			};
 			for( var i in form_data ) {
-				data[form_data[i].name] = form_data[i].value;
+				if ( data.hasOwnProperty(form_data[i].name) ) {
+					if( ! $.isArray(data[form_data[i].name]) ) {
+						data[form_data[i].name] = [data[form_data[i].name]];
+					}
+					data[form_data[i].name] = data[form_data[i].name].concat( form_data[i].value );
+				} else {
+					data[form_data[i].name] = form_data[i].value;
+				}
 			}
+
+			console.log(data);return false;
 
 			$.ajax({
 				type: 'POST',

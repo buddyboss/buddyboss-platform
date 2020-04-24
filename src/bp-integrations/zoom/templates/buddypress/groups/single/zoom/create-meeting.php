@@ -5,6 +5,7 @@
  * @since BuddyBoss 1.2.10
  */
 ?>
+<?php $users = groups_get_group_members( array( 'group_role' => array( 'member', 'mod', 'admin' ) ) ); ?>
 <div id="bp-new-zoom-meeting" class="bp-new-zoom-meeting-form">
 	<form id="bp-new-zoom-meeting-form" name="bp-new-zoom-meeting-form" class="standard-form" method="post" action="">
 		<fieldset class="bp-zoom-meeting-form">
@@ -15,7 +16,6 @@
 					<input type="text" id="bp-zoom-meeting-title" value="<?php _e( 'My Meeting', 'buddyboss' ); ?>" tabindex="1" name="bp-zoom-meeting-title" />
 				</p>
 				<p>
-					<?php $users = groups_get_group_members( array( 'group_role' => array( 'member', 'mod', 'admin' ) ) ); ?>
 					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
 						<option><?php _e( 'Select host', 'buddyboss' ); ?></option>
@@ -99,16 +99,28 @@
 					</select><br />
 					<small><?php _e( 'Set what type of auto recording feature you want to add. Default is none.', 'buddyboss' ); ?></small>
 				</p>
-<!--				<p>-->
-<!--					<label for="bp-zoom-meeting-alt-hosts">--><?php //_e( 'Alternative Hosts', 'buddyboss' ); ?><!--</label>-->
-<!--					<select id="bp-zoom-meeting-alt-hosts" name="bp-zoom-meeting-alt-hosts" tabindex="15">-->
-<!--					</select>-->
-<!--				</p>-->
+				<p>
+					<label for="bp-zoom-meeting-alt-host-ids"><?php _e( 'Alternative Hosts', 'buddyboss' ); ?></label>
+					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="15" multiple>
+						<option><?php _e( 'Select alternative hosts', 'buddyboss' ); ?></option>
+						<?php
+						if ( ! empty( $users['members'] ) ) :
+							foreach ( $users['members'] as $user ):
+								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
+								if ( ! empty( $bp_zoom_user_id ) ) : ?>
+									<option
+											value="<?php echo $bp_zoom_user_id; ?>"><?php echo bp_core_get_user_displayname( $user->ID ) . ' ( ' . $user->user_email . ' )'; ?></option>
+								<?php endif;
+							endforeach;
+						endif;
+						?>
+					</select>
+				</p>
 
 				<div class="bp-zoom-meeting-form-submit-wrapper">
 					<?php wp_nonce_field( 'bp_zoom_meeting' ); ?>
 					<input type="hidden" id="bp-zoom-meeting-group-id" name="bp-zoom-meeting-group-id" value="<?php echo bp_get_group_id(); ?>"/>
-					<button type="submit" tabindex="15" id="bp-zoom-meeting-form-submit" name="bp-zoom-meeting-form-submit" class="button submit"><?php _e( 'Create Meeting', 'buddyboss' ); ?></button>
+					<button type="submit" tabindex="16" id="bp-zoom-meeting-form-submit" name="bp-zoom-meeting-form-submit" class="button submit"><?php _e( 'Create Meeting', 'buddyboss' ); ?></button>
 				</div>
 
 			</div>

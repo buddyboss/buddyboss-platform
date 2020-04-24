@@ -321,7 +321,7 @@ if ( bp_is_active( 'groups' ) ) {
 			$waiting_room           = isset( $_POST['bp-zoom-meeting-waiting-room'] );
 			$enforce_login          = isset( $_POST['bp-zoom-meeting-authentication'] );
 			$auto_recording         = ! empty( $_POST['bp-zoom-meeting-recording'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-recording' ) ) : 'none';
-			$alternative_host_ids   = ! empty( $_POST['bp-zoom-meeting-alt-host-ids'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-alt-host-ids' ) ) : '';
+			$alternative_host_ids   = ! empty( $_POST['bp-zoom-meeting-alt-host-ids'] ) ? $_POST['bp-zoom-meeting-alt-host-ids'] : false;
 			$title          		= ! empty( $_POST['bp-zoom-meeting-title'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-title' ) ) : '';
 
 			$data = array(
@@ -367,6 +367,10 @@ if ( bp_is_active( 'groups' ) ) {
 
 				if ( ! empty( $group_id ) ) {
 					$data['group_id'] = $group_id;
+				}
+
+				if ( is_array( $alternative_host_ids ) ) {
+					$data['alternative_host_ids'] = implode( ',', $alternative_host_ids );
 				}
 
 				$id = bp_zoom_meeting_add( $data );
