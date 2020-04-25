@@ -107,7 +107,14 @@ $group_members = groups_get_group_members( $args );
 								<input name="bp_group_messages_gif" id="bp_group_messages_gif" type="hidden" value=""/>
 							<?php endif; ?>
 						</div>
-						<div id="whats-new-toolbar">
+						<div id="whats-new-toolbar" class="<?php if ( !bp_is_active( 'media' ) ){ echo 'media-off'; } ?>">
+							<?php if ( bp_is_active( 'media' ) ) : ?>
+								<div class="post-elements-buttons-item show-toolbar"  data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php _e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php _e( 'Hide formatting', 'buddyboss' ); ?>">
+									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+										<span class="dashicons dashicons-editor-textcolor"></span>
+									</a>
+								</div>
+							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) : ?>
 								<div class="post-elements-buttons-item post-media">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
