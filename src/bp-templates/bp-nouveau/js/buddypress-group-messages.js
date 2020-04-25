@@ -589,6 +589,11 @@ window.bp = window.bp || {};
 				e.preventDefault();
 				var medium_editor = $(e.currentTarget).closest('#bp-group-message-content').find('.medium-editor-toolbar');
 				$(e.currentTarget).find('.toolbar-button').toggleClass('active');
+				if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+					jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+				} else {
+					jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+				}
 				medium_editor.toggleClass('active');
 			});
 			$( document ).on( 'click', '#group-messages-container .medium-editor-toolbar-actions', function(e) {

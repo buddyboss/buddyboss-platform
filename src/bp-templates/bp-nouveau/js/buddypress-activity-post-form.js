@@ -1322,6 +1322,11 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			var medium_editor = $(e.currentTarget).closest('#whats-new-form').find('.medium-editor-toolbar');
 			$(e.currentTarget).find('.toolbar-button').toggleClass('active');
+			if( $(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+				$(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+			} else {
+				$(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+			}
 			medium_editor.toggleClass('active');
 		}
 	} );
@@ -1629,6 +1634,8 @@ window.bp = window.bp || {};
 			$('medium-editor-action').removeClass('medium-editor-button-active');
 			$('.medium-editor-toolbar-actions').show();
 			$('.medium-editor-toolbar-form').removeClass('medium-editor-toolbar-form-active');
+			$('#show-toolbar-button').parent('.show-toolbar').attr('data-bp-tooltip',$('#show-toolbar-button').parent('.show-toolbar').attr('data-bp-tooltip-show'));
+			
 		},
 
 		cleanFeedback: function() {

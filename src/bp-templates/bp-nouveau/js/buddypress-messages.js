@@ -1017,6 +1017,11 @@ window.bp = window.bp || {};
 		toggleToolbarSelector: function( e ) {
 			e.preventDefault();
 			$(e.currentTarget).toggleClass('active');
+			if( $(e.currentTarget).hasClass('active') ) {
+				$(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip',jQuery(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip-hide'));
+			} else {
+				$(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip',jQuery(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip-show'));
+			}
 			var medium_editor_toolbar = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
 			medium_editor_toolbar.toggleClass('active');
 		},

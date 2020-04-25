@@ -146,7 +146,13 @@ jQuery( document ).ready(
 			e.preventDefault();
 			var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
 			jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
+			if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+				jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+			} else {
+				jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+			}
 			medium_editor.toggleClass('active');
+
 		});
 
 		jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar-actions, .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {

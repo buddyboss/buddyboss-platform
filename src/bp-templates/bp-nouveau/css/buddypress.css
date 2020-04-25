@@ -4721,7 +4721,7 @@ input#send-to-input {
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
-  padding: 0 15px 0 0;
+  padding: 5px 15px 0 0;
   width: 100%;
 }
 

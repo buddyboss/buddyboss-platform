@@ -36,7 +36,7 @@
 	
 
 	<?php if ( bp_is_active( 'media' ) ) : ?>
-		<div class="post-elements-buttons-item show-toolbar">
+		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php _e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php _e('Show formatting', 'buddyboss'); ?>">
 			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
 				<span class="dashicons dashicons-editor-textcolor"></span>
 			</a>
