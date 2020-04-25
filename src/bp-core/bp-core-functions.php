@@ -4124,6 +4124,7 @@ function bp_get_allowedtags() {
 			'u'       => array(),
 			'i'       => array(),
 			'br'      => array(),
+			'pre'     => array(),
 
 		)
 	);
