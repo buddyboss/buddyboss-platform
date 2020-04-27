@@ -130,7 +130,7 @@
 			var _this = $(this);
 			e.preventDefault();
 
-			var textArea = document.createElement("textarea");
+			var textArea = document.createElement('textarea');
 			textArea.value = _this.data('join-url');
 			document.body.appendChild(textArea);
 			textArea.select();

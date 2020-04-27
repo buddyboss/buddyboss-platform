@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-16 23:00:10+00:00\n"
+"POT-Creation-Date: 2020-04-27 15:55:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -892,6 +892,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:912
 #: bp-groups/classes/class-bp-groups-list-table.php:409
 #: bp-groups/classes/class-bp-groups-list-table.php:573
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:41
 #: bp-members/classes/class-bp-members-list-table.php:177
 #: bp-members/classes/class-bp-members-list-table.php:327
 #: bp-members/classes/class-bp-members-ms-list-table.php:164
@@ -1162,7 +1163,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-template.php:297
 #: bp-blogs/classes/class-bp-blogs-template.php:152
 #: bp-groups/classes/class-bp-groups-template.php:298
-#: bp-integrations/zoom/includes/class-bp-group-zoom-meeting-template.php:220
+#: bp-integrations/zoom/includes/class-bp-zoom-meeting-template.php:220
 #: bp-media/classes/class-bp-media-album-template.php:225
 #: bp-media/classes/class-bp-media-template.php:234
 #: bp-members/classes/class-bp-core-members-template.php:209
@@ -1174,7 +1175,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-template.php:298
 #: bp-blogs/classes/class-bp-blogs-template.php:153
 #: bp-groups/classes/class-bp-groups-template.php:299
-#: bp-integrations/zoom/includes/class-bp-group-zoom-meeting-template.php:221
+#: bp-integrations/zoom/includes/class-bp-zoom-meeting-template.php:221
 #: bp-media/classes/class-bp-media-album-template.php:226
 #: bp-media/classes/class-bp-media-template.php:235
 #: bp-members/classes/class-bp-core-members-template.php:210
@@ -1605,7 +1606,8 @@ msgid "Select %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:278
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:49
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:55
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:70
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1709
 msgid "Required"
 msgstr ""
@@ -2102,7 +2104,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:46
 #: bp-core/classes/class-bp-admin-tab.php:242 bp-forums/groups.php:305
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:35
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:432
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:486
 msgid "Save Settings"
 msgstr ""
 
@@ -2904,7 +2906,8 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:49
 #: bp-core/admin/settings/bp-admin-setting-registration.php:21
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:47
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:53
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:68
 msgid "Registration"
 msgstr ""
 
@@ -6156,13 +6159,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -7925,7 +7928,8 @@ msgid "Reply \"%1$s\" successfully unmarked as spam."
 msgstr ""
 
 #: bp-forums/admin/replies.php:622
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:14
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:15
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:22
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:21
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:27
 msgid "Title"
@@ -8374,6 +8378,7 @@ msgid ""
 msgstr ""
 
 #: bp-forums/admin/settings.php:1481
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:38
 msgid "Start"
 msgstr ""
 
@@ -9353,7 +9358,7 @@ msgid "Moderator"
 msgstr ""
 
 #: bp-forums/common/locale.php:49
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:60
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:78
 #. translators: user role
 msgid "Participant"
 msgstr ""
@@ -11881,7 +11886,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1197
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:319
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:417
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:471
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:71
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:92
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:115
@@ -11890,7 +11895,7 @@ msgid "All group members"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1198
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:422
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:476
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:97
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:120
@@ -11900,7 +11905,7 @@ msgid "Organizers and Moderators only"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1199
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:427
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:481
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:81
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:102
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:125
@@ -12101,12 +12106,14 @@ msgid "Groups Filter"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2252 bp-groups/bp-groups-admin.php:2263
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:43
 #: bp-members/bp-members-functions.php:3682
 #: bp-members/bp-members-functions.php:3693
 msgid "Show"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:2254 bp-groups/bp-groups-admin.php:2261
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:45
 #: bp-members/bp-members-functions.php:3684
 #: bp-members/bp-members-functions.php:3691
 msgid "Hide"
@@ -13306,7 +13313,7 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/TopicsReportsGenerator.php:47
 #: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:14
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:14
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:16
 msgid "Topic"
 msgstr ""
 
@@ -13550,7 +13557,7 @@ msgstr ""
 
 #: bp-integrations/zoom/bp-zoom-admin-tab.php:88
 #: bp-integrations/zoom/bp-zoom-integration.php:21
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:366
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:420
 msgid "Zoom Conference"
 msgstr ""
 
@@ -13563,40 +13570,49 @@ msgid "Enable Zoom"
 msgstr ""
 
 #: bp-integrations/zoom/bp-zoom-admin-tab.php:141
-#: bp-integrations/zoom/bp-zoom-functions.php:338
-#: bp-integrations/zoom/bp-zoom-functions.php:339
+#: bp-integrations/zoom/bp-zoom-functions.php:347
+#: bp-integrations/zoom/bp-zoom-functions.php:348
 msgid "Zoom API Key"
 msgstr ""
 
 #: bp-integrations/zoom/bp-zoom-admin-tab.php:148
-#: bp-integrations/zoom/bp-zoom-functions.php:367
-#: bp-integrations/zoom/bp-zoom-functions.php:368
+#: bp-integrations/zoom/bp-zoom-functions.php:376
+#: bp-integrations/zoom/bp-zoom-functions.php:377
 msgid "Zoom API Secret"
 msgstr ""
 
 #: bp-integrations/zoom/bp-zoom-admin-tab.php:155
 #: bp-integrations/zoom/bp-zoom-admin-tab.php:162
-#: bp-integrations/zoom/bp-zoom-admin-tab.php:166
 #: bp-media/bp-media-settings.php:179 bp-media/bp-media-settings.php:184
 #: bp-media/bp-media-settings.php:189
 msgid "&#160;"
 msgstr ""
 
-#: bp-integrations/zoom/bp-zoom-functions.php:309
+#: bp-integrations/zoom/bp-zoom-functions.php:318
 msgid "Allow Zoom Conference on site"
 msgstr ""
 
-#: bp-integrations/zoom/bp-zoom-functions.php:408
+#: bp-integrations/zoom/bp-zoom-functions.php:417
 msgid "Check Connection"
 msgstr ""
 
-#: bp-integrations/zoom/bp-zoom-functions.php:669
-msgid "Sorry, no meetings were found."
-msgstr ""
-
+#: bp-integrations/zoom/bp-zoom-functions.php:467
+#: bp-integrations/zoom/bp-zoom-functions.php:555
 #: bp-integrations/zoom/includes/class-bp-group-zoom.php:83
 #: bp-integrations/zoom/includes/class-bp-group-zoom.php:136
 msgid "Zoom"
+msgstr ""
+
+#: bp-integrations/zoom/bp-zoom-functions.php:470
+msgid "Zoom User"
+msgstr ""
+
+#: bp-integrations/zoom/bp-zoom-functions.php:475
+msgid "Add to Zoom Conference."
+msgstr ""
+
+#: bp-integrations/zoom/bp-zoom-functions.php:838
+msgid "Sorry, no meetings were found."
 msgstr ""
 
 #: bp-integrations/zoom/includes/class-bp-group-zoom.php:103
@@ -13608,20 +13624,20 @@ msgid "Past Meetings"
 msgstr ""
 
 #: bp-integrations/zoom/includes/class-bp-group-zoom.php:122
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:105
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:123
 msgid "Create Meeting"
 msgstr ""
 
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:398
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:399
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:452
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:453
 msgid "Group Zoom Settings"
 msgstr ""
 
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:406
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:460
 msgid "Yes. I want this group to have a zoom conference."
 msgstr ""
 
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:413
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:467
 msgid "Which members of this group are allowed to manage zoom?"
 msgstr ""
 
@@ -13707,98 +13723,137 @@ msgstr ""
 msgid "Group zoom navigation menu"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:15
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:16
 msgid "My Meeting"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:18
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:53
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:19
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:27
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:71
 msgid "Host"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:30
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:21
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:29
+msgid "Select host"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:36
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:51
 msgid "When"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:34
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:40
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:55
 msgid "Duration"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:38
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:44
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:59
 msgid "Timezone"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:53
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:33
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:59
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:74
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:34
 msgid "Meeting Password"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:58
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:64
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:79
 msgid "Host Video"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:60
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:66
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:81
 msgid "Start video when host join meeting."
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:63
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:69
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:84
 msgid "Participants Video"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:65
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:71
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:86
 msgid "Start video when participants join meeting."
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:68
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:74
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:89
 msgid "Join Before Host"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:70
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:76
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:91
 msgid "Enable join before host."
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:73
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:79
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:94
 msgid "Mute Participants"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:75
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:81
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:96
 msgid "Mute participants upon entry."
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:78
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:84
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:99
 msgid "Waiting Room"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:80
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:86
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:101
 msgid "Enable waiting room."
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:83
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:89
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:104
 msgid "Authenticated Users"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:85
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:91
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:106
 msgid "Only authenticated users can join."
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:88
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:94
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:109
 msgid "Auto Recording"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:90
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:96
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:111
 msgid "No Recordings"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:91
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:97
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:112
 msgid "Local"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:92
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:98
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:113
 msgid "Cloud"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:94
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:100
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:115
 msgid "Set what type of auto recording feature you want to add. Default is none."
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:103
+msgid "Alternative Hosts"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/create-meeting.php:105
+msgid "Select alternative hosts"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/edit-meeting.php:128
+msgid "Update Meeting"
 msgstr ""
 
 #: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:13
@@ -13808,11 +13863,15 @@ msgid "Date"
 msgstr ""
 
 #: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:15
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:27
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:28
 msgid "Meeting ID"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:58
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:43
+msgid "View Recordings"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/meetings.php:57
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
@@ -13821,53 +13880,77 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:20
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:22
 msgid "Time"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:39
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:49
+msgid "Require meeting password"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:55
 msgid "Invite Attendees"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:41
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:57
 msgid "Join URL:"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:51
-msgid "Video"
-msgstr ""
-
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:54
-msgid " On"
-msgstr ""
-
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:54
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:61
-msgid "Off"
-msgstr ""
-
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:61
-msgid "On"
-msgstr ""
-
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:65
-msgid "Meeting Options"
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:62
+msgid "Copy the invitation"
 msgstr ""
 
 #: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:69
+msgid "Video"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:72
+msgid " On"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:72
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:79
+msgid "Off"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:79
+msgid "On"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:83
+msgid "Meeting Options"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:87
 msgid "Enable join before host"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:78
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:96
 msgid "Mute participants upon entry"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:86
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:104
 msgid "Enable waiting room"
 msgstr ""
 
-#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:94
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:112
 msgid "Only authenticated users can join"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:121
+msgid "Record the meeting automatically in the cloud"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:130
+msgid "Delete this Meeting"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:133
+msgid "Edit this Meeting"
+msgstr ""
+
+#: bp-integrations/zoom/templates/buddypress/groups/single/zoom/single-meeting.php:135
+msgid "Start this Meeting"
 msgstr ""
 
 #: bp-invites/actions/invites.php:54

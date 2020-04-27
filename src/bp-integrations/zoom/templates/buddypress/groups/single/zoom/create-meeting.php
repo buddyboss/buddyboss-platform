@@ -99,7 +99,7 @@
 					</select><br />
 					<small><?php _e( 'Set what type of auto recording feature you want to add. Default is none.', 'buddyboss' ); ?></small>
 				</p>
-				<p>
+				<p class="bp-zoom-meeting-alt-host">
 					<label for="bp-zoom-meeting-alt-host-ids"><?php _e( 'Alternative Hosts', 'buddyboss' ); ?></label>
 					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="15" multiple>
 						<option><?php _e( 'Select alternative hosts', 'buddyboss' ); ?></option>
