@@ -12457,6 +12457,29 @@ span.icons:before {
   padding: 15px 0;
   background-color: #fff;
   margin-top: -1px;
+  flex-flow: column;
+}
+
+.meeting-item-table .recording-list .recording-list-row-wrap {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.meeting-item-table .recording-list .recording-list-row {
+  display: table-row;
+  width: 100%;
+}
+
+.meeting-item-table .recording-list .recording-list-row-col {
+  display: table-cell;
+  text-align: center;
+  border-bottom: 1px solid #e7e9ec;
+  padding: 10px 0;
+}
+
+.meeting-item-table .recording-list .recording-list-row-col h4 {
+  margin-bottom: 0;
 }
 
 .meeting-item-table .recording-list:empty {

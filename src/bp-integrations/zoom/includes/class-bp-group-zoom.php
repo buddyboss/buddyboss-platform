@@ -262,29 +262,30 @@ if ( bp_is_active( 'groups' ) ) {
 				ob_start();
 				foreach( $recordings->recording_files as $recording_file ) {
 					?>
-							<div class="header_left">
-								<div class="video">
-									<div class="video_center"></div>
+						<div class="recording-list-row-wrap">
+							<div class="recording-list-row">
+								<div class="recording-list-row-col">
+									<h4 class="clip_title">Recording <?php echo $count; ?></h4>
+								</div>
+								<div class="recording-list-row-col">
 									<div class="video_link">
-										<a class="play_btn"
-										   href="<?php echo $recording_file->play_url; ?>"
-										   target="_blank">Play
-										</a>
+										<a class="play_btn" href="<?php echo $recording_file->play_url; ?>" target="_blank">Play</a>
 									</div>
 								</div>
+								<div class="recording-list-row-col">
+									<div class="video_link">
+										<span class="clip_description"><?php echo bp_media_format_size_units( $recording_file->file_size, true, 'MB' ); ?></span>
+									</div>
+								</div>
+								<div class="recording-list-row-col">
+									<a href="<?php echo $recording_file->download_url; ?>" target="_blank" class="btn btn-default downloadmeeting downloadclip ipad-hide" data-id="99UqH4qv6WxJG53NtmGOA699LoHmeaa8hiRI_vEOyJ7k3zX7P1bbDFxoF3a9cFc">Download</a>
+								</div>
+								<div class="recording-list-row-col">
+									<a href="javascript:;" class="btn deleteclip relative " aria-label="delete">Delete</a>
+								</div>
 							</div>
-							<div class="header_right">
-								<h3 class="clip_title">Recording <?php echo $count; ?></h3>
-								<span class="clip_description"><?php echo bp_media_format_size_units( $recording_file->file_size, true, 'MB' ); ?></span> <br>
-								<a href="<?php echo $recording_file->download_url; ?>" target="_blank"
-								   class="btn btn-default downloadmeeting downloadclip ipad-hide"
-								   data-id="99UqH4qv6WxJG53NtmGOA699LoHmeaa8hiRI_vEOyJ7k3zX7P1bbDFxoF3a9cFc">
-									<i class="icon_download my_icon"></i>
-									Download</a>
-								<a href="javascript:;" class="btn deleteclip relative " aria-label="delete">
-									<i class="icon_delete my_icon"></i>
-								</a>
-							</div>
+						</div>
+							
 					<?php
 					$count++;
 				}
