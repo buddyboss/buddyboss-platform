@@ -75,9 +75,9 @@
 				},
 				success: function (response) {
 					if ( response.success && response.data.recordings){
-						meeting_item.find('.recording-list').html(response.data.recordings);
+						meeting_item.parent().find('.recording-list').html(response.data.recordings);
 					} else {
-						meeting_item.find('.recording-list').html(response.data.error);
+						meeting_item.parent().find('.recording-list').html(response.data.error);
 					}
 				},
 			});
