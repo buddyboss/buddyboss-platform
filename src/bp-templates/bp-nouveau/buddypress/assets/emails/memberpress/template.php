@@ -53,6 +53,34 @@ $settings = bp_email_get_appearance_settings();
             width: 100% !important;
         }
 
+        pre {
+			background: #F5F6F7;
+			border: 1px solid rgba(0, 0, 0, 0.03);
+			margin: 0 auto;
+			overflow: auto;
+			padding: 10px;
+			white-space: pre-wrap;
+			font-size: 14px !important;
+			border-radius: 4px;
+		}
+
+		blockquote {
+			background: #e3e6ea;
+			border-radius: 4px;
+			padding: 12px;
+			font-size: 20px;
+            font-style: italic;
+			font-weight: normal;
+			letter-spacing: -0.24px;
+			line-height: 30px;
+			position: relative;
+			margin: 0;
+        }
+        
+        blockquote p {
+			margin: 0;
+		}
+
         /* What it does: Stops email clients resizing small text. */
         * {
             -ms-text-size-adjust: 100%;
