@@ -2334,43 +2334,6 @@ function bp_member_type_import_submenu_page() {
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
 						<h2><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h2>
-						<?php
-						if ( is_multisite() && is_network_admin() ) {
-							$bbp_network_sites = bbp_get_network_sites();
-							?>
-							<fieldset>
-								<label for="select-site">
-									<?php
-									esc_html_e( 'Select the site:', 'buddyboss' );
-
-									if ( ! empty( $bbp_network_sites ) ) {
-										?>
-										<select name="bbp-network-site" id="bbp-network-site" required>
-											<option value="0">
-												<?php
-												esc_html_e( 'Select a site to fix the forums', 'buddyboss' );
-												?>
-											</option>
-											<?php
-											foreach ( $bbp_network_sites as $bbp_network_site ) {
-												?>
-												<option value="<?php echo esc_attr( $bbp_network_site->blog_id ); ?>">
-													<?php
-													echo esc_html( $bbp_network_site->domain . '/' . $bbp_network_site->path );
-													?>
-												</option>
-												<?php
-											}
-											?>
-										</select>
-										<?php
-									}
-									?>
-								</label>
-							</fieldset>
-							<?php
-						}
-						?>
 						<p>
 						<?php
 							printf(
@@ -2396,17 +2359,8 @@ function bp_member_type_import_submenu_page() {
 
 	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
 
-		if ( empty( $_POST['bbp-network-site'] ) ) {
-			?>
-			<div class="wrap">
-				<div class="error notice " id="message"><p><?php _e( 'Please select a site to import profile types', 'buddyboss' ); ?></p></div>
-			</div>
-			<?php
-			return;
-		}
-
 		if( is_multisite() && bp_is_network_activated() ){
-			switch_to_blog( $_POST['bbp-network-site'] );
+			switch_to_blog( get_main_site_id() );
 		}
 
 		$registered_member_types = bp_get_member_types();
