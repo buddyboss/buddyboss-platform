@@ -1306,8 +1306,6 @@ function bp_activity_favorites_upgrade_data() {
 	}
 }
 
-add_action( 'bp_init', 'bp_activity_favorites_upgrade_data' );
-
 /**
  * Check whether an activity item exists with a given content string.
  *
