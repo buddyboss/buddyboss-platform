@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Text Editor - New text formatting interface in Messages, Activity, Forums
 * Text Editor - New text formatting option for adding a code block
 * Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
+* Notifications - Fixed notification for rejected group join request not clearing
 * LearnDash - Fixed alignment of Certificate banner for group with single course
 * LearnDash - Code optimization and performance improvements for Grid View ajax
 * Multisite - Fixed duplicate BuddyBoss menus when enabling 'BP_ENABLE_MULTIBLOG'
