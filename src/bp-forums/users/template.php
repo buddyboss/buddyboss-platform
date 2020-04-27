@@ -1824,8 +1824,16 @@ function bbp_user_can_view_forum( $args = '' ) {
 
 		// Forum is private, and user can see it
 	} elseif ( bbp_is_forum_private( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_private_forums' ) ) {
-		$retval = true;
-
+		/**
+		 * For check Current topic's forum is part of group or not.
+		 */
+		$group_id = 0;
+		$is_member = 0;
+		if ( bp_is_active( 'groups' ) ) {
+			$group_id   = bbp_forum_recursive_group_id( $forum_id );
+			$is_member  = BP_Groups_Member::check_is_member( $user_id, $group_id );
+		}
+		$retval = ( $group_id && !$is_member )?false:true;
 		// Forum is hidden, and user can see it
 	} elseif ( bbp_is_forum_hidden( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_hidden_forums' ) ) {
 		$retval = true;

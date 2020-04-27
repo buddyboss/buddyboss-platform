@@ -354,24 +354,10 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 			// Start output buffer
 			$this->start( 'bbp_single_topic' );
-			/**
-			 * For check Current topic's forum is part of group or not.
-			 */
-			$user_id    = bbp_get_current_user_id();
-			$group_id = 0;
-			$is_member = 0;
-			if ( bp_is_active( 'groups' ) ) {
-				$group_id   = bbp_forum_recursive_group_id( $forum_id );
-				$is_member  = BP_Groups_Member::check_is_member( $user_id, $group_id );
-			}
 
 			// Check forum caps
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
-				if ( bbp_is_forum_private( $forum_id, false ) && ( $group_id && !$is_member ) ){
-					bbp_get_template_part( 'feedback', 'no-access' );
-				}else {
-					bbp_get_template_part( 'content', 'single-topic' );
-				}
+				bbp_get_template_part( 'content', 'single-topic' );
 
 				// Forum is private and user does not have caps
 			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
