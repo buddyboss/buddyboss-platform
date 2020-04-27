@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.2 =
+* LearnDash - Code optimization and performance improvements for Grid View ajax
 * Translations - Added French language files, credits to Jean-Pierre Michaud
 * Translations - Updated German (formal) language files
 
