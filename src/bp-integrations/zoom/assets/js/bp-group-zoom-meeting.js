@@ -49,8 +49,6 @@
 				}
 			}
 
-			console.log(data);return false;
-
 			$.ajax({
 				type: 'POST',
 				url: bp_group_zoom_meeting_vars.ajax_url,
