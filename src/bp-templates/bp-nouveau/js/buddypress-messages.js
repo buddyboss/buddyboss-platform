@@ -589,7 +589,10 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-messages-toolbar'),
+						static: true,
+						updateOnEmptySelection: true
 					},
 					paste: {
 						forcePlainText: false,
@@ -598,6 +601,13 @@ window.bp = window.bp || {};
 						cleanAttrs: ['class', 'style', 'dir'],
 						cleanTags: ['meta'],
 						unwrapTags: []
+					}
+				});
+
+				bp.Nouveau.Messages.mediumEditor.subscribe('editableInput', function (event) {
+					if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
+						var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
+						event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
 					}
 				});
 
@@ -961,7 +971,9 @@ window.bp = window.bp || {};
 		template: bp.template( 'whats-new-messages-toolbar' ),
 		events: {
 			'click #messages-media-button': 'toggleMediaSelector',
-			'click #messages-gif-button': 'toggleGifSelector'
+			'click #messages-gif-button': 'toggleGifSelector',
+			'click #show-toolbar-button': 'toggleToolbarSelector',
+			'click .medium-editor-toolbar-actions': 'focusEditor',
 		},
 
 		initialize: function() {
@@ -1000,6 +1012,22 @@ window.bp = window.bp || {};
 			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
 			$(e.currentTarget).toggleClass('active');
+		},
+
+		toggleToolbarSelector: function( e ) {
+			e.preventDefault();
+			$(e.currentTarget).toggleClass('active');
+			if( $(e.currentTarget).hasClass('active') ) {
+				$(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip',jQuery(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip-hide'));
+			} else {
+				$(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip',jQuery(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip-show'));
+			}
+			var medium_editor_toolbar = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
+			medium_editor_toolbar.toggleClass('active');
+		},
+
+		focusEditor: function ( e ) {
+			$(e.currentTarget).closest('.bp-message-content-wrap').find('#bp-message-content #message_content').focus();
 		},
 
 		closeGifSelector: function() {
@@ -1796,6 +1824,20 @@ window.bp = window.bp || {};
 			'click .message_actions .message_action__anchor' : 'showOptions',
 		},
 
+		initialize: function() {
+
+			$( document ).on('click', '.messages', function(event) {
+
+				if( $(event.target ).hasClass( 'message_action__anchor' ) || $(event.target ).parent().hasClass('message_action__anchor') ) {
+					return event;
+				} else {
+					$('.message_action__list.open').removeClass('open');
+				}
+			
+			});
+
+		},
+
 		navigateToList: function( event ) {
 				event.preventDefault();
 				bp.Nouveau.Messages.router.navigate( '/' );
@@ -1804,7 +1846,9 @@ window.bp = window.bp || {};
 
 		doAction: function( event ) {
 			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
-			    feedback = BP_Nouveau.messages.doingAction;
+				feedback = BP_Nouveau.messages.doingAction;
+				
+				$( event.currentTarget ).closest( '.message_action__list' ).removeClass('open');
 
 			if ( ! action ) {
 				return event;
@@ -1884,6 +1928,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 
 					if ( 'unread' === action && ! _.isUndefined( response.ids ) ) {
+						$( '.bp-compose-message.bp-messages-container, .bp-view-message.bp-messages-container' ).removeClass( 'bp-compose-message bp-view-message' );
 						$.each( response.ids, function( index, value ) {
 							$('#bp-messages-threads-list .message-lists .thread-item.' + value ).addClass( 'unread' );
 						});

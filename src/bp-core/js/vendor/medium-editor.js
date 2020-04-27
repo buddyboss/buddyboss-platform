@@ -920,6 +920,10 @@ MediumEditor.extensions = {};
             var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
                 childNodes;
 
+                if ( tagName === 'pre' ) {
+                    doc.execCommand('outdent', false, tagName);
+                }
+
             // Special handling for blockquote
             if (tagName === 'blockquote') {
                 if (blockContainer) {
