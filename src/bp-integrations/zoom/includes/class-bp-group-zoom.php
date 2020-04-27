@@ -69,7 +69,7 @@ if ( bp_is_active( 'groups' ) ) {
 		 */
 		public function setup_nav() {
 			// return if no group.
-			if ( ! bp_is_group() ) {
+			if ( ! bp_is_group() || ! is_user_logged_in() ) {
 				return;
 			}
 
