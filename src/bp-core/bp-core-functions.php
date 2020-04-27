@@ -4186,12 +4186,12 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
  *
  * @return bool
  */
-function bp_is_large_install( $count = 10000 ) {
+function bp_is_large_install() {
 	// Use the Multisite function if available.
 	if ( function_exists( 'wp_is_large_network' ) ) {
 		$is_large = wp_is_large_network( 'users' );
 	} else {
-		$is_large = bp_core_get_total_member_count() > $count;
+		$is_large = bp_core_get_total_member_count() > 10000;
 	}
 
 	/**

@@ -1255,7 +1255,7 @@ function bp_activity_favorites_upgrade_data() {
 
 	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
 
-		if ( bp_is_large_install( 100 ) ) {
+		if ( bp_is_large_install() ) {
 			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
 			$notice    = sprintf(
 				'%1$s <a href="%2$s">%3$s</a> %4$s',
@@ -1279,13 +1279,13 @@ function bp_activity_favorites_upgrade_data() {
 		// User Loop
 		if ( $user_query->get_results() ) {
 			foreach ( $user_query->get_results() as $user_id ) {
-				$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+				$user_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
 
-				if ( empty( $my_favs ) || ! is_array( $my_favs ) ) {
+				if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
 					continue;
 				}
 
-				foreach ( $my_favs as $fav ) {
+				foreach ( $user_favs as $fav ) {
 
 					// Update the users who have favorited this activity.
 					$users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
