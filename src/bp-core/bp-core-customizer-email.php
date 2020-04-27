@@ -317,7 +317,9 @@ function bp_email_get_customizer_controls() {
 				'section'  => 'section_bp_mailtpl_header',
 				'settings' => 'bp_email_options[logo]',
 				'width'    => 180,
-				'height'   => 41,
+				'height'   => 45,
+				'flex_width'  => true,
+				'flex_height' => true,
 			),
 
 			'bp_mailtpl_site_title_logo_size'      => array(
@@ -326,10 +328,9 @@ function bp_email_get_customizer_controls() {
 				'description' => __( 'Used when logo is set.', 'buddyboss' ),
 				'section'     => 'section_bp_mailtpl_header',
 				'settings'    => 'bp_email_options[site_title_logo_size]',
-
 				'input_attrs' => array(
-					'max'  => 300,
-					'min'  => 65,
+					'max'  => 360,
+					'min'  => 45,
 					'step' => 1,
 				),
 			),
