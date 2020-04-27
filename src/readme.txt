@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
 * Activity - Allow for commenting on activity posts from custom post types
 * Activity - Improved formatting of images in activity posts from custom post types
+* Activity - Fixed @mentions moving the cursor position when no results are found
 * Notifications - Fixed notification for rejected group join request not clearing
 * LearnDash - Fixed alignment of Certificate banner for group with single course
 * LearnDash - Code optimization and performance improvements for Grid View ajax
