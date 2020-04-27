@@ -6,10 +6,6 @@
 	<# if ( data.link_success || data.link_error ) { #>
 	<div class="activity-link-preview-container">
 
-		<# if ( data.link_success && ! data.link_error ) { #>
-		<p class="activity-link-preview-title">{{{data.link_title}}}</p>
-		<# } #>
-
 		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
 		<div id="activity-url-scrapper-img-holder">
 			<div class="activity-link-preview-image">
@@ -28,6 +24,10 @@
 			</div>
 			<# } #>
 		</div>
+		<# } #>
+
+		<# if ( data.link_success && ! data.link_error ) { #>
+		<p class="activity-link-preview-title">{{{data.link_title}}}</p>
 		<# } #>
 
 		<# if ( data.link_success && ! data.link_error ) { #>
