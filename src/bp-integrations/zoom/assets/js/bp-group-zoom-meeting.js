@@ -63,7 +63,7 @@
 		} );
 
 		$( '.meeting-item-wrap' ).on('click','#bp-zoom-meeting-view-recordings',function(e){
-			var target = $(e.target), meeting_item = target.closest('.meeting-item-wrap');
+			var target = $(e.target), meeting_item = target.closest('.meeting-item');
 			e.preventDefault();
 
 			$.ajax({
