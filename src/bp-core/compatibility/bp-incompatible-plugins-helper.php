@@ -370,6 +370,19 @@ function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
 }
 add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
 
+function bp_core_fix_forums_subscriptions_tab( $passed ) {
+	$bp_current_component = bp_current_component();
+	$bp_current_action    = bp_current_action();
+
+	if ( 'forums' === $bp_current_component && 'subscriptions' === $bp_current_action ) {
+		$passed = false;
+	}
+
+	return $passed;
+}
+
+add_filter( 'woocommerce_account_endpoint_page_not_found', 'bp_core_fix_forums_subscriptions_tab' );
+
 /**
  * Fix Memberpress Privacy for BuddyPress pages.
  *
