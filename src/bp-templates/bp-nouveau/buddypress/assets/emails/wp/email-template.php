@@ -145,10 +145,6 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			width: <?php echo $width; ?>;
 		}
 
-		.recipient_text_color table {
-			display: inline-table;
-		}
-
 		/* MOBILE STYLES */
 		@media screen and (max-width: 768px) {
 			/* ALLOWS FOR FLUID TABLES */
@@ -267,7 +263,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											if ( !empty( $attachment_id ) ) {
 												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
 												if ( !empty( $image_src ) ) {
-													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:" . esc_attr( $settings['site_title_logo_size'] ) . "px;' border='0' />" );
+													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>" );
 												} else {
 													echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
 												}
