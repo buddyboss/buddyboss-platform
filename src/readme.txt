@@ -64,7 +64,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Allow for commenting on activity posts from custom post types
 * Activity - Improved formatting of images in activity posts from custom post types
 * Activity - Fixed @mentions moving the cursor position when no results are found
-* Groups - Fixed group members without access posting into group from sitewide activity
+* Activity - Fixed link embeds from Chinese websites displaying broken text characters
+* Activity - Fixed link embeds not always fetching the best image and description
+* Activity - Fixed group members without access posting into group from sitewide activity
 * Notifications - Fixed notification for rejected group join request not clearing
 * LearnDash - Fixed alignment of Certificate banner for group with single course
 * LearnDash - Code optimization and performance improvements for Grid View ajax
