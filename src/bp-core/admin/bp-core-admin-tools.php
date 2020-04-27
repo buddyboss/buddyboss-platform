@@ -1145,7 +1145,7 @@ add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_t
 /**
  * Check if BuddyPress activity favorites data needs upgrade & Update to BuddyBoss activity like data
  *
- * @since BuddyBoss 1.3.2
+ * @since BuddyBoss 1.3.3
  */
 function bp_admin_update_activity_favourite() {
 
