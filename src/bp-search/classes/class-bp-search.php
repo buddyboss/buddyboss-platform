@@ -137,23 +137,23 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->search_helpers['pages'] = new Bp_Search_Posts( 'page', 'pages' );
 			}
 
-			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( 'forum' ) ) {
+			if ( bp_is_active( 'forums' ) && ( isset( $_REQUEST['forum_search_term'] ) || bp_is_search_post_type_enable( 'forum' ) ) ) {
 
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress.php';
 
-				if ( bp_is_search_post_type_enable( 'forum' ) ) {
+				if ( isset( $_REQUEST['forum_search_term'] ) || bp_is_search_post_type_enable( 'forum' ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums.php';
 					$this->search_helpers['forum'] = Bp_Search_bbPress_Forums::instance();
 					$this->searchable_items[]      = 'forum';
 				}
 
-				if ( bp_is_search_post_type_enable( 'topic' ) ) {
+				if ( isset( $_REQUEST['forum_search_term'] ) || bp_is_search_post_type_enable( 'topic' ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-topics.php';
 					$this->search_helpers['topic'] = Bp_Search_bbPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
-				if ( bp_is_search_post_type_enable( 'reply' ) ) {
+				if ( isset( $_REQUEST['forum_search_term'] ) || bp_is_search_post_type_enable( 'reply' ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-replies.php';
 					$this->search_helpers['reply'] = Bp_Search_bbPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
