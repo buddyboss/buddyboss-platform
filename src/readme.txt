@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.2 =
 * Translations - Added French language files, credits to Jean-Pierre Michaud
+* Translations - Updated German (formal) language files
 
 = 1.3.1 =
 * Compatibility - Updated a file that was causing false alerts from Windows Defender
