@@ -4124,6 +4124,7 @@ function bp_get_allowedtags() {
 			'u'       => array(),
 			'i'       => array(),
 			'br'      => array(),
+			'pre'     => array(),
 
 		)
 	);
@@ -4574,4 +4575,130 @@ function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avata
 	}
 
 	return $group_avatar;
+}
+
+/**
+ * Parse url and get data about URL.
+ *
+ * @param string $url URL to parse data.
+ *
+ * @return array Parsed URL data.
+ * @since BuddyBoss 1.3.2
+ */
+function bp_core_parse_url( $url ) {
+	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+
+	// get transient data for url.
+	$parsed_url_data = get_transient( $cache_key );
+	if ( ! empty( $parsed_url_data ) ) {
+		return $parsed_url_data;
+	}
+
+	$parsed_url_data = array();
+
+	// Fetch the oembed code for URL.
+	$embed_code = wp_oembed_get( $url );
+	if ( ! empty( $embed_code ) ) {
+		$parsed_url_data['title']       = ' ';
+		$parsed_url_data['description'] = $embed_code;
+		$parsed_url_data['images']      = '';
+		$parsed_url_data['error']       = '';
+		$parsed_url_data['wp_embed']    = true;
+	} else {
+
+		// safely get URL and response body.
+		$response = wp_safe_remote_get( $url );
+		$body     = wp_remote_retrieve_body( $response );
+
+		// if response is not empty
+		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
+
+			// Load HTML to DOM Object
+			$dom = new DOMDocument();
+			@$dom->loadHTML( $body );
+
+			$meta_tags   = array();
+			$images      = array();
+			$description = '';
+			$title       = '';
+
+			$xpath       = new DOMXPath( $dom );
+			$query       = '//*/meta[starts-with(@property, \'og:\')]';
+			$metas_query = $xpath->query( $query );
+			foreach ( $metas_query as $meta ) {
+				$property    = $meta->getAttribute( 'property' );
+				$content     = $meta->getAttribute( 'content' );
+				$meta_tags[] = array( $property, $content );
+			}
+
+			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+				foreach ( $meta_tags as $tag ) {
+					if ( is_array( $tag ) && ! empty( $tag ) ) {
+						if ( $tag[0] == 'og:title' ) {
+							$title = $tag[1];
+						}
+						if ( $tag[0] == 'og:description' || 'description' === strtolower( $tag[0] ) ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
+						}
+						if ( $tag[0] == 'og:image' ) {
+							$images[] = $tag[1];
+						}
+					}
+				}
+			}
+
+			// Parse DOM to get Title
+			if ( empty( $title ) ) {
+				$nodes = $dom->getElementsByTagName( 'title' );
+				$title = $nodes->item( 0 )->nodeValue;
+			}
+
+			// Parse DOM to get Meta Description
+			if ( empty( $description ) ) {
+				$metas = $dom->getElementsByTagName( 'meta' );
+				for ( $i = 0; $i < $metas->length; $i ++ ) {
+					$meta = $metas->item( $i );
+					if ( 'description' === $meta->getAttribute( 'name' ) ) {
+						$description = $meta->getAttribute( 'content' );
+						break;
+					}
+				}
+			}
+
+			// Parse DOM to get Images
+			$image_elements = $dom->getElementsByTagName( 'img' );
+			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+				$image = $image_elements->item( $i );
+				$src   = $image->getAttribute( 'src' );
+
+				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
+					$images[] = $src;
+				}
+			}
+
+			if ( ! empty( $description ) && '' === trim( $title ) ) {
+				$title = $description;
+			}
+
+			if ( ! empty( $title ) && ! empty( $description ) && ! empty( $images ) ) {
+				$parsed_url_data['title']       = $title;
+				$parsed_url_data['description'] = $description;
+				$parsed_url_data['images']      = $images;
+				$parsed_url_data['error']       = '';
+			}
+		}
+	}
+
+	if ( ! empty( $parsed_url_data ) ) {
+		// set the transient.
+		set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Filters parsed URL data.
+	 *
+	 * @since BuddyBoss 1.3.2
+	 * @param array $parsed_url_data Parse URL data.
+	 */
+	return apply_filters( 'bp_core_parse_url', $parsed_url_data );
 }

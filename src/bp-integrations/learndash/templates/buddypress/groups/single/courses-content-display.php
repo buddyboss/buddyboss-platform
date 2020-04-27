@@ -113,29 +113,6 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	do_action( 'learndash-course-certificate-link-before', $course_id, $user_id );
 
 	/**
-	 * Certificate link
-	 */
-
-	if ( $course_certficate_link && ! empty( $course_certficate_link ) ) :
-
-		learndash_get_template_part(
-			'modules/alert.php',
-			array(
-				'type'    => 'success ld-alert-certificate',
-				'icon'    => 'certificate',
-				'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
-				'button'  => array(
-					'url'   => $course_certficate_link,
-					'icon'  => 'download',
-					'label' => __( 'Download Certificate', 'buddyboss' ),
-				),
-			),
-			true
-		);
-
-	endif;
-
-	/**
 	 * Action to add custom content after the course certificate link
 	 *
 	 * @since 3.0
@@ -147,8 +124,30 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 
 		<div class="bb-learndash-content-wrap">
 
-
 			<h1 class="entry-title"><?php echo get_the_title( $course_id ); ?></h1>
+
+			<?php
+				/**
+				* Certificate link
+				*/
+			   if ( $course_certficate_link && ! empty( $course_certficate_link ) ) :
+
+				   learndash_get_template_part(
+					   'modules/alert.php',
+					   array(
+						   'type'    => 'success ld-alert-certificate',
+						   'icon'    => 'certificate',
+						   'message' => __( 'You\'ve earned a certificate!', 'buddyboss' ),
+						   'button'  => array(
+							   'url'   => $course_certficate_link,
+							   'icon'  => 'download',
+							   'label' => __( 'Download Certificate', 'buddyboss' ),
+						   ),
+					   ),
+					   true
+				   );
+			   endif;
+			?>
 
 			<?php if ( has_excerpt( $course_id ) ) { ?>
 				<div class="bb-course-excerpt">
