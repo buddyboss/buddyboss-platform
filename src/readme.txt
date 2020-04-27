@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
 * LearnDash - Fixed alignment of Certificate banner for group with single course
 * LearnDash - Code optimization and performance improvements for Grid View ajax
+* Multisite - Fixed duplicate BuddyBoss menus when enabling 'BP_ENABLE_MULTIBLOG'
 * Translations - Added French language files, credits to Jean-Pierre Michaud
 * Translations - Updated German (formal) language files
 
