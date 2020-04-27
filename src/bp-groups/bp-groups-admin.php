@@ -842,7 +842,7 @@ function bp_groups_admin_create() {
 
 		<?php endif; ?>
 
-		<form action="<?php echo esc_url( bp_get_admin_url( 'admin-post.php' ) ); ?>" id="bp-groups-edit-form" method="post">
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="bp-groups-edit-form" method="post">
 			<div id="poststuff">
 
 				<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
