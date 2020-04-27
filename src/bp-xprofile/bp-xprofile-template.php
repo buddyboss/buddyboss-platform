@@ -51,24 +51,7 @@ function bp_has_profile( $args = '' ) {
 	} else {
 		$fetch_visibility_level_default = false;
 	}
-
-	/**
-	 * For get all the disable fields ids and exclude if user is not logged and it is displayed users.
-	 */
-	$fields_id__not_in = false;
-	if ( !bp_is_my_profile() && bp_displayed_user_id() ) {
-		// get all excluded fields id.
-		$fields_id__not_in = [];
-		$fields_id__not_in     = bp_xprofile_get_hidden_fields_for_user();
-		//print_r($hidden_fields);
-
-//		$default_visibility_levels = BP_XProfile_Group::fetch_default_visibility_levels();
-//		foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
-//			if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
-//				$fields_id__not_in[] = $d_field_id;
-//			}
-//		}
-	}
+	
 	// Parse arguments.
 	$r = bp_parse_args(
 		$args,
