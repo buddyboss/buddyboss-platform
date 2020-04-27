@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.3.2 =
 * Text Editor - New text formatting interface in Messages, Activity, Forums
 * Text Editor - New text formatting option for adding a code block
+* Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
 * LearnDash - Code optimization and performance improvements for Grid View ajax
 * Translations - Added French language files, credits to Jean-Pierre Michaud
 * Translations - Updated German (formal) language files
