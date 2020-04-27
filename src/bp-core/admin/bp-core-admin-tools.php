@@ -1165,12 +1165,12 @@ function bp_admin_update_activity_favourite() {
 		if ( ! empty( $users ) ) {
 
 		    foreach ( $users as $user ) {
-			    $my_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
-			    if ( empty( $my_favs ) || ! is_array( $my_favs ) ) {
+			    $user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
+			    if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
 				    $offset ++;
 				    continue;
 			    }
-			    foreach ( $my_favs as $fav ) {
+			    foreach ( $user_favs as $fav ) {
 
 				    // Update the users who have favorited this activity.
 				    $favorite_users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
