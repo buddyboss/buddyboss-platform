@@ -74,7 +74,7 @@ $settings = bp_email_get_appearance_settings();
 			letter-spacing: -0.24px;
 			line-height: 30px;
 			position: relative;
-			margin: 0;
+			margin: 0 0 15px 0;
         }
         
         blockquote p {

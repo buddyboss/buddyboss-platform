@@ -86,7 +86,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			letter-spacing: -0.24px;
 			line-height: 30px;
 			position: relative;
-			margin: 0;
+			margin: 0 0 15px 0;
 		}
 
 		blockquote p {
