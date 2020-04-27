@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-25 23:57:04+00:00\n"
+"POT-Creation-Date: 2020-04-27 00:26:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1263,6 +1263,8 @@ msgstr ""
 #: bp-blogs/bp-blogs-activity.php:106
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:343
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:121
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:139
 #: bp-messages/bp-messages-functions.php:249
 #: bp-messages/bp-messages-template.php:2121
 #: bp-search/bp-search-settings.php:805 bp-settings/actions/export.php:35
@@ -9532,6 +9534,8 @@ msgid "%1$s on %2$s %3$s"
 msgstr ""
 
 #: bp-forums/common/widgets.php:1288
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:158
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:163
 #. translators: 1: reply link, 2: reply timestamp
 msgid "%1$s %2$s"
 msgstr ""
@@ -13429,6 +13433,16 @@ msgstr ""
 msgid "Collapse All"
 msgstr ""
 
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:23
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:56
+msgid "Grid View"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:26
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:65
+msgid "List View"
+msgstr ""
+
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:6
 msgid "%s Lessons"
 msgstr ""
@@ -13437,8 +13451,21 @@ msgstr ""
 msgid "%s Lesson"
 msgstr ""
 
-#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:118
-msgid "0 Lessons"
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:121
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:139
+msgid "Start "
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:131
+msgid "Free"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:135
+msgid "Not Enrolled"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:172
+msgid "0 %s"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-nav.php:19
@@ -15486,14 +15513,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:417
 msgid "unsubscribe"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:56
-msgid "Grid View"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:65
-msgid "List View"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/filters/group-filters.php:45
