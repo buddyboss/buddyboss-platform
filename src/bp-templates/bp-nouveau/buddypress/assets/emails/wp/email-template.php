@@ -235,10 +235,10 @@ $width = wp_is_mobile() ? '100%' : '600px';
 </head>
 	
 <body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="mso-line-height-rule: exactly;">
-	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse; display: block;" class="email_bg">
-		<tbody style="display: block;">
-			<tr style="display: block;">
-				<td valign="top" style="display: flex;">
+	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+		<tbody>
+			<tr>
+				<td valign="top">
 					<center style="width: <?php echo $width; ?>; text-align: <?php echo esc_attr( $settings['direction'] ); ?>; margin: 0 auto;">
 
 						<div style="max-width: 600px; margin: auto;" class="email-container">
@@ -249,10 +249,10 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<![endif]-->
 
 							<!-- Email Header : BEGIN -->
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px; display: block;">
-								<tbody style="display: block;">
-									<tr style="display: block;">
-										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>; max-width: 300px; float: left; height: 35px;" class="center-in-mobile site_title_text_color site_title_text_size">
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px;">
+								<tbody>
+									<tr>
+										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>;" class="center-in-mobile site_title_text_color site_title_text_size">
 											<?php
 											/**
 											 * Fires before the display of the email template header.
@@ -265,7 +265,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 											if ( !empty( $attachment_id ) ) {
-												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
+												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
 												if ( !empty( $image_src ) ) {
 													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:" . esc_attr( $settings['site_title_logo_size'] ) . "px;' border='0' />" );
 												} else {
@@ -283,7 +283,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											do_action( 'bp_after_email_header' );
 											?>
 										</td>
-										<td style="text-align: right; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>; max-width: 300px; float: right; height: 35px;" class="center-in-mobile recipient_text_color recipient_text_size">
+										<td style="text-align: right; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>;" class="center-in-mobile recipient_text_color recipient_text_size">
 											<?php
 											/**
 											 * Fires before the display of the email recipient.

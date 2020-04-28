@@ -244,7 +244,7 @@ $settings = bp_email_get_appearance_settings();
 								$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 								if ( !empty( $attachment_id ) ) {
-									$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
+									$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
 									if ( !empty( $image_src ) ) { ?>
 										<img src="<?php echo esc_attr( $image_src[ 0 ] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" /><?php
 									} else {
