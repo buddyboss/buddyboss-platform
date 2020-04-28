@@ -200,6 +200,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_enqueue_scripts', array( $this, 'deregister_wp_job_manager_shared_assets' ), 21 );
 
 			add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
+			add_action( bp_core_admin_hook(), array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
@@ -665,7 +666,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 	public function bp_emails_add_sub_menu_page_admin_menu() {
 
-		if ( is_multisite() && bp_is_network_activated() ) {
+		if ( is_multisite() && bp_is_network_activated() && bp_is_root_blog() ) {
 			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
 			// Add our screen.
 			$hook = add_submenu_page( 'buddyboss-platform',
