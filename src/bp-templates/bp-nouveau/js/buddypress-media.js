@@ -3267,7 +3267,7 @@ window.bp = window.bp || {};
 
 		injectDocuments: function (event) {
 
-			var store = bp.Nouveau.getStorage( 'bp-media' ),
+			var store = bp.Nouveau.getStorage( 'bp-document' ),
 				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
 
 			if (currentTarget.hasClass( 'load-more' )) {
@@ -3281,6 +3281,8 @@ window.bp = window.bp || {};
 				if ($( '#buddypress .dir-search input[type=search]' ).length) {
 					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 				}
+
+				console.log( 'more');
 
 				bp.Nouveau.objectRequest(
 					{

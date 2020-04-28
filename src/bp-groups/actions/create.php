@@ -186,7 +186,7 @@ function groups_action_create_group() {
 			$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
 			$document_status         = ! empty( $_POST['group-document-status'] ) && in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
 
-			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $document_status );
+			groups_update_groupmeta( $bp->groups->new_group_id, 'document_status', $document_status );
 
 			/**
 			 * Filters the allowed album statuses.

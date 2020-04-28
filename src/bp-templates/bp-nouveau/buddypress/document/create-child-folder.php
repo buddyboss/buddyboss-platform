@@ -90,7 +90,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 									<div class="ac_document_search_folder_list" style="display: none;">
 										<ul class="location-folder-list"></ul>
 									</div>
-									<input type="hidden" class="bb-folder-selected-id" value="" readonly/>
+									<input type="hidden" class="bb-folder-selected-id" value="0" readonly/>
 								</div>
 							</div>
 						</div>

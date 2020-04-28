@@ -1506,7 +1506,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 	if ( is_user_logged_in() ) {
 
 		// Groups documents have their own access
-		if ( ! empty( $folder->group_id ) && groups_can_user_manage_folders( bp_loggedin_user_id(), $folder->group_id ) ) {
+		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_delete = true;
 
 			// Users are allowed to delete their own folder.

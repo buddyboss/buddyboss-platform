@@ -1029,9 +1029,14 @@ class BP_Document {
 			$documents = self::prefetch_object_data( $documents );
 		}
 
+
+
 		$direction = 'SORT_' . $sort;
-		//self::array_sort_by_column( $documents, $r['order_by'], $direction );
-		array_multisort( array_column( $documents, $r['order_by'] ), $direction, $documents );
+
+
+		$documents = self::array_msort( $documents,  array( $r['order_by'] => $direction ) );
+
+		//array_multisort( array_column( $documents, $r['order_by'] ), $direction, $documents );
 
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 
@@ -1052,14 +1057,65 @@ class BP_Document {
 		return $retval;
 	}
 
-	public static function array_sort_by_column( &$array, $column, $direction = SORT_DESC ) {
-		$reference_array = array();
+	public static function array_sort_by_column( $array, $column, $direction = SORT_DESC ) {
 
-		foreach ( $array as $key => $row ) {
-			$reference_array[ $key ] = $row->$column;
+		$new_array = json_decode( json_encode( $array ), true );
+
+
+		if ( 'date_created' === $column ) {
+			$mapping_arr = array_map( 'strtotime', array_column( $new_array, $column ) );
+			array_multisort( $mapping_arr, $direction );
+		} else {
+			$reference_array = array();
+
+			foreach ( $array as $key => $row ) {
+				$reference_array[ $key ] = $row[$column];
+			}
+
+			array_multisort( $reference_array, $direction, $array );
 		}
 
-		array_multisort( $reference_array, $direction, $array );
+		//error_log( print_r( $new_array, true ) );
+	}
+
+	public static function array_msort( $array, $cols ) {
+
+		$array  = json_decode( json_encode( $array ), true );
+
+		$colarr = array();
+		foreach ( $cols as $col => $order ) {
+			$colarr[ $col ] = array();
+			foreach ( $array as $k => $row ) {
+				$colarr[ $col ][ '_' . $k ] = strtolower( $row[ $col ] );
+			}
+		}
+		$eval = 'array_multisort(';
+		foreach ( $cols as $col => $order ) {
+			$eval .= '$colarr[\'' . $col . '\'],' . $order . ',';
+		}
+		$eval = substr( $eval, 0, - 1 ) . ');';
+		eval( $eval );
+		$ret = array();
+		foreach ( $colarr as $col => $arr ) {
+			foreach ( $arr as $k => $v ) {
+				$k = substr( $k, 1 );
+				if ( ! isset( $ret[ $k ] ) ) {
+					$ret[ $k ] = $array[ $k ];
+				}
+				$ret[ $k ][ $col ] = $array[ $k ][ $col ];
+			}
+		}
+
+
+		if ( ! empty( $ret ) ) {
+
+			foreach ( $ret as $k => $v ) {
+				$ret[$k] = (object) $v;
+			}
+		}
+
+		return $ret;
+
 	}
 
 	/**

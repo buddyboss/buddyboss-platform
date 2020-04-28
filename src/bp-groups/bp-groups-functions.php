@@ -351,7 +351,7 @@ function groups_edit_base_group_details( $args = array() ) {
  *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $album_status = false, $message_status = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $album_status = false, $message_status = false ) {
 
 	$group               = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -389,6 +389,11 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the media status.
 	if ( $media_status ) {
 		groups_update_groupmeta( $group->id, 'media_status', $media_status );
+	}
+
+	// Set the document status.
+	if ( $document_status ) {
+		groups_update_groupmeta( $group->id, 'document_status', $document_status );
 	}
 
 	// Set the album status.
@@ -3751,15 +3756,15 @@ function groups_can_user_manage_folders( $user_id, $group_id ) {
 		return false;
 	}
 
-	$status   = bp_group_get_album_status( $group_id );
+	$status   = bp_group_get_document_status( $group_id );
 	$is_admin = groups_is_user_admin( $user_id, $group_id );
 	$is_mod   = groups_is_user_mod( $user_id, $group_id );
 
-	if ( 'members' == $status ) {
+	if ( 'members' === $status ) {
 		$is_allowed = true;
-	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' == $status && $is_admin ) {
+	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
@@ -3791,15 +3796,15 @@ function groups_can_user_manage_document( $user_id, $group_id ) {
 		return false;
 	}
 
-	$status   = bp_group_get_media_status( $group_id );
+	$status   = bp_group_get_document_status( $group_id );
 	$is_admin = groups_is_user_admin( $user_id, $group_id );
 	$is_mod   = groups_is_user_mod( $user_id, $group_id );
 
-	if ( 'members' == $status ) {
+	if ( 'members' === $status ) {
 		$is_allowed = true;
-	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' == $status && $is_admin ) {
+	} elseif ( 'admins' === $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
