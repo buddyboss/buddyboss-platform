@@ -414,3 +414,16 @@ function bp_core_memberpress_the_content( $content ) {
 	return $content;
 }
 add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
+
+/**
+ * Fix Medium Editor version conflict with user blog plugin
+ *
+ * @since BuddyBoss 1.3.3
+ *
+ */
+function bp_remove_user_blog_disable_medium_editor_js() {
+	if ( bp_is_activity_directory() || bp_is_user_activity() || bp_is_group_activity() ) {
+		wp_dequeue_script('buddyboss-bower-medium-editor');
+	}
+}
+add_action('wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100);
