@@ -153,28 +153,22 @@ $document_id = bp_get_document_id();
 				    }
 				    if ( $can_manage_btn ) {
 					    ?>
-                        <li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $document_type ); ?>"
-                                                   class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
+                        <li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
                         </li>
-                        <li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"
-                                                 id="<?php echo esc_attr( $move_id ); ?>"
-                                                 class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                        <li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
                         </li>
 					    <?php
 					    if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id ) {
 						    ?>
-                            <li class="privacy_file"><a href="#"
-                                                        class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
+                            <li class="privacy_file">
+                                <a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
                             </li>
 						    <?php
 					    }
 					    ?>
-                        <li class="delete_file"><a class="document-file-delete"
-                                                   data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>"
-                                                   data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>"
-                                                   data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>"
-                                                   data-type="<?php echo esc_attr( $document_type ); ?>"
-                                                   href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+                        <li class="delete_file">
+                            <a class="document-file-delete" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $document_type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+                        </li>
 					    <?php
 				    }
 				    ?>

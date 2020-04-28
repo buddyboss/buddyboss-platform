@@ -2725,10 +2725,10 @@ window.bp = window.bp || {};
 									$( '.bb-photos-actions' ).show();
 								}
 
-								if ( 0 === parseInt( folderId ) ) {
+								//if ( 0 === parseInt( folderId ) ) {
 									// Prepend the activity.
 									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.media, 'prepend' );
-								}
+								//}
 
 								$( '#bp-media-post-content' ).val( '' );
 								$( '.bb-folder-selected-id' ).val( '0' );
@@ -2987,8 +2987,8 @@ window.bp = window.bp || {};
 		},
 
 		saveChildFolder: function (event) {
-			var target  = $( event.currentTarget ), self = this, title = $( '#bb-album-child-title' ),
-				privacy = $( '#bb-folder-child-privacy' ), parent = $( '#parent_id' );
+			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' ),
+				privacy = $( '#bp-media-create-child-folder #bb-folder-child-privacy' ), parentSelector = $( '#bp-media-create-child-folder #parent_id' );
 			event.preventDefault();
 
 			if ($.trim( title.val() ) === '') {
@@ -3005,6 +3005,12 @@ window.bp = window.bp || {};
 				privacy.removeClass( 'error' );
 			}
 
+			var parent  = parseInt( $( '#bp-media-create-child-folder .bb-folder-selected-id' ).val() );
+			    privacy = privacy.val();
+			if ( ! parent ) {
+				parent = parentSelector.val();
+			}
+
 			target.prop( 'disabled', true );
 
 			var data = {
@@ -3012,8 +3018,8 @@ window.bp = window.bp || {};
 				'_wpnonce'	: BP_Nouveau.nonces.media,
 				'title'		: title.val(),
 				'medias'	: self.dropzone_media,
-				'privacy'	: privacy.val(),
-				'parent'	: parent.val()
+				'privacy'	: privacy,
+				'parent'	: parent
 			};
 
 			if (self.album_id) {

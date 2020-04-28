@@ -818,6 +818,20 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( isset( $_POST['medias'] ) && !empty( $_POST['medias'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
+		$documents = $_POST['medias'];
+		$album_id  = (int) $_POST['folder_id'];
+		if ( ! empty( $documents ) && is_array( $documents ) ) {
+			// set album id for media.
+			foreach ( $documents as $key => $media ) {
+			    if ( 0 === (int) $media['folder_id'] ) {
+				    $_POST['medias'][ $key ]['folder_id'] = $album_id;
+                }
+			}
+		}
+    }
+
+
 	// handle media uploaded.
 	$media_ids = bp_document_add_handler();
 
