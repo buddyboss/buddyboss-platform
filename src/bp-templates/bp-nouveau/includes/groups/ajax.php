@@ -201,26 +201,26 @@ function bp_nouveau_ajax_joinleave_group() {
 			}
 			break;
 
-			case 'groups_request_membership' :
-				if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $group->id ) ) ) {
-					$response = array(
-						'feedback' => sprintf(
-							'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-							esc_html__( 'Error requesting membership.', 'buddyboss' )
-						),
-						'type'     => 'error',
-					);
-				} else {
-					// Request is pending
-					$group->is_pending = '1';
+        case 'groups_request_membership' :
+            if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $group->id ) ) ) {
+                $response = array(
+                    'feedback' => sprintf(
+                        '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+                        esc_html__( 'Error requesting membership.', 'buddyboss' )
+                    ),
+                    'type'     => 'error',
+                );
+            } else {
+                // Request is pending
+                $group->is_pending = '1';
 
-				$response = array(
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => bp_is_group(),
-					'type'     => 'success',
-				);
-			}
-			break;
+                $response = array(
+                    'contents' => bp_get_group_join_button( $group ),
+                    'is_group' => bp_is_group(),
+                    'type'     => 'success',
+                );
+            }
+            break;
 
 		case 'groups_leave_group' :
 			if ( ! groups_leave_group( $group->id ) ) {
@@ -300,23 +300,6 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	) );
 
 	if ( 'groups_get_group_potential_invites' === $request['action'] ) {
-
-		// check if subgroup.
-		$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
-
-		if ( isset( $parent_group_id ) && $parent_group_id > 0 ) {
-
-			$check_admin = groups_is_user_admin( bp_loggedin_user_id(), $parent_group_id );
-			$check_moder = groups_is_user_mod( bp_loggedin_user_id(), $parent_group_id );
-
-			// Check role of current logged in user for this group.
-			if ( false === $check_admin && false === $check_moder ) {
-				wp_send_json_error( array(
-					'feedback' => __( 'You are not authorized to send invites to other users.', 'buddyboss' ),
-					'type'     => 'info',
-				) );
-			}
-		}
 
 		$group_type = bp_groups_get_group_type( $request['group_id'] );
 
@@ -1026,7 +1009,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						wp_send_json_error( $response );
 					} elseif ( ! empty( $send ) ) {
 						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['feedback']      = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 						$response['type']          = 'success';
 						wp_send_json_success( $response );
@@ -1042,11 +1025,12 @@ function bp_nouveau_ajax_groups_send_message() {
 				remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 				add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 				$new_reply = messages_new_message( array(
-					'thread_id'  => $group_thread,
-					'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-					'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-					'date_sent'  => $date_sent = bp_core_current_time(),
-					'error_type' => 'wp_error',
+					'thread_id'    => $group_thread,
+					'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+					'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+					'date_sent'    => $date_sent = bp_core_current_time(),
+					'mark_visible' => true,
+					'error_type'   => 'wp_error',
 				) );
 				remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 				add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1055,7 +1039,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					$response['feedback'] = $new_reply->get_error_message();
 					wp_send_json_error( $response );
 				} elseif ( ! empty( $new_reply ) ) {
-					$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+					$response['feedback']      = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 					$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 					$response['type']          = 'success';
 					wp_send_json_success( $response );
@@ -1111,11 +1095,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$new_reply = messages_new_message( array(
-							'thread_id'  => $thread_id,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $thread_id,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1124,7 +1109,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $new_reply->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1156,7 +1141,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
 
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1188,14 +1173,14 @@ function bp_nouveau_ajax_groups_send_message() {
 						wp_send_json_error( $response );
 					} elseif ( ! empty( $send ) ) {
 						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['feedback']      = __( 'Your message was sent to all members of this group.', 'buddyboss' );
 						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 						$response['type']          = 'success';
 						wp_send_json_success( $response );
 					}
 				}
 			}
-			// "Individual Members" Selected.
+		// "Individual Members" Selected.
 		} else {
 
 			$meta = array(
@@ -1292,11 +1277,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$new_reply = messages_new_message( array(
-							'thread_id'  => $thread_id,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $thread_id,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1305,7 +1291,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $new_reply->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1371,11 +1357,12 @@ function bp_nouveau_ajax_groups_send_message() {
 								remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 								add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 								$new_reply = messages_new_message( array(
-									'thread_id'  => $existing_thread,
-									'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-									'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-									'date_sent'  => $date_sent = bp_core_current_time(),
-									'error_type' => 'wp_error',
+									'thread_id'    => $existing_thread,
+									'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+									'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+									'date_sent'    => $date_sent = bp_core_current_time(),
+									'mark_visible' => true,
+									'error_type'   => 'wp_error',
 								) );
 								remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 								add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1384,7 +1371,7 @@ function bp_nouveau_ajax_groups_send_message() {
 									$response['feedback'] = $new_reply->get_error_message();
 									wp_send_json_error( $response );
 								} elseif ( ! empty( $new_reply ) ) {
-									$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+									$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 									$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 									$response['type']          = 'success';
 									wp_send_json_success( $response );
@@ -1410,7 +1397,7 @@ function bp_nouveau_ajax_groups_send_message() {
 									$response['feedback'] = $send->get_error_message();
 									wp_send_json_error( $response );
 								} elseif ( ! empty( $send ) ) {
-									$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+									$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 									$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 									$response['type']          = 'success';
 									wp_send_json_success( $response );
@@ -1437,7 +1424,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$response['feedback'] = $send->get_error_message();
 								wp_send_json_error( $response );
 							} elseif ( ! empty( $send ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+								$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 								$response['type']          = 'success';
 								wp_send_json_success( $response );
@@ -1502,11 +1489,12 @@ function bp_nouveau_ajax_groups_send_message() {
 							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							$new_reply = messages_new_message( array(
-								'thread_id'  => $existing_thread,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
+								'thread_id'    => $existing_thread,
+								'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'    => $date_sent = bp_core_current_time(),
+								'mark_visible' => true,
+								'error_type'   => 'wp_error',
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1515,7 +1503,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$response['feedback'] = $new_reply->get_error_message();
 								wp_send_json_error( $response );
 							} elseif ( ! empty( $new_reply ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+								$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 								$response['type']          = 'success';
 								wp_send_json_success( $response );
@@ -1541,7 +1529,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$response['feedback'] = $send->get_error_message();
 								wp_send_json_error( $response );
 							} elseif ( ! empty( $send ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+								$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 								$response['type']          = 'success';
 								wp_send_json_success( $response );
@@ -1568,7 +1556,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $send->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $send ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1636,11 +1624,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$new_reply = messages_new_message( array(
-							'thread_id'  => $existing_thread,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $existing_thread,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1649,7 +1638,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $new_reply->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1675,7 +1664,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$response['feedback'] = $send->get_error_message();
 							wp_send_json_error( $response );
 						} elseif ( ! empty( $send ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 							$response['type']          = 'success';
 							wp_send_json_success( $response );
@@ -1703,7 +1692,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						$response['feedback'] = $send->get_error_message();
 						wp_send_json_error( $response );
 					} elseif ( ! empty( $send ) ) {
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['feedback']      = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
 						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 						$response['type']          = 'success';
 						wp_send_json_success( $response );
@@ -1712,7 +1701,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			}
 		}
 
-		// Else "Private Reply (BCC)" selected.
+    // Else "Private Reply (BCC)" selected.
 	} else {
 
 		// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
@@ -1780,11 +1769,12 @@ function bp_nouveau_ajax_groups_send_message() {
 							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							$message = messages_new_message( array(
-								'thread_id'  => $thread_id,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
+								'thread_id'    => $thread_id,
+								'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'    => $date_sent = bp_core_current_time(),
+								'mark_visible' => true,
+								'error_type'   => 'wp_error',
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1800,11 +1790,12 @@ function bp_nouveau_ajax_groups_send_message() {
 							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							$message = messages_new_message( array(
-								'thread_id'  => $thread_id,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
+								'thread_id'    => $thread_id,
+								'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'    => $date_sent = bp_core_current_time(),
+								'mark_visible' => true,
+								'error_type'   => 'wp_error',
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1882,11 +1873,12 @@ function bp_nouveau_ajax_groups_send_message() {
 							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							$message = messages_new_message( array(
-								'thread_id'  => $existing_thread,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
+								'thread_id'    => $existing_thread,
+								'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'    => $date_sent = bp_core_current_time(),
+								'mark_visible' => true,
+								'error_type'   => 'wp_error',
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -1902,6 +1894,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 								'content'       => $_POST['content'],
 								'error_type'    => 'wp_error',
+								'is_hidden'     => true,
 								'append_thread' => false,
 							) );
 							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -1920,6 +1913,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 							'content'       => $_POST['content'],
 							'error_type'    => 'wp_error',
+							'is_hidden'     => true,
 							'append_thread' => false,
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -1989,11 +1983,12 @@ function bp_nouveau_ajax_groups_send_message() {
 						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						$message = messages_new_message( array(
-							'thread_id'  => $existing_thread,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
+							'thread_id'    => $existing_thread,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
@@ -2009,6 +2004,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 							'content'       => $_POST['content'],
 							'error_type'    => 'wp_error',
+							'is_hidden'     => true,
 							'append_thread' => false,
 						) );
 						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -2026,6 +2022,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 						'content'       => $_POST['content'],
 						'error_type'    => 'wp_error',
+						'is_hidden'     => true,
 						'append_thread' => false,
 					) );
 					remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
@@ -2037,7 +2034,12 @@ function bp_nouveau_ajax_groups_send_message() {
 			$response['feedback'] = $message->get_error_message();
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
-			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+			if ( 'all' !== $_POST['users'] ) {
+				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
+			} else {
+				$response['feedback'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
+			}
+
 			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
