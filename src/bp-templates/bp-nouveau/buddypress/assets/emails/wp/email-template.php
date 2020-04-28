@@ -233,15 +233,15 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		}
 	</style>
 </head>
-	
-<body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="mso-line-height-rule: exactly;">
-	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+
+<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
+	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
 		<tbody>
 			<tr>
 				<td valign="top">
-					<center style="width: <?php echo $width; ?>; text-align: <?php echo esc_attr( $settings['direction'] ); ?>; margin: 0 auto;">
+					<center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
 
-						<div style="max-width: 600px; margin: auto;" class="email-container">
+						<div style="max-width: 600px; margin: auto; padding: 10px;" class="email-container">
 							<!--[if mso]>
 							<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
 								<tr>
@@ -249,7 +249,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<![endif]-->
 
 							<!-- Email Header : BEGIN -->
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px;">
+								<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
 								<tbody>
 									<tr>
 										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>;" class="center-in-mobile site_title_text_color site_title_text_size">
