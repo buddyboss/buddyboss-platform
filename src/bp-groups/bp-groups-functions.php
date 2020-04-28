@@ -2364,6 +2364,29 @@ function groups_send_membership_request( $args = array() ) {
 		'date_modified' => $r['date_modified'],
 	);
 
+	// Check if the user is already invited - if so, simply accept invite.
+	if ( groups_check_user_has_invite( $inv_args['user_id'], $inv_args['item_id'] ) ) {
+		groups_accept_invite( $inv_args['user_id'], $inv_args['item_id'] );
+		return true;
+	} else {
+
+		if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+
+			$group_type = bp_groups_get_group_type( $inv_args['item_id'] );
+
+			$group_type_id = bp_group_get_group_type_id( $group_type );
+
+			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+			$get_requesting_user_member_type = bp_get_member_type( $inv_args['user_id'] );
+
+			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+				groups_join_group( $inv_args['item_id'], $inv_args['user_id'] );
+				return true;
+			}
+		}
+	}
+
 	$invites_class = new BP_Groups_Invitation_Manager();
 	$request_id = $invites_class->add_request( $inv_args );
 
