@@ -823,14 +823,28 @@ function bp_zoom_get_users() {
 
 	if ( empty( $users ) ) {
 		$encoded_users = bp_zoom_conference()->list_users();
-		$encoded_users = $encoded_users['response'];
+		$encoded_users = ! empty( $encoded_users['response'] ) ? $encoded_users['response'] : false;
 		if ( ! empty( $encoded_users->users ) ) {
 			$users = $encoded_users->users;
+
+			// set user cache.
+			set_transient( 'bp_zoom_users', $users );
 		}
-		set_transient( 'bp_zoom_users', $users );
 	}
 	return $users;
 }
+
+/**
+ * Flush zoom users cache.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_flush_users_cache( $force = true ) {
+	if ( $force || ( ! empty( $_GET['page'] ) && 'bp-integrations' === $_GET['page'] && ! empty( $_GET['tab'] ) && 'bp-zoom' === $_GET['tab'] && isset( $_GET['flush'] ) ) ) {
+		delete_transient( 'bp_zoom_users' );
+	}
+}
+add_action( 'admin_init', 'bp_zoom_flush_users_cache' );
 
 function bp_zoom_nouveau_feedback_messages( $messages ) {
 	$messages['meetings-loop-none'] = array(
