@@ -370,11 +370,19 @@ function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
 }
 add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
 
+/**
+ * Fix forums subscription tab in user's profile.
+ *
+ * @param $passed
+ *
+ * @return bool
+ * @since BuddyBoss 1.3.3
+ */
 function bp_core_fix_forums_subscriptions_tab( $passed ) {
 	$bp_current_component = bp_current_component();
 	$bp_current_action    = bp_current_action();
 
-	if ( 'forums' === $bp_current_component && 'subscriptions' === $bp_current_action ) {
+	if ( 'forums' === $bp_current_component && $bp_current_action === bbp_get_user_subscriptions_slug() ) {
 		$passed = false;
 	}
 
