@@ -2360,7 +2360,7 @@ function bp_member_type_import_submenu_page() {
 	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
 
 		if( is_multisite() && bp_is_network_activated() ){
-			switch_to_blog( get_main_site_id() );
+			switch_to_blog( bp_get_root_blog_id() );
 		}
 
 		$registered_member_types = bp_get_member_types();
