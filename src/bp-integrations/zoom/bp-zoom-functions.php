@@ -839,7 +839,7 @@ function bp_zoom_get_users() {
  *
  * @since BuddyBoss 1.2.10
  */
-function bp_zoom_flush_users_cache( $force = true ) {
+function bp_zoom_flush_users_cache( $force = false ) {
 	if ( $force || ( ! empty( $_GET['page'] ) && 'bp-integrations' === $_GET['page'] && ! empty( $_GET['tab'] ) && 'bp-zoom' === $_GET['tab'] && isset( $_GET['flush'] ) ) ) {
 		delete_transient( 'bp_zoom_users' );
 	}
