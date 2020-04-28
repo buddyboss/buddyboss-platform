@@ -265,7 +265,7 @@ if ( bp_is_active( 'groups' ) ) {
 						<div class="recording-list-row-wrap">
 							<div class="recording-list-row">
 								<div class="recording-list-row-col">
-									<h4 class="clip_title">Recording <?php echo $count; ?></h4>
+									<p class="clip_title">Recording <?php echo $count; ?></p>
 								</div>
 								<div class="recording-list-row-col">
 									<div class="video_link">
@@ -279,9 +279,6 @@ if ( bp_is_active( 'groups' ) ) {
 								</div>
 								<div class="recording-list-row-col">
 									<a href="<?php echo $recording_file->download_url; ?>" target="_blank" class="btn btn-default downloadmeeting downloadclip ipad-hide" data-id="99UqH4qv6WxJG53NtmGOA699LoHmeaa8hiRI_vEOyJ7k3zX7P1bbDFxoF3a9cFc">Download</a>
-								</div>
-								<div class="recording-list-row-col">
-									<a href="javascript:;" class="btn deleteclip relative " aria-label="delete">Delete</a>
 								</div>
 							</div>
 						</div>

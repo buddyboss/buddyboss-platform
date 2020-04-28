@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-27 18:13:23+00:00\n"
+"POT-Creation-Date: 2020-04-28 12:54:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2104,7 +2104,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:46
 #: bp-core/classes/class-bp-admin-tab.php:242 bp-forums/groups.php:305
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:35
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:487
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:484
 msgid "Save Settings"
 msgstr ""
 
@@ -11886,7 +11886,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1197
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:319
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:472
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:469
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:71
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:92
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:115
@@ -11895,7 +11895,7 @@ msgid "All group members"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1198
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:477
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:474
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:97
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:120
@@ -11905,7 +11905,7 @@ msgid "Organizers and Moderators only"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1199
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:482
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:479
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:81
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:102
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:125
@@ -13557,7 +13557,7 @@ msgstr ""
 
 #: bp-integrations/zoom/bp-zoom-admin-tab.php:88
 #: bp-integrations/zoom/bp-zoom-integration.php:21
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:421
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:418
 msgid "Zoom Conference"
 msgstr ""
 
@@ -13628,16 +13628,16 @@ msgstr ""
 msgid "Create Meeting"
 msgstr ""
 
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:453
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:454
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:450
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:451
 msgid "Group Zoom Settings"
 msgstr ""
 
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:461
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:458
 msgid "Yes. I want this group to have a zoom conference."
 msgstr ""
 
-#: bp-integrations/zoom/includes/class-bp-group-zoom.php:468
+#: bp-integrations/zoom/includes/class-bp-group-zoom.php:465
 msgid "Which members of this group are allowed to manage zoom?"
 msgstr ""
 
