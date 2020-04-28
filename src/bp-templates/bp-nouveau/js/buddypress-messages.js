@@ -29,12 +29,12 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function() {
-			this.views          = new Backbone.Collection();
-			this.threads        = new bp.Collections.Threads();
-			this.messages       = new bp.Collections.Messages();
-			this.router         = new bp.Nouveau.Messages.Router();
-			this.box            = 'inbox';
-			this.mediumEditor    = false;
+			this.views        = new Backbone.Collection();
+			this.threads      = new bp.Collections.Threads();
+			this.messages     = new bp.Collections.Messages();
+			this.router       = new bp.Nouveau.Messages.Router();
+			this.box          = 'inbox';
+			this.mediumEditor = false;
 
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -323,7 +323,7 @@ window.bp = window.bp || {};
 		},
 
 		updateReadState: function( options ) {
-			options = options || {};
+			options 	 = options || {};
 			options.data = _.extend(
 				_.pick( this.attributes, ['id', 'message_id'] ),
 				{
@@ -589,7 +589,10 @@ window.bp = window.bp || {};
 						hideOnClick: true
 					},
 					toolbar: {
-						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-messages-toolbar'),
+						static: true,
+						updateOnEmptySelection: true
 					},
 					paste: {
 						forcePlainText: false,
@@ -598,6 +601,13 @@ window.bp = window.bp || {};
 						cleanAttrs: ['class', 'style', 'dir'],
 						cleanTags: ['meta'],
 						unwrapTags: []
+					}
+				});
+
+				bp.Nouveau.Messages.mediumEditor.subscribe('editableInput', function (event) {
+					if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
+						var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
+						event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
 					}
 				});
 
@@ -695,11 +705,11 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.dropzone.on('success', function(file, response) {
 				if ( response.data.id ) {
-					file.id = response.data.id;
-					response.data.uuid = file.upload.uuid;
+					file.id 				 = response.data.id;
+					response.data.uuid 		 = file.upload.uuid;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
-					response.data.saved = false;
-					response.data.privacy = 'message';
+					response.data.saved 	 = false;
+					response.data.privacy 	 = 'message';
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
 				}
@@ -756,9 +766,9 @@ window.bp = window.bp || {};
 			var gifData = this.model.get('gif_data');
 			if ( ! _.isEmpty( gifData ) ) {
 				this.el.style.backgroundImage = 'url(' + gifData.images.fixed_width.url + ')';
-				this.el.style.backgroundSize = 'contain';
-				this.el.style.height = gifData.images.original.height + 'px';
-				this.el.style.width = gifData.images.original.width + 'px';
+				this.el.style.backgroundSize  = 'contain';
+				this.el.style.height 		  = gifData.images.original.height + 'px';
+				this.el.style.width 		  = gifData.images.original.width + 'px';
 				$('#whats-new-messages-attachments').addClass('empty');
 			}
 
@@ -768,9 +778,9 @@ window.bp = window.bp || {};
 		destroy: function() {
 			this.model.set('gif_data', {} );
 			this.el.style.backgroundImage = '';
-			this.el.style.backgroundSize = '';
-			this.el.style.height = '0px';
-			this.el.style.width = '0px';
+			this.el.style.backgroundSize  = '';
+			this.el.style.height 		  = '0px';
+			this.el.style.width 		  = '0px';
 			document.removeEventListener( 'messages_gif_close', this.destroy.bind(this) );
 			$('#whats-new-messages-attachments').addClass('empty');
 		}
@@ -793,7 +803,7 @@ window.bp = window.bp || {};
 
 		initialize: function( options ) {
 			this.options = options || {};
-			this.giphy = new window.Giphy( BP_Nouveau.media.gif_api_key );
+			this.giphy   = new window.Giphy( BP_Nouveau.media.gif_api_key );
 
 			this.gifDataItems = new bp.Collections.GifDatas();
 			this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -824,8 +834,8 @@ window.bp = window.bp || {};
 		},
 
 		searchGif: function( q ) {
-			var self = this;
-			self.q = q;
+			var self 	= this;
+			self.q 		= q;
 			self.offset = 0;
 
 			self.clearRequests();
@@ -869,9 +879,9 @@ window.bp = window.bp || {};
 		},
 
 		loadTrending: function() {
-			var self = this;
+			var self 	= this;
 			self.offset = 0;
-			self.q = null;
+			self.q 		= null;
 
 			self.clearRequests();
 			self.el.classList.add('loading');
@@ -895,7 +905,7 @@ window.bp = window.bp || {};
 				var el = event.target;
 				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! el.classList.contains('loading') ) {
 					if ( this.total_count > 0 && this.offset <= this.total_count ) {
-						var self = this,
+						var self   = this,
 							params = {
 								offset: self.offset,
 								fmt: 'json',
@@ -961,7 +971,9 @@ window.bp = window.bp || {};
 		template: bp.template( 'whats-new-messages-toolbar' ),
 		events: {
 			'click #messages-media-button': 'toggleMediaSelector',
-			'click #messages-gif-button': 'toggleGifSelector'
+			'click #messages-gif-button': 'toggleGifSelector',
+			'click #show-toolbar-button': 'toggleToolbarSelector',
+			'click .medium-editor-toolbar-actions': 'focusEditor',
 		},
 
 		initialize: function() {
@@ -1000,6 +1012,22 @@ window.bp = window.bp || {};
 			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
 			$(e.currentTarget).toggleClass('active');
+		},
+
+		toggleToolbarSelector: function( e ) {
+			e.preventDefault();
+			$(e.currentTarget).toggleClass('active');
+			if( $(e.currentTarget).hasClass('active') ) {
+				$(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip',jQuery(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip-hide'));
+			} else {
+				$(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip',jQuery(e.currentTarget).parent('.show-toolbar').attr('data-bp-tooltip-show'));
+			}
+			var medium_editor_toolbar = $(e.currentTarget).closest('#bp-message-content').find('.medium-editor-toolbar');
+			medium_editor_toolbar.toggleClass('active');
+		},
+
+		focusEditor: function ( e ) {
+			$(e.currentTarget).closest('.bp-message-content-wrap').find('#bp-message-content #message_content').focus();
 		},
 
 		closeGifSelector: function() {
@@ -1135,7 +1163,7 @@ window.bp = window.bp || {};
 		},
 
 		addSelect2: function() {
-			var $input = $( this.el ).find( '#send-to-input' );
+			var $input    = $( this.el ).find( '#send-to-input' );
 			var ArrayData = [];
 			if ( $input.prop('tagName') != 'SELECT' ) {
 				this.addMentions();
@@ -1187,7 +1215,7 @@ window.bp = window.bp || {};
 
 			// Remove element into the Arrdata array.
 			$input.on('select2:unselect', function(e) {
-				var data = e.params.data;
+				var data  = e.params.data;
 				ArrayData = jQuery.grep(ArrayData, function(value) {
 					return value != data.id;
 				});
@@ -1264,7 +1292,7 @@ window.bp = window.bp || {};
 							}
 
 							var send_to = this.model.get( 'send_to' );
-							usernames = _.union(send_to, usernames);
+							usernames   = _.union(send_to, usernames);
 							this.model.set( 'send_to', usernames, { silent: true } );
 						}
 
@@ -1352,7 +1380,6 @@ window.bp = window.bp || {};
 				var form = bp.Nouveau.Messages.views.get( 'compose' );
 				form.get( 'view' ).remove();
 				bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
-
 				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread.id + '/', { trigger: true } );
 
 				var threads = bp.Nouveau.Messages.threads.parse( { threads : [ response.thread ] } );
@@ -1380,7 +1407,8 @@ window.bp = window.bp || {};
 
 		events: {
 			'click .bp-message-link' : 'changePreview',
-			'scroll' : 'scrolled'
+			'scroll' : 'scrolled',
+			'click .close-conversation' : 'doAction'
 		},
 
 		initialize: function() {
@@ -1537,7 +1565,40 @@ window.bp = window.bp || {};
 
 			target.addClass('current');
 			target.parents('.bp-messages-container').removeClass('bp-compose-message').addClass('bp-view-message');
-		}
+		},
+
+		doAction: function( event ) {
+			var action   = $( event.currentTarget ).data( 'bp-action' ), options = {},
+				id		 = $( event.currentTarget ).data( 'bp-thread-id' ),
+				feedback = BP_Nouveau.messages.doingAction;
+
+			if ( ! action ) {
+				return event;
+			}
+
+			event.preventDefault();
+
+			if ( ! _.isUndefined( feedback[ action ] ) ) {
+				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
+			}
+
+			bp.Nouveau.Messages.threads.doAction( action, id, options ).done( function() {
+
+				// Remove previous feedback.
+				bp.Nouveau.Messages.removeFeedback();
+
+				if ( 'hide_thread' === action ) {
+					bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
+					bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+				}
+
+			} ).fail( function( response ) {
+				// Remove previous feedback.
+				bp.Nouveau.Messages.removeFeedback();
+
+				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+			} );
+		},
 	} );
 
 	bp.Views.userThread = bp.Nouveau.Messages.View.extend( {
@@ -1557,6 +1618,9 @@ window.bp = window.bp || {};
 			if ( this.model.get( 'is_group' ) && 1 === this.model.get( 'is_group_thread' ) ) {
 				this.el.className += ' group-thread';
 			}
+
+			// Add thread id into the li class
+			this.el.className += ' ' + this.model.get( 'id' );
 
 			if ( $('#thread-id').val() == this.model.get('id') ) {
 				this.el.className += ' current';
@@ -1756,18 +1820,35 @@ window.bp = window.bp || {};
 		events: {
 			'click .actions a' : 'doAction',
 			'click .actions button' : 'doAction',
-			'click .bp-back-to-thread-list' : 'navigateToList'
+			'click .bp-back-to-thread-list' : 'navigateToList',
+			'click .message_actions .message_action__anchor' : 'showOptions',
 		},
 
-                navigateToList: function( event ) {
-                        event.preventDefault();
-                        bp.Nouveau.Messages.router.navigate( '/' );
-                        $('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
-                },
+		initialize: function() {
+
+			$( document ).on('click', '.messages', function(event) {
+
+				if( $(event.target ).hasClass( 'message_action__anchor' ) || $(event.target ).parent().hasClass('message_action__anchor') ) {
+					return event;
+				} else {
+					$('.message_action__list.open').removeClass('open');
+				}
+			
+			});
+
+		},
+
+		navigateToList: function( event ) {
+				event.preventDefault();
+				bp.Nouveau.Messages.router.navigate( '/' );
+				$('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
+		},
 
 		doAction: function( event ) {
-			var action = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
-			    feedback = BP_Nouveau.messages.doingAction;
+			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
+				feedback = BP_Nouveau.messages.doingAction;
+				
+				$( event.currentTarget ).closest( '.message_action__list' ).removeClass('open');
 
 			if ( ! action ) {
 				return event;
@@ -1798,8 +1879,21 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
 			}
 
+			if ( 'delete' === action || 'delete_thread' === action ) {
+				if ( $( '.message_actions .message_action__anchor' ).length ) {
+					$( '.message_actions .message_action__anchor' ).trigger( 'click' );
+				}
+			}
+
 			if ( 'delete' === action ) {
 				if (! confirm(BP_Nouveau.messages.delete_confirmation) ) {
+					bp.Nouveau.Messages.removeFeedback();
+					return;
+				}
+			}
+
+			if ( 'delete_thread' === action ) {
+				if (! confirm(BP_Nouveau.messages.delete_thread_confirmation) ) {
 					bp.Nouveau.Messages.removeFeedback();
 					return;
 				}
@@ -1811,28 +1905,37 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.removeFeedback();
 
 				// Remove all views
-				if ( 'delete' === action ) {
-
+				if ( 'delete_thread' === action || 'hide_thread' === action ) {
 					if ( bp.Nouveau.Messages.threads.length > 1 ) {
-						if ( response.id && '' !== response.id ) {
-							//bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
-							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
-							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
-						} else {
-							//bp.Nouveau.Messages.clearViews();
-							// Navigate back to current box
-							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
-							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
-						}
+						//bp.Nouveau.Messages.clearViews();
+						// Navigate back to current box
+						bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
+						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
 					} else {
 						BP_Nouveau.messages.hasThreads = false;
 						bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
 					}
+				} else if ( response.id ) {
+					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+					bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
+					bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
 				} else if ( response.messages ) {
+
+					//bp.Nouveau.Messages.messages.collection.reset();
 					self.model.set( _.first( response.messages ) );
 
 					// Display the feedback
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+
+					if ( 'unread' === action && ! _.isUndefined( response.ids ) ) {
+						$( '.bp-compose-message.bp-messages-container, .bp-view-message.bp-messages-container' ).removeClass( 'bp-compose-message bp-view-message' );
+						$.each( response.ids, function( index, value ) {
+							$('#bp-messages-threads-list .message-lists .thread-item.' + value ).addClass( 'unread' );
+						});
+					}
+
+					bp.Nouveau.Messages.removeFeedback();
+
 				}
 
 			} ).fail( function( response ) {
@@ -1841,7 +1944,15 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			} );
-		}
+		},
+
+		showOptions: function( event ) {
+			event.preventDefault();
+			var currentTarget = event.currentTarget;
+			$( currentTarget ).siblings('.message_action__list').toggleClass('open');
+		},
+
+
 	} );
 
 	bp.Views.userMessagesEntry = bp.Views.userMessagesHeader.extend( {
@@ -1853,7 +1964,7 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
-			this.model.on( 'change:is_starred', this.updateMessage, this );
+			this.model.on( 'change', this.updateMessage, this );
 		},
 
 		updateMessage: function( model ) {
@@ -1918,7 +2029,7 @@ window.bp = window.bp || {};
 		},
 
 		requestMessages: function() {
-			var data = {};
+			var data 					   = {};
 			this.options.collection.before = null;
 
 			this.collection.reset();
@@ -1942,7 +2053,7 @@ window.bp = window.bp || {};
 		},
 
 		messagesFetched: function( collection, response ) {
-			var loadMore = null;
+			var loadMore 	  = null;
 			collection.before = response.next_messages_timestamp;
 
 			if ( ! _.isUndefined( response.thread ) ) {
@@ -1964,9 +2075,9 @@ window.bp = window.bp || {};
 				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
 			}
                         
-                        if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
-                            $('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
-                        }
+			if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
+				$('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
+			}
 
 			$('#bp-message-load-more').removeClass('loading');
 
@@ -2177,7 +2288,10 @@ window.bp = window.bp || {};
 			$.each( $( '.thread-content' ), function() {
 				var _this = $(this);
 				if ( _this.data('thread-id') == thread_id ) {
-					_this.closest('.thread-item').addClass('current');
+					_this.closest('.thread-item').addClass( 'current' );
+					if ( _this.closest('.thread-item').hasClass( 'unread' ) ) {
+						_this.closest('.thread-item').removeClass( 'unread' );
+					}
 				} else {
 					_this.closest('.thread-item').removeClass('current');
 				}

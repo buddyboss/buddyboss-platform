@@ -552,7 +552,7 @@ function bp_groups_admin_load() {
  * @return string|int Option value. False to abandon update.
  */
 function bp_groups_admin_screen_options( $value, $option, $new_value ) {
-	if ( 'toplevel_page_bp_groups_per_page' != $option && 'toplevel_page_bp_groups_network_per_page' != $option ) {
+	if ( 'buddyboss_page_bp_groups_per_page' != $option && 'buddyboss_page_bp_groups_network_per_page' != $option ) {
 		return $value;
 	}
 
@@ -693,8 +693,7 @@ function bp_groups_admin_edit() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -716,8 +715,7 @@ function bp_groups_admin_edit() {
 								'page'   => 'bp-groups',
 								'create' => 'create-from-admin',
 								'action' => 'edit',
-							),
-							admin_url( 'admin.php' )
+							), bp_get_admin_url( 'admin.php' )
 						)
 					);
 					?>
@@ -949,8 +947,7 @@ function bp_process_create_group_admin() {
 				'page'   => 'bp-groups',
 				'gid'    => $new_group_id,
 				'action' => 'edit',
-			),
-			admin_url( 'admin.php' )
+			), bp_get_admin_url( 'admin.php' )
 		)
 	);
 	exit();
@@ -1093,8 +1090,7 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1121,8 +1117,7 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -2267,7 +2262,7 @@ function bp_group_type_show_data( $column, $post_id ) {
 
 		case 'total_groups':
 			$group_key      = bp_group_get_group_type_key( $post_id );
-			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
+			$group_type_url = bp_get_admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
 			printf(
 				__( '<a href="%1$s">%2$s</a>', 'buddyboss' ),
 				esc_url( $group_type_url ),
