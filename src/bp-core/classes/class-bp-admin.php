@@ -377,7 +377,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		$hooks = array();
-		if ( is_multisite() && bp_is_network_activated() ) {
+		if ( is_multisite() && bp_is_network_activated() && ! bp_is_multiblog_mode() ) {
 			$hooks[] = add_menu_page(
 				__( 'BuddyBoss', 'buddyboss' ),
 				__( 'BuddyBoss', 'buddyboss' ),

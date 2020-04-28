@@ -115,6 +115,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				array(
 					'post_type' => $this->cpt_name,
 					'post__in'  => $post_ids,
+					'posts_per_page' => 20,
 				)
 			);
 			$template = bp_locate_template( "search/loop/{$this->cpt_name}.php" ) ? "loop/{$this->cpt_name}" : 'loop/post';

@@ -9,6 +9,7 @@ add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
+add_action( 'bp_after_single_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_single_activity', 'bp_media_add_theatre_template' );

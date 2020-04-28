@@ -91,6 +91,202 @@
 	}
 }
 
+.bbp-reply-form #whats-new-toolbar,
+.bbp-topic-form #whats-new-toolbar {
+
+	.medium-editor-toolbar {
+		top: inherit;
+		bottom: 6px;
+		left: 38px;
+		visibility: hidden;
+		z-index: 99;
+		background-color: #fff;
+		opacity: 0;
+		transition: all ease 0.3s;
+		height: 0;
+		right: 0;
+		overflow: hidden;
+		border-radius: 0;
+
+		&.active {
+			display: block;
+			border-radius: 0;
+			z-index: 112;
+			opacity: 1;
+			visibility: visible;
+			bottom: 10px;
+			height: 40px;
+
+			div & {
+				bottom: 10px;
+			}
+		}
+
+		&.medium-editor-toolbar-active {
+			opacity: 1;
+		}
+
+		.medium-editor-toolbar-actions {
+			background-color: transparent;
+			height: auto;
+
+			button {
+				box-shadow: none;
+				padding: 10px 10px 10px 0;
+				min-width: 30px;
+				border: 0;
+				background-color: transparent !important;
+				color: rgba(18, 43, 70, 0.4) !important;
+
+				&.medium-editor-button-active {
+					color: #122b46 !important;
+				}
+
+				&.medium-editor-action-close {
+					padding-right: 0;
+				}
+
+			}
+
+		}
+
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			width: 210px;
+			margin-bottom: 0;
+			background-color: #fff;
+			border: 1px solid #dedfe2;
+			color: #4d5c6d;
+
+			&::-webkit-input-placeholder {
+				color: #4d5c6d;
+			}
+		}
+	}
+}
+
+.activity-update-form {
+
+	#whats-new-content {
+		position: relative;
+
+		.medium-editor-toolbar {
+			top: inherit;
+			bottom: -52px;
+			left: 38px;
+			visibility: hidden;
+			z-index: 99;
+			background-color: #fff;
+			transition: all ease 0.3s;
+			height: 0;
+			right: 0;
+			overflow: hidden;
+			display: none;
+
+			&.active {
+				border-radius: 0;
+				z-index: 112;
+				visibility: visible;
+				bottom: 0;
+				height: 44px;
+
+				div & {
+					bottom: -51px;
+				}
+			}
+
+			.medium-editor-toolbar-actions {
+				background-color: transparent;
+
+				button {
+					box-shadow: none;
+					padding: 10px 10px 10px 0;
+					min-width: 30px;
+					border: 0;
+					background-color: transparent !important;
+					color: rgba(18, 43, 70, 0.4) !important;
+
+					&.medium-editor-button-active {
+						color: #122b46 !important;
+					}
+
+					&.medium-editor-action-close {
+						padding-right: 0;
+					}
+
+				}
+
+			}
+
+			.medium-editor-toolbar-form .medium-editor-toolbar-input {
+				width: 210px;
+				margin-bottom: 0;
+				background-color: #fff;
+				border: 1px solid #dedfe2;
+				color: #4d5c6d;
+
+				&::-webkit-input-placeholder {
+					color: #4d5c6d;
+				}
+			}
+
+		}
+
+		.medium-editor-toolbar .medium-editor-toolbar-form-active {
+			position: absolute;
+			bottom: -6px;
+			box-shadow: none;
+		}
+
+	}
+
+}
+
+.bbpress #bbpress-forums #whats-new-toolbar.media-off,
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off +,
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off {
+
+	.medium-editor-toolbar {
+		visibility: visible;
+		height: 44px;
+		left: 0;
+		opacity: 1;
+		border-radius: 0;
+
+		.medium-editor-toolbar-actions {
+			opacity: 0.4;
+
+			li {
+				pointer-events: none;
+			}
+		}
+
+		&.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+			opacity: 1;
+
+			li {
+				pointer-events: auto;
+			}
+
+		}
+
+	}
+}
+
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+	bottom: -25px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
+	bottom: -24px;
+	left: -15px;
+}
+
+.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+	display: block;
+}
+
 // these ID's need replacing with this!
 //.textarea-wrap { // #whats-new-textarea
 
@@ -557,4 +753,44 @@ input.search-query-input {
 
 #content .toolbar-button {
 	box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+
+	.activity-update-form .activity-form.focus-in #whats-new-content,
+	.bbp-topic-form #whats-new-toolbar {
+
+		.medium-editor-toolbar-actions {
+
+			button {
+				padding: 10px 5px 10px 0;
+
+				&.medium-editor-button-first {
+					padding-left: 5px !important;
+				}
+			}
+		}
+
+	}
+
+	.activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.active {
+		opacity: 1;
+	}
+
+}
+
+@media screen and (max-width: 560px) {
+
+	.activity-update-form .activity-form.focus-in #whats-new-content,
+	.bbp-topic-form #whats-new-toolbar {
+
+		.medium-editor-toolbar-actions button {
+			padding: 10px 0;
+		}
+
+		.medium-editor-toolbar-form .medium-editor-toolbar-input {
+			max-width: calc(100% - 90px);
+			width: auto;
+		}
+	}
 }
