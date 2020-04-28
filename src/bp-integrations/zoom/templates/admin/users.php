@@ -17,7 +17,6 @@ echo esc_url( bp_get_admin_url( add_query_arg( array(
 	<table class="display" width="100%">
 		<thead>
 		<tr>
-			<th><?php _e( 'SN', 'buddyboss' ); ?></th>
 			<th><?php _e( 'User ID', 'buddyboss' ); ?></th>
 			<th><?php _e( 'Email', 'buddyboss' ); ?></th>
 			<th><?php _e( 'Name', 'buddyboss' ); ?></th>
@@ -28,12 +27,10 @@ echo esc_url( bp_get_admin_url( add_query_arg( array(
 		</thead>
 		<tbody>
 		<?php
-		$count = 1;
 		if ( ! empty( $users ) ) {
 			foreach ( $users as $user ) {
 				?>
 				<tr>
-					<td><?php echo $count ++; ?></td>
 					<td><?php echo $user->id; ?></td>
 					<td><?php echo $user->email; ?></td>
 					<td><?php echo $user->first_name . ' ' . $user->last_name; ?></td>
@@ -48,3 +45,8 @@ echo esc_url( bp_get_admin_url( add_query_arg( array(
 		</tbody>
 	</table>
 </div>
+<style>
+	.section-bp_zoom_users_section .form-table>tbody>tr>th{
+		display: none;
+	}
+</style>
