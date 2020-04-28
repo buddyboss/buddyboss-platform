@@ -1090,6 +1090,209 @@ a.layout-grid-view {
   position: relative;
 }
 
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
+  top: inherit;
+  bottom: 6px;
+  left: 38px;
+  visibility: hidden;
+  z-index: 99;
+  background-color: #fff;
+  opacity: 0;
+  transition: all ease 0.3s;
+  height: 0;
+  right: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
+  display: block;
+  border-radius: 0;
+  z-index: 112;
+  opacity: 1;
+  visibility: visible;
+  bottom: 10px;
+  height: 40px;
+}
+
+div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
+  bottom: 10px;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active {
+  opacity: 1;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
+  background-color: transparent;
+  height: auto;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 10px 10px 0;
+  min-width: 30px;
+  border: 0;
+  background-color: transparent !important;
+  color: rgba(18, 43, 70, 0.4) !important;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+  color: #122b46 !important;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
+  padding-right: 0;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  width: 210px;
+  margin-bottom: 0;
+  background-color: #fff;
+  border: 1px solid #dedfe2;
+  color: #4d5c6d;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
+  color: #4d5c6d;
+}
+
+.activity-update-form #whats-new-content {
+  position: relative;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar {
+  top: inherit;
+  bottom: -52px;
+  left: 38px;
+  visibility: hidden;
+  z-index: 99;
+  background-color: #fff;
+  transition: all ease 0.3s;
+  height: 0;
+  right: 0;
+  overflow: hidden;
+  display: none;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar.active {
+  border-radius: 0;
+  z-index: 112;
+  visibility: visible;
+  bottom: 0;
+  height: 44px;
+}
+
+div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
+  bottom: -51px;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
+  background-color: transparent;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 10px 10px 0;
+  min-width: 30px;
+  border: 0;
+  background-color: transparent !important;
+  color: rgba(18, 43, 70, 0.4) !important;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+  color: #122b46 !important;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
+  padding-right: 0;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  width: 210px;
+  margin-bottom: 0;
+  background-color: #fff;
+  border: 1px solid #dedfe2;
+  color: #4d5c6d;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input::-webkit-input-placeholder {
+  color: #4d5c6d;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-form-active {
+  position: absolute;
+  bottom: -6px;
+  box-shadow: none;
+}
+
+.bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar,
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar,
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar {
+  visibility: visible;
+  height: 44px;
+  left: 0;
+  opacity: 1;
+  border-radius: 0;
+}
+
+.bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions,
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions {
+  opacity: 0.4;
+}
+
+.bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions li,
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions li {
+  pointer-events: none;
+}
+
+.bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+  opacity: 1;
+}
+
+.bbpress #bbpress-forums #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li,
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .bbp-reply-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .bbp-topic-form #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li {
+  pointer-events: auto;
+}
+
+.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+  bottom: -25px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
+  bottom: -24px;
+  left: -15px;
+}
+
+.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+  display: block;
+}
+
 #whats-new-textarea [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   color: #bbb;
@@ -1337,6 +1540,32 @@ input.search-query-input {
 
 #content .toolbar-button {
   box-shadow: none;
+}
+
+@media screen and (max-width: 768px) {
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button,
+  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
+    padding: 10px 5px 10px 0;
+  }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button.medium-editor-button-first,
+  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+    padding-left: 5px !important;
+  }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar.active {
+    opacity: 1;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-actions button,
+  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions button {
+    padding: 10px 0;
+  }
+  .activity-update-form .activity-form.focus-in #whats-new-content .medium-editor-toolbar-form .medium-editor-toolbar-input,
+  .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+    max-width: calc(100% - 90px);
+    width: auto;
+  }
 }
 
 /**
@@ -4462,8 +4691,98 @@ input#send-to-input {
   padding: 0 5px;
 }
 
+.medium-editor-action-close b:before {
+  content: "\f153";
+}
+
 .bp-messages-content #bp-message-content {
   margin-top: 20px;
+  padding: 20px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar {
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar {
+  top: inherit;
+  bottom: 5px;
+  z-index: 99;
+  background-color: #fff;
+  visibility: hidden;
+  transition: all ease 0.3s;
+  height: 0;
+  right: 0;
+  overflow: hidden;
+  left: 25px;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar.active {
+  display: block;
+  border-radius: 0;
+  z-index: 112;
+  visibility: visible;
+  bottom: -5px;
+  height: 40px;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions {
+  background-color: transparent;
+  height: auto;
+  padding: 0 10px 0 0;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 10px 10px 0;
+  min-width: 30px;
+  border: 0;
+  background-color: transparent !important;
+  color: rgba(18, 43, 70, 0.4) !important;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+  color: #122b46 !important;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
+  padding-right: 0;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  width: 220px;
+}
+
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar {
+  padding: 5px 15px 0 0;
+  width: 100%;
+}
+
+.bbpress #bbpress-forums .medium-editor-toolbar .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar .medium-editor-toolbar-actions {
+  opacity: 0;
+}
+
+.bbpress #bbpress-forums .medium-editor-toolbar.active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active .medium-editor-toolbar-actions {
+  opacity: 0.4;
+}
+
+.bbpress #bbpress-forums .medium-editor-toolbar.active .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active .medium-editor-toolbar-actions li {
+  pointer-events: none;
+}
+
+.bbpress #bbpress-forums .medium-editor-toolbar.active.medium-editor-toolbar-active .medium-editor-toolbar-actions,
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+  opacity: 1;
+}
+
+.bbpress #bbpress-forums .medium-editor-toolbar.active.medium-editor-toolbar-active .medium-editor-toolbar-actions li,
+.buddypress #buddypress.buddypress-wrap .medium-editor-toolbar.active.medium-editor-toolbar-active .medium-editor-toolbar-actions li {
+  pointer-events: auto;
 }
 
 .messages .select2-dropdown {
@@ -4626,8 +4945,8 @@ input#send-to-input {
   margin-right: 10px;
 }
 
-.bp-messages-user-threads {
-  max-height: 80vh;
+body .bp-messages-user-threads {
+  max-height: 69vh;
   overflow: auto;
 }
 
@@ -4667,6 +4986,49 @@ input#send-to-input {
   .bp-messages-user-threads,
   #bp-message-thread-list {
     max-height: 400px;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+    padding: 10px 5px 10px 0;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+    padding-left: 5px !important;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    margin: 0 -20px;
+  }
+  .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #whats-new-messages-toolbar {
+    padding: 0 15px 0 20px;
+  }
+  .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #message-reply-new-submit {
+    padding: 20px 20px 0;
+    text-align: right;
+    border-top: 1px solid #ebe9e6;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar {
+    left: 45px;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
+    padding: 10px 0;
+    min-width: 30px;
+  }
+  .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+    max-width: calc(100% - 90px);
+    width: auto;
+  }
+  .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
+    left: 10px;
   }
 }
 
@@ -7982,26 +8344,19 @@ div.bbp-reply-header {
 }
 
 #bbpress-forums div.bbp-topic-content code,
-#bbpress-forums div.bbp-reply-content code,
-#bbpress-forums div.bbp-topic-content pre,
-#bbpress-forums div.bbp-reply-content pre {
+#bbpress-forums div.bbp-reply-content code {
   display: inline-block;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   padding: 0 5px;
-  max-width: 95%;
+  max-width: 100%;
   vertical-align: middle;
   margin-top: -3px;
 }
 
-#bbpress-forums div.bbp-topic-content pre,
-#bbpress-forums div.bbp-reply-content pre {
-  display: block;
-  line-height: 18px;
-  margin: 0 0 30px;
-  padding: 5px 10px;
-  white-space: pre;
-  overflow: auto;
+#bbpress-forums .bbp-the-content pre {
+  position: relative;
+  z-index: 1;
 }
 
 #bbpress-forums div.bbp-topic-content pre code,
@@ -11840,6 +12195,22 @@ img.emojioneemoji {
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar #group-messages-new-submit {
     margin-top: 15px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+  #group-messages-container .bb-groups-messages-right #whats-new-toolbar #group-messages-new-submit .group-messages-type {
+    margin-bottom: 10px;
+  }
+  #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar {
+    bottom: 65px;
+  }
+  #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
+    bottom: 88px;
+  }
+  #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
+    bottom: 88px;
   }
 }
 
@@ -11854,6 +12225,7 @@ img.emojioneemoji {
   max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
+  margin-bottom: 15px;
 }
 
 .bb-groups-messages-left {
@@ -11870,6 +12242,12 @@ img.emojioneemoji {
     flex: 0 0 100%;
     min-width: 0;
   }
+}
+
+.bp-vertical-navs .bb-groups-messages-left {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 260px;
+  flex: 0 0 260px;
 }
 
 .bb-panel-head {
@@ -12191,6 +12569,110 @@ span.icons:before {
   display: flex;
 }
 
+#group-messages-container #whats-new-toolbar {
+  display: block;
+}
+
+#group-messages-container #whats-new-toolbar .post-elements-buttons-item {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+#group-messages-container #whats-new-toolbar #group-messages-new-submit {
+  border-top: 1px solid #ebe9e6;
+  padding: 10px 20px 0;
+  margin: 10px -20px -10px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+#group-messages-container #whats-new-toolbar #group-messages-new-submit .group-messages-type {
+  width: auto;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar {
+  top: inherit;
+  bottom: 45px;
+  left: 23px;
+  visibility: hidden;
+  z-index: 99;
+  background-color: #fff;
+  opacity: 0;
+  transition: all ease 0.3s;
+  height: 0;
+  right: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar.active {
+  border-radius: 0;
+  z-index: 112;
+  opacity: 1;
+  visibility: visible;
+  bottom: 40px;
+  height: 40px;
+  right: -20px;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
+  background-color: transparent;
+  height: auto;
+  padding: 0;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
+  box-shadow: none;
+  padding: 10px 10px 10px 0;
+  min-width: 30px;
+  border: 0;
+  background-color: transparent !important;
+  color: rgba(18, 43, 70, 0.4) !important;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
+  color: #122b46 !important;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
+  padding-right: 0;
+}
+
+#group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+  width: 220px;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar {
+  visibility: visible;
+  height: 44px;
+  left: -15px;
+  opacity: 1;
+  bottom: 35px;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions {
+  opacity: 0.4;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-actions li {
+  pointer-events: none;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions {
+  opacity: 1;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar.medium-editor-toolbar-active .medium-editor-toolbar-actions li {
+  pointer-events: auto;
+}
+
+#group-messages-container #whats-new-toolbar.media-off .medium-editor-toolbar .medium-editor-toolbar-form.medium-editor-toolbar-form-active {
+  position: absolute;
+  box-shadow: none;
+  bottom: -6px;
+}
+
 #group-messages-container select.group-messages-type {
   margin-right: 10px;
 }
@@ -12509,5 +12991,27 @@ span.icons:before {
   .bb-groups-messages-right .medium-editor-element:not(.emojionearea),
   .bb-groups-messages-right .medium-editor-placeholder:not(.emojionearea) {
     min-height: 180px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
+    padding: 10px 5px 10px 0;
+  }
+  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+    padding-left: 5px !important;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
+    padding: 0 6px;
+  }
+  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
+    padding: 10px 0;
+  }
+  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
+    max-width: calc(100% - 90px);
+    width: auto;
   }
 }
