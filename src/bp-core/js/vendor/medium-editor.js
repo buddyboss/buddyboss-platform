@@ -6730,7 +6730,6 @@ MediumEditor.extensions = {};
                 (MediumEditor.util.getClosestTag(node, 'pre') !== false) &&
                 MediumEditor.selection.getCaretOffsets(node).right === 0) {
 
-                    console.log('enter in');
             // when cursor is at the end of <pre>,
             // then pressing enter key should create <p> tag, not <pre>
             p = this.options.ownerDocument.createElement('p');
