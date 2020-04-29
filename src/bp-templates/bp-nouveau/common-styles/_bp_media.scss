@@ -2099,6 +2099,14 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	.media-search-form {
 		float: right;
+
+		.bp-dir-search-form {
+			border: 0;
+
+			#group-document-search {
+				background-image: none;
+			}
+		}
 	}
 
 }

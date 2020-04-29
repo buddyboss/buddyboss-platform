@@ -13318,6 +13318,14 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   float: right;
 }
 
+.bp-document-listing .media-search-form .bp-dir-search-form {
+  border: 0;
+}
+
+.bp-document-listing .media-search-form .bp-dir-search-form #group-document-search {
+  background-image: none;
+}
+
 @media screen and (max-width: 1120px) {
   .bp-media-header-wrap .media-search-form {
     width: 100%;
