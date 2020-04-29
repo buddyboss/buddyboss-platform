@@ -487,17 +487,17 @@ if ( bp_is_active( 'groups' ) ) {
 				<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage zoom?', 'buddyboss' ); ?></p>
 
 				<div class="bp-radio-wrap">
-					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-members" class="bs-styled-radio" value="members"<?php bp_zoom_group_show_manager_setting( 'members' ); ?> />
+					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-members" class="bs-styled-radio" value="members"<?php bp_zoom_group_show_manager_setting( 'members', $group ); ?> />
 					<label for="group-zoom-manager-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
 				</div>
 
 				<div class="bp-radio-wrap">
-					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-mods" class="bs-styled-radio" value="mods"<?php bp_zoom_group_show_manager_setting( 'mods' ); ?> />
+					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-mods" class="bs-styled-radio" value="mods"<?php bp_zoom_group_show_manager_setting( 'mods', $group ); ?> />
 					<label for="group-zoom-manager-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
 				</div>
 
 				<div class="bp-radio-wrap">
-					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-admins" class="bs-styled-radio" value="admins"<?php bp_zoom_group_show_manager_setting( 'admins' ); ?> />
+					<input type="radio" name="bp-group-zoom-manager" id="group-zoom-manager-admins" class="bs-styled-radio" value="admins"<?php bp_zoom_group_show_manager_setting( 'admins', $group ); ?> />
 					<label for="group-zoom-manager-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 				</div>
 			</fieldset>
