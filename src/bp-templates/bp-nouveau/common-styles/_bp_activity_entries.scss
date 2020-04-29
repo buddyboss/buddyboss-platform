@@ -428,12 +428,69 @@
 	}
 }
 
+.medium-editor-toolbar-actions {
+
+	.medium-editor-action b {
+		font-family: bb-icons;
+		text-align: center;
+		width: 24px;
+	}
+
+	.medium-editor-action-bold b:before {
+		content: "\e94a";
+	}
+
+	.medium-editor-action-italic b:before {
+		content: "\e949";
+	}
+
+	.medium-editor-action-unorderedlist b:before {
+		content: "\e9a3";
+		font-size: 14px;
+		vertical-align: middle;
+		display: inline-block;
+		margin-top: 3px;
+	}
+
+	.medium-editor-action-orderedlist b:before {
+		content: "\e9a4";
+		font-size: 15px;
+		vertical-align: middle;
+		display: inline-block;
+		margin-top: 2px;
+	}
+
+	.medium-editor-action-quote b:before {
+		content: "\e9a5";
+		font-size: 13px;
+		margin-top: 3px;
+		display: inline-block;
+	}
+
+	.medium-editor-action-anchor b:before {
+		content: "\e816";
+		font-size: 20px;
+	}
+
+	.medium-editor-action-pre b:before {
+		content: "\e962";
+		font-size: 16px;
+		margin-top: 2px;
+		display: inline-block;
+	}
+
+	.medium-editor-action-close b:before {
+		content: "\e80a";
+	}
+
+}
+
 .ac-reply-toolbar,
 #whats-new-toolbar,
 #whats-new-messages-toolbar {
 
 	.bb-icon {
-		color: rgba(18, 43, 70, 0.4);
+		color: rgba(255, 255, 255, 0.4);
 		transition: all linear 0.2s;
 		font-size: 24px;
 		width: auto;
@@ -458,6 +515,14 @@
 
 	}
 
+	.bb-icon-text-format:before {
+		font-size: 15px;
+		vertical-align: top;
+		margin-top: 3px;
+		display: inline-block;
+		width: 24px;
+	}
+
 	.emojionearea .emojionearea-button:before {
 		content: "\E821";
 		color: rgba(18, 43, 70, 0.4);
@@ -474,6 +539,18 @@
 	.emojionearea .emojionearea-button.active:before {
 		color: #122b46;
 	}
+
+	.toolbar-button.active {
+
+		.bb-icon.bb-icon-text-format:before {
+			color: #122b46;
+		}
+	}
+}
+
+.bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
+	vertical-align: top;
+	margin-top: 3px;
 }
 
 .active #activity-media-button,
