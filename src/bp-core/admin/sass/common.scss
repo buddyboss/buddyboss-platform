@@ -538,6 +538,10 @@ table.extension-listing td input[type="text"].extension-name {
 	width: 100px;
 }
 
+table.extension-listing td input.error {
+	border: 1px solid #f00;
+}
+
 table.extension-listing td #btn-remove-extensions {
 	cursor: pointer;
 }
