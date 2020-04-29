@@ -5266,6 +5266,10 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   color: #555;
 }
 
+.bp-messages-content .actions .message_actions .message_action__anchor .bb-icon-menu-dots-v {
+  font-size: 20px;
+}
+
 .bp-messages-content .actions .message_actions .message_action__list {
   display: none;
   margin: 0;
