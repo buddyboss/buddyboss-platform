@@ -4483,3 +4483,31 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 
 	return $user_id;
 }
+
+/**
+ * Format file size units
+ *
+ * @param $bytes
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @return string
+ */
+function bp_core_format_size_units( $bytes, $type = 'bytes' ) {
+
+	if ( 'GB' === $type ) {
+		$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+	} elseif ( 'MB' === $type ) {
+		$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+	} elseif ( 'KB' === $type ) {
+		$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+	} elseif ( 'bytes' === $type ) {
+		$bytes = $bytes . ' bytes';
+	} elseif ( 1 === $bytes ) {
+		$bytes = $bytes . ' byte';
+	} else {
+		$bytes = '0' . ' bytes';
+	}
+
+	return $bytes;
+}
