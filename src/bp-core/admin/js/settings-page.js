@@ -164,7 +164,7 @@
 					$( selectorMediaImport ).addClass( 'current' );
 					$( selectorMediaImport ).attr( 'aria-current','page' );
 					$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-tools"]' ).parent().addClass( 'current' );
-				}
+			}
 
 			// Set Tools selected on Import Profile Types Page.
 			if ( $( 'body.buddypress.buddyboss_page_bp-member-type-import' ).length || $( 'body.buddypress.buddyboss_page_bp-repair-community' ).length ) {
@@ -173,13 +173,13 @@
 					$( selectorProfileImport ).addClass( 'current' );
 					$( selectorProfileImport ).attr( 'aria-current','page' );
 					$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-tools"]' ).parent().addClass( 'current' );
-				}
+			}
 
 			if ( $( 'body .section-bp_search_settings_community' ).length ) {
 
-					if ($( 'body .section-bp_search_settings_community table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_community table td input:checkbox' ).length) {
-						$( '#bp_search_select_all_components' ).prop( 'checked', true );
-					}
+				if ($( 'body .section-bp_search_settings_community table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_community table td input:checkbox' ).length) {
+					$( '#bp_search_select_all_components' ).prop( 'checked', true );
+				}
 
 					$( '#bp_search_select_all_components' ).click(
 						function () {
@@ -196,40 +196,79 @@
 								$( '#bp_search_select_all_components' ).prop( 'checked', false );
 							}
 
-							if( 'bp_search_topic_tax_topic-tag' === $(this).attr('id') && true === $(this).prop('checked')  && false === $('#bp_search_post_type_topic').prop('checked') ){
+							if ( 'bp_search_topic_tax_topic-tag' === $( this ).attr( 'id' ) && true === $( this ).prop( 'checked' ) && false === $( '#bp_search_post_type_topic' ).prop( 'checked' ) ) {
 								$( '#bp_search_post_type_topic' ).prop( 'checked', true );
 							}
 
-							if( 'bp_search_post_type_topic' === $(this).attr('id') && true !== $(this).prop('checked')  && true === $('#bp_search_topic_tax_topic-tag').prop('checked') ){
+							if ( 'bp_search_post_type_topic' === $( this ).attr( 'id' ) && true !== $( this ).prop( 'checked' ) && true === $( '#bp_search_topic_tax_topic-tag' ).prop( 'checked' ) ) {
 								$( '#bp_search_topic_tax_topic-tag' ).prop( 'checked', false );
 							}
 						}
 					);
-				}
+			}
 
 			if ( $( 'body .section-bp_search_settings_post_types' ).length ) {
 
-					if ($( 'body .section-bp_search_settings_post_types table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_post_types table td input:checkbox' ).length) {
-						$( '#bp_search_select_all_post_types' ).prop( 'checked', true );
-					}
-
-					$( '#bp_search_select_all_post_types' ).click(
-						function () {
-							var table = $( 'body .section-bp_search_settings_post_types table' );
-							$( 'td input:checkbox', table ).prop( 'checked', this.checked );
-						}
-					);
-
-					$( 'body .section-bp_search_settings_post_types table td input:checkbox' ).click(
-						function () {
-							if ($( 'body .section-bp_search_settings_post_types table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_post_types table td input:checkbox' ).length) {
-								$( '#bp_search_select_all_post_types' ).prop( 'checked', true );
-							} else {
-								$( '#bp_search_select_all_post_types' ).prop( 'checked', false );
-							}
-						}
-					);
+				if ($( 'body .section-bp_search_settings_post_types table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_post_types table td input:checkbox' ).length) {
+					$( '#bp_search_select_all_post_types' ).prop( 'checked', true );
 				}
+
+				$( '#bp_search_select_all_post_types' ).click(
+					function () {
+						var table = $( 'body .section-bp_search_settings_post_types table' );
+						$( 'td input:checkbox', table ).prop( 'checked', this.checked );
+					}
+				);
+
+				$( 'body .section-bp_search_settings_post_types table td input:checkbox' ).click(
+					function () {
+						if ($( 'body .section-bp_search_settings_post_types table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_post_types table td input:checkbox' ).length) {
+							$( '#bp_search_select_all_post_types' ).prop( 'checked', true );
+						} else {
+							$( '#bp_search_select_all_post_types' ).prop( 'checked', false );
+						}
+					}
+				);
+			}
+
+			if ( $( 'body .section-bp_document_settings_extensions' ).length ) {
+				if ($( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox:checked' ).length === $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).length) {
+					$( '#bp_select_extensions' ).prop( 'checked', true );
+				}
+
+				$( '#bp_select_extensions' ).click(
+					function () {
+						var table = $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr' );
+						$( 'td input:checkbox', table ).prop( 'checked', this.checked );
+					}
+				);
+
+				$( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).click(
+					function () {
+						if ($( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox:checked' ).length === $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).length) {
+							$( '#bp_select_extensions' ).prop( 'checked', true );
+						} else {
+							$( '#bp_select_extensions' ).prop( 'checked', false );
+						}
+					}
+				);
+
+				$('form').submit(function () {
+					var error = false;
+					$('body .section-bp_document_settings_extensions table tbody tr td table tbody tr.document-extensions td [type="text"]').each(function() {
+						var value = $(this).val();
+						if ( '' === value ) {
+							$( this ).addClass( 'error' );
+							error = true;
+						} else if ( $( this ). hasClass( 'error' ) ) {
+							$( this ).removeClass( 'error' );
+						}
+					});
+					if ( error ) {
+						return false;
+					}
+				});
+			}
 
 			if ( $( '.buddyboss_page_bp-activity' ).length ) {
 					$( document ).on(
@@ -254,7 +293,7 @@
 							}
 						}
 					);
-				}
+			}
 
 			// Set Help selected on Help/Documentation Page.
 			if ( $( 'body.buddyboss_page_bp-help' ).length ) {
@@ -283,7 +322,7 @@
 								$( this ).text( '(' + $( this ).closest( 'li' ).find( 'ul:first li' ).size() + ')' );
 						}
 					);
-				}
+			}
 
 			// As soon as an admin selects the option "Hierarchies - Allow groups to have subgroups" they
 			// should instantly see the option to "Restrict Invitations".
@@ -293,11 +332,11 @@
 
 					var checkbox = document.getElementById( 'bp-enable-group-hierarchies' );
 
-					if (checkbox.checked) {
-						$( '.bp-enable-group-restrict-invites' ).show();
-					} else {
-						$( '.bp-enable-group-restrict-invites' ).hide();
-					}
+				if (checkbox.checked) {
+					$( '.bp-enable-group-restrict-invites' ).show();
+				} else {
+					$( '.bp-enable-group-restrict-invites' ).hide();
+				}
 
 					$( document ).on(
 						'click',
@@ -311,7 +350,7 @@
 							}
 						}
 					);
-				}
+			}
 
 			$( '#bp_media_profile_media_support' ).change(
 				function () {
@@ -382,7 +421,7 @@
 								return false;
 						}
 					);
-				}
+			}
 
 			var doFitVids = function() {
 				setTimeout(
@@ -442,11 +481,11 @@
 							}
 						}
 					);
-				};
+			};
 
 			if ( $( '#bp-media-import-updating' ).length ) {
 					bp_media_import_send_status_requests();
-				}
+			}
 
 			// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
 			if ( $( '.display-options' ).length ) {
@@ -461,19 +500,19 @@
 						}
 					);
 
-					if ( 'first_name' === currentValue ) {
-						$( '.first-name-options' ).show();
-						$( '.nick-name-options' ).hide();
-						$( '.first-last-name-options' ).hide();
-					} else if ( 'first_last_name' === currentValue ) {
-						$( '.first-last-name-options' ).show();
-						$( '.first-name-options' ).hide();
-						$( '.nick-name-options' ).hide();
-					} else {
-						$( '.nick-name-options' ).show();
-						$( '.first-name-options' ).hide();
-						$( '.first-last-name-options' ).hide();
-					}
+				if ( 'first_name' === currentValue ) {
+					$( '.first-name-options' ).show();
+					$( '.nick-name-options' ).hide();
+					$( '.first-last-name-options' ).hide();
+				} else if ( 'first_last_name' === currentValue ) {
+					$( '.first-last-name-options' ).show();
+					$( '.first-name-options' ).hide();
+					$( '.nick-name-options' ).hide();
+				} else {
+					$( '.nick-name-options' ).show();
+					$( '.first-name-options' ).hide();
+					$( '.first-last-name-options' ).hide();
+				}
 
 					$( displayOptions ).change(
 						function () {
@@ -502,48 +541,54 @@
 
 						}
 					);
-				}
+			}
 
 			// For Profile layout options.
-			var profileSelectorType = $('.profile-layout-options');
+			var profileSelectorType = $( '.profile-layout-options' );
 			if ( profileSelectorType.length ) {
 
-				var profileSelectorOptions = $('select[name=bp-profile-layout-format]');
-				var profileView = profileSelectorOptions.val();
+				var profileSelectorOptions = $( 'select[name=bp-profile-layout-format]' );
+				var profileView            = profileSelectorOptions.val();
 
-				$( profileSelectorType ).each(function() {
-					$(this).hide();
-				});
+				$( profileSelectorType ).each(
+					function() {
+						$( this ).hide();
+					}
+				);
 
 				if ( 'list_grid' === profileView ) {
-					$('.profile-default-layout').show();
+					$( '.profile-default-layout' ).show();
 				} else {
-					$('.profile-default-layout').hide();
+					$( '.profile-default-layout' ).hide();
 				}
 
-				$( profileSelectorOptions ).change(function () {
+				$( profileSelectorOptions ).change(
+					function () {
 
-					$( profileSelectorType ).each(function() {
-						$(this).hide();
-					});
+						$( profileSelectorType ).each(
+							function() {
+								$( this ).hide();
+							}
+						);
 
-					profileView = $(this).val();
+						profileView = $( this ).val();
 
-					if ( 'list_grid' === profileView ) {
-						$('.profile-default-layout').show();
-					} else {
-						$('.profile-default-layout').hide();
+						if ( 'list_grid' === profileView ) {
+							$( '.profile-default-layout' ).show();
+						} else {
+							$( '.profile-default-layout' ).hide();
+						}
+
 					}
-
-				});
+				);
 
 				/* jshint ignore:start */
-				var getCookies = function(){
-					var pairs = document.cookie.split(';');
+				var getCookies      = function(){
+					var pairs   = document.cookie.split( ';' );
 					var cookies = {};
-					for (var i=0; i<pairs.length; i++){
-						var pair = pairs[i].split('=');
-						cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
+					for (var i = 0; i < pairs.length; i++) {
+						var pair                       = pairs[i].split( '=' );
+						cookies[(pair[0] + '').trim()] = unescape( pair.slice( 1 ).join( '=' ) );
 					}
 					return cookies;
 				};
@@ -551,59 +596,65 @@
 				if ( getResetCookies.reset_member ) {
 					localStorage.setItem( 'bp-members', '' );
 					localStorage.setItem( 'bp-group_members', '' );
-					setCookie('reset_member','',0); // this will delete the cookie.
+					setCookie( 'reset_member','',0 ); // this will delete the cookie.
 				}
 				/* jshint ignore:end */
 
 			}
 
 			// For Group layout options.
-			var groupSelectorType = $('.group-layout-options');
+			var groupSelectorType = $( '.group-layout-options' );
 			if ( groupSelectorType.length ) {
 
-				var groupSelectorOptions = $('select[name=bp-group-layout-format]');
-				var groupView = groupSelectorOptions.val();
+				var groupSelectorOptions = $( 'select[name=bp-group-layout-format]' );
+				var groupView            = groupSelectorOptions.val();
 
-				$( groupSelectorType ).each(function() {
-					$(this).hide();
-				});
+				$( groupSelectorType ).each(
+					function() {
+						$( this ).hide();
+					}
+				);
 
 				if ( 'list_grid' === groupView ) {
-					$('.group-default-layout').show();
+					$( '.group-default-layout' ).show();
 				} else {
-					$('.group-default-layout').hide();
+					$( '.group-default-layout' ).hide();
 				}
 
-				$( groupSelectorOptions ).change(function () {
+				$( groupSelectorOptions ).change(
+					function () {
 
-					$( groupSelectorType ).each(function() {
-						$(this).hide();
-					});
+						$( groupSelectorType ).each(
+							function() {
+								$( this ).hide();
+							}
+						);
 
-					groupView = $(this).val();
+						groupView = $( this ).val();
 
-					if ( 'list_grid' === groupView ) {
-						$('.group-default-layout').show();
-					} else {
-						$('.group-default-layout').hide();
+						if ( 'list_grid' === groupView ) {
+							$( '.group-default-layout' ).show();
+						} else {
+							$( '.group-default-layout' ).hide();
+						}
+
 					}
-
-				});
+				);
 
 				/* jshint ignore:start */
-				var getGroupCookies = function(){
-					var pairs = document.cookie.split(';');
+				var getGroupCookies      = function(){
+					var pairs   = document.cookie.split( ';' );
 					var cookies = {};
-					for (var i=0; i<pairs.length; i++){
-						var pair = pairs[i].split('=');
-						cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
+					for (var i = 0; i < pairs.length; i++) {
+						var pair                       = pairs[i].split( '=' );
+						cookies[(pair[0] + '').trim()] = unescape( pair.slice( 1 ).join( '=' ) );
 					}
 					return cookies;
 				};
 				var getGroupResetCookies = getGroupCookies();
 				if ( getGroupResetCookies.reset_group ) {
 					localStorage.setItem( 'bp-groups', '' );
-					setCookie('reset_group','',0); // this will delete the cookie.
+					setCookie( 'reset_group','',0 ); // this will delete the cookie.
 				}
 				/* jshint ignore:end */
 
@@ -678,7 +729,7 @@
 							}
 						}
 					);
-				}
+			}
 
 			if ( $( '#bp-tools-forum-submit' ).length ) {
 				var bp_admin_forum_repair_tools_wrapper_function = function( offset, currentAction ) {
@@ -773,46 +824,50 @@
 					$( '.register-text-box' ).show();
 				}
 
-				$( registrationSettings ).change( function () {
-					currentSettings = parseInt( $( this ).val() );
-					if ( 0 === currentSettings ) {
-						$( '.register-text-box' ).hide();
-						$( '.register-email-checkbox' ).show();
-						$( '.register-password-checkbox' ).show();
-						$( '.registration-form-main-select p.description' ).show();
-					} else {
-						$( '.register-email-checkbox' ).hide();
-						$( '.register-password-checkbox' ).hide();
-						$( '.register-text-box' ).show();
-						$( '.registration-form-main-select p.description' ).hide();
-					}
+				$( registrationSettings ).change(
+					function () {
+							currentSettings = parseInt( $( this ).val() );
+						if ( 0 === currentSettings ) {
+							  $( '.register-text-box' ).hide();
+							  $( '.register-email-checkbox' ).show();
+							  $( '.register-password-checkbox' ).show();
+							  $( '.registration-form-main-select p.description' ).show();
+						} else {
+							  $( '.register-email-checkbox' ).hide();
+							  $( '.register-password-checkbox' ).hide();
+							  $( '.register-text-box' ).show();
+							  $( '.registration-form-main-select p.description' ).hide();
+						}
 
-				} );
+					}
+				);
 			}
 
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',
 				function() {
-					var parent 		= $( this ).closest( 'table.extension-listing' );
-					var newOption 	= $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
-					var totalCount  = parseInt( $('.extension-listing tr.default-extension').length );
-					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension"> ' + newOption + ' </tr> ' );
+					var parent     = $( this ).closest( 'table.extension-listing' );
+					var newOption  = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
+					var totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
+					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension document-extensions"> ' + newOption + ' </tr> ' );
 
-					parent.find( 'tbody tr.extra-extension' ).each( function() {
-						$(this).find('input.extension-check').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-						$(this).find('input.extension-name').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-						$(this).find('input.extension-hidden').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-						$(this).find('input.extension-extension').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-						$(this).find('input.extension-mime').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-						$(this).find('input.extension-desc').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-						totalCount = totalCount + 1;
-					});
+					parent.find( 'tbody tr.extra-extension' ).each(
+						function() {
+								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+								totalCount = totalCount + 1;
+						}
+					);
 
-					totalCount = parseInt( $('.extension-listing tr.default-extension').length );
+					totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
 
-					parent.find('.check-mimetype.hidden').show().removeClass('hidden');
-					
+					parent.find( '.check-mimetype.hidden' ).show().removeClass( 'hidden' );
+
 				}
 			);
 
@@ -822,20 +877,22 @@
 				function() {
 
 					var parent = $( this ).closest( 'table.extension-listing' );
-					
+
 					$( this ).closest( 'tr' ).remove();
 
-					var totalCount  = parseInt( $('.extension-listing tr.default-extension').length );
+					var totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
 
-					parent.find( 'tbody tr.extra-extension' ).each( function() {
-						$(this).find('input.extension-check').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
-						$(this).find('input.extension-name').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
-						$(this).find('input.extension-hidden').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
-						$(this).find('input.extension-extension').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
-						$(this).find('input.extension-mime').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
-						$(this).find('input.extension-desc').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
-						totalCount = totalCount + 1;
-					});
+					parent.find( 'tbody tr.extra-extension' ).each(
+						function() {
+								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+								totalCount = totalCount + 1;
+						}
+					);
 
 				}
 			);
@@ -845,22 +902,24 @@
 				'#document-upload-check-mime-type',
 				function(e) {
 					e.preventDefault();
-					var file_data = $('#bp-document-file-input').prop('files')[0];
+					var file_data = $( '#bp-document-file-input' ).prop( 'files' )[0];
 					var form_data = new FormData();
-					form_data.append('file', file_data);
-					form_data.append('action', 'bp_document_check_file_mime_type');
-					$.ajax({
-						url: BP_ADMIN.ajax_url, // point to server-side PHP script
-						cache: false,
-						contentType: false,
-						processData: false,
-						data: form_data,
-						type: 'post',
-						success: function( response ){
-							$( '.show-document-mime-type' ).show();
-							$( '.show-document-mime-type input.type' ).val( response.data.type );
+					form_data.append( 'file', file_data );
+					form_data.append( 'action', 'bp_document_check_file_mime_type' );
+					$.ajax(
+						{
+							url: BP_ADMIN.ajax_url, // point to server-side PHP script
+							cache: false,
+							contentType: false,
+							processData: false,
+							data: form_data,
+							type: 'post',
+							success: function( response ){
+								$( '.show-document-mime-type' ).show();
+								$( '.show-document-mime-type input.type' ).val( response.data.type );
+							}
 						}
-					});
+					);
 				}
 			);
 
@@ -869,21 +928,23 @@
 				'.show-document-mime-type .mime-copy',
 				function(e) {
 					e.preventDefault();
-					if( $(this).hasClass('copying') ){
+					if ( $( this ).hasClass( 'copying' ) ) {
 						return;
 					}
-					$(this).siblings('.type').select();
-					document.execCommand('copy');
-					$(this).parent().append('<span class="mimeCopied">Copied</span>');
-					$('.mimeCopied').fadeOut(1000);
-					$(this).addClass('copying');
-					setTimeout( function() {
-						$('.mimeCopied').remove();
-						$('.mime-copy.copying').removeClass('copying');
-					},1000 );
+					$( this ).siblings( '.type' ).select();
+					document.execCommand( 'copy' );
+					$( this ).parent().append( '<span class="mimeCopied">Copied</span>' );
+					$( '.mimeCopied' ).fadeOut( 1000 );
+					$( this ).addClass( 'copying' );
+					setTimeout(
+						function() {
+								$( '.mimeCopied' ).remove();
+								$( '.mime-copy.copying' ).removeClass( 'copying' );
+						},
+						1000
+					);
 				}
 			);
-
 
 		}
 	);
@@ -891,8 +952,8 @@
 	/* jshint ignore:start */
 	function setCookie(cname, cvalue, exMins) {
 		var d = new Date();
-		d.setTime(d.getTime() + (exMins*60*1000));
-		var expires = 'expires='+d.toUTCString();
+		d.setTime( d.getTime() + (exMins * 60 * 1000) );
+		var expires     = 'expires=' + d.toUTCString();
 		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 	}
 	/* jshint ignore:end */

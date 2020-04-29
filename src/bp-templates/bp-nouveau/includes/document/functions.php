@@ -40,7 +40,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$extensions     = array();
 	$all_extensions = bp_document_extensions_list();
 	foreach ( $all_extensions as $extension ) {
-		if ( true === (bool) $extension['is_active'] ) {
+		if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
 			$extensions[] = $extension['extension'];
 		}
 	}
