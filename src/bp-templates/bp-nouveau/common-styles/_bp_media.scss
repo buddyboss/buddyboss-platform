@@ -1691,11 +1691,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	@media screen and (min-width: 768px) {
 
 		.bb-media-section {
-			padding-right: 40px;
-
-			h3 {
-				right: 40px;
-			}
+			border-right: 1px solid #ecedee;
 		}
 	}
 
