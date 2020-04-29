@@ -4,6 +4,28 @@
 
 	$( document ).ready( function() {
 
+		$('.meeting-item-container').on( 'click', '.load-more a', function(e){
+			var _this = $(this);
+			e.preventDefault();
+
+			if ( _this.hasClass('loading') ) {
+				return false;
+			}
+
+			_this.addClass('loading');
+
+			$.ajax({
+				type: 'GET',
+				url: bp_group_zoom_meeting_vars.ajax_url,
+				data: { action: 'zoom_meeting_load_more', 'acpage' : bpZoomGetLinkParams($(this).prop( 'href' ), 'acpage') },
+				success: function ( response ) {
+					if ( typeof response.data !== 'undefined' && response.data.contents ) {
+						_this.closest('.load-more').replaceWith(response.data.contents);
+					}
+				}
+			});
+		});
+
 		$('#bp-zoom-meeting-start-date').datetimepicker({
 			format:'Y-m-d H:i:s',
 			minDateTime:0,
@@ -149,6 +171,36 @@
 			}
 			document.body.removeChild(textArea);
 		});
+
+		/**
+		 * [getLinkParams description]
+		 * @param  {[type]} url   [description]
+		 * @param  {[type]} param [description]
+		 * @return {[type]}       [description]
+		 */
+		function bpZoomGetLinkParams( url, param ) {
+			var qs;
+			if (url) {
+				qs = (-1 !== url.indexOf('?')) ? '?' + url.split('?')[1] : '';
+			} else {
+				qs = document.location.search;
+			}
+
+			if (!qs) {
+				return null;
+			}
+
+			var params = qs.replace(/(^\?)/, '').split('&').map(function (n) {
+				return n = n.split('='), this[n[0]] = n[1], this;
+			}.bind({}))[0];
+
+			if (param) {
+				return params[param];
+			}
+
+			return params;
+		}
+
 	} );
 
 } )( jQuery );

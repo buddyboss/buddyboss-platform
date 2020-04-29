@@ -54,6 +54,7 @@ if ( bp_is_active( 'groups' ) ) {
 			add_action( 'wp_ajax_zoom_meeting_add', array( $this, 'zoom_meeting_add' ) );
 			add_action( 'wp_ajax_zoom_meeting_delete', array( $this, 'zoom_meeting_delete' ) );
 			add_action( 'wp_ajax_zoom_meeting_recordings', array( $this, 'zoom_meeting_recordings' ) );
+			add_action( 'wp_ajax_zoom_meeting_load_more', array( $this, 'zoom_meeting_load_more' ) );
 
 			// Adds a zoom metabox to the new BuddyBoss Group Admin UI
 			add_action( 'bp_groups_admin_meta_boxes', array( $this, 'group_admin_ui_edit_screen' ) );
@@ -282,7 +283,7 @@ if ( bp_is_active( 'groups' ) ) {
 								</div>
 							</div>
 						</div>
-							
+
 					<?php
 					$count++;
 				}
@@ -403,6 +404,27 @@ if ( bp_is_active( 'groups' ) ) {
 			}
 
 			wp_send_json_success( array( 'deleted' => $meeting_deleted ) );
+		}
+
+		public function zoom_meeting_load_more() {
+			ob_start();
+			if ( bp_has_zoom_meetings() ) {
+				while ( bp_zoom_meeting() ) {
+					bp_the_zoom_meeting();
+
+					bp_get_template_part( 'groups/single/zoom/loop-meeting' );
+				}
+				if ( bp_zoom_meeting_has_more_items() ) {
+					?>
+					<div class="load-more">
+						<a class="button full outline"
+						   href="<?php bp_zoom_meeting_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					</div>
+					<?php
+				}
+			}
+			$response = ob_get_clean();
+			wp_send_json_success( array( 'contents' => $response ) );
 		}
 
 		/**
