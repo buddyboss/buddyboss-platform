@@ -472,9 +472,13 @@ function bp_zoom_add_zoom_user_profile_field( $user ) {
 				<label for="bp_zoom_user">
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 						<input name="bp_zoom_user" type="checkbox" id="bp_zoom_user" value="1" <?php checked( '1', $bp_zoom_user ); ?> />
-						<?php _e( 'Add to Zoom Conference.', 'buddyboss' ); ?>
+						<?php if ( 'active' === $bp_zoom_user_status ) {
+							_e( 'Added to Zoom Conference.', 'buddyboss' );
+						} else {
+							_e( 'Add to Zoom Conference.', 'buddyboss' );
+						} ?>
 					<?php endif; ?>
-					<?php if ( ! empty( $bp_zoom_user_status ) ) { echo '[' . $bp_zoom_user_status . ']'; } ?>
+					<?php if ( ! empty( $bp_zoom_user_status ) ) { echo __( 'Status:' ) . ' ' . $bp_zoom_user_status; } ?>
 				</label>
 			</td>
 		</tr>
