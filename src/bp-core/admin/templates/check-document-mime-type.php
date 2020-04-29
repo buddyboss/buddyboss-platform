@@ -38,8 +38,8 @@ defined( 'ABSPATH' ) || exit;
 
 		<div style="display: none;" class="show-document-mime-type">
 			<span class="info"><?php esc_html_e( 'Your Uploaded Document MimeType is: ', 'buddyboss' ); ?></span>
-			<input type="text" class="type" value="" />
-			<label for="mime-copy" class="screen-reader-text">Copy Mine type </label>
+			<label for="mime-type" class="screen-reader-text">Mine type</label>
+			<input type="text" class="type" id="mime-type" value="" />
 			<button class="mime-copy" id="mime-copy">Copy to Clipboard</button>
 		</div>
 	</div>
