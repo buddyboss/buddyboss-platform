@@ -49,7 +49,7 @@
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' )  && bp_is_forums_media_support_enabled() ) : ?>
-		<div class="post-elements-buttons-item post-media">
+		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
 				<i class="bb-icon bb-icon-camera-small"></i>
 			</a>
@@ -59,7 +59,7 @@
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_document_support_enabled() ) : ?>
 
-		<div class="post-elements-buttons-item post-media">
+		<div class="post-elements-buttons-item post-media document-support">
 			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a document', 'buddyboss' ); ?>">
 				<i class="bb-icon bb-icon-attach"></i>
 			</a>

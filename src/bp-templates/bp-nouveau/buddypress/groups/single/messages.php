@@ -120,14 +120,14 @@ $group_members = groups_get_group_members( $args );
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) : ?>
-								<div class="post-elements-buttons-item post-media">
+								<div class="post-elements-buttons-item post-media media-support">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
 										<span class="bb-icon bb-icon-camera-small"></span>
 									</a>
 								</div>
 							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) : ?>
-                                <div class="post-elements-buttons-item post-media">
+                                <div class="post-elements-buttons-item post-media document-support">
                                     <a href="#" id="bp-group-messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a document', 'buddyboss' ); ?>">
                                         <span class="bb-icon bb-icon-attach"></span>
                                     </a>

@@ -8,14 +8,14 @@
 	</div>
 	<?php endif; ?>
 	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ): ?>
-		<div class="post-elements-buttons-item post-media">
+		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Attach a photo', 'buddyboss'); ?>">
 				<i class="bb-icon bb-icon-camera-small"></i>
 			</a>
 		</div>
 	<?php endif; ?>
 	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ): ?>
-		<div class="post-elements-buttons-item post-media">
+		<div class="post-elements-buttons-item post-media document-support">
 			<a href="#" id="activity-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Attach a document', 'buddyboss'); ?>">
 				<i class="bb-icon bb-icon-attach"></i>
 			</a>

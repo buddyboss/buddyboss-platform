@@ -45,14 +45,17 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		}
 	}
 
-	// initialize media vars because it is used globally.
-	$params['media'] = array(
-		'max_upload_size' => bp_document_file_upload_max_size( false, 'MB' ),
-		'profile_media'   => bp_is_profile_document_support_enabled(),
-		'group_media'     => bp_is_group_document_support_enabled(),
-		'messages_media'  => bp_is_messages_media_support_enabled(),
-		'document_type'   => implode( ',', $extensions ),
+	$document_params = array(
+		'max_upload_size_document' => bp_document_file_upload_max_size( false, 'MB' ),
+		'profile_document'         => bp_is_profile_document_support_enabled(),
+		'group_document'           => bp_is_group_document_support_enabled(),
+		'messages_document'        => bp_is_messages_document_support_enabled(),
+		'document_type'            => implode( ',', $extensions ),
 	);
+
+	$old_media = $params['media'];
+
+	$params['media'] = array_merge( $old_media, $document_params );
 
 	if ( bp_is_single_folder() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
@@ -62,42 +65,16 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 1 );
 	}
 
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-		$params['media']['group_id'] = bp_get_current_group_id();
-	}
 
-	$params['media']['emoji']            = array(
-		'profile'  => bp_is_profiles_emoji_support_enabled(),
-		'groups'   => bp_is_groups_emoji_support_enabled(),
-		'messages' => bp_is_messages_emoji_support_enabled(),
-		'forums'   => bp_is_forums_emoji_support_enabled(),
-		'document' => bp_is_forums_document_support_enabled(),
-	);
-	$params['media']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
-
-	$params['media']['gif']         = array(
-		'profile'  => bp_is_profiles_gif_support_enabled(),
-		'groups'   => bp_is_groups_gif_support_enabled(),
-		'messages' => bp_is_messages_gif_support_enabled(),
-		'forums'   => bp_is_forums_gif_support_enabled(),
-		'document' => bp_is_forums_document_support_enabled(),
-	);
-	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
-
-	$params['media']['i18n_strings'] = array(
-		'select'                => __( 'Select', 'buddyboss' ),
-		'unselect'              => __( 'Unselect', 'buddyboss' ),
-		'selectall'             => __( 'Select All', 'buddyboss' ),
-		'unselectall'           => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'       => __( 'Sorry, no photos were found', 'buddyboss' ),
-		'upload'                => __( 'Upload', 'buddyboss' ),
-		'uploading'             => __( 'Uploading', 'buddyboss' ),
-		'upload_status'         => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
-		'album_delete_confirm'  => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
+	$document_i18n_strings = array(
 		'folder_delete_confirm' => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted.', 'buddyboss' ),
-		'album_delete_error'    => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'folder_delete_error'   => __( 'There was a problem deleting the folder.', 'buddyboss' ),
+		'folder_move_error'     => __( 'Please select destination folder.', 'buddyboss' ),
 	);
+
+	$old_i18n_strings = $params['media']['i18n_strings'];
+
+	$params['media']['i18n_strings'] = array_merge( $old_i18n_strings, $document_i18n_strings );
 
 	return $params;
 }

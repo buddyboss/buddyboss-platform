@@ -81,7 +81,7 @@ class BP_Nouveau_Document {
 	protected function setup_filters() {
 
 		// Localize Scripts.
-		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_document_localize_scripts', 10, 1 );
+		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_document_localize_scripts', 11, 1 );
 	}
 }
 

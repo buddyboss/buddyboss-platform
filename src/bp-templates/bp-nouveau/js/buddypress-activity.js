@@ -1360,9 +1360,16 @@ window.bp = window.bp || {};
 
 					// check media is enable in groups or not
 					if (BP_Nouveau.media.group_media === false) {
-						form.find('.ac-reply-toolbar .post-media').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+						form.find('.ac-reply-toolbar .post-media.media-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-media').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+						form.find('.ac-reply-toolbar .post-media.media-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+					}
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.group_document === false) {
+						form.find('.ac-reply-toolbar .post-media.document-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+					} else {
+						form.find('.ac-reply-toolbar .post-media.document-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
 					}
 
 					// check gif is enable in groups or not
@@ -1382,9 +1389,16 @@ window.bp = window.bp || {};
 
 					// check media is enable in groups or not
 					if (BP_Nouveau.media.profile_media === false) {
-						form.find('.ac-reply-toolbar .post-media').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+						form.find('.ac-reply-toolbar .post-media.media-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
 					} else {
-						form.find('.ac-reply-toolbar .post-media').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+						form.find('.ac-reply-toolbar .post-media.media-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
+					}
+
+					// check document is enable in groups or not
+					if (BP_Nouveau.media.profile_document === false) {
+						form.find('.ac-reply-toolbar .post-media.document-support').hide().parent('.ac-reply-toolbar').addClass('post-media-disabled');
+					} else {
+						form.find('.ac-reply-toolbar .post-media.document-support').show().parent('.ac-reply-toolbar').removeClass('post-media-disabled');
 					}
 
 					// check gif is enable in groups or not

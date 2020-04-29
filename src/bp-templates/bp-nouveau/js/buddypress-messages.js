@@ -821,6 +821,7 @@ window.bp = window.bp || {};
 					response.data.uuid 		 = file.upload.uuid;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					response.data.saved 	 = false;
+					response.data.privacy 	 = 'message';
 					self.document.push( response.data );
 					self.model.set( 'document', self.document );
 				}
@@ -1113,8 +1114,8 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			this.closeMediaSelector();
 			this.closeGifSelector();
-			var event = new Event('messages_document_toggle');
-			document.dispatchEvent(event);
+			var documentEvent = new Event('messages_document_toggle');
+			document.dispatchEvent(documentEvent);
 			$(e.currentTarget).toggleClass('active');
 		},
 
@@ -1125,8 +1126,8 @@ window.bp = window.bp || {};
 		},
 
 		closeDocumentSelector: function() {
-			var event = new Event('messages_document_close');
-			document.dispatchEvent(event);
+			var documentCloseEvent = new Event('messages_document_close');
+			document.dispatchEvent(documentCloseEvent);
 			$('#messages-document-button').removeClass('active');
 		},
 
@@ -1197,7 +1198,9 @@ window.bp = window.bp || {};
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media ) {
 				this.messagesMedia = new bp.Views.MessagesMedia({model: this.model});
 				this.views.add(this.messagesMedia);
+			}
 
+			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_document ) {
 				this.messagesDocument = new bp.Views.MessagesDocument({model: this.model});
 				this.views.add(this.messagesDocument);
 			}

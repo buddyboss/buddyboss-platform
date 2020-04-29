@@ -1305,11 +1305,20 @@ window.bp = window.bp || {};
 
 					// check media is enable in groups or not
 					if (BP_Nouveau.media.group_media === false) {
-						$('#whats-new-toolbar .post-media').hide();
+						$('#whats-new-toolbar .post-media.media-support').hide();
 						var mediaCloseEvent = new Event('activity_media_close');
 						document.dispatchEvent(mediaCloseEvent);
 					} else {
-						$('#whats-new-toolbar .post-media').show();
+						$('#whats-new-toolbar .post-media.media-suppot').show();
+					}
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.group_document === false) {
+						$('#whats-new-toolbar .post-media.document-support').hide();
+						var documentCloseEvent = new Event('activity_document_close');
+						document.dispatchEvent(documentCloseEvent);
+					} else {
+						$('#whats-new-toolbar .post-media.document-support').show();
 					}
 
 					// check gif is enable in groups or not
@@ -1332,11 +1341,20 @@ window.bp = window.bp || {};
 
 					// check media is enable in profile or not
 					if (BP_Nouveau.media.profile_media === false) {
-						$('#whats-new-toolbar .post-media').hide();
+						$('#whats-new-toolbar .post-media.media-support').hide();
 						var event = new Event('activity_media_close');
 						document.dispatchEvent(event);
 					} else {
-						$('#whats-new-toolbar .post-media').show();
+						$('#whats-new-toolbar .post-media.media-support').show();
+					}
+
+					// check media is enable in profile or not
+					if (BP_Nouveau.media.profile_document === false) {
+						$('#whats-new-toolbar .post-media.document-support').hide();
+						var documentEvent = new Event('activity_document_close');
+						document.dispatchEvent(documentEvent);
+					} else {
+						$('#whats-new-toolbar .post-media.document-support').show();
 					}
 
 					// check gif is enable in profile or not
