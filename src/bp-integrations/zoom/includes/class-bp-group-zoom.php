@@ -266,11 +266,11 @@ if ( bp_is_active( 'groups' ) ) {
 						<div class="recording-list-row-wrap">
 							<div class="recording-list-row">
 								<div class="recording-list-row-col">
-									<p class="clip_title">Recording <?php echo $count; ?></p>
+									<p class="clip_title"><?php _e( 'Recording', 'buddyboss' ); ?> <?php echo $count; ?></p>
 								</div>
 								<div class="recording-list-row-col">
 									<div class="video_link">
-										<a class="play_btn" href="<?php echo $recording_file->play_url; ?>" target="_blank">Play</a>
+										<a class="play_btn" href="<?php echo esc_url( $recording_file->play_url ); ?>" target="_blank"><?php _e( 'Play', 'buddyboss' ); ?></a>
 									</div>
 								</div>
 								<div class="recording-list-row-col">
@@ -279,11 +279,10 @@ if ( bp_is_active( 'groups' ) ) {
 									</div>
 								</div>
 								<div class="recording-list-row-col">
-									<a href="<?php echo $recording_file->download_url; ?>" target="_blank" class="btn btn-default downloadmeeting downloadclip ipad-hide" data-id="99UqH4qv6WxJG53NtmGOA699LoHmeaa8hiRI_vEOyJ7k3zX7P1bbDFxoF3a9cFc">Download</a>
+									<a href="<?php echo esc_url( $recording_file->download_url ); ?>" target="_blank" class="btn btn-default downloadmeeting downloadclip"><?php _e( 'Download', 'buddyboss' ); ?></a>
 								</div>
 							</div>
 						</div>
-
 					<?php
 					$count++;
 				}
