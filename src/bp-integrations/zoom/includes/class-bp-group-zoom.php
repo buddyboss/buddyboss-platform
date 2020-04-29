@@ -275,7 +275,7 @@ if ( bp_is_active( 'groups' ) ) {
 								</div>
 								<div class="recording-list-row-col">
 									<div class="video_link">
-										<span class="clip_description"><?php echo bp_core_format_size_units( $recording_file->file_size, 'MB' ); ?></span>
+										<span class="clip_description"><?php echo bp_core_format_size_units( $recording_file->file_size, true ); ?></span>
 									</div>
 								</div>
 								<div class="recording-list-row-col">
