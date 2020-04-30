@@ -330,13 +330,16 @@ class BP_Embed extends WP_Embed {
 		// add lazy loads for iframes to load on front end.
 		if ( $is_activity && ! empty( $content ) ) {
 
-			$content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
+			$old_content = $content;
+			$content     = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
 
-			// add the lazy class to the iframe element
-			if ( preg_match( '/class=["\']/i', $content ) ) {
-				$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
-			} else {
-				$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
+			// add the lazy class to the iframe element.
+			if ( $content !== $old_content ) {
+				if ( preg_match( '/class=["\']/i', $content ) ) {
+					$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
+				} else {
+					$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
+				}
 			}
 		}
 
