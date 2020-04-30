@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.3 =
+* Text Editor - Fixed content formatting reset issues when switching edit buttons
 
 = 1.3.2 =
 * Text Editor - New text formatting interface in Messages, Activity, Forums
