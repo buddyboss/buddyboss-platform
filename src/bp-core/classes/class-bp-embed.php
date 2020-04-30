@@ -273,27 +273,21 @@ class BP_Embed extends WP_Embed {
 			if ( '0' === $link_embed ) {
 				return $content;
 			} else if ( ! empty( $link_embed ) ) {
-				$cache_key = 'bp_activity_oembed_' . md5( serialize( $link_embed ) );
-				$embed_data = get_transient( $cache_key );
+				$embed_data = bp_core_parse_url( $link_embed );
 
-				if ( empty( $embed_data ) ) {
+				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+					$embed_code = $embed_data['description'];
+				} else {
 					$embed_code = wp_oembed_get( $link_embed );
-
-					if ( false !== $embed_code ) {
-
-						$embed_data['title']       = ' ';
-						$embed_data['description'] = $embed_code;
-						$embed_data['images']      = '';
-						$embed_data['error']       = '';
-						$embed_data['wp_embed']    = true;
-
-						// set the transient.
-						set_transient( $cache_key, $embed_data, DAY_IN_SECONDS );
-					}
 				}
 
-				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) && false !== strpos( '<iframe', $embed_data['description'] ) ) {
-					$content .= '<p>' . $embed_data['description'] . '</p>';
+				if ( ! empty( $embed_code ) ) {
+					// find matches for only urls in the content.
+					preg_match_all( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', $content, $match );
+
+					if ( empty( $match[0] ) ) {
+						$content .= $embed_code;
+					}
 				}
 			} else {
 
