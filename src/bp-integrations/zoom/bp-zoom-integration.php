@@ -47,6 +47,7 @@ class BP_Zoom_Integration extends BP_Integration {
 				'includes/class-bp-zoom-meeting-template.php',
 				'includes/class-bp-zoom-meeting.php',
 				'includes/class-bp-group-zoom.php',
+				'includes/class-bp-zoom-ajax.php',
 			)
 		);
 	}
