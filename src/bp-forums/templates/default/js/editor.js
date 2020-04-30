@@ -35,10 +35,6 @@ jQuery( document ).ready(
 					window.forums_medium_forum_editor[key].subscribe(
 						'editableInput',
 						function ( event ) {
-							if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
-								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
-								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
-							}
 							var bbp_forum_content = jQuery(element).closest('form').find( '#bbp_forum_content' );
 							bbp_forum_content.val( window.forums_medium_forum_editor[key].getContent() );
 							var atwho_query = bbp_forum_content.find( 'span.atwho-query' );
@@ -74,11 +70,7 @@ jQuery( document ).ready(
 
 					window.forums_medium_reply_editor[key].subscribe(
 						'editableInput',
-						function ( event ) {
-							if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
-								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
-								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
-							}
+						function () {
 							var bbp_reply_content = jQuery(element).closest('form').find( '#bbp_reply_content' );
 							bbp_reply_content.val( window.forums_medium_reply_editor[key].getContent() );
 							var atwho_query = bbp_reply_content.find( 'span.atwho-query' );
@@ -114,11 +106,7 @@ jQuery( document ).ready(
 
 					window.forums_medium_topic_editor[key].subscribe(
 						'editableInput',
-						function ( event ) {
-							if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
-								var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
-								event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
-							}
+						function () {
 							jQuery(element).closest('form').find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
 							var bbp_topic_content = jQuery(element).closest('form').find( '#bbp_topic_content' );
 							bbp_topic_content.val( window.forums_medium_topic_editor[key].getContent() );

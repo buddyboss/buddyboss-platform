@@ -623,13 +623,6 @@ window.bp = window.bp || {};
 					}
 				});
 
-				bp.Nouveau.Messages.mediumEditor.subscribe('editableInput', function (event) {
-					if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
-						var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
-						event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
-					}
-				});
-
 				if (!_.isUndefined(BP_Nouveau.media) &&
 					!_.isUndefined(BP_Nouveau.media.emoji) &&
 					(
