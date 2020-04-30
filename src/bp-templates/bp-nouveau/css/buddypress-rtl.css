@@ -1146,6 +1146,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active,
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
+  background: none transparent !important;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close,
@@ -1212,6 +1213,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
+  background: none transparent !important;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
@@ -4710,6 +4712,7 @@ input#send-to-input {
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
+  background: none transparent !important;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {
@@ -12598,6 +12601,7 @@ span.icons:before {
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-active {
   color: #122b46 !important;
+  background: none transparent !important;
 }
 
 #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-action-close {

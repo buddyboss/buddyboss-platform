@@ -893,13 +893,6 @@ window.bp = window.bp || {};
 					$('#message_content').focus();
 				}
 
-				window.group_messages_editor.subscribe('editableInput', function (event) {
-					if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
-						var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
-						event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
-					}
-				});
-
 			} else if ( typeof tinymce !== 'undefined' ) {
 				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'whats-new' ); // jshint ignore:line
 			}
