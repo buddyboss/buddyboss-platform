@@ -396,7 +396,7 @@ function bp_has_groups( $args = '' ) {
 	// Exclude Group Types
 	if (
 		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
-		! bp_is_user_groups() &&
+		! bp_is_user_groups() && ! bp_is_group_subgroups() && 
 		( wp_doing_ajax() && empty( $group_type ) )
 	) {
 		// get all excluded group types.
