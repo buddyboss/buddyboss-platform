@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.0
+Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.0
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,35 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.3.3 =
+* Text Editor - Fixed content formatting reset issues when switching edit buttons
+* Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
+* Forums - Fixed URL conflict between 'Subscriptions' tab and plugin 'WooCommerce Subscriptions'
+* Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
+* Groups - Fixed organizer of sub-group unable to send invites if not organizer of parent group
+* Groups - Fixed subgroups not in 'Subgroups' tab if group type is hidden from Groups Directory
+* LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
+
+= 1.3.2 =
+* Text Editor - New text formatting interface in Messages, Activity, Forums
+* Text Editor - New text formatting option for adding a code block
+* Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
+* Activity - Allow for commenting on activity posts from custom post types
+* Activity - Improved formatting of images in activity posts from custom post types
+* Activity - Fixed @mentions moving the cursor position when no results are found
+* Activity - Fixed link embeds from Chinese websites displaying broken text characters
+* Activity - Fixed link embeds not always fetching the best image and description
+* Activity - Fixed group members without access posting into group from sitewide activity
+* Notifications - Fixed notification for rejected group join request not clearing
+* LearnDash - Fixed alignment of Certificate banner for group with single course
+* LearnDash - Code optimization and performance improvements for Grid View ajax
+* Multisite - Fixed duplicate BuddyBoss menus when enabling 'BP_ENABLE_MULTIBLOG'
+* Translations - Added French language files, credits to Jean-Pierre Michaud
+* Translations - Updated German (formal) language files
+
+= 1.3.1 =
+* Compatibility - Updated a file that was causing false alerts from Windows Defender
 
 = 1.3.0 =
 * Messages - New dropdown option to 'Mark unread' in inbox

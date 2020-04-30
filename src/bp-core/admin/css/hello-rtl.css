@@ -55,6 +55,13 @@ TABLE OF CONTENTS:
   font-size: 16px;
 }
 
+.bp-hello-content ul.bp-hello-list {
+  list-style: disc;
+  margin-right: 25px;
+  font-size: 16px;
+  line-height: 1.3;
+}
+
 .bp-hello-content .video-wrapper {
   margin: 0 auto;
   height: calc(100%);

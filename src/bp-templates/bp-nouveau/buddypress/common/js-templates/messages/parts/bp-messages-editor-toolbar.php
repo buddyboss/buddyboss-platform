@@ -1,5 +1,16 @@
 <script type="text/html" id="tmpl-whats-new-messages-toolbar">
-	<?php if ( bp_is_active( 'media' ) ): ?>
+
+<?php if ( !bp_is_active( 'media' ) ): ?>
+<div class="media-off">
+<?php endif; ?>
+
+    <?php if ( bp_is_active( 'media' ) ): ?>
+
+        <div class="post-elements-buttons-item show-toolbar"  data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e('Show formatting', 'buddyboss'); ?>" data-bp-tooltip-hide="<?php _e('Hide formatting', 'buddyboss'); ?>" data-bp-tooltip-show="<?php _e('Show formatting', 'buddyboss'); ?>">
+            <a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+                <span class="dashicons dashicons-editor-textcolor"></span>
+            </a>
+        </div>
 
         <?php if ( bp_is_messages_media_support_enabled() ) : ?>
             <div class="post-elements-buttons-item post-media">
@@ -25,4 +36,9 @@
 		<?php endif; ?>
 
 	<?php endif; ?>
+
+<?php if ( !bp_is_active( 'media' ) ): ?>
+</div>
+<?php endif; ?>
+
 </script>
