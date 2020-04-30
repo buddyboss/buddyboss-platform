@@ -391,6 +391,35 @@ function bp_zoom_api_secret( $default = '' ) {
 	return apply_filters( 'bp_zoom_api_secret', bp_get_option( 'bp-zoom-api-secret', $default ) );
 }
 
+/**
+ * Callback function for api host in zoom integration.
+ *
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_settings_callback_api_host_field() {
+	?>
+	<input name="bp-zoom-api-host"
+		   id="bp-zoom-api-host"
+		   type="text"
+		   value="<?php echo esc_html( bp_zoom_api_host() ); ?>"
+		   placeholder="<?php _e( 'Zoom API Host', 'buddyboss' ); ?>"
+		   aria-label="<?php _e( 'Zoom API Host', 'buddyboss' ); ?>"
+	/>
+	<?php
+}
+
+/**
+ * Get Zoom API Host
+ *
+ * @since BuddyBoss 1.2.10
+ * @param string $default
+ *
+ * @return mixed|void Zoom API Host
+ */
+function bp_zoom_api_host( $default = '' ) {
+	return apply_filters( 'bp_zoom_api_host', bp_get_option( 'bp-zoom-api-host', $default ) );
+}
+
 function bp_zoom_api_check_connection() {
 	$test = bp_zoom_conference()->list_users();
 	$test = ! empty( $test['response'] ) ? $test['response'] : false;

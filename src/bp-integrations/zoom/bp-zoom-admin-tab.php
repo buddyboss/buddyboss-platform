@@ -156,6 +156,13 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'callback' => 'bp_zoom_api_check_connection_button',
 			);
 
+			$fields['bp_zoom_settings_section']['bp-zoom-api-host'] = array(
+				'title'             => __( 'Zoom Host', 'buddyboss' ),
+				'callback'          => 'bp_zoom_settings_callback_api_host_field',
+				'sanitize_callback' => 'string',
+				'args'              => array(),
+			);
+
 			$fields['bp_zoom_users_section'] = array(
 
 				'bp-zoom-users-list' => array(
