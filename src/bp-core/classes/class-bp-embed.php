@@ -279,6 +279,19 @@ class BP_Embed extends WP_Embed {
 					$embed_code = $embed_data['description'];
 				} else {
 					$embed_code = wp_oembed_get( $link_embed );
+
+					if ( ! empty( $embed_code ) ) {
+						$parsed_url_data = array(
+							'title'       => ' ',
+							'description' => $embed_code,
+							'images'      => '',
+							'error'       => '',
+							'wp_embed'    => true,
+						);
+						$cache_key = 'bp_activity_oembed_' . md5( serialize( $link_embed ) );
+						// set the transient.
+						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+					}
 				}
 
 				if ( ! empty( $embed_code ) ) {
