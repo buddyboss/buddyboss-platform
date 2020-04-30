@@ -2144,6 +2144,14 @@ input.search-query-input {
   width: 24px;
 }
 
+.medium-editor-toolbar-actions .medium-editor-action b:before {
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  line-height: 1;
+  display: block;
+  transform: none;
+}
+
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
 }
@@ -5246,6 +5254,13 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   width: 100%;
 }
 
+#message-form-submit-wrapper,
+#message-reply-form-submit-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .bp-messages-content .actions {
   margin-right: auto;
 }
@@ -5293,6 +5308,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 
 .bp-messages-content .actions .message_actions .message_action__list ul {
   margin: 0;
+  padding: 0;
 }
 
 .bp-messages-content .actions .message_actions .message_action__list li {
@@ -5342,6 +5358,31 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li a:before {
+  font-family: bb-icons;
+  font-size: 15px;
+  display: inline-block;
+  margin-left: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.unread a:before {
+  content: "\e8ae";
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.hide_thread a:before {
+  content: "\e8f7";
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_messages a:before {
+  content: "\e938";
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_thread a:before {
+  content: "\e937";
 }
 
 .bp-messages-content .single-thread-title {
@@ -5580,6 +5621,15 @@ input#send-to-input {
   padding: 20px;
 }
 
+.bp-messages-content #bp-message-content .medium-editor-element:not(.emojionearea) {
+  border: 0;
+  min-height: 60px;
+  overflow: auto;
+  max-height: calc(69vh - 128px);
+  margin: 0 -20px;
+  padding: 0 20px;
+}
+
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
@@ -5794,6 +5844,16 @@ input#send-to-input {
 
 .bp-messages-content-wrapper {
   position: relative;
+  display: flex;
+  flex-flow: column;
+  padding: 0 20px;
+  height: calc(69vh + 130px);
+}
+
+.bp-messages-content-wrapper #messages-post-media-uploader.open {
+  height: calc(100% - 145px);
+  right: 0;
+  margin: 0;
 }
 
 .bp-messages-content-wrapper #messages-post-media-uploader.open {

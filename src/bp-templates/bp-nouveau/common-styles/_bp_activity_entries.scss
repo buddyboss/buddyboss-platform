@@ -434,6 +434,13 @@
 		font-family: bb-icons;
 		text-align: center;
 		width: 24px;
+
+		&:before {
+			font-family: "bb-icons";/* stylelint-disable-line */
+			line-height: 1;
+			display: block;
+			transform: none;
+		}
 	}
 
 	.medium-editor-action-bold b:before {

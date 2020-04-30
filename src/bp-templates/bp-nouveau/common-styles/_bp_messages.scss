@@ -186,6 +186,13 @@
 
 // close message-threads
 
+#message-form-submit-wrapper,
+#message-reply-form-submit-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .bp-messages-content {
 
 	.actions {
@@ -236,6 +243,7 @@
 
 				ul {
 					margin: 0;
+					padding: 0;
 				}
 
 				li {
@@ -295,6 +303,34 @@
 		-webkit-box-align: center;
 		-ms-flex-align: center;
 		align-items: center;
+
+		.message_actions .message_action__list {
+
+			li a:before {
+				font-family: bb-icons;
+				font-size: 15px;
+				display: inline-block;
+				margin-right: 10px;
+				width: 20px;
+				text-align: center;
+			}
+
+			li.unread a:before {
+				content: "\e8ae";
+			}
+
+			li.hide_thread a:before {
+				content: "\e8f7";
+			}
+
+			li.delete_messages a:before {
+				content: "\e938";
+			}
+
+			li.delete_thread a:before {
+				content: "\e937";
+			}
+		}
 	}
 
 	.single-thread-title {
@@ -569,6 +605,15 @@ input#send-to-input {
 	margin-top: $marg-lrg;
 	padding: 20px;
 
+	.medium-editor-element:not(.emojionearea) {
+		border: 0;
+		min-height: 60px;
+		overflow: auto;
+		max-height: calc(69vh - 128px);
+		margin: 0 -20px;
+		padding: 0 20px;
+	}
+
 	#whats-new-messages-toolbar {
 		-webkit-box-pack: start;
 		-ms-flex-pack: start;
@@ -787,6 +832,16 @@ input#send-to-input {
 
 .bp-messages-content-wrapper {
 	position: relative;
+	display: flex;
+	flex-flow: column;
+	padding: 0 20px;
+	height: calc(69vh + 130px);
+
+	#messages-post-media-uploader.open {
+		height: calc(100% - 145px);
+		left: 0;
+		margin: 0;
+	}
 
 	#messages-post-media-uploader.open {
 		position: absolute;
