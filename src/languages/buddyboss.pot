@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-30 02:55:59+00:00\n"
+"POT-Creation-Date: 2020-04-30 04:11:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10124,12 +10124,12 @@ msgid "Anonymous"
 msgstr ""
 
 #: bp-forums/replies/template.php:1248 bp-forums/topics/template.php:1527
-#: bp-forums/users/template.php:1732
+#: bp-forums/users/template.php:1718
 msgid "View %s's profile"
 msgstr ""
 
 #: bp-forums/replies/template.php:1248 bp-forums/topics/template.php:1527
-#: bp-forums/users/template.php:1732
+#: bp-forums/users/template.php:1718
 msgid "Visit %s's website"
 msgstr ""
 
@@ -11259,23 +11259,23 @@ msgstr ""
 msgid "- No role for these forums -"
 msgstr ""
 
-#: bp-forums/users/template.php:1524
+#: bp-forums/users/template.php:1510
 msgid "You are now logged out."
 msgstr ""
 
-#: bp-forums/users/template.php:1528
+#: bp-forums/users/template.php:1514
 msgid "New user registration is currently not allowed."
 msgstr ""
 
-#: bp-forums/users/template.php:1537
+#: bp-forums/users/template.php:1523
 msgid "Check your e-mail for the confirmation link."
 msgstr ""
 
-#: bp-forums/users/template.php:1542
+#: bp-forums/users/template.php:1528
 msgid "Check your e-mail for your new password."
 msgstr ""
 
-#: bp-forums/users/template.php:1547
+#: bp-forums/users/template.php:1533
 msgid "Registration complete. Please check your e-mail."
 msgstr ""
 
