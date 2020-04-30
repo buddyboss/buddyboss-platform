@@ -1845,6 +1845,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		.media-folder_action__list {
 			position: absolute;
 			top: 30px;
+			right: 0;
 			background: #fff;
 			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 			border-radius: 4px;
@@ -1860,8 +1861,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				height: 0;
 				top: 0;
 				margin: 0 auto;
-				right: 0;
-				left: -5px;
+				right: 24px;
 				box-sizing: border-box;
 				border: 6px solid #000;
 				border-color: #fff #fff transparent transparent;
@@ -2605,7 +2605,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			background-color: #fff;
 			border: 1px solid #e7e9ec;
 			border-radius: 4px;
-			padding: 0 10px;
+			padding: 10px;
 
 			&.is-loading {
 				display: flex;
