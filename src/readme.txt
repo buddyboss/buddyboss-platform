@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.3 =
 * Text Editor - Fixed content formatting reset issues when switching edit buttons
+* Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
 
 = 1.3.2 =
 * Text Editor - New text formatting interface in Messages, Activity, Forums
