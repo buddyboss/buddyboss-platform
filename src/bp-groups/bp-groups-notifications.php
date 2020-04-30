@@ -1104,6 +1104,10 @@ function bp_groups_screen_my_groups_mark_notifications() {
 }
 add_action( 'groups_screen_my_groups', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 add_action( 'groups_screen_group_home', 'bp_groups_screen_my_groups_mark_notifications', 10 );
+/*
+ * Request membership screen in clear read notification and count.
+ */
+add_action( 'groups_screen_group_request_membership', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 
 /**
  * Mark group invitation notifications read when a member views their invitations.
