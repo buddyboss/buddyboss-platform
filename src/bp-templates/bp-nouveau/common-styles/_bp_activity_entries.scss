@@ -513,7 +513,7 @@
 .activity-url-thumb-nav {
 	background: rgba(0, 0, 0, 0.3);
 	position: absolute;
-	bottom: 20px;
+	top: 0;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -585,6 +585,7 @@
 	right: 5px;
 	top: 5px;
 	text-decoration: none;
+	z-index: 10;
 }
 
 #activity-close-link-suggestion:focus,
