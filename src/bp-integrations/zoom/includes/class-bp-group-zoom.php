@@ -303,9 +303,15 @@ if ( bp_is_active( 'groups' ) ) {
 				return;
 			}
 
+			$user_id = bp_zoom_api_host();
+
+			// check user host.
+			if ( empty( $user_id ) ) {
+				return;
+			}
+
 			$id             		= ! empty( $_POST['bp-zoom-meeting-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-id' ) ) : false;
 			$meeting_id        		= ! empty( $_POST['bp-zoom-meeting-zoom-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id' ) ) : false;
-			$user_id                = ! empty( $_POST['bp-zoom-meeting-host'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-host' ) ) : '';
 			$group_id               = ! empty( $_POST['bp-zoom-meeting-group-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-group-id' ) ) : false;
 			$start_date             = ! empty( $_POST['bp-zoom-meeting-start-date'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-start-date' ) ) : bp_core_current_time();
 			$timezone               = ! empty( $_POST['bp-zoom-meeting-timezone'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-timezone' ) ) : '';

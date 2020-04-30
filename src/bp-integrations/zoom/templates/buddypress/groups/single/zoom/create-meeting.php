@@ -15,15 +15,16 @@
 					<label for="bp-zoom-meeting-title"><?php _e( 'Title', 'buddyboss' ); ?></label>
 					<input type="text" id="bp-zoom-meeting-title" value="<?php _e( 'My Meeting', 'buddyboss' ); ?>" tabindex="1" name="bp-zoom-meeting-title" />
 				</p>
-				<p>
-					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label>
-					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
-						<option><?php _e( 'Select host', 'buddyboss' ); ?></option>
+				<p class="bp-zoom-meeting-alt-host">
+					<label for="bp-zoom-meeting-alt-host-ids"><?php _e( 'Hosts', 'buddyboss' ); ?></label>
+					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="15" multiple>
+						<option><?php _e( 'Select hosts', 'buddyboss' ); ?></option>
 						<?php
 						if ( ! empty( $users['members'] ) ) :
 							foreach ( $users['members'] as $user ):
+								$bp_zoom_user_status = get_user_meta( $user->ID, 'bp_zoom_user_status', true );
 								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
-								if ( ! empty( $bp_zoom_user_id ) ) : ?>
+								if ( 'active' === $bp_zoom_user_status && ! empty( $bp_zoom_user_id ) && $bp_zoom_user_id !== bp_zoom_api_host() ) : ?>
 									<option
 											value="<?php echo $bp_zoom_user_id; ?>"><?php echo bp_core_get_user_displayname( $user->ID ) . ' ( ' . $user->user_email . ' )'; ?></option>
 								<?php endif;
@@ -98,23 +99,6 @@
 						<option value="cloud"><?php _e( 'Cloud', 'buddyboss' ); ?></option>
 					</select><br />
 					<small><?php _e( 'Set what type of auto recording feature you want to add. Default is none.', 'buddyboss' ); ?></small>
-				</p>
-				<p class="bp-zoom-meeting-alt-host">
-					<label for="bp-zoom-meeting-alt-host-ids"><?php _e( 'Alternative Hosts', 'buddyboss' ); ?></label>
-					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="15" multiple>
-						<option><?php _e( 'Select alternative hosts', 'buddyboss' ); ?></option>
-						<?php
-						if ( ! empty( $users['members'] ) ) :
-							foreach ( $users['members'] as $user ):
-								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
-								if ( ! empty( $bp_zoom_user_id ) ) : ?>
-									<option
-											value="<?php echo $bp_zoom_user_id; ?>"><?php echo bp_core_get_user_displayname( $user->ID ) . ' ( ' . $user->user_email . ' )'; ?></option>
-								<?php endif;
-							endforeach;
-						endif;
-						?>
-					</select>
 				</p>
 
 				<div class="bp-zoom-meeting-form-submit-wrapper">
