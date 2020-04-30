@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed URL conflict between 'Subscriptions' tab and plugin 'WooCommerce Subscriptions'
 * Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
 * Groups - Fixed organizer of sub-group unable to send invites if not organizer of parent group
+* Groups - Fixed subgroups not in 'Subgroups' tab if group type is hidden from Groups Directory
 * LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
 
 = 1.3.2 =
