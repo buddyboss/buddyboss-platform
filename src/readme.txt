@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Text Editor - Fixed content formatting reset issues when switching edit buttons
 * Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
 * Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
+* LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
 
 = 1.3.2 =
 * Text Editor - New text formatting interface in Messages, Activity, Forums
