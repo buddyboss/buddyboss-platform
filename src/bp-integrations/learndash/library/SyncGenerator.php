@@ -644,7 +644,9 @@ class SyncGenerator {
 		$syncTo      = $this->getLdSyncToRole( $type );
 
 		if ( $remove ) {
-			bp_messages_remove_user_to_group_message_thread( $this->bpGroupId, $userId );
+			if ( bp_is_active( 'messages' ) ) {
+				bp_messages_remove_user_to_group_message_thread( $this->bpGroupId, $userId );
+			}
 			return $groupMember->remove();
 		}
 
@@ -661,7 +663,9 @@ class SyncGenerator {
 		}
 
 		$groupMember->save();
-		bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
+		if ( bp_is_active( 'messages' ) ) {
+			bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
+		}
 	}
 
 	/**
