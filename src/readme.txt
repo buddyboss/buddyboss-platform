@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.3.3 =
 * Text Editor - Fixed content formatting reset issues when switching edit buttons
 * Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
+* Forums - Fixed URL conflict between 'Subscriptions' tab and plugin 'WooCommerce Subscriptions'
 * Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
 * LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
 
