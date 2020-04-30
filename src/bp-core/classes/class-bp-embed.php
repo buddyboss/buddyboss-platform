@@ -327,20 +327,18 @@ class BP_Embed extends WP_Embed {
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
 
-		//todo: lazy load for iframe is not good enough for all the sites. we need to have proper solution here.
-//		if ( $is_activity && ! empty( $content ) ) {
-//
-//			$content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
-//
-//			// add the lazy class to the img element
-//			if ( preg_match( '/class=["\']/i', $content ) ) {
-//				$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
-//			} else {
-//				$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
-//			}
-//
-//			return apply_filters( 'bp_autoembed', $content );
-//		}
+		// add lazy loads for iframes to load on front end.
+		if ( $is_activity && ! empty( $content ) ) {
+
+			$content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
+
+			// add the lazy class to the iframe element
+			if ( preg_match( '/class=["\']/i', $content ) ) {
+				$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
+			} else {
+				$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
+			}
+		}
 
 		// Put the line breaks back.
 		return apply_filters( 'bp_autoembed', $content );
