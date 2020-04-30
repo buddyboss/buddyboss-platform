@@ -990,7 +990,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		// Fetch all the group members.
 		$args = array(
 			'per_page'            => 9999999999999999999,
-			'group'               => $_POST['group'],
+			'group_id'            => trim( $_POST['group'] ),
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
