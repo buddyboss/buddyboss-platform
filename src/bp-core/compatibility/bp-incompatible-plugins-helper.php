@@ -427,3 +427,4 @@ function bp_settings_remove_wc_lostpassword_url() {
 	}
 }
 add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
+add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
