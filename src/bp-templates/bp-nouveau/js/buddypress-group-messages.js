@@ -627,10 +627,6 @@ window.bp = window.bp || {};
 				window.group_messages_editor.subscribe(
 					'editableInput',
 					function () {
-						if( 'insertUnorderedList' == event.inputType || 'insertOrderedList' == event.inputType ) {
-							var regex = /<p>|<pre>|<blockquote>|<\/p>|<\/pre>|<\/blockquote>/gi;
-							event.srcElement.innerHTML = event.srcElement.innerHTML.replace(regex,'');
-						}
 						$( '#group_message_content_hidden' ).val( window.group_messages_editor.getContent() );
 					}
 				);
