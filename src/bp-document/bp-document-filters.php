@@ -18,6 +18,7 @@ add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_docum
 add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
+add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_privacy', 2 );
 
 // Forums
 add_action( 'bbp_template_after_single_topic', 'bp_document_add_theatre_template' );
@@ -165,8 +166,8 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	}
 
 	$_POST['documents']          = $_POST['document'];
-	$_POST['medias']             = $_POST['document'];
 	$_POST['bp_activity_update'] = true;
+	$_POST['bp_activity_id']     = $activity_id;
 
 	remove_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	remove_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -542,8 +543,16 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 
 function bp_document_download_url_file() {
 
-	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+		$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+        if ( $can_download_btn ) {
+	        bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+        } else {
+            wp_safe_redirect( site_url() );
+        }
+
 	}
 }
 
@@ -565,5 +574,26 @@ function bp_document_sync_document_data( $attachment_id ) {
 
 		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, $document_post->post_excerpt, $document_post->post_content, true );
 
+	}
+}
+
+/**
+ * Update media privacy when activity is updated.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param BP_Activity_Activity $activity Activity object.
+ */
+function bp_document_activity_update_document_privacy( $activity ) {
+	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+	if ( ! empty( $document_ids ) ) {
+		$document_ids = explode( ',', $document_ids );
+
+		foreach( $document_ids as $document_id ) {
+			$document          = new BP_Document( $document_id );
+			$document->privacy = $activity->privacy;
+			$document->save();
+		}
 	}
 }

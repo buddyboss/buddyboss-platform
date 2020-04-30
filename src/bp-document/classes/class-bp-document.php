@@ -1885,7 +1885,7 @@ class BP_Document {
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
-					if ( 'activity_comment' == $activity->type ) {
+					if ( 'activity_comment' === $activity->type ) {
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );

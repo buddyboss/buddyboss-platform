@@ -15,7 +15,7 @@ $svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = size_format( filesize( get_attached_file( $attachment_id ) ) );
-$download_url      = bp_document_download_link( $attachment_id );
+$download_url      = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $document_privacy  = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
 $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;

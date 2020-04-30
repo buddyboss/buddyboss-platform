@@ -3861,7 +3861,7 @@ window.bp = window.bp || {};
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: {
-						action: 'media_get_activity',
+						action: 'document_get_activity',
 						id: activity_id,
 						nonce: BP_Nouveau.nonces.media
 					},

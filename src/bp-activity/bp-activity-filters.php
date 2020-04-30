@@ -1301,17 +1301,6 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			if ( ! empty( $album_id ) ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $album_id );
 			}
-
-			if ( 'document_document_save' === $_POST['action'] ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
-			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['document'] ) ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
-			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['media'] ) ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
-			} else {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
-			}
-
 			if ( empty( $group_id ) ) {
 				$main_activity = new BP_Activity_Activity( $activity_id );
 				if ( ! empty( $main_activity ) ) {
@@ -1372,7 +1361,7 @@ function bp_activity_document_add( $document ) {
 
 	if ( ! empty( $document ) ) {
 
-		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
+		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'document' ) );
 
 		if ( $activity_id ) {
 
@@ -1448,24 +1437,14 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				}
 
 				//save parent activity id in attachment meta
-				update_post_meta( $document->attachment_id, 'bp_media_parent_activity_id', $activity_id );
+				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $activity_id );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $added_document_ids ) );
 
 			// if media is from album then save album id in activity media
 			if ( ! empty( $folder_id ) ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $folder_id );
-			}
-
-			if ( 'document_document_save' === $_POST['action'] ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
-			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['document'] ) ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
-			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['media'] ) ) {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
-			} else {
-				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
+				bp_activity_update_meta( $activity_id, 'bp_document_folder_activity', $folder_id );
 			}
 
 			if ( empty( $group_id ) ) {

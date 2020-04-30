@@ -85,6 +85,12 @@ add_action(
 					'nopriv'   => true,
 				)
 			),
+			array(
+				'document_get_activity' => array(
+					'function' => 'bp_nouveau_ajax_document_get_activity',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -569,7 +575,7 @@ function bp_nouveau_ajax_media_folder_delete() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_ajax_media_get_activity() {
+function bp_nouveau_ajax_document_get_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -583,7 +589,7 @@ function bp_nouveau_ajax_media_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+	remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 
 	$post_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 
@@ -592,6 +598,7 @@ function bp_nouveau_ajax_media_get_activity() {
 		array(
 			'include'     => $post_id,
 			'show_hidden' => true,
+			'privacy'     => array( 'document' )
 		)
 	) ) {
 		while ( bp_activities() ) {
@@ -602,7 +609,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
-	add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+	add_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 
 	wp_send_json_success(
 		array(
@@ -616,7 +623,7 @@ function bp_nouveau_ajax_media_get_activity() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_ajax_media_delete_attachment() {
+function bp_nouveau_ajax_document_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -1254,14 +1261,18 @@ function bp_nouveau_ajax_document_delete() {
 	}
 
 	if ( 'folder' === $type ) {
-		bp_folder_delete( array( 'id' => $id ) );
+		if ( bp_folder_user_can_delete( $id ) ) {
+			bp_folder_delete( array( 'id' => $id ) );
+		}
 	} else {
-		bp_document_delete(
-			array(
-				'id'            => $id,
-				'attachment_id' => $attachment_id,
-			)
-		);
+	    if ( bp_document_user_can_delete( $id ) ) {
+		    bp_document_delete(
+			    array(
+				    'id'            => $id,
+				    'attachment_id' => $attachment_id,
+			    )
+		    );
+	    }
 	}
 
 	$content = '';

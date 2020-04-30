@@ -357,8 +357,8 @@ function bp_document_add( $args = '' ) {
 function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 	$document_ids = array();
 
-	if ( empty( $documents ) && ! empty( $_POST['medias'] ) ) {
-		$documents = $_POST['medias'];
+	if ( empty( $documents ) && ! empty( $_POST['document'] ) ) {
+		$documents = $_POST['document'];
 	}
 
 	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_document_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
@@ -1251,7 +1251,7 @@ function bp_document_allowed_mimes( $existing_mimes = array() ) {
 		$existing_mimes = array();
 		$all_extensions = bp_document_extensions_list();
 		foreach ( $all_extensions as $extension ) {
-			if ( true === (bool) $extension['is_active'] ) {
+			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
 				$extension_name                    = ltrim( $extension['extension'], '.' );
 				$existing_mimes["$extension_name"] = $extension['mime_type'];
 			}
@@ -1714,13 +1714,13 @@ function bp_document_move_folder( $folder_id, $destination_folder_id ) {
 
 }
 
-function bp_document_download_link( $attachment_id ) {
+function bp_document_download_link( $attachment_id, $document_id ) {
 
 	if ( empty( $attachment_id ) ) {
 		return;
 	}
 
-	$link = get_the_permalink( $attachment_id ) . '?attachment_id=' . $attachment_id . '&download_document_file=1';
+	$link = get_the_permalink( $attachment_id ) . '?attachment_id=' . $attachment_id . '&download_document_file=1' . '&document_file=' . $document_id;
 
 	return apply_filters( 'bp_document_download_link', $link, $attachment_id );
 
