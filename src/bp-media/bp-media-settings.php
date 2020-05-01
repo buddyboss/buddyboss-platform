@@ -1005,7 +1005,7 @@ function bp_media_settings_callback_profile_document_support() {
 /**
  * Checks if media forums document support is enabled.
  *
- * @param $default integer
+ * @param $default false.
  *
  * @return bool Is media forums document support enabled or not
  * @since BuddyBoss 1.2.3
@@ -1070,11 +1070,11 @@ function bp_media_settings_callback_extension_document_support() {
 	?>
 	<table class="extension-listing">
 		<thead>
-		<th class="ext-head ext-head-enable"><?php echo __( 'Enable', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-name"><?php echo __( 'Name', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-name"><?php echo __( 'Extension', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-mime"><?php echo __( 'Mime Type', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-desc"><?php echo __( 'Description', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-enable"><?php echo esc_html__( 'Enable', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-name"><?php echo esc_html__( 'Name', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-name"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'Mime Type', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-control"></th>
 		</thead>
 		<tbody>
@@ -1088,33 +1088,20 @@ function bp_media_settings_callback_extension_document_support() {
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
 				<td>
-					<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>"
-						   type="checkbox" value="1" <?php checked( $extension['is_active'], 1 ); ?> />
+					<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( $extension['is_active'], 1 ); ?> />
 				</td>
 				<td>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[name]' ); ?>"
-															id="<?php echo esc_attr( $name ) . 'name'; ?>" type="text"
-															value="<?php echo esc_attr( $extension['name'] ); ?>"/>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>"
-															id="<?php echo esc_attr( $name ) . 'is_default'; ?>"
-															type="hidden"
-															value="<?php echo esc_attr( $extension['is_default'] ); ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[name]' ); ?>" id="<?php echo esc_attr( $name ) . 'name'; ?>" type="text" value="<?php echo esc_attr( $extension['name'] ); ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo esc_attr( $extension['is_default'] ); ?>"/>
 				</td>
 				<td>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>"
-															id="<?php echo esc_attr( $name ) . 'extension'; ?>"
-															type="text"
-															value="<?php echo esc_attr( $extension['extension'] ); ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>"/>
 				</td>
 				<td>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>"
-															id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text"
-															value="<?php echo esc_attr( $extension['mime_type'] ); ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>"/>
 				</td>
 				<td>
-					<input name="<?php echo esc_attr( $name . '[description]' ); ?>"
-						   id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text"
-						   value="<?php echo esc_attr( $extension['description'] ); ?>"/>
+					<input name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>"/>
 				</td>
 				<?php
 				if ( ! $is_default ) {
@@ -1138,26 +1125,20 @@ function bp_media_settings_callback_extension_document_support() {
 		?>
 		<tr style="display: none;" class="custom-extension-data">
 			<td>
-				<input name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>"
-					   type="checkbox" class="extension-check"/>
+				<input name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>" type="checkbox" class="extension-check"/>
 			</td>
 			<td>
-				<input name="extension-name" data-name="<?php echo esc_attr( $name . '[name]' ); ?>" type="text"
-					   class="extension-name"/>
-				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>"
-					   type="hidden" value="0"/>
+				<input name="extension-name" data-name="<?php echo esc_attr( $name . '[name]' ); ?>" type="text" class="extension-name"/>
+				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0"/>
 			</td>
 			<td>
-				<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>"
-					   type="text" class="extension-extension"/>
+				<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>" type="text" class="extension-extension"/>
 			</td>
 			<td>
-				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text"
-					   class="extension-mime"/>
+				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" class="extension-mime"/>
 			</td>
 			<td>
-				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text"
-					   class="extension-desc"/>
+				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc"/>
 			</td>
 			<td>
 				<span class="dashicons dashicons-dismiss" id="btn-remove-extensions"></span>
@@ -1170,8 +1151,7 @@ function bp_media_settings_callback_extension_document_support() {
 			<td></td>
 			<td></td>
 			<td style="text-align:left;">
-				<a href="/wp-admin/admin.php?page=bp-settings&tab=bp-document&mime_type=check_mime_type"
-				   target="_blank"><?php echo __( 'Check Mime Type', 'buddyboss' ); ?></a>
+				<a href="/wp-admin/admin.php?page=bp-settings&tab=bp-document&mime_type=check_mime_type" target="_blank"><?php echo esc_html__( 'Check Mime Type', 'buddyboss' ); ?></a>
 			</td>
 			<td></td>
 			<td></td>
@@ -1209,8 +1189,6 @@ function bp_media_settings_callback_extension_link() {
 /**
  * Checks if extension support is enabled.
  *
- * @param $default integer
- *
  * @return array Is media extension support enabled or not
  * @since BuddyBoss 1.0.0
  */
@@ -1241,14 +1219,14 @@ function bp_document_get_settings_sections() {
 /**
  * Get settings fields by section.
  *
- * @param string $section_id
+ * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
  * @since BuddyBoss 1.0.0
  */
 function bp_document_get_settings_fields_for_section( $section_id = '' ) {
 
-	// Bail if section is empty
+	// Bail if section is empty.
 	if ( empty( $section_id ) ) {
 		return false;
 	}
@@ -1292,9 +1270,9 @@ function bp_document_get_settings_fields() {
  */
 function bp_document_settings_callback_extension_section() {
 	?>
-    <p><?php esc_html_e( 'Enable/Disable the following Document extensions:', 'buddyboss' ); ?></p>
-    <input id="bp_select_extensions" type="checkbox" value="1">
-    <label for="bp_select_extensions"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></label>
+	<p><?php esc_html_e( 'Enable/Disable the following Document extensions:', 'buddyboss' ); ?></p>
+	<input id="bp_select_extensions" type="checkbox" value="1">
+	<label for="bp_select_extensions"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></label>
 
 	<?php
 }

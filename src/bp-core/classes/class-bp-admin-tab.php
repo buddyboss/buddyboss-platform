@@ -107,19 +107,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			wp_localize_script(
-				'bp-admin',
-				'BP_ADMIN',
-				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'tools'    => array(
+			wp_localize_script( 'bp-admin', 'BP_ADMIN', array(
+					'ajax_url'        => admin_url( 'admin-ajax.php' ),
+					'select_document' => esc_js( __( 'Please select document file to check the mime type.', 'buddyboss' ) ),
+					'tools'           => array(
 						'default_data' => array(
 							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
 							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
 						),
 					),
-				)
-			);
+				) );
 		}
 
 		/**

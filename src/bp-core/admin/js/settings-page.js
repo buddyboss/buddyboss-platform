@@ -903,12 +903,16 @@
 				function(e) {
 					e.preventDefault();
 					var file_data = $( '#bp-document-file-input' ).prop( 'files' )[0];
+					if ( 'undefined' === typeof file_data ) {
+						alert( BP_ADMIN.select_document );
+						return false;
+					}
 					var form_data = new FormData();
 					form_data.append( 'file', file_data );
 					form_data.append( 'action', 'bp_document_check_file_mime_type' );
 					$.ajax(
 						{
-							url: BP_ADMIN.ajax_url, // point to server-side PHP script
+							url: BP_ADMIN.ajax_url, // point to server-side PHP script.
 							cache: false,
 							contentType: false,
 							processData: false,
