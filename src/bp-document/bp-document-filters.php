@@ -57,7 +57,7 @@ function bp_document_activity_entry() {
 
 	// Add document to single activity page.
 	$document_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_activity', true );
-	if ( bp_is_single_activity() && ! empty( $document_activity ) && '1' == $document_activity && empty( $document_ids ) ) {
+	if ( bp_is_single_activity() && ! empty( $document_activity ) && '1' === $document_activity && empty( $document_ids ) ) {
 		$document_ids = BP_Document::get_activity_document_id( bp_get_activity_id() );
 	}
 
@@ -299,13 +299,13 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 
 	if ( ! empty( $_POST['bbp_document'] ) ) {
 
-		// save activity id if it is saved in forums and enabled in platform settings
+		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
 
 		// save document
 		$documents = json_decode( stripslashes( $_POST['bbp_document'] ), true );
 
-		// fetch currently uploaded document ids
+		// fetch currently uploaded document ids.
 		$existing_document                = array();
 		$existing_document_ids            = get_post_meta( $post_id, 'bp_document_ids', true );
 		$existing_document_attachment_ids = array();
@@ -367,22 +367,22 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 			if ( ! is_wp_error( $document_id ) ) {
 				$document_ids[] = $document_id;
 
-				// save document is saved in attachment
+				// save document is saved in attachment.
 				update_post_meta( $attachment_id, 'bp_document_saved', true );
 			}
 		}
 
 		$document_ids = implode( ',', $document_ids );
 
-		// Save all attachment ids in forums post meta
+		// Save all attachment ids in forums post meta.
 		update_post_meta( $post_id, 'bp_document_ids', $document_ids );
 
-		// save document meta for activity
+		// save document meta for activity.
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
 			bp_activity_update_meta( $main_activity_id, 'bp_document_ids', $document_ids );
 		}
 
-		// delete documents which were not saved or removed from form
+		// delete documents which were not saved or removed from form.
 		if ( ! empty( $existing_document_ids ) ) {
 			foreach ( $existing_document_ids as $document_id ) {
 				bp_document_delete( array( 'id' => $document_id ) );
@@ -402,7 +402,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
  */
 function bp_document_forums_embed_attachments( $content, $id ) {
 
-	// Do not embed attachment in wp-admin area
+	// Do not embed attachment in wp-admin area.
 	if ( is_admin() ) {
 		return $content;
 	}
@@ -476,7 +476,7 @@ function bp_document_attach_document_to_message( &$message ) {
 			if ( $document_id ) {
 				$document_ids[] = $document_id;
 
-				// save document is saved in attachment
+				// save document is saved in attachment.
 				update_post_meta( $attachment_id, 'bp_document_saved', true );
 			}
 		}

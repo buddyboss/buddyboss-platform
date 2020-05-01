@@ -1005,178 +1005,185 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  *
  */
 function bp_nouveau_activity_privacy() {
-    if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+	if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
 
-    	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
-    		return;
-	    }
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
+			return;
+		}
 
-	    $privacy                   = bp_get_activity_privacy();
-	    $media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
-	    $document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
-	    $parent_activity_id        = false;
-	    $parent_activity_permalink = false;
-	    $group_id                  = false;
-	    $album_id                  = false;
-	    $album_url                 = '';
-	    $folder_id                 = false;
-	    $folder_url                = '';
+		$privacy                   = bp_get_activity_privacy();
+		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
+		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
+		$parent_activity_id        = false;
+		$parent_activity_permalink = false;
+		$group_id                  = false;
+		$album_id                  = false;
+		$album_url                 = '';
+		$folder_id                 = false;
+		$folder_url                = '';
 
-	    // Get media privacy to show
-	    if ( bp_is_active( 'media' ) ) {
-	    	if ( $media_activity ) {
-			    $media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
-			    $media    = new BP_Media( $media_id );
+		// Get media privacy to show.
+		if ( bp_is_active( 'media' ) ) {
+			if ( $media_activity ) {
+				$media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
+				$media    = new BP_Media( $media_id );
 
-			    if ( ! empty( $media ) ) {
-				    $privacy  = $media->privacy;
-				    $group_id = $media->group_id;
-				    $album_id = $media->album_id;
+				if ( ! empty( $media ) ) {
+					$privacy  = $media->privacy;
+					$group_id = $media->group_id;
+					$album_id = $media->album_id;
 
-				    if ( ! empty( $album_id ) ) {
-					    $album     = new BP_Media_Album( $album_id );
-					    $privacy   = $album->privacy;
-					    $album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-				    } else {
-					    $parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
-					    $parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
-				    }
-			    }
-		    }
+					if ( ! empty( $album_id ) ) {
+						$album     = new BP_Media_Album( $album_id );
+						$privacy   = $album->privacy;
+						$album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+					} else {
+						$parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
+						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+					}
+				}
+			}
 
-		    if ( $document_activity ) {
-			    $document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
-			    $document    = new BP_Document( $document_id );
-			    if ( ! empty( $document ) ) {
-				    $privacy   = $document->privacy;
-				    $group_id  = $document->group_id;
-				    $folder_id = $document->album_id;
+			if ( $document_activity ) {
+				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
+				$document    = new BP_Document( $document_id );
+				if ( ! empty( $document ) ) {
+					$privacy   = $document->privacy;
+					$group_id  = $document->group_id;
+					$folder_id = $document->album_id;
 
-				    if ( ! empty( $folder_id ) ) {
-					    $folder    = new BP_Document_Folder( $folder_id );
-					    $privacy   = $folder->privacy;
-					    $album_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-				    } else {
-					    $parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
-					    $parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
-				    }
-			    }
-		    }
+					if ( ! empty( $folder_id ) ) {
+						$folder    = new BP_Document_Folder( $folder_id );
+						$privacy   = $folder->privacy;
+						$album_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+					} else {
+						$parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
+						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+					}
+				}
+			}
 
-		    $activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
-		    if ( ! empty( $activity_album_id ) ) {
-			    $album_id       = $activity_album_id;
-			    $album          = new BP_Media_Album( $album_id );
-			    $privacy        = $album->privacy;
-			    $album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-			    $media_activity = true;
-		    } else {
-			    $media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
-			    if ( ! empty( $media_ids ) ) {
-				    $media_ids = explode( ',', $media_ids );
-				    $media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
-				    $media     = new BP_Media( $media_id );
+			$activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
+			if ( ! empty( $activity_album_id ) ) {
+				$album_id       = $activity_album_id;
+				$album          = new BP_Media_Album( $album_id );
+				$privacy        = $album->privacy;
+				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+				$media_activity = true;
+			} else {
+				$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+				if ( ! empty( $media_ids ) ) {
+					$media_ids = explode( ',', $media_ids );
+					$media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
+					$media     = new BP_Media( $media_id );
 
-				    if ( ! empty( $media->album_id ) ) {
-					    $album_id       = $media->album_id;
-					    $album          = new BP_Media_Album( $album_id );
-					    $privacy        = $album->privacy;
-					    $album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-					    $media_activity = true;
-					    bp_activity_update_meta( bp_get_activity_id(), 'bp_media_album_activity', $album_id );
-				    }
-			    }
-		    }
+					if ( ! empty( $media->album_id ) ) {
+						$album_id       = $media->album_id;
+						$album          = new BP_Media_Album( $album_id );
+						$privacy        = $album->privacy;
+						$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						$media_activity = true;
+						bp_activity_update_meta( bp_get_activity_id(), 'bp_media_album_activity', $album_id );
+					}
+				}
+			}
 
-		    $activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
-		    if ( ! empty( $activity_folder_id ) ) {
-			    $folder_id         = $activity_folder_id;
-			    $folder            = new BP_Document_Folder( $folder_id );
-			    $privacy           = $folder->privacy;
-			    $album_url         = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-			    $document_activity = true;
-		    } else {
-			    $document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
-			    if ( ! empty( $document_ids ) ) {
-				    $document_ids = explode( ',', $document_ids );
-				    $document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
-				    $document     = new BP_Document( $document_id );
+			$activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
+			if ( ! empty( $activity_folder_id ) ) {
+				$folder_id         = $activity_folder_id;
+				$folder            = new BP_Document_Folder( $folder_id );
+				$privacy           = $folder->privacy;
+				$album_url         = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+				$document_activity = true;
+			} else {
+				$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+				if ( ! empty( $document_ids ) ) {
+					$document_ids = explode( ',', $document_ids );
+					$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
+					$document     = new BP_Document( $document_id );
 
-				    if ( ! empty( $document->album_id ) ) {
-					    $folder_id         = $document->album_id;
-					    $folder            = new BP_Document_Folder( $folder_id );
-					    $privacy           = $folder->privacy;
-					    $folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
-					    $document_activity = true;
-					    bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
-				    }
-			    }
-		    }
-	    }
+					if ( ! empty( $document->album_id ) ) {
+						$folder_id         = $document->album_id;
+						$folder            = new BP_Document_Folder( $folder_id );
+						$privacy           = $folder->privacy;
+						$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+						$document_activity = true;
+						bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
+					}
+				}
+			}
+		}
 
-	    if ( $media_activity && empty( $group_id ) && $parent_activity_id ) {
-	    	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+		if ( $media_activity && empty( $group_id ) && $parent_activity_id ) {
+			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
 
-	    	if ( ! empty( $parent_activity->id ) ) {
-	    		$group_id = $parent_activity->item_id;
-		    }
-	    }
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+		}
 
-	    if ( $document_activity && empty( $group_id ) && $parent_activity_id ) {
-		    $parent_activity = new BP_Activity_Activity( $parent_activity_id );
+		if ( $document_activity && empty( $group_id ) && $parent_activity_id ) {
+			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
 
-		    if ( ! empty( $parent_activity->id ) ) {
-			    $group_id = $parent_activity->item_id;
-		    }
-	    }
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+		}
 
-	    if ( ! empty( $group_id ) ) {
-	    	return;
-	    }
+		if ( ! empty( $group_id ) ) {
+			return;
+		}
 
-	    $privacy_items = bp_activity_get_visibility_levels();
+		$privacy_items = bp_activity_get_visibility_levels();
 
-	    if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
-	    	?>
+		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
+			?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[$privacy] ) ? $privacy_items[$privacy] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
-			    <ul class="activity-privacy">
-				    <?php if ( $album_id && ! empty( $album_url ) ) : ?>
-					    <li class="bb-edit-privacy"><a href="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
-		            <?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-					    <li class="bb-edit-privacy"><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
-				    <?php endif; ?>
-			    </ul>
+			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+			<ul class="activity-privacy">
+				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
+					<li class="bb-edit-privacy">
+						<a href="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
+				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+					<li class="bb-edit-privacy">
+						<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+					</li>
+				<?php endif; ?>
+			</ul>
 			</div><?php
-        } elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
-		    ?>
-            <div class="bb-media-privacy-wrap">
-                <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[$privacy] ) ? $privacy_items[$privacy] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
-                <ul class="activity-privacy">
-                    <?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
-                        <li class="bb-edit-privacy"><a href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
-                    <?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-                        <li class="bb-edit-privacy"><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
-                    <?php endif; ?>
-                </ul>
-            </div><?php
-	    } else { ?>
+		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
+			?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[$privacy] ) ? $privacy_items[$privacy] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
-                <?php
-                $class = 'activity-privacy';
-                if ( $media_activity ) {
-	                $class = 'media-privacy';
-                } elseif ( $document_activity ) {
-	                $class = 'document-privacy';
-                }
-                ?>
-                <ul class="<?php echo esc_attr( $class ); ?>">
-                    <?php foreach( $privacy_items as $item_key => $privacy_item ) {
-                        ?><li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php
-                    } ?>
-                </ul>
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<ul class="activity-privacy">
+					<?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
+						<li class="bb-edit-privacy">
+							<a href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
+					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+						<li class="bb-edit-privacy">
+							<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+						</li>
+					<?php endif; ?>
+				</ul>
 			</div><?php
-	    }
-    }
+		} else { ?>
+			<div class="bb-media-privacy-wrap">
+			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+			<?php
+			$class = 'activity-privacy';
+			if ( $media_activity ) {
+				$class = 'media-privacy';
+			} elseif ( $document_activity ) {
+				$class = 'document-privacy';
+			}
+			?>
+			<ul class="<?php echo esc_attr( $class ); ?>">
+				<?php foreach ( $privacy_items as $item_key => $privacy_item ) {
+					?>
+					<li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php
+				} ?>
+			</ul>
+			</div><?php
+		}
+	}
 }

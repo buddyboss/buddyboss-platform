@@ -1873,7 +1873,7 @@ class BP_Document {
 			}
 		}
 
-		// delete related activity
+		// delete related activity.
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
 
 			foreach ( $activity_ids as $activity_id ) {

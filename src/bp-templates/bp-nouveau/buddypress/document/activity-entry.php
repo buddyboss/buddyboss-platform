@@ -33,7 +33,7 @@ if ( $group_id > 0 ) {
 
 ?>
 
-<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>">
+<div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>">
 	<div class="document-description-wrap">
 		<a href="<?php echo esc_url( $download_url ); ?>" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>
@@ -57,7 +57,7 @@ if ( $group_id > 0 ) {
 			<div class="document-action_list">
 				<ul>
 					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
-					<li class="delete_file"><a href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+					<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
 			<?php
@@ -111,7 +111,7 @@ if ( $group_id > 0 ) {
 					<div class="document-action_list">
 						<ul>
 							<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"  id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
-							<li class="delete_file"><a href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+							<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						</ul>
 					</div>
 					<?php

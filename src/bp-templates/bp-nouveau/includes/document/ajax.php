@@ -73,21 +73,27 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
-            array(
-            	'document_get_folder_view' => array(
-		            'function' => 'bp_nouveau_ajax_document_get_folder_view',
-		            'nopriv'   => true,
-	            )
-            ),
+			array(
+				'document_get_folder_view' => array(
+					'function' => 'bp_nouveau_ajax_document_get_folder_view',
+					'nopriv'   => true,
+				),
+			),
 			array(
 				'document_save_privacy' => array(
 					'function' => 'bp_nouveau_ajax_document_save_privacy',
 					'nopriv'   => true,
-				)
+				),
 			),
 			array(
 				'document_get_activity' => array(
 					'function' => 'bp_nouveau_ajax_document_get_activity',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'document_activity_delete' => array(
+					'function' => 'bp_nouveau_ajax_document_activity_delete',
 					'nopriv'   => true,
 				),
 			),
@@ -571,7 +577,7 @@ function bp_nouveau_ajax_media_folder_delete() {
 }
 
 /**
- * Get activity for the media
+ * Get activity for the document.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -598,7 +604,7 @@ function bp_nouveau_ajax_document_get_activity() {
 		array(
 			'include'     => $post_id,
 			'show_hidden' => true,
-			'privacy'     => array( 'document' )
+			'privacy'     => array( 'document' ),
 		)
 	) ) {
 		while ( bp_activities() ) {
@@ -755,7 +761,6 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
  * Change the querystring based on caller of the albums media query
  *
  * @param $querystring
- *
  */
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -773,7 +778,6 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_folders_e
  * Change the querystring based on caller of the albums media query
  *
  * @param $querystring
- *
  */
 function bp_nouveau_object_template_results_folders_existing_document_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -825,19 +829,18 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['medias'] ) && !empty( $_POST['medias'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
+	if ( isset( $_POST['medias'] ) && ! empty( $_POST['medias'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
 		$documents = $_POST['medias'];
 		$album_id  = (int) $_POST['folder_id'];
 		if ( ! empty( $documents ) && is_array( $documents ) ) {
 			// set album id for media.
 			foreach ( $documents as $key => $media ) {
-			    if ( 0 === (int) $media['folder_id'] ) {
-				    $_POST['medias'][ $key ]['folder_id'] = $album_id;
-                }
+				if ( 0 === (int) $media['folder_id'] ) {
+					$_POST['medias'][ $key ]['folder_id'] = $album_id;
+				}
 			}
 		}
-    }
-
+	}
 
 	// handle media uploaded.
 	$media_ids = bp_document_add_handler();
@@ -1265,14 +1268,13 @@ function bp_nouveau_ajax_document_delete() {
 			bp_folder_delete( array( 'id' => $id ) );
 		}
 	} else {
-	    if ( bp_document_user_can_delete( $id ) ) {
-		    bp_document_delete(
-			    array(
-				    'id'            => $id,
-				    'attachment_id' => $attachment_id,
-			    )
-		    );
-	    }
+		if ( bp_document_user_can_delete( $id ) ) {
+			$args = array(
+				'id'            => $id,
+				'attachment_id' => $attachment_id,
+			);
+			bp_document_delete( $args );
+		}
 	}
 
 	$content = '';
@@ -1461,16 +1463,16 @@ function bp_nouveau_ajax_document_folder_move() {
 
 }
 
-function bp_nouveau_ajax_document_get_folder_view(){
+function bp_nouveau_ajax_document_get_folder_view() {
 
 	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
 		$ul = bp_document_user_document_folder_tree_view_li_html( $id );
-    } else {
+	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
-    }
+	}
 
 	wp_send_json_success(
 		array(
@@ -1480,8 +1482,8 @@ function bp_nouveau_ajax_document_get_folder_view(){
 	);
 }
 
-function bp_nouveau_ajax_document_save_privacy(){
-    global $wpdb, $bp;
+function bp_nouveau_ajax_document_save_privacy() {
+	global $wpdb, $bp;
 
 	$id      = filter_input( INPUT_POST, 'itemId', FILTER_VALIDATE_INT );
 	$type    = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
@@ -1489,9 +1491,9 @@ function bp_nouveau_ajax_document_save_privacy(){
 
 	if ( 'folder' === $type ) {
 		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $id );
-    } else {
+	} else {
 		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
-    }
+	}
 
 	$wpdb->query( $q );
 
@@ -1502,4 +1504,51 @@ function bp_nouveau_ajax_document_save_privacy(){
 		)
 	);
 
+}
+
+function bp_nouveau_ajax_document_activity_delete() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	$id            = ! empty( filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
+	$attachment_id = ! empty( filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
+	$type          = ! empty( filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
+	$activity_id   = ! empty( filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT ) : 0;
+
+	if ( '' === $type ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( bp_document_user_can_delete( $id ) ) {
+		$args = array(
+			'id'            => $id,
+			'attachment_id' => $attachment_id,
+		);
+		bp_document_delete( $args );
+	}
+
+	$delete_box = false;
+
+	// Get activity object.
+	$activity = new BP_Activity_Activity( $activity_id );
+	if ( empty( $activity->id ) ) {
+		$delete_box = true;
+	}
+
+	wp_send_json_success(
+		array(
+			'message'         => 'success',
+			'delete_activity' => $delete_box,
+		)
+	);
 }
