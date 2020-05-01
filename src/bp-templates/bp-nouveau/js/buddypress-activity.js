@@ -1080,8 +1080,6 @@ window.bp = window.bp || {};
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 							}
-						} else {
-							self.dropzone_obj.removeFile(file);
 						}
 					});
 
