@@ -50,19 +50,19 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 		 */
 		public function zoom_meeting_add() {
 			if ( ! bp_is_post_request() ) {
-				return;
+				wp_send_json_error( array( 'error' => __( 'There was a problem when adding. Please try again.', 'buddyboss' ) ) );
 			}
 
 			// Nonce check!
 			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_zoom_meeting' ) ) {
-				return;
+				wp_send_json_error( array( 'error' => __( 'There was a problem when adding. Please try again.', 'buddyboss' ) ) );
 			}
 
 			$user_id = bp_zoom_api_host();
 
 			// check user host.
 			if ( empty( $user_id ) ) {
-				return;
+				wp_send_json_error( array( 'error' => __( 'Please choose API Host in the settings and try again.', 'buddyboss' ) ) );
 			}
 
 			$id             		= ! empty( $_POST['bp-zoom-meeting-id'] ) ? sanitize_text_field( filter_input( INPUT_POST, 'bp-zoom-meeting-id' ) ) : false;
@@ -135,13 +135,17 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 				$id = bp_zoom_meeting_add( $data );
 
 				if ( ! $id ) {
-					wp_send_json_error( array() );
+					wp_send_json_error( array( 'error' => __( 'There was a error saving the meeting.', 'buddyboss' ) ) );
 				}
+
+				$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+				$redirect_url = trailingslashit( $group_link . 'zoom/meetings/' . $id );
+				wp_send_json_success( array( 'redirect_url' => $redirect_url ) );
 			}
 
-			$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
-			$redirect_url = trailingslashit( $group_link . 'zoom/meetings/' . $id );
-			wp_send_json_success( array( 'redirect_url' => $redirect_url ) );
+			if ( ! empty( $zoom_meeting['code'] ) && in_array( $zoom_meeting['code'], array( 300, 404, 400 ), true ) ) {
+				wp_send_json_error( array( 'error' => $zoom_meeting['response']->message ) );
+			}
 		}
 
 		/**

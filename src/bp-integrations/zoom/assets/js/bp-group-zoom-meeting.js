@@ -68,9 +68,13 @@
 				url: bp_group_zoom_meeting_vars.ajax_url,
 				data: data,
 				success: function ( response ) {
-					if ( typeof response.data !== 'undefined' && response.data.redirect_url ) {
-						window.location.href = response.data.redirect_url;
-						return false;
+					if ( response.success ) {
+						if (typeof response.data !== 'undefined' && response.data.redirect_url) {
+							window.location.href = response.data.redirect_url;
+							return false;
+						}
+					} else {
+						console.log( response );
 					}
 				}
 			});
