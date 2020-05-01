@@ -40,13 +40,14 @@
 		});
 
 		$( document ).on( 'click', '#bp-zoom-meeting-form-submit', function(e){
+			var _this = $(this);
 			e.preventDefault();
 
-			if ( $(this).hasClass('loading') ) {
+			if ( _this.hasClass('loading') ) {
 				return false;
 			}
 
-			$(this).addClass('loading');
+			_this.addClass('loading');
 
 			var form_data = $('#bp-new-zoom-meeting-form').serializeArray();
 			var data = {
@@ -75,6 +76,7 @@
 						}
 					} else {
 						console.log( response );
+						_this.removeClass('loading');
 					}
 				}
 			});
