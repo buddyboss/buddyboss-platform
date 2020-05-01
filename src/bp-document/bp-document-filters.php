@@ -444,10 +444,8 @@ function bp_document_attach_document_to_message( &$message ) {
 
 	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
 
-
 		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
 
 		$document_list = $_POST['document'];
 		$document_ids  = array();
@@ -547,30 +545,28 @@ function bp_document_download_url_file() {
 
 		$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 		$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-        if ( $can_download_btn ) {
-	        bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
-        } else {
-            wp_safe_redirect( site_url() );
-        }
-
+		if ( $can_download_btn ) {
+			bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		} else {
+			wp_safe_redirect( site_url() );
+		}
 	}
 }
 
 function bp_document_sync_document_data( $attachment_id ) {
 
-    if ( ! is_admin() || wp_doing_ajax() ) {
-        return;
-    }
+	if ( ! is_admin() || wp_doing_ajax() ) {
+		return;
+	}
 
 	global $wpdb, $bp;
 
 	// Check if media is attached to a document
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE type = %s AND attachment_id = %d", 'document', $attachment_id ) ); // db call ok; no-cache ok;
 
-    if ( $document  ) {
+	if ( $document ) {
 
-	    $document_post = get_post( $attachment_id );
-
+		$document_post = get_post( $attachment_id );
 
 		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, $document_post->post_excerpt, $document_post->post_content, true );
 
@@ -590,7 +586,7 @@ function bp_document_activity_update_document_privacy( $activity ) {
 	if ( ! empty( $document_ids ) ) {
 		$document_ids = explode( ',', $document_ids );
 
-		foreach( $document_ids as $document_id ) {
+		foreach ( $document_ids as $document_id ) {
 			$document          = new BP_Document( $document_id );
 			$document->privacy = $activity->privacy;
 			$document->save();

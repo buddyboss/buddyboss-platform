@@ -27,38 +27,38 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 							<h4 class="bb-title" id="bp-single-album-title"><?php bp_folder_title(); ?></h4>
 						</div> <!-- .bb-single-album-header -->
 						<div class="bb-media-actions">
-                            <div id="search-documents-form" class="media-search-form" data-bp-search="document">
-                                <form action="" method="get" class="bp-dir-search-form" id="group-document-search-form" autocomplete="off">
-                                    <button type="submit" id="group-document-search-submit" class="nouveau-search-submit" name="group_document_search_submit">
-                                        <span class="dashicons dashicons-search" aria-hidden="true"></span>
-                                        <span id="button-text" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></span>
-                                    </button>
-                                    <label for="group-document-search" class="bp-screen-reader-text"><?php _e( 'Search Documents…', 'buddyboss' ); ?></label>
-                                    <input id="group-document-search" name="document_search" type="search" placeholder="<?php _e( 'Search Documents…', 'buddyboss' ); ?>">
-                                </form>
-                            </div>
+							<div id="search-documents-form" class="media-search-form" data-bp-search="document">
+								<form action="" method="get" class="bp-dir-search-form" id="group-document-search-form" autocomplete="off">
+									<button type="submit" id="group-document-search-submit" class="nouveau-search-submit" name="group_document_search_submit">
+										<span class="dashicons dashicons-search" aria-hidden="true"></span>
+										<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
+									</button>
+									<label for="group-document-search" class="bp-screen-reader-text"><?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?></label>
+									<input id="group-document-search" name="document_search" type="search" placeholder="<?php esc_html_e( 'Search Documents…', 'buddyboss' ); ?>">
+								</form>
+							</div>
 							<?php
 							if ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) :
 
-                                if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
-                                    ?>
-                                    <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-                                        <i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
-                                    </a>
-                                    <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
-                                        <i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
-                                    </a>
-                                    <?php
-                                } elseif ( ! bp_is_group() ) {
-	                                ?>
-                                    <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-                                        <i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
-                                    </a>
-                                    <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
-                                        <i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
-                                    </a>
-	                                <?php
-                                }
+								if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
+									?>
+									<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
+										<i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+									</a>
+									<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
+										<i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
+									</a>
+									<?php
+								} elseif ( ! bp_is_group() ) {
+									?>
+									<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
+										<i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+									</a>
+									<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
+										<i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
+									</a>
+									<?php
+								}
 								if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 									?>
 									<div class="media-folder_items">

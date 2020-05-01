@@ -239,12 +239,12 @@ function bp_has_document( $args = '' ) {
 		$r['search_terms'] = $_REQUEST['s'];
 	}
 
-	if ( ! empty( $_REQUEST[ 'sort' ] ) ) {
-		$r['sort'] = $_REQUEST[ 'sort' ];
+	if ( ! empty( $_REQUEST['sort'] ) ) {
+		$r['sort'] = $_REQUEST['sort'];
 	}
 
-	if ( ! empty( $_REQUEST[ 'order_by' ] ) ) {
-		$r['order_by'] = $_REQUEST[ 'order_by' ];
+	if ( ! empty( $_REQUEST['order_by'] ) ) {
+		$r['order_by'] = $_REQUEST['order_by'];
 	}
 
 	// Do not exceed the maximum per page.
@@ -1696,7 +1696,7 @@ function bp_get_document_folder_group_id() {
 	 *
 	 * @param int $id The folder group ID.
 	 */
-	return apply_filters( 'bp_get_document_group_id',  (int) $document_template->document->group_id );
+	return apply_filters( 'bp_get_document_group_id', (int) $document_template->document->group_id );
 }
 
 /**

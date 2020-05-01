@@ -1252,8 +1252,8 @@ function bp_document_allowed_mimes( $existing_mimes = array() ) {
 		$all_extensions = bp_document_extensions_list();
 		foreach ( $all_extensions as $extension ) {
 			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
-				$extension_name                    = ltrim( $extension['extension'], '.' );
-				$existing_mimes["$extension_name"] = $extension['mime_type'];
+				$extension_name                      = ltrim( $extension['extension'], '.' );
+				$existing_mimes[ "$extension_name" ] = $extension['mime_type'];
 			}
 		}
 	}
@@ -1645,15 +1645,17 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, file_name = %s, extension = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, $new_file_name, $extension, bp_core_current_time(), $document_id, $attachment_document_id );
 	$rename_file_name_query = $wpdb->query( $rename_file_name_query ); // db call ok; no-cache ok;
 
-
-	$response = apply_filters( 'bp_document_rename_file', array(
-		'document_id'            => $document_id,
-		'attachment_document_id' => $attachment_document_id,
-		'title'                  => $title,
-		'caption'                => $caption,
-		'description'            => $description,
-		'backendn'               => $backend
-	) );
+	$response = apply_filters(
+		'bp_document_rename_file',
+		array(
+			'document_id'            => $document_id,
+			'attachment_document_id' => $attachment_document_id,
+			'title'                  => $title,
+			'caption'                => $caption,
+			'description'            => $description,
+			'backendn'               => $backend,
+		)
+	);
 
 	return $response;
 }
@@ -1733,11 +1735,9 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 	$folder     = new BP_Document_Folder( $folder_id );
 	$data       = array();
 
-
 	switch ( $folder->privacy ) {
 
 		case 'public':
-
 			if ( $folder->user_id === $user_id ) {
 				$can_manage = true;
 				$can_view   = true;
@@ -1748,8 +1748,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'grouponly':
-
-			if ( bp_is_active( 'groups') ) {
+			if ( bp_is_active( 'groups' ) ) {
 
 				$manage = groups_can_user_manage_document( $user_id, $folder->group_id );
 
@@ -1760,64 +1759,63 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 					$can_view = true;
 				}
 
-//				$group           = groups_get_group( $folder->group_id );
-//				$group_status    = bp_get_group_status( $group );
-//				$document_status = bp_group_get_document_status( $folder->group_id );
-//				$is_admin        = groups_is_user_admin( $user_id, $folder->group_id );
-//				$is_mod          = groups_is_user_mod( $user_id, $folder->group_id );
-//				$is_member       = groups_is_user_member( $user_id, $folder->group_id );
-//				if ( 'private' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'private' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'private' === $group_status && $is_member && 'members' === $document_status ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'private' === $group_status && $is_member ) {
-//					$can_manage = false;
-//					$can_view   = true;
-//				} elseif ( 'private' === $group_status && ! $is_member ) {
-//					$can_manage = false;
-//					$can_view   = false;
-//				} elseif ( 'hidden' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'hidden' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'hidden' === $group_status && $is_member && 'members' === $document_status ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'hidden' === $group_status && $is_member ) {
-//					$can_manage = false;
-//					$can_view   = true;
-//				} elseif ( 'hidden' === $group_status && ! $is_member ) {
-//					$can_manage = false;
-//					$can_view   = false;
-//				} elseif ( 'public' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'public' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'public' === $group_status && $is_member && 'members' === $document_status ) {
-//					$can_manage = true;
-//					$can_view   = true;
-//				} elseif ( 'public' === $group_status && $is_member ) {
-//					$can_manage = false;
-//					$can_view   = true;
-//				} elseif ( 'public' === $group_status && ! $is_member ) {
-//					$can_manage = false;
-//					$can_view   = true;
-//				}
+				// $group           = groups_get_group( $folder->group_id );
+				// $group_status    = bp_get_group_status( $group );
+				// $document_status = bp_group_get_document_status( $folder->group_id );
+				// $is_admin        = groups_is_user_admin( $user_id, $folder->group_id );
+				// $is_mod          = groups_is_user_mod( $user_id, $folder->group_id );
+				// $is_member       = groups_is_user_member( $user_id, $folder->group_id );
+				// if ( 'private' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'private' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'private' === $group_status && $is_member && 'members' === $document_status ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'private' === $group_status && $is_member ) {
+				// $can_manage = false;
+				// $can_view   = true;
+				// } elseif ( 'private' === $group_status && ! $is_member ) {
+				// $can_manage = false;
+				// $can_view   = false;
+				// } elseif ( 'hidden' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'hidden' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'hidden' === $group_status && $is_member && 'members' === $document_status ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'hidden' === $group_status && $is_member ) {
+				// $can_manage = false;
+				// $can_view   = true;
+				// } elseif ( 'hidden' === $group_status && ! $is_member ) {
+				// $can_manage = false;
+				// $can_view   = false;
+				// } elseif ( 'public' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'public' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'public' === $group_status && $is_member && 'members' === $document_status ) {
+				// $can_manage = true;
+				// $can_view   = true;
+				// } elseif ( 'public' === $group_status && $is_member ) {
+				// $can_manage = false;
+				// $can_view   = true;
+				// } elseif ( 'public' === $group_status && ! $is_member ) {
+				// $can_manage = false;
+				// $can_view   = true;
+				// }
 			}
 
 			break;
 
 		case 'loggedin':
-
 			if ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage = false;
 				$can_view   = true;
@@ -1825,7 +1823,6 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'friends':
-
 			$is_friend = friends_check_friendship( $folder->user_id, $user_id );
 			if ( $is_friend ) {
 				$can_manage = false;
@@ -1837,7 +1834,6 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'onlyme':
-
 			if ( $folder->user_id === $user_id ) {
 				$can_manage = true;
 				$can_view   = true;
@@ -1848,7 +1844,6 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
 	$data['can_manage'] = $can_manage;
 	$data['can_view']   = $can_view;
-
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $folder_id, $user_id );
 }
@@ -1861,11 +1856,9 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$document     = new BP_Document( $document_id );
 	$data         = array();
 
-
 	switch ( $document->privacy ) {
 
 		case 'public':
-
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -1878,8 +1871,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'grouponly':
-
-			if ( bp_is_active( 'groups') ) {
+			if ( bp_is_active( 'groups' ) ) {
 
 				$manage = groups_can_user_manage_document( $user_id, $document->group_id );
 
@@ -1893,79 +1885,78 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 					$can_download = true;
 				}
 
-//				$group           = groups_get_group( $document->group_id );
-//				$group_status    = bp_get_group_status( $group );
-//				$document_status = bp_group_get_document_status( $document->group_id );
-//				$is_admin        = groups_is_user_admin( $user_id, $document->group_id );
-//				$is_mod          = groups_is_user_mod( $user_id, $document->group_id );
-//				$is_member       = groups_is_user_member( $user_id, $document->group_id );
-//				if ( 'private' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'private' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'private' === $group_status && $is_member && 'members' === $document_status ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'private' === $group_status && $is_member ) {
-//					$can_manage   = false;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'private' === $group_status && ! $is_member ) {
-//					$can_manage   = false;
-//					$can_view     = false;
-//					$can_download = false;
-//				} elseif ( 'hidden' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'hidden' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'hidden' === $group_status && $is_member && 'members' === $document_status ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'hidden' === $group_status && $is_member ) {
-//					$can_manage   = false;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'hidden' === $group_status && ! $is_member ) {
-//					$can_manage   = false;
-//					$can_view     = false;
-//					$can_download = false;
-//				} elseif ( 'public' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'public' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'public' === $group_status && $is_member && 'members' === $document_status ) {
-//					$can_manage   = true;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'public' === $group_status && $is_member ) {
-//					$can_manage   = false;
-//					$can_view     = true;
-//					$can_download = true;
-//				} elseif ( 'public' === $group_status && ! $is_member ) {
-//					$can_manage   = false;
-//					$can_view     = true;
-//					$can_download = true;
-//				}
+				// $group           = groups_get_group( $document->group_id );
+				// $group_status    = bp_get_group_status( $group );
+				// $document_status = bp_group_get_document_status( $document->group_id );
+				// $is_admin        = groups_is_user_admin( $user_id, $document->group_id );
+				// $is_mod          = groups_is_user_mod( $user_id, $document->group_id );
+				// $is_member       = groups_is_user_member( $user_id, $document->group_id );
+				// if ( 'private' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'private' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'private' === $group_status && $is_member && 'members' === $document_status ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'private' === $group_status && $is_member ) {
+				// $can_manage   = false;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'private' === $group_status && ! $is_member ) {
+				// $can_manage   = false;
+				// $can_view     = false;
+				// $can_download = false;
+				// } elseif ( 'hidden' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'hidden' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'hidden' === $group_status && $is_member && 'members' === $document_status ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'hidden' === $group_status && $is_member ) {
+				// $can_manage   = false;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'hidden' === $group_status && ! $is_member ) {
+				// $can_manage   = false;
+				// $can_view     = false;
+				// $can_download = false;
+				// } elseif ( 'public' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'public' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'public' === $group_status && $is_member && 'members' === $document_status ) {
+				// $can_manage   = true;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'public' === $group_status && $is_member ) {
+				// $can_manage   = false;
+				// $can_view     = true;
+				// $can_download = true;
+				// } elseif ( 'public' === $group_status && ! $is_member ) {
+				// $can_manage   = false;
+				// $can_view     = true;
+				// $can_download = true;
+				// }
 			}
 
 			break;
 
 		case 'loggedin':
-
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -1978,7 +1969,6 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'friends':
-
 			$is_friend = friends_check_friendship( $document->user_id, $user_id );
 			if ( $is_friend ) {
 				$can_manage   = false;
@@ -1992,7 +1982,6 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'onlyme':
-
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -2007,4 +1996,16 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$data['can_download'] = $can_download;
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $document_id, $user_id );
+}
+
+function bp_document_get_allowed_extension() {
+	$extensions     = array();
+	$all_extensions = bp_document_extensions_list();
+	foreach ( $all_extensions as $extension ) {
+		if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+			$extensions[] = $extension['extension'];
+		}
+	}
+
+	return $extensions;
 }

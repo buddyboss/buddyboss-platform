@@ -1175,12 +1175,14 @@ function bp_media_settings_callback_extension_link() {
 		'<p class="description">%s</p>',
 		sprintf(
 			__( 'Click <a href="%s">here</a> add/edit/delete more extensions..', 'buddyboss' ),
-			add_query_arg(
-				array(
-					'page' => 'bp-settings',
-					'tab'  => 'bp-document',
-				),
-				admin_url( 'admin.php' )
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-document',
+					),
+					'admin.php'
+				)
 			)
 		)
 	);

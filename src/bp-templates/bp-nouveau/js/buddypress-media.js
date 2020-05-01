@@ -338,6 +338,7 @@ window.bp = window.bp || {};
 			var attachment_id 		  = target.attr( 'data-item-attachment-id' );
 			var preview_attachment_id = target.attr( 'data-item-preview-attachment-id' );
 			var fromWhere			  = target.attr( 'data-item-from' );
+			var data				  = [];
 
 			if ( 'activity' !== fromWhere ) {
 				if ( 'folder' === type ) {
@@ -346,7 +347,7 @@ window.bp = window.bp || {};
 					}
 				}
 
-				var data = {
+				data = {
 					'action'				: 'document_delete',
 					'id'					: id,
 					'preview_attachment_id'	: preview_attachment_id,
@@ -372,7 +373,7 @@ window.bp = window.bp || {};
 
 				var activityId = target.attr( 'data-item-activity-id' );
 
-				var data = {
+				data = {
 					'action'				: 'document_activity_delete',
 					'id'					: id,
 					'preview_attachment_id'	: preview_attachment_id,
