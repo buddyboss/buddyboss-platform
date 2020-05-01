@@ -96,7 +96,7 @@
                             <source src="{{data.gif.video_url}}" type="video/mp4">
                         </video>
                         <a href="#" class="gif-play-button">
-                            <span class="dashicons dashicons-video-alt3"></span>
+                            <span class="bb-icon-play-thin"></span>
                         </a>
                         <span class="gif-icon"></span>
                     </div>

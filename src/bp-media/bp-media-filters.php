@@ -591,7 +591,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
-					<span class="dashicons dashicons-video-alt3"></span>
+					<span class="bb-icon-play-thin"></span>
 				</a>
 				<span class="gif-icon"></span>
 			</div>
@@ -776,7 +776,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 					<source src="<?php echo $video_url; ?>" type="video/mp4">
 				</video>
 				<a href="#" class="gif-play-button">
-					<span class="dashicons dashicons-video-alt3"></span>
+					<span class="bb-icon-play-thin"></span>
 				</a>
 				<span class="gif-icon"></span>
 			</div>
