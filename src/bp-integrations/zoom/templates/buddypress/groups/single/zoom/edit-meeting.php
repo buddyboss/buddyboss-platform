@@ -7,11 +7,6 @@
 
 if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) ) ) :
 	while ( bp_zoom_meeting() ) : bp_the_zoom_meeting();
-		$edit_users = get_users( array( 'meta_key' => 'bp_zoom_user_id', 'meta_value' => bp_get_zoom_meeting_user_id() ) );
-		$edit_host = false;
-		if( ! empty( $edit_users ) ) {
-			$edit_host = $edit_users[0]->data;
-		}
 ?>
 <div id="bp-new-zoom-meeting" class="bp-new-zoom-meeting-form">
 	<form id="bp-new-zoom-meeting-form" name="bp-new-zoom-meeting-form" class="standard-form" method="post" action="">
@@ -23,24 +18,18 @@ if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) )
 					<input type="text" id="bp-zoom-meeting-title" value="<?php bp_zoom_meeting_title(); ?>" tabindex="1" name="bp-zoom-meeting-title" />
 				</p>
 				<p>
-					<?php $users = groups_get_group_members( array( 'group_role' => array( 'member', 'mod', 'admin' ) ) ); ?>
-					<label for="bp-zoom-meeting-host"><?php _e( 'Host', 'buddyboss' ); ?></label>
-					<select id="bp-zoom-meeting-host" name="bp-zoom-meeting-host" tabindex="2">
-						<option><?php _e( 'Select host', 'buddyboss' ); ?></option>
-						<?php if ( ! empty( $edit_host ) ) : ?>
-						<option value="<?php bp_zoom_meeting_user_id(); ?>" selected><?php echo bp_core_get_user_displayname( $edit_host->ID ) . ' ( ' . $edit_host->user_email . ' )'; ?></option>
-						<?php endif; ?>
-
+					<label for="bp-zoom-meeting-alt-host-ids"><?php _e( 'Hosts', 'buddyboss' ); ?></label>
+					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="2" multiple>
+						<?php $users = groups_get_group_members( array( 'group_role' => array( 'member', 'mod', 'admin' ) ) ); ?>
+						<?php $alt_host_ids = explode( ',', bp_get_zoom_meeting_alternative_host_ids() ); ?>
 						<?php
 						if ( ! empty( $users['members'] ) ) :
 							foreach ( $users['members'] as $user ):
-								if ( ! empty( $edit_host ) && $user->ID === (int) $edit_host->ID ) {
-									continue;
-								}
+								$bp_zoom_user_status = get_user_meta( $user->ID, 'bp_zoom_user_status', true );
 								$bp_zoom_user_id = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
-								if ( ! empty( $bp_zoom_user_id ) ) : ?>
+								if ( 'active' === $bp_zoom_user_status && ! empty( $bp_zoom_user_id ) && $bp_zoom_user_id !== bp_zoom_api_host() ) : ?>
 									<option
-											value="<?php echo $bp_zoom_user_id; ?>"><?php echo bp_core_get_user_displayname( $user->ID ) . ' ( ' . $user->user_email . ' )'; ?></option>
+											value="<?php echo $bp_zoom_user_id; ?>" <?php echo in_array( $bp_zoom_user_id, $alt_host_ids ) ? 'selected="selected"' : ''; ?>><?php echo bp_core_get_user_displayname( $user->ID ) . ' ( ' . $user->user_email . ' )'; ?></option>
 								<?php endif;
 							endforeach;
 						endif;
@@ -114,11 +103,6 @@ if ( bp_has_zoom_meetings( array( 'include' => bp_zoom_get_edit_meeting_id() ) )
 					</select><br />
 					<small><?php _e( 'Set what type of auto recording feature you want to add. Default is none.', 'buddyboss' ); ?></small>
 				</p>
-<!--				<p>-->
-<!--					<label for="bp-zoom-meeting-alt-hosts">--><?php //_e( 'Alternative Hosts', 'buddyboss' ); ?><!--</label>-->
-<!--					<select id="bp-zoom-meeting-alt-hosts" name="bp-zoom-meeting-alt-hosts" tabindex="15">-->
-<!--					</select>-->
-<!--				</p>-->
 
 				<div class="bp-zoom-meeting-form-submit-wrapper">
 					<?php wp_nonce_field( 'bp_zoom_meeting' ); ?>

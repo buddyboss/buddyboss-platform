@@ -17,7 +17,7 @@
 				</p>
 				<p class="bp-zoom-meeting-alt-host">
 					<label for="bp-zoom-meeting-alt-host-ids"><?php _e( 'Hosts', 'buddyboss' ); ?></label>
-					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="15" multiple>
+					<select id="bp-zoom-meeting-alt-host-ids" name="bp-zoom-meeting-alt-host-ids" tabindex="2" multiple>
 						<option><?php _e( 'Select hosts', 'buddyboss' ); ?></option>
 						<?php
 						if ( ! empty( $users['members'] ) ) :
