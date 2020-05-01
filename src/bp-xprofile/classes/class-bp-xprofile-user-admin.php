@@ -419,13 +419,16 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 					?>
 
 				<div<?php bp_field_css_class( 'bp-profile-field' ); ?>>
-					<fieldset>
+					<fieldset class="bp-profile-fieldset">
+
+					<div class="bp-field-wrap">
+						<?php
+						$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
+						$field_type->edit_field_html( array( 'user_id' => $r['user_id'] ) );
+						?>
+					</div>
 
 					<?php
-
-					$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
-					$field_type->edit_field_html( array( 'user_id' => $r['user_id'] ) );
-
 					/**
 					 * Fires before display of visibility form elements for profile metaboxes.
 					 *

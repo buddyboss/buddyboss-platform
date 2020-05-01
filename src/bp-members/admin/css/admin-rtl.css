@@ -125,24 +125,41 @@ div#community-profile-page p.not-activated {
 }
 
 .bp-profile-field .description {  /* description also sits in the right side column */
-	margin: 10px 200px 12px 0;
-	text-align: right;
+	margin: 10px 0 12px;
+        flex: 0 0 calc(100% - 200px);
 }
 
-.bp-profile-field .wp-editor-wrap {
-	margin-right: 200px;
-}
-
+.bp-profile-field legend + .description,
 .field_type_checkbox .description,
 .field_type_datebox .description,
 .field_type_radio .description {
 	margin-top: 0;
 }
 
-.clear-value {  /* 'clear value' option also sits in the right side column */
-	display: block;
-	font-size: 12px;
-	margin-right: 200px;
+.clear-value {
+    font-size: 12px;
+    padding-right: 200px;
+    flex: 0 0 100%;
+}
+
+.bp-field-wrap {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.bp-field-wrap .description + .input-options {
+    flex: 0 0 100%;
+    padding-right: 200px;
+}
+
+.bp-field-wrap .description + input,
+.bp-field-wrap .description + select {
+    margin-right: 200px;
+}
+
+.bp-field-wrap > select,
+.bp-profile-field input:not([type=checkbox]):not([type=radio]) {
+    min-width: 35%;
 }
 
 /* force checkboxes to new lines, in the right side column */
@@ -150,20 +167,13 @@ div#community-profile-page p.not-activated {
 .field_type_radio label {
 	display: block;
 	margin-bottom: 1em;
-	margin-right: 200px;
 	width: auto;
 }
 
 .field_type_checkbox input,
-.field_type_radio input{
-	margin-right: 200px;
+.field_type_radio input {
     float: right;
     margin-top: 3px;
-}
-
-.bp-profile-field .input-options .bp-radio-wrap:first-child > input,
-.bp-profile-field .input-options .bp-checkbox-wrap:first-child > input {
-	margin-right: 4px;
 }
 
 .field_type_checkbox .radio label,
@@ -172,7 +182,7 @@ div#community-profile-page p.not-activated {
 }
 
 .field_type_datebox .datebox-selects {
-	margin-right: 200px;
+	/*margin-left: 200px;*/
 }
 
 .field_type_datebox select:nth-of-type(1) {
@@ -211,10 +221,24 @@ div#community-profile-page p.not-activated {
 	margin-bottom: 15px;
 }
 
+.input-options {
+    flex: 1;
+}
+
 .field-visibility-settings label {
 	clear: right;
 	display: block;
-	margin-bottom: 1em;
+        margin: 0;
+}
+
+.field-visibility-settings .bp-radio-wrap {
+    clear: both;
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.field-visibility-settings .bp-radio-wrap input {
+    margin: 2px 0 0 8px;
 }
 
 #normal-sortables .field-visibility-settings legend {  /* id required for css selector weight */
@@ -223,14 +247,12 @@ div#community-profile-page p.not-activated {
 }
 
 #your-profile .bp-profile-field legend {
-	float: right; /* Firefox will not apply display: inline-block to legends */
 	font-size: 14px;
 	font-weight: 600;
 	line-height: 1.4;
 	margin-bottom: 1em;
-	text-align: right;
 	vertical-align: middle;
-	width: 192px;
+	flex: 0 0 192px;
 }
 
 #your-profile .field_type_socialnetworks fieldset > legend {
