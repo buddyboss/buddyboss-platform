@@ -201,7 +201,18 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 								</div>
 								<div class="recording-list-row-col">
 									<div class="video_link">
-										<a class="play_btn" href="<?php echo esc_url( $recording_file->play_url ); ?>" target="_blank"><?php _e( 'Play', 'buddyboss' ); ?></a>
+										<?php if ( 'MP4' === $recording_file->file_type ) : ?>
+											<video width="320" height="240" controls>
+												<source src="<?php echo esc_url( $recording_file->download_url ); ?>" type="video/mp4">
+												<p><?php _e( 'Your browser does not support HTML5 video.', 'buddyboss' ); ?></p>
+											</video>
+										<?php endif; ?>
+										<?php if ( 'M4A' === $recording_file->file_type ) : ?>
+											<audio width="320" height="240" controls>
+												<source src="<?php echo esc_url( $recording_file->download_url ); ?>" type="audio/mp4">
+												<p><?php _e( 'Your browser does not support HTML5 audio.', 'buddyboss' ); ?></p>
+											</audio>
+										<?php endif; ?>
 									</div>
 								</div>
 								<div class="recording-list-row-col">
