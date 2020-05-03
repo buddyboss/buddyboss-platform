@@ -263,7 +263,6 @@ module.exports = function (grunt) {
 			css: {
 				options: {
 					config: stylelintConfigCss,
-					format: 'css'
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
@@ -278,7 +277,6 @@ module.exports = function (grunt) {
 			scss: {
 				options: {
 					config: stylelintConfigScss,
-					format: 'scss'
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
