@@ -1,7 +1,8 @@
 /* jshint node:true */
 /* global module */
 module.exports = function (grunt) {
-	var SOURCE_DIR = 'src/',
+	var sass = require('node-sass'),
+		SOURCE_DIR = 'src/',
 		BUILD_DIR = 'buddyboss-platform/',
 
 		BP_CSS = [
@@ -60,7 +61,6 @@ module.exports = function (grunt) {
 
 	require('matchdep').filterDev(['grunt-*', '!grunt-legacy-util']).forEach(grunt.loadNpmTasks);
 	grunt.util = require('grunt-legacy-util');
-	const sass = require('node-sass');
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
