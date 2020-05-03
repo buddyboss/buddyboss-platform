@@ -27,13 +27,13 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_MISC = [],
 
 		// SASS generated "Twenty*"" CSS files
-		BP_SCSS_CSS_FILES = [
-			// '!bp-templates/bp-legacy/css/twenty*.css',
-			'!bp-templates/bp-nouveau/css/buddypress.css',
-			'!bp-core/admin/css/hello.css',
-			'!bp-core/css/medium-editor-beagle.css',
-			'!bp-core/css/medium-editor.css'
-		],
+		// BP_SCSS_CSS_FILES = [
+		// 	// '!bp-templates/bp-legacy/css/twenty*.css',
+		// 	'!bp-templates/bp-nouveau/css/buddypress.css',
+		// 	'!bp-core/admin/css/hello.css',
+		// 	'!bp-core/css/medium-editor-beagle.css',
+		// 	'!bp-core/css/medium-editor.css'
+		// ],
 
 		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
 		stylelintConfigScss = require('stylelint-config-wordpress/scss.js');
