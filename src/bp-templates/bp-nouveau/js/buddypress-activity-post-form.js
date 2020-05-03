@@ -869,7 +869,7 @@ window.bp = window.bp || {};
 			}
 		},
 		activateTinyMce: function() {
-			
+
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
 				window.group_messages_editor = new window.MediumEditor('#whats-new',{
@@ -882,7 +882,8 @@ window.bp = window.bp || {};
 						relativeContainer: document.getElementById('whats-new-content'),
 						static: true,
 						updateOnEmptySelection: true
-					}
+					},
+					imageDragging: false
 				});
 
 				// check for mentions in the url, if set any then focus to editor
@@ -1628,7 +1629,7 @@ window.bp = window.bp || {};
 			$('.medium-editor-toolbar-actions').show();
 			$('.medium-editor-toolbar-form').removeClass('medium-editor-toolbar-form-active');
 			$('#show-toolbar-button').parent('.show-toolbar').attr('data-bp-tooltip',$('#show-toolbar-button').parent('.show-toolbar').attr('data-bp-tooltip-show'));
-			
+
 		},
 
 		cleanFeedback: function() {

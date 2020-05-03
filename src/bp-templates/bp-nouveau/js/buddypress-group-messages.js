@@ -621,7 +621,8 @@ window.bp = window.bp || {};
 						relativeContainer: document.getElementById('whats-new-toolbar'),
 						static: true,
 						updateOnEmptySelection: true
-					}
+					},
+					imageDragging: false
 				});
 
 				window.group_messages_editor.subscribe(
