@@ -124,7 +124,6 @@ module.exports = function (grunt) {
 			options: {
 				outputStyle: 'expanded',
 				implementation: sass,
-				sourceMap: true
 				//indentType: 'tab',
 				//indentWidth: '1'
 			},
