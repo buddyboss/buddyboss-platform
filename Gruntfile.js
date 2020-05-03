@@ -260,21 +260,21 @@ module.exports = function (grunt) {
 			}
 		},
 		stylelint: {
-			css: {
-				options: {
-					config: stylelintConfigCss,
-					format: 'css'
-				},
-				expand: true,
-				cwd: SOURCE_DIR,
-				src: BP_CSS.concat(BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES,
-					[
-						'!**/*.min.css',
-						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css'
-					]
-				)
-			},
+			// css: {
+			// 	options: {
+			// 		config: stylelintConfigCss,
+			// 		format: 'css'
+			// 	},
+			// 	expand: true,
+			// 	cwd: SOURCE_DIR,
+			// 	src: BP_CSS.concat(BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES,
+			// 		[
+			// 			'!**/*.min.css',
+			// 			'!**/admin/**/*.css',
+			// 			'!**/emojionearea-edited.css'
+			// 		]
+			// 	)
+			// },
 			scss: {
 				options: {
 					config: stylelintConfigScss,
