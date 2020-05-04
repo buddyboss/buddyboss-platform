@@ -687,7 +687,7 @@ body.users_page_bp-signups td.count_sent {
   margin-top: -44px;
 }
 
-.activity-attached-gif-container .gif-play-button span.dashicons {
+.activity-attached-gif-container .gif-play-button .bb-icon-play-thin {
   font-size: 80px;
   width: 80px;
   height: 80px;
