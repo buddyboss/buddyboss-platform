@@ -570,8 +570,8 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	}
 
 	$retval = array(
-		'relation' => 'OR',
-		array(
+		'relation'      => 'OR',
+		'group_privacy' => array(
 			'relation' => 'AND',
 			array(
 				'column'  => 'group_id',
@@ -584,6 +584,14 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 			),
 		),
 	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval['group_privacy'][] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => '%' . bp_esc_like( $filter['search_terms'] ) . '%',
+		);
+	}
 
 	return $retval;
 }
