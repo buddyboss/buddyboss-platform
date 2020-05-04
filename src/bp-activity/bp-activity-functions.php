@@ -1262,7 +1262,7 @@ function bp_activity_favorites_upgrade_data() {
 				__( 'Due to the large users you must need to update users activity favorites via BuddyBoss > ', 'buddyboss' ),
 				esc_url( $admin_url ),
 				__( 'Tools', 'buddyboss' ),
-				__( ' > Repair Community and check the checkobx "Update activity favorites data." and click on Repair Items. ', 'buddyboss' ),
+				__( ' > Repair Community and check the checkobx "Update activity favorites data." and click on Repair Items. ', 'buddyboss' )
 			);
 
 			bp_core_add_admin_notice( $notice, 'error' );
