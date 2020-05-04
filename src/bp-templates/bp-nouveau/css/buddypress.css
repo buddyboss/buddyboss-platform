@@ -6394,6 +6394,10 @@ button[data-bp-close]:hover {
   margin-bottom: 0;
 }
 
+.buddypress.widget .bp-activity-info {
+  flex: 1;
+}
+
 .widget-area .buddypress.widget ul.item-list li {
   -webkit-flex: 0 1 46%;
   -moz-flex: 0 1 46%;
@@ -12984,5 +12988,3 @@ span.icons:before {
     width: auto;
   }
 }
-
-/*# sourceMappingURL=buddypress.css.map */
