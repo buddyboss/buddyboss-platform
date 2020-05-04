@@ -74,11 +74,11 @@ add_filter( 'bbp_forums_at_name_do_notifications', 'bp_groups_disable_at_mention
 add_filter( 'bp_core_avatar_default', 'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 
-// Exclude Forums if group type hide
+// Exclude Forums if group type hide.
 add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
-// Exclude Forums if group type hide
+// Exclude Forums if group type hide.
 add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
-// media scope filter
+// media scope filter.
 add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
@@ -181,14 +181,13 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 /**
  * Disable at-mention forum notifications for users who are not a member of the non-public group.
  *
- * @param bool $send Whether to send the notification.
+ * @param bool  $send Whether to send the notification.
  * @param array $usernames Array of all usernames being notified.
- * @param int $user_id ID of the user to be notified.
- * @param int $forum_id ID of the forum.
+ * @param int   $user_id ID of the user to be notified.
+ * @param int   $forum_id ID of the forum.
  *
  * @return bool
  * @since BuddyBoss 1.2.9
- *
  */
 function bp_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.
@@ -536,7 +535,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 			: bp_loggedin_user_id();
 	}
 
-	// Fetch public groups
+	// Fetch public groups.
 	$public_groups = groups_get_groups(
 		array(
 			'fields'   => 'ids',
@@ -601,6 +600,10 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
  */
 function bp_groups_filter_document_scope( $retval = array(), $filter = array() ) {
 
+	if ( ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -610,7 +613,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 			: bp_loggedin_user_id();
 	}
 
-	// Fetch public groups
+	// Fetch public groups.
 	$public_groups = groups_get_groups(
 		array(
 			'fields'   => 'ids',
@@ -701,6 +704,10 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 
 function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
+	if ( ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -710,7 +717,7 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 			: bp_loggedin_user_id();
 	}
 
-	// Fetch public groups
+	// Fetch public groups.
 	$public_groups = groups_get_groups(
 		array(
 			'fields'   => 'ids',
@@ -772,10 +779,10 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-				'column'  => 'title',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			);
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
 	}
 
 	return $retval;

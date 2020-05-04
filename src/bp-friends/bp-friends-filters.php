@@ -108,6 +108,10 @@ add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 
  */
 function bp_friends_filter_document_scope( $retval = array(), $filter = array() ) {
 
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -191,6 +195,10 @@ add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_do
  */
 function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
 
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -222,16 +230,16 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 			array(
 				'column' => 'parent',
 				'value'  => 0,
-			)
+			),
 		),
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
-				'column'  => 'title',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			);
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
 	}
 
 	return $retval;

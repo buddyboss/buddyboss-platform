@@ -98,7 +98,7 @@ function bp_activity_find_mentions( $content ) {
 	 * @param array $mentioned_users Associative array with user IDs as keys and usernames as values.
 	 * @param string $content Activity content
 	 */
-	return apply_filters( 'bp_activity_mentioned_users', [], $content );
+	return apply_filters( 'bp_activity_mentioned_users', array(), $content );
 }
 
 /**
@@ -108,8 +108,8 @@ function bp_activity_find_mentions( $content ) {
  * @version  Buddyboss 1.2.0
  * @deprecated BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
- * @param string $content Activity content
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content Activity content.
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.
  */
@@ -1778,7 +1778,7 @@ function bp_activity_generate_action_string( $activity ) {
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
 	if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
-		$mentioned_users = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+		$mentioned_users      = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
 		$mentioned_users_link = array_map(
 			function( $mentioned_user ) {
 					return bp_core_get_userlink( $mentioned_user->ID );
@@ -4379,7 +4379,6 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	 * @param WP_Post $post Post data.
 	 *
 	 * @since BuddyBoss 1.2.3
-	 *
 	 */
 	$pre_transition = apply_filters( 'bp_activity_pre_transition_post_type_status', true, $new_status, $old_status, $post );
 

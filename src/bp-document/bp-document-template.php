@@ -133,7 +133,7 @@ function bp_has_document( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	// folder filtering
+	// folder filtering.
 	if ( ! isset( $args['folder_id'] ) ) {
 		$folder_id = bp_is_single_folder() ? (int) bp_action_variable( 0 ) : false;
 		if ( bp_is_group_single() && bp_is_group_folders() ) {
@@ -143,33 +143,31 @@ function bp_has_document( $args = '' ) {
 		$folder_id = $args['folder_id'];
 	}
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) ) {
+	if ( bp_is_profile_document_support_enabled() ) {
+		$privacy = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$privacy[] = 'loggedin';
+			if ( bp_is_active( 'friends' ) ) {
 
-			// get the login user id.
-			$current_user_id = get_current_user_id();
+				// get the login user id.
+				$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
-			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+				// check if the login user is friends of the display user.
+				$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
-			/**
-			 * check if the login user is friends of the display user
-			 * OR check if the login user and the display user is the same
-			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
-				$privacy[] = 'friends';
+				if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
+					$privacy[] = 'friends';
+				}
 			}
-		}
 
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
+			if ( bp_is_my_profile() ) {
+				$privacy[] = 'onlyme';
+			}
 		}
 	}
 
 	$group_id = false;
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) && bp_is_group() ) {
 		$privacy  = array( 'grouponly' );
 		$group_id = bp_get_current_group_id();
 		$user_id  = false;
@@ -178,19 +176,21 @@ function bp_has_document( $args = '' ) {
 	// The default scope should recognize custom slugs.
 	$scope = array();
 	if ( bp_is_document_directory() ) {
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bp_is_profile_document_support_enabled() && bp_is_active( 'friends' ) ) {
 			$scope[] = 'friends';
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) ) {
 			$scope[] = 'groups';
 		}
 
-		if ( is_user_logged_in() ) {
+		if ( bp_is_profile_document_support_enabled() && is_user_logged_in() ) {
 			$scope[] = 'personal';
 		}
 
-		$privacy[] = 'friends';
+		if ( bp_is_profile_document_support_enabled() && bp_is_active( 'friends' ) ) {
+			$privacy[] = 'friends';
+		}
 	}
 
 	/*
@@ -205,7 +205,7 @@ function bp_has_document( $args = '' ) {
 			'include'        => false,           // Pass an document_id or string of IDs comma-separated.
 			'exclude'        => false,           // Pass an activity_id or string of IDs comma-separated.
 			'sort'           => 'DESC',          // Sort DESC or ASC.
-			'order_by'       => false,           // Order by. Default: date_created
+			'order_by'       => false,           // Order by. Default: date_created.
 			'page'           => 1,               // Which page to load.
 			'per_page'       => 20,              // Number of items per page.
 			'page_arg'       => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
@@ -216,7 +216,7 @@ function bp_has_document( $args = '' ) {
 			// Scope - pre-built document filters for a user (friends/groups).
 			'scope'          => $scope,
 
-			// Filtering
+			// Filtering.
 			'user_id'        => $user_id,        // user_id to filter on.
 			'folder_id'      => $folder_id,       // folder_id to filter on.
 			'group_id'       => $group_id,       // group_id to filter on.

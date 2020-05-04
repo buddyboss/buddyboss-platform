@@ -114,12 +114,12 @@ class BP_Document_Component extends BP_Component {
 		if ( bp_is_document_component() ) {
 
 			// Screens - Directory.
-			if ( bp_is_document_directory() ) {
+			if ( bp_is_document_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) {
 				require $this->path . 'bp-document/screens/directory.php';
 			}
 
 			// Screens - User profile integration.
-			if ( bp_is_user() ) {
+			if ( bp_is_user() && bp_is_profile_document_support_enabled() ) {
 				require $this->path . 'bp-document/screens/document.php';
 
 				/*

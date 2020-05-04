@@ -288,7 +288,6 @@ class BP_Document {
 			$file                  = get_attached_file( $attachment_id );
 			$upload_dir            = wp_upload_dir();
 
-
 			if ( 'pdf' === $extension ) {
 
 				$output_format = 'jpeg';
@@ -830,7 +829,7 @@ class BP_Document {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort !== 'ASC' && $sort !== 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -872,7 +871,7 @@ class BP_Document {
 			$where_conditions_document['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
 
-		// existing-document check to query document which has no folders assigned
+		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
 			$where_conditions_document['folder'] = "m.album_id = {$r['folder_id']}";
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
@@ -897,13 +896,23 @@ class BP_Document {
 				$where_conditions_folder['user_directory']   = "a.parent = {$folder_id}";
 				$where_conditions_document['user_directory'] = "m.album_id = {$folder_id}";
 			} else {
-				$where_conditions_document['user_directory'] = 'm.album_id = 0';
-				$where_conditions_folder['user_directory']   = 'a.parent = 0';
+				if ( false === $r['search_terms'] ) {
+					$where_conditions_document['user_directory'] = 'm.album_id = 0';
+					$where_conditions_folder['user_directory']   = 'a.parent = 0';
+				}
 			}
 		}
 
-		$where_conditions_folder['type']   = "a.type = 'document'";
-		$where_conditions_document['type'] = "m.type = 'document'";
+		if ( bp_is_document_directory() && ! bp_is_profile_document_support_enabled() ) {
+			$where_conditions_folder['type']   = "a.type = 'document' AND a.group_id > 0";
+			$where_conditions_document['type'] = "m.type = 'document' AND m.group_id > 0";
+		} elseif ( bp_is_document_directory() && ! bp_is_group_document_support_enabled() ) {
+			$where_conditions_folder['type']   = "a.type = 'document' AND a.group_id = 0";
+			$where_conditions_document['type'] = "m.type = 'document' AND m.group_id = 0";
+		} else {
+			$where_conditions_folder['type']   = " a.type = 'document'";
+			$where_conditions_document['type'] = " m.type = 'document'";
+		}
 
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                              = "'" . implode( "', '", $r['privacy'] ) . "'";
@@ -934,7 +943,7 @@ class BP_Document {
 		}
 
 		// Join the where conditions together.
-		if ( ! empty( $scope_query_document['sql'] ) && !empty( $scope_query_folder['sql'] ) ) {
+		if ( ! empty( $scope_query_document['sql'] ) && ! empty( $scope_query_folder['sql'] ) ) {
 			$where_sql_folder   = 'WHERE a.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
 			$where_sql_document = 'WHERE m.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
 		} else {
@@ -991,6 +1000,10 @@ class BP_Document {
 		$document_ids_sql_folder   = apply_filters( 'bp_document_paged_activities_sql_folder', $document_ids_sql_folder, $r );
 		$document_ids_sql_document = apply_filters( 'bp_document_paged_activities_sql_document', $document_ids_sql_document, $r );
 
+
+		error_log( $document_ids_sql_folder );
+		error_log( $document_ids_sql_document );
+
 		$cache_group = 'bp_document';
 
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
@@ -1029,14 +1042,11 @@ class BP_Document {
 			$documents = self::prefetch_object_data( $documents );
 		}
 
-
-
 		$direction = 'SORT_' . $sort;
 
+		$documents = self::array_msort( $documents, array( $r['order_by'] => $direction ) );
 
-		$documents = self::array_msort( $documents,  array( $r['order_by'] => $direction ) );
-
-		//array_multisort( array_column( $documents, $r['order_by'] ), $direction, $documents );
+		// array_multisort( array_column( $documents, $r['order_by'] ), $direction, $documents );
 
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 
@@ -1061,7 +1071,6 @@ class BP_Document {
 
 		$new_array = json_decode( json_encode( $array ), true );
 
-
 		if ( 'date_created' === $column ) {
 			$mapping_arr = array_map( 'strtotime', array_column( $new_array, $column ) );
 			array_multisort( $mapping_arr, $direction );
@@ -1069,18 +1078,18 @@ class BP_Document {
 			$reference_array = array();
 
 			foreach ( $array as $key => $row ) {
-				$reference_array[ $key ] = $row[$column];
+				$reference_array[ $key ] = $row[ $column ];
 			}
 
 			array_multisort( $reference_array, $direction, $array );
 		}
 
-		//error_log( print_r( $new_array, true ) );
+		// error_log( print_r( $new_array, true ) );
 	}
 
 	public static function array_msort( $array, $cols ) {
 
-		$array  = json_decode( json_encode( $array ), true );
+		$array = json_decode( json_encode( $array ), true );
 
 		$colarr = array();
 		foreach ( $cols as $col => $order ) {
@@ -1106,11 +1115,10 @@ class BP_Document {
 			}
 		}
 
-
 		if ( ! empty( $ret ) ) {
 
 			foreach ( $ret as $k => $v ) {
-				$ret[$k] = (object) $v;
+				$ret[ $k ] = (object) $v;
 			}
 		}
 
