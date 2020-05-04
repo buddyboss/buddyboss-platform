@@ -242,14 +242,22 @@ module.exports = function( grunt ) {
 				src: [
 					'**/bp-activity/**',
 					'**/bp-blogs/**',
+					'**/bp-forums/**',
 					'**/bp-friends/**',
 					'**/bp-groups/**',
+					'**/bp-invites/**',
+					'**/bp-media/**',
 					'**/bp-members/**',
 					'**/bp-messages/**',
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
 					'**/bp-xprofile/**'
 				],
+				options: {
+					process : function( content ) {
+						return content.replace( /\'buddypress'/g, '\'buddyboss\'' ); // update text-domain.
+					}
+				}
 			},
 			bp_rest_core: {
 				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
@@ -260,17 +268,27 @@ module.exports = function( grunt ) {
 				filter: 'isFile',
 				src: [
 					'**',
+					'!actions.php',
+					'!filters.php',
 					'!functions.php',
 					'!**/bp-activity/**',
 					'!**/bp-blogs/**',
+					'!**/bp-forums/**',
 					'!**/bp-friends/**',
 					'!**/bp-groups/**',
+					'!**/bp-invites/**',
+					'!**/bp-media/**',
 					'!**/bp-members/**',
 					'!**/bp-messages/**',
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
 					'!**/bp-xprofile/**'
-				]
+				],
+				options: {
+					process : function( content ) {
+						return content.replace( /\'buddypress'/g, '\'buddyboss\'' ); // update text-domain.
+					}
+				}
 			}
 		},
 		uglify: {
