@@ -364,7 +364,7 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_document_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
 
 	if ( ! empty( $documents ) && is_array( $documents ) ) {
-		// save  document
+		// save  document.
 		foreach ( $documents as $document ) {
 
 			$attachment_data = get_post( $document['id'] );

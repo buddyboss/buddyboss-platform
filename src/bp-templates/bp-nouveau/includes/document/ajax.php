@@ -820,7 +820,7 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['medias'] ) ) {
+	if ( empty( $_POST['documents'] ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please upload document before saving.', 'buddyboss' )
@@ -829,36 +829,36 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['medias'] ) && ! empty( $_POST['medias'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
-		$documents = $_POST['medias'];
+	if ( isset( $_POST['documents'] ) && ! empty( $_POST['documents'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
+		$documents = $_POST['documents'];
 		$album_id  = (int) $_POST['folder_id'];
 		if ( ! empty( $documents ) && is_array( $documents ) ) {
-			// set album id for media.
-			foreach ( $documents as $key => $media ) {
-				if ( 0 === (int) $media['folder_id'] ) {
-					$_POST['medias'][ $key ]['folder_id'] = $album_id;
+			// set folder id for document.
+			foreach ( $documents as $key => $document ) {
+				if ( 0 === (int) $document['folder_id'] ) {
+					$_POST['documents'][ $key ]['folder_id'] = $album_id;
 				}
 			}
 		}
 	}
 
 	// handle media uploaded.
-	$media_ids = bp_document_add_handler();
+	$document_ids = bp_document_add_handler( $_POST['documents'] );
 
-	$media = '';
-	if ( ! empty( $media_ids ) ) {
+	$document = '';
+	if ( ! empty( $document_ids ) ) {
 		ob_start();
-		if ( bp_has_document( array( 'include' => implode( ',', $media_ids ) ) ) ) {
+		if ( bp_has_document( array( 'include' => implode( ',', $document_ids ) ) ) ) {
 			while ( bp_document() ) {
 				bp_the_document();
 				bp_get_template_part( 'document/document-entry' );
 			}
 		}
-		$media = ob_get_contents();
+		$document = ob_get_contents();
 		ob_end_clean();
 	}
 
-	wp_send_json_success( array( 'media' => $media ) );
+	wp_send_json_success( array( 'document' => $document ) );
 }
 
 /**
