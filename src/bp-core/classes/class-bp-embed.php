@@ -335,7 +335,8 @@ class BP_Embed extends WP_Embed {
 
 			// add the lazy class to the iframe element.
 			if ( $content !== $old_content ) {
-				if ( preg_match( '/class=["\']/i', $content ) ) {
+				preg_match( '/<iframe[^>]+(?:class)="([^"]*)"[^>]*>/', $content, $match );
+				if ( ! empty( $match[0] ) ) {
 					$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
 				} else {
 					$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
