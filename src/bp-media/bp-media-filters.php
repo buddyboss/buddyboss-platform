@@ -9,6 +9,7 @@ add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
+add_action( 'bp_after_single_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
@@ -31,10 +32,10 @@ add_action( 'bbp_new_reply', 'bp_media_forums_save_gif_data', 999 );
 add_action( 'bbp_new_topic', 'bp_media_forums_save_gif_data', 999 );
 add_action( 'edit_post', 'bp_media_forums_save_gif_data', 999 );
 
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 999, 2 );
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 999, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 
 // Messages
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
@@ -274,7 +275,7 @@ function bp_media_delete_activity_media( $activities ) {
  * @since BuddyBoss 1.0.0
  * @param $album
  */
-function bp_media_update_media_privacy( &$album ) {
+function bp_media_update_media_privacy( $album ) {
 
 	if ( ! empty( $album->id ) ) {
 
@@ -1007,10 +1008,10 @@ function bp_media_messages_save_group_data( &$message ) {
 	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list
 	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply
 
-	if ( '' === $message_meta_users_list ) {
+	if ( '' === $message_meta_users_list && isset( $group ) &&  '' !== $group ) {
 		$args = array(
 			'per_page'            => 99999999999999,
-			'group'               => $_POST['group'],
+			'group'               => $group,
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
@@ -1036,7 +1037,7 @@ function bp_media_messages_save_group_data( &$message ) {
 
 		$args = [
 			'thread_id' => $message->thread_id,
-			'per_page' => 99999999999999,
+			'per_page'  => 99999999999999,
 		];
 
 		if ( bp_thread_has_messages( $args ) ) {

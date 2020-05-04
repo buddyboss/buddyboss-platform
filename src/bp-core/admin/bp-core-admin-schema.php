@@ -323,9 +323,11 @@ function bp_core_install_private_messaging() {
 				unread_count int(10) NOT NULL DEFAULT '0',
 				sender_only tinyint(1) NOT NULL DEFAULT '0',
 				is_deleted tinyint(1) NOT NULL DEFAULT '0',
+				is_hidden tinyint(1) NOT NULL DEFAULT '0',
 				KEY user_id (user_id),
 				KEY thread_id (thread_id),
 				KEY is_deleted (is_deleted),
+				KEY is_hidden (is_hidden),
 				KEY sender_only (sender_only),
 				KEY unread_count (unread_count)
 			) {$charset_collate};";

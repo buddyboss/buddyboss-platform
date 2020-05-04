@@ -1110,26 +1110,27 @@ add_filter( 'bp_create_excerpt', 'force_balance_tags' );
 function bp_total_member_count() {
 	echo bp_get_total_member_count();
 }
-	/**
-	 * Return the total member count in your BP instance.
-	 *
-	 * Since BuddyBoss 1.0.0, members directory lists all members, even if they have never been active.
-	 * So, this function also uses bp_core_get_total_member_count, again.
-	 *
-	 * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
-	 * which counts non-spam, non-deleted users who have last_activity.
-	 * This value will correctly match the total member count number used
-	 * for pagination on member directories.
-	 *
-	 * Before BuddyPress 1.6, this function used bp_core_get_total_member_count(),
-	 * which did not take into account last_activity, and thus often
-	 * resulted in higher counts than shown by member directory pagination.
-	 *
-	 * @since BuddyPress 1.2.0
-	 * @since BuddyBoss 1.0.0 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
-	 *
-	 * @return int Member count.
-	 */
+
+/**
+ * Return the total member count in your BP instance.
+ *
+ * Since BuddyBoss 1.0.0, members directory lists all members, even if they have never been active.
+ * So, this function also uses bp_core_get_total_member_count, again.
+ *
+ * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
+ * which counts non-spam, non-deleted users who have last_activity.
+ * This value will correctly match the total member count number used
+ * for pagination on member directories.
+ *
+ * Before BuddyPress 1.6, this function used bp_core_get_total_member_count(),
+ * which did not take into account last_activity, and thus often
+ * resulted in higher counts than shown by member directory pagination.
+ *
+ * @since BuddyPress 1.2.0
+ * @since BuddyBoss 1.0.0 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
+ *
+ * @return int Member count.
+ */
 function bp_get_total_member_count() {
 
 	/**
@@ -1141,7 +1142,7 @@ function bp_get_total_member_count() {
 	 */
 	return apply_filters( 'bp_get_total_member_count', bp_core_get_total_member_count() );
 }
-	add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
+add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
 
 /**
  * Output whether blog signup is allowed.
