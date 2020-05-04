@@ -1001,9 +1001,6 @@ class BP_Document {
 		$document_ids_sql_document = apply_filters( 'bp_document_paged_activities_sql_document', $document_ids_sql_document, $r );
 
 
-		error_log( $document_ids_sql_folder );
-		error_log( $document_ids_sql_document );
-
 		$cache_group = 'bp_document';
 
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
