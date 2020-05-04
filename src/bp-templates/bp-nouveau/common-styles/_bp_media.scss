@@ -1049,6 +1049,10 @@ ul.bb-albums-list {
 		top: 10px;
 		right: 10px;
 	}
+
+	body .bb-document-theater .bb-media-section {
+		height: calc(100vh - 145px);
+	}
 }
 
 @media (max-width: 1000px) {
@@ -1648,6 +1652,29 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		overflow: auto;
 		align-items: flex-end;
 		position: relative;
+
+		&.bb-media-no-preview {
+			background-color: #fff;
+			align-items: center;
+
+			.img-section {
+				justify-content: center;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+
+				> i {
+					font-size: 35px;
+					margin-bottom: 10px;
+					color: #9ca8b4;
+				}
+
+				> p {
+					font-size: 18px;
+				}
+
+			}
+		}
 
 		.img-section {
 			overflow: auto;

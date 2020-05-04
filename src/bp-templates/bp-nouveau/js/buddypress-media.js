@@ -3923,7 +3923,7 @@ window.bp = window.bp || {};
 				$.get(
 					target.attr( 'data-text-preview' ),
 					function(data) {
-						media_elements.find( '.bb-media-section' ).html( '<h3>' + target.text() + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
+						media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target.text() + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
 						media_elements.find( '.bb-media-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );
 						media_elements.find( '.bb-media-section .document-text textarea' ).html( data.replace( 'n','' ) );
 
@@ -3932,7 +3932,16 @@ window.bp = window.bp || {};
 				);
 			} else {
 
-				media_elements.find( '.bb-media-section' ).html( '<h3>' + target.text() + '</h3><div class="img-section"> <img src="' + target.attr( 'data-preview' ) + '" /> </div>' );
+				if( target.attr( 'data-preview' ) ) {
+					
+					media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target.text() + '</h3><div class="img-section"> <img src="' + target.attr( 'data-preview' ) + '" /> </div>' );
+
+				} else {
+
+					media_elements.find( '.bb-media-section' ).addClass( 'bb-media-no-preview' ).html( '<div class="img-section"> <i class="' + target.closest('.media-folder_items').find('.media-folder_icon > a > i').attr( 'class' ) + '"></i><p>' + target.text() + '</p> </div>' );
+
+				}
+
 			}
 			var id = target.closest( '.media-folder_items' ).data( 'activity-id' );
 			bp.Nouveau.Media.Theatre.getDocumentActivity( id );
@@ -3992,7 +4001,7 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			var media_elements = $( target ).closest( '.bb-media-container' ).find( '.document-theatre' );
-			media_elements.find( '.bb-media-section' ).html( '' );
+			media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '' );
 			media_elements.hide();
 			self.is_open = false;
 			document.removeEventListener( 'keyup', bp.Nouveau.Media.Theatre.checkPressedKeyDocuments( event ) );

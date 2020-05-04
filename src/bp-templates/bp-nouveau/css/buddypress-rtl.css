@@ -12361,6 +12361,9 @@ ul.bb-albums-list .bb-more-photos strong {
     top: 10px;
     left: 10px;
   }
+  body .bb-document-theater .bb-media-section {
+    height: calc(100vh - 145px);
+  }
 }
 
 @media (max-width: 1000px) {
@@ -12971,6 +12974,28 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   overflow: auto;
   align-items: flex-end;
   position: relative;
+}
+
+.bb-document-theater .bb-media-section.bb-media-no-preview {
+  background-color: #fff;
+  align-items: center;
+}
+
+.bb-document-theater .bb-media-section.bb-media-no-preview .img-section {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.bb-document-theater .bb-media-section.bb-media-no-preview .img-section > i {
+  font-size: 35px;
+  margin-bottom: 10px;
+  color: #9ca8b4;
+}
+
+.bb-document-theater .bb-media-section.bb-media-no-preview .img-section > p {
+  font-size: 18px;
 }
 
 .bb-document-theater .bb-media-section .img-section {
