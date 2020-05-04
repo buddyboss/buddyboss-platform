@@ -27,13 +27,13 @@ module.exports = function (grunt) {
 		BP_EXCLUDED_MISC = [],
 
 		// SASS generated "Twenty*"" CSS files
-		// BP_SCSS_CSS_FILES = [
-		// 	// '!bp-templates/bp-legacy/css/twenty*.css',
-		// 	'!bp-templates/bp-nouveau/css/buddypress.css',
-		// 	'!bp-core/admin/css/hello.css',
-		// 	'!bp-core/css/medium-editor-beagle.css',
-		// 	'!bp-core/css/medium-editor.css'
-		// ],
+		BP_SCSS_CSS_FILES = [
+			// '!bp-templates/bp-legacy/css/twenty*.css',
+			'!bp-templates/bp-nouveau/css/buddypress.css',
+			'!bp-core/admin/css/hello.css',
+			'!bp-core/css/medium-editor-beagle.css',
+			'!bp-core/css/medium-editor.css'
+		],
 
 		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
 		stylelintConfigScss = require('stylelint-config-wordpress/scss.js');
@@ -260,21 +260,21 @@ module.exports = function (grunt) {
 			}
 		},
 		stylelint: {
-			// css: {
-			// 	options: {
-			// 		config: stylelintConfigCss,
-			// 		format: 'css'
-			// 	},
-			// 	expand: true,
-			// 	cwd: SOURCE_DIR,
-			// 	src: BP_CSS.concat(BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES,
-			// 		[
-			// 			'!**/*.min.css',
-			// 			'!**/admin/**/*.css',
-			// 			'!**/emojionearea-edited.css'
-			// 		]
-			// 	)
-			// },
+			css: {
+				options: {
+					config: stylelintConfigCss,
+					format: 'css'
+				},
+				expand: true,
+				cwd: SOURCE_DIR,
+				src: BP_CSS.concat(BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES,
+					[
+						'!**/*.min.css',
+						'!**/admin/**/*.css',
+						'!**/emojionearea-edited.css'
+					]
+				)
+			},
 			scss: {
 				options: {
 					config: stylelintConfigScss,
