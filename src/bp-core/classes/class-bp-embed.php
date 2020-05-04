@@ -261,6 +261,7 @@ class BP_Embed extends WP_Embed {
 	 */
 	public function autoembed( $content, $type = '' ) {
 		$is_activity = isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type );
+		$link_embed  = false;
 
 		if ( $is_activity ) {
 
@@ -295,12 +296,8 @@ class BP_Embed extends WP_Embed {
 				}
 
 				if ( ! empty( $embed_code ) ) {
-					// find matches for only urls in the content.
-					preg_match_all( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', $content, $match );
-
-					if ( empty( $match[0] ) ) {
-						$content .= $embed_code;
-					}
+					$content .= $embed_code;
+					$link_embed = true;
 				}
 			} else {
 
@@ -315,7 +312,7 @@ class BP_Embed extends WP_Embed {
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 
-		if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
+		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) ) {
 			// Find URLs on their own line.
 			if ( ! $is_activity ) {
 				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
