@@ -1704,7 +1704,8 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
-			$errors->add( 'user_name', __( 'Usernames can contain only letters, numbers, ., -, and @', 'buddyboss' ) );
+			$field_name = xprofile_get_field( bp_xprofile_nickname_field_id() )->name;
+			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
 		}
 
 		// Minimum of 4 characters.
