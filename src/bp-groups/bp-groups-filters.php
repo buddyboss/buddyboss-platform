@@ -569,29 +569,31 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
-	$retval = array(
-		'relation'      => 'OR',
-		'group_privacy' => array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'group_id',
-				'compare' => 'IN',
-				'value'   => (array) $group_ids['groups'],
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'grouponly',
-			),
+	$wheres = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
 		),
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval['group_privacy'][] = array(
+		$wheres[] = array(
 			'column'  => 'title',
 			'compare' => 'LIKE',
 			'value'   => '%' . bp_esc_like( $filter['search_terms'] ) . '%',
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$wheres
+	);
 
 	return $retval;
 }
