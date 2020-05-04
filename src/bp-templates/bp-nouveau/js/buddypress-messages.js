@@ -68,7 +68,7 @@ window.bp = window.bp || {};
 			//  if defined, add custom dropzone options
 			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
 				Object.assign(this.dropzone_options, BP_Nouveau.media.dropzone_options);
-			}			
+			}
 		},
 
 		dropzoneDocumentView: function() {
@@ -730,8 +730,6 @@ window.bp = window.bp || {};
 					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 					}
-				} else {
-					bp.Nouveau.Messages.dropzone.removeFile(file);
 				}
 			});
 
@@ -825,8 +823,6 @@ window.bp = window.bp || {};
 					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 					}
-				} else {
-					bp.Nouveau.Messages.dropzone.removeFile(file);
 				}
 			});
 
@@ -1965,7 +1961,7 @@ window.bp = window.bp || {};
 				} else {
 					$('.message_action__list.open').removeClass('open');
 				}
-			
+
 			});
 
 		},
@@ -1979,7 +1975,7 @@ window.bp = window.bp || {};
 		doAction: function( event ) {
 			var action   = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
 				feedback = BP_Nouveau.messages.doingAction;
-				
+
 				$( event.currentTarget ).closest( '.message_action__list' ).removeClass('open');
 
 			if ( ! action ) {
@@ -2206,7 +2202,7 @@ window.bp = window.bp || {};
 			} else {
 				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
 			}
-                        
+
 			if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
 				$('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
 			}
