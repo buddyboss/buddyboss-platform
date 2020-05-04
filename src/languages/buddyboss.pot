@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-04-30 08:06:13+00:00\n"
+"POT-Creation-Date: 2020-05-03 16:31:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -640,75 +640,102 @@ msgstr ""
 msgid "other like this"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1682
+#: bp-activity/bp-activity-functions.php:1262
+msgid ""
+"Due to the large users you must need to update users activity favorites via "
+"BuddyBoss > "
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:1264
+#: bp-core/admin/bp-core-admin-functions.php:668
+#: bp-core/admin/bp-core-admin-functions.php:2324
+#: bp-core/admin/bp-core-admin-tools.php:34
+#: bp-core/admin/bp-core-admin-tools.php:222
+#: bp-core/admin/bp-core-admin-tools.php:855
+#: bp-core/classes/class-bp-admin.php:509
+#: bp-core/classes/class-bp-admin.php:510
+#: bp-core/classes/class-bp-admin.php:532
+#: bp-core/classes/class-bp-admin.php:533 bp-forums/admin/settings.php:1464
+#: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
+#: bp-media/bp-media-filters.php:820
+msgid "Tools"
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:1265
+msgid ""
+" > Repair Community and check the checkobx \"Update activity favorites "
+"data.\" and click on Repair Items. "
+msgstr ""
+
+#: bp-activity/bp-activity-functions.php:1695
 #: bp-groups/bp-groups-activity.php:33
 msgid "Posted a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1684
+#: bp-activity/bp-activity-functions.php:1697
 #: bp-groups/bp-groups-activity.php:35
 msgid "Updates"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1691
+#: bp-activity/bp-activity-functions.php:1704
 msgid "Replied to a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1693
+#: bp-activity/bp-activity-functions.php:1706
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:761
 msgid "Activity Comments"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1773
+#: bp-activity/bp-activity-functions.php:1786
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1776
+#: bp-activity/bp-activity-functions.php:1789
 msgid " and "
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1780 cli/components/activity.php:766
+#: bp-activity/bp-activity-functions.php:1793 cli/components/activity.php:766
 msgid "%s posted an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1804 cli/components/activity.php:790
+#: bp-activity/bp-activity-functions.php:1817 cli/components/activity.php:790
 msgid "%s posted a new activity comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1853
+#: bp-activity/bp-activity-functions.php:1866
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1859
+#: bp-activity/bp-activity-functions.php:1872
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1904
+#: bp-activity/bp-activity-functions.php:1917
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1910
+#: bp-activity/bp-activity-functions.php:1923
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2897
+#: bp-activity/bp-activity-functions.php:2910
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:340
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2925
+#: bp-activity/bp-activity-functions.php:2938
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3607
+#: bp-activity/bp-activity-functions.php:3620
 msgid "Thumbnail"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5026
+#: bp-activity/bp-activity-functions.php:5039
 msgid "URL is not valid."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:5034
+#: bp-activity/bp-activity-functions.php:5047
 msgid "Sorry! preview is not available right now. Please try again later."
 msgstr ""
 
@@ -1718,20 +1745,6 @@ msgstr ""
 msgid "Integrations"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:668
-#: bp-core/admin/bp-core-admin-functions.php:2324
-#: bp-core/admin/bp-core-admin-tools.php:34
-#: bp-core/admin/bp-core-admin-tools.php:222
-#: bp-core/admin/bp-core-admin-tools.php:846
-#: bp-core/classes/class-bp-admin.php:509
-#: bp-core/classes/class-bp-admin.php:510
-#: bp-core/classes/class-bp-admin.php:532
-#: bp-core/classes/class-bp-admin.php:533 bp-forums/admin/settings.php:1464
-#: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:820
-msgid "Tools"
-msgstr ""
-
 #: bp-core/admin/bp-core-admin-functions.php:673
 #: bp-core/admin/bp-core-admin-help.php:56
 #: bp-core/classes/class-bp-admin.php:431
@@ -2692,13 +2705,17 @@ msgid ""
 "admins)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:432
+#: bp-core/admin/bp-core-admin-tools.php:409
+msgid "Update activity favorites data."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:441
 msgid "Counting the number of connections for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:433
-#: bp-core/admin/bp-core-admin-tools.php:494
-#: bp-core/admin/bp-core-admin-tools.php:542 bp-forums/admin/tools.php:196
+#: bp-core/admin/bp-core-admin-tools.php:442
+#: bp-core/admin/bp-core-admin-tools.php:503
+#: bp-core/admin/bp-core-admin-tools.php:551 bp-forums/admin/tools.php:196
 #: bp-forums/admin/tools.php:262 bp-forums/admin/tools.php:321
 #: bp-forums/admin/tools.php:387 bp-forums/admin/tools.php:389
 #: bp-forums/admin/tools.php:518 bp-forums/admin/tools.php:573
@@ -2712,17 +2729,19 @@ msgstr ""
 msgid "Failed!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:475
-#: bp-core/admin/bp-core-admin-tools.php:525
-#: bp-core/admin/bp-core-admin-tools.php:554
-#: bp-core/admin/bp-core-admin-tools.php:576
-#: bp-core/admin/bp-core-admin-tools.php:593
-#: bp-core/admin/bp-core-admin-tools.php:651
-#: bp-core/admin/bp-core-admin-tools.php:688
-#: bp-core/admin/bp-core-admin-tools.php:739
-#: bp-core/admin/bp-core-admin-tools.php:784
-#: bp-core/admin/bp-core-admin-tools.php:1019
-#: bp-core/admin/bp-core-admin-tools.php:1062 bp-forums/admin/tools.php:242
+#: bp-core/admin/bp-core-admin-tools.php:484
+#: bp-core/admin/bp-core-admin-tools.php:534
+#: bp-core/admin/bp-core-admin-tools.php:563
+#: bp-core/admin/bp-core-admin-tools.php:585
+#: bp-core/admin/bp-core-admin-tools.php:602
+#: bp-core/admin/bp-core-admin-tools.php:660
+#: bp-core/admin/bp-core-admin-tools.php:697
+#: bp-core/admin/bp-core-admin-tools.php:748
+#: bp-core/admin/bp-core-admin-tools.php:793
+#: bp-core/admin/bp-core-admin-tools.php:1028
+#: bp-core/admin/bp-core-admin-tools.php:1071
+#: bp-core/admin/bp-core-admin-tools.php:1206
+#: bp-core/admin/bp-core-admin-tools.php:1215 bp-forums/admin/tools.php:242
 #: bp-forums/admin/tools.php:244 bp-forums/admin/tools.php:302
 #: bp-forums/admin/tools.php:304 bp-forums/admin/tools.php:345
 #: bp-forums/admin/tools.php:347 bp-forums/admin/tools.php:551
@@ -2742,83 +2761,83 @@ msgstr ""
 msgid "Complete!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:493
+#: bp-core/admin/bp-core-admin-tools.php:502
 msgid "Counting the number of groups for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:539
+#: bp-core/admin/bp-core-admin-tools.php:548
 msgid "Repopulating Blogs records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:570
+#: bp-core/admin/bp-core-admin-tools.php:579
 msgid "Counting the number of active members on the site&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:588
+#: bp-core/admin/bp-core-admin-tools.php:597
 msgid "Determining last activity dates for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:647
+#: bp-core/admin/bp-core-admin-tools.php:656
 msgid "Repair default profile set and fields&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:678
-#: bp-core/admin/bp-core-admin-tools.php:729
-#: bp-core/admin/bp-core-admin-tools.php:774
-#: bp-core/admin/bp-core-admin-tools.php:1010
-#: bp-core/admin/bp-core-admin-tools.php:1053
+#: bp-core/admin/bp-core-admin-tools.php:687
+#: bp-core/admin/bp-core-admin-tools.php:738
+#: bp-core/admin/bp-core-admin-tools.php:783
+#: bp-core/admin/bp-core-admin-tools.php:1019
+#: bp-core/admin/bp-core-admin-tools.php:1062
 msgid "%s members updated successfully."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:685
+#: bp-core/admin/bp-core-admin-tools.php:694
 msgid "Re-sync user profile data to WordPress; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:736
+#: bp-core/admin/bp-core-admin-tools.php:745
 msgid "Re-sync user WordPress data to BuddyBoss profile fields; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:781
+#: bp-core/admin/bp-core-admin-tools.php:790
 msgid "Update WordPress user display names; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:876
-#: bp-core/admin/bp-core-admin-tools.php:879
+#: bp-core/admin/bp-core-admin-tools.php:885
+#: bp-core/admin/bp-core-admin-tools.php:888
 msgid "BuddyBoss Tools"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:878
+#: bp-core/admin/bp-core-admin-tools.php:887
 msgid ""
 "BuddyBoss keeps track of various relationships between users, groups, and "
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:879
+#: bp-core/admin/bp-core-admin-tools.php:888
 msgid "Use the %s to repair these relationships."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:944
+#: bp-core/admin/bp-core-admin-tools.php:953
 msgid "Emails have been successfully reinstalled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:965
+#: bp-core/admin/bp-core-admin-tools.php:974
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1018
+#: bp-core/admin/bp-core-admin-tools.php:1027
 msgid ""
 "Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1061
+#: bp-core/admin/bp-core-admin-tools.php:1070
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1085 bp-forums/admin/tools.php:1892
+#: bp-core/admin/bp-core-admin-tools.php:1094 bp-forums/admin/tools.php:1892
 #: bp-forums/functions.php:866
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
@@ -2832,6 +2851,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:502
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1190
+msgid "%s members activity favorite updated successfully."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1202
+#: bp-core/admin/bp-core-admin-tools.php:1211
+msgid "Members activity favorite updated %s"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:76
