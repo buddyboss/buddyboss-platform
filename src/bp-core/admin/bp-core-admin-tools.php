@@ -403,6 +403,15 @@ function bp_admin_repair_list() {
 		}
 	}
 
+	if ( bp_is_active( 'activity' ) ) {
+		$repair_list[102] = array(
+			'bp-sync-activity-favourite',
+			__( 'Update activity favorites data.', 'buddyboss' ),
+			'bp_admin_update_activity_favourite',
+		);
+    }
+
+
 	ksort( $repair_list );
 
 	/**
@@ -1126,7 +1135,84 @@ function bp_admin_repair_tools_wrapper_function() {
 		$status = bp_admin_reinstall_emails();
 	} elseif ( 'bp-assign-member-type' === $type ) {
 		$status = bp_admin_assign_member_type();
+	} elseif ( 'bp-sync-activity-favourite' === $type ) {
+		$status = bp_admin_update_activity_favourite();
 	}
 	wp_send_json_success( $status );
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );
+
+/**
+ * Check if BuddyPress activity favorites data needs upgrade & Update to BuddyBoss activity like data
+ *
+ * @since BuddyBoss 1.3.3
+ */
+function bp_admin_update_activity_favourite() {
+
+	$bp_activity_favorites = bp_get_option( 'bp_activity_favorites', false );
+
+	if ( ! $bp_activity_favorites ) {
+
+		$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+		$args = array(
+			'number' => 50,
+			'offset' => $offset,
+		);
+
+		$users = get_users( $args );
+
+		if ( ! empty( $users ) ) {
+
+		    foreach ( $users as $user ) {
+			    $user_favs = bp_get_user_meta( $user->ID, 'bp_favorite_activities', true );
+			    if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
+				    $offset ++;
+				    continue;
+			    }
+			    foreach ( $user_favs as $fav ) {
+
+				    // Update the users who have favorited this activity.
+				    $favorite_users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
+				    if ( empty( $favorite_users ) || ! is_array( $favorite_users ) ) {
+					    $favorite_users = array();
+				    }
+				    // Add to activity's favorited users.
+				    $favorite_users[] = $user->ID;
+
+				    // Update activity meta
+				    bp_activity_update_meta( $fav, 'bp_favorite_users', array_unique( $favorite_users ) );
+
+			    }
+			    $offset ++;
+		    }
+
+			$records_updated = sprintf( __( '%s members activity favorite updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+			return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+			);
+
+		} else {
+
+			bp_update_option( 'bp_activity_favorites', true );
+
+			$statement = __( 'Members activity favorite updated %s', 'buddyboss' );
+
+			return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			);
+		}
+
+	} else {
+		$statement = __( 'Members activity favorite updated %s', 'buddyboss' );
+
+		return array(
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+    }
+}

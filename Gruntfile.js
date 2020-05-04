@@ -1,7 +1,8 @@
 /* jshint node:true */
 /* global module */
-module.exports = function( grunt ) {
-	var SOURCE_DIR = 'src/',
+module.exports = function (grunt) {
+	var sass = require('node-sass'),
+		SOURCE_DIR = 'src/',
 		BUILD_DIR = 'buddyboss-platform/',
 
 		BP_CSS = [
@@ -23,8 +24,7 @@ module.exports = function( grunt ) {
 			'!**/vendor/**/*.js'
 		],
 
-		BP_EXCLUDED_MISC = [
-		],
+		BP_EXCLUDED_MISC = [],
 
 		// SASS generated "Twenty*"" CSS files
 		BP_SCSS_CSS_FILES = [
@@ -35,29 +35,35 @@ module.exports = function( grunt ) {
 			'!bp-core/css/medium-editor.css'
 		],
 
-		stylelintConfigCss  = require('stylelint-config-wordpress/index.js'),
+		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
 		stylelintConfigScss = require('stylelint-config-wordpress/scss.js');
 
-	if ( typeof stylelintConfigCss.rules !== 'undefined' ) {
+	if (typeof stylelintConfigCss.rules !== 'undefined') {
 		stylelintConfigCss.rules = Object.assign(stylelintConfigCss.rules, {
 			'no-descending-specificity': null,
 			'selector-pseudo-element-colon-notation': null,
-			'no-duplicate-selectors': null
+			'no-duplicate-selectors': null,
+			'selector-class-pattern': null,
+			'selector-id-pattern': null
 		});
 	}
-	if ( typeof stylelintConfigScss.rules !== 'undefined' ) {
+	if (typeof stylelintConfigScss.rules !== 'undefined') {
 		stylelintConfigScss.rules = Object.assign(stylelintConfigScss.rules, {
 			'no-descending-specificity': null,
 			'selector-pseudo-element-colon-notation': null,
-			'no-duplicate-selectors': null
+			'no-duplicate-selectors': null,
+			'selector-class-pattern': null,
+			'selector-id-pattern': null,
+			'font-family-no-missing-generic-family-keyword': null,
+			'selector-combinator-space-after': null
 		});
 	}
 
-	require( 'matchdep' ).filterDev( ['grunt-*', '!grunt-legacy-util'] ).forEach( grunt.loadNpmTasks );
-	grunt.util = require( 'grunt-legacy-util' );
+	require('matchdep').filterDev(['grunt-*', '!grunt-legacy-util']).forEach(grunt.loadNpmTasks);
+	grunt.util = require('grunt-legacy-util');
 
-	grunt.initConfig( {
-		pkg: grunt.file.readJSON( 'package.json' ),
+	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'),
 		checkDependencies: {
 			options: {
 				packageManager: 'npm'
@@ -65,20 +71,21 @@ module.exports = function( grunt ) {
 			src: {}
 		},
 		jshint: {
-			options: grunt.file.readJSON( '.jshintrc' ),
+			options: grunt.file.readJSON('.jshintrc'),
 			grunt: {
 				src: ['Gruntfile.js']
 			},
 			core: {
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: BP_JS.concat( [
+				src: BP_JS.concat([
 					'!**/vendor/*.js',
 					'!**/lib/*.js',
 					'!**/*.min.js',
 					'!**/emojione-edited.js',
-					'!**/emojionearea-edited.js'
-				] ),
+					'!**/emojionearea-edited.js',
+					'!**/node_modules/**/*.js',
+				]),
 
 				/**
 				 * Limit JSHint's run to a single specified file:
@@ -92,20 +99,20 @@ module.exports = function( grunt ) {
 				 * @param {String} filepath
 				 * @returns {Bool}
 				 */
-				filter: function( filepath ) {
-					var index, file = grunt.option( 'file' );
+				filter: function (filepath) {
+					var index, file = grunt.option('file');
 
 					// Don't filter when no target file is specified
-					if ( ! file ) {
+					if (!file) {
 						return true;
 					}
 
 					// Normalise filepath for Windows
-					filepath = filepath.replace( /\\/g, '/' );
-					index = filepath.lastIndexOf( '/' + file );
+					filepath = filepath.replace(/\\/g, '/');
+					index = filepath.lastIndexOf('/' + file);
 
 					// Match only the filename passed from cli
-					if ( filepath === file || ( -1 !== index && index === filepath.length - ( file.length + 1 ) ) ) {
+					if (filepath === file || (-1 !== index && index === filepath.length - (file.length + 1))) {
 						return true;
 					}
 
@@ -115,7 +122,8 @@ module.exports = function( grunt ) {
 		},
 		sass: {
 			options: {
-				outputStyle: 'expanded'
+				outputStyle: 'expanded',
+				implementation: sass,
 				//indentType: 'tab',
 				//indentWidth: '1'
 			},
@@ -153,7 +161,7 @@ module.exports = function( grunt ) {
 				dest: SOURCE_DIR,
 				extDot: 'last',
 				ext: '-rtl.css',
-				src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC )
+				src: BP_CSS.concat(BP_EXCLUDED_CSS, BP_EXCLUDED_MISC)
 			}
 		},
 		checktextdomain: {
@@ -179,7 +187,7 @@ module.exports = function( grunt ) {
 			},
 			files: {
 				cwd: SOURCE_DIR,
-				src: ['**/*.php'].concat( BP_EXCLUDED_MISC ),
+				src: ['**/*.php'].concat(BP_EXCLUDED_MISC),
 				expand: true
 			}
 		},
@@ -188,7 +196,7 @@ module.exports = function( grunt ) {
 				options: {
 					cwd: SOURCE_DIR,
 					domainPath: '/languages',
-					exclude: [ 'node_modules/*' ], // List of files or directories to ignore.
+					exclude: ['node_modules/*'], // List of files or directories to ignore.
 					mainFile: 'bp-loader.php',
 					potFilename: 'buddyboss.pot',
 					potHeaders: { // Headers to add to the generated POT file.
@@ -208,12 +216,12 @@ module.exports = function( grunt ) {
 			core: {
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: ['**/*.{gif,jpg,jpeg,png}'].concat( BP_EXCLUDED_MISC ),
+				src: ['**/*.{gif,jpg,jpeg,png}'].concat(BP_EXCLUDED_MISC),
 				dest: SOURCE_DIR
 			}
 		},
 		clean: {
-			all: [ BUILD_DIR ]
+			all: [BUILD_DIR]
 		},
 		copy: {
 			files: {
@@ -223,7 +231,7 @@ module.exports = function( grunt ) {
 						dest: BUILD_DIR,
 						dot: true,
 						expand: true,
-						src: ['**', '!**/.{svn,git}/**'].concat( BP_EXCLUDED_MISC )
+						src: ['**', '!**/.{svn,git}/**'].concat(BP_EXCLUDED_MISC)
 					},
 					{
 						dest: BUILD_DIR,
@@ -241,7 +249,14 @@ module.exports = function( grunt ) {
 				extDot: 'last',
 				expand: true,
 				ext: '.min.js',
-				src: BP_JS
+				src: BP_JS.concat([
+					'!**/vendor/*.js',
+					'!**/lib/*.js',
+					'!**/*.min.js',
+					'!**/emojione-edited.js',
+					'!**/emojionearea-edited.js',
+					'!**/node_modules/**/*.js',
+				])
 			}
 		},
 		stylelint: {
@@ -252,7 +267,7 @@ module.exports = function( grunt ) {
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES,
+				src: BP_CSS.concat(BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES,
 					[
 						'!**/*.min.css',
 						'!**/admin/**/*.css',
@@ -295,7 +310,7 @@ module.exports = function( grunt ) {
 			},
 			'codecoverage': {
 				cmd: 'phpunit',
-				args: ['-c', 'tests/phpunit/codecoverage.xml' ]
+				args: ['-c', 'tests/phpunit/codecoverage.xml']
 			}
 		},
 		exec: {
@@ -305,10 +320,10 @@ module.exports = function( grunt ) {
 				stdout: false
 			}
 		},
-		jsvalidate:{
-			options:{
+		jsvalidate: {
+			options: {
 				globals: {},
-				esprimaOptions:{},
+				esprimaOptions: {},
 				verbose: false
 			},
 			src: {
@@ -317,8 +332,9 @@ module.exports = function( grunt ) {
 						SOURCE_DIR + '/**/*.js',
 						'!**/emojione-edited.js',
 						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js'
-					].concat( BP_EXCLUDED_MISC )
+						'!**/vendor/**/*.js',
+						'!**/node_modules/**/*.js'
+					].concat(BP_EXCLUDED_MISC)
 				}
 			}
 		},
@@ -339,31 +355,31 @@ module.exports = function( grunt ) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
-	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
-	grunt.registerTask( 'release', ['src', 'build'] );
+	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
+	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.
-	grunt.registerMultiTask( 'phpunit', 'Runs PHPUnit tests, including the ajax and multisite tests.', function() {
-		grunt.util.spawn( {
+	grunt.registerMultiTask('phpunit', 'Runs PHPUnit tests, including the ajax and multisite tests.', function () {
+		grunt.util.spawn({
 			args: this.data.args,
-			cmd:  this.data.cmd,
-			opts: { stdio: 'inherit' }
-		}, this.async() );
+			cmd: this.data.cmd,
+			opts: {stdio: 'inherit'}
+		}, this.async());
 	});
 
-	grunt.registerTask( 'test', 'Run all unit test tasks.', ['phpunit:default', 'phpunit:multisite'] );
+	grunt.registerTask('test', 'Run all unit test tasks.', ['phpunit:default', 'phpunit:multisite']);
 
-	grunt.registerTask( 'jstest', 'Runs all JavaScript tasks.', [ 'jsvalidate', 'jshint' ] );
+	grunt.registerTask('jstest', 'Runs all JavaScript tasks.', ['jsvalidate', 'jshint']);
 
 	// Travis CI Tasks.
-	grunt.registerTask( 'travis:grunt', 'Runs Grunt build task.', [ 'src' ]);
-	grunt.registerTask( 'travis:phpunit', ['jsvalidate', 'jshint', 'checktextdomain', 'test'] );
-	grunt.registerTask( 'travis:codecoverage', 'Runs PHPUnit tasks with code-coverage generation.', ['phpunit:codecoverage'] );
+	grunt.registerTask('travis:grunt', 'Runs Grunt build task.', ['src']);
+	grunt.registerTask('travis:phpunit', ['jsvalidate', 'jshint', 'checktextdomain', 'test']);
+	grunt.registerTask('travis:codecoverage', 'Runs PHPUnit tasks with code-coverage generation.', ['phpunit:codecoverage']);
 
 	// Patch task.
-	grunt.renameTask( 'patch_wordpress', 'patch' );
+	grunt.renameTask('patch_wordpress', 'patch');
 
 	// Default task.
-	grunt.registerTask( 'default', ['src'] );
+	grunt.registerTask('default', ['src']);
 };
