@@ -251,6 +251,12 @@ function bp_core_activation_notice() {
 
 	// Only components with 'has_directory' require a WP page to function.
 	foreach ( array_keys( $bp->loaded_components ) as $component_id ) {
+		if ( 'photos' === $component_id ) {
+			$component_id = 'media';
+		}
+		if ( 'documents' === $component_id ) {
+			$component_id = 'document';
+		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
 				'id'   => $component_id,

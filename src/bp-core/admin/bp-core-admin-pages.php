@@ -280,7 +280,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 		switch_to_blog( bp_get_root_blog_id() );
 	}
 
-	// For the button
+	// For the button.
 	if ( 'button' === $name ) {
 
 		printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );

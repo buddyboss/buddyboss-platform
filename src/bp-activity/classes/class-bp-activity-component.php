@@ -216,7 +216,7 @@ class BP_Activity_Component extends BP_Component {
 		parent::setup_globals( $args );
 
 		if ( bp_is_activity_follow_active() ) {
-			// locally cache total count values for logged-in user
+			// locally cache total count values for logged-in user.
 			if ( is_user_logged_in() ) {
 				$bp->loggedin_user->total_follow_counts = bp_total_follow_counts(
 					array(
@@ -225,8 +225,8 @@ class BP_Activity_Component extends BP_Component {
 				);
 			}
 
-			// locally cache total count values for displayed user
-			if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
+			// locally cache total count values for displayed user.
+			if ( bp_is_user() && ( bp_loggedin_user_id() !== bp_displayed_user_id() ) ) {
 				$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
 					array(
 						'user_id' => bp_displayed_user_id(),
