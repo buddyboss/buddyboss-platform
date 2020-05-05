@@ -438,7 +438,7 @@ function bp_get_blog_avatar( $args = '' ) {
 	 * This filter is deprecated as of BuddyPress 1.5 and may be removed in a future version.
 	 * Use the 'bp_get_blog_avatar' filter instead.
 	 */
-	$avatar = apply_filters( 'bp_get_blog_avatar_' . $blogs_template->blog->blog_id, $avatar );
+	$avatar = apply_filters( 'bp_get_blog_avatar_' . $blog_id, $avatar );
 
 	/**
 	 * Filters a blog's avatar.
@@ -450,7 +450,7 @@ function bp_get_blog_avatar( $args = '' ) {
 	 * @param int    $blog_id ID of the blog whose avatar is being displayed.
 	 * @param array  $r       Array of arguments used when fetching avatar.
 	 */
-	return apply_filters( 'bp_get_blog_avatar', $avatar, $blogs_template->blog->blog_id, $r );
+	return apply_filters( 'bp_get_blog_avatar', $avatar, $blog_id, $r );
 }
 
 function bp_blog_permalink() {
