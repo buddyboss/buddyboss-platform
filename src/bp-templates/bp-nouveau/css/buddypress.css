@@ -2049,7 +2049,7 @@ input.search-query-input {
 }
 
 .activity-url-error {
-  color: #f00;
+  color: #d33;
 }
 
 #activity-url-scrapper-url {
@@ -6392,6 +6392,10 @@ button[data-bp-close]:hover {
 
 .buddypress.widget .activity-update .update-item a img {
   margin-bottom: 0;
+}
+
+.buddypress.widget .bp-activity-info {
+  flex: 1;
 }
 
 .widget-area .buddypress.widget ul.item-list li {

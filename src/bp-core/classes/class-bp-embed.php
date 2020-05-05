@@ -261,6 +261,7 @@ class BP_Embed extends WP_Embed {
 	 */
 	public function autoembed( $content, $type = '' ) {
 		$is_activity = isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type );
+		$link_embed  = false;
 
 		if ( $is_activity ) {
 
@@ -273,8 +274,30 @@ class BP_Embed extends WP_Embed {
 			if ( '0' === $link_embed ) {
 				return $content;
 			} else if ( ! empty( $link_embed ) ) {
-				if ( false !== wp_oembed_get( $link_embed ) ) {
-					$content .= '<p>' . $link_embed . '</p>';
+				$embed_data = bp_core_parse_url( $link_embed );
+
+				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
+					$embed_code = $embed_data['description'];
+				} else {
+					$embed_code = wp_oembed_get( $link_embed );
+
+					if ( ! empty( $embed_code ) ) {
+						$parsed_url_data = array(
+							'title'       => ' ',
+							'description' => $embed_code,
+							'images'      => '',
+							'error'       => '',
+							'wp_embed'    => true,
+						);
+						$cache_key = 'bp_activity_oembed_' . md5( serialize( $link_embed ) );
+						// set the transient.
+						set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+					}
+				}
+
+				if ( ! empty( $embed_code ) ) {
+					$content .= $embed_code;
+					$link_embed = true;
 				}
 			} else {
 
@@ -289,7 +312,7 @@ class BP_Embed extends WP_Embed {
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 
-		if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
+		if ( ! $link_embed && preg_match( '#(^|\s|>)https?://#i', $content ) ) {
 			// Find URLs on their own line.
 			if ( ! $is_activity ) {
 				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
@@ -301,20 +324,22 @@ class BP_Embed extends WP_Embed {
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
 
-		//todo: lazy load for iframe is not good enough for all the sites. we need to have proper solution here.
-//		if ( $is_activity && ! empty( $content ) ) {
-//
-//			$content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
-//
-//			// add the lazy class to the img element
-//			if ( preg_match( '/class=["\']/i', $content ) ) {
-//				$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
-//			} else {
-//				$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
-//			}
-//
-//			return apply_filters( 'bp_autoembed', $content );
-//		}
+		// add lazy loads for iframes to load on front end.
+		if ( $is_activity && ! empty( $content ) ) {
+
+			$old_content = $content;
+			$content     = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
+
+			// add the lazy class to the iframe element.
+			if ( $content !== $old_content ) {
+				preg_match( '/<iframe[^>]+(?:class)="([^"]*)"[^>]*>/', $content, $match );
+				if ( ! empty( $match[0] ) ) {
+					$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
+				} else {
+					$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
+				}
+			}
+		}
 
 		// Put the line breaks back.
 		return apply_filters( 'bp_autoembed', $content );
