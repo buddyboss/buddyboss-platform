@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.4 =
+* Profiles - Fixed Profile Type filter not working when any Profile Type is hidden
 * Widgets - Improved formatting structure of activities in 'Latest Activities' widget
 * Translations - Updated German (formal) language files
 
