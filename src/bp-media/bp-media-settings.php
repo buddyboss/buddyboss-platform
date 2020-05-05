@@ -1151,7 +1151,17 @@ function bp_media_settings_callback_extension_document_support() {
 			<td></td>
 			<td></td>
 			<td style="text-align:left;">
-				<a href="/wp-admin/admin.php?page=bp-settings&tab=bp-document&mime_type=check_mime_type" target="_blank"><?php echo esc_html__( 'Check Mime Type', 'buddyboss' ); ?></a>
+				<?php
+				$check_mime_type_link = add_query_arg(
+					array(
+						'page'      => 'bp-settings',
+						'tab'       => 'bp-document',
+						'mime_type' => 'check_mime_type',
+					),
+					bp_get_admin_url( 'admin.php' )
+				);
+				?>
+				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" target="_blank"><?php echo esc_html__( 'Check Mime Type', 'buddyboss' ); ?></a>
 			</td>
 			<td></td>
 			<td></td>

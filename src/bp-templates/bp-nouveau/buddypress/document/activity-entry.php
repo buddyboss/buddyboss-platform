@@ -14,7 +14,7 @@ $svg_icon          = bp_document_svg_icon( $extension );
 $svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );
-$size              = size_format( filesize( get_attached_file( $attachment_id ) ) );
+$size              = is_file( get_attached_file( $attachment_id ) ) ? size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 $download_url      = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $document_privacy  = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
 $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
@@ -83,7 +83,8 @@ if ( $group_id > 0 ) {
 		</div><!-- .document-preview-wrap -->
 		<?php
 	}
-	if ( filesize( get_attached_file( $attachment_id ) ) / 1e+6 < 2 ) {
+	$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
+	if ( $sizes > 0 && filesize( $sizes ) / 1e+6 < 2 ) {
 		if ( 'css' === $extension || 'txt' === $extension || 'html' === $extension || 'htm' === $extension || 'js' === $extension || 'csv' === $extension ) {
 			$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
 			$file_data = $data['text'];

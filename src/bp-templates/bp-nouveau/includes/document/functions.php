@@ -176,6 +176,14 @@ function bp_media_allowed_document_type() {
 			'is_active'   => true,
 		),
 		array(
+			'name'        => 'css',
+			'extension'   => '.css',
+			'mime_type'   => 'text/plain',
+			'description' => 'Cascading Style Sheets (CSS)',
+			'is_default'  => true,
+			'is_active'   => true,
+		),
+		array(
 			'name'        => 'doc',
 			'extension'   => '.doc',
 			'mime_type'   => 'application/msword',

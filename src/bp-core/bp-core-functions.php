@@ -507,7 +507,7 @@ function bp_core_get_packaged_component_ids() {
 function bp_core_get_directory_page_ids( $status = 'active' ) {
 	$page_ids = bp_get_option( 'bp-pages', array() );
 
-	// Loop through pages
+	// Loop through pages.
 	foreach ( $page_ids as $component_name => $page_id ) {
 
 		// Ensure that empty indexes are unset. Should only matter in edge cases.
@@ -516,7 +516,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// Trashed pages should never appear in results.
-		if ( 'trash' == get_post_status( $page_id ) ) {
+		if ( 'trash' === get_post_status( $page_id ) ) {
 			unset( $page_ids[ $component_name ] );
 		}
 
@@ -706,7 +706,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy
+	// check for privacy page if already exists in WP settings > privacy.
 	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
 	$static_pages   = array( 'terms' );
 
@@ -716,7 +716,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		$pages_to_create['privacy'] = $page_titles['privacy'];
 	}
 
-	// Create terms and privacy pages
+	// Create terms and privacy pages.
 	foreach ( $static_pages as $slug ) {
 		if ( ! isset( $pages[ $slug ] ) ) {
 			$pages_to_create[ $slug ] = $page_titles[ $slug ];

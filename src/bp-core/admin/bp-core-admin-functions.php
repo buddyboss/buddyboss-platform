@@ -2938,12 +2938,17 @@ function bp_document_ajax_check_file_mime_type() {
 	$response = array();
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && ! empty( $_FILES ) ) {
 		$files = $_FILES;
-		foreach ( $files as $input => $infoArr ) {
-			foreach ( $infoArr as $key => $valueArr ) {
-				$response[ $key ] = $valueArr;
+		foreach ( $files as $input => $info_arr ) {
+
+			$finfo            = finfo_open( FILEINFO_MIME_TYPE );
+			$real_mime        = finfo_file( $finfo, $info_arr['tmp_name'] );
+			$info_arr['type'] = $real_mime;
+			foreach ( $info_arr as $key => $value_arr ) {
+				$response[ $key ] = $value_arr;
 			}
 		}
 	}
 	wp_send_json_success( $response );
 }
+
 add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_file_mime_type' );

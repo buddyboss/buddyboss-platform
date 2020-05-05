@@ -2303,20 +2303,10 @@ window.bp = window.bp || {};
 				jQuery('#message_content').addClass('loading');
 			}
 
-
-			console.log( 'chetan');
-			console.log( this.model.get('document') );
-			console.log( 'media' );
-			console.log( this.model.get('media') );
-
 			//check message content empty
 			if ( content === '' && ( ( typeof this.model.get('document') !== 'undefined' && ! this.model.get('document').length ) && ( typeof this.model.get('media') !== 'undefined' && ! this.model.get('media').length ) && ( typeof this.model.get('gif_data') !== 'undefined' && ! Object.keys(this.model.get('gif_data')).length ) ) ) {
 				errors.push( 'message_content' );
 			}
-
-			console.log( 'chetan');
-			console.log( errors );
-
 
 			if ( errors.length ) {
 				var feedback = '';
@@ -2333,9 +2323,6 @@ window.bp = window.bp || {};
 			if ( content === '' && ( ( typeof this.model.get('document') !== 'undefined' && this.model.get('document').length ) || ( typeof this.model.get('media') !== 'undefined' && this.model.get('media').length ) || ( typeof this.model.get('gif_data') !== 'undefined' && Object.keys(this.model.get('gif_data')).length ) ) ) {
 				content = '&nbsp;';
 			}
-
-			console.log( 'chetan');
-			console.log( content );
 
 			this.model.set ( {
 				thread_id : this.options.thread.get( 'id' ),
