@@ -24,7 +24,16 @@ module.exports = function (grunt) {
 			'!**/vendor/**/*.js'
 		],
 
-		BP_EXCLUDED_MISC = [],
+		BP_EXCLUDED_MISC = [
+			'!**/vendor/*.js',
+			'!**/lib/*.js',
+			'!**/*.min.js',
+			'!**/emojione-edited.js',
+			'!**/emojionearea-edited.js',
+			'!**/node_modules/**/*.js',
+			'!**/bp-integrations/zoom/assets/js/blocks/**/*.js',
+			'!**/bp-integrations/zoom/webpack.config.js'
+		],
 
 		// SASS generated "Twenty*"" CSS files
 		BP_SCSS_CSS_FILES = [
@@ -78,14 +87,7 @@ module.exports = function (grunt) {
 			core: {
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: BP_JS.concat([
-					'!**/vendor/*.js',
-					'!**/lib/*.js',
-					'!**/*.min.js',
-					'!**/emojione-edited.js',
-					'!**/emojionearea-edited.js',
-					'!**/node_modules/**/*.js',
-				]),
+				src: BP_JS.concat(BP_EXCLUDED_MISC),
 
 				/**
 				 * Limit JSHint's run to a single specified file:
@@ -249,14 +251,7 @@ module.exports = function (grunt) {
 				extDot: 'last',
 				expand: true,
 				ext: '.min.js',
-				src: BP_JS.concat([
-					'!**/vendor/*.js',
-					'!**/lib/*.js',
-					'!**/*.min.js',
-					'!**/emojione-edited.js',
-					'!**/emojionearea-edited.js',
-					'!**/node_modules/**/*.js',
-				])
+				src: BP_JS.concat(BP_EXCLUDED_MISC)
 			}
 		},
 		stylelint: {
@@ -325,11 +320,7 @@ module.exports = function (grunt) {
 			src: {
 				files: {
 					src: [
-						SOURCE_DIR + '/**/*.js',
-						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js',
-						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js'
+						SOURCE_DIR + '/**/*.js'
 					].concat(BP_EXCLUDED_MISC)
 				}
 			}
@@ -351,7 +342,7 @@ module.exports = function (grunt) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', /*'makepot:src'*/]);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 

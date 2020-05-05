@@ -2933,3 +2933,49 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 
 // Set the forum slug on edit page from backend.
 add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
+
+/**
+ * Adds a BuddyPress category to house BuddyPress blocks.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @param array  $categories Array of block categories.
+ * @param object $post       Post being loaded.
+ */
+function bp_block_category( $categories = array(), $post = null ) {
+	if ( ! ( $post instanceof WP_Post ) ) {
+		return $categories;
+	}
+
+	/**
+	 * Filter here to add/remove the supported post types for the BuddyPress blocks category.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param array $value The list of supported post types. Defaults to WordPress built-in ones.
+	 */
+	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page' ) );
+
+	if ( ! $post_types ) {
+		return $categories;
+	}
+
+	// Get the post type of the current item.
+	$post_type = get_post_type( $post );
+
+	if ( ! in_array( $post_type, $post_types, true ) ) {
+		return $categories;
+	}
+
+	return array_merge(
+			$categories,
+			array(
+					array(
+							'slug'  => 'buddyboss',
+							'title' => __( 'BuddyBoss', 'buddyboss' ),
+							'icon'  => 'buddicons-buddypress-logo',
+					),
+			)
+	);
+}
+add_filter( 'block_categories', 'bp_block_category', 1, 2 );
