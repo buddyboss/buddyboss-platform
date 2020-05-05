@@ -403,8 +403,9 @@ function bp_admin_repair_list() {
 		}
 	}
 
+	// Update user activity favorites data.
 	if ( bp_is_active( 'activity' ) ) {
-		$repair_list[102] = array(
+		$repair_list[85] = array(
 			'bp-sync-activity-favourite',
 			__( 'Update activity favorites data.', 'buddyboss' ),
 			'bp_admin_update_activity_favourite',
