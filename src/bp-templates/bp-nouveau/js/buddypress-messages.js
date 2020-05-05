@@ -855,7 +855,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Messages Document
+	// Messages Document.
 	bp.Views.MessagesDocument = bp.Nouveau.Messages.View.extend(
 		{
 			tagName: 'div',
@@ -1628,7 +1628,7 @@ window.bp = window.bp || {};
 				}
 
 				// check message content empty.
-				if ( this.model.get( 'message_content' ) === '' && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
+				if ( this.model.get( 'message_content' ) === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -1645,7 +1645,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( this.model.get( 'message_content' ) === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && this.model.get( 'document' ).length ) || ( typeof this.model.get( 'media' ) !== 'undefined' && this.model.get( 'media' ).length ) || ( typeof this.model.get( 'gif_data' ) !== 'undefined' && Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					this.model.set( 'message_content', '&nbsp;', { silent: true } );
 				}
 
