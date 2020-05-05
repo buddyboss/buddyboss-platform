@@ -535,10 +535,6 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-	remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
-
 	// save media.
 	$id       = ! empty( filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
 	$group_id = ! empty( filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) : false;
@@ -568,19 +564,28 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	$medias = $_POST['document'];
-	if ( ! empty( $medias ) && is_array( $medias ) ) {
-		// set album id for media.
-		foreach ( $medias as $key => $media ) {
-			$_POST['document'][ $key ]['folder_id'] = $folder_id;
+	if ( isset( $_POST['document'] ) ) {
+
+		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+		$medias = $_POST['document'];
+		if ( ! empty( $medias ) && is_array( $medias ) ) {
+			// set album id for media.
+			foreach ( $medias as $key => $media ) {
+				$_POST['document'][ $key ]['folder_id'] = $folder_id;
+			}
 		}
+
+		// save all media uploaded.
+		bp_document_add_handler();
+
+		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+
 	}
 
-	// save all media uploaded.
-	bp_document_add_handler();
-
-	add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-	add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 	$document = '';
 	if ( ! empty( $folder_id ) ) {

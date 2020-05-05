@@ -506,6 +506,7 @@ function bp_document_id() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
  * @return int The document ID.
  */
@@ -586,7 +587,7 @@ function bp_get_document_user_id() {
 
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->user_id ) ) {
 		$user_id = $document_template->document->user_id;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->user_id ) ) {
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->user_id ) ) {
 		$user_id = $document_folder_template->folder->user_id;
 	}
 
@@ -683,7 +684,7 @@ function bp_get_document_title() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @param int|BP_Document $document BP_Document object or ID of the document
+ * @param int|BP_Document $document BP_Document object or ID of the document.
  * @return bool True if can delete, false otherwise.
  */
 function bp_document_user_can_delete( $document = false ) {
@@ -1363,11 +1364,18 @@ function bp_folder_id() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
  * @return int The document folder ID.
  */
 function bp_get_folder_id() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
+		$id = $document_template->document->id;
+	} else {
+		$id = $document_folder_template->folder->id;
+	}
 
 	/**
 	 * Filters the document ID being displayed.
@@ -1376,7 +1384,7 @@ function bp_get_folder_id() {
 	 *
 	 * @param int $id The document folder ID.
 	 */
-	return apply_filters( 'bp_get_folder_id', $document_template->document->id );
+	return apply_filters( 'bp_get_folder_id', $id );
 }
 
 /**
@@ -1421,12 +1429,12 @@ function bp_get_folder_title() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Template}
  *
  * @return string The document folder privacy.
  */
 function bp_get_folder_privacy() {
-	global $document_template;
+	global $document_folder_template;
 
 	/**
 	 * Filters the folder privacy being displayed.
@@ -1435,7 +1443,7 @@ function bp_get_folder_privacy() {
 	 *
 	 * @param int $id The document folder privacy.
 	 */
-	return apply_filters( 'bp_get_folder_privacy', $document_template->document->privacy );
+	return apply_filters( 'bp_get_folder_privacy', $document_folder_template->folder->privacy );
 }
 
 /**
@@ -1453,16 +1461,23 @@ function bp_folder_link() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
  * @return string The document folder description.
  */
 function bp_get_folder_link() {
-	global $document_template;
+	global $document_template, $document_folder_template;
 
-	if ( bp_is_group() || $document_template->document->group_id > 0 ) {
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) && $document_template->document->group_id > 0 ) {
 		$group      = groups_get_group( $document_template->document->group_id );
 		$group_link = bp_get_group_permalink( $group );
 		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) && $document_folder_template->folder->group_id > 0 ) {
+		$group      = groups_get_group( $document_folder_template->folder->group_id );
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->user_id ) ) {
+		$url = trailingslashit( bp_core_get_user_domain( $document_folder_template->folder->user_id ) . 'document/folders/' . bp_get_folder_id() );
 	} else {
 		$url = trailingslashit( bp_core_get_user_domain( $document_template->document->user_id ) . 'document/folders/' . bp_get_folder_id() );
 	}
@@ -1652,11 +1667,18 @@ function bp_document_group_id() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
  * @return int The document group ID.
  */
 function bp_get_document_group_id() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) ) {
+		$db_group_id = $document_template->document->group_id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {
+		$db_group_id = $document_folder_template->folder->group_id;
+	}
 
 	/**
 	 * Filters the document group ID being displayed.
@@ -1665,7 +1687,7 @@ function bp_get_document_group_id() {
 	 *
 	 * @param int $id The document group ID.
 	 */
-	return apply_filters( 'bp_get_document_group_id', (int) $document_template->document->group_id );
+	return apply_filters( 'bp_get_document_group_id', (int) $db_group_id );
 }
 
 /**
@@ -1683,11 +1705,18 @@ function bp_document_folder_group_id() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
  * @return int The folder group ID.
  */
 function bp_get_document_folder_group_id() {
-	global $document_template;
+	global $document_template, $document_folder_template;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) ) {
+		$db_group_id = $document_template->document->group_id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {
+		$db_group_id = $document_folder_template->folder->group_id;
+	}
 
 	/**
 	 * Filters the folder group ID being displayed.
@@ -1696,7 +1725,7 @@ function bp_get_document_folder_group_id() {
 	 *
 	 * @param int $id The folder group ID.
 	 */
-	return apply_filters( 'bp_get_document_group_id', (int) $document_template->document->group_id );
+	return apply_filters( 'bp_get_document_group_id', (int) $db_group_id );
 }
 
 /**
@@ -1747,16 +1776,21 @@ function bp_document_date() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Folder_Template}
  *
  * @return string The document date created.
  */
 function bp_get_document_date() {
-	global $document_template;
+	global $document_template, $document_folder_template;
 
-	if ( (int) strtotime( $document_template->document->date_modified ) > 0 ) {
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->date_modified ) && (int) strtotime( $document_template->document->date_modified ) > 0 ) {
 		$date = $document_template->document->date_modified;
-	} else {
+	} elseif ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->date_created ) && (int) strtotime( $document_template->document->date_created ) > 0 ) {
 		$date = $document_template->document->date_created;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->date_modified ) && (int) strtotime( $document_folder_template->folder->date_modified ) > 0 ) {
+		$date = $document_folder_template->folder->date_modified;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->date_created ) && (int) strtotime( $document_folder_template->folder->date_created ) > 0 ) {
+		$date = $document_folder_template->folder->date_created;
 	}
 
 	$date = date_i18n( bp_get_option( 'date_format' ), strtotime( $date ) );
@@ -1786,6 +1820,7 @@ function bp_document_privacy() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Folder_Template}
  *
  * @return string The document privacy.
  */
