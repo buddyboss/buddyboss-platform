@@ -1057,7 +1057,7 @@ add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_notificati
 /**
  * Remove Group invite notification when a user is uninvited.
  *
- * @since BuddyBoss 1.2.5bp_get_group_avatar_mini
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int $group_id ID of the group being uninvited from.

@@ -830,7 +830,7 @@ class BP_Groups_Member {
 	/**
 	 * Gets memberships of a user for purposes of a personal data export.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @since BuddyPress 4.0.0
 	 *
 	 * @param int $user_id ID of the user.

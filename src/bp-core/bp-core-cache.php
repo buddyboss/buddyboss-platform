@@ -388,7 +388,7 @@ function bp_core_reset_incrementor( $group ) {
 /**
  * Resets all incremented bp_invitations caches.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  */
 function bp_invitations_reset_cache_incrementor() {

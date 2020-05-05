@@ -5,7 +5,7 @@
  * @package BuddyBoss
  * @subpackage Invitations
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Use this class to create, access, edit, or delete BuddyBoss Invitations.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  *
  */
 class BP_Invitation {
@@ -24,7 +24,7 @@ class BP_Invitation {
 	/**
 	 * The invitation ID.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var int
 	 */
@@ -33,7 +33,7 @@ class BP_Invitation {
 	/**
 	 * The ID of the invited user.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var int
 	 */
@@ -42,7 +42,7 @@ class BP_Invitation {
 	/**
 	 * The ID of the user who created the invitation.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var int
 	 */
@@ -52,7 +52,7 @@ class BP_Invitation {
 	 * The email address of the invited user.
 	 * Used when extending an invitation to someone who does not belong to the site.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var string
 	 */
@@ -61,7 +61,7 @@ class BP_Invitation {
 	/**
 	 * The name of the related class.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var string
 	 */
@@ -71,7 +71,7 @@ class BP_Invitation {
 	 * The ID associated with the invitation and component.
 	 * Example: the group ID if a group invitation
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var int
 	 */
@@ -81,7 +81,7 @@ class BP_Invitation {
 	 * The secondary ID associated with the invitation and component.
 	 * Example: a taxonomy term ID if invited to a site's category-specific RSS feed
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var int
 	 */
@@ -90,7 +90,7 @@ class BP_Invitation {
 	/**
 	 * Invite or request.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var string
 	 */
@@ -99,7 +99,7 @@ class BP_Invitation {
 	/**
 	 * Extra information provided by the requester or inviter.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var string
 	 */
@@ -108,7 +108,7 @@ class BP_Invitation {
 	/**
 	 * The date the invitation was last modified.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var string
 	 */
@@ -117,7 +117,7 @@ class BP_Invitation {
 	/**
 	 * Has the invitation been sent, or is it a draft invite?
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var bool
 	 */
@@ -126,7 +126,7 @@ class BP_Invitation {
 	/**
 	 * Has the invitation been accepted by the invitee?
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 * @access public
 	 * @var bool
 	 */
@@ -137,7 +137,7 @@ class BP_Invitation {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param int $id Optional. Provide an ID to access an existing
 	 *        invitation item.
@@ -152,7 +152,7 @@ class BP_Invitation {
 	/**
 	 * Update or insert invitation details into the database.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @global wpdb $wpdb WordPress database object.
 	 *
@@ -182,7 +182,7 @@ class BP_Invitation {
 		/**
 		 * Fires before an invitation is saved.
 		 *
-		 * @since BuddyBoss 1.2.5
+		 * @since BuddyBoss 1.3.5
 		 *
 		 * @param BP_Invitation object $this Characteristics of the invitation to be saved.
 		 */
@@ -209,7 +209,7 @@ class BP_Invitation {
 		/**
 		 * Fires after an invitation is saved.
 		 *
-		 * @since BuddyBoss 1.2.5
+		 * @since BuddyBoss 1.3.5
 		 *
 		 * @param BP_Invitation object $this Characteristics of the invitation just saved.
 		 */
@@ -222,7 +222,7 @@ class BP_Invitation {
 	/**
 	 * Fetch data for an existing invitation from the database.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @global BuddyBoss $bp The one true BuddyBoss instance.
 	 * @global wpdb $wpdb WordPress database object.
@@ -265,7 +265,7 @@ class BP_Invitation {
 	/**
 	 * Create an invitation entry.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $data {
 	 *     Array of invitation data, passed to {@link wpdb::insert()}.
@@ -293,7 +293,7 @@ class BP_Invitation {
 	/**
 	 * Update invitations.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see wpdb::update() for further description of paramater formats.
 	 *
@@ -315,7 +315,7 @@ class BP_Invitation {
 	/**
 	 * Delete invitations.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see wpdb::update() for further description of paramater formats.
 	 *
@@ -336,7 +336,7 @@ class BP_Invitation {
 	 * Used by BP_Invitation::get() to create its WHERE
 	 * clause.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args See {@link BP_Invitation::get()} for more details.
 	 * @return string WHERE clause.
@@ -461,7 +461,7 @@ class BP_Invitation {
 	 * Used by BP_Invitation::get() to create its ORDER BY
 	 * clause.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args See {@link BP_Invitation::get()} for more details.
 	 * @return string ORDER BY clause.
@@ -497,7 +497,7 @@ class BP_Invitation {
 	 *
 	 * Used by BP_Invitation::get() to create its LIMIT clause.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args See {@link BP_Invitation::get()} for more details.
 	 * @return string LIMIT clause.
@@ -553,7 +553,7 @@ class BP_Invitation {
 	 *
 	 * which can easily be passed as arguments to the $wpdb methods.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args Associative array of filter arguments.
 	 *                    See {@BP_Invitation::get()} for a breakdown.
@@ -649,7 +649,7 @@ class BP_Invitation {
 	/**
 	 * Get invitations, based on provided filter parameters.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args {
 	 *     Associative array of arguments. All arguments but $page and
@@ -777,7 +777,7 @@ class BP_Invitation {
 		/**
 		 * Filters the pagination SQL statement.
 		 *
-		 * @since BuddyBoss 1.2.5
+		 * @since BuddyBoss 1.3.5
 		 *
 		 * @param string $value Concatenated SQL statement.
 		 * @param array  $sql   Array of SQL parts before concatenation.
@@ -819,7 +819,7 @@ class BP_Invitation {
 	/**
 	 * Get a count of total invitations matching a set of arguments.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see BP_Invitation::get() for a description of
 	 *      arguments.
@@ -844,7 +844,7 @@ class BP_Invitation {
 	/**
 	 * Update invitations.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see BP_Invitation::get() for a description of
 	 *      accepted update/where arguments.
@@ -864,7 +864,7 @@ class BP_Invitation {
 		/**
 		 * Fires before an invitation is updated.
 		 *
-		 * @since BuddyBoss 1.2.5
+		 * @since BuddyBoss 1.3.5
 
 		 *
 		 * @param array $where_args  Associative array of columns/values describing
@@ -886,7 +886,7 @@ class BP_Invitation {
 		/**
 		 * Fires after an invitation is updated.
 		 *
-		 * @since BuddyBoss 1.2.5
+		 * @since BuddyBoss 1.3.5
 		 *
 		 * @param array $where_args  Associative array of columns/values describing
 		 *                           invitations about to be deleted.
@@ -900,7 +900,7 @@ class BP_Invitation {
 	/**
 	 * Delete invitations.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see BP_Invitation::get() for a description of
 	 *      accepted where arguments.
@@ -916,7 +916,7 @@ class BP_Invitation {
 		/**
 		 * Fires before an invitation is deleted.
 		 *
-		 * @since BuddyBoss 1.2.5
+		 * @since BuddyBoss 1.3.5
 		 *
 		 *
 		 * @param array $args Characteristics of the invitations to be deleted.
@@ -950,7 +950,7 @@ class BP_Invitation {
 	/**
 	 * Delete a single invitation by ID.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see BP_Invitation::delete() for explanation of
 	 *      return value.
@@ -969,9 +969,11 @@ class BP_Invitation {
 	/**
 	 * Mark specific invitations as sent by invitation ID.
 	 *
-	 * @since BuddyBoss 1.2.5
-	 *
 	 * @param int $id The ID of the invitation to mark as sent.
+	 *
+	 * @return bool|int
+	 * @since BuddyBoss 1.3.5
+	 *
 	 */
 	public static function mark_sent( $id = 0 ) {
 
@@ -996,9 +998,11 @@ class BP_Invitation {
 	 * Mark invitations as sent that are found by user_id, inviter_id, item id, and optional
 	 * secondary item id, and class name.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @param array $args See BP_Invitation::update().
 	 *
- 	 * @param array $args See BP_Invitation::update().
+	 * @return bool|int
+	 * @since BuddyBoss 1.3.5
+	 *
 	 */
 	public static function mark_sent_by_data( $args ) {
 

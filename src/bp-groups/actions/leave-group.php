@@ -62,7 +62,7 @@ add_action( 'bp_actions', 'groups_action_leave_group' );
 /**
  * Clean up requests/invites when a member leaves a group.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  */
 function groups_action_clean_up_invites_requests( $user_id, $group_id ) {

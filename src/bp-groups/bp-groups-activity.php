@@ -75,7 +75,7 @@ add_action( 'bp_register_activity_actions', 'groups_register_activity_actions' )
 /**
  * Get the group object the activity belongs to.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param integer $group_id The group ID the activity is linked to.
@@ -245,7 +245,7 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 /**
  * Format the action for activity updates posted in a Group.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param string $action   Static activity action.

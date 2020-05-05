@@ -216,7 +216,7 @@ add_action( 'groups_member_after_save', 'groups_clear_group_administrator_cache_
 /**
  * Clear group administrator and moderator cache when a group member is deleted.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 4.0.0
  *
  * @param int $user_id  User ID.
@@ -260,7 +260,7 @@ add_action( 'groups_member_before_remove', 'bp_groups_clear_user_group_cache_on_
  * The save action is called when inserting a new record or using the save() method
  * to update an existing record.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param BP_Invitation object $invitation Characteristics of the invitation just saved.
@@ -278,7 +278,7 @@ add_action( 'bp_invitation_after_save', 'bp_groups_clear_user_group_cache_on_inv
  * Clear caches on invitation deletion or update.
  * This also catches changes like sending an invite or marking one as accepted.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param array $args Associative array of columns/values describing invitations about to be deleted.

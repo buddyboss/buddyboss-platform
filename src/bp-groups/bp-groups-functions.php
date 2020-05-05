@@ -1269,7 +1269,7 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 /**
  * Get the Group roles.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  *
  * @return array The list of Group role objects.
  */
@@ -1760,7 +1760,7 @@ function groups_get_invite_count_for_user( $user_id = 0 ) {
 /**
  * Get an array of group IDs to which a user is invited.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int $user_id The user ID.
@@ -2076,7 +2076,7 @@ function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
 /**
  * Get invitations to a given group filtered by arguments.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int   $group_id ID of the group.
@@ -2116,7 +2116,7 @@ function groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
  * Entering 'all' as the $type parameter will return unsent invitations as
  * well (useful to make sure AJAX requests are not duplicated).
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int    $user_id    ID of potential group member.
@@ -2520,7 +2520,7 @@ function groups_delete_membership_request( $membership_id, $user_id = 0, $group_
 /**
  * Get group membership requests filtered by arguments.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int   $group_id ID of the group.
@@ -2560,7 +2560,7 @@ function groups_check_for_membership_request( $user_id, $group_id ) {
 /**
  * Get an array of group IDs to which a user has requested membership.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int $user_id The user ID.
@@ -2583,7 +2583,7 @@ function groups_get_membership_requested_group_ids( $user_id = 0 ) {
 /**
  * Get an array of group IDs to which a user has requested membership.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param int $user_id The user ID.
@@ -4002,7 +4002,7 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 /**
  * Migrate invitations and requests from pre-5.0 group_members table to invitations table.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  *
  * @since BuddyPress 5.0.0
  */

@@ -1004,7 +1004,7 @@ function bp_get_group_avatar_mini( $group = false ) {
 /**
  * Returns the group avatar URL.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param object|bool $group Optional. Group object. Default current group in loop.
@@ -1045,7 +1045,7 @@ function bp_group_use_cover_image_header() {
 /**
  * Returns the group cover image URL.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  * @since BuddyPress 5.0.0
  *
  * @param object|bool $group Optional. Group object. Default current group in loop.
