@@ -570,7 +570,7 @@ class BP_Document {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
 
-			// we want to disable limit query when include document ids
+			// we want to disable limit query when include document ids.
 			$r['page']     = false;
 			$r['per_page'] = false;
 		}
@@ -579,7 +579,7 @@ class BP_Document {
 			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
 
-		// existing-document check to query document which has no folders assigned
+		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
 			$where_conditions['folder'] = "m.album_id = {$r['folder_id']}";
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
@@ -671,7 +671,7 @@ class BP_Document {
 
 		$cached = bp_core_get_incremented_cache( $document_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$document_ids = $wpdb->get_col( $document_ids_sql ); // db call ok; no-cache ok;
+			$document_ids = $wpdb->get_col( $document_ids_sql );
 			bp_core_set_incremented_cache( $document_ids_sql, $cache_group, $document_ids );
 		} else {
 			$document_ids = $cached;
@@ -716,7 +716,7 @@ class BP_Document {
 			$total_documents_sql = apply_filters( 'bp_document_total_documents_sql', "SELECT count(DISTINCT m.id) FROM {$bp->document->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached              = bp_core_get_incremented_cache( $total_documents_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_documents = $wpdb->get_var( $total_documents_sql ); // db call ok; no-cache ok;
+				$total_documents = $wpdb->get_var( $total_documents_sql );
 				bp_core_set_incremented_cache( $total_documents_sql, $cache_group, $total_documents );
 			} else {
 				$total_documents = $cached;

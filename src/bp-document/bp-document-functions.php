@@ -208,9 +208,9 @@ function bp_document_get_specific( $args = '' ) {
 			'max'          => false,      // Maximum number of results to return.
 			'page'         => 1,          // Page 1 without a per_page will result in no pagination.
 			'per_page'     => false,      // Results per page.
-			'sort'         => 'DESC',     // Sort ASC or DESC
-			'order_by'     => false,     // Sort ASC or DESC
-			'folder_id'    => false,     // Sort ASC or DESC
+			'sort'         => 'DESC',     // Sort ASC or DESC.
+			'order_by'     => false,     // Sort ASC or DESC.
+			'folder_id'    => false,     // Sort ASC or DESC.
 			'folder'       => false,
 		),
 		'document_get_specific'
@@ -272,7 +272,7 @@ function bp_document_add( $args = '' ) {
 		$args,
 		array(
 			'id'            => false,                   // Pass an existing document ID to update an existing entry.
-			'blog_id'       => get_current_blog_id(),   // Blog ID
+			'blog_id'       => get_current_blog_id(),   // Blog ID.
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of document being added.
@@ -281,7 +281,7 @@ function bp_document_add( $args = '' ) {
 			'activity_id'   => false,                   // The ID of activity.
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
-			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded
+			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
 			'error_type'    => 'bool',
 			'file_name'     => '',
 			'caption'       => '',
@@ -309,11 +309,11 @@ function bp_document_add( $args = '' ) {
 	$document->description   = $r['description'];
 	$document->extension     = $r['extension'];
 
-	// groups document always have privacy to `grouponly`
+	// groups document always have privacy to `grouponly`.
 	if ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
 
-		// folder privacy is document privacy
+		// folder privacy is document privacy.
 	} elseif ( ! empty( $document->folder_id ) ) {
 		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
@@ -321,7 +321,7 @@ function bp_document_add( $args = '' ) {
 		}
 	}
 
-	// save document
+	// save document.
 	$save = $document->save();
 
 	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
@@ -330,7 +330,7 @@ function bp_document_add( $args = '' ) {
 		return false;
 	}
 
-	// document is saved for attachment
+	// document is saved for attachment.
 	update_post_meta( $document->attachment_id, 'bp_document_saved', true );
 
 	/**
@@ -773,7 +773,7 @@ function bp_folder_get_specific( $args = '' ) {
 			'max'               => false,      // Maximum number of results to return.
 			'page'              => 1,          // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,      // Results per page.
-			'sort'              => 'DESC',     // Sort ASC or DESC
+			'sort'              => 'DESC',     // Sort ASC or DESC.
 			'update_meta_cache' => true,
 			'count_total'       => false,
 		),
@@ -1452,12 +1452,12 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
  */
 function bp_document_folder_recursive_li_list( $array, $first = false ) {
 
-	// Base case: an empty array produces no list
+	// Base case: an empty array produces no list.
 	if ( empty( $array ) ) {
 		return '';
 	}
 
-	// Recursive Step: make a list with child lists
+	// Recursive Step: make a list with child lists.
 	if ( $first ) {
 		$output = '<ul class="">';
 	} else {

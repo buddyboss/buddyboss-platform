@@ -753,7 +753,7 @@ function bp_get_document_folder_id() {
 
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
 		$id = $document_template->document->id;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->id ) ) {
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
 		$id = $document_folder_template->folder->id;
 	}
 
@@ -1037,11 +1037,11 @@ function bp_has_folders( $args = '' ) {
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
+			// check if the login user is friends of the display user.
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
 			/**
-			 * check if the login user is friends of the display user
+			 * check if the login user is friends of the display user.
 			 * OR check if the login user and the display user is the same
 			 */
 			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
@@ -1080,7 +1080,7 @@ function bp_has_folders( $args = '' ) {
 			'fields'       => 'all',
 			'count_total'  => false,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,     // user_id to filter on.
 			'group_id'     => $group_id,    // group_id to filter on.
 			'privacy'      => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
@@ -1482,7 +1482,7 @@ function bp_get_folder_link() {
  *
  * @since BuddyBoss 1.3.0
  *
- * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the folder
+ * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the folder.
  * @return bool True if can delete, false otherwise.
  */
 function bp_folder_user_can_delete( $folder = false ) {
@@ -1505,7 +1505,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 	// Only logged in users can delete folder.
 	if ( is_user_logged_in() ) {
 
-		// Groups documents have their own access
+		// Groups documents have their own access.
 		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_delete = true;
 
@@ -1790,12 +1790,24 @@ function bp_document_privacy() {
  * @return string The document privacy.
  */
 function bp_get_document_privacy() {
-	global $document_template;
+	global $document_template, $document_folder_template;
 
 	$document_privacy = bp_document_get_visibility_levels();
-	$document_privacy = $document_privacy[ $document_template->document->privacy ];
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->privacy ) ) {
+		$db_document_privacy = $document_template->document->privacy;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->privacy ) ) {
+		$db_document_privacy = $document_folder_template->folder->privacy;
+	}
 
-	if ( empty( $document_privacy ) && $document_template->document->group_id > 0 ) {
+	$document_privacy = $document_privacy[ $db_document_privacy ];
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) ) {
+		$db_group_id = $document_template->document->group_id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {
+		$db_group_id = $document_folder_template->folder->group_id;
+	}
+
+	if ( empty( $document_privacy ) && $db_group_id > 0 ) {
 		$document_privacy = esc_html__( 'Group members', 'buddyboss' );
 	}
 
@@ -1806,5 +1818,5 @@ function bp_get_document_privacy() {
 	 *
 	 * @param string The privacy.
 	 */
-	return apply_filters( 'bp_get_document_privacy', $document_privacy, $document_template->document->privacy, $document_privacy );
+	return apply_filters( 'bp_get_document_privacy', $document_privacy, $db_document_privacy, $document_privacy );
 }

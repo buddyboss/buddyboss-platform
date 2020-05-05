@@ -479,8 +479,7 @@ function bp_nouveau_ajax_document_document_save() {
 
 	// handle media uploaded.
 	$document_ids = bp_document_add_handler( $_POST['documents'] );
-
-	$document = '';
+	$document     = '';
 	if ( ! empty( $document_ids ) ) {
 		ob_start();
 		if ( bp_has_document( array( 'include' => implode( ',', $document_ids ) ) ) ) {
@@ -536,6 +535,10 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+	remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+
 	// save media.
 	$id       = ! empty( filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
 	$group_id = ! empty( filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) : false;
@@ -547,7 +550,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		$id = false;
 	}
 
-	$album_id = bp_folder_add(
+	$folder_id = bp_folder_add(
 		array(
 			'id'       => $id,
 			'title'    => $title,
@@ -557,7 +560,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		)
 	);
 
-	if ( ! $album_id ) {
+	if ( ! $folder_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
@@ -565,29 +568,34 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	$medias = $_POST['medias'];
+	$medias = $_POST['document'];
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 		// set album id for media.
 		foreach ( $medias as $key => $media ) {
-			$_POST['medias'][ $key ]['folder_id'] = $album_id;
+			$_POST['document'][ $key ]['folder_id'] = $folder_id;
 		}
 	}
 
 	// save all media uploaded.
 	bp_document_add_handler();
 
-	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
-		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
-		$redirect_url = trailingslashit( $group_link . bp_get_document_slug() . '/folders/' . $album_id );
-	} else {
-		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() . '/folders/' . $album_id );
+	add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+	add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+	$document = '';
+	if ( ! empty( $folder_id ) ) {
+		ob_start();
+		if ( bp_has_folders( array( 'include' => $folder_id ) ) ) {
+			while ( bp_folder() ) {
+				bp_the_folder();
+				bp_get_template_part( 'document/document-entry' );
+			}
+		}
+		$document = ob_get_contents();
+		ob_end_clean();
 	}
 
-	wp_send_json_success(
-		array(
-			'redirect_url' => $redirect_url,
-		)
-	);
+	wp_send_json_success( array( 'document' => $document ) );
 }
 
 /**

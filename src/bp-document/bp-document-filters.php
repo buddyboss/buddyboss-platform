@@ -481,7 +481,7 @@ function bp_document_attach_document_to_message( &$message ) {
 
 		$document_ids = implode( ',', $document_ids );
 
-		// save document meta for message
+		// save document meta for message.
 		bp_messages_update_meta( $message->id, 'bp_document_ids', $document_ids );
 
 		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );

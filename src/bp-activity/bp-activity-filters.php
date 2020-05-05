@@ -1361,22 +1361,27 @@ function bp_activity_document_add( $document ) {
 
 	if ( ! empty( $document ) ) {
 
-		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'document' ) );
+		$args = array(
+			'hide_sitewide' => true,
+			'privacy'       => 'document',
+		);
+
+		$activity_id = bp_activity_post_update( $args );
 
 		if ( $activity_id ) {
 
-			//save media activity id in media
+			// save media activity id in media.
 			$document->activity_id = $activity_id;
 			$document->save();
 
-			// update activity meta
+			// update activity meta.
 			bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
 
-			// save attachment meta for activity
+			// save attachment meta for activity.
 			update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 			if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
-				//save parent activity id in attachment meta
+				// save parent activity id in attachment meta.
 				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $_POST['bp_activity_id'] );
 			}
 		}
