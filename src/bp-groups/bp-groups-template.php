@@ -396,7 +396,7 @@ function bp_has_groups( $args = '' ) {
 	// Exclude Group Types
 	if (
 		( empty( $args['scope'] ) || ( ! empty( $args['scope'] ) && 'all' === $args['scope'] ) ) &&
-		! bp_is_user_groups() && ! bp_is_group_subgroups() && 
+		! bp_is_user_groups() && ! bp_is_group_subgroups() &&
 		( wp_doing_ajax() && empty( $group_type ) )
 	) {
 		// get all excluded group types.
@@ -4821,7 +4821,7 @@ function bp_get_group_member_link() {
 	 *
 	 * @param string $value HTML link for the current user.
 	 */
-	return apply_filters( 'bp_get_group_member_link', '<a href="' . bp_core_get_user_domain( $members_template->member->user_id, $members_template->member->user_nicename, $members_template->member->user_login ) . '">' . $members_template->member->display_name . '</a>' );
+	return apply_filters( 'bp_get_group_member_link', '<a href="' . bp_core_get_user_domain( $members_template->member->user_id, $members_template->member->user_nicename, $members_template->member->user_login ) . '">' . bp_core_get_user_displayname( $members_template->member->user_id ) . '</a>' );
 }
 
 /**
