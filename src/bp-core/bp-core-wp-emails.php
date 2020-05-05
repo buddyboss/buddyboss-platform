@@ -955,6 +955,8 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	 *        }
 	 * @param array $user The original user array.
 	 * @param array $userdata The updated user array.
+	 *
+	 * @return array $email_change_email Email change array
 	 */
 	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
 
@@ -975,7 +977,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
-		$email_change_email = bp_email_core_wp_get_template( $email_change_email, $user );
+		$email_change_email['message'] = bp_email_core_wp_get_template( $email_change_email['message'], $user );
 
 		return $email_change_email;
 	}
