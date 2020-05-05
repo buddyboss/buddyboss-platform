@@ -458,7 +458,7 @@ function bp_nouveau_ajax_document_document_save() {
 	if ( empty( $_POST['documents'] ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please upload document before saving.', 'buddyboss' )
+			esc_html__( 'Please upload a document before saving.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
