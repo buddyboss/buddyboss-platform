@@ -3447,7 +3447,7 @@ function bp_email_get_appearance_settings() {
 		'footer_text_color'         => '#7F868F',
 		'footer_text_size'          => 12,
 		'highlight_color'           => '#007CFF',
-		'site_title_logo_size'      => 180,
+		'site_title_logo_size'      => 150,
 		'site_title_text_color'     => '#122B46',
 		'site_title_text_size'      => 20,
 		'recipient_text_color'      => '#7F868F',

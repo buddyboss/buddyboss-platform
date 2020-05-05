@@ -65,6 +65,34 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			<?php echo wp_is_mobile() ? "width:{$width} !important" : ""; ?>;
 		}
 
+		pre {
+			background: #F5F6F7;
+			border: 1px solid rgba(0, 0, 0, 0.03);
+			margin: 0 auto;
+			overflow: auto;
+			padding: 10px;
+			white-space: pre-wrap;
+			font-size: 14px !important;
+			border-radius: 4px;
+		}
+
+		blockquote {
+			background: #e3e6ea;
+			border-radius: 4px;
+			padding: 12px;
+			font-size: 20px;
+			font-style: italic;
+			font-weight: normal;
+			letter-spacing: -0.24px;
+			line-height: 30px;
+			position: relative;
+			margin: 0 0 15px 0;
+		}
+
+		blockquote p {
+			margin: 0;
+		}
+
 		/* What it does: Stops email clients resizing small text. */
 		* {
 			-ms-text-size-adjust: <?php echo $width; ?>;
@@ -143,10 +171,6 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		/* What it does: Forces Outlook.com to display emails full width. */
 		.ExternalClass {
 			width: <?php echo $width; ?>;
-		}
-
-		.recipient_text_color table {
-			display: inline-table;
 		}
 
 		/* MOBILE STYLES */
@@ -267,7 +291,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											if ( !empty( $attachment_id ) ) {
 												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
 												if ( !empty( $image_src ) ) {
-													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:" . esc_attr( $settings['site_title_logo_size'] ) . "px;' border='0' />" );
+													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>" );
 												} else {
 													echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
 												}
