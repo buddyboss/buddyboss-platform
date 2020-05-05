@@ -923,7 +923,7 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
  * @return array $pass_change_email Password change email data of array
  */
 function bp_xprofile_replace_username_to_display_name( $pass_change_email, $user = null ) {
-	if ( ! $user || ! is_a( $user, 'WP_User' ) ) {
+	if ( ! $user || empty( $user ) ) {
 		$user = wp_get_current_user()->to_array();
 	}
 
