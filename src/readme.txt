@@ -58,9 +58,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.4 =
+* Activity - Fixed certain link previews displaying doubled in activity posts
 * Profiles - Fixed 'Profile Type' filter not working when any Profile Type is hidden
-* Widgets - Improved formatting structure of activities in 'Latest Activities' widget
-* Tools - New 'Repair Community' tool for running 'Update activity favorites data'
+* Widgets - Improved formatting structure of activities in '(BB) Latest Activities' widget
+* Tools - Added 'Repair Community' tool for running 'Update activity favorites data'
 * Performance - Optimized code when activating plugin on site with 60,000 or more users
 * Translations - Updated German (formal) language files
 
