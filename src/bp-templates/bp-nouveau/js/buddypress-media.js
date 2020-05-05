@@ -2293,16 +2293,16 @@ window.bp = window.bp || {};
 
 			var current_privacy_select = $( event.currentTarget );
 
-			if ( current_privacy_select.data( 'mouseup' ) == 'true' ) {
+			if ( current_privacy_select.attr( 'data-mouseup' ) == 'true' ) {
 
-				current_privacy_select.data( 'mouseup','false' );
+				current_privacy_select.attr( 'data-mouseup','false' );
 
 				// Make ajax call and onSuccess add this.
 				current_privacy_select.addClass( 'hide' ).siblings( 'span' ).show().text( current_privacy_select.find( 'option:selected' ).text() );
 
 			} else {
 
-				current_privacy_select.data( 'mouseup','true' );
+				current_privacy_select.attr( 'data-mouseup','true' );
 
 			}
 
