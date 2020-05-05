@@ -6,7 +6,7 @@ window.bp = window.bp || {};
 ( function( exports, $ ) {
 	bp.Nouveau = bp.Nouveau || {};
 
-	// Bail if not set
+	// Bail if not set.
 	if ( typeof bp.Nouveau.Activity === 'undefined' || typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
@@ -41,20 +41,20 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			// Create the BuddyPress Uploader
+			// Create the BuddyPress Uploader.
 			var postForm = new bp.Views.PostForm();
 
-			// Add it to views
+			// Add it to views.
 			this.views.add( { id: 'post_form', view: postForm } );
 
-			// Display it
+			// Display it.
 			postForm.inject( '#bp-nouveau-activity-form' );
 		},
 
 		dropzoneView: function() {
 			this.dropzone = null;
 
-			// set up dropzones auto discover to false so it does not automatically set dropzones
+			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
@@ -67,7 +67,7 @@ window.bp = window.bp || {};
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
 
-			// if defined, add custom dropzone options
+			// if defined, add custom dropzone options.
 			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
 				Object.assign( this.dropzone_options, BP_Nouveau.media.dropzone_options );
 			}
@@ -83,7 +83,7 @@ window.bp = window.bp || {};
 	};
 
 	if ( typeof bp.View === 'undefined' ) {
-		// Extend wp.Backbone.View with .prepare() and .inject()
+		// Extend wp.Backbone.View with .prepare() and .inject().
 		bp.View = bp.Backbone.View.extend(
 			{
 				inject: function( selector ) {
@@ -105,7 +105,7 @@ window.bp = window.bp || {};
 
 	/** Models ****************************************************************/
 
-	// The Activity to post
+	// The Activity to post.
 	bp.Models.Activity = Backbone.Model.extend(
 		{
 			defaults: {
@@ -139,7 +139,7 @@ window.bp = window.bp || {};
 
 	bp.Models.GifData = Backbone.Model.extend( {} );
 
-	// Git results collection returned from giphy api
+	// Git results collection returned from giphy api.
 	bp.Collections.GifDatas = Backbone.Collection.extend(
 		{
 				// Reference to this collection's model.
@@ -147,7 +147,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Object, the activity is attached to (group or blog or any other)
+	// Object, the activity is attached to (group or blog or any other).
 	bp.Models.ActivityObject = Backbone.Model.extend(
 		{
 			defaults: {
@@ -161,7 +161,7 @@ window.bp = window.bp || {};
 
 	/** Collections ***********************************************************/
 
-	// Objects, the activity can be attached to (groups or blogs or any others)
+	// Objects, the activity can be attached to (groups or blogs or any others).
 	bp.Collections.ActivityObjects = Backbone.Collection.extend(
 		{
 			model: bp.Models.ActivityObject,
@@ -195,7 +195,7 @@ window.bp = window.bp || {};
 
 	/** Views *****************************************************************/
 
-	// Feedback messages
+	// Feedback messages.
 	bp.Views.activityFeedback = bp.View.extend(
 		{
 			tagName  : 'div',
@@ -220,7 +220,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Activity Media
+	// Activity Media.
 	bp.Views.ActivityMedia = bp.View.extend(
 		{
 			tagName: 'div',
@@ -328,7 +328,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Activity Document
+	// Activity Document.
 	bp.Views.ActivityDocument = bp.View.extend(
 		{
 			tagName: 'div',
@@ -448,7 +448,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Activity link preview
+	// Activity link preview.
 	bp.Views.ActivityLinkPreview = bp.View.extend(
 		{
 			tagName: 'div',
@@ -471,22 +471,22 @@ window.bp = window.bp || {};
 			},
 
 			render: function() {
-				// do not re render if post form is submitting
+				// do not re render if post form is submitting.
 				if ( this.model.get( 'posting' ) == true ) {
 					return;
 				}
 
 				this.$el.html( this.template( this.model.toJSON() ) );
 
-				// if link embed is used then add class to container
+				// if link embed is used then add class to container.
 				if ( this.model.get( 'link_embed' ) == true ) {
 
-					// support for instgram embed after ajax
+					// support for instgram embed after ajax.
 					if ( typeof window.instgrm !== 'undefined' ) {
 						window.instgrm.Embeds.process();
 					}
 
-					// support for facebook embed after ajax
+					// support for facebook embed after ajax.
 					if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
 						window.FB.XFBML.parse( this.el );
 					}
@@ -534,7 +534,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( e ) ) {
 					e.preventDefault();
 				}
-				// Set default values
+				// Set default values.
 				this.model.set(
 					{
 						link_success: false,
@@ -557,7 +557,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Activity gif selector
+	// Activity gif selector.
 	bp.Views.ActivityAttachedGifPreview = bp.View.extend(
 		{
 			tagName: 'div',
@@ -599,7 +599,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Gif search dropdown
+	// Gif search dropdown.
 	bp.Views.GifMediaSearchDropdown = bp.View.extend(
 		{
 			tagName: 'div',
@@ -722,7 +722,7 @@ window.bp = window.bp || {};
 			},
 
 			loadMore: function( event ) {
-				if ( event.target.id === 'gif-search-results' ) { // or any other filtering condition
+				if ( event.target.id === 'gif-search-results' ) { // or any other filtering condition.
 					var el = event.target;
 					if ( el.scrollTop + el.offsetHeight >= el.scrollHeight && ! el.classList.contains( 'loading' ) ) {
 						if ( this.total_count > 0 && this.offset <= this.total_count ) {
@@ -765,7 +765,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Gif search dropdown single item
+	// Gif search dropdown single item.
 	bp.Views.GifDataItem = bp.View.extend(
 		{
 			tagName: 'li',
@@ -789,7 +789,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// Regular input
+	// Regular input.
 	bp.Views.ActivityInput = bp.View.extend(
 		{
 			tagName: 'input',
@@ -820,7 +820,7 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// The content of the activity
+	// The content of the activity.
 	bp.Views.WhatsNew = bp.View.extend(
 		{
 			tagName   : 'div',
@@ -861,7 +861,7 @@ window.bp = window.bp || {};
 				// placeholder: false
 				// });
 
-				// First adjust layout
+				// First adjust layout.
 				this.$el.css(
 					{
 						resize: 'none',
@@ -869,7 +869,7 @@ window.bp = window.bp || {};
 						}
 				);
 
-				// Check for mention
+				// Check for mention.
 				var	mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
 
 				if ( ! _.isNull( mention ) ) {
@@ -887,14 +887,14 @@ window.bp = window.bp || {};
 			},
 
 			handlePaste: function ( event ) {
-				// Get user's pasted data
+				// Get user's pasted data.
 				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
 					data          = clipboardData.getData( 'text/plain' );
 
-				// Insert the filtered content
+				// Insert the filtered content.
 				document.execCommand( 'insertHTML', false, data );
 
-				// Prevent the standard paste behavior
+				// Prevent the standard paste behavior.
 				event.preventDefault();
 			},
 
@@ -925,7 +925,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( urlString !== '' ) {
-					// check if the url of any of the excluded video oembeds
+					// check if the url of any of the excluded video oembeds.
 					var url_a    = document.createElement( 'a' );
 					url_a.href   = urlString;
 					var hostname = url_a.hostname;
@@ -1080,10 +1080,10 @@ window.bp = window.bp || {};
 							}
 					);
 
-					// check for mentions in the url, if set any then focus to editor
+					// check for mentions in the url, if set any then focus to editor.
 					var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
 
-					// Check for mention
+					// Check for mention.
 					if ( ! _.isNull( mention ) ) {
 						$( '#message_content' ).focus();
 					}
@@ -1234,7 +1234,7 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				// Reset the collection before starting a new search
+				// Reset the collection before starting a new search.
 				this.collection.reset();
 
 				if ( this.ac_req ) {
@@ -1358,7 +1358,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Activity.postForm.ActivityObjects.reset();
 				}
 
-				// Clean up views
+				// Clean up views.
 				_.each(
 					this.views._views[''],
 					function( view ) {
@@ -1379,7 +1379,7 @@ window.bp = window.bp || {};
 						)
 					);
 
-					// Set the object type
+					// Set the object type.
 					this.model.set( 'object', model.get( 'selected' ) );
 				} else {
 					this.model.set( { object: 'user', item_id: 0 } );
@@ -1391,7 +1391,7 @@ window.bp = window.bp || {};
 
 			postIn: function( model ) {
 				if ( _.isUndefined( model.get( 'id' ) ) ) {
-					// Reset the item id
+					// Reset the item id.
 					this.model.set( 'item_id', 0 );
 
 					// When the model has been cleared, Attach Autocomplete!
@@ -1399,10 +1399,10 @@ window.bp = window.bp || {};
 					return;
 				}
 
-				// Set the item id for the selected object
+				// Set the item id for the selected object.
 				this.model.set( 'item_id', model.get( 'id' ) );
 
-				// Set the view to the selected object
+				// Set the view to the selected object.
 				this.views.set( '#whats-new-post-in-box-items', new bp.Views.Item( { model: model } ) );
 			},
 
@@ -1423,7 +1423,7 @@ window.bp = window.bp || {};
 
 					if ('user' !== this.model.get( 'object' )) {
 
-						// check media is enable in groups or not
+						// check media is enable in groups or not.
 						if (BP_Nouveau.media.group_media === false) {
 							$( '#whats-new-toolbar .post-media.media-support' ).hide();
 							var mediaCloseEvent = new Event( 'activity_media_close' );
@@ -1432,7 +1432,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.media-suppot' ).show();
 						}
 
-						// check media is enable in groups or not
+						// check media is enable in groups or not.
 						if (BP_Nouveau.media.group_document === false) {
 							$( '#whats-new-toolbar .post-media.document-support' ).hide();
 							var documentCloseEvent = new Event( 'activity_document_close' );
@@ -1441,7 +1441,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
 						}
 
-						// check gif is enable in groups or not
+						// check gif is enable in groups or not.
 						if (BP_Nouveau.media.gif.groups === false) {
 							$( '#whats-new-toolbar .post-gif' ).hide();
 							var gifCloseEvent = new Event( 'activity_gif_close' );
@@ -1450,7 +1450,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-gif' ).show();
 						}
 
-						// check emoji is enable in groups or not
+						// check emoji is enable in groups or not.
 						if (BP_Nouveau.media.emoji.groups === false) {
 							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
 							$( '#whats-new-toolbar .post-emoji' ).hide();
@@ -1459,7 +1459,7 @@ window.bp = window.bp || {};
 						}
 					} else {
 
-						// check media is enable in profile or not
+						// check media is enable in profile or not.
 						if (BP_Nouveau.media.profile_media === false) {
 							$( '#whats-new-toolbar .post-media.media-support' ).hide();
 							var event = new Event( 'activity_media_close' );
@@ -1468,7 +1468,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.media-support' ).show();
 						}
 
-						// check media is enable in profile or not
+						// check media is enable in profile or not.
 						if (BP_Nouveau.media.profile_document === false) {
 							$( '#whats-new-toolbar .post-media.document-support' ).hide();
 							var documentEvent = new Event( 'activity_document_close' );
@@ -1477,7 +1477,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-media.document-support' ).show();
 						}
 
-						// check gif is enable in profile or not
+						// check gif is enable in profile or not.
 						if (BP_Nouveau.media.gif.profile === false) {
 							$( '#whats-new-toolbar .post-gif' ).hide();
 							var gifCloseEvent2 = new Event( 'activity_gif_close' );
@@ -1486,7 +1486,7 @@ window.bp = window.bp || {};
 							$( '#whats-new-toolbar .post-gif' ).show();
 						}
 
-						// check emoji is enable in profile or not
+						// check emoji is enable in profile or not.
 						if (BP_Nouveau.media.emoji.profile === false) {
 							$( '#whats-new-toolbar .post-emoji' ).hide();
 							$( '#whats-new-textarea' ).find( 'img.emojioneemoji' ).remove();
@@ -1699,7 +1699,7 @@ window.bp = window.bp || {};
 			},
 
 			isActive: function( button ) {
-				// Clean up views
+				// Clean up views.
 				_.each(
 					this.views._views[''],
 					function( view, index ) {
@@ -1709,31 +1709,31 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// Then loop threw all buttons to update their status
+				// Then loop threw all buttons to update their status.
 				if ( true === button.get( 'active' ) ) {
 					_.each(
 						this.views._views['#whats-new-buttons'],
 						function( view ) {
 							if ( view.model.get( 'id' ) !== button.get( 'id' ) ) {
-								// Silently update the model
+								// Silently update the model.
 								view.model.set( 'active', false, { silent: true } );
 
-								// Remove the active class
+								// Remove the active class.
 								view.$el.removeClass( 'active' );
 
 								// Trigger an even to let Buttons reset
-								// their modifications to the activity model
+								// their modifications to the activity model.
 								this.collection.trigger( 'reset:' + view.model.get( 'id' ), this.model );
 							}
 						},
 						this
 					);
 
-					// Tell the active Button to load its content
+					// Tell the active Button to load its content.
 					this.collection.trigger( 'display:' + button.get( 'id' ), this );
 
 					// Trigger an even to let Buttons reset
-					// their modifications to the activity model
+					// their modifications to the activity model.
 				} else {
 					this.collection.trigger( 'reset:' + button.get( 'id' ), this.model );
 				}
@@ -1754,7 +1754,7 @@ window.bp = window.bp || {};
 			setActive: function( event ) {
 				var isActive = this.model.get( 'active' ) || false;
 
-				// Stop event propagation
+				// Stop event propagation.
 				event.preventDefault();
 
 				if ( false === isActive ) {
@@ -1843,13 +1843,13 @@ window.bp = window.bp || {};
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
 				}
 
-				// activity privacy dropdown for profile
+				// activity privacy dropdown for profile.
 				if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
 					var privacy = new bp.Views.ActivityPrivacy();
 					this.views.add( privacy );
 				}
 
-				$( '#whats-new-form' ).addClass( 'focus-in' ); // add some class to form so that DOM knows about focus
+				$( '#whats-new-form' ).addClass( 'focus-in' ); // add some class to form so that DOM knows about focus.
 
 				this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 			}
@@ -1882,7 +1882,7 @@ window.bp = window.bp || {};
 					)
 				);
 
-				// Clone the model to set the resetted one
+				// Clone the model to set the resetted one.
 				this.resetModel = this.model.clone();
 
 				this.views.set(
@@ -1911,14 +1911,14 @@ window.bp = window.bp || {};
 						}
 				);
 
-				// Backcompat custom fields
+				// Backcompat custom fields.
 				if ( true === BP_Nouveau.activity.params.backcompat ) {
 					this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
 				}
 
-				// Attach buttons
+				// Attach buttons.
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
-					// Global
+					// Global.
 					bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
 					this.views.add( new bp.Views.FormButtons( { collection: bp.Nouveau.Activity.postForm.buttons, model: this.model } ) );
 				}
@@ -1973,9 +1973,9 @@ window.bp = window.bp || {};
 						}
 				);
 
-				$( '#whats-new-form' ).removeClass( 'focus-in' ); // remove class when reset
+				$( '#whats-new-form' ).removeClass( 'focus-in' ); // remove class when reset.
 
-				// Reset the model
+				// Reset the model.
 				this.model.clear();
 				this.model.set( this.resetModel.attributes );
 				$( '.medium-editor-toolbar' ).removeClass( 'active medium-editor-toolbar-active' );
@@ -2018,7 +2018,7 @@ window.bp = window.bp || {};
 					event.preventDefault();
 				}
 
-				// Set the content and meta
+				// Set the content and meta.
 				_.each(
 					this.$el.serializeArray(),
 					function( pair ) {
@@ -2037,7 +2037,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				// Post content
+				// Post content.
 				var $whatsNew = this.$el.find( '#whats-new' );
 
 				var atwho_query = $whatsNew.find( 'span.atwho-query' );
@@ -2045,20 +2045,20 @@ window.bp = window.bp || {};
 					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
 				}
 
-				// Transform emoji image into emoji unicode
+				// Transform emoji image into emoji unicode.
 				$whatsNew.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
 					}
 				);
 
-				// Add valid line breaks
+				// Add valid line breaks.
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' ) );
 				content     = content.replace( /&nbsp;/g, ' ' );
 
 				self.model.set( 'content', content, { silent: true } );
 
-				// Silently add meta
+				// Silently add meta.
 				this.model.set( meta, { silent: true } );
 
 				var medias = self.model.get( 'media' );
@@ -2069,7 +2069,15 @@ window.bp = window.bp || {};
 					self.model.set( 'media',medias );
 				}
 
-				// update posting status true
+				var document = self.model.get( 'document' );
+				if ( 'group' == self.model.get( 'object' ) && typeof document !== 'undefined' && document.length ) {
+					for ( var d = 0; d < document.length; d++ ) {
+						document[d].group_id = self.model.get( 'item_id' );
+					}
+					self.model.set( 'document',document );
+				}
+
+				// update posting status true.
 				this.model.set( 'posting', true );
 
 				var data = {
@@ -2081,7 +2089,7 @@ window.bp = window.bp || {};
 					data._bp_as_nonce = $( '#_bp_as_nonce' ).val();
 				}
 
-				// Remove all unused model attribute
+				// Remove all unused model attribute.
 				data = _.omit(
 					_.extend( data, this.model.attributes ),
 					[
@@ -2096,7 +2104,7 @@ window.bp = window.bp || {};
 					]
 				);
 
-				// Form link preview data to pass in request if available
+				// Form link preview data to pass in request if available.
 				if ( this.model.get( 'link_success' ) ) {
 					var images = this.model.get( 'link_images' ),
 						index  = this.model.get( 'link_image_index' );
@@ -2109,7 +2117,7 @@ window.bp = window.bp || {};
 						);
 					}
 
-					// Append zero-width character to allow post link without activity content
+					// Append zero-width character to allow post link without activity content.
 					if ( _.isEmpty( data.content ) ) {
 						data.content = '&#8203;';
 					}
@@ -2124,21 +2132,21 @@ window.bp = window.bp || {};
 					);
 				}
 
-				// Append zero-width character to allow post gif without activity content
+				// Append zero-width character to allow post gif without activity content.
 				if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
 					data.content = '&#8203;';
 				}
 
 				bp.ajax.post( 'post_update', data ).done(
 					function( response ) {
-							var store   = bp.Nouveau.getStorage( 'bp-activity' ),
-							searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-							toPrepend   = false;
+						var store   = bp.Nouveau.getStorage( 'bp-activity' ),
+						searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
+						toPrepend   = false;
 
 							// Look for matches if the stream displays search results.
 						if ( searchTerms ) {
-							   searchTerms = new RegExp( searchTerms, 'im' );
-							   matches     = response.activity.match( searchTerms );
+						   searchTerms = new RegExp( searchTerms, 'im' );
+						   matches     = response.activity.match( searchTerms );
 						}
 
 							/**
@@ -2147,7 +2155,7 @@ window.bp = window.bp || {};
 							 * from the Activity directory.
 							 */
 						if ( ( ! searchTerms || matches ) ) {
-							   toPrepend = ! store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
+						   toPrepend = ! store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
 						}
 
 							/**
@@ -2156,7 +2164,7 @@ window.bp = window.bp || {};
 							 * "My Groups" tab is active.
 							 */
 						if ( toPrepend && response.is_directory ) {
-							   toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
+						   toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
 						}
 
 							var medias = self.model.get( 'media' );
@@ -2164,12 +2172,12 @@ window.bp = window.bp || {};
 							for ( var k = 0; k < medias.length; k++ ) {
 								medias[k].saved = true;
 							}
-							   self.model.set( 'media',medias );
+						   self.model.set( 'media',medias );
 						}
 
 							var link_embed = false;
 						if ( self.model.get( 'link_embed' ) == true ) {
-							   link_embed = true;
+							link_embed = true;
 						}
 
 							var documents = self.model.get( 'document' );
@@ -2177,39 +2185,34 @@ window.bp = window.bp || {};
 							for ( var d = 0; d < documents.length; d++ ) {
 								documents[d].saved = true;
 							}
-							   self.model.set( 'document',documents );
+							self.model.set( 'document',documents );
 						}
 
-							// Reset the form
+							// Reset the form.
 							self.resetForm();
 
 							// Display a successful feedback if the acticity is not consistent with the displayed stream.
-						if ( ! toPrepend ) {
-							   self.views.add( new bp.Views.activityFeedback( { value: response.message, type: 'updated' } ) );
-
-							   // Inject the activity into the stream only if it hasn't been done already (HeartBeat).
-						} else if ( ! $( '#activity-' + response.id ).length ) {
-
-							   // It's the very first activity, let's make sure the container can welcome it!
-							if ( ! $( '#activity-stream ul.activity-list' ).length ) {
-								$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
-							}
-
-							   // Prepend the activity.
-							   bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
-
-							   // replace dummy image with original image by faking scroll event
-							   jQuery( window ).scroll();
-
-							if ( link_embed ) {
-								if ( typeof window.instgrm !== 'undefined' ) {
-									window.instgrm.Embeds.process();
+							if ( ! toPrepend ) {
+								self.views.add( new bp.Views.activityFeedback( { value: response.message, type: 'updated' } ) );
+							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
+							} else if ( ! $( '#activity-' + response.id ).length ) {
+								// It's the very first activity, let's make sure the container can welcome it!
+								if ( ! $( '#activity-stream ul.activity-list' ).length ) {
+									$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
 								}
-								if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
-									window.FB.XFBML.parse( document.getElementById( 'activity-' + response.id ) );
+								// Prepend the activity.
+								bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+								// replace dummy image with original image by faking scroll event.
+								jQuery( window ).scroll();
+								if ( link_embed ) {
+									if ( typeof window.instgrm !== 'undefined' ) {
+										window.instgrm.Embeds.process();
+									}
+									if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+										window.FB.XFBML.parse( document.getElementById( 'activity-' + response.id ) );
+									}
 								}
 							}
-						}
 					}
 				).fail(
 					function( response ) {
