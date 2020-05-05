@@ -140,7 +140,7 @@ add_action( 'bp_init', function() {
 	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
 		$component['document'] = '1';
 		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && empty( $component['media'] ) ) {
+	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
 		unset($component['document']);
 		bp_update_option( 'bp-active-components', $component );
 	}
