@@ -1598,13 +1598,18 @@ function bp_document_author() {
  * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
  * @return int The document name.
  */
 function bp_get_document_author() {
-	global $document_template;
+	global $document_template, $document_folder_template;
 
-	$author = bp_core_get_user_displayname( $document_template->document->user_id );
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->user_id ) ) {
+		$author = bp_core_get_user_displayname( $document_template->document->user_id );
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->user_id ) ) {
+		$author = bp_core_get_user_displayname( $document_folder_template->folder->user_id );
+	}
 
 	/**
 	 * Filters the document name being displayed.
