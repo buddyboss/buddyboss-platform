@@ -13963,7 +13963,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .modal-container .bb-field-steps #bp-media-create-child-folder-submit,
 .modal-container .bb-field-steps #bp-media-create-folder-submit,
-.modal-container .bb-field-steps .bb-field-steps-next {
+.modal-container .bb-field-steps .bb-field-steps-next,
+.modal-container .bb-field-steps #bp-media-edit-child-folder-submit {
   min-width: 100px;
   float: right;
 }

@@ -626,11 +626,11 @@ window.bp = window.bp || {};
 
 		closeChildFolderUploader: function (event) {
 			event.preventDefault();
+			$( '#bb-album-child-title' ).val( '' );
 			$( '#bp-media-create-child-folder' ).hide();
-			$( '#bb-album-child-title' ).text( '' );
 
-			$( '#bp-media-create-folder' ).hide();
 			$( '#bb-album-title' ).text( '' );
+			$( '#bp-media-create-folder' ).hide();
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
 
@@ -649,11 +649,13 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			$( '#bp-media-create-folder' ).hide();
-			$( '#bb-album-title' ).text( '' );
+			$( '#bb-album-title' ).val( '' );
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
 
-			var currentPopup = $( event.currentTarget ).closest( '#bbp-media-create-folder' );
+			var currentPopup = $( event.currentTarget ).closest( '#bp-media-create-folder' );
+
+			currentPopup.find( '#bp-media-create-folder-submit' ).removeClass( 'loading' );
 
 			if (currentPopup.find( '.bb-field-steps' ).length) {
 				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
@@ -3119,7 +3121,7 @@ window.bp = window.bp || {};
 				parent = parentSelector.val();
 			}
 
-			target.prop( 'disabled', true );
+			target.prop( 'disabled', true ).addClass( 'loading' );
 
 			var data = {
 				'action'	: 'document_folder_save',
@@ -3201,7 +3203,7 @@ window.bp = window.bp || {};
 				privacy.removeClass( 'error' );
 			}
 
-			target.prop( 'disabled', true );
+			target.prop( 'disabled', true ).addClass( 'loading' ) ;
 
 			var data = {
 				'action'	: 'document_edit_folder',
@@ -3237,7 +3239,21 @@ window.bp = window.bp || {};
 							500
 						);
 						if (response.success) {
+							
 							window.location.href = response.data.redirect_url;
+							
+							var currentPopup = $( event.currentTarget ).closest( '#bp-media-create-child-folder' );
+
+							currentPopup.find('#bp-media-edit-child-folder-submit').removeClass('loading');
+							
+							if (currentPopup.find( '.bb-field-steps' ).length) {
+								currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
+								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+							}
+				
+							this.clearFolderLocationUI( event );
+							currentPopup.hide();
+
 						} else {
 							if (self.album_id) {
 								$( '#bp-media-single-album' ).prepend( response.data.feedback );

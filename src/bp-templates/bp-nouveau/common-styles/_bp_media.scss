@@ -2744,7 +2744,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	#bp-media-create-child-folder-submit,
 	#bp-media-create-folder-submit,
-	.bb-field-steps-next {
+	.bb-field-steps-next,
+	#bp-media-edit-child-folder-submit {
 		min-width: 100px;
 		float: right;
 	}
