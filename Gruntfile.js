@@ -256,7 +256,8 @@ module.exports = function( grunt ) {
 				],
 				options: {
 					process : function( content ) {
-						return content.replace( /\'buddypress'/g, '\'buddyboss\'' ); // update text-domain.
+						content = content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						return content.replace( /\@since 0\.1\.0/g, '@since 1.3.5' ); // update @since to 1.3.5
 					}
 				}
 			},
@@ -288,7 +289,8 @@ module.exports = function( grunt ) {
 				],
 				options: {
 					process : function( content ) {
-						return content.replace( /\'buddypress'/g, '\'buddyboss\'' ); // update text-domain.
+						content = content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+						return content.replace( /\@since 0\.1\.0/g, '@since 1.3.5' ); // update @since to 1.3.5
 					}
 				}
 			}
@@ -400,7 +402,7 @@ module.exports = function( grunt ) {
 	 * Register tasks.
 	 */
 	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
-	grunt.registerTask( 'bp_rest', ['exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest'] );
+	grunt.registerTask( 'bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest'] );
 	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
 	grunt.registerTask( 'release', ['src', 'build'] );
 
