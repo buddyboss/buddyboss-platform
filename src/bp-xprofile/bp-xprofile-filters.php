@@ -914,22 +914,30 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 /**
  * Change display_name for admin areas.
  *
+ * @param array $pass_change_email Password change email array
+ * @param object|null $user User Object
+ *
  * @since BuddyBoss 1.0.0
+ * @update BuddyBoss 1.3.3
+ *
+ * @return array
  */
-function bp_xprofile_replace_username_to_display_name( $email_content, $user = null ) {
+function bp_xprofile_replace_username_to_display_name( $pass_change_email, $user = null ) {
 	if ( ! $user || ! is_a( $user, 'WP_User' ) ) {
 		$user = wp_get_current_user()->to_array();
 	}
 
 	if ( ! isset( $user['ID'] ) || ! isset( $user['display_name'] ) ) {
-		return $email_content;
+		return $pass_change_email;
 	}
 
-	return str_replace(
+	$pass_change_email['message'] = str_replace(
 		'###USERNAME###',
 		bp_core_get_user_displayname( $user['ID'] ),
-		$email_content
+		$pass_change_email['message']
 	);
+
+	return $pass_change_email;
 }
 
 /**
