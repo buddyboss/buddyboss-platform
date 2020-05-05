@@ -251,7 +251,8 @@ module.exports = function( grunt ) {
 					'**/bp-messages/**',
 					'**/bp-notifications/**',
 					'**/bp-settings/**',
-					'**/bp-xprofile/**'
+					'**/bp-xprofile/**',
+					'**/bp-integrations/**'
 				],
 				options: {
 					process : function( content ) {
@@ -282,7 +283,8 @@ module.exports = function( grunt ) {
 					'!**/bp-messages/**',
 					'!**/bp-notifications/**',
 					'!**/bp-settings/**',
-					'!**/bp-xprofile/**'
+					'!**/bp-xprofile/**',
+					'**/bp-integrations/**'
 				],
 				options: {
 					process : function( content ) {
