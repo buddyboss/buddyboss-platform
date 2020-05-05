@@ -788,7 +788,7 @@ function xprofile_update_display_names() {
 			'records' => $records_updated,
 		);
 	} else {
-		$statement = __( 'Update WordPress user display names; %s', 'buddyboss' );
+		$statement = __( 'Update WordPress user display names&hellip; %s', 'buddyboss' );
 		return array(
 			'status'  => 1,
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
@@ -1200,7 +1200,7 @@ function bp_admin_update_activity_favourite() {
 
 			bp_update_option( 'bp_activity_favorites', true );
 
-			$statement = __( 'Members activity favorite updated %s', 'buddyboss' );
+			$statement = __( 'Update members activity favorites&hellip; %s', 'buddyboss' );
 
 			return array(
 				'status'  => 1,
@@ -1209,7 +1209,7 @@ function bp_admin_update_activity_favourite() {
 		}
 
 	} else {
-		$statement = __( 'Members activity favorite updated %s', 'buddyboss' );
+		$statement = __( 'Update members activity favorites&hellip; %s', 'buddyboss' );
 
 		return array(
 			'status'  => 1,
