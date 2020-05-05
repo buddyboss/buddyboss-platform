@@ -29,7 +29,8 @@ if ( $attachment_id ) {
 	$can_manage_btn      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$group_id            = bp_get_document_group_id();
-	$document_title      = basename( get_attached_file( $attachment_id ) );
+	//$document_title      = basename( get_attached_file( $attachment_id ) );
+	$document_title      = bp_get_document_title();
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -80,7 +81,8 @@ $document_id = bp_get_document_id();
 		}
 		?>
 		" href="<?php echo esc_url( $download_link ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
-			<span><?php echo esc_html( $document_title ); ?></span>
+<!--			<span>--><?php //echo esc_html( $document_title ); ?><!--</span>-->
+			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" style="display: none;"></i>
 			<i class="media-document-attachment-id" data-item-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" style="display: none;"></i>
 			<i class="media-document-type" data-item-id="<?php echo esc_attr( $document_type ); ?>" style="display: none;"></i>
