@@ -1860,3 +1860,33 @@ function bp_get_document_privacy() {
 	 */
 	return apply_filters( 'bp_get_document_privacy', $document_privacy, $db_document_privacy, $document_privacy );
 }
+
+/**
+ * Return the document privacy.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Folder_Template}
+ *
+ * @return string The document privacy.
+ */
+function bp_get_db_document_privacy() {
+	global $document_template, $document_folder_template;
+
+	$document_privacy = bp_document_get_visibility_levels();
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->privacy ) ) {
+		$db_document_privacy = $document_template->document->privacy;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->privacy ) ) {
+		$db_document_privacy = $document_folder_template->folder->privacy;
+	}
+
+	/**
+	 * Filters the document privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 *
+	 * @param string The privacy.
+	 */
+	return apply_filters( 'bp_get_db_document_privacy', $db_document_privacy );
+}

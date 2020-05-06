@@ -329,6 +329,9 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 			$attached_document_id = ! empty( $document['document_id'] ) ? $document['document_id'] : 0;
 			$folder_id            = ! empty( $document['folder_id'] ) ? $document['folder_id'] : 0;
 			$group_id             = ! empty( $document['group_id'] ) ? $document['group_id'] : 0;
+			$forum_id             = ! empty( $document['forum_id'] ) ? $document['forum_id'] : 0;
+			$topic_id             = ! empty( $document['topic_id'] ) ? $document['topic_id'] : 0;
+			$reply_id             = ! empty( $document['reply_id'] ) ? $document['reply_id'] : 0;
 			$menu_order           = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
 
 			if ( ! empty( $existing_document_attachment_ids ) ) {
@@ -344,6 +347,17 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 				}
 			}
 
+			if ( 0 === $reply_id && bbp_get_reply_post_type() === get_post_type( $post_id ) ) {
+				$reply_id = $post_id;
+				$topic_id = bbp_get_reply_topic_id( $reply_id );
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
+			} elseif ( 0 === $topic_id && bbp_get_topic_post_type() === get_post_type( $post_id ) ) {
+				$topic_id = $post_id;
+				$forum_id = bbp_get_topic_forum_id( $topic_id );
+			} elseif ( 0 === $forum_id && bbp_get_forum_post_type() === get_post_type( $post_id ) ) {
+				$forum_id = $post_id;
+			}
+
 			$attachment_data = get_post( $document['id'] );
 			$file            = get_attached_file( $document['id'] );
 			$file_type       = wp_check_filetype( $file );
@@ -355,6 +369,9 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 					'title'         => $title,
 					'folder_id'     => $folder_id,
 					'group_id'      => $group_id,
+					'forum_id'      => $forum_id,
+					'topic_id'      => $topic_id,
+					'reply_id'      => $reply_id,
 					'file_name'     => $file_name,
 					'privacy'       => 'forums',
 					'caption'       => $attachment_data->post_excerpt,
@@ -465,6 +482,7 @@ function bp_document_attach_document_to_message( &$message ) {
 					'title'         => $title,
 					'privacy'       => 'message',
 					'file_name'     => $file_name,
+					'thread_id'     => $message->thread_id,
 					'caption'       => $attachment_data->post_excerpt,
 					'description'   => $attachment_data->post_content,
 					'extension'     => '.' . $file_type['ext'],

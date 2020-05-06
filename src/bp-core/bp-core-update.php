@@ -299,7 +299,7 @@ function bp_version_updater() {
 			bp_update_to_1_3_0();
 		}
 
-		if ( $raw_db_version < 15300 ) {
+		if ( $raw_db_version < 15400 ) {
 			bp_update_to_1_3_1();
 		}
 	}

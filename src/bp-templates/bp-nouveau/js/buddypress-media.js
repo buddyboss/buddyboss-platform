@@ -442,6 +442,7 @@ window.bp = window.bp || {};
 								$( 'body #buddypress .activity-list li#activity-' + activityId + ' .documemt-activity .activity-inner .bb-activity-media-wrap .document-activity.' + id ).remove();
 								if ( true === response.data.delete_activity ) {
 									$( 'body #buddypress .activity-list li#activity-' + activityId ).remove();
+									$( 'body .bb-activity-media-elem.document-activity.' + id ).remove();
 								}
 							}
 						}

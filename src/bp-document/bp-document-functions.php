@@ -130,9 +130,9 @@ function bp_document_get( $args = '' ) {
 			'max'            => false,        // Maximum number of results to return.
 			'fields'         => 'all',
 			'page'           => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'       => false,        // results per page
-			'sort'           => 'DESC',       // sort ASC or DESC
-			'order_by'       => false,       // order by
+			'per_page'       => false,        // results per page.
+			'sort'           => 'DESC',       // sort ASC or DESC.
+			'order_by'       => false,       // order by.
 
 			'scope'          => false,
 
@@ -141,8 +141,12 @@ function bp_document_get( $args = '' ) {
 			'activity_id'    => false,
 			'folder_id'      => false,
 			'group_id'       => false,
-			'search_terms'   => false,        // Pass search terms as a string
-			'privacy'        => false,        // privacy of document
+			'thread_id'      => false,        // Optional: ID of the message thread.
+			'forum_id'       => false,        // Optional: ID of the forum.
+			'topic_id'       => false,        // Optional: ID of the topic.
+			'reply_id'       => false,        // Optional: ID of the reply.
+			'search_terms'   => false,        // Pass search terms as a string.
+			'privacy'        => false,        // privacy of document.
 			'exclude'        => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'    => false,
 			'folder'         => true,
@@ -159,6 +163,10 @@ function bp_document_get( $args = '' ) {
 			'activity_id'    => $r['activity_id'],
 			'folder_id'      => $r['folder_id'],
 			'group_id'       => $r['group_id'],
+			'thread_id'      => $r['thread_id'],
+			'forum_id'       => $r['forum_id'],
+			'topic_id'       => $r['topic_id'],
+			'reply_id'       => $r['reply_id'],
 			'max'            => $r['max'],
 			'sort'           => $r['sort'],
 			'order_by'       => $r['order_by'],
@@ -176,10 +184,10 @@ function bp_document_get( $args = '' ) {
 	/**
 	 * Filters the requested document item(s).
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @param BP_Document $document Requested document object.
+	 * @param array       $r        Arguments used for the document query.
 	 *
-	 * @param BP_Document  $document Requested document object.
-	 * @param array     $r     Arguments used for the document query.
+	 * @since BuddyBoss 1.3.0
 	 */
 	return apply_filters_ref_array( 'bp_document_get', array( &$document, &$r ) );
 }
@@ -187,17 +195,17 @@ function bp_document_get( $args = '' ) {
 /**
  * Fetch specific document items.
  *
- * @since BuddyBoss 1.3.0
- *
- * @see BP_Document::get() For more information on accepted arguments.
- *
  * @param array|string $args {
- *     All arguments and defaults are shared with BP_Document::get(),
- *     except for the following:
- *     @type string|int|array Single document ID, comma-separated list of IDs,
+ *                           All arguments and defaults are shared with BP_Document::get(),
+ *                           except for the following:
+ *
+ * @type string|int|array Single document ID, comma-separated list of IDs,
  *                            or array of IDs.
  * }
  * @return array $activity See BP_Document::get() for description.
+ * @since BuddyBoss 1.3.0
+ *
+ * @see   BP_Document::get() For more information on accepted arguments.
  */
 function bp_document_get_specific( $args = '' ) {
 
@@ -278,6 +286,10 @@ function bp_document_add( $args = '' ) {
 			'title'         => '',                      // title of document being added.
 			'folder_id'     => false,                   // Optional: ID of the folder.
 			'group_id'      => false,                   // Optional: ID of the group.
+			'thread_id'     => false,                   // Optional: ID of the message thread.
+			'forum_id'      => false,                   // Optional: ID of the forum.
+			'topic_id'      => false,                   // Optional: ID of the topic.
+			'reply_id'      => false,                   // Optional: ID of the reply.
 			'activity_id'   => false,                   // The ID of activity.
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
@@ -299,6 +311,10 @@ function bp_document_add( $args = '' ) {
 	$document->title         = $r['title'];
 	$document->folder_id     = (int) $r['folder_id'];
 	$document->group_id      = (int) $r['group_id'];
+	$document->thread_id     = (int) $r['thread_id'];
+	$document->forum_id      = (int) $r['forum_id'];
+	$document->topic_id      = (int) $r['topic_id'];
+	$document->reply_id      = (int) $r['reply_id'];
 	$document->activity_id   = (int) $r['activity_id'];
 	$document->privacy       = $r['privacy'];
 	$document->menu_order    = $r['menu_order'];
@@ -310,10 +326,10 @@ function bp_document_add( $args = '' ) {
 	$document->extension     = $r['extension'];
 
 	// groups document always have privacy to `grouponly`.
-	if ( ! empty( $document->group_id ) ) {
+	if ( ! empty( $document->privacy ) && ( in_array( $document->privacy, array( 'forums', 'message' ), true ) ) ) {
+		$document->privacy = $r['privacy'];
+	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
-
-		// folder privacy is document privacy.
 	} elseif ( ! empty( $document->folder_id ) ) {
 		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
@@ -322,7 +338,7 @@ function bp_document_add( $args = '' ) {
 	}
 
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
-		$document->privacy ='message';
+		$document->privacy = 'message';
 	}
 
 	// save document.
@@ -1828,7 +1844,6 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-
 			if ( $folder->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -2005,6 +2020,37 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			}
 			break;
 
+		case 'forums':
+			$args       = array(
+				'user_id'         => $user_id,
+				'forum_id'        => $document->forum_id,
+				'check_ancestors' => false,
+			);
+			$has_access = bbp_user_can_view_forum( $args );
+			if ( $document->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $has_access ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'message':
+			$has_access = messages_check_thread_access( $document->thread_id, $user_id );
+			if ( $document->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $has_access > 0 ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
 		case 'onlyme':
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
@@ -2032,4 +2078,8 @@ function bp_document_get_allowed_extension() {
 	}
 
 	return $extensions;
+}
+
+function bp_document_get_forum_topic_id( $document_id ) {
+
 }

@@ -6,7 +6,7 @@
  * @since BuddyBoss 1.3.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -85,6 +85,38 @@ class BP_Document {
 	 * @var int
 	 */
 	var $group_id;
+
+	/**
+	 * Thread ID of the document item.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var int
+	 */
+	var $thread_id;
+
+	/**
+	 * Forum ID of the document item.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var int
+	 */
+	var $forum_id;
+
+	/**
+	 * Topic ID of the document item.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var int
+	 */
+	var $topic_id;
+
+	/**
+	 * Reply ID of the document item.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var int
+	 */
+	var $reply_id;
 
 	/**
 	 * Privacy of the document item.
@@ -209,6 +241,10 @@ class BP_Document {
 		$this->folder_id     = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
 		$this->group_id      = (int) $row->group_id;
+		$this->thread_id     = (int) $row->thread_id;
+		$this->forum_id      = (int) $row->forum_id;
+		$this->topic_id      = (int) $row->topic_id;
+		$this->reply_id      = (int) $row->reply_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
@@ -239,6 +275,10 @@ class BP_Document {
 		$this->folder_id     = apply_filters_ref_array( 'bp_document_folder_id_before_save', array( $this->folder_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_document_activity_id_before_save', array( $this->activity_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
+		$this->thread_id     = apply_filters_ref_array( 'bp_document_thread_id_before_save', array( $this->thread_id, &$this ) );
+		$this->forum_id      = apply_filters_ref_array( 'bp_document_forum_id_before_save', array( $this->forum_id, &$this ) );
+		$this->topic_id      = apply_filters_ref_array( 'bp_document_topic_id_before_save', array( $this->topic_id, &$this ) );
+		$this->reply_id      = apply_filters_ref_array( 'bp_document_reply_id_before_save', array( $this->reply_id, &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
@@ -399,9 +439,9 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, type = %s, preview_attachment_id = %d, file_name = %s, caption = %s, description = %s, extension = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, type = %s, preview_attachment_id = %d, file_name = %s, caption = %s, description = %s, extension = %s, thread_id = %d, forum_id = %d, topic_id = %d, reply_id = %d WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type, preview_attachment_id, file_name, caption, description, extension ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %d, %s, %s, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type, preview_attachment_id, file_name, caption, description, extension, thread_id, forum_id, topic_id, reply_id ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -867,6 +907,22 @@ class BP_Document {
 			$where_conditions_folder['in']   = "a.id IN ({$in})";
 		}
 
+		if ( ! empty( $r['thread_id'] ) ) {
+			$where_conditions_document['thread_id'] = "m.thread_id = {$r['thread_id']}";
+		}
+
+		if ( ! empty( $r['forum_id'] ) ) {
+			$where_conditions_document['forum_id'] = "m.forum_id = {$r['forum_id']}";
+		}
+
+		if ( ! empty( $r['topic_id'] ) ) {
+			$where_conditions_document['topic_id'] = "m.topic_id = {$r['topic_id']}";
+		}
+
+		if ( ! empty( $r['reply_id'] ) ) {
+			$where_conditions_document['reply_id'] = "m.reply_id = {$r['reply_id']}";
+		}
+
 		if ( ! empty( $r['activity_id'] ) ) {
 			$where_conditions_document['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
@@ -999,7 +1055,6 @@ class BP_Document {
 		 */
 		$document_ids_sql_folder   = apply_filters( 'bp_document_paged_activities_sql_folder', $document_ids_sql_folder, $r );
 		$document_ids_sql_document = apply_filters( 'bp_document_paged_activities_sql_document', $document_ids_sql_document, $r );
-
 
 		$cache_group = 'bp_document';
 
@@ -1172,10 +1227,14 @@ class BP_Document {
 				$document->folder_id     = (int) $document->album_id;
 				$document->activity_id   = (int) $document->activity_id;
 				$document->group_id      = (int) $document->group_id;
+				$document->thread_id     = (int) $document->thread_id;
+				$document->forum_id      = (int) $document->forum_id;
+				$document->topic_id      = (int) $document->topic_id;
+				$document->reply_id      = (int) $document->reply_id;
 				$document->menu_order    = (int) $document->menu_order;
 			}
 
-			// fetch attachment data
+			// fetch attachment data.
 			$attachment_data                 = new stdClass();
 			$attachment_data->full           = '';
 			$attachment_data->thumb          = '';

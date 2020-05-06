@@ -40,7 +40,6 @@ add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 
 // Messages.
-add_action( 'messages_message_sent', 'bp_media_attach_document_to_message' );
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );

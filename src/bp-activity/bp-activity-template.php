@@ -279,7 +279,7 @@ function bp_has_activities( $args = '' ) {
 		// Scope - pre-built activity filters for a user (friends/groups/favorites/mentions).
 			'scope'             => $scope,
 
-			// Filtering
+			// Filtering.
 			'user_id'           => $user_id,     // user_id to filter on.
 			'object'            => $object,      // Object to filter on e.g. groups, profile, status, friends.
 			'action'            => false,        // Action to filter on e.g. activity_update, profile_updated.
@@ -689,6 +689,11 @@ function bp_activity_id() {
 function bp_get_activity_id() {
 	global $activities_template;
 
+	$activity_id = 0;
+	if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id  ) ) {
+		$activity_id = $activities_template->activity->id ;
+	}
+
 	/**
 	 * Filters the activity ID being displayed.
 	 *
@@ -696,7 +701,7 @@ function bp_get_activity_id() {
 	 *
 	 * @param int $id The activity ID.
 	 */
-	return apply_filters( 'bp_get_activity_id', $activities_template->activity->id );
+	return apply_filters( 'bp_get_activity_id', $activity_id );
 }
 
 /**

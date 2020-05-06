@@ -456,13 +456,13 @@ function bp_media_add( $args = '' ) {
 	$media->date_created  = $r['date_created'];
 	$media->error_type    = $r['error_type'];
 
-	// groups media always have privacy to `grouponly`.
-	if ( ! empty( $media->group_id ) ) {
+	// groups document always have privacy to `grouponly`.
+	if ( ! empty( $media->privacy ) && ( in_array( $media->privacy, array( 'forums', 'message' ), true ) ) ) {
+		$media->privacy = $r['privacy'];
+	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
-
-	// album privacy is media privacy.
-	} else if ( ! empty( $media->album_id ) ) {
-		$album        = new BP_Media_Album( $media->album_id );
+	} elseif ( ! empty( $media->folder_id ) ) {
+		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
 			$media->privacy = $album->privacy;
 		}
@@ -481,7 +481,7 @@ function bp_media_add( $args = '' ) {
 		return false;
 	}
 
-	//media is saved for attachment
+	//media is saved for attachment.
 	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
 
 	/**

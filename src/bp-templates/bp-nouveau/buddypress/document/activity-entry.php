@@ -20,7 +20,7 @@ $document_privacy  = bp_document_user_can_manage_document( bp_get_document_id(),
 $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
-
+$db_privacy        = bp_get_db_document_privacy();
 
 $group_id = bp_get_document_group_id();
 if ( $group_id > 0 ) {
@@ -56,7 +56,13 @@ if ( $group_id > 0 ) {
 			</a>
 			<div class="document-action_list">
 				<ul>
+					<?php
+					if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+						?>
 					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+						<?php
+					}
+					?>
 					<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
@@ -111,7 +117,13 @@ if ( $group_id > 0 ) {
 					</a>
 					<div class="document-action_list">
 						<ul>
-							<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"  id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+							<?php
+							if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+								?>
+								<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>"  id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+								<?php
+							}
+							?>
 							<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						</ul>
 					</div>
