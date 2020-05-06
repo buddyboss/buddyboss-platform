@@ -221,6 +221,24 @@
 	}
 }
 
+.bb-meeting-actions-wrap {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	margin: 15px 0;
+
+	h2 {
+		margin: 0;
+	}
+}
+
+.bb-add-meeting {
+	display: inline-block;
+}
+
 #zmmtg-root {
 	z-index: 999;
 	.chat-container {

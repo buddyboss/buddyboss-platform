@@ -13,6 +13,7 @@ if ( bp_is_current_action( 'zoom' ) ) {
 		$tab = 'zoom';
 	}
 }
+?><div class="bb-meeting-container group-media"><?php
 
 // subnav.
 bp_get_template_part( 'groups/single/parts/zoom-subnav' );
@@ -23,6 +24,9 @@ switch ( $tab ) :
 	case 'zoom':
 	case 'meetings':
 	case 'past-meetings':
+
+		bp_get_template_part( 'zoom/add-meeting' );
+
 		if ( bp_zoom_is_single_meeting() ) {
 			bp_get_template_part( 'groups/single/zoom/single-meeting' );
 		} else if ( bp_zoom_is_edit_meeting() ) {
@@ -42,3 +46,5 @@ switch ( $tab ) :
 		bp_get_template_part( 'groups/single/plugins' );
 		break;
 endswitch;
+
+	?></div>

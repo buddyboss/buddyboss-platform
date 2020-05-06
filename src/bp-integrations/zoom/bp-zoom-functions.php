@@ -1190,7 +1190,26 @@ function bp_zoom_web_sdk_scripts() {
 	wp_enqueue_script( 'zoom-lodash', 'https://source.zoom.us/1.7.7/lib/vendor/lodash.min.js', array(), '1.7.7', false );
 	wp_enqueue_script( 'bp-zoom-web-sdk-main', bp_zoom_integration_url( '/assets/js/zoom-web/zoom-meeting-1.7.7.min.js' ), array(), '1.7.7', true );
 	wp_enqueue_script( 'bp-zoom-web-sdk-tool', bp_zoom_integration_url( '/assets/js/zoom-web/tool.js' ), array(), bp_get_version(), true );
-	wp_enqueue_script( 'bp-zoom-web-sdk-script', bp_zoom_integration_url( '/assets/js/zoom-web/bp-zoom-meeting.js' ), array(), bp_get_version(), true );
+	if ( ! wp_script_is( 'bp-zoom-meeting-js', 'enqueued' ) ) {
+		wp_enqueue_script( 'bp-zoom-meeting-js', bp_zoom_integration_url( '/assets/js/bp-zoom-meeting.js' ), array(), bp_get_version(), true );
+
+		$group_link = '';
+		if ( bp_is_group() ) {
+			$current_group = groups_get_current_group();
+			$group_link    = bp_get_group_permalink( $current_group );
+		}
+
+		wp_localize_script( 'bp-zoom-meeting-js', 'bp_zoom_meeting_vars',
+				array(
+						'ajax_url'           => bp_core_ajax_url(),
+						'bp_zoom_key'        => bp_zoom_api_key(),
+						'bp_zoom_secret'     => bp_zoom_api_secret(),
+						'home_url'     	     => home_url('/'),
+						'is_single_meeting'  => bp_zoom_is_single_meeting(),
+						'group_meetings_url' => trailingslashit( $group_link . 'zoom' ),
+				)
+		);
+	}
 
 	wp_add_inline_script( 'bp-zoom-web-sdk-main', 'var $ = jQuery', 'before' );
 }

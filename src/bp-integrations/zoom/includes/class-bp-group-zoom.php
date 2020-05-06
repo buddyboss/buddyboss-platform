@@ -229,14 +229,17 @@ if ( bp_is_active( 'groups' ) ) {
 				wp_enqueue_script( 'bp-select2-local' );
 			}
 			wp_enqueue_style( 'bp-select2' );
-			wp_enqueue_script( 'bp-group-zoom-meeting-js', bp_zoom_integration_url( '/assets/js/bp-group-zoom-meeting.js' ), array( 'jquery' ), bp_get_version(), true );
+			wp_enqueue_script( 'bp-zoom-meeting-js', bp_zoom_integration_url( '/assets/js/bp-zoom-meeting.js' ), array( 'jquery' ), bp_get_version(), true );
 
 			$current_group = groups_get_current_group();
 			$group_link    = bp_get_group_permalink( $current_group );
 
-			wp_localize_script( 'bp-group-zoom-meeting-js', 'bp_group_zoom_meeting_vars',
+			wp_localize_script( 'bp-zoom-meeting-js', 'bp_zoom_meeting_vars',
 				array(
 					'ajax_url'           => bp_core_ajax_url(),
+					'bp_zoom_key'        => bp_zoom_api_key(),
+					'bp_zoom_secret'     => bp_zoom_api_secret(),
+					'home_url'     	     => home_url('/'),
 					'is_single_meeting'  => bp_zoom_is_single_meeting(),
 					'group_meetings_url' => trailingslashit( $group_link . 'zoom' ),
 				)
