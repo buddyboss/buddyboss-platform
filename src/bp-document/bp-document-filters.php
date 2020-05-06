@@ -1,5 +1,5 @@
 <?php
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action( 'bp_document_folder_after_save', 'bp_document_update_document_privacy' );
 add_action( 'delete_attachment', 'bp_document_delete_attachment_document', 0 );
 
-// Activity
+// Activity.
 // add_action( 'bp_after_directory_activity_list', 'bp_document_add_theatre_template' );
 // add_action( 'bp_after_member_activity_content', 'bp_document_add_theatre_template' );
 // add_action( 'bp_after_group_activity_content', 'bp_document_add_theatre_template' );
@@ -20,7 +20,7 @@ add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_acti
 add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
 add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_privacy', 2 );
 
-// Forums
+// Forums.
 add_action( 'bbp_template_after_single_topic', 'bp_document_add_theatre_template' );
 add_action( 'bbp_new_reply', 'bp_document_forums_new_post_document_save', 999 );
 add_action( 'bbp_new_topic', 'bp_document_forums_new_post_document_save', 999 );
@@ -29,14 +29,14 @@ add_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
 add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999, 2 );
 add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999, 2 );
 
-// Messages
+// Messages.
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 
-// Download Document
+// Download Document.
 add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
 
-// Sync Attachment data
+// Sync Attachment data.
 add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
 
 /**
@@ -181,7 +181,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	// save document meta for activity
+	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
 	}
@@ -234,7 +234,7 @@ function bp_document_delete_activity_document( $activities ) {
 				bp_document_delete( array( 'activity_id' => $activity_id ) );
 			}
 
-			// get document ids attached to activity
+			// get document ids attached to activity.
 			$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			if ( ! empty( $document_ids ) ) {
 				$document_ids = explode( ',', $document_ids );
@@ -302,7 +302,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 		// save activity id if it is saved in forums and enabled in platform settings.
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
 
-		// save document
+		// save document.
 		$documents = json_decode( stripslashes( $_POST['bbp_document'] ), true );
 
 		// fetch currently uploaded document ids.
@@ -542,7 +542,6 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 function bp_document_download_url_file() {
 
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-
 		$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 		$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		if ( $can_download_btn ) {
@@ -561,7 +560,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 
 	global $wpdb, $bp;
 
-	// Check if media is attached to a document
+	// Check if media is attached to a document.
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE type = %s AND attachment_id = %d", 'document', $attachment_id ) ); // db call ok; no-cache ok;
 
 	if ( $document ) {

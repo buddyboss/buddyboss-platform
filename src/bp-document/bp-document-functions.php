@@ -1730,20 +1730,23 @@ function bp_document_download_link( $attachment_id, $document_id ) {
 
 function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
-	$can_manage = false;
-	$can_view   = false;
-	$folder     = new BP_Document_Folder( $folder_id );
-	$data       = array();
+	$can_manage   = false;
+	$can_view     = false;
+	$can_download = true;
+	$folder       = new BP_Document_Folder( $folder_id );
+	$data         = array();
 
 	switch ( $folder->privacy ) {
 
 		case 'public':
 			if ( $folder->user_id === $user_id ) {
-				$can_manage = true;
-				$can_view   = true;
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
 			} else {
-				$can_manage = false;
-				$can_view   = true;
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
 			}
 			break;
 
@@ -1753,10 +1756,15 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$manage = groups_can_user_manage_document( $user_id, $folder->group_id );
 
 				if ( $manage ) {
-					$can_manage = true;
-					$can_view   = true;
+					$can_manage   = true;
+					$can_view     = true;
+					$can_download = true;
 				} else {
-					$can_view = true;
+					$the_group = groups_get_group( absint( $folder->group_id ) );
+					if ( $the_group->id > 0 && $the_group->user_has_access ) {
+						$can_view     = true;
+						$can_download = true;
+					}
 				}
 
 				// $group           = groups_get_group( $folder->group_id );
@@ -1816,34 +1824,44 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( bp_loggedin_user_id() === $user_id ) {
-				$can_manage = false;
-				$can_view   = true;
+
+			if ( $folder->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_loggedin_user_id() === $user_id ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
 			}
 			break;
 
 		case 'friends':
 			$is_friend = friends_check_friendship( $folder->user_id, $user_id );
-			if ( $is_friend ) {
-				$can_manage = false;
-				$can_view   = true;
-			} elseif ( $folder->user_id === $user_id ) {
-				$can_manage = true;
-				$can_view   = true;
+			if ( $folder->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $is_friend ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
 			}
 			break;
 
 		case 'onlyme':
 			if ( $folder->user_id === $user_id ) {
-				$can_manage = true;
-				$can_view   = true;
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
 			}
 			break;
 
 	}
 
-	$data['can_manage'] = $can_manage;
-	$data['can_view']   = $can_view;
+	$data['can_manage']   = $can_manage;
+	$data['can_view']     = $can_view;
+	$data['can_download'] = $can_download;
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $folder_id, $user_id );
 }
@@ -1880,9 +1898,11 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 					$can_view     = true;
 					$can_download = true;
 				} else {
-					$can_manage   = false;
-					$can_view     = true;
-					$can_download = true;
+					$the_group = groups_get_group( absint( $document->group_id ) );
+					if ( $the_group->id > 0 && $the_group->user_has_access ) {
+						$can_view     = true;
+						$can_download = true;
+					}
 				}
 
 				// $group           = groups_get_group( $document->group_id );
@@ -1970,12 +1990,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 
 		case 'friends':
 			$is_friend = friends_check_friendship( $document->user_id, $user_id );
-			if ( $is_friend ) {
-				$can_manage   = false;
+			if ( $document->user_id === $user_id ) {
+				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
-			} elseif ( $document->user_id === $user_id ) {
-				$can_manage   = true;
+			} elseif ( $is_friend ) {
+				$can_manage   = false;
 				$can_view     = true;
 				$can_download = true;
 			}
