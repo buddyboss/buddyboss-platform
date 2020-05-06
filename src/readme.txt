@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.3.4 =
+* Activity - Fixed certain link previews displaying doubled in activity posts
+* Profiles - Fixed 'Profile Type' filter not working when any Profile Type is hidden
+* Widgets - Improved formatting structure of activities in '(BB) Latest Activities' widget
+* Tools - Added 'Repair Community' tool for running 'Update activity favorites data'
+* Performance - Optimized code when activating plugin on site with 60,000 or more users
+* Translations - Updated German (formal) language files
 
 = 1.3.3 =
 * Text Editor - Fixed content formatting reset issues when switching edit buttons
