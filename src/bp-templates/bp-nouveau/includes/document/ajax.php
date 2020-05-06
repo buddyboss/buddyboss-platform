@@ -144,7 +144,17 @@ function bp_nouveau_ajax_document_upload() {
 	$result = bp_document_upload();
 
 	if ( is_wp_error( $result ) ) {
-		$response['feedback'] = $result->get_error_message();
+
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$error_msg = $result->get_error_message();
+			if ( 'Sorry, this file type is not permitted for security reasons.' === $error_msg ) {
+				$response['feedback'] = __( 'Make sure you whitelisted extension and MIME TYPE in media settings and added correct MIME TYPE in extension entry.', 'buddyboss' );
+			} else {
+				$response['feedback'] = $result->get_error_message();
+			}
+		} else {
+			$response['feedback'] = $result->get_error_message();
+		}
 		wp_send_json_error( $response, $result->get_error_code() );
 	}
 
