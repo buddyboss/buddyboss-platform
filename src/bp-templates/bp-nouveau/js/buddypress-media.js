@@ -55,34 +55,48 @@ window.bp = window.bp || {};
 			}
 
 			this.documentOptions = {
-				url: BP_Nouveau.ajaxurl,
-				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: BP_Nouveau.media.document_type,
+				url				: BP_Nouveau.ajaxurl,
+				timeout			: 3 * 60 * 60 * 1000,
+				acceptedFiles	: BP_Nouveau.media.document_type,
 				autoProcessQueue: true,
-				addRemoveLinks: true,
-				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+				addRemoveLinks	: true,
+				uploadMultiple	: false,
+				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				accept			: function(file, done) {
+					if (file.size == 0) {
+						done( BP_Nouveau.media.empty_document_type );
+					} else {
+						done();
+					}
+				}
 			};
 
 			if ($( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' )) {
 				this.options = {
-					url: BP_Nouveau.ajaxurl,
-					timeout: 3 * 60 * 60 * 1000,
-					acceptedFiles: BP_Nouveau.media.document_type,
+					url				: BP_Nouveau.ajaxurl,
+					timeout			: 3 * 60 * 60 * 1000,
+					acceptedFiles	: BP_Nouveau.media.document_type,
 					autoProcessQueue: true,
-					addRemoveLinks: true,
-					uploadMultiple: false,
-					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+					addRemoveLinks	: true,
+					uploadMultiple	: false,
+					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					accept			: function(file, done) {
+						if (file.size == 0) {
+							done( BP_Nouveau.media.empty_document_type );
+						} else {
+							done();
+						}
+					}
 				};
 			} else {
 				this.options = {
-					url: BP_Nouveau.ajaxurl,
-					timeout: 3 * 60 * 60 * 1000,
-					acceptedFiles: 'image/*',
+					url				: BP_Nouveau.ajaxurl,
+					timeout			: 3 * 60 * 60 * 1000,
+					acceptedFiles	: 'image/*',
 					autoProcessQueue: true,
-					addRemoveLinks: true,
-					uploadMultiple: false,
-					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+					addRemoveLinks	: true,
+					uploadMultiple	: false,
+					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 				};
 			}
 
@@ -3239,18 +3253,18 @@ window.bp = window.bp || {};
 							500
 						);
 						if (response.success) {
-							
+
 							window.location.href = response.data.redirect_url;
-							
+
 							var currentPopup = $( event.currentTarget ).closest( '#bp-media-create-child-folder' );
 
 							currentPopup.find('#bp-media-edit-child-folder-submit').removeClass('loading');
-							
+
 							if (currentPopup.find( '.bb-field-steps' ).length) {
 								currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
 								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
 							}
-				
+
 							this.clearFolderLocationUI( event );
 							currentPopup.hide();
 

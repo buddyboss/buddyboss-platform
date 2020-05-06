@@ -65,13 +65,13 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url: BP_Nouveau.ajaxurl,
-					timeout: 3 * 60 * 60 * 1000,
-					acceptedFiles: 'image/*',
+					url				: BP_Nouveau.ajaxurl,
+					timeout			: 3 * 60 * 60 * 1000,
+					acceptedFiles	: 'image/*',
 					autoProcessQueue: true,
-					addRemoveLinks: true,
-					uploadMultiple: false,
-					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+					addRemoveLinks	: true,
+					uploadMultiple	: false,
+					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 				};
 
 				//  if defined, add custom dropzone options
@@ -1262,13 +1262,20 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass('closed') ) {
 
 					var dropzone_options = {
-						url: BP_Nouveau.ajaxurl,
-						timeout: 3 * 60 * 60 * 1000,
-						acceptedFiles: BP_Nouveau.media.document_type,
+						url				: BP_Nouveau.ajaxurl,
+						timeout			: 3 * 60 * 60 * 1000,
+						acceptedFiles	: BP_Nouveau.media.document_type,
 						autoProcessQueue: true,
-						addRemoveLinks: true,
-						uploadMultiple: false,
-						maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+						addRemoveLinks	: true,
+						uploadMultiple	: false,
+						maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						accept			: function(file, done) {
+							if (file.size == 0) {
+								done( BP_Nouveau.media.empty_document_type );
+							} else {
+								done();
+							}
+						}
 					};
 
 					// init dropzone

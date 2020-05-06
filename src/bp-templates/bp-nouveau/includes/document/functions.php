@@ -51,6 +51,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'group_document'           => bp_is_group_document_support_enabled(),
 		'messages_document'        => bp_is_messages_document_support_enabled(),
 		'document_type'            => implode( ',', $extensions ),
+		'empty_document_type'      => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
 	);
 
 	$old_media = $params['media'];

@@ -6,7 +6,7 @@ window.bp = window.bp || {};
 
 ( function( exports, $ ) {
 
-	// Bail if not set
+	// Bail if not set.
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
@@ -56,20 +56,20 @@ window.bp = window.bp || {};
 		dropzoneView: function() {
 			this.dropzone = null;
 
-			// set up dropzones auto discover to false so it does not automatically set dropzones
+			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url: BP_Nouveau.ajaxurl,
-				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: 'image/*',
+				url				: BP_Nouveau.ajaxurl,
+				timeout			: 3 * 60 * 60 * 1000,
+				acceptedFiles	: 'image/*',
 				autoProcessQueue: true,
-				addRemoveLinks: true,
-				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+				addRemoveLinks	: true,
+				uploadMultiple	: false,
+				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
 
-			// if defined, add custom dropzone options
+			// if defined, add custom dropzone options.
 			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
 				Object.assign( this.dropzone_options, BP_Nouveau.media.dropzone_options );
 			}
@@ -78,17 +78,24 @@ window.bp = window.bp || {};
 		dropzoneDocumentView: function() {
 			this.dropzone = null;
 
-			// set up dropzones auto discover to false so it does not automatically set dropzones
+			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_document_options = {
-				url: BP_Nouveau.ajaxurl,
-				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: BP_Nouveau.media.document_type,
+				url				: BP_Nouveau.ajaxurl,
+				timeout			: 3 * 60 * 60 * 1000,
+				acceptedFiles	: BP_Nouveau.media.document_type,
 				autoProcessQueue: true,
-				addRemoveLinks: true,
-				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+				addRemoveLinks	: true,
+				uploadMultiple	: false,
+				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				accept			: function(file, done) {
+					if (file.size == 0) {
+						done( BP_Nouveau.media.empty_document_type );
+					} else {
+						done();
+					}
+				}
 			};
 
 		},
@@ -96,10 +103,10 @@ window.bp = window.bp || {};
 		setupNav: function() {
 			var self = this;
 
-			// First adapt the compose nav
+			// First adapt the compose nav.
 			$( '#compose-personal-li' ).addClass( 'last' );
 
-			// Then listen to nav click and load the appropriate view
+			// Then listen to nav click and load the appropriate view.
 			$( '#subnav a' ).on(
 				'click',
 				function( event ) {
@@ -107,10 +114,10 @@ window.bp = window.bp || {};
 
 					var view_id = $( event.target ).prop( 'id' );
 
-					// Remove the editor to be sure it will be added dynamically later
+					// Remove the editor to be sure it will be added dynamically later.
 					self.removeTinyMCE();
 
-					// The compose view is specific (toggle behavior)
+					// The compose view is specific (toggle behavior).
 					if ( 'compose' === view_id ) {
 						self.router.navigate( 'compose/', { trigger: true } );
 										$( event.target ).parents( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
@@ -165,7 +172,7 @@ window.bp = window.bp || {};
 		displayFeedback: function( message, type ) {
 			var feedback;
 
-			// Make sure to remove the feedbacks
+			// Make sure to remove the feedbacks.
 			this.removeFeedback();
 
 			if ( ! message ) {
@@ -185,7 +192,7 @@ window.bp = window.bp || {};
 		},
 
 		clearViews: function() {
-			// Clear views
+			// Clear views.
 			if ( ! _.isUndefined( this.views.models ) ) {
 				_.each(
 					this.views.models,
@@ -220,14 +227,14 @@ window.bp = window.bp || {};
 				this.threadsView();
 			}
 
-			// Create the loop view
+			// Create the loop view.
 			var form = new bp.Views.messageForm(
 				{
 					model: new bp.Models.Message()
 				}
 			);
 
-			// Activate the appropriate nav
+			// Activate the appropriate nav.
 			$( '#subnav ul li' ).removeClass( 'current selected' );
 			$( '#subnav a#compose' ).closest( 'li' ).addClass( 'current selected' );
 
@@ -235,7 +242,7 @@ window.bp = window.bp || {};
 
 			form.inject( '.bp-messages-content' );
 
-			// show compose message screen
+			// show compose message screen.
 			$( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
 		},
 
@@ -245,25 +252,25 @@ window.bp = window.bp || {};
 				$( '.bp-messages-content' ).html( '' );
 			}
 
-			// Activate the appropriate nav
+			// Activate the appropriate nav.
 			$( '#subnav ul li' ).removeClass( 'current selected' );
 			$( '#subnav a#' + this.box ).closest( 'li' ).addClass( 'current selected' );
 
-			// Create the loop view
+			// Create the loop view.
 			var threads_list = new bp.Views.userThreads( { collection: this.threads, box: this.box } );
 
 			this.views.add( { id: 'threads', view: threads_list } );
 
 			threads_list.inject( '.bp-messages-threads-list' );
 
-			// Attach filters
+			// Attach filters.
 			this.displayFilters( this.threads );
 		},
 
 		displayFilters: function( collection ) {
 			var filters_view;
 
-			// Create the model
+			// Create the model.
 			this.filters = new Backbone.Model(
 				{
 					'page'         : 1,
@@ -274,7 +281,7 @@ window.bp = window.bp || {};
 			);
 
 			if ( collection.length ) {
-				// Use it in the filters viex
+				// Use it in the filters viex.
 				filters_view = new bp.Views.messageFilters( {model: this.filters, threads: collection} );
 
 				this.views.add( {id: 'filters', view: filters_view} );
@@ -287,7 +294,7 @@ window.bp = window.bp || {};
 
 			this.box = 'single';
 
-			// Remove the editor to be sure it will be added dynamically later
+			// Remove the editor to be sure it will be added dynamically later.
 			this.removeTinyMCE();
 
 			var threadView = false;
@@ -314,7 +321,7 @@ window.bp = window.bp || {};
 				this.threadsView();
 			}
 
-			// Create the single thread view
+			// Create the single thread view.
 			var single_thread = new bp.Views.userMessages( { collection: this.messages, thread: thread } );
 
 			this.views.add( { id: 'single', view: single_thread } );
@@ -518,7 +525,7 @@ window.bp = window.bp || {};
 				options.context = this;
 				options.data    = options.data || {};
 
-				// Add generic nonce
+				// Add generic nonce.
 				options.data.nonce = BP_Nouveau.nonces.messages;
 
 				if ( 'read' === method ) {
@@ -597,7 +604,7 @@ window.bp = window.bp || {};
 
 	bp.Models.GifData = Backbone.Model.extend( {} );
 
-	// Git results collection returned from giphy api
+	// Git results collection returned from giphy api.
 	bp.Collections.GifDatas = Backbone.Collection.extend(
 		{
 				// Reference to this collection's model.
@@ -1671,7 +1678,7 @@ window.bp = window.bp || {};
 							for ( var k = 0; k < medias.length; k++ ) {
 								medias[k].saved = true;
 							}
-						   self.model.set( 'media',medias );
+							self.model.set( 'media',medias );
 						}
 
 						var document = self.model.get( 'document' );
@@ -1684,7 +1691,7 @@ window.bp = window.bp || {};
 
 							// clear message attachments and toolbar.
 						if (self.messagesAttachments !== false) {
-						   self.messagesAttachments.onClose();
+							self.messagesAttachments.onClose();
 						}
 
 						// Remove the form view.
@@ -1927,8 +1934,8 @@ window.bp = window.bp || {};
 							bp.Nouveau.Messages.removeFeedback();
 
 						if ( 'hide_thread' === action ) {
-						   bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
-						   bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
+							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at( 0 ).id + '/', { trigger: true } );
 						}
 
 					}
