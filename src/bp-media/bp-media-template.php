@@ -135,7 +135,7 @@ function bp_has_media( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	// Album filtering
+	// Album filtering.
 	if ( ! isset( $args['album_id'] ) ) {
 		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
 	} else {
@@ -156,11 +156,11 @@ function bp_has_media( $args = '' ) {
 			// get the login user id.
 			$current_user_id = get_current_user_id();
 
-			// check if the login user is friends of the display user
+			// check if the login user is friends of the display user.
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
 
 			/**
-			 * check if the login user is friends of the display user
+			 * check if the login user is friends of the display user.
 			 * OR check if the login user and the display user is the same
 			 */
 			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
@@ -204,7 +204,7 @@ function bp_has_media( $args = '' ) {
 			'include'      => false,           // Pass an media_id or string of IDs comma-separated.
 			'exclude'      => false,           // Pass an activity_id or string of IDs comma-separated.
 			'sort'         => 'DESC',          // Sort DESC or ASC.
-			'order_by'     => false,           // Order by. Default: date_created
+			'order_by'     => false,           // Order by. Default: date_created.
 			'page'         => 1,               // Which page to load.
 			'per_page'     => 20,              // Number of items per page.
 			'page_arg'     => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
@@ -215,7 +215,7 @@ function bp_has_media( $args = '' ) {
 			// Scope - pre-built media filters for a user (friends/groups).
 			'scope'        => $scope,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,        // user_id to filter on.
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.

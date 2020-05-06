@@ -321,6 +321,10 @@ function bp_document_add( $args = '' ) {
 		}
 	}
 
+	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
+		$document->privacy ='message';
+	}
+
 	// save document.
 	$save = $document->save();
 

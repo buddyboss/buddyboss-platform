@@ -39,7 +39,8 @@ add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 
 add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
 add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 
-// Messages
+// Messages.
+add_action( 'messages_message_sent', 'bp_media_attach_document_to_message' );
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
@@ -166,11 +167,11 @@ function bp_media_activity_append_media( $content, $activity ) {
 				// get the login user id.
 				$current_user_id = get_current_user_id();
 
-				// check if the login user is friends of the display user
+				// check if the login user is friends of the display user.
 				$is_friend = friends_check_friendship( $current_user_id, $activity->user_id );
 
 				/**
-				 * check if the login user is friends of the display user
+				 * check if the login user is friends of the display user.
 				 * OR check if the login user and the display user is the same
 				 */
 				if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $activity->user_id ) {
@@ -669,8 +670,30 @@ function bp_media_attach_media_to_message( &$message ) {
 		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
-		// save media meta for message
+		// save media meta for message.
 		bp_messages_update_meta( $message->id, 'bp_media_ids', implode( ',', $media_ids ) );
+	}
+}
+
+/**
+ * Attach document to the message object
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $message
+ */
+function bp_media_attach_document_to_message( &$message ) {
+
+	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
+		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+		$document_ids = bp_document_add_handler( $_POST['document'] );
+
+		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
+		// save media meta for message.
+		bp_messages_update_meta( $message->id, 'bp_document_ids', implode( ',', $document_ids ) );
 	}
 }
 

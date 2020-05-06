@@ -988,6 +988,10 @@ function bp_nouveau_ajax_groups_send_message() {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
 	}
 
+	if ( '' === $_POST['content'] && ( ! empty( $_POST['document'] ) || !empty( $_POST['media'] ) ) ) {
+		$_POST['content'] = '&nbsp;';
+	}
+
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $_POST['users'] ) {
 

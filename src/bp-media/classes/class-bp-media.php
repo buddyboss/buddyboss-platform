@@ -389,7 +389,7 @@ class BP_Media {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
 
-			// we want to disable limit query when include media ids
+			// we want to disable limit query when include media ids.
 			$r['page']     = false;
 			$r['per_page'] = false;
 		}
@@ -398,7 +398,7 @@ class BP_Media {
 			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
 
-		// existing-media check to query media which has no albums assigned
+		// existing-media check to query media which has no albums assigned.
 		if ( ! empty( $r['album_id'] ) && 'existing-media' != $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
 		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' == $r['album_id'] ) {
@@ -489,6 +489,7 @@ class BP_Media {
 		$cache_group = 'bp_media';
 
 		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );
+
 		if ( false === $cached ) {
 			$media_ids = $wpdb->get_col( $media_ids_sql );
 			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids );

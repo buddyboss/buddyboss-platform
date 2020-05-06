@@ -365,9 +365,9 @@ function bp_media_get_specific( $args = '' ) {
 			'max'       => false,      // Maximum number of results to return.
 			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
 			'per_page'  => false,      // Results per page.
-			'sort'      => 'DESC',     // Sort ASC or DESC
-			'order_by'  => false,     // Sort ASC or DESC
-			'privacy'   => array( 'public' ),     // privacy to filter
+			'sort'      => 'DESC',     // Sort ASC or DESC.
+			'order_by'  => false,     // Sort ASC or DESC.
+			'privacy'   => array( 'public' ),     // privacy to filter.
 		),
 		'media_get_specific'
 	);
@@ -427,7 +427,7 @@ function bp_media_add( $args = '' ) {
 		$args,
 		array(
 			'id'            => false,                   // Pass an existing media ID to update an existing entry.
-			'blog_id'       => get_current_blog_id(),   // Blog ID
+			'blog_id'       => get_current_blog_id(),   // Blog ID.
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of media being added.
@@ -436,7 +436,7 @@ function bp_media_add( $args = '' ) {
 			'activity_id'   => false,                   // The ID of activity.
 			'privacy'       => 'public',                // Optional: privacy of the media e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
-			'date_created'  => bp_core_current_time(),  // The GMT time that this media was recorded
+			'date_created'  => bp_core_current_time(),  // The GMT time that this media was recorded.
 			'error_type'    => 'bool',
 		),
 		'media_add'
@@ -456,11 +456,11 @@ function bp_media_add( $args = '' ) {
 	$media->date_created  = $r['date_created'];
 	$media->error_type    = $r['error_type'];
 
-	// groups media always have privacy to `grouponly`
+	// groups media always have privacy to `grouponly`.
 	if ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
 
-	// album privacy is media privacy
+	// album privacy is media privacy.
 	} else if ( ! empty( $media->album_id ) ) {
 		$album        = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
@@ -468,7 +468,11 @@ function bp_media_add( $args = '' ) {
 		}
 	}
 
-	// save media
+	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
+		$media->privacy ='message';
+	}
+
+	// save media.
 	$save = $media->save();
 
 	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
@@ -510,7 +514,7 @@ function bp_media_add_handler( $medias = array() ) {
 	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_media_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
-		// save  media
+		// save  media.
 		foreach ( $medias as $media ) {
 
 			$media_id = bp_media_add( array(

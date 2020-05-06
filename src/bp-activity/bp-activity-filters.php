@@ -1426,28 +1426,28 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		//save media meta for activity
+		//save media meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
 			foreach ( (array) $added_document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 
-				// get one of the media's privacy for the activity privacy
+				// get one of the media's privacy for the activity privacy.
 				$privacy = $document->privacy;
 
-				// get media album id
+				// get media album id.
 				if ( ! empty( $document->album_id ) ) {
 					$folder_id = $document->album_id;
 				}
 
-				//save parent activity id in attachment meta
+				//save parent activity id in attachment meta.
 				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $activity_id );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $added_document_ids ) );
 
-			// if media is from album then save album id in activity media
+			// if media is from album then save album id in activity media.
 			if ( ! empty( $folder_id ) ) {
 				bp_activity_update_meta( $activity_id, 'bp_document_folder_activity', $folder_id );
 			}
