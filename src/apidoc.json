@@ -1,0 +1,11 @@
+{
+  "name": "BuddyBoss Platform",
+  "version": "1.0.0",
+  "description": "API Reference",
+  "title": "BuddyBoss Platform",
+  "url": "https://www.buddyboss.com/resources/api/",
+  "template": {
+    "withCompare": true,
+    "withGenerator": true
+  }
+}

@@ -411,6 +411,16 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+		apidoc: {
+			api: {
+				src: SOURCE_DIR,
+				dest: SOURCE_DIR + "endpoints/",
+				options : {
+					includeFilters: [".*\\.php$"],
+					excludeFilters : ["assets/", "bin/","languages/", "node_modules/", "src/bp-core/admin/js/lib/"],
+				},
+			}
+		},
 	});
 
 
@@ -418,7 +428,7 @@ module.exports = function (grunt) {
 	 * Register tasks.
 	 */
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
-    grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest']);
+    grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'apidoc', 'clean:bp_rest']);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 
