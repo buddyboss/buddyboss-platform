@@ -2132,6 +2132,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 			#group-document-search {
 				background-image: none;
+				padding: 6px 10px 6px 2rem;
+				height: auto;
+				font-size: 14px;
 			}
 		}
 	}
@@ -2210,6 +2213,17 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 			.dropzone * {
 				text-align: center;
+			}
+
+			.bp-dir-search-form {
+				border: 0;
+
+				#group-document-search {
+					background-image: none;
+					padding: 6px 10px 6px 2rem;
+					height: auto;
+					font-size: 14px;
+				}
 			}
 
 		}
