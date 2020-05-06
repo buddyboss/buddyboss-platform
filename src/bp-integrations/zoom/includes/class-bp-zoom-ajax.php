@@ -201,18 +201,34 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 								</div>
 								<div class="recording-list-row-col">
 									<div class="video_link">
-										<?php if ( 'MP4' === $recording_file->file_type ) : ?>
-											<video width="320" height="240" controls>
-												<source src="<?php echo esc_url( $recording_file->download_url ); ?>" type="video/mp4">
-												<p><?php _e( 'Your browser does not support HTML5 video.', 'buddyboss' ); ?></p>
-											</video>
-										<?php endif; ?>
-										<?php if ( 'M4A' === $recording_file->file_type ) : ?>
-											<audio width="320" height="240" controls>
-												<source src="<?php echo esc_url( $recording_file->download_url ); ?>" type="audio/mp4">
-												<p><?php _e( 'Your browser does not support HTML5 audio.', 'buddyboss' ); ?></p>
-											</audio>
-										<?php endif; ?>
+										<a class="play_btn" href="#"><?php _e( 'Play', 'buddyboss' ); ?></a>
+										<div class="bb-media-model-wrapper bb-internal-model" style="display: none;">
+
+											<a data-balloon-pos="left" data-balloon="<?php _e( 'Close', 'buddyboss' ); ?>" class="bb-close-media-theatre bb-close-model" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7"/></svg></a>
+
+											<div id="bb-media-model-container" class="bb-media-model-container">
+												<div class="bb-media-model-inner">
+													<div class="bb-media-section">
+														<?php if ( 'MP4' === $recording_file->file_type ) : ?>
+															<video controls>
+																<source src="<?php echo esc_url( $recording_file->download_url ); ?>" type="video/mp4">
+																<p><?php _e( 'Your browser does not support HTML5 video.', 'buddyboss' ); ?></p>
+															</video>
+														<?php endif; ?>
+														<?php if ( 'M4A' === $recording_file->file_type ) : ?>
+															<audio controls>
+																<source src="<?php echo esc_url( $recording_file->download_url ); ?>" type="audio/mp4">
+																<p><?php _e( 'Your browser does not support HTML5 audio.', 'buddyboss' ); ?></p>
+															</audio>
+														<?php endif; ?>
+													</div>
+<!--													<div class="bb-media-info-section">-->
+<!--														<ul class="activity-list item-list bp-list"><span><i class="bb-icon-spin5 animate-spin"></i></span></ul>-->
+<!--													</div>-->
+												</div>
+											</div>
+
+										</div>
 									</div>
 								</div>
 								<div class="recording-list-row-col">

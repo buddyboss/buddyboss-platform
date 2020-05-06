@@ -41,6 +41,8 @@ window.bp = window.bp || {};
 			$(document).on('click', '.join-meeting-in-browser', this.joinMeetingInBrowser.bind(this));
 			$(document).on('click', '#bp-add-meeting', this.openCreateMeetingModal.bind(this));
 			$(document).on('click', '#bp-meeting-create-meeting-close', this.closeCreateMeetingModal.bind(this));
+			$(document).on('click', '.play_btn', this.openRecordingModal.bind(this));
+			$(document).on('click', '.bb-close-model', this.closeRecordingModal.bind(this));
 		},
 
 		loadMoreMeetings: function (e) {
@@ -305,6 +307,19 @@ window.bp = window.bp || {};
 
 			$('#bp-meeting-create').hide();
 		},
+
+		openRecordingModal: function(e) {
+			var _this = $(e.currentTarget);
+			e.preventDefault();
+
+			_this.closest('.video_link').find('.bb-media-model-wrapper').show();
+		},
+
+		closeRecordingModal: function(e) {
+			e.preventDefault();
+
+			$('.bb-media-model-wrapper').hide();
+		}
 	};
 
 	// Launch BP Zoom
