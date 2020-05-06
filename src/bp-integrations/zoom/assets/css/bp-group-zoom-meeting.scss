@@ -33,7 +33,7 @@
 }
 
 .meeting-item-table {
-	min-width: 600px;
+	min-width: 520px;
 
 	.meeting-item-header {
 		display: -webkit-box;
@@ -186,6 +186,11 @@
 			}
 		}
 	}
+}
+
+#buddypress.bp-vertical-navs .meeting-item-container .meeting-item-table .meeting-item-col.meeting-action .button {
+	font-size: 12px;
+    padding: 7px 10px;
 }
 
 @media screen and ( max-width: 768px ) {

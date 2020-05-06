@@ -13025,7 +13025,7 @@ span.icons:before {
 }
 
 .meeting-item-table {
-  min-width: 600px;
+  min-width: 520px;
 }
 
 .meeting-item-table .meeting-item-header {
@@ -13172,6 +13172,11 @@ span.icons:before {
 .single-meeting-item-table .single-meeting-item .meeting-item-col a.delete {
   margin-top: 7px;
   display: inline-block;
+}
+
+#buddypress.bp-vertical-navs .meeting-item-container .meeting-item-table .meeting-item-col.meeting-action .button {
+  font-size: 12px;
+  padding: 7px 10px;
 }
 
 @media screen and (max-width: 768px) {
