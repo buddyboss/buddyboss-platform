@@ -346,7 +346,7 @@ function groups_edit_base_group_details( $args = array() ) {
  * @param int|bool    $parent_id Parent group ID.
  * @param string|bool $media_status Optional. Who is allowed to manage media
  *                                   to the group. 'members', 'mods', or 'admins'.
- * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support
+ * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support.
  *                                   to the group. 'members', 'mods', or 'admins'.
  *
  * @return bool True on success, false on failure.

@@ -1541,11 +1541,11 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			target.toggleClass( 'active' );
-
+			console.log( 'd' );
 			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
-
+				console.log( 'dd' );
 				if ( dropzone_container.hasClass( 'closed' ) ) {
-
+					console.log( 'ddd' );
 					// init dropzone.
 					self.dropzone_obj = new Dropzone( 'div#bp-group-messages-post-document-uploader', self.documentOptions );
 

@@ -164,7 +164,7 @@ function groups_action_create_group() {
 			* Filters the allowed media statuses.
 			 *
 			 * @since BuddyBoss 1.0.0
-			                       *
+			 *
 			 * @param array $value Array of statuses allowed.
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.

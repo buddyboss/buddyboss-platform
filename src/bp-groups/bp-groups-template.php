@@ -2594,7 +2594,7 @@ function bp_group_show_document_status_setting( $setting, $group = false ) {
 
 	$document_status = bp_group_get_document_status( $group_id );
 
-	if ( $setting == $document_status ) {
+	if ( $setting === $document_status ) {
 		echo ' checked="checked"';
 	}
 }
@@ -2685,7 +2685,7 @@ function bp_group_get_document_status( $group_id = false ) {
 
 	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
 	if ( ! $document_status ) {
-		$media_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
 	}
 
 	/**
@@ -2698,7 +2698,7 @@ function bp_group_get_document_status( $group_id = false ) {
 	 * @param string $media_status Membership level needed to manage albums.
 	 * @param int    $group_id      ID of the group whose status is being checked.
 	 */
-	return apply_filters( 'bp_group_get_media_status', $media_status, $group_id );
+	return apply_filters( 'bp_group_get_document_status', $document_status, $group_id );
 }
 
 /**
