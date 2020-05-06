@@ -466,6 +466,7 @@ class BP_Zoom_Meeting {
 				'search_terms' => false,           // Terms to search by.
 				'count_total'  => false,           // Whether or not to use count_total.
 				'group_id'     => false,           // filter results by group id.
+				'meeting_id'   => false,           // filter results by zoom meeting id.
 				'since'        => false,           // return items since date.
 				'from'         => false,           // return items from date.
 			)
@@ -499,6 +500,10 @@ class BP_Zoom_Meeting {
 			$where_conditions['group'] = "m.group_id = {$r['group_id']}";
 		}
 
+		if ( ! empty( $r['meeting_id'] ) ) {
+			$where_conditions['meeting'] = "m.zoom_meeting_id = {$r['meeting_id']}";
+		}
+
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
 			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
@@ -515,7 +520,7 @@ class BP_Zoom_Meeting {
 			$r['per_page'] = false;
 		}
 
-		if ( ! empty( $r['since'] ) && empty( $r['in'] ) ) {
+		if ( ! empty( $r['since'] ) && empty( $r['in'] ) && empty( $r['meeting_id'] ) ) {
 			// Validate that this is a proper Y-m-d H:i:s date.
 			// Trick: parse to UNIX date then translate back.
 			$translated_date = date( 'Y-m-d H:i:s', strtotime( $r['since'] ) );

@@ -140,6 +140,7 @@ class BP_Zoom_Meeting_Template {
 			'exclude'      => false,
 			'search_terms' => false,
 			'group_id'     => false,
+			'meeting_id'   => false,
 			'since'        => false,
 			'from'         => false,
 		);
@@ -162,6 +163,7 @@ class BP_Zoom_Meeting_Template {
 					'sort'        => $sort,
 					'order_by'    => $order_by,
 					'group_id'    => $group_id,
+					'meeting_id'  => $meeting_id,
 					'since'       => $since,
 					'from'        => $from,
 				)
@@ -180,6 +182,7 @@ class BP_Zoom_Meeting_Template {
 					'search_terms' => $search_terms,
 					'exclude'      => $exclude,
 					'group_id'     => $group_id,
+					'meeting_id'   => $meeting_id,
 					'since'        => $since,
 					'from'         => $from,
 				)

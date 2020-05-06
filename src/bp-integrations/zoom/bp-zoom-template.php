@@ -100,6 +100,7 @@ function bp_has_zoom_meetings( $args = '' ) {
 
 			// Filtering
 			'group_id'     => $group_id,       // group_id to filter on.
+			'meeting_id'   => false,       // meeting_id to filter on.
 			'since'        => $since,           // Return only items recorded since this Y-m-d H:i:s date.
 			'from'         => $from,           // Return only items recorded from this Y-m-d H:i:s date.
 

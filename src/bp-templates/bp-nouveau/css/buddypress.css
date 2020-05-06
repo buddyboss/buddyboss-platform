@@ -13194,3 +13194,71 @@ span.icons:before {
     display: none;
   }
 }
+
+#zmmtg-root {
+  z-index: 999;
+}
+
+#zmmtg-root .chat-container .dropdown-menu {
+  list-style: none;
+  padding-left: 0;
+}
+
+#zmmtg-root .chat-container .chat-scrollbar {
+  max-height: 400px;
+}
+
+body:not(.full-screen) {
+  overflow: auto;
+}
+
+body:not(.full-screen) #zmmtg-root {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  display: none;
+  z-index: 9999;
+}
+
+body:not(.full-screen) #zmmtg-root.active {
+  display: block;
+  margin-bottom: 30px;
+}
+
+body:not(.full-screen) #zmmtg-root .meeting-app, body:not(.full-screen) #zmmtg-root .meeting-client, body:not(.full-screen) #zmmtg-root .meeting-client-inner, body:not(.full-screen) #zmmtg-root .meeting-client-inner > div, body:not(.full-screen) #zmmtg-root #dialog-join {
+  position: absolute !important;
+  min-width: 100% !important;
+  width: 100% !important;
+  min-height: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+}
+
+body:not(.full-screen) #zmmtg-root .meeting-app {
+  overflow: hidden;
+}
+
+body:not(.full-screen) #zmmtg-root .meeting-app > span {
+  max-width: 100%;
+}
+
+body:not(.full-screen) #zmmtg-root .active-main {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+}
+
+body:not(.full-screen) #zmmtg-root #sv-active-video {
+  transform: translate(-50%, -50%);
+  position: absolute !important;
+  left: 50% !important;
+  top: 25% !important;
+}
+
+body.full-screen.ReactModal__Body--open {
+  overflow: hidden !important;
+  width: 100% !important;
+  height: 100% !important;
+}
