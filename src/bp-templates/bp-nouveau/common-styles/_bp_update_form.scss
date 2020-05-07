@@ -168,11 +168,10 @@
 .activity-update-form {
 
 	#whats-new-content {
-		position: relative;
 
 		.medium-editor-toolbar {
 			top: inherit;
-			bottom: -52px;
+			bottom: 56px;
 			left: 38px;
 			visibility: hidden;
 			z-index: 99;
@@ -191,7 +190,7 @@
 				height: 44px;
 
 				div & {
-					bottom: -51px;
+					bottom: 56px;
 				}
 			}
 
@@ -794,4 +793,27 @@ input.search-query-input {
 			width: auto;
 		}
 	}
+}
+
+@media screen and (max-width: 560px) {
+
+	#buddypress > .activity-update-form .focus-in {
+
+		#whats-new-content {
+
+			.medium-editor-toolbar {
+				bottom: 109px;
+
+				&.active {
+
+					div & {
+						bottom: 109px;
+					}
+				}
+			}
+
+		}
+
+	}
+
 }
