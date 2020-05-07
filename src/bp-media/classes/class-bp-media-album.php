@@ -627,7 +627,7 @@ class BP_Media_Album {
 	public static function total_group_album_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id} AND type = 'media'" );
 
 		return $total_count;
 	}

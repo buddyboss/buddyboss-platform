@@ -1088,7 +1088,7 @@ class BP_Media {
 	public static function total_group_media_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id} AND type = 'media'" );
 
 		return $total_count;
 	}

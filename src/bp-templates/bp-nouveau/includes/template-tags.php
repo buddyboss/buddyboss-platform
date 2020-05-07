@@ -104,18 +104,18 @@ function bp_nouveau_template_message_classes() {
 	 *
 	 * @return string The type of the notice. Defaults to error.
 	 */
-	function bp_nouveau_get_template_message_type() {
-		$bp_nouveau = bp_nouveau();
-		$type       = 'error';
+function bp_nouveau_get_template_message_type() {
+	$bp_nouveau = bp_nouveau();
+	$type       = 'error';
 
-		if ( ! empty( $bp_nouveau->template_message['type'] ) ) {
-			$type = $bp_nouveau->template_message['type'];
-		} elseif ( ! empty( $bp_nouveau->user_feedback['type'] ) ) {
-			$type = $bp_nouveau->user_feedback['type'];
-		}
-
-		return $type;
+	if ( ! empty( $bp_nouveau->template_message['type'] ) ) {
+		$type = $bp_nouveau->template_message['type'];
+	} elseif ( ! empty( $bp_nouveau->user_feedback['type'] ) ) {
+		$type = $bp_nouveau->user_feedback['type'];
 	}
+
+	return $type;
+}
 
 /**
  * Checks if a template notice/feedback message is set
@@ -196,32 +196,32 @@ function bp_nouveau_template_message() {
 	 *
 	 * @return string HTML Output.
 	 */
-	function bp_nouveau_get_template_message() {
-		$bp_nouveau = bp_nouveau();
+function bp_nouveau_get_template_message() {
+	$bp_nouveau = bp_nouveau();
 
-		if ( ! empty( $bp_nouveau->user_feedback['message'] ) ) {
-			$user_feedback = $bp_nouveau->user_feedback['message'];
+	if ( ! empty( $bp_nouveau->user_feedback['message'] ) ) {
+		$user_feedback = $bp_nouveau->user_feedback['message'];
 
-			// @TODO: why is this treated differently?
-			foreach ( array( 'wp_kses_data', 'wp_unslash', 'wptexturize', 'convert_smilies', 'convert_chars' ) as $filter ) {
-				$user_feedback = call_user_func( $filter, $user_feedback );
-			}
-
-			return '<p>' . $user_feedback . '</p>';
-
-		} elseif ( ! empty( $bp_nouveau->template_message['message'] ) ) {
-			/**
-			 * Filters the 'template_notices' feedback message content.
-			 *
-			 * @since BuddyPress 1.5.5
-			 *
-			 * @param string $template_message Feedback message content.
-			 * @param string $type             The type of message being displayed.
-			 *                                 Either 'updated' or 'error'.
-			 */
-			return apply_filters( 'bp_core_render_message_content', $bp_nouveau->template_message['message'], bp_nouveau_get_template_message_type() );
+		// @TODO: why is this treated differently?
+		foreach ( array( 'wp_kses_data', 'wp_unslash', 'wptexturize', 'convert_smilies', 'convert_chars' ) as $filter ) {
+			$user_feedback = call_user_func( $filter, $user_feedback );
 		}
+
+		return '<p>' . $user_feedback . '</p>';
+
+	} elseif ( ! empty( $bp_nouveau->template_message['message'] ) ) {
+		/**
+		 * Filters the 'template_notices' feedback message content.
+		 *
+		 * @since BuddyPress 1.5.5
+		 *
+		 * @param string $template_message Feedback message content.
+		 * @param string $type             The type of message being displayed.
+		 *                                 Either 'updated' or 'error'.
+		 */
+		return apply_filters( 'bp_core_render_message_content', $bp_nouveau->template_message['message'], bp_nouveau_get_template_message_type() );
 	}
+}
 
 /**
  * Template tag to display feedback notices to users, if there are to display
@@ -644,7 +644,6 @@ function bp_nouveau_get_loop_classes() {
 	 * @param string $component The current component's loop.
 	 *
 	 * @since BuddyPress 3.0.0
-	 *
 	 */
 	$class_list = (array) apply_filters( 'bp_nouveau_get_loop_classes', $classes, $component );
 
@@ -728,11 +727,14 @@ function bp_nouveau_avatar_args() {
 	 *     @param int    $height Avatar height value.
 	 * }
 	 */
-	return apply_filters( 'bp_nouveau_avatar_args', array(
-		'type'   => 'full',
-		'width'  => bp_core_avatar_full_width(),
-		'height' => bp_core_avatar_full_height(),
-	) );
+	return apply_filters(
+		'bp_nouveau_avatar_args',
+		array(
+			'type'   => 'full',
+			'width'  => bp_core_avatar_full_width(),
+			'height' => bp_core_avatar_full_height(),
+		)
+	);
 }
 
 
@@ -766,12 +768,15 @@ function bp_nouveau_avatar_args() {
 function bp_nouveau_has_nav( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$n = wp_parse_args( $args, array(
-		'type'                    => 'primary',
-		'object'                  => '',
-		'user_has_access'         => true,
-		'show_for_displayed_user' => true,
-	) );
+	$n = wp_parse_args(
+		$args,
+		array(
+			'type'                    => 'primary',
+			'object'                  => '',
+			'user_has_access'         => true,
+			'show_for_displayed_user' => true,
+		)
+	);
 
 	if ( empty( $n['type'] ) ) {
 		return false;
@@ -785,7 +790,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 		$bp_nouveau->displayed_nav = 'directory';
 		$nav                       = $bp_nouveau->directory_nav->get_primary();
 
-	// So far it's only possible to build a Group nav when displaying it.
+		// So far it's only possible to build a Group nav when displaying it.
 	} elseif ( bp_is_group() ) {
 		$bp_nouveau->displayed_nav = 'groups';
 		$parent_slug               = bp_get_current_group_slug();
@@ -793,17 +798,17 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
-		} else if ( 'group_invite' === $bp_nouveau->object_nav && bp_is_group_invites() ) {
+		} elseif ( 'group_invite' === $bp_nouveau->object_nav && bp_is_group_invites() ) {
 			$parent_slug .= '_invite';
-		} else if ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
+		} elseif ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
 			$parent_slug .= '_media';
-		} else if ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
+		} elseif ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
 			$parent_slug .= '_members';
 
-		/**
-		 * If it's not the Admin tabs, reorder the Group's nav according to the
-		 * customizer setting.
-		 */
+			/**
+			 * If it's not the Admin tabs, reorder the Group's nav according to the
+			 * customizer setting.
+			 */
 		} else {
 			bp_nouveau_set_nav_item_order( $group_nav, bp_nouveau_get_appearance_settings( 'group_nav_order' ), $parent_slug );
 		}
@@ -815,7 +820,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 			)
 		);
 
-	// Build the nav for the displayed user
+		// Build the nav for the displayed user
 	} elseif ( bp_is_user() ) {
 		$bp_nouveau->displayed_nav = 'personal';
 		$user_nav                  = buddypress()->members->nav;
@@ -840,7 +845,6 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 			$nav = $user_nav->get_primary( $args );
 		}
-
 	} elseif ( ! empty( $bp_nouveau->object_nav ) ) {
 		$bp_nouveau->displayed_nav = $bp_nouveau->object_nav;
 
@@ -922,29 +926,29 @@ function bp_nouveau_nav_id() {
 	 *
 	 * @return string the ID attribute.
 	 */
-	function bp_nouveau_get_nav_id() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
+function bp_nouveau_get_nav_id() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
 
-		if ( 'directory' === $bp_nouveau->displayed_nav ) {
-			$id = sprintf( '%1$s-%2$s', $nav_item->component, $nav_item->slug );
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' ===  $bp_nouveau->displayed_nav ) {
-			$id = sprintf( '%1$s-%2$s-li', $nav_item->css_id, $bp_nouveau->displayed_nav );
-		} else {
-			$id = $nav_item->slug;
-		}
-
-		/**
-		 * Filter to edit the ID attribute of the nav.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $id       The ID attribute of the nav.
-		 * @param object $nav_item The current nav item object.
-		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		return apply_filters( 'bp_nouveau_get_nav_id', $id, $nav_item, $bp_nouveau->displayed_nav );
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		$id = sprintf( '%1$s-%2$s', $nav_item->component, $nav_item->slug );
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {
+		$id = sprintf( '%1$s-%2$s-li', $nav_item->css_id, $bp_nouveau->displayed_nav );
+	} else {
+		$id = $nav_item->slug;
 	}
+
+	/**
+	 * Filter to edit the ID attribute of the nav.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $id       The ID attribute of the nav.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return apply_filters( 'bp_nouveau_get_nav_id', $id, $nav_item, $bp_nouveau->displayed_nav );
+}
 
 /**
  * Displays the nav item classes.
@@ -962,70 +966,70 @@ function bp_nouveau_nav_classes() {
 	 *
 	 * @return string List of classes.
 	 */
-	function bp_nouveau_get_nav_classes() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
-		$classes    = array();
+function bp_nouveau_get_nav_classes() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$classes    = array();
 
-		if ( 'directory' === $bp_nouveau->displayed_nav ) {
-			if ( ! empty( $nav_item->li_class ) ) {
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		if ( ! empty( $nav_item->li_class ) ) {
 			$classes = (array) $nav_item->li_class;
-			}
+		}
 
-			if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
-				$classes[] = 'no-ajax';
-			}
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {
-			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-tab' );
-			$selected = bp_current_action();
+		if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
+			$classes[] = 'no-ajax';
+		}
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {
+		$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-tab' );
+		$selected = bp_current_action();
 
-			// User's primary nav
-			if ( ! empty( $nav_item->primary ) ) {
-				$selected = bp_current_component();
+		// User's primary nav
+		if ( ! empty( $nav_item->primary ) ) {
+			$selected = bp_current_component();
 
 			// Group Member Tabs
-			} elseif ( 'group_members' === $bp_nouveau->object_nav ) {
-				$selected = bp_action_variable( 0 );
-				$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-member-tab' );
+		} elseif ( 'group_members' === $bp_nouveau->object_nav ) {
+			$selected = bp_action_variable( 0 );
+			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-member-tab' );
 
 			// Group Admin Tabs.
-			} elseif ( 'group_manage' === $bp_nouveau->object_nav ) {
-				$selected = bp_action_variable( 0 );
-				$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-admin-tab' );
+		} elseif ( 'group_manage' === $bp_nouveau->object_nav ) {
+			$selected = bp_action_variable( 0 );
+			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-admin-tab' );
 
 			// If we are here, it's the member's subnav
-			} elseif ( 'personal' === $bp_nouveau->displayed_nav ) {
-				$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
-			}
-
-			if ( $nav_item->slug === $selected || ( $nav_item->slug == 'just-me' && strpos( $selected, 'just-me' ) !== false ) ) {
-				$classes = array_merge( $classes, array( 'current', 'selected' ) );
-			}
+		} elseif ( 'personal' === $bp_nouveau->displayed_nav ) {
+			$classes = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
 		}
 
-		if ( ! empty( $classes ) ) {
-			$classes = array_map( 'sanitize_html_class', $classes );
+		if ( $nav_item->slug === $selected || ( $nav_item->slug == 'just-me' && strpos( $selected, 'just-me' ) !== false ) ) {
+			$classes = array_merge( $classes, array( 'current', 'selected' ) );
 		}
-
-		/**
-		 * Filter to edit/add classes.
-		 *
-		 * NB: you can also directly add classes into the template parts.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $value    A space separated list of classes.
-		 * @param array  $classes  The list of classes.
-		 * @param object $nav_item The current nav item object.
-		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		$classes_list = apply_filters( 'bp_nouveau_get_classes', join( ' ', $classes ), $classes, $nav_item, $bp_nouveau->displayed_nav );
-		if ( ! $classes_list ) {
-			$classes_list = '';
-		}
-
-		return $classes_list;
 	}
+
+	if ( ! empty( $classes ) ) {
+		$classes = array_map( 'sanitize_html_class', $classes );
+	}
+
+	/**
+	 * Filter to edit/add classes.
+	 *
+	 * NB: you can also directly add classes into the template parts.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $value    A space separated list of classes.
+	 * @param array  $classes  The list of classes.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	$classes_list = apply_filters( 'bp_nouveau_get_classes', join( ' ', $classes ), $classes, $nav_item, $bp_nouveau->displayed_nav );
+	if ( ! $classes_list ) {
+		$classes_list = '';
+	}
+
+	return $classes_list;
+}
 
 /**
  * Displays the nav item scope.
@@ -1043,36 +1047,36 @@ function bp_nouveau_nav_scope() {
 	 *
 	 * @return string the specific scope of the nav.
 	 */
-	function bp_nouveau_get_nav_scope() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
-		$scope      = array();
+function bp_nouveau_get_nav_scope() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$scope      = array();
 
-		if ( 'directory' === $bp_nouveau->displayed_nav ) {
-			$scope = array( 'data-bp-scope' => $nav_item->slug );
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		$scope = array( 'data-bp-scope' => $nav_item->slug );
 
-		} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->secondary ) ) {
-			$scope = array( 'data-bp-user-scope' => $nav_item->slug );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->secondary ) ) {
+		$scope = array( 'data-bp-user-scope' => $nav_item->slug );
 
-		} else {
-			/**
-			 * Filter to add your own scope.
-			 *
-			 * @since BuddyPress 3.0.0
-			 *
-			 * @param array $scope     Contains the key and the value for your scope.
-			 * @param object $nav_item The current nav item object.
-			 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-			 */
-			$scope = apply_filters( 'bp_nouveau_set_nav_scope', $scope, $nav_item, $bp_nouveau->displayed_nav );
-		}
-
-		if ( ! $scope ) {
-			return '';
-		}
-
-		return bp_get_form_field_attributes( 'scope', $scope );
+	} else {
+		/**
+		 * Filter to add your own scope.
+		 *
+		 * @since BuddyPress 3.0.0
+		 *
+		 * @param array $scope     Contains the key and the value for your scope.
+		 * @param object $nav_item The current nav item object.
+		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+		 */
+		$scope = apply_filters( 'bp_nouveau_set_nav_scope', $scope, $nav_item, $bp_nouveau->displayed_nav );
 	}
+
+	if ( ! $scope ) {
+		return '';
+	}
+
+	return bp_get_form_field_attributes( 'scope', $scope );
+}
 
 /**
  * Displays the nav item URL.
@@ -1090,34 +1094,34 @@ function bp_nouveau_nav_link() {
 	 *
 	 * @return string The URL for the nav item.
 	 */
-	function bp_nouveau_get_nav_link() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
+function bp_nouveau_get_nav_link() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
 
-		$link = '#';
-		if ( ! empty( $nav_item->link ) ) {
-			$link = $nav_item->link;
-		}
-
-		if ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
-			if ( bp_loggedin_user_domain() ) {
-				$link = str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $link );
-			} else {
-				$link = trailingslashit( bp_displayed_user_domain() . $link );
-			}
-		}
-
-		/**
-		 * Filter to edit the URL of the nav item.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $link     The URL for the nav item.
-		 * @param object $nav_item The current nav item object.
-		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		return apply_filters( 'bp_nouveau_get_nav_link', $link, $nav_item, $bp_nouveau->displayed_nav );
+	$link = '#';
+	if ( ! empty( $nav_item->link ) ) {
+		$link = $nav_item->link;
 	}
+
+	if ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
+		if ( bp_loggedin_user_domain() ) {
+			$link = str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $link );
+		} else {
+			$link = trailingslashit( bp_displayed_user_domain() . $link );
+		}
+	}
+
+	/**
+	 * Filter to edit the URL of the nav item.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $link     The URL for the nav item.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return apply_filters( 'bp_nouveau_get_nav_link', $link, $nav_item, $bp_nouveau->displayed_nav );
+}
 
 /**
  * Displays the nav item link ID.
@@ -1135,32 +1139,32 @@ function bp_nouveau_nav_link_id() {
 	 *
 	 * @return string The link id for the nav item.
 	 */
-	function bp_nouveau_get_nav_link_id() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
-		$link_id   = '';
+function bp_nouveau_get_nav_link_id() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$link_id    = '';
 
-		if ( ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) && ! empty( $nav_item->css_id ) ) {
-			$link_id = $nav_item->css_id;
+	if ( ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) && ! empty( $nav_item->css_id ) ) {
+		$link_id = $nav_item->css_id;
 
-			if ( ! empty( $nav_item->primary ) && 'personal' === $bp_nouveau->displayed_nav ) {
-				$link_id = 'user-' . $link_id;
-			}
-		} else {
-			$link_id = $nav_item->slug;
+		if ( ! empty( $nav_item->primary ) && 'personal' === $bp_nouveau->displayed_nav ) {
+			$link_id = 'user-' . $link_id;
 		}
-
-		/**
-		 * Filter to edit the link id attribute of the nav.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $link_id  The link id attribute for the nav item.
-		 * @param object $nav_item The current nav item object.
-		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		return apply_filters( 'bp_nouveau_get_nav_link_id', $link_id, $nav_item, $bp_nouveau->displayed_nav );
+	} else {
+		$link_id = $nav_item->slug;
 	}
+
+	/**
+	 * Filter to edit the link id attribute of the nav.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $link_id  The link id attribute for the nav item.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return apply_filters( 'bp_nouveau_get_nav_link_id', $link_id, $nav_item, $bp_nouveau->displayed_nav );
+}
 
 /**
  * Displays the nav item link title.
@@ -1178,33 +1182,33 @@ function bp_nouveau_nav_link_title() {
 	 *
 	 * @return string The link title for the nav item.
 	 */
-	function bp_nouveau_get_nav_link_title() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
-		$title      = '';
+function bp_nouveau_get_nav_link_title() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$title      = '';
 
-		if ( 'directory' === $bp_nouveau->displayed_nav && ! empty( $nav_item->title ) ) {
-			$title = $nav_item->title;
+	if ( 'directory' === $bp_nouveau->displayed_nav && ! empty( $nav_item->title ) ) {
+		$title = $nav_item->title;
 
-		} elseif (
-			( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav )
-			&&
-			! empty( $nav_item->name )
-		) {
-			$title = $nav_item->name;
-		}
-
-		/**
-		 * Filter to edit the link title attribute of the nav.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $title    The link title attribute for the nav item.
-		 * @param object $nav_item The current nav item object.
-		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		return apply_filters( 'bp_nouveau_get_nav_link_title', $title, $nav_item, $bp_nouveau->displayed_nav );
+	} elseif (
+		( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav )
+		&&
+		! empty( $nav_item->name )
+	) {
+		$title = $nav_item->name;
 	}
+
+	/**
+	 * Filter to edit the link title attribute of the nav.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $title    The link title attribute for the nav item.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return apply_filters( 'bp_nouveau_get_nav_link_title', $title, $nav_item, $bp_nouveau->displayed_nav );
+}
 
 /**
  * Displays the nav item link html text.
@@ -1222,33 +1226,33 @@ function bp_nouveau_nav_link_text() {
 	 *
 	 * @return string The html text for the nav item.
 	 */
-	function bp_nouveau_get_nav_link_text() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
-		$link_text  = '';
+function bp_nouveau_get_nav_link_text() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$link_text  = '';
 
-		if ( 'directory' === $bp_nouveau->displayed_nav && ! empty( $nav_item->text ) ) {
-			$link_text = _bp_strip_spans_from_title( $nav_item->text );
+	if ( 'directory' === $bp_nouveau->displayed_nav && ! empty( $nav_item->text ) ) {
+		$link_text = _bp_strip_spans_from_title( $nav_item->text );
 
-		} elseif (
-			( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav )
-			&&
-			! empty( $nav_item->name )
-		) {
-			$link_text = _bp_strip_spans_from_title( $nav_item->name );
-		}
-
-		/**
-		 * Filter to edit the html text of the nav.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $link_text The html text of the nav item.
-		 * @param object $nav_item  The current nav item object.
-		 * @param string $value     The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		return apply_filters( 'bp_nouveau_get_nav_link_text', $link_text, $nav_item, $bp_nouveau->displayed_nav );
+	} elseif (
+		( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav )
+		&&
+		! empty( $nav_item->name )
+	) {
+		$link_text = _bp_strip_spans_from_title( $nav_item->name );
 	}
+
+	/**
+	 * Filter to edit the html text of the nav.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $link_text The html text of the nav item.
+	 * @param object $nav_item  The current nav item object.
+	 * @param string $value     The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return apply_filters( 'bp_nouveau_get_nav_link_text', $link_text, $nav_item, $bp_nouveau->displayed_nav );
+}
 
 /**
  * Checks if the nav item has a count attribute.
@@ -1265,11 +1269,13 @@ function bp_nouveau_nav_has_count() {
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
-	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
+		$count = 0 !== (int) groups_get_current_group()->total_member_count;
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
+		$count = 0 !== (int) bp_document_get_total_group_document_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
-	    $count = 0 !== (int) bp_media_get_total_group_media_count();
+		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
-	    $count = 0 !== (int) bp_media_get_total_group_album_count();
+		$count = 0 !== (int) bp_media_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = 0 !== (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
@@ -1304,52 +1310,52 @@ function bp_nouveau_nav_count() {
 	 *
 	 * @return int The count attribute for the nav item.
 	 */
-	function bp_nouveau_get_nav_count() {
-		$bp_nouveau = bp_nouveau();
-		$nav_item   = $bp_nouveau->current_nav_item;
-		$count      = 0;
+function bp_nouveau_get_nav_count() {
+	$bp_nouveau = bp_nouveau();
+	$nav_item   = $bp_nouveau->current_nav_item;
+	$count      = 0;
 
-		if ( 'directory' === $bp_nouveau->displayed_nav ) {
-			$count = (int) str_replace(',', '', $nav_item->count );
-
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
-			$count = groups_get_current_group()->total_member_count;
-
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav &&  'subgroups' === $nav_item->slug  ) {
-			$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug  ) {
-			$count = bp_media_get_total_group_media_count();
-		}  elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug  ) {
-			$count = bp_media_get_total_group_album_count();
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
-			$group  = groups_get_current_group();
-			$admins = groups_get_group_admins( $group->id );
-			$mods   = groups_get_group_mods( $group->id );
-			$count  = sizeof( $admins ) + sizeof( $mods );
+	if ( 'directory' === $bp_nouveau->displayed_nav ) {
+		$count = (int) str_replace( ',', '', $nav_item->count );
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
+		$count = groups_get_current_group()->total_member_count;
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
+		$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
+		$count = bp_document_get_total_group_document_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
+		$count = bp_media_get_total_group_media_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
+		$count = bp_media_get_total_group_album_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
+		$group  = groups_get_current_group();
+		$admins = groups_get_group_admins( $group->id );
+		$mods   = groups_get_group_mods( $group->id );
+		$count  = sizeof( $admins ) + sizeof( $mods );
 
 		// @todo imho BuddyPress shouldn't add html tags inside Nav attributes...
-		} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
-			$span = strpos( $nav_item->name, '<span' );
+	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
+		$span = strpos( $nav_item->name, '<span' );
 
-			// Grab count out of the <span> element.
-			if ( false !== $span ) {
-				$count_start = strpos( $nav_item->name, '>', $span ) + 1;
-				$count_end   = strpos( $nav_item->name, '<', $count_start );
-				$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
-			}
+		// Grab count out of the <span> element.
+		if ( false !== $span ) {
+			$count_start = strpos( $nav_item->name, '>', $span ) + 1;
+			$count_end   = strpos( $nav_item->name, '<', $count_start );
+			$count       = (int) substr( $nav_item->name, $count_start, $count_end - $count_start );
 		}
-
-		/**
-		 * Filter to edit the count attribute for the nav item.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param int $count    The count attribute for the nav item.
-		 * @param object $nav_item The current nav item object.
-		 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
-		 */
-		return (int) apply_filters( 'bp_nouveau_get_nav_count', $count, $nav_item, $bp_nouveau->displayed_nav );
 	}
+
+	/**
+	 * Filter to edit the count attribute for the nav item.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param int $count    The count attribute for the nav item.
+	 * @param object $nav_item The current nav item object.
+	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 */
+	return (int) apply_filters( 'bp_nouveau_get_nav_count', $count, $nav_item, $bp_nouveau->displayed_nav );
+}
 
 /** Template tags specific to the Directory navs ******************************/
 
@@ -1372,43 +1378,43 @@ function bp_nouveau_directory_type_navs_class() {
 	 *
 	 * @return string
 	 */
-	function bp_nouveau_get_directory_type_navs_class() {
-		$component  = sanitize_key( bp_current_component() );
+function bp_nouveau_get_directory_type_navs_class() {
+	$component = sanitize_key( bp_current_component() );
 
-		// If component is 'blogs' we need to access options as 'Sites'.
-		if ('blogs' === $component) {
-			$component = 'sites';
-		};
+	// If component is 'blogs' we need to access options as 'Sites'.
+	if ( 'blogs' === $component ) {
+		$component = 'sites';
+	};
 
-		$customizer_option = sprintf( '%s_dir_tabs', $component );
-		$nav_style  = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-		$tab_style = '';
+	$customizer_option = sprintf( '%s_dir_tabs', $component );
+	$nav_style         = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+	$tab_style         = '';
 
-		if ( 1 === $nav_style ) {
-			$tab_style = $component . '-nav-tabs';
-		}
-
-		$nav_wrapper_classes = array(
-			sprintf( '%s-type-navs', $component ),
-			'main-navs',
-			'bp-navs',
-			'dir-navs',
-			$tab_style
-		);
-
-		/**
-		 * Filter to edit/add classes.
-		 *
-		 * NB: you can also directly add classes to the class attr.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array $nav_wrapper_classes The list of classes.
-		 */
-		$nav_wrapper_classes = (array) apply_filters( 'bp_nouveau_get_directory_type_navs_class', $nav_wrapper_classes );
-
-		return join( ' ', array_map( 'sanitize_html_class', $nav_wrapper_classes ) );
+	if ( 1 === $nav_style ) {
+		$tab_style = $component . '-nav-tabs';
 	}
+
+	$nav_wrapper_classes = array(
+		sprintf( '%s-type-navs', $component ),
+		'main-navs',
+		'bp-navs',
+		'dir-navs',
+		$tab_style,
+	);
+
+	/**
+	 * Filter to edit/add classes.
+	 *
+	 * NB: you can also directly add classes to the class attr.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array $nav_wrapper_classes The list of classes.
+	 */
+	$nav_wrapper_classes = (array) apply_filters( 'bp_nouveau_get_directory_type_navs_class', $nav_wrapper_classes );
+
+	return join( ' ', array_map( 'sanitize_html_class', $nav_wrapper_classes ) );
+}
 
 /**
  * Displays the directory nav item list class.
@@ -1426,9 +1432,9 @@ function bp_nouveau_directory_list_class() {
 	 *
 	 * @return string
 	 */
-	function bp_nouveau_get_directory_list_class() {
-		return sanitize_html_class( sprintf( '%s-nav', bp_current_component() ) );
-	}
+function bp_nouveau_get_directory_list_class() {
+	return sanitize_html_class( sprintf( '%s-nav', bp_current_component() ) );
+}
 
 /**
  * Displays the directory nav item object (data-bp attribute).
@@ -1452,15 +1458,15 @@ function bp_nouveau_directory_nav_object() {
 	 *
 	 * @return array
 	 */
-	function bp_nouveau_get_directory_nav_object() {
-		$nav_item = bp_nouveau()->current_nav_item;
+function bp_nouveau_get_directory_nav_object() {
+	$nav_item = bp_nouveau()->current_nav_item;
 
-		if ( ! $nav_item->component ) {
-			return null;
-		}
-
-		return $nav_item->component;
+	if ( ! $nav_item->component ) {
+		return null;
 	}
+
+	return $nav_item->component;
+}
 
 
 // Template tags for the single item navs.
@@ -1483,102 +1489,101 @@ function bp_nouveau_container_classes() {
 	 *
 	 * @return string CSS classes
 	 */
-	function bp_nouveau_get_container_classes() {
-		$classes           = array( 'buddypress-wrap' );
-		$component         = bp_current_component();
-		$bp_nouveau        = bp_nouveau();
-		$member_type_class = '';
+function bp_nouveau_get_container_classes() {
+	$classes           = array( 'buddypress-wrap' );
+	$component         = bp_current_component();
+	$bp_nouveau        = bp_nouveau();
+	$member_type_class = '';
 
-		if ( bp_is_user() ) {
-			$customizer_option = 'user_nav_display';
-			$component         = 'members';
-			$user_type         = bp_get_member_type( bp_displayed_user_id() );
-			$member_type_class = ( $user_type )? $user_type : '';
+	if ( bp_is_user() ) {
+		$customizer_option = 'user_nav_display';
+		$component         = 'members';
+		$user_type         = bp_get_member_type( bp_displayed_user_id() );
+		$member_type_class = ( $user_type ) ? $user_type : '';
 
-		} elseif ( bp_is_group() ) {
-			$customizer_option = 'group_nav_display';
+	} elseif ( bp_is_group() ) {
+		$customizer_option = 'group_nav_display';
 
-		} elseif ( bp_is_directory() ) {
-			switch ( $component ) {
-				case 'activity':
-					$customizer_option = 'activity_dir_layout';
-					break;
+	} elseif ( bp_is_directory() ) {
+		switch ( $component ) {
+			case 'activity':
+				$customizer_option = 'activity_dir_layout';
+				break;
 
-				case 'members':
-					$customizer_option = 'members_dir_layout';
-					break;
+			case 'members':
+				$customizer_option = 'members_dir_layout';
+				break;
 
-				case 'groups':
-					$customizer_option = 'groups_dir_layout';
-					break;
+			case 'groups':
+				$customizer_option = 'groups_dir_layout';
+				break;
 
-				case 'blogs':
-					$customizer_option = 'sites_dir_layout';
-					break;
+			case 'blogs':
+				$customizer_option = 'sites_dir_layout';
+				break;
 
-				case 'media':
-					$customizer_option = 'media_dir_layout';
-					break;
+			case 'media':
+				$customizer_option = 'media_dir_layout';
+				break;
 
-				default:
-					$customizer_option = '';
-					break;
-			}
-
-		} else {
-			/**
-			 * Filters the BuddyPress Nouveau single item setting ID.
-			 *
-			 * @since BuddyPress 3.0.0
-			 *
-			 * @param string $value Setting ID.
-			 */
-			$customizer_option = apply_filters( 'bp_nouveau_single_item_display_settings_id', '' );
+			default:
+				$customizer_option = '';
+				break;
 		}
-
-		if ( $member_type_class ) {
-			$classes[] = $member_type_class;
-		}
-
-		// Provide a class token to acknowledge additional extended profile fields added to default account reg screen
-		if ( 'register' === bp_current_component() && bp_is_active( 'xprofile' ) && bp_nouveau_base_account_has_xprofile()) {
-			$classes[] = 'extended-default-reg';
-		}
-
-		// Add classes according to site owners preferences. These are options set via Customizer.
-
-		// Set via earlier switch for component check to provide correct option key.
-		if ( $customizer_option ) {
-			$layout_prefs  = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-
-			if ( $layout_prefs && (int) $layout_prefs === 1 && ( bp_is_user() || bp_is_group() ) ) {
-				$classes[] = 'bp-single-vert-nav';
-				$classes[] = 'bp-vertical-navs';
-			}
-
-			if ( $layout_prefs && bp_is_directory() ) {
-				$classes[] = 'bp-dir-vert-nav';
-				$classes[] = 'bp-vertical-navs';
-				$bp_nouveau->{$component}->directory_vertical_layout = $layout_prefs;
-			} else {
-				$classes[] = 'bp-dir-hori-nav';
-			}
-		}
-
-		$class = array_map( 'sanitize_html_class', $classes );
-
+	} else {
 		/**
-		 * Filters the final results for BuddyPress Nouveau container classes.
-		 *
-		 * This filter will return a single string of concatenated classes to be used.
+		 * Filters the BuddyPress Nouveau single item setting ID.
 		 *
 		 * @since BuddyPress 3.0.0
 		 *
-		 * @param string $value   Concatenated classes.
-		 * @param array  $classes Array of classes that were concatenated.
+		 * @param string $value Setting ID.
 		 */
-		return apply_filters( 'bp_nouveau_get_container_classes', join( ' ', $class ), $classes );
+		$customizer_option = apply_filters( 'bp_nouveau_single_item_display_settings_id', '' );
 	}
+
+	if ( $member_type_class ) {
+		$classes[] = $member_type_class;
+	}
+
+	// Provide a class token to acknowledge additional extended profile fields added to default account reg screen
+	if ( 'register' === bp_current_component() && bp_is_active( 'xprofile' ) && bp_nouveau_base_account_has_xprofile() ) {
+		$classes[] = 'extended-default-reg';
+	}
+
+	// Add classes according to site owners preferences. These are options set via Customizer.
+
+	// Set via earlier switch for component check to provide correct option key.
+	if ( $customizer_option ) {
+		$layout_prefs = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+
+		if ( $layout_prefs && (int) $layout_prefs === 1 && ( bp_is_user() || bp_is_group() ) ) {
+			$classes[] = 'bp-single-vert-nav';
+			$classes[] = 'bp-vertical-navs';
+		}
+
+		if ( $layout_prefs && bp_is_directory() ) {
+			$classes[] = 'bp-dir-vert-nav';
+			$classes[] = 'bp-vertical-navs';
+			$bp_nouveau->{$component}->directory_vertical_layout = $layout_prefs;
+		} else {
+			$classes[] = 'bp-dir-hori-nav';
+		}
+	}
+
+	$class = array_map( 'sanitize_html_class', $classes );
+
+	/**
+	 * Filters the final results for BuddyPress Nouveau container classes.
+	 *
+	 * This filter will return a single string of concatenated classes to be used.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $value   Concatenated classes.
+	 * @param array  $classes Array of classes that were concatenated.
+	 */
+	return apply_filters( 'bp_nouveau_get_container_classes', join( ' ', $class ), $classes );
+}
 
 /**
  * Output single item nav container classes
@@ -1598,47 +1603,47 @@ function bp_nouveau_single_item_nav_classes() {
 	 *
 	 * @return string CSS classes
 	 */
-	function bp_nouveau_get_single_item_nav_classes() {
-		$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs' );
-		$component  = bp_current_component();
-		$bp_nouveau = bp_nouveau();
+function bp_nouveau_get_single_item_nav_classes() {
+	$classes    = array( 'main-navs', 'no-ajax', 'bp-navs', 'single-screen-navs' );
+	$component  = bp_current_component();
+	$bp_nouveau = bp_nouveau();
 
-		if ( bp_is_user() ) {
-			$component = 'members';
-			$menu_type = 'users-nav';
-		} else {
-			$menu_type = 'groups-nav';
-		}
-
-		$customizer_option = ( bp_is_user() )? 'user_nav_display' : 'group_nav_display';
-
-		$layout_prefs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-
-		// Set the global for a later use - this is moved from the `bp_nouveau_get_container_classes()
-		// But was set as a check for this array class addition.
-		$bp_nouveau->{$component}->single_primary_nav_layout = $layout_prefs;
-
-		if ( 1 === $layout_prefs ) {
-			$classes[] = 'vertical';
-		} else {
-			$classes[] = 'horizontal';
-		}
-
-		$classes[] = $menu_type;
-		$class = array_map( 'sanitize_html_class', $classes );
-
-		/**
-		 * Filters the final results for BuddyPress Nouveau single item nav classes.
-		 *
-		 * This filter will return a single string of concatenated classes to be used.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $value   Concatenated classes.
-		 * @param array  $classes Array of classes that were concatenated.
-		 */
-		return apply_filters( 'bp_nouveau_get_single_item_nav_classes', join( ' ', $class ), $classes );
+	if ( bp_is_user() ) {
+		$component = 'members';
+		$menu_type = 'users-nav';
+	} else {
+		$menu_type = 'groups-nav';
 	}
+
+	$customizer_option = ( bp_is_user() ) ? 'user_nav_display' : 'group_nav_display';
+
+	$layout_prefs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+
+	// Set the global for a later use - this is moved from the `bp_nouveau_get_container_classes()
+	// But was set as a check for this array class addition.
+	$bp_nouveau->{$component}->single_primary_nav_layout = $layout_prefs;
+
+	if ( 1 === $layout_prefs ) {
+		$classes[] = 'vertical';
+	} else {
+		$classes[] = 'horizontal';
+	}
+
+	$classes[] = $menu_type;
+	$class     = array_map( 'sanitize_html_class', $classes );
+
+	/**
+	 * Filters the final results for BuddyPress Nouveau single item nav classes.
+	 *
+	 * This filter will return a single string of concatenated classes to be used.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $value   Concatenated classes.
+	 * @param array  $classes Array of classes that were concatenated.
+	 */
+	return apply_filters( 'bp_nouveau_get_single_item_nav_classes', join( ' ', $class ), $classes );
+}
 
 /**
  * Output single item subnav container classes.
@@ -1658,40 +1663,40 @@ function bp_nouveau_single_item_subnav_classes() {
 	 *
 	 * @return string CSS classes
 	 */
-	function bp_nouveau_get_single_item_subnav_classes() {
-		$classes = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
+function bp_nouveau_get_single_item_subnav_classes() {
+	$classes = array( 'bp-navs', 'bp-subnavs', 'no-ajax' );
 
-		// Set user or group class string
-		if ( bp_is_user() ) {
-			$classes[] = 'user-subnav';
-		}
-
-		if ( bp_is_group() ) {
-			$classes[] = 'group-subnav';
-		}
-
-		if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
-			$classes[] = 'bp-invites-nav';
-		}
-
-		if ( ( bp_is_group() && 'messages' === bp_current_action() ) ) {
-			$classes[] = 'bp-messages-nav';
-		}
-
-		$class = array_map( 'sanitize_html_class', $classes );
-
-		/**
-		 * Filters the final results for BuddyPress Nouveau single item subnav classes.
-		 *
-		 * This filter will return a single string of concatenated classes to be used.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $value   Concatenated classes.
-		 * @param array  $classes Array of classes that were concatenated.
-		 */
-		return apply_filters( 'bp_nouveau_get_single_item_subnav_classes', join( ' ', $class ), $classes );
+	// Set user or group class string
+	if ( bp_is_user() ) {
+		$classes[] = 'user-subnav';
 	}
+
+	if ( bp_is_group() ) {
+		$classes[] = 'group-subnav';
+	}
+
+	if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
+		$classes[] = 'bp-invites-nav';
+	}
+
+	if ( ( bp_is_group() && 'messages' === bp_current_action() ) ) {
+		$classes[] = 'bp-messages-nav';
+	}
+
+	$class = array_map( 'sanitize_html_class', $classes );
+
+	/**
+	 * Filters the final results for BuddyPress Nouveau single item subnav classes.
+	 *
+	 * This filter will return a single string of concatenated classes to be used.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $value   Concatenated classes.
+	 * @param array  $classes Array of classes that were concatenated.
+	 */
+	return apply_filters( 'bp_nouveau_get_single_item_subnav_classes', join( ' ', $class ), $classes );
+}
 
 /**
  * Output the groups create steps classes.
@@ -1711,24 +1716,23 @@ function bp_nouveau_groups_create_steps_classes() {
 	 *
 	 * @return string CSS classes
 	 */
-	function bp_nouveau_get_group_create_steps_classes() {
-		$classes  = array( 'bp-navs', 'group-create-links', 'no-ajax' );
+function bp_nouveau_get_group_create_steps_classes() {
+	$classes = array( 'bp-navs', 'group-create-links', 'no-ajax' );
 
+	$class = array_map( 'sanitize_html_class', $classes );
 
-		$class = array_map( 'sanitize_html_class', $classes );
-
-		/**
-		 * Filters the final results for BuddyPress Nouveau group creation step classes.
-		 *
-		 * This filter will return a single string of concatenated classes to be used.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $value   Concatenated classes.
-		 * @param array  $classes Array of classes that were concatenated.
-		 */
-		return apply_filters( 'bp_nouveau_get_group_create_steps_classes', join( ' ', $class ), $classes );
-	}
+	/**
+	 * Filters the final results for BuddyPress Nouveau group creation step classes.
+	 *
+	 * This filter will return a single string of concatenated classes to be used.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $value   Concatenated classes.
+	 * @param array  $classes Array of classes that were concatenated.
+	 */
+	return apply_filters( 'bp_nouveau_get_group_create_steps_classes', join( ' ', $class ), $classes );
+}
 
 
 /** Template tags for the object search **************************************/
@@ -1920,18 +1924,18 @@ function bp_nouveau_search_form() {
 
 	if ( 'dir' === $objects['primary'] ) {
 		/**
-	     * Filter here to edit the HTML output of the directory search form.
-	     *
-	     * NB: This will take in charge the following BP Core Components filters
-	     *     - bp_directory_members_search_form
-	     *     - bp_directory_blogs_search_form
-	     *     - bp_directory_groups_search_form
-	     *
-	     * @since BuddyPress 1.9.0
-	     *
-	     * @param string $search_form_html The HTML output for the directory search form.
-	     */
-	    echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
+		 * Filter here to edit the HTML output of the directory search form.
+		 *
+		 * NB: This will take in charge the following BP Core Components filters
+		 *     - bp_directory_members_search_form
+		 *     - bp_directory_blogs_search_form
+		 *     - bp_directory_groups_search_form
+		 *
+		 * @since BuddyPress 1.9.0
+		 *
+		 * @param string $search_form_html The HTML output for the directory search form.
+		 */
+		echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
 
 		if ( 'activity' === $objects['secondary'] ) {
 			/**
@@ -2036,7 +2040,6 @@ function bp_nouveau_current_object() {
 		if ( 'activity' !== bp_current_action() ) {
 			$component['data_filter'] = 'group_' . bp_current_action();
 		}
-
 	} else {
 		$component['members_select']   = 'members-order-select';
 		$component['members_order_by'] = 'members-order-by';
@@ -2063,32 +2066,32 @@ function bp_nouveau_filter_container_id() {
 	 *
 	 * @param string
 	 */
-	function bp_nouveau_get_filter_container_id() {
-		$component = bp_nouveau_current_object();
+function bp_nouveau_get_filter_container_id() {
+	$component = bp_nouveau_current_object();
 
-		$ids = array(
-			'members'       =>  $component['members_select'],
-			'friends'       => 'members-friends-select',
-			'notifications' => 'notifications-filter-select',
-			'activity'      => 'activity-filter-select',
-			'groups'        => 'groups-order-select',
-			'blogs'         => 'blogs-order-select',
-		);
+	$ids = array(
+		'members'       => $component['members_select'],
+		'friends'       => 'members-friends-select',
+		'notifications' => 'notifications-filter-select',
+		'activity'      => 'activity-filter-select',
+		'groups'        => 'groups-order-select',
+		'blogs'         => 'blogs-order-select',
+	);
 
-		if ( isset( $ids[ $component['object'] ] ) ) {
+	if ( isset( $ids[ $component['object'] ] ) ) {
 
-			/**
-			 * Filters the container ID for BuddyPress Nouveau filters.
-			 *
-			 * @since BuddyPress 3.0.0
-			 *
-			 * @param string $value ID based on current component object.
-			 */
-			return apply_filters( 'bp_nouveau_get_filter_container_id', $ids[ $component['object'] ] );
-		}
-
-		return '';
+		/**
+		 * Filters the container ID for BuddyPress Nouveau filters.
+		 *
+		 * @since BuddyPress 3.0.0
+		 *
+		 * @param string $value ID based on current component object.
+		 */
+		return apply_filters( 'bp_nouveau_get_filter_container_id', $ids[ $component['object'] ] );
 	}
+
+	return '';
+}
 
 /**
  * Output data filter's ID attribute value.
@@ -2106,32 +2109,32 @@ function bp_nouveau_filter_id() {
 	 *
 	 * @param string
 	 */
-	function bp_nouveau_get_filter_id() {
-		$component = bp_nouveau_current_object();
+function bp_nouveau_get_filter_id() {
+	$component = bp_nouveau_current_object();
 
-		$ids = array(
-			'members'       => $component['members_order_by'],
-			'friends'       => 'members-friends',
-			'notifications' => 'notifications-filter-by',
-			'activity'      => 'activity-filter-by',
-			'groups'        => 'groups-order-by',
-			'blogs'         => 'blogs-order-by',
-		);
+	$ids = array(
+		'members'       => $component['members_order_by'],
+		'friends'       => 'members-friends',
+		'notifications' => 'notifications-filter-by',
+		'activity'      => 'activity-filter-by',
+		'groups'        => 'groups-order-by',
+		'blogs'         => 'blogs-order-by',
+	);
 
-		if ( isset( $ids[ $component['object'] ] ) ) {
+	if ( isset( $ids[ $component['object'] ] ) ) {
 
-			/**
-			 * Filters the filter ID for BuddyPress Nouveau filters.
-			 *
-			 * @since BuddyPress 3.0.0
-			 *
-			 * @param string $value ID based on current component object.
-			 */
-			return apply_filters( 'bp_nouveau_get_filter_id', $ids[ $component['object'] ] );
-		}
-
-		return '';
+		/**
+		 * Filters the filter ID for BuddyPress Nouveau filters.
+		 *
+		 * @since BuddyPress 3.0.0
+		 *
+		 * @param string $value ID based on current component object.
+		 */
+		return apply_filters( 'bp_nouveau_get_filter_id', $ids[ $component['object'] ] );
 	}
+
+	return '';
+}
 
 /**
  * Output data filter's label.
@@ -2144,29 +2147,29 @@ function bp_nouveau_filter_label() {
 
 	/**
 	 * Get data filter's label.
- 	 *
+	 *
 	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string
 	 */
-	function bp_nouveau_get_filter_label() {
-		$component = bp_nouveau_current_object();
-		$label     = __( 'Order By:', 'buddyboss' );
+function bp_nouveau_get_filter_label() {
+	$component = bp_nouveau_current_object();
+	$label     = __( 'Order By:', 'buddyboss' );
 
-		if ( 'activity' === $component['object'] || 'friends' === $component['object'] ) {
-			$label = __( 'Show:', 'buddyboss' );
-		}
-
-		/**
-		 * Filters the label for BuddyPress Nouveau filters.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $label     Label for BuddyPress Nouveau filter.
-		 * @param array  $component The data filter's data-bp-filter attribute value.
-		 */
-		return apply_filters( 'bp_nouveau_get_filter_label', $label, $component );
+	if ( 'activity' === $component['object'] || 'friends' === $component['object'] ) {
+		$label = __( 'Show:', 'buddyboss' );
 	}
+
+	/**
+	 * Filters the label for BuddyPress Nouveau filters.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $label     Label for BuddyPress Nouveau filter.
+	 * @param array  $component The data filter's data-bp-filter attribute value.
+	 */
+	return apply_filters( 'bp_nouveau_get_filter_label', $label, $component );
+}
 
 /**
  * Output data filter's data-bp-filter attribute value.
@@ -2194,26 +2197,27 @@ function bp_nouveau_filter_options() {
 	 *
 	 * @return string
 	 */
-	function bp_nouveau_get_filter_options() {
-		$output = '';
+function bp_nouveau_get_filter_options() {
+	$output = '';
 
-		if ( 'notifications' === bp_current_component() ) {
-			$output = bp_nouveau_get_notifications_filters();
+	if ( 'notifications' === bp_current_component() ) {
+		$output = bp_nouveau_get_notifications_filters();
 
-		} else {
-			$filters = bp_nouveau_get_component_filters();
+	} else {
+		$filters = bp_nouveau_get_component_filters();
 
-			foreach ( $filters as $key => $value ) {
-				$output .= sprintf( '<option value="%1$s">%2$s</option>%3$s',
-					esc_attr( $key ),
-					esc_html( $value ),
-					PHP_EOL
-				);
-			}
+		foreach ( $filters as $key => $value ) {
+			$output .= sprintf(
+				'<option value="%1$s">%2$s</option>%3$s',
+				esc_attr( $key ),
+				esc_html( $value ),
+				PHP_EOL
+			);
 		}
-
-		return $output;
 	}
+
+	return $output;
+}
 
 
 /** Template tags for the Customizer ******************************************/
@@ -2228,13 +2232,17 @@ function bp_nouveau_filter_options() {
  * @return string HTML.
  */
 function bp_nouveau_get_customizer_link( $args = array() ) {
-	$r = bp_parse_args( $args, array(
-		'capability' => 'bp_moderate',
-		'object'     => 'user',
-		'item_id'    => 0,
-		'autofocus'  => '',
-		'text'       => '',
-	), 'nouveau_get_customizer_link' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'capability' => 'bp_moderate',
+			'object'     => 'user',
+			'item_id'    => 0,
+			'autofocus'  => '',
+			'text'       => '',
+		),
+		'nouveau_get_customizer_link'
+	);
 
 	if ( empty( $r['capability'] ) || empty( $r['autofocus'] ) || empty( $r['text'] ) ) {
 		return '';
@@ -2269,10 +2277,13 @@ function bp_nouveau_get_customizer_link( $args = array() ) {
 		return '';
 	}
 
-	$customizer_link = add_query_arg( array(
-		'autofocus[section]' => $r['autofocus'],
-		'url'                => $url,
-	), admin_url( 'customize.php' ) );
+	$customizer_link = add_query_arg(
+		array(
+			'autofocus[section]' => $r['autofocus'],
+			'url'                => $url,
+		),
+		admin_url( 'customize.php' )
+	);
 
 	return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $customizer_link ), esc_html( $r['text'] ) );
 }
@@ -2378,7 +2389,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				$value = call_user_func( $value );
 			}
 
-		// Handle the specific case of Site's privacy differently
+			// Handle the specific case of Site's privacy differently
 		} elseif ( 'signup_blog_privacy_private' !== $name ) {
 			?>
 				<label for="signup_blog_privacy">
@@ -2400,7 +2411,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				 */
 				if ( $section !== 'blog_details' ) {
 					// Removed because we don't have to display the browser error message.
-					//$existing_attributes['required'] = 'required';
+					// $existing_attributes['required'] = 'required';
 				}
 			}
 
@@ -2465,7 +2476,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			if ( 'signup_blog_url' !== $name ) {
 				print( $field_output );  // Constructed safely above.
 
-			// If it's the signup blog url, it's specific to Multisite config.
+				// If it's the signup blog url, it's specific to Multisite config.
 			} elseif ( is_subdomain_install() ) {
 				// Constructed safely above.
 				printf(
@@ -2475,7 +2486,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 					bp_signup_get_subdomain_base()
 				);
 
-			// Subfolders!
+				// Subfolders!
 			} else {
 				printf(
 					'<small>%1$s</small> %2$s',
@@ -2484,24 +2495,24 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				);
 			}
 
-		// It's a radio, let's output the field inside the label
+			// It's a radio, let's output the field inside the label
 		} else {
 			// $label_output and $field_output are constructed safely above.
 			printf( $label_output, esc_attr( $name ), $field_output . ' ' . esc_html( $label ) );
 		}
 
 		// Password strength is restricted to the signup_password field
-		if ( 'signup_password' === $name) :
-		?>
+		if ( 'signup_password' === $name ) :
+			?>
 			<div id="pass-strength-result"></div>
-		<?php
+			<?php
 		endif;
 
 		// Email Confirm
 		if ( 'signup_email' === $name ) :
-		?>
+			?>
 			<div id="email-strength-result"></div>
-		<?php
+			<?php
 		endif;
 	}
 
@@ -2538,8 +2549,8 @@ function bp_nouveau_signup_terms_privacy() {
 	}
 
 	if ( ! $terms && ! $privacy ) {
-	    return false;
-    }
+		return false;
+	}
 
 	if ( $terms && ! $privacy ) {
 		?>
@@ -2550,49 +2561,49 @@ function bp_nouveau_signup_terms_privacy() {
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content',  $get_terms->post_content );
+			echo apply_filters( 'the_content', $get_terms->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
 	}
 
 	if ( ! $terms && $privacy ) {
 		?>
-        <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $privacy ) ); ?>
-        </p>
+		<p class="register-privacy-info">
+			<?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $privacy ) ); ?>
+		</p>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content',  $get_privacy->post_content );
+			echo apply_filters( 'the_content', $get_privacy->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
 	}
 
 	if ( $terms && $privacy ) {
 		?>
-        <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%s</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ), get_the_title( $privacy ) ); ?>
-        </p>
+		<p class="register-privacy-info">
+			<?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%1$s</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">%2$s</a>.', 'buddyboss' ), get_the_title( $terms ), get_the_title( $privacy ) ); ?>
+		</p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
-			echo apply_filters( 'the_content',  $get_terms->post_content );
+			echo apply_filters( 'the_content', $get_terms->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
-			echo apply_filters( 'the_content',  $get_privacy->post_content );
+			echo apply_filters( 'the_content', $get_privacy->post_content );
 			?>
-			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"><?php esc_html_e( '×', 'buddyboss' ); ?></button>
 		</div>
 		<?php
 	}
@@ -2623,7 +2634,8 @@ function bp_nouveau_submit_button( $action ) {
 		do_action( $submit_data['before'] );
 	}
 
-	$submit_input = sprintf( '<input type="submit" %s/>',
+	$submit_input = sprintf(
+		'<input type="submit" %s/>',
 		bp_get_form_field_attributes( 'submit', $submit_data['attributes'] )  // Safe.
 	);
 
@@ -2631,7 +2643,7 @@ function bp_nouveau_submit_button( $action ) {
 	if ( isset( $submit_data['wrapper'] ) && false === $submit_data['wrapper'] ) {
 		echo $submit_input;
 
-	// Output the submit button into a wrapper.
+		// Output the submit button into a wrapper.
 	} else {
 		printf( '<div class="submit">%s</div>', $submit_input );
 	}

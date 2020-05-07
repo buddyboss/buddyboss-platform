@@ -471,7 +471,7 @@ class BP_Document {
 			foreach ( $objects as $object ) {
 				if ( $object != '.' && $object != '..' ) {
 					if ( filetype( $dir . '/' . $object ) == 'dir' ) {
-						BP_Document::bp_document_remove_temp_directory( $dir . '/' . $object );
+						self::bp_document_remove_temp_directory( $dir . '/' . $object );
 					} else {
 						unlink( $dir . '/' . $object );
 					}
@@ -2013,8 +2013,9 @@ class BP_Document {
 	public static function total_group_document_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id}" ); // db call ok; no-cache ok;
-
+		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id} AND type = 'document' AND album_id = 0" ); // db call ok; no-cache ok;
+		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folders} WHERE group_id = {$group_id} AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count          = $total_count_folder + $total_count_document;
 		return $total_count;
 	}
 
