@@ -33,7 +33,7 @@ if ( $group_id > 0 ) {
 
 ?>
 
-<div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>">
+<div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
 	<div class="document-description-wrap">
 		<a href="<?php echo esc_url( $download_url ); ?>" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>

@@ -17,9 +17,8 @@
 						<h4><?php esc_html_e( 'Move ', 'buddyboss' ); ?> <span class="target_name"></span> <?php esc_html_e( ' to ', 'buddyboss' ); ?><span class="target_folder">...</span></h4>
 					</header>
 					<?php
-					if ( ! bp_is_group() ) :
 						$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-						?>
+					?>
 					<div class="bb-field-wrap bb-field-wrap-search">
 						<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folder', 'buddyboss' ); ?>" />
 					</div>
@@ -38,9 +37,6 @@
 							</div>
 						</div>
 					</div>
-						<?php
-						endif;
-					?>
 					<footer class="bb-model-footer">
 						<a class="ac-folder-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="button bp-folder-move" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
