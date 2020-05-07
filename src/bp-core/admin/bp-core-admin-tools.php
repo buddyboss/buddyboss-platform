@@ -412,6 +412,14 @@ function bp_admin_repair_list() {
 		);
     }
 
+	// Invitations:
+	// - maybe create the database table and migrate any existing group invitations.
+	$repair_list[110] = array(
+		'bp-invitations-table',
+		__( 'Create the database table for Invitations and migrate existing group invitations if needed.', 'buddyboss' ),
+		'bp_admin_invitations_table',
+	);
+
 
 	ksort( $repair_list );
 
@@ -1138,6 +1146,8 @@ function bp_admin_repair_tools_wrapper_function() {
 		$status = bp_admin_assign_member_type();
 	} elseif ( 'bp-sync-activity-favourite' === $type ) {
 		$status = bp_admin_update_activity_favourite();
+	} elseif ( 'bp-invitations-table' === $type ) {
+		$status = bp_admin_invitations_table();
 	}
 	wp_send_json_success( $status );
 }
@@ -1216,4 +1226,72 @@ function bp_admin_update_activity_favourite() {
 			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
 		);
     }
+}
+
+
+/**
+ * Create the invitations database table if it does not exist.
+ * Migrate outstanding group invitations if needed.
+ *
+ * @since BuddyBoss 1.3.5
+ *
+ * @return array
+ */
+function bp_admin_invitations_table() {
+	global $wpdb;
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+
+	/* translators: %s: the result of the action performed by the repair tool */
+	$statement = __( 'Creating the Invitations database table if it does not exist&hellip; %s', 'buddyboss' );
+	$result    = __( 'Failed to create table!', 'buddyboss' );
+
+	bp_core_install_invitations();
+
+	// Check for existence of invitations table.
+	$bp_prefix  = bp_core_get_table_prefix();
+	$table_name = "{$bp_prefix}bp_invitations";
+	$query      = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
+	if ( ! $wpdb->get_var( $query ) == $table_name ) {
+		return array(
+			'status'  => 2,
+			'message' => sprintf( $statement, $result ),
+		);
+	} else {
+		$result = __( 'Created invitations table!', 'buddyboss' );
+	}
+
+	// Migrate group invitations if needed.
+	if ( bp_is_active( 'groups' ) ) {
+		$bp = buddypress();
+
+		/* translators: %s: the result of the action performed by the repair tool */
+		$migrate_statement = __( 'Migrating group invitations&hellip; %s', 'buddyboss' );
+		$migrate_result    = __( 'Failed to migrate invitations!', 'buddyboss' );
+
+		bp_groups_migrate_invitations();
+
+		// Check that there are no outstanding group invites in the group_members table.
+		$records = $wpdb->get_results( "SELECT id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND is_banned = 0" );
+		if ( empty( $records ) ) {
+			$migrate_result = __( 'Migrated invitations!', 'buddyboss' );
+
+			return array(
+				'status'  => 0,
+				'message' => sprintf( $statement . ' ' . $migrate_statement, $result, $migrate_result ),
+			);
+		} else {
+			return array(
+				'status'  => 2,
+				'message' => sprintf( $statement . ' ' . $migrate_statement, $result, $migrate_result ),
+			);
+		}
+	}
+
+	// Return a "create-only" success message.
+	return array(
+		'status'  => 0,
+		'message' => sprintf( $statement, $result ),
+	);
 }
