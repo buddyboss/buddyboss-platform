@@ -685,8 +685,6 @@ function bp_document_object_results_document_all_scope( $querystring ) {
 		$querystring['scope'][] = 'personal';
 	}
 
-	$querystring['page']        = 1;
-	$querystring['per_page']    = '1';
 	$querystring['user_id']     = 0;
 	$querystring['count_total'] = true;
 
@@ -1470,7 +1468,7 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 	if ( $first ) {
 		$output = '<ul class="">';
 	} else {
-		$output  = '<ul class="location-folder-list">';
+		$output = '<ul class="location-folder-list">';
 	}
 
 	foreach ( $array as $item ) {

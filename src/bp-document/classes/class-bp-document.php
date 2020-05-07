@@ -1061,9 +1061,6 @@ class BP_Document {
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
 		$cached_document = bp_core_get_incremented_cache( $document_ids_sql_document, $cache_group );
 
-		error_log( $document_ids_sql_folder );
-		error_log( $document_ids_sql_document );
-
 		if ( false === $cached_folder ) {
 			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $document_ids_sql_folder, $cache_group, $document_ids_folder );
@@ -1102,8 +1099,6 @@ class BP_Document {
 
 		$documents = self::array_msort( $documents, array( $r['order_by'] => $direction ) );
 
-		// array_multisort( array_column( $documents, $r['order_by'] ), $direction, $documents );
-
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 
 		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $retval['has_more_items'] ) {
@@ -1140,7 +1135,6 @@ class BP_Document {
 			array_multisort( $reference_array, $direction, $array );
 		}
 
-		// error_log( print_r( $new_array, true ) );
 	}
 
 	public static function array_msort( $array, $cols ) {
@@ -1172,9 +1166,10 @@ class BP_Document {
 		}
 
 		if ( ! empty( $ret ) ) {
-
+			$i = 0;
 			foreach ( $ret as $k => $v ) {
-				$ret[ $k ] = (object) $v;
+				$ret[ $i ] = (object) $v;
+				$i++;
 			}
 		}
 

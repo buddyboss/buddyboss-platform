@@ -379,8 +379,6 @@ function bp_nouveau_object_template_results_document_all_scope( $querystring ) {
 		$querystring['scope'][] = 'personal';
 	}
 
-	$querystring['page']        = 1;
-	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
 	$querystring['count_total'] = true;
 	$querystring['type']        = 'document';
@@ -400,12 +398,10 @@ function bp_nouveau_object_template_results_document_personal_scope( $querystrin
 
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope']    = 'personal';
-	$querystring['page']     = 1;
-	$querystring['per_page'] = 1;
-	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	$querystring['type']     = 'document';
-	$privacy                 = array( 'public' );
+	$querystring['scope']   = 'personal';
+	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['type']    = 'document';
+	$privacy                = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		$privacy[] = 'onlyme';

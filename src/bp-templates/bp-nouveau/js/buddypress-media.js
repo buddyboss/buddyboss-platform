@@ -1219,7 +1219,7 @@ window.bp = window.bp || {};
 			$( 'div#bp-group-messages-post-media-uploader' ).html( '' );
 			$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 			$( '#bp-group-messages-media-button' ).removeClass( 'active' );
-			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val('');
+			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val( '' );
 		},
 
 		resetGroupMessagesDocumentComponent: function() {
@@ -1231,7 +1231,7 @@ window.bp = window.bp || {};
 			$( 'div#bp-group-messages-post-document-uploader' ).html( '' );
 			$( 'div#bp-group-messages-post-document-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 			$( '#bp-group-messages-document-button' ).removeClass( 'active' );
-			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val('');
+			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val( '' );
 		},
 
 		resetForumsMediaComponent: function( dropzone_container_key ) {
@@ -3090,8 +3090,8 @@ window.bp = window.bp || {};
 							if ( $( '.document-data-table-head' ).length ) {
 								if ( 0 === parent || '0' === parent ) {
 									// Prepend the activity if no parent.
-									bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend');
-									jQuery(window).scroll();
+									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+									jQuery( window ).scroll();
 								}
 							} else {
 								location.reload( true );
@@ -3177,8 +3177,8 @@ window.bp = window.bp || {};
 							if ( $( '.document-data-table-head' ).length ) {
 								if ( 0 === parent || '0' === parent ) {
 									// Prepend the activity if no parent.
-									bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend');
-									jQuery(window).scroll();
+									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+									jQuery( window ).scroll();
 								}
 							} else {
 								location.reload( true );
@@ -3510,15 +3510,15 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.objectRequest(
 				{
-					object: 'document',
-					scope: scope,
-					filter: filter,
+					object		: 'document',
+					scope		: scope,
+					filter		: filter,
 					search_terms: search_terms,
-					page: next_page,
-					order_by: order_by,
-					sort: sort,
-					method: 'reset',
-					target: '#buddypress [data-bp-list]'
+					page		: next_page,
+					order_by	: order_by,
+					sort		: sort,
+					method		: 'reset',
+					target		: '#buddypress [data-bp-list]'
 				}
 			).done(
 				function (response) {
