@@ -154,57 +154,29 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 function bp_nouveau_get_media_directory_nav_items() {
 	$nav_items = array();
 
-	global $wp_query;
-	$page_ids   = bp_core_get_directory_page_ids();
-	if ( $page_ids['media'] === $wp_query->post->ID ) {
 
-		$nav_items['all'] = array(
+	$nav_items['all'] = array(
+		'component' => 'media',
+		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
+		'li_class'  => array(),
+		'link'      => bp_get_media_directory_permalink(),
+		'text'      => __( 'All Photos', 'buddyboss' ),
+		'count'     => bp_get_total_media_count(),
+		'position'  => 5,
+	);
+
+	if ( is_user_logged_in() ) {
+		$nav_items['personal'] = array(
 			'component' => 'media',
-			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_get_media_directory_permalink(),
-			'text'      => __( 'All Photos', 'buddyboss' ),
-			'count'     => bp_get_total_media_count(),
-			'position'  => 5,
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
+			'text'      => __( 'My Photos', 'buddyboss' ),
+			'count'     => bp_media_get_total_media_count(),
+			'position'  => 15,
 		);
-
-		if ( is_user_logged_in() ) {
-			$nav_items['personal'] = array(
-				'component' => 'media',
-				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
-				'li_class'  => array(),
-				'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
-				'text'      => __( 'My Photos', 'buddyboss' ),
-				'count'     => bp_media_get_total_media_count(),
-				'position'  => 15,
-			);
-		}
-
-	} else {
-
-		$nav_items['all'] = array(
-			'component' => 'document',
-			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-			'li_class'  => array(),
-			'link'      => bp_get_media_directory_permalink(),
-			'text'      => __( 'All Documents', 'buddyboss' ),
-			'count'     => bp_get_total_document_count(),
-			'position'  => 5,
-		);
-
-		if ( is_user_logged_in() ) {
-			$nav_items['personal'] = array(
-				'component' => 'document',
-				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
-				'li_class'  => array(),
-				'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
-				'text'      => __( 'My Documents', 'buddyboss' ),
-				'count'     => bp_get_total_document_count(),
-				'position'  => 15,
-			);
-		}
-
 	}
+
 
 	/**
 	 * Use this filter to introduce your custom nav items for the media directory.

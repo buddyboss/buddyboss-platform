@@ -380,10 +380,10 @@ function bp_nouveau_object_template_results_document_all_scope( $querystring ) {
 	}
 
 	$querystring['page']        = 1;
-	$querystring['per_page']    = '1';
+	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
 	$querystring['count_total'] = true;
-
+	$querystring['type']        = 'document';
 	return http_build_query( $querystring );
 }
 
@@ -402,10 +402,10 @@ function bp_nouveau_object_template_results_document_personal_scope( $querystrin
 
 	$querystring['scope']    = 'personal';
 	$querystring['page']     = 1;
-	$querystring['per_page'] = '1';
+	$querystring['per_page'] = 1;
 	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-
-	$privacy = array( 'public' );
+	$querystring['type']     = 'document';
+	$privacy                 = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		$privacy[] = 'onlyme';
@@ -593,9 +593,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
-
 	}
-
 
 	$document = '';
 	if ( ! empty( $folder_id ) ) {

@@ -1060,6 +1060,10 @@ class BP_Document {
 
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
 		$cached_document = bp_core_get_incremented_cache( $document_ids_sql_document, $cache_group );
+
+		error_log( $document_ids_sql_folder );
+		error_log( $document_ids_sql_document );
+
 		if ( false === $cached_folder ) {
 			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $document_ids_sql_folder, $cache_group, $document_ids_folder );
@@ -1997,8 +2001,9 @@ class BP_Document {
 		}
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document'" ); // db call ok; no-cache ok;
-
+		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND album_id = 0" ); // db call ok; no-cache ok;
+		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folders} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count          = $total_count_folder + $total_count_document;
 		return $total_count;
 	}
 

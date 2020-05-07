@@ -201,7 +201,7 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
-		$user_id = $filter['user_id'];
+		$user_id = (int) $filter['user_id'];
 	} else {
 		$user_id = bp_displayed_user_id()
 			? bp_displayed_user_id()

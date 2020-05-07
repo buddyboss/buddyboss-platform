@@ -106,7 +106,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
 			'text'      => __( 'My Documents', 'buddyboss' ),
-			'count'     => bp_get_total_document_count(),
+			'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
 	}

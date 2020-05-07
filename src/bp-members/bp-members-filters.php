@@ -217,7 +217,7 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
-		$user_id = $filter['user_id'];
+		$user_id = (int) $filter['user_id'];
 	} else {
 		$user_id = bp_displayed_user_id()
 			? bp_displayed_user_id()
@@ -292,7 +292,7 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
-		$user_id = $filter['user_id'];
+		$user_id = (int) $filter['user_id'];
 	} else {
 		$user_id = bp_displayed_user_id()
 			? bp_displayed_user_id()
