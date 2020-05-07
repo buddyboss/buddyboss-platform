@@ -11,7 +11,6 @@ bp_nouveau_before_loop();
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 	if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) : ?>
 		<div class="document-data-table-head">
-			<span class="data-head-sort-label"><?php esc_html_e( 'Sort By:', 'buddyboss' ); ?></span>
 			<div class="data-head data-head-name" data-target="name">
 				<span>
 					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
@@ -21,7 +20,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			<?php
 			if ( bp_is_document_directory() ) {
 				?>
-				<div class="data-head data-head-name" data-target="group">
+				<div class="data-head data-head-origin" data-target="group">
 				<span>
 					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>

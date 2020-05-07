@@ -2267,6 +2267,8 @@ window.bp = window.bp || {};
 
 			current_name.hide().siblings( '.media-folder_name_edit_wrap' ).show().children( '.media-folder_name_edit' ).val( current_name_text ).focus().select();
 
+			event.preventDefault();
+
 		},
 
 		/**
@@ -2322,7 +2324,14 @@ window.bp = window.bp || {};
 			var attachment_document_id = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' );
 			var documentType		   = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' );
 			var document_name_val 	   = document_edit.val().trim(); // trim to remove whitespace around name.
-			var pattern 			   = /^[-\w^&'@{}[\],$=!#().%+~]+$/; // regex to find not supported characters.
+			var pattern				   = '';
+
+			if( $( event.currentTarget ).closest('.ac-document-list').length ){
+				pattern = /^[-\w^&'@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
+			} else if( $( event.currentTarget ).closest('.ac-folder-list').length ) {
+				pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
+			}
+
 			var matches 			   = pattern.exec( document_name_val );
 			var matchStatus 		   = Boolean( matches );
 

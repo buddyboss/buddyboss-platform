@@ -94,6 +94,12 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 		<div class="media-folder_name_edit_wrap">
 			<input type="text" value="" class="media-folder_name_edit"/>
 			<?php
+				if( $attachment_id ) { ?>
+					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ * | / > < ? ` ; : {space}', 'buddyboss' ); ?></small>
+				<?php } else { ?>
+					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ * | / > < ? ` ; :', 'buddyboss' ); ?></small>
+				<?php }
+
 			if ( wp_is_mobile() ) {
 				?>
 				<a href="#" class="name_edit_cancel button small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>

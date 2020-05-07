@@ -1576,9 +1576,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	}
 
 	@media screen and (max-width: 540px) {
-		-webkit-box-pack: end;
-		-ms-flex-pack: end;
-		justify-content: flex-end;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
 		padding: 10px 0;
 
 		.data-head-sort-label {
@@ -1590,9 +1590,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		.data-head-name,
 		.data-head-modified,
+		.data-head-origin,
 		.data-head-visibility {
-			-ms-flex-preferred-size: auto;
-			flex-basis: auto;
+			-ms-flex-preferred-size: auto !important;
+			flex-basis: auto !important;
+			width: auto !important;
 			padding-right: 15px;
 		}
 
@@ -1819,12 +1821,23 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			> a {
 				margin: 5px 0;
 			}
+
+			.error-box {
+				display: none;
+			}
 		}
 
 		.media-folder_name_edit {
 			height: 32px;
 			width: 100%;
 			margin: 0 8px 0 0;
+
+			&.error + .error-box {
+				display: block;
+				line-height: 1.3;
+				margin-top: 5px;
+				color: #f00;
+			}
 		}
 
 	}
@@ -1986,10 +1999,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		}
 
-		.media-folder_details {
-			-ms-flex-preferred-size: 100%;
-			flex-basis: 100%;
-			width: 100%;
+		.media-folder_details,
+		.media-folder_group {
+			-ms-flex-preferred-size: 100% !important;
+			flex-basis: 100% !important;
+			width: 100% !important;
 		}
 
 		.media-folder_modified {
@@ -2012,6 +2026,44 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			}
 		}
 	}
+}
+
+
+#media-stream.document-parent {
+
+	.document-data-table-head {
+
+		.data-head-name {
+			-ms-flex-preferred-size: calc(40% - 50px);
+			flex-basis: calc(40% - 50px);
+		}
+
+		.data-head-origin {
+			-ms-flex-preferred-size: 20%;
+			flex-basis: 20%;
+		}
+
+	}
+
+	#media-folder-document-data-table {
+
+		.media-folder_items {
+
+			.media-folder_details {
+				-ms-flex-preferred-size: calc(40% - 100px);
+				flex-basis: calc(40% - 100px);
+				width: calc(40% - 100px);
+			}
+
+			.media-folder_group {
+				-ms-flex-preferred-size: 20%;
+				flex-basis: 20%;
+				width: 20%;
+			}
+
+		}
+	}
+
 }
 
 .bp-media-header-wrap {
