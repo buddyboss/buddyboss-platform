@@ -1,6 +1,7 @@
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { registerBlockType } from '@wordpress/blocks';
-import { TextControl } from '@wordpress/components';
+import { InspectorControls } from '@wordpress/block-editor';
+import { TextControl, ToggleControl, PanelBody } from '@wordpress/components';
 
 registerBlockType( 'bp-zoom-meeting/meeting', {
 	title: __( 'Zoom Meeting', 'buddyboss' ),
@@ -12,20 +13,41 @@ registerBlockType( 'bp-zoom-meeting/meeting', {
 		meetingId : {
 			type: 'string',
 			default: ''
+		},
+		onlyZoomEmbed : {
+			type: 'boolean',
+			default: false
 		}
 	},
 
 	edit: ( props ) => {
 		const { setAttributes } = props;
-		const { meetingId } = props.attributes;
+		const { meetingId, onlyZoomEmbed } = props.attributes;
 		const updateMeetingId = ( val ) => {
 			setAttributes( { meetingId: val } );
 		}
-		return <TextControl
-		label={__('Meeting ID','buddyboss')}
-		value={ meetingId }
-		onChange={ updateMeetingId }
-		/>;
+		const setOnlyZoomEmbed = ( val ) => {
+			setAttributes( { onlyZoomEmbed: val } );
+		}
+		return (
+			<>
+				<TextControl
+					label={__('Meeting ID','buddyboss')}
+					value={ meetingId }
+					onChange={ updateMeetingId }
+					/>
+				<InspectorControls>
+					<PanelBody
+					title={ __( 'Mode', 'buddyboss' ) }
+					initialOpen={ true }>
+						<ToggleControl
+							label={ __( 'Display the zoom embed mode', 'buddyboss' ) }
+							checked={ onlyZoomEmbed }
+							onChange={ setOnlyZoomEmbed } />
+					</PanelBody>
+				</InspectorControls>
+			</>
+		);
 	},
 
 	// save: ( { attributes } ) => {

@@ -2954,7 +2954,7 @@ function bp_block_category( $categories = array(), $post = null ) {
 	 *
 	 * @param array $value The list of supported post types. Defaults to WordPress built-in ones.
 	 */
-	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page' ) );
+	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page', 'sfwd-courses' ) );
 
 	if ( ! $post_types ) {
 		return $categories;
@@ -2978,4 +2978,4 @@ function bp_block_category( $categories = array(), $post = null ) {
 			)
 	);
 }
-add_filter( 'block_categories', 'bp_block_category', 1, 2 );
+add_filter( 'block_categories', 'bp_block_category', 30, 2 );

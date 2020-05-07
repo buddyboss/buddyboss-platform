@@ -1170,7 +1170,9 @@ function bp_zoom_render_meeting_block( $attributes, $content ) {
 	ob_start();
 	if ( bp_has_zoom_meetings( array( 'meeting_id' => $attributes['meetingId'] ) ) ) :
 
-		bp_zoom_web_sdk_scripts();
+		if ( ! is_admin() ) {
+			bp_zoom_web_sdk_scripts();
+		}
 		$bp_zoom_single_meeting_block = $attributes;
 
 		while ( bp_zoom_meeting() ) : bp_the_zoom_meeting();
