@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-06 16:00:45+00:00\n"
+"POT-Creation-Date: 2020-05-07 08:30:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -529,7 +529,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:45
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:40
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:95
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:99
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/includes/activity/functions.php:187
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
@@ -942,7 +942,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:15
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:66
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:127
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:173
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:177
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -2572,9 +2572,9 @@ msgid "Profile Dashboard"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
-#: bp-document/bp-document-functions.php:1485
-#: bp-document/bp-document-functions.php:1532
-#: bp-document/bp-document-functions.php:1535
+#: bp-document/bp-document-functions.php:1474
+#: bp-document/bp-document-functions.php:1520
+#: bp-document/bp-document-functions.php:1523
 #: bp-document/classes/class-bp-document-component.php:70
 #: bp-document/classes/class-bp-document-component.php:269
 #: bp-document/classes/class-bp-document-component.php:323
@@ -5761,31 +5761,31 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1233
+#: bp-document/bp-document-functions.php:1221
 #: bp-media/bp-media-functions.php:117
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1234
+#: bp-document/bp-document-functions.php:1222
 #: bp-media/bp-media-functions.php:118
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1236
+#: bp-document/bp-document-functions.php:1224
 #: bp-media/bp-media-functions.php:120
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1237
+#: bp-document/bp-document-functions.php:1225
 #: bp-media/bp-media-functions.php:121
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1238
+#: bp-document/bp-document-functions.php:1226
 #: bp-media/bp-media-functions.php:122
 msgid "File upload stopped by extension."
 msgstr ""
@@ -7165,21 +7165,21 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1175
+#: bp-document/bp-document-functions.php:1164
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1231
-#: bp-document/bp-document-functions.php:1232
+#: bp-document/bp-document-functions.php:1219
+#: bp-document/bp-document-functions.php:1220
 #: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1256
+#: bp-document/bp-document-functions.php:1245
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1539
+#: bp-document/bp-document-functions.php:1527
 msgid "..."
 msgstr ""
 
@@ -7199,7 +7199,7 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-component.php:331
 #: bp-document/classes/class-bp-document-component.php:352
-#: bp-templates/bp-nouveau/includes/document/functions.php:136
+#: bp-templates/bp-nouveau/includes/document/functions.php:135
 #: bp-templates/bp-nouveau/includes/media/functions.php:201
 msgid "My Documents"
 msgstr ""
@@ -10384,7 +10384,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:41
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:62
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:123
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:161
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:165
 msgid "Move"
 msgstr ""
 
@@ -10837,7 +10837,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:158
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:162
 msgid "Rename"
 msgstr ""
 
@@ -11904,7 +11904,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:96
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:100
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:96
 #: bp-templates/bp-nouveau/includes/functions.php:1387
 #: bp-templates/bp-nouveau/includes/functions.php:1439
@@ -14187,7 +14187,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:341
 #: bp-media/classes/class-bp-media-component.php:372
-#: bp-templates/bp-nouveau/includes/document/functions.php:113
+#: bp-templates/bp-nouveau/includes/document/functions.php:112
 #: bp-templates/bp-nouveau/includes/media/functions.php:177
 msgid "My Photos"
 msgstr ""
@@ -16097,7 +16097,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:48
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:109
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:148
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:152
 msgid "Download"
 msgstr ""
 
@@ -16160,15 +16160,15 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:108
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:112
 msgid "by "
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:151
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:155
 msgid "Copy Download Link"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:167
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:171
 msgid "Edit Privacy"
 msgstr ""
 
@@ -17311,26 +17311,26 @@ msgstr ""
 msgid "Empty documents will not be uploaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:71
+#: bp-templates/bp-nouveau/includes/document/functions.php:70
 msgid ""
 "Are you sure you want to delete this folder? Documents in this folder will "
 "also be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:72
+#: bp-templates/bp-nouveau/includes/document/functions.php:71
 msgid "There was a problem deleting the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:73
+#: bp-templates/bp-nouveau/includes/document/functions.php:72
 msgid "Please select destination folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:102
+#: bp-templates/bp-nouveau/includes/document/functions.php:101
 #: bp-templates/bp-nouveau/includes/media/functions.php:166
 msgid "All Photos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:125
+#: bp-templates/bp-nouveau/includes/document/functions.php:124
 #: bp-templates/bp-nouveau/includes/media/functions.php:190
 msgid "All Documents"
 msgstr ""

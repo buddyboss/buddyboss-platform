@@ -3027,9 +3027,11 @@ window.bp = window.bp || {};
 							self.closeFolderUploader( event );
 
 							if ( $( '.document-data-table-head' ).length ) {
-								// Prepend the activity.
-								bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
-								jQuery( window ).scroll();
+								if ( 0 === parent || '0' === parent ) {
+									// Prepend the activity if no parent.
+									bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend');
+									jQuery(window).scroll();
+								}
 							} else {
 								location.reload( true );
 							}
@@ -3112,9 +3114,11 @@ window.bp = window.bp || {};
 							}
 							self.closeChildFolderUploader( event );
 							if ( $( '.document-data-table-head' ).length ) {
-								// Prepend the activity.
-								bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
-								jQuery( window ).scroll();
+								if ( 0 === parent || '0' === parent ) {
+									// Prepend the activity if no parent.
+									bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.document, 'prepend');
+									jQuery(window).scroll();
+								}
 							} else {
 								location.reload( true );
 							}

@@ -465,13 +465,13 @@ class BP_Document {
 		return true;
 	}
 
-	public function bp_document_remove_temp_directory( $dir ) {
+	public static function bp_document_remove_temp_directory( $dir ) {
 		if ( is_dir( $dir ) ) {
 			$objects = scandir( $dir );
 			foreach ( $objects as $object ) {
 				if ( $object != '.' && $object != '..' ) {
 					if ( filetype( $dir . '/' . $object ) == 'dir' ) {
-						rrmdir( $dir . '/' . $object );
+						BP_Document::bp_document_remove_temp_directory( $dir . '/' . $object );
 					} else {
 						unlink( $dir . '/' . $object );
 					}

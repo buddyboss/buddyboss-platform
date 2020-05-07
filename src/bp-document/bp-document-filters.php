@@ -559,11 +559,18 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 
 function bp_document_download_url_file() {
 
-	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
-		$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+
+		if ( 'folder' !== $_GET['document_type'] ) {
+			$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+		} else {
+			$folder_privacy = bp_document_user_can_manage_folder( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+		}
+
 		if ( $can_download_btn ) {
-			bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			bp_document_download_file( $_GET['attachment_id'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
 		}

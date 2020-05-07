@@ -15,6 +15,7 @@ $attachment_url      = '';
 $text_attachment_url = '';
 $move_id             = '';
 $move_type           = '';
+$folder_link		 = '';
 $document_id         = bp_get_document_id();
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
@@ -44,16 +45,18 @@ if ( $attachment_id ) {
 		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
 	}
 } else {
-	$svg_icon       = bp_document_svg_icon( 'folder' );
-	$download_link  = bp_get_folder_link();
-	$move_class     = 'ac-folder-move';
-	$listing_class  = 'ac-folder-list';
-	$document_type  = 'folder';
-	$folder_privacy = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
-	$can_manage_btn = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
-	$can_view       = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
-	$group_id       = bp_get_document_folder_group_id();
-	$document_title = bp_get_folder_title();
+	$svg_icon         = bp_document_svg_icon( 'folder' );
+	$download_link    = bp_document_folder_download_link( bp_get_document_folder_id() );
+	$folder_link	  = bp_get_folder_link();
+	$move_class       = 'ac-folder-move';
+	$listing_class    = 'ac-folder-list';
+	$document_type    = 'folder';
+	$folder_privacy   = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
+	$can_manage_btn   = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+	$can_view         = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
+	$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+	$group_id         = bp_get_document_folder_group_id();
+	$document_title   = bp_get_folder_title();
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -66,10 +69,11 @@ if ( $attachment_id ) {
 
 $document_id = bp_get_document_id();
 
+$link = ( $attachment_id ) ? $download_link : $folder_link;
 ?>
 <div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
-		<a href="<?php echo esc_url( $download_link ); ?>">
+		<a href="<?php echo esc_url( $link ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>"></i>
 		</a>
 	</div>
@@ -80,7 +84,7 @@ $document_id = bp_get_document_id();
 			echo 'bb-open-document-theatre';
 		}
 		?>
-		" href="<?php echo esc_url( $download_link ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
+		" href="<?php echo esc_url( $link ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
 <!--			<span>--><?php // echo esc_html( $document_title ); ?><!--</span>-->
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" style="display: none;"></i>
@@ -142,7 +146,7 @@ $document_id = bp_get_document_id();
 			<div class="media-folder_action__list">
 				<ul>
 					<?php
-					if ( $attachment_id && $can_download_btn ) {
+					if ( $can_download_btn ) {
 						?>
 						<li class="download_file">
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>

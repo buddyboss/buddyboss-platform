@@ -66,7 +66,6 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 1 );
 	}
 
-
 	$document_i18n_strings = array(
 		'folder_delete_confirm' => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted.', 'buddyboss' ),
 		'folder_delete_error'   => __( 'There was a problem deleting the folder.', 'buddyboss' ),
@@ -639,58 +638,219 @@ function bp_media_allowed_document_type() {
 	return $extension_lists;
 }
 
-function bp_document_download_file( $attachment_id ) {
+function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
-	$the_file = wp_get_attachment_url( $attachment_id );
+	if ( 'document' === $type ) {
 
-	if ( ! $the_file ) {
-		return;
-	}
+		$the_file = wp_get_attachment_url( $attachment_id );
 
-	// clean the file url.
-	$file_url = stripslashes( trim( $the_file ) );
+		if ( ! $the_file ) {
+			return;
+		}
 
-	// get filename.
-	$file_name = basename( $the_file );
+		// clean the file url.
+		$file_url = stripslashes( trim( $the_file ) );
 
-	// get file extension.
-	$file_extension = pathinfo( $file_name );
+		// get filename.
+		$file_name = basename( $the_file );
 
-	// security check.
-	$fileName = strtolower( $file_url );
+		// get file extension.
+		$file_extension = pathinfo( $file_name );
 
-	// Get all allowed document extensions.
-	$all_extensions                   = bp_document_extensions_list();
-	$allowed_for_download             = array();
-	$allowed_file_type_with_mime_type = array();
-	foreach ( $all_extensions as $extension ) {
-		if ( true === (bool) $extension['is_active'] ) {
-			$extension_name                                      = ltrim( $extension['extension'], '.' );
-			$allowed_for_download[]                              = $extension_name;
-			$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
+		// security check.
+		$file_name_lower = strtolower( $file_url );
+
+		// Get all allowed document extensions.
+		$all_extensions                   = bp_document_extensions_list();
+		$allowed_for_download             = array();
+		$allowed_file_type_with_mime_type = array();
+		foreach ( $all_extensions as $extension ) {
+			if ( true === (bool) $extension['is_active'] ) {
+				$extension_name                                      = ltrim( $extension['extension'], '.' );
+				$allowed_for_download[]                              = $extension_name;
+				$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
+			}
+		}
+
+		$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
+
+		$file_arr = explode( '.', $file_name_lower );
+		$needle   = end( $file_arr );
+		if ( ! in_array( $needle, $whitelist ) ) {
+			exit( 'Invalid file!' );
+		}
+
+		$file_new_name = $file_name;
+		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
+		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
+
+		header( 'Expires: 0' );
+		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+		header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
+		header( 'Pragma: no-cache' );
+		header( "Content-type: {$content_type}" );
+		header( "Content-Disposition:attachment; filename={$file_new_name}" );
+		header( 'Content-Type: application/force-download' );
+
+		readfile( "{$file_url}" );
+		exit();
+	} else {
+
+		// Get folder object.
+		$folder = folders_get_folder( $attachment_id );
+
+		// Get Upload directory.
+		$upload     = wp_upload_dir();
+		$upload_dir = $upload['basedir'];
+
+		// Create temp folder.
+		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
+
+		// If folder not exists then create.
+		if ( ! is_dir( $upload_dir ) ) {
+
+			// Create temp folder.
+			wp_mkdir_p( $upload_dir );
+			chmod($upload_dir, 0777);
+
+			// Create given main parent folder.
+			$parent_folder = $upload_dir . '/' . $folder->title;
+			wp_mkdir_p( $parent_folder );
+
+			// Fetch all the attachments of the parent folder.
+			$get_parent_attachments = bp_document_get_folder_attachemt_ids( $folder->id );
+			if ( ! empty( $get_parent_attachments ) ) {
+				foreach ( $get_parent_attachments as $attachment ) {
+					$the_file  = get_attached_file( $attachment->attachment_id );
+					$file_name = basename( $the_file );
+					copy( $the_file, $parent_folder . '/' . $file_name );
+				}
+			}
+			bp_document_get_child_folders( $attachment_id, $parent_folder );
+
+			$zip_name = $upload_dir . '/' . $folder->title . '.zip';
+			$file_name = $folder->title . '.zip';
+			$rootPath = realpath( "$upload_dir" );
+
+			$zip = new ZipArchive();
+			$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
+
+			$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
+
+			foreach ( $files as $name => $file ) {
+				$filePath     = $file->getRealPath();
+				$relativePath = substr( $filePath, strlen( $rootPath ) + 1 );
+
+				if ( ! $file->isDir() ) {
+					$zip->addFile( $filePath, $relativePath );
+				} else {
+					if ( $relativePath !== false ) {
+						$zip->addEmptyDir( $relativePath );
+					}
+				}
+			}
+
+			$zip->close();
+
+			header( 'Expires: 0' );
+			header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+			header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
+			header( 'Pragma: no-cache' );
+			header( "Content-type: application/zip" );
+			header( "Content-Disposition:attachment; filename={$file_name}" );
+			header( 'Content-Type: application/force-download' );
+
+			readfile( "{$zip_name}" );
+
+
+			BP_Document::bp_document_remove_temp_directory( $upload_dir );
+			exit();
+
 		}
 	}
 
-	$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
+}
 
-	if ( ! in_array( end( explode( '.', $fileName ) ), $whitelist ) ) {
-		exit( 'Invalid file!' );
+function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
+
+	global $wpdb, $bp;
+
+	$document_folder_table = $bp->table_prefix . 'bp_media_albums';
+
+	if ( 0 === $folder_id ) {
+		return;
 	}
 
-	$file_new_name = $file_name;
-	$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
-	$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
+	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$document_folder_table} WHERE parent IN (@pv)) AS lv FROM {$document_folder_table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id );
 
-	header( 'Expires: 0' );
-	header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-	header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-	header( 'Pragma: no-cache' );
-	header( "Content-type: {$content_type}" );
-	header( "Content-Disposition:attachment; filename={$file_new_name}" );
-	header( 'Content-Type: application/force-download' );
+	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
-	readfile( "{$file_url}" );
-	exit();
+	// Build array of item references.
+	foreach ( $data as $key => &$item ) {
+		$itemsByReference[ $item['id'] ] = &$item;
+		// Children array:
+		$itemsByReference[ $item['id'] ]['children'] = array();
+		// Empty data class (so that json_encode adds "data: {}" )
+		$itemsByReference[ $item['id'] ]['data'] = new StdClass();
+	}
+
+	// Set items as children of the relevant parent item.
+	foreach ( $data as $key => &$item ) {
+		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+			$itemsByReference [ $item['parent'] ]['children'][] = &$item;
+		}
+	}
+
+	// Remove items that were added to parents elsewhere.
+	foreach ( $data as $key => &$item ) {
+		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+			unset( $data[ $key ] );
+		}
+	}
+
+	bp_document_create_folder_recursive( $data, $parent_folder );
+
+}
+
+/**
+ * This function will give the breadcrumbs ul li html.
+ *
+ * @param      $array
+ * @param bool  $first
+ *
+ * @return string
+ * @since BuddyBoss 1.3.0
+ */
+function bp_document_create_folder_recursive( $array, $parent_folder ) {
+
+	// Base case: an empty array produces no list.
+	if ( empty( $array ) || empty( $parent_folder ) ) {
+		return '';
+	}
+
+	foreach ( $array as $item ) {
+
+		$id    = $item['id'];
+		$title = $item['title'];
+		$child = $item['children'];
+
+		// Create given main parent folder.
+		$sub_parent_folder = $parent_folder . '/' . $title;
+		wp_mkdir_p( $sub_parent_folder );
+
+		// Fetch all the attachments of the parent folder.
+		$get_current_attachments = bp_document_get_folder_attachemt_ids( $id );
+		if ( ! empty( $get_current_attachments ) ) {
+			foreach ( $get_current_attachments as $attachment ) {
+				$the_file  = get_attached_file( $attachment->attachment_id );
+				$file_name = basename( $the_file );
+				copy( $the_file, $sub_parent_folder . '/' . $file_name );
+			}
+		}
+		if ( ! empty( $child ) ) {
+			bp_document_create_folder_recursive( $child, $sub_parent_folder );
+		}
+	}
 }
 
 function bp_document_preview_extension_list() {
