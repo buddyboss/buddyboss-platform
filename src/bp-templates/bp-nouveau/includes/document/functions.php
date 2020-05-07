@@ -89,54 +89,26 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 function bp_nouveau_get_document_directory_nav_items() {
 	$nav_items = array();
 
-	global $wp_query;
-	$page_ids = bp_core_get_directory_page_ids();
-	if ( $page_ids['media'] === $wp_query->post->ID ) {
+	$nav_items['all'] = array(
+		'component' => 'document',
+		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
+		'li_class'  => array(),
+		'link'      => bp_get_document_directory_permalink(),
+		'text'      => __( 'All Documents', 'buddyboss' ),
+		'count'     => bp_get_total_document_count(),
+		'position'  => 5,
+	);
 
-		$nav_items['all'] = array(
-			'component' => 'media',
-			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
-			'li_class'  => array(),
-			'link'      => bp_get_media_directory_permalink(),
-			'text'      => __( 'All Photos', 'buddyboss' ),
-			'count'     => bp_get_total_media_count(),
-			'position'  => 5,
-		);
-
-		if ( is_user_logged_in() ) {
-			$nav_items['personal'] = array(
-				'component' => 'media',
-				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
-				'li_class'  => array(),
-				'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
-				'text'      => __( 'My Photos', 'buddyboss' ),
-				'count'     => bp_media_get_total_media_count(),
-				'position'  => 15,
-			);
-		}
-	} else {
-
-		$nav_items['all'] = array(
+	if ( is_user_logged_in() ) {
+		$nav_items['personal'] = array(
 			'component' => 'document',
-			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
+			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_get_media_directory_permalink(),
-			'text'      => __( 'All Documents', 'buddyboss' ),
+			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
+			'text'      => __( 'My Documents', 'buddyboss' ),
 			'count'     => bp_get_total_document_count(),
-			'position'  => 5,
+			'position'  => 15,
 		);
-
-		if ( is_user_logged_in() ) {
-			$nav_items['personal'] = array(
-				'component' => 'document',
-				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
-				'li_class'  => array(),
-				'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
-				'text'      => __( 'My Documents', 'buddyboss' ),
-				'count'     => bp_get_total_document_count(),
-				'position'  => 15,
-			);
-		}
 	}
 
 	/**
@@ -146,7 +118,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 	 *
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
-	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+	return apply_filters( 'bp_nouveau_get_document_directory_nav_items', $nav_items );
 }
 
 /**
@@ -711,7 +683,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 			// Create temp folder.
 			wp_mkdir_p( $upload_dir );
-			chmod($upload_dir, 0777);
+			chmod( $upload_dir, 0777 );
 
 			// Create given main parent folder.
 			$parent_folder = $upload_dir . '/' . $folder->title;
@@ -728,9 +700,9 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			}
 			bp_document_get_child_folders( $attachment_id, $parent_folder );
 
-			$zip_name = $upload_dir . '/' . $folder->title . '.zip';
+			$zip_name  = $upload_dir . '/' . $folder->title . '.zip';
 			$file_name = $folder->title . '.zip';
-			$rootPath = realpath( "$upload_dir" );
+			$rootPath  = realpath( "$upload_dir" );
 
 			$zip = new ZipArchive();
 			$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
@@ -756,12 +728,11 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			header( 'Cache-Control: no-cache, no-store, must-revalidate' );
 			header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
 			header( 'Pragma: no-cache' );
-			header( "Content-type: application/zip" );
+			header( 'Content-type: application/zip' );
 			header( "Content-Disposition:attachment; filename={$file_name}" );
 			header( 'Content-Type: application/force-download' );
 
 			readfile( "{$zip_name}" );
-
 
 			BP_Document::bp_document_remove_temp_directory( $upload_dir );
 			exit();

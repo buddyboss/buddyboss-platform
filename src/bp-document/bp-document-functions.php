@@ -1471,13 +1471,12 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 		$output = '<ul class="">';
 	} else {
 		$output  = '<ul class="location-folder-list">';
-		$output .= '<li data-id="0"><span>' . __( 'Documents', 'buddyboss' ) . '</span><ul class="">';
 	}
 
 	foreach ( $array as $item ) {
 		$output .= '<li data-id="' . $item['id'] . '"><span>' . $item['title'] . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
 	}
-	$output .= '</li></ul>';
+	$output .= '</ul>';
 
 	return $output;
 }

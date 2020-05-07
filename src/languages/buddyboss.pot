@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-07 08:30:59+00:00\n"
+"POT-Creation-Date: 2020-05-07 11:36:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -853,7 +853,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:471
 #: bp-document/bp-document-template.php:362
-#: bp-document/bp-document-template.php:1220 bp-media/bp-media-template.php:351
+#: bp-document/bp-document-template.php:1262 bp-media/bp-media-template.php:351
 #: bp-media/bp-media-template.php:1244
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
@@ -942,7 +942,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:15
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:66
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:127
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:177
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:203
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -2572,9 +2572,8 @@ msgid "Profile Dashboard"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
-#: bp-document/bp-document-functions.php:1474
-#: bp-document/bp-document-functions.php:1520
-#: bp-document/bp-document-functions.php:1523
+#: bp-document/bp-document-functions.php:1519
+#: bp-document/bp-document-functions.php:1522
 #: bp-document/classes/class-bp-document-component.php:70
 #: bp-document/classes/class-bp-document-component.php:269
 #: bp-document/classes/class-bp-document-component.php:323
@@ -6066,6 +6065,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:733 bp-groups/bp-groups-template.php:738
 #: bp-groups/bp-groups-template.php:743 bp-groups/bp-groups-template.php:746
 #: bp-groups/bp-groups-template.php:757 bp-groups/bp-groups-template.php:846
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:26
 msgid "Group"
 msgstr ""
 
@@ -7179,11 +7179,11 @@ msgstr ""
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1527
+#: bp-document/bp-document-functions.php:1526
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-template.php:1851
+#: bp-document/bp-document-template.php:1894
 #: bp-document/classes/class-bp-document-component.php:168
 msgid "Group members"
 msgstr ""
@@ -7199,7 +7199,7 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-component.php:331
 #: bp-document/classes/class-bp-document-component.php:352
-#: bp-templates/bp-nouveau/includes/document/functions.php:135
+#: bp-templates/bp-nouveau/includes/document/functions.php:108
 #: bp-templates/bp-nouveau/includes/media/functions.php:201
 msgid "My Documents"
 msgstr ""
@@ -10384,7 +10384,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:41
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:62
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:123
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:165
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:191
 msgid "Move"
 msgstr ""
 
@@ -10587,7 +10587,7 @@ msgid "Forum Type"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:95
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:29
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:41
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
 #: bp-templates/bp-nouveau/includes/document/ajax.php:686
 #: bp-templates/bp-nouveau/includes/document/ajax.php:964
@@ -10837,7 +10837,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:162
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:188
 msgid "Rename"
 msgstr ""
 
@@ -14187,7 +14187,6 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:341
 #: bp-media/classes/class-bp-media-component.php:372
-#: bp-templates/bp-nouveau/includes/document/functions.php:112
 #: bp-templates/bp-nouveau/includes/media/functions.php:177
 msgid "My Photos"
 msgstr ""
@@ -15698,7 +15697,7 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:48
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:60
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
@@ -16097,7 +16096,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:48
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:109
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:152
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:178
 msgid "Download"
 msgstr ""
 
@@ -16160,15 +16159,19 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:112
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:123
+msgid "-"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:138
 msgid "by "
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:155
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:181
 msgid "Copy Download Link"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:171
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:197
 msgid "Edit Privacy"
 msgstr ""
 
@@ -16179,7 +16182,7 @@ msgstr ""
 msgid "Sort By:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:23
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:35
 #: bp-templates/bp-nouveau/includes/document/ajax.php:679
 #: bp-templates/bp-nouveau/includes/document/ajax.php:957
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1064
@@ -17325,12 +17328,7 @@ msgstr ""
 msgid "Please select destination folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:101
-#: bp-templates/bp-nouveau/includes/media/functions.php:166
-msgid "All Photos"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/document/functions.php:124
+#: bp-templates/bp-nouveau/includes/document/functions.php:97
 #: bp-templates/bp-nouveau/includes/media/functions.php:190
 msgid "All Documents"
 msgstr ""
@@ -18092,6 +18090,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:141
 msgid "There was a problem deleting the album."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/functions.php:166
+msgid "All Photos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/members/functions.php:93

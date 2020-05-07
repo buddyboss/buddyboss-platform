@@ -517,7 +517,7 @@ function bp_get_document_id() {
 
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
 		$id = $document_template->document->id;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->id ) ) {
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
 		$id = $document_folder_template->folder->id;
 	}
 
@@ -529,6 +529,48 @@ function bp_get_document_id() {
 	 * @param int $id The document ID.
 	 */
 	return apply_filters( 'bp_get_document_id', $id );
+}
+
+/**
+ * Output the document parent id.
+ *
+ * @since BuddyBoss 1.3.0
+ */
+function bp_document_parent_id() {
+	echo bp_get_document_parent_id();
+}
+
+/**
+ * Return the document parent ID.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ *
+ * @return int The document ID.
+ */
+function bp_get_document_parent_id() {
+	global $document_template, $document_folder_template;
+
+	$id = 0;
+
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->album_id ) ) {
+		$id = $document_template->document->album_id;
+	} elseif ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->parent ) ) {
+		$id = $document_template->document->parent;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->parent ) ) {
+		$id = $document_folder_template->folder->parent;
+	}
+
+	/**
+	 * Filters the document ID being displayed.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 *
+	 * @param int $id The document ID.
+	 */
+	return apply_filters( 'bp_get_document_parent_id', $id );
 }
 
 /**
@@ -1679,6 +1721,7 @@ function bp_document_group_id() {
 function bp_get_document_group_id() {
 	global $document_template, $document_folder_template;
 
+	$db_group_id = 0;
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) ) {
 		$db_group_id = $document_template->document->group_id;
 	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {

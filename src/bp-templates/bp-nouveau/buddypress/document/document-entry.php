@@ -71,7 +71,7 @@ $document_id = bp_get_document_id();
 
 $link = ( $attachment_id ) ? $download_link : $folder_link;
 ?>
-<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>">
+<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>">
 	<div class="media-folder_icon">
 		<a href="<?php echo esc_url( $link ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>"></i>
@@ -103,13 +103,39 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 			?>
 		</div>
 	</div>
+	<?php
+	if ( bp_is_document_directory() ) {
+		?>
+		<div class="media-folder_group">
+			<div class="media-folder_details__bottom">
+				<?php
+				$group_id = bp_get_document_group_id();
+				if ( $group_id > 0 ) {
+					// Get the group from the database.
+					$group = groups_get_group( $group_id );
+
+					$group_name = isset( $group->name ) ? bp_get_group_name( $group ) : '';
+					?>
+					<span class="media-folder_group"><?php echo esc_html( $group_name ); ?></span>
+					<?php
+				} else {
+					?>
+					<span class="media-folder_group"><?php esc_html_e( '-', 'buddyboss' ); ?></span>
+					<?php
+				}
+				?>
+			</div>
+		</div>
+		<?php
+	}
+	?>
 	<div class="media-folder_modified">
 		<div class="media-folder_details__bottom">
 			<span class="media-folder_date"><?php bp_document_date(); ?></span>
 			<?php
 			if ( ! bp_is_user() ) {
 				?>
-				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><?php bp_document_author(); ?></span>
+				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo bp_core_get_user_domain( bp_get_document_user_id() ); ?>"><?php bp_document_author(); ?></a></span>
 				<?php
 			}
 			?>

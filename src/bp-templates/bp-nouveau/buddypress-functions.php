@@ -762,6 +762,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
 		} elseif ( bp_is_media_directory() ) {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
+		} elseif ( bp_is_document_directory() ) {
+			$nav_items = bp_nouveau_get_document_directory_nav_items();
 		}
 
 		if ( empty( $nav_items ) ) {
