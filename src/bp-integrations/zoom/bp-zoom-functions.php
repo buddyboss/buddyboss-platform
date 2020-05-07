@@ -489,11 +489,19 @@ function bp_zoom_add_zoom_user_profile_field( $user ) {
 	$bp_zoom_user        = get_user_meta( $user->ID, 'bp_zoom_user', true );
 	$bp_zoom_user_id     = get_user_meta( $user->ID, 'bp_zoom_user_id', true );
 	$bp_zoom_user_status = get_user_meta( $user->ID, 'bp_zoom_user_status', true );
+	$bp_zoom_user_type   = get_user_meta( $user->ID, 'bp_zoom_user_type', true );
+	//$bp_zoom_user_info   = get_user_meta( $user->ID, 'bp_zoom_user_info', true );
+
 	if ( ! empty( $bp_zoom_user_id ) && ! in_array( $bp_zoom_user_status, array( 'active', 'deleted' ), true ) ) {
 		$zoom_user_info = bp_zoom_conference()->get_user_info( $bp_zoom_user_id );
 		if ( ! empty( $zoom_user_info['code'] ) && 200 === $zoom_user_info['code'] && ! empty( $zoom_user_info['response'] ) ) {
 			$bp_zoom_user_status = $zoom_user_info['response']->status;
 			update_user_meta( $user->ID, 'bp_zoom_user_status', $bp_zoom_user_status );
+
+			$bp_zoom_user_type = $zoom_user_info['response']->type;
+			update_user_meta( $user->ID, 'bp_zoom_user_type', $bp_zoom_user_type );
+
+			update_user_meta( $user->ID, 'bp_zoom_user_info', serialize( $zoom_user_info['response'] ) );
 		}
 	}
 	?>
@@ -510,6 +518,11 @@ function bp_zoom_add_zoom_user_profile_field( $user ) {
 						} else {
 							_e( 'Add to Zoom Conference.', 'buddyboss' );
 						} ?>
+						<select name="bp_zoom_user_type">
+							<option value=""><?php _e( 'User Type', 'buddyboss' ); ?></option>
+							<option value="1" <?php echo '1' === $bp_zoom_user_type ? 'selected' : ''; ?>><?php _e( 'Basic User', 'buddyboss' ); ?></option>
+							<option value="2" <?php echo '2' === $bp_zoom_user_type ? 'selected' : ''; ?>><?php _e( 'Pro User', 'buddyboss' ); ?></option>
+						</select>
 					<?php endif; ?>
 					<?php if ( ! empty( $bp_zoom_user_status ) ) { echo __( 'Status', 'buddyboss' ) . ': ' . $bp_zoom_user_status; } ?>
 				</label>
@@ -537,6 +550,7 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 	$bp_zoom_user_id = get_user_meta( $user_id, 'bp_zoom_user_id', true );
 
 	if ( isset( $_POST['bp_zoom_user'] ) ) {
+
 		if ( empty( $bp_zoom_user_id ) ) {
 			$user = get_userdata( $user_id );
 
@@ -544,7 +558,7 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 					array(
 							'action'     => 'create',
 							'email'      => $user->user_email,
-							'type'       => 1,
+							'type'       => ! empty( $_POST['bp_zoom_user_type'] ) && in_array( $_POST['bp_zoom_user_type'], array( 1, 2 ) ) ? $_POST['bp_zoom_user_type'] : 1,
 							'first_name' => ! empty( $user->user_firstname ) ? $user->user_firstname : '',
 							'last_name'  => ! empty( $user->user_lastname ) ? $user->user_lastname : '',
 					)
@@ -554,6 +568,8 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 				$bp_zoom_user_id = $create_user['response']->id;
 				update_user_meta( $user_id, 'bp_zoom_user_id', $bp_zoom_user_id );
 				update_user_meta( $user_id, 'bp_zoom_user', $_POST['bp_zoom_user'] );
+				update_user_meta( $user_id, 'bp_zoom_user_type', $create_user['response']->type );
+				update_user_meta( $user_id, 'bp_zoom_user_info', serialize( $create_user['response'] ) );
 			}
 
 			if ( ! empty( $create_user['code'] ) && 409 === $create_user['code'] ) {
@@ -562,7 +578,33 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 					update_user_meta( $user_id, 'bp_zoom_user_status', $zoom_user_info['response']->status );
 					update_user_meta( $user_id, 'bp_zoom_user_id', $zoom_user_info['response']->id );
 					update_user_meta( $user_id, 'bp_zoom_user', $_POST['bp_zoom_user'] );
+					update_user_meta( $user_id, 'bp_zoom_user_type', $zoom_user_info['response']->type );
+					update_user_meta( $user_id, 'bp_zoom_user_info', serialize( $zoom_user_info['response'] ) );
 				}
+			}
+
+			if ( ! empty( $create_user['code'] ) && in_array( $create_user['code'], array( 400, 404, 409 ) ) ) {
+				update_user_meta( $user_id, 'bp_zoom_user_error', $create_user['response']->message );
+			}
+
+		} else {
+			$user = get_userdata( $user_id );
+
+			$update_user = bp_zoom_conference()->update_user(
+					array(
+							'user_id'      => $bp_zoom_user_id,
+							'type'       => ! empty( $_POST['bp_zoom_user_type'] ) && in_array( $_POST['bp_zoom_user_type'], array( 1, 2 ) ) ? $_POST['bp_zoom_user_type'] : 1,
+							'first_name' => ! empty( $user->user_firstname ) ? $user->user_firstname : '',
+							'last_name'  => ! empty( $user->user_lastname ) ? $user->user_lastname : '',
+					)
+			);
+
+			if ( ! empty( $update_user['code'] ) && 204 === $update_user['code'] ) {
+				update_user_meta( $user_id, 'bp_zoom_user_type', $_POST['bp_zoom_user_type'] );
+			}
+
+			if ( ! empty( $update_user['code'] ) && in_array( $update_user['code'], array( 300, 400, 404 ) ) ) {
+				update_user_meta( $user_id, 'bp_zoom_user_error', $update_user['response']->message );
 			}
 		}
 	} else {
@@ -572,13 +614,43 @@ function bp_zoom_save_zoom_user_profile_field( $user_id ) {
 			if ( ! empty( $delete_user['code'] ) && ( 204 === $delete_user['code'] || 429 === $delete_user['code'] ) ) {
 				delete_user_meta( $user_id, 'bp_zoom_user_id' );
 				delete_user_meta( $user_id, 'bp_zoom_user' );
+				delete_user_meta( $user_id, 'bp_zoom_user_type' );
+				delete_user_meta( $user_id, 'bp_zoom_user_info' );
 				update_user_meta( $user_id, 'bp_zoom_user_status', 'deleted' );
+			}
+
+			if ( ! empty( $delete_user['code'] ) && in_array( $delete_user['code'], array( 400, 404 ) ) ) {
+				update_user_meta( $user_id, 'bp_zoom_user_error', $delete_user['response']->message );
 			}
 		}
 	}
 }
 add_action( 'personal_options_update', 'bp_zoom_save_zoom_user_profile_field', 999 );
 add_action( 'edit_user_profile_update', 'bp_zoom_save_zoom_user_profile_field', 999 );
+
+/**
+ * Show notice when user update has error.
+ * @since BuddyBoss 1.2.10
+ */
+function bp_zoom_user_profile_update_notice() {
+	// Make sure that the user is assigned to the subscriber role, specifically.
+	$user = wp_get_current_user();
+
+	// Make sure the profile is being viewed.
+	$screen = get_current_screen();
+	if ( ! $screen || ( 'profile' !== $screen->id ) ) {
+		return;
+	}
+
+	$bp_zoom_user_error = get_user_meta( $user->ID, 'bp_zoom_user_error', true );
+
+	if ( ! empty( $bp_zoom_user_error ) ) {
+		$notice = '<strong>' . __( 'Zoom', 'buddyboss' ) . ': </strong>' . $bp_zoom_user_error;
+		echo "<div class='notice notice-error'><p>{$notice}</p></div>";
+		delete_user_meta( $user->ID, 'bp_zoom_user_error', true );
+	}
+}
+add_action( 'admin_notices', 'bp_zoom_user_profile_update_notice' );
 
 /**
  * WP Users list add zoom user status column.

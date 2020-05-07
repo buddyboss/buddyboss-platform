@@ -129,6 +129,25 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 		}
 
 		/**
+		 * Updates a User
+		 *
+		 * @since BuddyBoss 1.2.10
+		 *
+		 * @param array $data
+		 *
+		 * @return array|bool|string
+		 */
+		public function update_user( $data = array() ) {
+			$args              = array(
+				'type'       => $data['type'],
+				'first_name' => $data['first_name'],
+				'last_name'  => $data['last_name']
+			);
+
+			return $this->send_request( 'users/' . $data['user_id'], $args, 'PATCH' );
+		}
+
+		/**
 		 * Get user list
 		 *
 		 * @since BuddyBoss 1.2.10
