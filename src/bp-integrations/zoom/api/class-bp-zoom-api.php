@@ -417,6 +417,18 @@ if ( ! class_exists( 'BP_Zoom_Conference_Api' ) ) {
 
 			return $this->send_request( 'users/' . $host_id . '/recordings', $post_data, 'GET' );
 		}
+
+		/**
+		 * Get meeting recording settings.
+		 *
+		 * @since BuddyBoss 1.2.10
+		 * @param $meeting_id
+		 *
+		 * @return bool|mixed
+		 */
+		public function recording_settings( $meeting_id ) {
+			return $this->send_request( 'meetings/' . $meeting_id . '/recordings/settings', false, 'GET' );
+		}
 	}
 
 	function bp_zoom_conference() {
