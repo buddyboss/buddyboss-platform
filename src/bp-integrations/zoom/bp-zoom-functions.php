@@ -647,7 +647,7 @@ function bp_zoom_user_profile_update_notice() {
 	if ( ! empty( $bp_zoom_user_error ) ) {
 		$notice = '<strong>' . __( 'Zoom', 'buddyboss' ) . ': </strong>' . $bp_zoom_user_error;
 		echo "<div class='notice notice-error'><p>{$notice}</p></div>";
-		delete_user_meta( $user->ID, 'bp_zoom_user_error', true );
+		delete_user_meta( $user->ID, 'bp_zoom_user_error' );
 	}
 }
 add_action( 'admin_notices', 'bp_zoom_user_profile_update_notice' );
