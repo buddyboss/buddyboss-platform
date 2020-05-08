@@ -224,7 +224,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
 			bpNouveau.on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
-			bpNouveau.on( 'change', '.bb-media-container select#bb-folder-privacy', this.savePrivacy.bind( this ) );
+			bpNouveau.on( 'change', '#media-stream select#bb-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
 
@@ -3503,6 +3503,9 @@ window.bp = window.bp || {};
 					break;
 				case 'visibility':
 					order_by = 'privacy';
+					break;
+				case 'group':
+					order_by = 'group_id';
 					break;
 			}
 

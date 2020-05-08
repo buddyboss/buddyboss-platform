@@ -792,6 +792,11 @@ class BP_Document {
 		return $retval;
 	}
 
+	/**
+	 * @param array $args
+	 *
+	 * @return null[]
+	 */
 	public static function documents( $args = array() ) {
 
 		global $wpdb;
@@ -1185,14 +1190,16 @@ class BP_Document {
 		}
 
 		if ( ! empty( $ret ) ) {
-			$i = 0;
+			$i   = 0;
+			$arr = array();
 			foreach ( $ret as $k => $v ) {
 				$ret[ $i ] = (object) $v;
+				$arr[ $i ] = (object) $v;
 				$i++;
 			}
 		}
 
-		return $ret;
+		return $arr;
 
 	}
 
@@ -1252,6 +1259,14 @@ class BP_Document {
 				$document->menu_order    = (int) $document->menu_order;
 			}
 
+			$group_name = '';
+			$visibility = '';
+			if ( $document->group_id > 0 ) {
+				$group      = groups_get_group( $document->group_id );
+				$group_name = bp_get_group_name( $group );
+				$visibility = ucfirst( bp_get_group_status( $group ) );
+			}
+
 			// fetch attachment data.
 			$attachment_data                 = new stdClass();
 			$attachment_data->full           = '';
@@ -1259,6 +1274,8 @@ class BP_Document {
 			$attachment_data->activity_thumb = '';
 			$attachment_data->meta           = wp_get_attachment_metadata( $document->attachment_id );
 			$document->attachment_data       = $attachment_data;
+			$document->group_name            = $group_name;
+			$document->visibility            = $visibility;
 
 			$documents[] = $document;
 		}

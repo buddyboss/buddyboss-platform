@@ -32,6 +32,7 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 // Messages.
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
+add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
 
 // Download Document.
 add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
@@ -519,7 +520,32 @@ function bp_document_messages_delete_attached_document( $thread_id, $message_ids
 	if ( ! empty( $message_ids ) ) {
 		foreach ( $message_ids as $message_id ) {
 
-			// get document ids attached to message
+			// get document ids attached to message.
+			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
+
+			if ( ! empty( $document_ids ) ) {
+				$document_ids = explode( ',', $document_ids );
+				foreach ( $document_ids as $document_id ) {
+					bp_document_delete( array( 'id' => $document_id ) );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Delete document attached to messages
+ *
+ * @since BuddyBoss 1.3.0
+ * @param $thread_id
+ * @param $message_ids
+ */
+function bp_document_user_messages_delete_attached_document( $thread_id, $message_ids, $user_id, $update_message_ids ) {
+
+	if ( ! empty( $update_message_ids ) ) {
+		foreach ( $update_message_ids as $message_id ) {
+
+			// get document ids attached to message.
 			$document_ids = bp_messages_get_meta( $message_id, 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) ) {
