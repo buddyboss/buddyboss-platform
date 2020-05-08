@@ -15,7 +15,7 @@ $attachment_url      = '';
 $text_attachment_url = '';
 $move_id             = '';
 $move_type           = '';
-$folder_link		 = '';
+$folder_link         = '';
 $document_id         = bp_get_document_id();
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
@@ -47,7 +47,7 @@ if ( $attachment_id ) {
 } else {
 	$svg_icon         = bp_document_svg_icon( 'folder' );
 	$download_link    = bp_document_folder_download_link( bp_get_document_folder_id() );
-	$folder_link	  = bp_get_folder_link();
+	$folder_link      = bp_get_folder_link();
 	$move_class       = 'ac-folder-move';
 	$listing_class    = 'ac-folder-list';
 	$document_type    = 'folder';
@@ -94,19 +94,21 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 		<div class="media-folder_name_edit_wrap">
 			<input type="text" value="" class="media-folder_name_edit"/>
 			<?php
-				if( $attachment_id ) { ?>
+			if ( $attachment_id ) {
+				?>
 					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ * | / > < ? ` ; : {space}', 'buddyboss' ); ?></small>
 				<?php } else { ?>
 					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ * | / > < ? ` ; :', 'buddyboss' ); ?></small>
-				<?php }
+				<?php
+}
 
-			if ( wp_is_mobile() ) {
-				?>
+if ( wp_is_mobile() ) {
+	?>
 				<a href="#" class="name_edit_cancel button small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 				<a href="#" class="name_edit_save button small pull-right"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
 				<?php
-			}
-			?>
+}
+?>
 		</div>
 	</div>
 	<?php
@@ -150,7 +152,27 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 	</div>
 	<div class="media-folder_visibility">
 		<div class="media-folder_details__bottom">
-			<span><?php bp_document_privacy(); ?></span>
+
+				<?php
+				$group_id = bp_get_document_group_id();
+				if ( $group_id > 0 ) {
+					?>
+					<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Inherited from group', 'buddyboss' ); ?>">
+						<?php
+						bp_document_privacy();
+						?>
+					</span>
+					<?php
+				} else {
+					?>
+					<span>
+						<?php
+							bp_document_privacy();
+						?>
+					</span>
+					<?php
+				}
+				?>
 			<select data-item-type="<?php echo esc_attr( $document_type ); ?>" data-item-id="<?php echo esc_attr( $document_id ); ?>" id="bb-folder-privacy" class="hide">
 				<?php
 				foreach ( bp_document_get_visibility_levels() as $key => $privacy ) :
