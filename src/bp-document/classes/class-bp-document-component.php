@@ -254,17 +254,19 @@ class BP_Document_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$count    = bp_document_get_total_document_count( bp_displayed_user_id() );
-				$class    = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name = sprintf(
-					/* translators: %s: total document count for the current user */
-					__( 'Documents %s', 'buddyboss' ),
-					sprintf(
-						'<span class="%s">%s</span>',
-						esc_attr( $class ),
-						bp_core_number_format( $count )
-					)
-				);
+//				$count    = bp_document_get_total_document_count( bp_displayed_user_id() );
+//				$class    = ( 0 === $count ) ? 'no-count' : 'count';
+//				$nav_name = sprintf(
+//					/* translators: %s: total document count for the current user */
+//					__( 'Documents %s', 'buddyboss' ),
+//					sprintf(
+//						'<span class="%s">%s</span>',
+//						esc_attr( $class ),
+//						bp_core_number_format( $count )
+//					)
+//				);
+
+				$nav_name = __( 'Documents', 'buddyboss' );
 			} else {
 				$nav_name = __( 'Documents', 'buddyboss' );
 			}

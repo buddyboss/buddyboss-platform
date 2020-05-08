@@ -1727,6 +1727,8 @@ function bp_get_document_group_id() {
 	$db_group_id = 0;
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) ) {
 		$db_group_id = $document_template->document->group_id;
+	} elseif ( isset( $document_template ) && isset( $document_template->$document_template ) && isset( $document_folder_template->folder->group_id ) ) {
+		$db_group_id = $document_template->document->group_id;
 	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {
 		$db_group_id = $document_folder_template->folder->group_id;
 	}

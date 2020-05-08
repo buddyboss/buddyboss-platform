@@ -327,7 +327,7 @@ function bp_nouveau_ajax_document_delete_attachment() {
 	wp_send_json_success();
 }
 
-add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2 );
+//add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2 );
 
 /**
  * Object template results media tabs.

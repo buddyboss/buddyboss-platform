@@ -110,7 +110,7 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 		</div>
 	</div>
 	<?php
-	if ( bp_is_document_directory() ) {
+	if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
 		?>
 		<div class="media-folder_group">
 			<div class="media-folder_details__bottom">
@@ -121,8 +121,9 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 					$group = groups_get_group( $group_id );
 
 					$group_name = isset( $group->name ) ? bp_get_group_name( $group ) : '';
+					$group_link = bp_get_group_link( $group );
 					?>
-					<span class="media-folder_group"><?php echo esc_html( $group_name ); ?></span>
+					<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
 					<?php
 				} else {
 					?>
