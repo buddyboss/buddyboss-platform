@@ -1880,23 +1880,11 @@ function bp_document_privacy() {
 function bp_get_document_privacy() {
 	global $document_template, $document_folder_template;
 
-	$document_privacy = bp_document_get_visibility_levels();
-	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->privacy ) ) {
-		$db_document_privacy = $document_template->document->privacy;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->privacy ) ) {
-		$db_document_privacy = $document_folder_template->folder->privacy;
-	}
-
-	$document_privacy = $document_privacy[ $db_document_privacy ];
-
-	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) ) {
-		$db_group_id = $document_template->document->group_id;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {
-		$db_group_id = $document_folder_template->folder->group_id;
-	}
-
-	if ( empty( $document_privacy ) && $db_group_id > 0 ) {
-		$document_privacy = esc_html__( 'Group members', 'buddyboss' );
+	$db_document_privacy = '';
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->visibility ) ) {
+		$db_document_privacy = $document_template->document->visibility;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->visibility ) ) {
+		$db_document_privacy = $document_folder_template->folder->visibility;
 	}
 
 	/**
@@ -1906,7 +1894,7 @@ function bp_get_document_privacy() {
 	 *
 	 * @param string The privacy.
 	 */
-	return apply_filters( 'bp_get_document_privacy', $document_privacy, $db_document_privacy, $document_privacy );
+	return apply_filters( 'bp_get_document_privacy', $db_document_privacy, $document_template, $document_folder_template );
 }
 
 /**

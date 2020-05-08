@@ -907,6 +907,7 @@ class BP_Document {
 			case 'privacy':
 			case 'group_id':
 			case 'menu_order':
+			case 'visibility':
 			case 'date_modified':
 				break;
 
@@ -1121,6 +1122,12 @@ class BP_Document {
 
 		$direction = 'SORT_' . $sort;
 
+		if ( 'privacy' === $r['order_by'] ) {
+			$r['order_by'] = 'visibility';
+		} elseif ( 'group_id' === $r['order_by'] ) {
+			$r['order_by'] = 'group_name';
+		}
+
 		$documents = self::array_msort( $documents, array( $r['order_by'] => $direction ) );
 
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
@@ -1264,7 +1271,15 @@ class BP_Document {
 			if ( $document->group_id > 0 ) {
 				$group      = groups_get_group( $document->group_id );
 				$group_name = bp_get_group_name( $group );
-				$visibility = ucfirst( bp_get_group_status( $group ) );
+				$status     = bp_get_group_status( $group );
+				if ( 'hidden' === $status ) {
+					$visibility = esc_html__( 'Group members', 'buddyboss' );
+				} else {
+					$visibility = ucfirst( $status );
+				}
+			} else {
+				$document_privacy = bp_document_get_visibility_levels();
+				$visibility       = $document_privacy[ $document->privacy ];
 			}
 
 			// fetch attachment data.
@@ -1363,6 +1378,21 @@ class BP_Document {
 					$document->link   = bp_core_get_user_domain( (int) $document->user_id ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
 				}
 			}
+
+			$group_name = '';
+			$visibility = '';
+			if ( $document->group_id > 0 ) {
+				$group      = groups_get_group( $document->group_id );
+				$group_name = bp_get_group_name( $group );
+				$visibility = ucfirst( bp_get_group_status( $group ) );
+			} else {
+				$document_privacy = bp_document_get_visibility_levels();
+				$visibility       = $document_privacy[ $document->privacy ];
+			}
+
+			$document->group_name = $group_name;
+			$document->visibility = $visibility;
+
 			$documents[] = $document;
 		}
 
