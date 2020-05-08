@@ -74,9 +74,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	}
 
 	$document_i18n_strings = array(
-		'folder_delete_confirm' => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted.', 'buddyboss' ),
-		'folder_delete_error'   => __( 'There was a problem deleting the folder.', 'buddyboss' ),
-		'folder_move_error'     => __( 'Please select destination folder.', 'buddyboss' ),
+		'folder_delete_confirm'   => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted?', 'buddyboss' ),
+		'document_delete_confirm' => __( 'Are you sure you want to delete this document?', 'buddyboss' ),
+		'folder_delete_error'     => __( 'There was a problem deleting the folder.', 'buddyboss' ),
+		'folder_move_error'       => __( 'Please select destination folder.', 'buddyboss' ),
 	);
 
 	$old_i18n_strings = $params['media']['i18n_strings'];
