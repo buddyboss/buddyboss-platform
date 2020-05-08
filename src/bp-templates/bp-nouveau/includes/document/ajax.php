@@ -97,6 +97,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+			'document_folder_delete' => array(
+					'function' => 'bp_nouveau_ajax_document_folder_delete',
+					'nopriv'   => true,
+			)
+		)
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -166,7 +172,7 @@ function bp_nouveau_ajax_document_upload() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_nouveau_ajax_media_folder_delete() {
+function bp_nouveau_ajax_document_folder_delete() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',

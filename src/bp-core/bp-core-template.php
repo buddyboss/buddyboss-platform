@@ -3178,6 +3178,23 @@ function bp_is_group_folders() {
 	return $retval;
 }
 
+/**
+ * Is the current page a user's folder page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's folder page.
+ */
+function bp_is_user_folders() {
+	$retval = false;
+
+	if ( bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
 /** Messages ******************************************************************/
 
 /**

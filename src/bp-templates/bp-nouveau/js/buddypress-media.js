@@ -2587,12 +2587,12 @@ window.bp = window.bp || {};
 				);
 
 				if( currentTargetParent ) {
-					
+
 					$( targetPopup ).find( '.location-folder-list li').hide();
 					$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass('is_active');
 					$( targetPopup ).find('.location-folder-list li[data-id="' + currentTargetParent + '"]').addClass('is_active');
 					$( targetPopup ).find( '.location-folder-list li.is_active' ).parents('.has-ul').show().children('ul').show().siblings('span,i').hide();
-					
+
 					if($( targetPopup ).find( '.location-folder-list li.is_active' ).addClass('is_active').children('ul').length ) {
 						$( targetPopup ).find( '.location-folder-list li.is_active' ).addClass('is_active').show().children('ul').show().children('li').show().parent().siblings( 'span, i' ).hide();
 					} else{
@@ -2604,7 +2604,7 @@ window.bp = window.bp || {};
 					$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children('span').text() );
 
 				}
-				
+
 				if( currentTargetParent === '0' ) {
 					$( targetPopup ).find( '.location-folder-list' ).children('li').show();
 					$( targetPopup ).find('.location-folder-list-wrap').find('.location-folder-title').text( 'Documents' );
@@ -3045,7 +3045,7 @@ window.bp = window.bp || {};
 				title.removeClass( 'error' );
 			}
 
-			var parent = $( '#boss-media-create-album-popup .bb-folder-selected-id' ).val();
+			var parent = parseInt( $( '#boss-media-create-album-popup .bb-folder-selected-id' ).val() );
 
 			if ( ! self.group_id && $.trim( privacy.val() ) === '') {
 				privacy.addClass( 'error' );
@@ -3094,10 +3094,12 @@ window.bp = window.bp || {};
 							for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
 							}
+
+							$( '#bp-media-create-child-folder-submit' ).removeClass( 'loading' );
 							self.closeFolderUploader( event );
 
 							if ( $( '.document-data-table-head' ).length ) {
-								if ( 0 === parent || '0' === parent ) {
+								if ( 0 === parent || '0' === parent || parent === parseInt( BP_Nouveau.media.current_folder ) ) {
 									// Prepend the activity if no parent.
 									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
 									jQuery( window ).scroll();
@@ -3182,9 +3184,10 @@ window.bp = window.bp || {};
 							for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
 							}
+							$( '#bp-media-create-child-folder-submit' ).removeClass( 'loading' );
 							self.closeChildFolderUploader( event );
 							if ( $( '.document-data-table-head' ).length ) {
-								if ( 0 === parent || '0' === parent ) {
+								if ( 0 === parent || '0' === parent || parent === parseInt( BP_Nouveau.media.current_folder ) ) {
 									// Prepend the activity if no parent.
 									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
 									jQuery( window ).scroll();
@@ -3342,7 +3345,7 @@ window.bp = window.bp || {};
 			$( event.currentTarget ).prop( 'disabled', true );
 
 			var data = {
-				'action': 'media_folder_delete',
+				'action': 'document_folder_delete',
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'album_id': this.album_id,
 				'group_id': this.group_id

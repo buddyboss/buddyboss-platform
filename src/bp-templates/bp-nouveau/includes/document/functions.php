@@ -45,6 +45,12 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		}
 	}
 
+	$folder_id = 0;
+	if ( bp_is_group_single() && bp_is_group_folders() ) {
+		$folder_id = (int) bp_action_variable( 1 );
+	} elseif ( bp_is_user_document() && bp_is_user_folders() ) {
+		$folder_id = (int) bp_action_variable( 0 );
+	}
 	$document_params = array(
 		'max_upload_size_document' => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_document'         => bp_is_profile_document_support_enabled(),
@@ -52,6 +58,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'messages_document'        => bp_is_messages_document_support_enabled(),
 		'document_type'            => implode( ',', $extensions ),
 		'empty_document_type'      => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
+		'current_folder'           => $folder_id,
 	);
 
 	$old_media = $params['media'];
