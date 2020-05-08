@@ -71,6 +71,14 @@ class BP_Document_Folder {
 	var $date_created;
 
 	/**
+	 * Update date of the folder.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var string
+	 */
+	var $date_modified;
+
+	/**
 	 * Error holder.
 	 *
 	 * @since BuddyBoss 1.3.0
@@ -136,13 +144,14 @@ class BP_Document_Folder {
 			return;
 		}
 
-		$this->id           = (int) $row->id;
-		$this->user_id      = (int) $row->user_id;
-		$this->group_id     = (int) $row->group_id;
-		$this->title        = $row->title;
-		$this->privacy      = $row->privacy;
-		$this->date_created = $row->date_created;
-		$this->parent       = $row->parent;
+		$this->id            = (int) $row->id;
+		$this->user_id       = (int) $row->user_id;
+		$this->group_id      = (int) $row->group_id;
+		$this->title         = $row->title;
+		$this->privacy       = $row->privacy;
+		$this->date_created  = $row->date_created;
+		$this->date_modified = $row->date_modified;
+		$this->parent        = $row->parent;
 	}
 
 	/**
@@ -158,13 +167,14 @@ class BP_Document_Folder {
 
 		$bp = buddypress();
 
-		$this->id           = apply_filters_ref_array( 'bp_document_id_before_save', array( $this->id, &$this ) );
-		$this->user_id      = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this ) );
-		$this->group_id     = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
-		$this->title        = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
-		$this->privacy      = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
-		$this->date_created = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
-		$this->parent       = apply_filters_ref_array( 'bp_document_parent_before_save', array( $this->parent, &$this ) );
+		$this->id            = apply_filters_ref_array( 'bp_document_id_before_save', array( $this->id, &$this ) );
+		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
+		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
+		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
+		$this->parent        = apply_filters_ref_array( 'bp_document_parent_before_save', array( $this->parent, &$this ) );
 
 		/**
 		 * Fires before the current folder gets saved.
@@ -183,9 +193,9 @@ class BP_Document_Folder {
 
 		// If we have an existing ID, update the folder, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'document', $this->parent, bp_core_current_time(), $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, type = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, 'document', $this->parent, $this->date_modified, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'document', $this->parent );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, date_modified, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, 'document', $this->parent );
 		}
 
 		$q = $wpdb->query( $q ); // db call ok; no-cache ok;

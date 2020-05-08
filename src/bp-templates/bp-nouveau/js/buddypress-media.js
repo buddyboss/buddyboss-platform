@@ -3499,7 +3499,7 @@ window.bp = window.bp || {};
 					order_by = 'title';
 					break;
 				case 'modified':
-					order_by = 'date_created';
+					order_by = 'date_modified';
 					break;
 				case 'visibility':
 					order_by = 'privacy';

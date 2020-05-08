@@ -9,7 +9,7 @@
 bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
-	if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) : ?>
+	if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) : ?>
 		<div class="document-data-table-head">
 			<div class="data-head data-head-name" data-target="name">
 				<span>
@@ -61,7 +61,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 		</div>
 		<?php
 	endif;
-	if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+	if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 		?>
 		</div> <!-- #media-folder-document-data-table -->
 		<?php

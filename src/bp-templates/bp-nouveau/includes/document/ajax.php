@@ -224,7 +224,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = ! empty( filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) : false;
+	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -548,11 +548,11 @@ function bp_nouveau_ajax_document_folder_save() {
 	}
 
 	// save media.
-	$id       = ! empty( filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
-	$group_id = ! empty( filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) : false;
-	$title    = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
-	$privacy  = ! empty( filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
-	$parent   = ! empty( filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
+	$id       = ! empty( $_POST['album_id'] ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
+	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
+	$title    = $_POST['title'];
+	$privacy  = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
+	$parent   = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
 
 	if ( $parent > 0 ) {
 		$id = false;
@@ -662,7 +662,7 @@ function bp_nouveau_ajax_document_move() {
 
 		if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-			if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+			if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 				?>
 
 				<div class="document-data-table-head">
@@ -713,7 +713,7 @@ function bp_nouveau_ajax_document_move() {
 				<?php
 			endif;
 
-			if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+			if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 				?>
 				</div> <!-- #media-folder-document-data-table -->
 				<?php
@@ -759,10 +759,10 @@ function bp_nouveau_ajax_document_update_file_name() {
 		wp_send_json_error( $response );
 	}
 
-	$document_id            = ! empty( filter_input( INPUT_POST, 'document_id', FILTER_SANITIZE_STRING ) ) ? (int) filter_input( INPUT_POST, 'document_id', FILTER_SANITIZE_STRING ) : 0;
-	$attachment_document_id = ! empty( filter_input( INPUT_POST, 'attachment_document_id', FILTER_SANITIZE_STRING ) ) ? (int) filter_input( INPUT_POST, 'attachment_document_id', FILTER_SANITIZE_STRING ) : 0;
-	$title                  = ! empty( filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING ) : '';
-	$type                   = ! empty( filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING ) : '';
+	$document_id            = ! empty( $_POST['document_id'] ) ? (int) filter_input( INPUT_POST, 'document_id', FILTER_SANITIZE_STRING ) : 0;
+	$attachment_document_id = ! empty( $_POST['attachment_document_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_document_id', FILTER_SANITIZE_STRING ) : 0;
+	$title                  = ! empty( $_POST['name'] ) ? filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING ) : '';
+	$type                   = ! empty( $_POST['document_type'] ) ? filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING ) : '';
 
 	if ( 'document' === $type ) {
 		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
@@ -770,6 +770,14 @@ function bp_nouveau_ajax_document_update_file_name() {
 		}
 
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
+
+		// Get Document Object.
+		$document_object = bp_document_get(
+				array(
+					'folder_id'   => $document_id,
+					'count_total' => true,
+				)
+		);
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
 			wp_send_json_success(
@@ -848,11 +856,11 @@ function bp_nouveau_ajax_document_edit_folder() {
 	}
 
 	// save media.
-	$group_id = ! empty( filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT ) : false;
-	$title    = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
-	$privacy  = ! empty( filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
-	$parent   = ! empty( filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
-	$move_to  = ! empty( filter_input( INPUT_POST, 'moveTo', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'moveTo', FILTER_VALIDATE_INT ) : 0;
+	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
+	$title    = $_POST['title'];
+	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$parent   = ! empty( $_POST['parent'] ) ? (int) $_POST['parent'] : 0;
+	$move_to  = ! empty( $_POST['moveTo'] ) ? (int) $_POST['moveTo'] : 0;
 
 	if ( 0 === $move_to ) {
 		$move_to = $parent;
@@ -913,9 +921,9 @@ function bp_nouveau_ajax_document_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$id            = ! empty( filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
-	$attachment_id = ! empty( filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
-	$type          = ! empty( filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
+	$id            = ! empty( $_POST['id'] ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
+	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
+	$type          = ! empty( $_POST['type'] ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );
@@ -940,7 +948,7 @@ function bp_nouveau_ajax_document_delete() {
 
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-		if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 			?>
 
 			<div class="document-data-table-head">
@@ -991,7 +999,7 @@ function bp_nouveau_ajax_document_delete() {
 			<?php
 		endif;
 
-		if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 			?>
 			</div> <!-- #media-folder-document-data-table -->
 			<?php
@@ -1033,8 +1041,8 @@ function bp_nouveau_ajax_document_folder_move() {
 		wp_send_json_error( $response );
 	}
 
-	$destination_folder_id = ! empty( filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) : 0;
-	$folder_id             = ! empty( filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
+	$destination_folder_id = ! empty( $_POST['folderMoveToId'] ) ? (int) filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) : 0;
+	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
 
 	if ( '' === $destination_folder_id ) {
 		wp_send_json_error( $response );
@@ -1047,7 +1055,7 @@ function bp_nouveau_ajax_document_folder_move() {
 
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-		if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 			?>
 
 			<div class="document-data-table-head">
@@ -1098,7 +1106,7 @@ function bp_nouveau_ajax_document_folder_move() {
 			<?php
 		endif;
 
-		if ( empty( filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 			?>
 			</div> <!-- #media-folder-document-data-table -->
 			<?php
@@ -1178,10 +1186,10 @@ function bp_nouveau_ajax_document_activity_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$id            = ! empty( filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
-	$attachment_id = ! empty( filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
-	$type          = ! empty( filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
-	$activity_id   = ! empty( filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT ) ) ? filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT ) : 0;
+	$id            = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) $_POST['attachment_id'] : 0;
+	$type          = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
+	$activity_id   = ! empty( $_POST['activity_id'] ) ? $_POST['activity_id'] : 0;
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );

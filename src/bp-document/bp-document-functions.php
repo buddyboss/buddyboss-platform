@@ -287,6 +287,7 @@ function bp_document_add( $args = '' ) {
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
+			'date_modified' => bp_core_current_time(),  // The GMT time that this document was modified.
 			'error_type'    => 'bool',
 			'file_name'     => '',
 			'caption'       => '',
@@ -312,6 +313,7 @@ function bp_document_add( $args = '' ) {
 	$document->privacy       = $r['privacy'];
 	$document->menu_order    = $r['menu_order'];
 	$document->date_created  = $r['date_created'];
+	$document->date_modified = $r['date_modified'];
 	$document->error_type    = $r['error_type'];
 	$document->file_name     = $r['file_name'];
 	$document->caption       = $r['caption'];
@@ -833,33 +835,35 @@ function bp_folder_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'           => false,
+			'id'            => false,
 			// Pass an existing folder ID to update an existing entry.
-			'user_id'      => bp_loggedin_user_id(),
-			// User ID
-			'group_id'     => false,
+			'user_id'       => bp_loggedin_user_id(),
+			// User ID.
+			'group_id'      => false,
 			// attachment id.
-			'title'        => '',
+			'title'         => '',
 			// title of folder being added.
-			'privacy'      => 'public',
+			'privacy'       => 'public',
 			// Optional: privacy of the document e.g. public.
-			'date_created' => bp_core_current_time(),
-			// The GMT time that this document was recorded
-			'error_type'   => 'bool',
-			'parent'       => 0,
+			'date_created'  => bp_core_current_time(),
+			'date_modified' => bp_core_current_time(),
+			// The GMT time that this document was recorded.
+			'error_type'    => 'bool',
+			'parent'        => 0,
 		),
 		'folder_add'
 	);
 
 	// Setup document to be added.
-	$folder               = new BP_Document_Folder( $r['id'] );
-	$folder->user_id      = (int) $r['user_id'];
-	$folder->group_id     = (int) $r['group_id'];
-	$folder->title        = $r['title'];
-	$folder->privacy      = $r['privacy'];
-	$folder->date_created = $r['date_created'];
-	$folder->error_type   = $r['error_type'];
-	$folder->parent       = $r['parent'];
+	$folder                = new BP_Document_Folder( $r['id'] );
+	$folder->user_id       = (int) $r['user_id'];
+	$folder->group_id      = (int) $r['group_id'];
+	$folder->title         = $r['title'];
+	$folder->privacy       = $r['privacy'];
+	$folder->date_created  = $r['date_created'];
+	$folder->date_modified = $r['date_modified'];
+	$folder->error_type    = $r['error_type'];
+	$folder->parent        = $r['parent'];
 
 	if ( ! empty( $folder->group_id ) ) {
 		$folder->privacy = 'grouponly';
@@ -1680,6 +1684,32 @@ function bp_document_rename_folder( $folder_id = 0, $title = '' ) {
 	}
 
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+
+	if ( false === $q ) {
+		return false;
+	}
+
+	return $folder_id;
+}
+
+/**
+ * This function will rename the folder name.
+ *
+ * @param int    $folder_id
+ * @param string $title
+ *
+ * @return bool|int
+ * @since BuddyBoss 1.3.0
+ */
+function bp_document_update_folder_modified_date( $folder_id = 0 ) {
+
+	global $wpdb, $bp;
+
+	if ( 0 === $folder_id ) {
+		return false;
+	}
+
+	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
 	if ( false === $q ) {
 		return false;

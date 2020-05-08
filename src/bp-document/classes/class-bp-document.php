@@ -143,6 +143,14 @@ class BP_Document {
 	var $date_created;
 
 	/**
+	 * Update date of the document item.
+	 *
+	 * @since BuddyBoss 1.3.0
+	 * @var string
+	 */
+	var $date_modified;
+
+	/**
 	 * Upload document file name.
 	 *
 	 * @since BuddyBoss 1.3.0
@@ -248,6 +256,7 @@ class BP_Document {
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
+		$this->date_modified = $row->date_modified;
 		$this->file_name     = $row->file_name;
 		$this->caption       = $row->caption;
 		$this->description   = $row->description;
@@ -282,6 +291,7 @@ class BP_Document {
 		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
 		$this->file_name     = apply_filters_ref_array( 'bp_document_file_name_before_save', array( $this->file_name, &$this ) );
 		$this->caption       = apply_filters_ref_array( 'bp_document_caption_before_save', array( $this->caption, &$this ) );
 		$this->description   = apply_filters_ref_array( 'bp_document_description_before_save', array( $this->description, &$this ) );
@@ -439,9 +449,11 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, type = %s, preview_attachment_id = %d, file_name = %s, caption = %s, description = %s, extension = %s, thread_id = %d, forum_id = %d, topic_id = %d, reply_id = %d WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s, type = %s, preview_attachment_id = %d, file_name = %s, caption = %s, description = %s, extension = %s, thread_id = %d, forum_id = %d, topic_id = %d, reply_id = %d WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type, preview_attachment_id, file_name, caption, description, extension, thread_id, forum_id, topic_id, reply_id ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id );
+			$q = $wpdb->prepare(
+				"INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, date_modified, type, preview_attachment_id, file_name, caption, description, extension, thread_id, forum_id, topic_id, reply_id ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %s, %d, %s, %s, %s, %s, %d, %d, %d, %d )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified, 'document', $preview_attachment_id, $this->file_name, $this->caption, $this->description, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id
+			);
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -451,6 +463,12 @@ class BP_Document {
 		// If this is a new document item, set the $id property.
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
+		}
+
+		// Update folder modified date.
+		$folder = (int) $this->folder_id;
+		if ( $folder > 0 ) {
+			bp_document_update_folder_modified_date( $folder );
 		}
 
 		/**
@@ -884,6 +902,7 @@ class BP_Document {
 			case 'privacy':
 			case 'group_id':
 			case 'menu_order':
+			case 'date_modified':
 				break;
 
 			default:
