@@ -147,21 +147,27 @@ function bp_has_document( $args = '' ) {
 		$privacy = array( 'public' );
 		if ( is_user_logged_in() ) {
 			$privacy[] = 'loggedin';
-			if ( bp_is_active( 'friends' ) ) {
-
-				// get the login user id.
-				$current_user_id = get_current_user_id();
-
-				// check if the login user is friends of the display user.
-				$is_friend = friends_check_friendship( $current_user_id, $user_id );
-
-				if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
-					$privacy[] = 'friends';
-				}
-			}
 
 			if ( bp_is_my_profile() ) {
 				$privacy[] = 'onlyme';
+				$privacy[] = 'friends';
+			}
+		}
+
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
+
+			// get the login user id.
+			$current_user_id = get_current_user_id();
+
+			// check if the login user is friends of the display user.
+			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+
+			/**
+			 * Check if the login user is friends of the display user.
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
+				$privacy[] = 'friends';
 			}
 		}
 	}
@@ -186,10 +192,6 @@ function bp_has_document( $args = '' ) {
 
 		if ( bp_is_profile_document_support_enabled() && is_user_logged_in() ) {
 			$scope[] = 'personal';
-		}
-
-		if ( bp_is_profile_document_support_enabled() && bp_is_active( 'friends' ) ) {
-			$privacy[] = 'friends';
 		}
 	}
 

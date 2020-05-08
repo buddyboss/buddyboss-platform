@@ -995,6 +995,11 @@ class BP_Document {
 			$where_conditions_document['type'] = " m.type = 'document'";
 		}
 
+		// Add privacy "friends" when in directory page click on "My Documents" tab.
+		if ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['user_id'] ) && !empty( $r['scope'] ) ) {
+			array_push( $r['privacy'], 'friends' );
+		}
+
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                              = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions_document['privacy'] = "m.privacy IN ({$privacy})";

@@ -126,6 +126,7 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
+	array_push( $friends, bp_loggedin_user_id() );
 
 	$retval = array(
 		'relation' => 'OR',
@@ -213,6 +214,7 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
+	array_push( $friends, bp_loggedin_user_id() );
 
 	$retval = array(
 		'relation' => 'OR',
