@@ -1082,17 +1082,17 @@ function bp_media_settings_callback_extension_document_support() {
 		foreach ( $extensions as $k => $extension ) {
 
 			$name       = 'bp_document_extensions_support[' . $k . ']';
-			$edit       = ( (bool) $extension['is_default'] ) ? 'readonly="readonly"' : '';
-			$is_default = ( (bool) $extension['is_default'] ) ? true : '';
-			$tr_class   = ( (bool) $extension['is_default'] ) ? 'default-extension' : 'extra-extension';
+			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
+			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? true : '';
+			$tr_class   = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'default-extension' : 'extra-extension';
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
 				<td>
-					<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( $extension['is_active'], 1 ); ?> />
+					<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php ( isset( $extension['is_active'] ) ) ? checked( $extension['is_active'], 1 ) : ''; ?> />
 				</td>
 				<td>
 					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[name]' ); ?>" id="<?php echo esc_attr( $name ) . 'name'; ?>" type="text" value="<?php echo esc_attr( $extension['name'] ); ?>"/>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo esc_attr( $extension['is_default'] ); ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo ( isset( $extension['is_default'] ) ) ? esc_attr( $extension['is_default'] ) : ''; ?>"/>
 				</td>
 				<td>
 					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>"/>
@@ -1125,7 +1125,7 @@ function bp_media_settings_callback_extension_document_support() {
 		?>
 		<tr style="display: none;" class="custom-extension-data">
 			<td>
-				<input name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>" type="checkbox" class="extension-check"/>
+				<input value="1" name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>" type="checkbox" class="extension-check"/>
 			</td>
 			<td>
 				<input name="extension-name" data-name="<?php echo esc_attr( $name . '[name]' ); ?>" type="text" class="extension-name"/>
