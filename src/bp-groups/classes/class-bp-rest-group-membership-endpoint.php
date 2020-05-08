@@ -320,10 +320,8 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $group_member, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $group_member, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -450,6 +448,15 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$group_id     = $group->id;
 		$group_member = new BP_Groups_Member( $user->ID, $group_id );
 
+		/**
+		 * Fires before the promotion of a user to a new status.
+		 *
+		 * @param int    $group_id ID of the group being promoted in.
+		 * @param int    $user_id  ID of the user being promoted.
+		 * @param string $status   New status being promoted to.
+		 */
+		do_action( "groups_{$action}_member", $group_id, $user->ID, $role );
+
 		if ( 'promote' === $action ) {
 			if ( ! $group_member->promote( $role ) ) {
 				return new WP_Error(
@@ -488,13 +495,26 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		$after_action = array(
+			'promote' => 'promoted',
+			'demote'  => 'demoted',
+			'ban'     => 'banned',
+			'unban'   => 'unbanned',
+		);
+
+		/**
+		 * Fires after a group member has been updated.
+		 *
+		 * @param int $user_id  ID of the user being updated.
+		 * @param int $group_id ID of the group.
+		 */
+		do_action( "groups_{$after_action[$action]}_member", $user->ID, $group_id );
+
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $group_member, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $group_member, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -623,6 +643,14 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		$member   = new BP_Groups_Member( $request['user_id'], $request['group_id'] );
 		$previous = $this->prepare_item_for_response( $member, $request );
 
+		/**
+		 * Fires before the removal of a member from a group.
+		 *
+		 * @param int $group_id ID of the group being removed from.
+		 * @param int $user_id  ID of the user being removed.
+		 */
+		do_action( 'groups_remove_member', $request['group_id'], $request['user_id'] );
+
 		if ( ! $member->remove() ) {
 			return new WP_Error(
 				'bp_rest_group_member_failed_to_remove',
@@ -632,6 +660,14 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 				)
 			);
 		}
+
+		/**
+		 * Fires after a group member has been removed.
+		 *
+		 * @param int $user_id  ID of the user being updated.
+		 * @param int $group_id ID of the group.
+		 */
+		do_action( 'groups_removed_member', $request['user_id'], $request['group_id'] );
 
 		// Build the response.
 		$response = new WP_REST_Response();

@@ -253,10 +253,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_item( $request ) {
 		$group = $this->get_group_object( $request );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $group, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $group, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -371,10 +369,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			bp_groups_set_group_type( $group_id, $request['types'] );
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $group, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $group, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -471,10 +467,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $group, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $group, $request )
 		);
 
 		$response = rest_ensure_response( $retval );

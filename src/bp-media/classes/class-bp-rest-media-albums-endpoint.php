@@ -242,9 +242,9 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$retval = array();
+		$retval = '';
 		foreach ( $medias['albums'] as $album ) {
-			$retval[] = $this->prepare_response_for_collection(
+			$retval = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $album, $request )
 			);
 		}
@@ -596,7 +596,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 
 		$previous = array();
 		foreach ( $medias['albums'] as $album ) {
-			$previous[] = $this->prepare_response_for_collection(
+			$previous = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $album, $request )
 			);
 		}

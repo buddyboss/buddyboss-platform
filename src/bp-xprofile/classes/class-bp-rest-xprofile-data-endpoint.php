@@ -110,10 +110,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		// Get Field data.
 		$field_data = $this->get_xprofile_field_data_object( $request->get_param( 'field_id' ), $request->get_param( 'user_id' ) );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $field_data, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $field_data, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -260,10 +258,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $field_data, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $field_data, $request )
 		);
 
 		$response = rest_ensure_response( $retval );

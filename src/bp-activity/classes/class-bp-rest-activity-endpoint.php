@@ -327,10 +327,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $activity, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -485,10 +483,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $activity, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -614,10 +610,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $activity, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -891,10 +885,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		// Prepare the response now the user favorites has been updated.
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $activity, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $activity, $request )
 		);
 
 		$response = rest_ensure_response( $retval );

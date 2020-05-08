@@ -271,9 +271,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$retval = array();
+		$retval = '';
 		foreach ( $medias['medias'] as $media ) {
-			$retval[] = $this->prepare_response_for_collection(
+			$retval = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $media, $request )
 			);
 		}
@@ -528,9 +528,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data( array( 'media_ids' => array( $request['id'] ) ) );
 
-		$retval = array();
+		$retval = '';
 		foreach ( $medias['medias'] as $media ) {
-			$retval[] = $this->prepare_response_for_collection(
+			$retval = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $media, $request )
 			);
 		}
@@ -643,9 +643,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$previous = array();
+		$previous = '';
 		foreach ( $medias['medias'] as $media ) {
-			$previous[] = $this->prepare_response_for_collection(
+			$previous = $this->prepare_response_for_collection(
 				$this->prepare_item_for_response( $media, $request )
 			);
 		}

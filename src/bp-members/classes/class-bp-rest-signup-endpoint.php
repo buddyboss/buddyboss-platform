@@ -483,10 +483,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		// Get signup.
 		$signup = $this->get_signup_object( $request['id'] );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $signup, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $signup, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -855,10 +853,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		$retval['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
 		$retval['data']    = array();
 
-		$retval['data'] = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $signup, $request )
-			),
+		$retval['data'] = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $signup, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1020,10 +1016,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $signup, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $signup, $request )
 		);
 
 		$response = rest_ensure_response( $retval );

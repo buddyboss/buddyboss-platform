@@ -667,10 +667,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'roles'              => array(),
 			'capabilities'       => array(),
 			'extra_capabilities' => array(),
-			'registered_date'    => '',
+			'registered_date'    => bp_rest_prepare_date_response( get_userdata( $user->ID )->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
 			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID ),
 			'xprofile'           => $this->xprofile_data( $user->ID ),
+			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
+			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
 		);
 
 		$data['friendship_status'] = (
@@ -1054,7 +1056,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'description' => __( 'Registration date for the member.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
-					'context'     => array( 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'password'           => array(
@@ -1102,6 +1104,18 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					'description' => __( 'Member XProfile groups and its fields.', 'buddyboss' ),
 					'type'        => 'array',
 					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'followers'          => array(
+					'description' => __( 'Followers counts for the current user.', 'buddyboss' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'following'          => array(
+					'description' => __( 'Followings counts for the current user.', 'buddyboss' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'friendship_status'  => array(

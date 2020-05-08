@@ -459,10 +459,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 
 		$invite = get_post( $request['id'] );
 
-		$previous = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $invite, $request )
-			),
+		$previous = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $invite, $request )
 		);
 
 		$success = wp_delete_post( $invite->ID );

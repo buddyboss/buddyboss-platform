@@ -127,10 +127,8 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 		$field_group = $this->group_fields_endpoint->get_xprofile_field_group_object( $request );
 
-		$retval = array(
-			$this->group_fields_endpoint->prepare_response_for_collection(
-				$this->group_fields_endpoint->prepare_item_for_response( $field_group, $request )
-			),
+		$retval = $this->group_fields_endpoint->prepare_response_for_collection(
+			$this->group_fields_endpoint->prepare_item_for_response( $field_group, $request )
 		);
 
 		$response = new WP_REST_Response();
@@ -319,10 +317,8 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 		$field_group = $this->group_fields_endpoint->get_xprofile_field_group_object( $request );
 
-		$retval = array(
-			$this->group_fields_endpoint->prepare_response_for_collection(
-				$this->group_fields_endpoint->prepare_item_for_response( $field_group, $request )
-			),
+		$retval = $this->group_fields_endpoint->prepare_response_for_collection(
+			$this->group_fields_endpoint->prepare_item_for_response( $field_group, $request )
 		);
 
 		$response = new WP_REST_Response();

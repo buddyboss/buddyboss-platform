@@ -79,6 +79,10 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		$results = array();
 
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
 		// Check BuddyBoss Platform activate and get the settings.
 		if ( is_plugin_active( $buddyboss_platform_plugin_file ) ) {
 			$platform_settings   = $this->get_buddyboss_platform_settings();
@@ -242,6 +246,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		$results = array(
 			// General settings.
 			'bp-enable-site-registration'              => bp_enable_site_registration(),
+			'allow-custom-registration'                => bp_allow_custom_registration(),
 			'register-confirm-email'                   => bp_register_confirm_email(),
 			'register-confirm-password'                => bp_register_confirm_password(),
 			'bp-disable-account-deletion'              => bp_disable_account_deletion(),
@@ -369,7 +374,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_media_forums_emoji_support']   = bp_is_forums_emoji_support_enabled();
 
 			// Animated GIFs.
-			$results['bp_media_gif_api_key']          = bp_media_get_gif_api_key();
+			if ( bp_loggedin_user_id() ) {
+				$results['bp_media_gif_api_key'] = bp_media_get_gif_api_key();
+			}
 			$results['bp_media_profiles_gif_support'] = bp_is_profiles_gif_support_enabled();
 			$results['bp_media_groups_gif_support']   = bp_is_groups_gif_support_enabled();
 			$results['bp_media_messages_gif_support'] = bp_is_messages_gif_support_enabled();

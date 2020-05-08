@@ -127,10 +127,8 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $cover_url, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $cover_url, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -221,10 +219,8 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			return $cover_url;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $cover_url, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $cover_url, $request )
 		);
 
 		$response = rest_ensure_response( $retval );

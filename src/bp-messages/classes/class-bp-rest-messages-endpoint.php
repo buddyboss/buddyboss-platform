@@ -299,10 +299,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function get_item( $request ) {
 		$thread = $this->get_thread_object( $request['id'] );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $thread, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $thread, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -432,10 +430,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $thread, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $thread, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -661,10 +657,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $thread, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $thread, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -766,10 +760,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		// Prepare the message for the REST response.
-		$data = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_message_for_response( $message, $request )
-			),
+		$data = $this->prepare_response_for_collection(
+			$this->prepare_message_for_response( $message, $request )
 		);
 
 		$response = rest_ensure_response( $data );

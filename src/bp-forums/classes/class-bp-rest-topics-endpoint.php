@@ -488,10 +488,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$topic = get_post( $request['id'] );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $topic, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $topic, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1037,10 +1035,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $topic, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $topic, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1531,10 +1527,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $topic, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $topic, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1622,10 +1616,8 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$topic = get_post( $request['id'] );
 
-		$previous = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $topic, $request )
-			),
+		$previous = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $topic, $request )
 		);
 
 		$success = wp_delete_post( $topic->ID );

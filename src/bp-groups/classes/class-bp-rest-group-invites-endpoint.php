@@ -395,10 +395,8 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 		// Set context.
 		$request->set_param( 'context', 'edit' );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $invite, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $invite, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -520,10 +518,8 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 
 		$accepted_member = new BP_Groups_Member( $invite->user_id, $invite->item_id );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->group_members_endpoint->prepare_item_for_response( $accepted_member, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->group_members_endpoint->prepare_item_for_response( $accepted_member, $request )
 		);
 
 		$response = rest_ensure_response( $retval );

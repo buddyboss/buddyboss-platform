@@ -183,7 +183,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			$group_id         = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $request['group_id'] );
 			$course_ids       = learndash_group_enrolled_courses( $group_id );
-			$args['post__in'] = $course_ids;
+			$args['post__in'] = ! empty( $course_ids ) ? $course_ids : array( 0 );
 			unset( $args['author'] );
 		}
 

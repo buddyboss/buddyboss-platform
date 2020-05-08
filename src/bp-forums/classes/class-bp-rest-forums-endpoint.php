@@ -267,10 +267,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$forum = get_post( $request['id'] );
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $forum, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $forum, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -384,10 +382,8 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 		$retval['update'] = $success;
 
-		$retval['data'] = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $forum, $request )
-			),
+		$retval['data'] = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $forum, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -567,11 +563,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				&& bbp_is_forum_group_forum( $forum->ID )
 				&& function_exists( 'groups_get_group' )
 			)
-			? (
-				bbp_get_forum_group_ids( $forum->ID )
-				? groups_get_group( current( bbp_get_forum_group_ids( $forum->ID ) ) )
-				: ''
-			)
+			? $this->bp_rest_get_group( $forum->ID )
 			: ''
 		);
 
@@ -1268,5 +1260,48 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Get Forum's group.
+	 *
+	 * @param int $forum_id ID of the forum.
+	 *
+	 * @return BP_Groups_Group|string
+	 */
+	public function bp_rest_get_group( $forum_id ) {
+		if ( empty( $forum_id ) ) {
+			return '';
+		}
+
+		if ( bbp_get_forum_group_ids( $forum_id ) ) {
+			$group              = groups_get_group( current( bbp_get_forum_group_ids( $forum_id ) ) );
+			$group->avatar_urls = array();
+			if ( ! bp_disable_group_avatar_uploads() ) {
+				$group->avatar_urls = array(
+					'thumb' => bp_core_fetch_avatar(
+						array(
+							'html'    => false,
+							'object'  => 'group',
+							'item_id' => $group->id,
+							'type'    => 'thumb',
+						)
+					),
+					'full'  => bp_core_fetch_avatar(
+						array(
+							'html'    => false,
+							'object'  => 'group',
+							'item_id' => $group->id,
+							'type'    => 'full',
+						)
+					),
+				);
+			}
+
+			return $group;
+		}
+
+		return '';
+
 	}
 }

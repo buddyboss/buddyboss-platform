@@ -428,10 +428,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		$retval = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $reply, $request )
-			),
+		$retval = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $reply, $request )
 		);
 
 		$response = rest_ensure_response( $retval );
@@ -1530,10 +1528,8 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
 		$reply = get_post( $request['id'] );
 
-		$previous = array(
-			$this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $reply, $request )
-			),
+		$previous = $this->prepare_response_for_collection(
+			$this->prepare_item_for_response( $reply, $request )
 		);
 
 		$success = wp_delete_post( $reply->ID );
