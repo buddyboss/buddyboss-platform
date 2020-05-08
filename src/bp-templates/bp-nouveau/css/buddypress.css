@@ -2274,6 +2274,25 @@ input.search-query-input {
   color: #122b46;
 }
 
+.ac-reply-toolbar .toolbar-button.disable,
+.ac-reply-toolbar .toolbar-button.disable.active,
+#whats-new-toolbar .toolbar-button.disable,
+#whats-new-toolbar .toolbar-button.disable.active,
+#whats-new-messages-toolbar .toolbar-button.disable,
+#whats-new-messages-toolbar .toolbar-button.disable.active {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.ac-reply-toolbar .toolbar-button.disable .bb-icon,
+.ac-reply-toolbar .toolbar-button.disable.active .bb-icon,
+#whats-new-toolbar .toolbar-button.disable .bb-icon,
+#whats-new-toolbar .toolbar-button.disable.active .bb-icon,
+#whats-new-messages-toolbar .toolbar-button.disable .bb-icon,
+#whats-new-messages-toolbar .toolbar-button.disable.active .bb-icon {
+  color: rgba(18, 43, 70, 0.4);
+}
+
 .bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
   vertical-align: top;
   margin-top: 3px;

@@ -553,6 +553,16 @@
 			color: #122b46;
 		}
 	}
+
+	.toolbar-button.disable,
+	.toolbar-button.disable.active {
+		pointer-events: none;
+		opacity: 0.4;
+
+		.bb-icon {
+			color: rgba(18, 43, 70, 0.4);
+		}
+	}
 }
 
 .bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {

@@ -840,6 +840,16 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						}
+
+						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length > 0 ) {
+							var tool_box = self.$el.parents( '#bp-message-content' );
+							if ( tool_box.find( '#messages-document-button' ) ) {
+								tool_box.find( '#messages-document-button' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-gif-button' ) ) {
+								tool_box.find( '#messages-gif-button' ).addClass( 'disable' );
+							}
+						}
 					}
 				);
 
@@ -866,6 +876,16 @@ window.bp = window.bp || {};
 									self.media.splice( i, 1 );
 									self.model.set( 'media', self.media );
 								}
+							}
+						}
+
+						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
+							var tool_box = self.$el.parents( '#bp-message-content' );
+							if ( tool_box.find( '#messages-document-button' ) ) {
+								tool_box.find( '#messages-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+							}
+							if ( tool_box.find( '#messages-gif-button' ) ) {
+								tool_box.find( '#messages-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
 							}
 						}
 					}
@@ -947,6 +967,16 @@ window.bp = window.bp || {};
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
 						}
+
+						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length > 0 ) {
+							var tool_box = self.$el.parents( '#bp-message-content' );
+							if ( tool_box.find( '#messages-media-button' ) ) {
+								tool_box.find( '#messages-media-button' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-gif-button' ) ) {
+								tool_box.find( '#messages-gif-button').addClass( 'disable' );
+							}
+						}
 					}
 				);
 
@@ -973,6 +1003,16 @@ window.bp = window.bp || {};
 									self.document.splice( i, 1 );
 									self.model.set( 'document', self.document );
 								}
+							}
+						}
+
+						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
+							var tool_box = self.$el.parents( '#bp-message-content' );
+							if ( tool_box.find( '#messages-media-button' ) ) {
+								tool_box.find( '#messages-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+							}
+							if ( tool_box.find( '#messages-gif-button' ) ) {
+								tool_box.find( '#messages-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
 							}
 						}
 					}
@@ -1024,6 +1064,14 @@ window.bp = window.bp || {};
 				this.el.style.width 		  = '0px';
 				document.removeEventListener( 'messages_gif_close', this.destroy.bind( this ) );
 				$( '#whats-new-messages-attachments' ).addClass( 'empty' );
+
+				var tool_box = this.$el.parents( '#bp-message-content' );
+				if ( tool_box.find( '#messages-media-button' ) ) {
+					tool_box.find( '#messages-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+				}
+				if ( tool_box.find( '#messages-document-button' ) ) {
+					tool_box.find( '#messages-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+				}
 			}
 		}
 	);
@@ -1110,6 +1158,14 @@ window.bp = window.bp || {};
 				this.$el.parent().removeClass( 'open' );
 				var model = this.gifDataItems.findWhere( {id: e.currentTarget.dataset.id} );
 				this.model.set( 'gif_data', model.attributes );
+
+				var tool_box = this.$el.parents( '#bp-message-content' );
+				if ( tool_box.find( '#messages-media-button' ) ) {
+					tool_box.find( '#messages-media-button' ).addClass( 'disable' );
+				}
+				if ( tool_box.find( '#messages-document-button' ) ) {
+					tool_box.find( '#messages-document-button' ).addClass( 'disable' );
+				}
 			},
 
 				// Add a single GifDataItem to the list by creating a view for it, and

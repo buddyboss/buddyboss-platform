@@ -290,6 +290,16 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						}
+
+						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length > 0 ) {
+							var tool_box = self.$el.parents( '#whats-new-form' );
+							if ( tool_box.find( '#activity-document-button' ) ) {
+								tool_box.find( '#activity-document-button' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#activity-gif-button' ) ) {
+								tool_box.find( '#activity-gif-button' ).addClass( 'disable' );
+							}
+						}
 					}
 				);
 
@@ -316,6 +326,16 @@ window.bp = window.bp || {};
 									self.media.splice( i, 1 );
 									self.model.set( 'media', self.media );
 								}
+							}
+						}
+
+						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+							var tool_box = self.$el.parents( '#whats-new-form' );
+							if ( tool_box.find( '#activity-document-button' ) ) {
+								tool_box.find( '#activity-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+							}
+							if ( tool_box.find( '#activity-gif-button' ) ) {
+								tool_box.find( '#activity-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
 							}
 						}
 					}
@@ -432,6 +452,16 @@ window.bp = window.bp || {};
 							self.media.push( response.data );
 							self.model.set( 'document', self.media );
 						}
+
+						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length > 0 ) {
+							var tool_box = self.$el.parents( '#whats-new-form' );
+							if ( tool_box.find( '#activity-media-button' ) ) {
+								tool_box.find( '#activity-media-button' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#activity-gif-button' ) ) {
+								tool_box.find( '#activity-gif-button' ).addClass( 'disable' );
+							}
+						}
 					}
 				);
 
@@ -453,12 +483,21 @@ window.bp = window.bp || {};
 							for ( var i in self.media ) {
 								if ( file.id === self.media[i].id ) {
 									if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
-										console.log( 'removed' );
 										bp.Nouveau.Media.removeAttachment( file.id );
 									}
 									self.media.splice( i, 1 );
 									self.model.set( 'media', self.media );
 								}
+							}
+						}
+
+						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+							var tool_box = self.$el.parents( '#whats-new-form' );
+							if ( tool_box.find( '#activity-media-button' ) ) {
+								tool_box.find( '#activity-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+							}
+							if ( tool_box.find( '#activity-gif-button' ) ) {
+								tool_box.find( '#activity-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
 							}
 						}
 					}
@@ -618,6 +657,13 @@ window.bp = window.bp || {};
 				this.el.style.width           = '0px';
 				document.removeEventListener( 'activity_gif_close', this.destroy.bind( this ) );
 				$( '#whats-new-attachments' ).addClass( 'empty' );
+				var tool_box = this.$el.parents( '#whats-new-form' );
+				if ( tool_box.find( '#activity-document-button' ) ) {
+					tool_box.find( '#activity-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+				}
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+				}
 			}
 		}
 	);
@@ -704,6 +750,13 @@ window.bp = window.bp || {};
 				this.$el.parent().removeClass( 'open' );
 				var model = this.gifDataItems.findWhere( {id: e.currentTarget.dataset.id} );
 				this.model.set( 'gif_data', model.attributes );
+				var tool_box = this.$el.parents( '#whats-new-form' );
+				if ( tool_box.find( '#activity-document-button' ) ) {
+					tool_box.find( '#activity-document-button' ).addClass( 'disable' );
+				}
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-media-button' ).addClass( 'disable' );
+				}
 			},
 
 				// Add a single GifDataItem to the list by creating a view for it, and
