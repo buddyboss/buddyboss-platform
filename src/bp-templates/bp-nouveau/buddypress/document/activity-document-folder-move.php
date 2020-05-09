@@ -20,15 +20,15 @@
 						$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 					?>
 					<div class="bb-field-wrap bb-field-wrap-search">
-						<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folder', 'buddyboss' ); ?>" />
+						<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folders', 'buddyboss' ); ?>" />
 					</div>
 					<div class="bb-field-wrap">
 						<div class="bb-dropdown-wrap">
 							<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-								<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
+								<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 								<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
 								<div class="location-folder-list-wrap">
-									<span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
+									<span class="location-folder-back"><i class="bb-icon-angle-right"></i></span>
 									<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 								</div> <!-- .location-folder-list-wrap -->
 								<div class="ac_document_search_folder_list" style="display: none;">

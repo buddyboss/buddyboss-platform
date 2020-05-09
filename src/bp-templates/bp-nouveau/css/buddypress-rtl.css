@@ -13883,8 +13883,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-title {
   padding: 8px 0;
   display: inline-block;
-  margin-right: 8px;
   vertical-align: middle;
+  font-size: 12px;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-back,
@@ -13898,11 +13898,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-back i {
   display: inline-block;
   vertical-align: middle;
-  font-size: 34px;
-  height: 25px;
-  line-height: 25px;
-  width: 20px;
+  font-size: 22px;
+  height: 26px;
+  line-height: 26px;
+  width: 15px;
   user-select: none;
+  color: #939597;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list,
