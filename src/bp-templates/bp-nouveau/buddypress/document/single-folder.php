@@ -57,7 +57,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
 										<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
-											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
+											<i class="bb-icon-folder-stacked"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
 									}
