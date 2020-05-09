@@ -5,7 +5,7 @@
 ?>
 
 <div class="create-popup-folder-wrap popup-on-fly-create-folder" style="display: none;">
-	<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Folder name', 'buddyboss' ); ?>" id="new_folder_name_input">
+	<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>" id="new_folder_name_input">
 	<?php
 	if ( ! bp_is_group() ) :
 		?>
