@@ -11,21 +11,24 @@
  *
  * @version Buddyboss 1.0.0
  */
-$template_parts = apply_filters( 'bp_messages_js_template_parts', [
-	'parts/bp-activity-attached-gif',
-	'parts/bp-activity-link-preview',
-	'parts/bp-activity-media',
-	'parts/bp-activity-document',
-	'parts/bp-activity-post-form-avatar',
-	'parts/bp-activity-post-form-buttons',
-	'parts/bp-activity-post-form-feedback',
-	'parts/bp-activity-post-form-options',
-	'parts/bp-activity-target-item',
-	'parts/bp-gif-media-search-dropdown',
-	'parts/bp-gif-result-item',
-	'parts/bp-whats-new-toolbar',
-	'parts/bp-activity-post-form-privacy',
-] );
+$template_parts = apply_filters(
+	'bp_messages_js_template_parts',
+	array(
+		'parts/bp-activity-attached-gif',
+		'parts/bp-activity-link-preview',
+		'parts/bp-activity-media',
+		'parts/bp-activity-document',
+		'parts/bp-activity-post-form-avatar',
+		'parts/bp-activity-post-form-buttons',
+		'parts/bp-activity-post-form-feedback',
+		'parts/bp-activity-post-form-options',
+		'parts/bp-activity-target-item',
+		'parts/bp-gif-media-search-dropdown',
+		'parts/bp-gif-result-item',
+		'parts/bp-whats-new-toolbar',
+		'parts/bp-activity-post-form-privacy',
+	)
+);
 
 foreach ( $template_parts as $template_part ) {
 	bp_get_template_part( 'common/js-templates/activity/' . $template_part );

@@ -45,20 +45,38 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		}
 	}
 
-	$folder_id = 0;
-	if ( bp_is_group_single() && bp_is_group_folders() ) {
-		$folder_id = (int) bp_action_variable( 1 );
-	} elseif ( bp_is_user_document() && bp_is_user_folders() ) {
-		$folder_id = (int) bp_action_variable( 0 );
+	$folder_id        = 0;
+	$type             = '';
+	$user_id          = bp_loggedin_user_id();
+	$group_id         = 0;
+	$move_to_id_popup = $user_id;
+	if ( bp_is_group_document() || bp_is_group_folders() ) {
+		$folder_id        = (int) bp_action_variable( 1 );
+		$type             = 'group';
+		$group_id         = bp_get_current_group_id();
+		$move_to_id_popup = $group_id;
+	} elseif ( bp_is_user_document() || bp_is_user_folders() ) {
+		$folder_id        = (int) bp_action_variable( 0 );
+		$type             = 'profile';
+		$move_to_id_popup = $user_id;
+	} elseif ( bp_is_document_directory() ) {
+		$folder_id = 0;
+		$type      = 'profile';
 	}
 	$document_params = array(
-		'max_upload_size_document' => bp_document_file_upload_max_size( false, 'MB' ),
-		'profile_document'         => bp_is_profile_document_support_enabled(),
-		'group_document'           => bp_is_group_document_support_enabled(),
-		'messages_document'        => bp_is_messages_document_support_enabled(),
-		'document_type'            => implode( ',', $extensions ),
-		'empty_document_type'      => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
-		'current_folder'           => $folder_id,
+		'max_upload_size_document'  => bp_document_file_upload_max_size( false, 'MB' ),
+		'profile_document'          => bp_is_profile_document_support_enabled(),
+		'group_document'            => bp_is_group_document_support_enabled(),
+		'messages_document'         => bp_is_messages_document_support_enabled(),
+		'document_type'             => implode( ',', $extensions ),
+		'empty_document_type'       => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
+		'current_folder'            => $folder_id,
+		'current_type'              => $type,
+		'move_to_id_popup'          => $move_to_id_popup,
+		'current_user_id'           => $user_id,
+		'current_group_id'          => $group_id,
+		'target_text'               => __( 'Documents', 'buddyboss' ),
+		'create_folder_error_title' => __( 'Please enter title of folder', 'buddyboss' ),
 	);
 
 	$old_media = $params['media'];
