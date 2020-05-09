@@ -25,7 +25,6 @@
 					<div class="bb-field-wrap">
 						<div class="bb-dropdown-wrap">
 							<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-								<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 								<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
 								<div class="location-folder-list-wrap">
 									<span class="location-folder-back"><i class="bb-icon-angle-right"></i></span>
@@ -40,6 +39,7 @@
 						</div>
 					</div>
 					<footer class="bb-model-footer">
+						<a href="#" class="bp-document-open-create-popup-folder"> <i class="bb-icon-plus-square"></i> <?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 						<a class="ac-folder-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						<a class="button bp-folder-move" id="" href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 					</footer>

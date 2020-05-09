@@ -1140,6 +1140,10 @@ ul.bb-albums-list {
 	.button {
 		min-width: 130px;
 	}
+
+	&.document-uploader-footer {
+		justify-content: space-around;
+	}
 }
 
 .bbm-uploader-model-wrap {
@@ -2633,7 +2637,27 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				color: #a5a7ab;
 			}
 
+			&.bp-document-open-create-popup-folder {
+				float: left;
+				margin-top: 7px;
+			}
+
 		}
+	}
+}
+
+.db-modal-buttons {
+	text-align: right;
+	margin-top: 20px;
+
+	.close-create-popup-folder {
+		color: #a5a7ab;
+		margin-right: 20px;
+		font-size: 14px;
+	}
+
+	.button {
+		min-width: 130px;
 	}
 }
 
@@ -2754,19 +2778,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 					}
 				}
 
-				&:hover > .sub-menu-anchor {
-					visibility: visible;
-					opacity: 1;
-				}
-
 				.sub-menu-anchor {
 					position: absolute;
 					right: 5px;
 					top: 50%;
 					font-size: 34px;
 					line-height: 1;
-					visibility: hidden;
-					opacity: 0;
 					cursor: pointer;
 					transform: translateY(-50%);
 					display: inline-block;

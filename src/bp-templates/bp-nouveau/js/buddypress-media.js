@@ -212,7 +212,6 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
-			bpNouveau.on( 'click', '#bp-media-document-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
 
 			$( '#bp-media-uploader' ).on( 'click', '.bp-media-upload-tab', this.changeUploadModalTab.bind( this ) );
 
@@ -775,7 +774,7 @@ window.bp = window.bp || {};
 
 			if (currentPopup.find( '.bb-field-steps' ).length) {
 				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
 			}
 
 			this.clearFolderLocationUI( event );
@@ -796,7 +795,7 @@ window.bp = window.bp || {};
 
 			if (currentPopup.find( '.bb-field-steps' ).length) {
 				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
 			}
 
 			this.clearFolderLocationUI( event );
@@ -817,7 +816,7 @@ window.bp = window.bp || {};
 
 			if (currentPopup.find( '.bb-field-steps' ).length) {
 				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
 			}
 
 			this.clearFolderLocationUI( event );
@@ -3127,7 +3126,7 @@ window.bp = window.bp || {};
 
 							if (currentPopup.find( '.bb-field-steps' ).length) {
 								currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
 							}
 
 						}
@@ -3195,7 +3194,7 @@ window.bp = window.bp || {};
 
 							if (currentPopup.find( '.bb-field-steps' ).length) {
 								currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
 							}
 
 						}
@@ -3525,7 +3524,7 @@ window.bp = window.bp || {};
 
 							if (currentPopup.find( '.bb-field-steps' ).length) {
 								currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit' ).hide();
+								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
 							}
 
 							this.clearFolderLocationUI( event );
@@ -3832,12 +3831,10 @@ window.bp = window.bp || {};
 
 			if ($( target ).hasClass( 'bb-field-uploader-next' )) {
 				currentPopup.find( '.bb-field-steps-1' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
-				currentPopup.find( '#bp-media-document-submit, #bp-media-document-prev' ).show();
-				currentPopup.find( '#bp-media-document-add-more' ).hide();
+				currentPopup.find( '#bp-media-document-submit, #bp-media-document-prev, .bp-document-open-create-popup-folder' ).show();
 			} else {
 				$( target ).hide();
-				currentPopup.find( '#bp-media-document-submit, #bp-media-document-prev' ).hide();
-				currentPopup.find( '#bp-media-document-add-more' ).show();
+				currentPopup.find( '#bp-media-document-submit, #bp-media-document-prev, .bp-document-open-create-popup-folder' ).hide();
 				currentPopup.find( '.bb-field-steps-2' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
 			}
 
