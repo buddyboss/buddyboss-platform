@@ -45,7 +45,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 									if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-											<i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
 										<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'New Folder', 'buddyboss' ); ?>
@@ -54,7 +54,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 									} elseif ( ! bp_is_group() ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-											<i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
+											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
 										<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
