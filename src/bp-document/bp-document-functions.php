@@ -717,15 +717,15 @@ function bp_folder_get( $args = '' ) {
 			'max'          => false,                    // Maximum number of results to return.
 			'fields'       => 'all',
 			'page'         => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,                    // results per page
-			'sort'         => 'DESC',                   // sort ASC or DESC
+			'per_page'     => false,                    // results per page.
+			'sort'         => 'DESC',                   // sort ASC or DESC.
 
-			'search_terms' => false,           // Pass search terms as a string
+			'search_terms' => false,           // Pass search terms as a string.
 			'exclude'      => false,           // Comma-separated list of activity IDs to exclude.
 			// want to limit the query.
 			'user_id'      => false,
 			'group_id'     => false,
-			'privacy'      => false,                    // privacy of folder
+			'privacy'      => false,                    // privacy of folder.
 			'count_total'  => false,
 		),
 		'folder_get'
@@ -1709,7 +1709,7 @@ function bp_document_update_folder_modified_date( $folder_id = 0 ) {
 		return false;
 	}
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET date_modified = %s WHERE id = %d", bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
 	if ( false === $q ) {
 		return false;

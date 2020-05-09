@@ -531,6 +531,27 @@ class BP_Document_Folder {
 				)
 			);
 
+			$group_name = '';
+			$visibility = '';
+			if ( $folder->group_id > 0 ) {
+				$group      = groups_get_group( $folder->group_id );
+				$group_name = bp_get_group_name( $group );
+				$status     = bp_get_group_status( $group );
+				if ( 'hidden' === $status ) {
+					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				} elseif ( 'private' === $status ) {
+					$visibility = esc_html__( 'All Members', 'buddyboss' );
+				} else {
+					$visibility = ucfirst( $status );
+				}
+			} else {
+				$document_privacy = bp_document_get_visibility_levels();
+				$visibility       = $document_privacy[ $folder->privacy ];
+			}
+
+			$folder->group_name = $group_name;
+			$folder->visibility = $visibility;
+
 			$folders[] = $folder;
 		}
 
