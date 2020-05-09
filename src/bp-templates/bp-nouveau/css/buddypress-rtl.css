@@ -13044,6 +13044,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   left: 0;
   text-align: center;
   border-bottom: 1px solid #ecedee;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .bb-document-theater .document-text-file-data-hidden {
