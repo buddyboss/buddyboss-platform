@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Add Folder
+ * BuddyBoss - Create Folder
  *
  * @since BuddyBoss 1.0.0
  * @package BuddyBoss\Core
@@ -12,7 +12,7 @@ if ( ! empty( $active_extensions ) && ( bp_is_my_profile() || ( bp_is_group() &&
 
 	<div class="bb-media-actions-wrap album-actions-wrap">
 		<div class="bb-media-actions">
-			<a href="#" id="bb-create-folder" class="bb-create-folder button small outline"><i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-folder" class="bb-create-folder button small outline"><i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 

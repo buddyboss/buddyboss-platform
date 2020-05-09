@@ -13195,6 +13195,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #939597;
 }
 
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom .media-folder_author a {
+  color: #939597;
+}
+
 #media-folder-document-data-table .media-folder_items .media-folder_actions {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -13459,8 +13463,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #4d5c6d;
   opacity: 0.4;
   position: absolute;
-  left: 12px;
-  top: 10px;
+  left: 10px;
+  top: 8px;
   line-height: 1;
   font-size: 16px;
 }

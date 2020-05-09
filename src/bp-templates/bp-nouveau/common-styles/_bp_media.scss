@@ -1857,6 +1857,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			font-size: 13px;
 			color: #939597;
+
+			a {
+				color: #939597;
+			}
 		}
 	}
 
@@ -2166,8 +2170,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			color: #4d5c6d;
 			opacity: 0.4;
 			position: absolute;
-			left: 12px;
-			top: 10px;
+			left: 10px;
+			top: 8px;
 			line-height: 1;
 			font-size: 16px;
 		}
