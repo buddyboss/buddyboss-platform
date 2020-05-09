@@ -13948,7 +13948,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-bottom: 1px solid #e7e9ec;
   display: block;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:before,
@@ -13957,12 +13957,18 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   font-family: bb-icons;
   /* stylelint-disable-line */
   color: #939597;
-  margin-left: 10px;
+  margin-left: 12px;
+  font-size: 16px;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:hover,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover {
+  background-color: #fbfbfc;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span.selected,
 .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected {
-  background-color: #fbfbfc;
+  background-color: #f7fafe;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span.disabled,

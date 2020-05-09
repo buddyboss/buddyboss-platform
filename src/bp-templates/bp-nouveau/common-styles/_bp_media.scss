@@ -2724,17 +2724,22 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 					border-bottom: 1px solid #e7e9ec;
 					display: block;
 					cursor: pointer;
-					font-size: 15px;
+					font-size: 14px;
 
 					&:before {
 						content: "\e8ec";
 						font-family: bb-icons;/* stylelint-disable-line */
 						color: #939597;
-						margin-right: 10px;
+						margin-right: 12px;
+						font-size: 16px;
+					}
+
+					&:hover {
+						background-color: #fbfbfc;
 					}
 
 					&.selected {
-						background-color: #fbfbfc;
+						background-color: #f7fafe;
 					}
 
 					&.disabled {
