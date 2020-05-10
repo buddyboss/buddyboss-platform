@@ -619,6 +619,7 @@ function bp_nouveau_ajax_document_folder_save() {
 	$response = array(
 		'document'  => $document,
 		'tree_view' => $ul,
+		'folder_id' => $folder_id,
 	);
 
 	wp_send_json_success( $response );

@@ -344,6 +344,7 @@ window.bp = window.bp || {};
 			var title         = $( event.currentTarget ).closest( '.modal-container' ).find( '.popup-on-fly-create-folder-title' ).val();
 			var privacy       = '';
 			var targetPopup   =  $( event.currentTarget ).closest( '.modal-container' );
+			var newParent	  = 0;
 			if ( 'group' === this.moveToTypePopup ) {
 				privacy = 'grouponly';
 				groupId = this.moveToIdPopup;
@@ -369,6 +370,7 @@ window.bp = window.bp || {};
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: data,
+					async: false,
 					success: function (response) {
 						if (response.success) {
 							if ( $( '.document-data-table-head' ).length ) {
@@ -386,17 +388,25 @@ window.bp = window.bp || {};
 								console.log( 'come' );
 								console.log( targetPopup );
 								console.log( currentFolder );
-								bp.Nouveau.Media.folderLocationUI( targetPopup, currentFolder );
+								bp.Nouveau.Media.folderLocationUI( targetPopup, response.data.folder_id );
 							}
+							newParent = response.data.folder_id;
+							console.log( newParent );
+
+							console.log( this.currentTargetParent );
+							targetPopup.find( 'ul.location-folder-list span#' + newParent ).trigger( 'click' );
 							targetPopup.find( '.bb-model-footer' ).show();
 							targetPopup.find( '.bb-field-wrap-search' ).show();
 							targetPopup.find( '.bp-document-open-create-popup-folder' ).show();
 							targetPopup.find( '.location-folder-list-wrap-main' ).show();
 							targetPopup.find( '.create-popup-folder-wrap' ).hide();
+							targetPopup.find( '.bb-folder-selected-id' ).val();
+							targetPopup.find( '.bb-folder-selected-id' ).val( newParent );
 						}
 					}
 				}
 			);
+			this.currentTargetParent = newParent;
 		},
 
 		closeCreateFolderInPopup: function( event ) {
@@ -412,9 +422,9 @@ window.bp = window.bp || {};
 		createFolderInPopup: function( event ) {
 			event.preventDefault();
 
-			// console.log( this.currentTargetParent ); // Parent.
-			// console.log( this.moveToIdPopup ); // userID/GroupID.
-			// console.log( this.moveToTypePopup ); // Profile/Group.
+			console.log( this.currentTargetParent ); // Parent.
+			console.log( this.moveToIdPopup ); // userID/GroupID.
+			console.log( this.moveToTypePopup ); // Profile/Group.
 
 			$( '.modal-container .bb-model-footer' ).hide();
 			$( '.bb-field-wrap-search' ).hide();

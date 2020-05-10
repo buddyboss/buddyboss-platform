@@ -1476,7 +1476,7 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . $item['id'] . '"><span data-id="' . $item['id'] . '">' . stripslashes( $item['title'] ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
+		$output .= '<li data-id="' . $item['id'] . '"><span id="' . $item['id'] . '" data-id="' . $item['id'] . '">' . stripslashes( $item['title'] ) . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</ul>';
 
