@@ -139,15 +139,15 @@ function bp_core_admin_register_page_fields() {
 	foreach ( $directory_pages as $name => $label ) {
 
 		if ( 'members' === $name ) {
-			$description = 'This directory shows a listing of all members.';
+			$description = esc_html__( 'This directory shows a listing of all members.', 'buddyboss' );
 		} elseif ( 'groups' === $name ) {
-			$description = 'This directory shows a listing of all groups.';
+			$description = esc_html__( 'This directory shows a listing of all groups.', 'buddyboss' );
 		} elseif ( 'new_forums_page' === $name ) {
-			$description = 'This directory shows a listing of all forums.';
+			$description = esc_html__( 'This directory shows a listing of all forums.', 'buddyboss' );
 		} elseif ( 'activity' === $name ) {
-			$description = 'This directory shows all sitewide activity.';
+			$description = esc_html__( 'This directory shows all sitewide activity.', 'buddyboss' );
 		} elseif ( 'media' === $name ) {
-			$description = 'This directory shows all photos uploaded by members.';
+			$description = esc_html__( 'This directory shows all photos uploaded by members.', 'buddyboss' );
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact( 'existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, array() );
@@ -197,13 +197,13 @@ function bp_core_admin_register_registration_page_fields() {
 	foreach ( $static_pages as $name => $label ) {
 		$title = $label;
 		if ( 'register' === $name ) {
-			$description = 'New users fill out this form to register their accounts.';
+			$description = esc_html__( 'New users fill out this form to register their accounts.', 'buddyboss' );
 		} elseif ( 'terms' === $name ) {
-			$description = 'If a page is added, its contents will display in a popup on the register form.';
+			$description = esc_html__( 'If a page is added, its contents will display in a popup on the register form.', 'buddyboss' );
 		} elseif ( 'privacy' === $name ) {
-			$description = 'If a page is added, its contents will display in a popup on the register form.';
+			$description = esc_html__( 'If a page is added, its contents will display in a popup on the register form.', 'buddyboss' );
 		} elseif ( 'activate' === $name ) {
-			$description = 'After registering, users are sent to this page to activate their accounts.';
+			$description = esc_html__( 'After registering, users are sent to this page to activate their accounts.', 'buddyboss' );
 		}
 
 		if ( 'button' === $name ) {
@@ -239,7 +239,10 @@ function bp_core_admin_registration_pages_description() {
 		$invite_text = '';
 		if ( bp_is_active( 'invites' ) ) {
 			$invite_text = sprintf(
-				'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+				__(
+					'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+					'buddyboss'
+				),
 				add_query_arg(
 					array(
 						'page' => 'bp-settings',
