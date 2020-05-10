@@ -10,7 +10,11 @@
 ?>
 
 <div class="create-popup-folder-wrap popup-on-fly-create-folder" style="display: none;">
-	<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>" id="new_folder_name_input">
+	
+	<div class="bb-field-wrap">
+		<label for="new_folder_name_input" class="bb-label">Folder Title</label>
+		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>" id="new_folder_name_input">
+	</div>
 	<?php
 	if ( ! bp_is_group() ) :
 		bp_get_template_part( 'document/document-privacy' );

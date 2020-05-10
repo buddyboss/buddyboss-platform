@@ -13869,6 +13869,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   margin-top: 7px;
 }
 
+.popup-on-fly-create-folder .bb-field-wrap .bb-dropdown-wrap select {
+  width: 100%;
+}
+
 .db-modal-buttons {
   text-align: left;
   margin-top: 20px;
