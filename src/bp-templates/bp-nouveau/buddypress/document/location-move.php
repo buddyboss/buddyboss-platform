@@ -21,11 +21,10 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 	<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
 		<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
 		<div class="location-folder-list-wrap">
-			<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
-						<span data-id="0">Home / </span>
+						<span data-id="0"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
 					</div>
 				</div>
 			</div>

@@ -2787,9 +2787,9 @@ window.bp = window.bp || {};
 
 							$this.parents('li').each(function(n, li) {
 								var $a = $(li).children('span').clone();
-								$bc.prepend(' / ', $a);
+								$bc.prepend('', $a);
 							});
-							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb' ).html( $bc.prepend('<span data-id="0">Home</span>') );
+							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb' ).html( $bc.prepend('<span data-id="0">'+ BP_Nouveau.media.target_text +'</span>') );
 
 							//console.log( this.currentTargetParent );
 							if ($( this ).hasClass( 'selected' ) && ! $( this ).hasClass( 'disabled' )) {
@@ -2816,7 +2816,7 @@ window.bp = window.bp || {};
 
 							$( this ).closest( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( this ).siblings( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
 							$( this ).siblings( 'ul' ).show().siblings( 'span, i' ).hide().parent().siblings().hide();
-							$( this ).siblings( 'ul' ).children( 'li' ).show();
+							$( this ).siblings( 'ul' ).children( 'li' ).show().children( 'span,i' ).show();
 							$( this ).closest( '.is_active' ).removeClass( 'is_active' );
 							$( this ).parent().addClass( 'is_active' );
 
@@ -2826,6 +2826,51 @@ window.bp = window.bp || {};
 							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span' ).each(function() {
 								$(this).show();
 							});
+						}
+					);
+
+					$( document ).on(
+						'click',
+						targetPopup + ' .breadcrumbs-append-ul-li .item span',
+						function ( event ) {
+							var currentLiID = $( event.currentTarget ).attr('data-id');
+							$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
+							$( targetPopup ).find( '.bb-folder-selected-id' ).val( $( targetPopup ).find( '.location-folder-list li.is_active' ).attr( 'data-id' ) );
+							$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span' ).text() );
+
+							$( targetPopup ).find( '.location-folder-list li' ).hide();
+							$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' );
+							$( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).addClass( 'is_active' );
+							$( targetPopup ).find( '.location-folder-list li.is_active' ).parents( '.has-ul' ).show().children( 'ul' ).show().siblings( 'span,i' ).hide();
+
+							if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length
+								&& !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') ) {
+									setTimeout( function(){
+										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
+									},100);
+							} else {
+
+								$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' ).closest( '.has-ul' ).addClass( 'is_active' );
+								
+								if( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul.no-folder-list' ).length ){
+									setTimeout( function(){
+										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show();
+									},10);
+								} else {
+									$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span,i' ).hide().parent().children( 'ul' ).show().children( 'li' ).show();
+								}
+								
+							}
+
+							if ( currentLiID === '0' ) {
+								$( targetPopup ).find( '.location-folder-list' ).children( 'li' ).show().children( 'span,i' ).show();
+								$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( BP_Nouveau.media.target_text );
+								$( targetPopup ).find( '.location-folder-back' ).hide();
+								$( targetPopup ).find( '.target_folder' ).text( BP_Nouveau.media.target_text );
+							}
+
+							$( event.currentTarget ).nextAll().remove();
+
 						}
 					);
 
@@ -2950,7 +2995,10 @@ window.bp = window.bp || {};
 
 					if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length
 						&& !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') )   {
-						$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().parent().siblings( 'span, i' ).hide();
+							setTimeout( function(){
+								$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
+							},100);
+							console.log('ddd');
 					} else {
 
 						$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' ).closest( '.has-ul' ).addClass( 'is_active' );

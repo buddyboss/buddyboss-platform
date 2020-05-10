@@ -13920,12 +13920,38 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-color: #f00;
 }
 
-.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-title,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-title {
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item {
   padding: 8px 0;
   display: inline-block;
   vertical-align: middle;
   font-size: 12px;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:after,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:after {
+  content: '\e827';
+  font-family: "bb-icons";
+  font-size: 20px;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span {
+  display: inline-block !important;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:hover,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:last-child:after,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:last-child:after {
+  display: none;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-back,

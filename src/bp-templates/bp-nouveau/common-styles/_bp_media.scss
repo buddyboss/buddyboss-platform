@@ -2701,11 +2701,33 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			border-color: #f00;
 		}
 
-		.location-folder-title {
+		.breadcrumbs-append-ul-li .item {
 			padding: 8px 0;
 			display: inline-block;
 			vertical-align: middle;
 			font-size: 12px;
+
+			span:after {
+				content: '\e827';
+				font-family: "bb-icons";
+				font-size: 20px;
+				vertical-align: middle;
+				display: inline-block;
+				line-height: 1;
+			}
+
+			span {
+				display: inline-block !important;
+				
+				&:hover {
+					text-decoration: underline;
+					cursor: pointer;
+				}
+			}
+			
+			span:last-child:after {
+				display: none;
+			}
 		}
 
 		.location-folder-back {
