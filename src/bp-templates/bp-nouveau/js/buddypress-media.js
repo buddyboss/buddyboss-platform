@@ -385,15 +385,15 @@ window.bp = window.bp || {};
 							targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 							targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 							if (bp.Nouveau.Media.folderLocationUI) {
-								console.log( 'come' );
-								console.log( targetPopup );
-								console.log( currentFolder );
+								//console.log( 'come' );
+								//console.log( targetPopup );
+								//console.log( currentFolder );
 								bp.Nouveau.Media.folderLocationUI( targetPopup, response.data.folder_id );
 							}
 							newParent = response.data.folder_id;
-							console.log( newParent );
+							//console.log( newParent );
 
-							console.log( this.currentTargetParent );
+							//console.log( this.currentTargetParent );
 							targetPopup.find( 'ul.location-folder-list span#' + newParent ).trigger( 'click' );
 							targetPopup.find( '.bb-model-footer' ).show();
 							targetPopup.find( '.bb-field-wrap-search' ).show();
@@ -422,9 +422,9 @@ window.bp = window.bp || {};
 		createFolderInPopup: function( event ) {
 			event.preventDefault();
 
-			console.log( this.currentTargetParent ); // Parent.
-			console.log( this.moveToIdPopup ); // userID/GroupID.
-			console.log( this.moveToTypePopup ); // Profile/Group.
+			//console.log( this.currentTargetParent ); // Parent.
+			//console.log( this.moveToIdPopup ); // userID/GroupID.
+			//console.log( this.moveToTypePopup ); // Profile/Group.
 
 			$( '.modal-container .bb-model-footer' ).hide();
 			$( '.bb-field-wrap-search' ).hide();
@@ -2472,6 +2472,7 @@ window.bp = window.bp || {};
 							$( currentTarget ).find( '.location-folder-list-wrap' ).append( response.data.html );
 							if (bp.Nouveau.Media.folderLocationUI) {
 								bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
+								$( currentTarget ).find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
 							}
 						}
 					}
