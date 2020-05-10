@@ -1421,12 +1421,12 @@ function bp_get_folder_id() {
 	global $document_template, $document_folder_template;
 
 	$id = 0;
-	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->id ) ) {
-		$id = $document_template->document->id;
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->album_id ) ) {
+		$id = $document_template->document->album_id;
 	} elseif ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->album_id ) ) {
 		$id = $document_template->document->album_id;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->album_id ) ) {
-		$id = $document_folder_template->folder->album_id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
+		$id = $document_folder_template->folder->id;
 	}
 
 	/**
