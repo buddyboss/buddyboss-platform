@@ -335,15 +335,25 @@ window.bp = window.bp || {};
 		submitCreateFolderInPopup: function( event ) {
 			event.preventDefault();
 
-			// console.log( this.currentTargetParent ); // Parent.
+			 //console.log( this.currentTargetParent ); // Parent.
 			// console.log( this.moveToIdPopup ); // userID/GroupID.
 			// console.log( this.moveToTypePopup ); // Profile/Group.
+
+			var targetPopup =  $( event.currentTarget ).closest( '.modal-container' );
+			var hiddenValue = targetPopup.find( '.bb-folder-selected-id' ).val();
+			// if ( 0 === this.currentTargetParent && hiddenValue > 0 ) {
+			// 	this.currentTargetParent = hiddenValue;
+			// }
+
+			//console.log( this.currentTargetParent ); // Parent.
+			//console.log( hiddenValue ); // Parent.
+
+			this.currentTargetParent = hiddenValue;
 
 			var currentFolder = this.currentTargetParent;
 			var groupId       = 0;
 			var title         = $( event.currentTarget ).closest( '.modal-container' ).find( '.popup-on-fly-create-folder-title' ).val();
 			var privacy       = '';
-			var targetPopup   =  $( event.currentTarget ).closest( '.modal-container' );
 			var newParent	  = 0;
 			if ( 'group' === this.moveToTypePopup ) {
 				privacy = 'grouponly';
@@ -407,6 +417,7 @@ window.bp = window.bp || {};
 				}
 			);
 			this.currentTargetParent = newParent;
+			//console.log( this.currentTargetParent );
 		},
 
 		closeCreateFolderInPopup: function( event ) {
@@ -425,6 +436,8 @@ window.bp = window.bp || {};
 			//console.log( this.currentTargetParent ); // Parent.
 			//console.log( this.moveToIdPopup ); // userID/GroupID.
 			//console.log( this.moveToTypePopup ); // Profile/Group.
+			//return false;
+
 
 			$( '.modal-container .bb-model-footer' ).hide();
 			$( '.bb-field-wrap-search' ).hide();
@@ -2764,6 +2777,9 @@ window.bp = window.bp || {};
 						'click',
 						targetPopup + ' .location-folder-list span',
 						function () {
+
+							this.currentTargetParent =  $(this).attr( 'id' );
+
 							var $this = $(this),
 								$bc = $('<div class="item"></div>');
 
@@ -2773,6 +2789,7 @@ window.bp = window.bp || {};
 							});
 							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb' ).html( $bc.prepend('<span data-id="0">Home</span>') );
 
+							//console.log( this.currentTargetParent );
 							if ($( this ).hasClass( 'selected' ) && ! $( this ).hasClass( 'disabled' )) {
 								$( this ).removeClass( 'selected' );
 								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '...' );
