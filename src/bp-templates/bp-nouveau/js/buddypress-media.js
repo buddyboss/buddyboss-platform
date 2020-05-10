@@ -3680,7 +3680,7 @@ window.bp = window.bp || {};
 
 		injectDocuments: function (event) {
 
-			var store = bp.Nouveau.getStorage( 'bp-document' ),
+			var store = bp.Nouveau.getStorage( 'bp-document' ), sort = '', order_by = '',
 				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
 
 			if (currentTarget.hasClass( 'load-more' )) {
@@ -3695,30 +3695,29 @@ window.bp = window.bp || {};
 					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
 				}
 
-				var queryData;
-				if ( this.sort_by && this.order_by ) {
-					queryData = {
-						object			: 'document',
-						scope			: scope,
-						filter			: filter,
-						search_terms	: search_terms,
-						page			: next_page,
-						method			: 'append',
-						target			: '#buddypress [data-bp-list] div#media-folder-document-data-table',
-						order_by		: this.order_by,
-						sort			: this.sort_by
-					};
+				if (  this.order_by && this.sort_by ) {
+					sort = this.sort_by;
+					order_by = this.order_by;
+				} else if ( undefined !== store.extras ) {
+					sort 		= store.extras.sort;
+					order_by 	= store.extras.orderby;
 				} else {
-					queryData = {
-						object			: 'document',
-						scope			: scope,
-						filter			: filter,
-						search_terms	: search_terms,
-						page			: next_page,
-						method			: 'append',
-						target			: '#buddypress [data-bp-list] div#media-folder-document-data-table'
-					};
+					sort 		= 'ASC';
+					order_by 	= 'title';
 				}
+
+				var queryData;
+				queryData = {
+					object			: 'document',
+					scope			: scope,
+					filter			: filter,
+					search_terms	: search_terms,
+					page			: next_page,
+					method			: 'append',
+					target			: '#buddypress [data-bp-list] div#media-folder-document-data-table',
+					order_by		: order_by,
+					sort			: sort
+				};
 
 				bp.Nouveau.objectRequest(
 					queryData
