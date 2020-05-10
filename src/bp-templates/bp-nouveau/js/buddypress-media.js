@@ -2735,6 +2735,7 @@ window.bp = window.bp || {};
 						$( '.location-folder-list-wrap' ).append( response.data.html );
 						if (bp.Nouveau.Media.folderLocationUI) {
 							bp.Nouveau.Media.folderLocationUI( '#bp-media-edit-child-folder', BP_Nouveau.media.current_folder );
+							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + BP_Nouveau.media.current_folder ).trigger( 'click' );
 						}
 					}
 				}
