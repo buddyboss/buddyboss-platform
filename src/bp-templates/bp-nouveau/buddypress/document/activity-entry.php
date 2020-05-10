@@ -83,14 +83,16 @@ if ( $group_id > 0 ) {
 	}
 	if ( 'pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension ) {
 		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
-		?>
-		<div class="document-preview-wrap">
-			<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
-		</div><!-- .document-preview-wrap -->
-		<?php
+		if ( $attachment_url ) {
+			?>
+			<div class="document-preview-wrap">
+				<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
+			</div><!-- .document-preview-wrap -->
+			<?php
+		}
 	}
 	$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
-	if ( $sizes > 0 && filesize( $sizes ) / 1e+6 < 2 ) {
+	if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
 		if ( 'css' === $extension || 'txt' === $extension || 'html' === $extension || 'htm' === $extension || 'js' === $extension || 'csv' === $extension ) {
 			$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
 			$file_data = $data['text'];
