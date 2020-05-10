@@ -2119,6 +2119,7 @@ window.bp = window.bp || {};
 					}
 
 					this.folderLocationUI( '#bp-media-uploader', this.currentTargetParent );
+					$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + this.currentTargetParent ).trigger( 'click' );
 				}
 
 				$( '#bp-media-uploader' ).show();
