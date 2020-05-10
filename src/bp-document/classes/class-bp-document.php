@@ -893,7 +893,7 @@ class BP_Document {
 		// Sorting.
 		$sort = $r['sort'];
 		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
-			$sort = 'DESC';
+			$sort = 'ASC';
 		}
 
 		switch ( $r['order_by'] ) {
@@ -909,10 +909,11 @@ class BP_Document {
 			case 'menu_order':
 			case 'visibility':
 			case 'date_modified':
+			case 'date_created':
 				break;
 
 			default:
-				$r['order_by'] = 'date_created';
+				$r['order_by'] = 'title';
 				break;
 		}
 		$order_by_document = 'm.' . $r['order_by'];

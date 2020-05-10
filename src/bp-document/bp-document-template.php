@@ -206,8 +206,8 @@ function bp_has_document( $args = '' ) {
 		array(
 			'include'        => false,           // Pass an document_id or string of IDs comma-separated.
 			'exclude'        => false,           // Pass an activity_id or string of IDs comma-separated.
-			'sort'           => 'DESC',          // Sort DESC or ASC.
-			'order_by'       => false,           // Order by. Default: date_created.
+			'sort'           => 'ASC',          // Sort DESC or ASC.
+			'order_by'       => false,           // Order by. Default: title.
 			'page'           => 1,               // Which page to load.
 			'per_page'       => 20,              // Number of items per page.
 			'page_arg'       => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
@@ -243,6 +243,11 @@ function bp_has_document( $args = '' ) {
 
 	if ( ! empty( $_REQUEST['sort'] ) ) {
 		$r['sort'] = $_REQUEST['sort'];
+	}
+
+	if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['orderby'] ) && ! empty( $_POST['extras']['sort'] ) ) {
+		$r['order_by'] = $_POST['extras']['orderby'];
+		$r['sort'] = $_POST['extras']['sort'];
 	}
 
 	if ( ! empty( $_REQUEST['order_by'] ) ) {

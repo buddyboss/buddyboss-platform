@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-10 04:53:16+00:00\n"
+"POT-Creation-Date: 2020-05-10 05:50:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -853,8 +853,8 @@ msgid "A member replies to an update or comment you've posted"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:471
-#: bp-document/bp-document-template.php:364
-#: bp-document/bp-document-template.php:1264 bp-media/bp-media-template.php:351
+#: bp-document/bp-document-template.php:369
+#: bp-document/bp-document-template.php:1269 bp-media/bp-media-template.php:351
 #: bp-media/bp-media-template.php:1244
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
@@ -1042,7 +1042,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-component.php:178
 #: bp-document/classes/class-bp-document-component.php:160
 #: bp-document/classes/class-bp-document-folder.php:543
-#: bp-document/classes/class-bp-document.php:1396
+#: bp-document/classes/class-bp-document.php:1397
 #: bp-groups/bp-groups-admin.php:1192 bp-groups/bp-groups-admin.php:1213
 #: bp-groups/bp-groups-admin.php:1225
 #: bp-media/classes/class-bp-media-component.php:164
@@ -2583,7 +2583,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:325
 #: bp-document/classes/class-bp-document-theme-compat.php:166
 #: bp-groups/classes/class-bp-groups-component.php:798
-#: bp-templates/bp-nouveau/buddypress/document/location-move.php:26
+#: bp-templates/bp-nouveau/buddypress/document/location-move.php:24
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:22
 #: bp-templates/bp-nouveau/includes/document/functions.php:78
@@ -7180,7 +7180,7 @@ msgid "..."
 msgstr ""
 
 #: bp-document/classes/class-bp-document-component.php:168
-#: bp-document/classes/class-bp-document.php:1281
+#: bp-document/classes/class-bp-document.php:1282
 msgid "Group members"
 msgstr ""
 
@@ -7196,7 +7196,7 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-folder.php:541
 #: bp-document/classes/class-bp-document-privacy.php:58
-#: bp-document/classes/class-bp-document.php:1394
+#: bp-document/classes/class-bp-document.php:1395
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-privacy.php:59
 msgid "Group Members"
@@ -16214,7 +16214,7 @@ msgstr ""
 msgid "Rename Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/location-move.php:23
+#: bp-templates/bp-nouveau/buddypress/document/location-move.php:21
 msgid "Select Folder"
 msgstr ""
 

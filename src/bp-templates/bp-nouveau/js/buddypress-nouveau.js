@@ -162,7 +162,7 @@ window.bp = window.bp || {};
 			if ( undefined === value && undefined !== store[ property ] ) {
 				delete store[ property ];
 			} else {
-				// Set property
+				// Set property.
 				store[ property ] = value;
 			}
 
@@ -1724,7 +1724,7 @@ window.bp = window.bp || {};
 		 *
 		 * @param event
 		 */
-		lazyLoad: function( lazyTarget ){
+		lazyLoad: function( lazyTarget ) {
 			var lazy = $( lazyTarget );
 			if ( lazy.length ) {
 				for ( var i = 0; i < lazy.length; i++ ) {

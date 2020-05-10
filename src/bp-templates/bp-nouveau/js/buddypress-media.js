@@ -326,7 +326,6 @@ window.bp = window.bp || {};
 		submitCreateFolderInPopup: function( event ) {
 			event.preventDefault();
 
-
 			// console.log( this.currentTargetParent ); // Parent.
 			// console.log( this.moveToIdPopup ); // userID/GroupID.
 			// console.log( this.moveToTypePopup ); // Profile/Group.
@@ -3759,7 +3758,16 @@ window.bp = window.bp || {};
 			}
 
 			sortTarget.hasClass( 'asce' ) ? sortTarget.removeClass( 'asce' ) : sortTarget.addClass( 'asce' );
-			var sort = sortTarget.hasClass( 'asce' ) ? 'DESC' : 'ASC';
+			var sort 		= sortTarget.hasClass( 'asce' ) ? 'DESC' : 'ASC';
+			var objectData 	= bp.Nouveau.getStorage( 'bp-document' );
+			var extras 		= {};
+
+			extras.orderby 	= order_by;
+			extras.sort 	= sort;
+
+			if ( 'group' !== order_by ) {
+				bp.Nouveau.setStorage('bp-document', 'extras', extras);
+			}
 
 			var store = bp.Nouveau.getStorage( 'bp-document' ),
 				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
