@@ -1,6 +1,11 @@
 <?php
 
-
+/**
+ * BuddyBoss - Document Create Folder
+ *
+ * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Core
+ */
 
 ?>
 
@@ -8,23 +13,7 @@
 	<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>" id="new_folder_name_input">
 	<?php
 	if ( ! bp_is_group() ) :
-		?>
-		<div class="bb-field-wrap">
-			<label for="bb-folder-privacy" class="bb-label"><?php esc_html_e( 'Privacy', 'buddyboss' ); ?></label>
-			<div class="bb-dropdown-wrap">
-				<?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
-				<select id="bb-folder-child-privacy">
-					<?php
-					foreach ( $privacy_options as $k => $option ) {
-						?>
-						<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_html( $option ); ?></option>
-						<?php
-					}
-					?>
-				</select>
-			</div>
-		</div>
-	<?php
+		bp_get_template_part( 'document/document-privacy' );
 	endif;
 	?>
 	<div class="db-modal-buttons">

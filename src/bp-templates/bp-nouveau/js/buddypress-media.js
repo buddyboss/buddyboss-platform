@@ -3370,7 +3370,7 @@ window.bp = window.bp || {};
 
 		saveChildFolder: function (event) {
 			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' ),
-				privacy = $( '#bp-media-create-child-folder #bb-folder-child-privacy' ), parentSelector = $( '#bp-media-create-child-folder #parent_id' );
+				privacy = $( '#bp-media-create-child-folder #bb-folder-privacy' ), parentSelector = $( '#bp-media-create-child-folder #parent_id' );
 			event.preventDefault();
 
 			if ($.trim( title.val() ) === '') {
