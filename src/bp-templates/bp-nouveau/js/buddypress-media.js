@@ -51,6 +51,8 @@ window.bp = window.bp || {};
 			this.currentTargetParent	     = BP_Nouveau.media.current_folder;
 			this.moveToIdPopup	     	     = BP_Nouveau.media.move_to_id_popup;
 			this.moveToTypePopup	     	 = BP_Nouveau.media.current_type;
+			this.privacySelectorSelect		 = '';
+			this.privacySelectorSpan		 = '';
 
 
 
@@ -268,7 +270,7 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
-			mediaStream.on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
+			//mediaStream.on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
 			mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
@@ -415,12 +417,18 @@ window.bp = window.bp || {};
 		},
 
 		savePrivacy: function( event ) {
-			var target = $( event.currentTarget ), itemId = 0, type = '', value = '';
+			var target = $( event.currentTarget ), itemId = 0, type = '', value = '', text = '';
 			event.preventDefault();
 
 			itemId = parseInt( target.data( 'item-id' ) );
 			type   = target.data( 'item-type' );
 			value  = target.val();
+			text   = $( event.currentTarget ).find('option:selected').text();
+
+			this.privacySelectorSelect.addClass( 'hide' );
+			this.privacySelectorSpan.text( '' );
+			this.privacySelectorSpan.text( text );
+			this.privacySelectorSpan.show();
 
 			if ( itemId > 0 ) {
 				var data = {
@@ -437,7 +445,6 @@ window.bp = window.bp || {};
 						data: data,
 						success: function (response) {
 							if (response.success) {
-
 							}
 						}
 					}
@@ -2499,10 +2506,13 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		editPrivacyDocument: function( event ) {
-
+			event.preventDefault();
 			var current_privacy = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_visibility' );
 
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
+
+			this.privacySelectorSelect = current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' );
+			this.privacySelectorSpan = current_privacy.find( '.media-folder_details__bottom span' );
 
 		},
 
