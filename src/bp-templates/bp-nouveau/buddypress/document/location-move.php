@@ -6,6 +6,7 @@
  * @package BuddyBoss\Core
  */
 
+$ul  = '';
 if ( bp_is_group_document() || bp_is_group_folders() ) {
 	$group_id         = bp_get_current_group_id();
 	$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
