@@ -2646,7 +2646,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	}
 }
 
-.popup-on-fly-create-folder .bb-field-wrap .bb-dropdown-wrap select{
+.popup-on-fly-create-folder .bb-field-wrap .bb-dropdown-wrap select {
 	width: 100%;
 }
 
@@ -2708,8 +2708,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			font-size: 12px;
 
 			span:after {
-				content: '\e827';
-				font-family: "bb-icons";
+				content: "\e827";
+				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 20px;
 				vertical-align: middle;
 				display: inline-block;
@@ -2718,13 +2718,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 			span {
 				display: inline-block !important;
-				
+
 				&:hover {
 					text-decoration: underline;
 					cursor: pointer;
 				}
 			}
-			
+
 			span:last-child:after {
 				display: none;
 			}

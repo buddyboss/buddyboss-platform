@@ -2844,8 +2844,7 @@ window.bp = window.bp || {};
 							$( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).addClass( 'is_active' );
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).parents( '.has-ul' ).show().children( 'ul' ).show().siblings( 'span,i' ).hide();
 
-							if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length
-								&& !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') ) {
+							if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length && !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') ) {
 									setTimeout( function(){
 										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
 									},100);
@@ -2994,8 +2993,7 @@ window.bp = window.bp || {};
 					$( targetPopup ).find( '.location-folder-list li[data-id="' + currentTargetParent + '"]' ).addClass( 'is_active' );
 					$( targetPopup ).find( '.location-folder-list li.is_active' ).parents( '.has-ul' ).show().children( 'ul' ).show().siblings( 'span,i' ).hide();
 
-					if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length
-						&& !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') )   {
+					if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length && !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') )   {
 							setTimeout( function(){
 								$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children( 'ul' ).show().children( 'li' ).show().children( 'span,i' ).show().closest('ul').siblings( 'span, i' ).hide();
 							},100);

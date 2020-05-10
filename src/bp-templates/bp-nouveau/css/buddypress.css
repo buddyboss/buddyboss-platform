@@ -13930,8 +13930,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:after,
 .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:after {
-  content: '\e827';
+  content: "\e827";
   font-family: "bb-icons";
+  /* stylelint-disable-line */
   font-size: 20px;
   vertical-align: middle;
   display: inline-block;
