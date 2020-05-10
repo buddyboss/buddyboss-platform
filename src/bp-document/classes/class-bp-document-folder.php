@@ -519,9 +519,10 @@ class BP_Document_Folder {
 			// Integer casting.
 			$folder = wp_cache_get( $folder_id, 'bp_document_folder' );
 			if ( ! empty( $folder ) ) {
-				$folder->id       = (int) $folder->id;
-				$folder->user_id  = (int) $folder->user_id;
-				$folder->group_id = (int) $folder->group_id;
+				$folder->id           = (int) $folder->id;
+				$folder->user_id      = (int) $folder->user_id;
+				$folder->group_id     = (int) $folder->group_id;
+				$folder->folder_id    = (int) $folder->id;
 			}
 
 			$folder->document = bp_document_get(

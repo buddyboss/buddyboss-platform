@@ -23,6 +23,13 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 		<div class="location-folder-list-wrap">
 			<span class="location-folder-back"><i class="bb-icon-angle-right"></i></span>
 			<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
+			<div class="breadcrumbs-append-ul-li">
+				<div class="breadcrumb">
+					<div class="item">
+						<span data-id="0">Home / </span>
+					</div>
+				</div>
+			</div>
 			<?php
 			if ( '' !== $ul ) {
 				echo wp_kses_post( $ul );

@@ -1374,6 +1374,7 @@ class BP_Document {
 				$document->title        = $document->title;
 				$document->privacy      = $document->privacy;
 				$document->parent       = $document->parent;
+				$document->folder_id    = (int) $document->id;
 
 				if ( (int) $document->group_id > 0 ) {
 					$document->folder = 'group';
