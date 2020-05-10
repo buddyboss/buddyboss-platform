@@ -2703,6 +2703,7 @@ window.bp = window.bp || {};
 
 			this.openDocumentFolderChildUploader( event );
 			this.folderLocationUI( '#bp-media-create-child-folder', this.currentTargetParent );
+			$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + this.currentTargetParent ).trigger( 'click' );
 			$( '#bp-media-create-child-folder' ).show();
 			$( '#bp-media-create-child-folder' ).addClass( 'open-popup' );
 		},
