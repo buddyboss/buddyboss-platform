@@ -27,8 +27,8 @@
                         <h2 class="bb-title"><?php _e( 'Documents', 'buddyboss' ); ?></h2>
 
 						<?php
-						bp_get_template_part( 'document/add-document' );
 						bp_get_template_part( 'document/add-folder' );
+						bp_get_template_part( 'document/add-document' );
 						?>
 
                         <div id="search-documents-form" class="media-search-form" data-bp-search="document">
