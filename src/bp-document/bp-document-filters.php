@@ -40,6 +40,16 @@ add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
 // Sync Attachment data.
 add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
 
+add_filter( 'bp_get_document_name', 'convert_chars' );
+add_filter( 'bp_get_document_name', 'wptexturize' );
+add_filter( 'bp_get_document_name', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_document_name', 'stripslashes' );
+
+add_filter( 'bp_get_folder_title', 'wptexturize' );
+add_filter( 'bp_get_folder_title', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_folder_title', 'stripslashes' );
+add_filter( 'bp_get_folder_title', 'convert_chars' );
+
 /**
  * Add document theatre template for activity pages
  */
