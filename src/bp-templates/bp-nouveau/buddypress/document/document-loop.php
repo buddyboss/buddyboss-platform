@@ -18,7 +18,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 				</span>
 			</div>
 			<?php
-			if ( bp_is_document_directory() ) {
+			if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
 				?>
 				<div class="data-head data-head-origin" data-target="group">
 				<span>

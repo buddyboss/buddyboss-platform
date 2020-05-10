@@ -154,20 +154,30 @@ if ( wp_is_mobile() ) {
 		<div class="media-folder_details__bottom">
 
 				<?php
-				$group_id = bp_get_document_group_id();
-				if ( $group_id > 0 ) {
-					?>
-					<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Inherited from group', 'buddyboss' ); ?>">
-						<?php
-						bp_document_privacy();
+				if ( bp_is_active( 'groups' ) ) {
+					$group_id = bp_get_document_group_id();
+					if ( $group_id > 0 ) {
 						?>
-					</span>
-					<?php
+						<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Inherited from group', 'buddyboss' ); ?>">
+							<?php
+							bp_document_privacy();
+							?>
+						</span>
+						<?php
+					} else {
+						?>
+						<span>
+							<?php
+								bp_document_privacy();
+							?>
+						</span>
+						<?php
+					}
 				} else {
 					?>
 					<span>
 						<?php
-							bp_document_privacy();
+						bp_document_privacy();
 						?>
 					</span>
 					<?php
