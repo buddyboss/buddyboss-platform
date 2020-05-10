@@ -35,41 +35,13 @@
 						<a id="bp-media-document-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
 					</div>
 					<div class="bb-field-steps bb-field-steps-2">
-						<?php
-							$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-						?>
 						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Destination Folder', 'buddyboss' ); ?></label>
 						<div class="bb-field-wrap bb-field-wrap-search">
 							<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folders', 'buddyboss' ); ?>" />
 						</div>
 						<div class="bb-field-wrap">
-							<div class="bb-dropdown-wrap">
-								<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-									<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
-									<div class="location-folder-list-wrap">
-										<span class="location-folder-back"><i class="bb-icon-angle-right"></i></span>
-										<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
-										<?php
-										if ( '' !== $ul ) {
-											echo wp_kses_post( $ul );
-										} else {
-											?>
-											<ul class="location-folder-list">
-												<li data-id="0">
-													<span class="selected disabled"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
-												</li>
-											</ul>
-											<?php
-										}
-										?>
-									</div> <!-- .location-folder-list-wrap -->
-									<div class="ac_document_search_folder_list" style="display: none;">
-										<ul class="location-folder-list"></ul>
-									</div>
-									<input type="hidden" class="bb-folder-selected-id" value="0" readonly/>
-								</div>
-								<?php bp_get_template_part( 'document/document-create-folder' ); ?>
-							</div>
+							<?php bp_get_template_part( 'document/location-move' ); ?>
+							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
 						</div>
 					</div>
 					<footer class="flex align-items-center bb-model-footer document-uploader-footer">

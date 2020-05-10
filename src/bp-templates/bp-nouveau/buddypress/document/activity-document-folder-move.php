@@ -16,27 +16,12 @@
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Move ', 'buddyboss' ); ?> <span class="target_name"></span> <?php esc_html_e( ' to ', 'buddyboss' ); ?><span class="target_folder">...</span></h4>
 					</header>
-					<?php
-						$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-					?>
 					<div class="bb-field-wrap bb-field-wrap-search">
 						<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folders', 'buddyboss' ); ?>" />
 					</div>
 					<div class="bb-field-wrap">
-						<div class="bb-dropdown-wrap">
-							<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-								<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
-								<div class="location-folder-list-wrap">
-									<span class="location-folder-back"><i class="bb-icon-angle-right"></i></span>
-									<span class="location-folder-title"><?php esc_html_e( 'Documents', 'buddyboss' ); ?></span>
-								</div> <!-- .location-folder-list-wrap -->
-								<div class="ac_document_search_folder_list" style="display: none;">
-									<ul class="location-folder-list"></ul>
-								</div>
-								<input type="hidden" class="bb-folder-selected-id" value="0" readonly/>
-							</div>
-							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
-						</div>
+						<?php bp_get_template_part( 'document/location-move' ); ?>
+						<?php bp_get_template_part( 'document/document-create-folder' ); ?>
 					</div>
 					<footer class="bb-model-footer">
 						<a href="#" class="bp-document-open-create-popup-folder"> <i class="bb-icon-plus-square"></i> <?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
