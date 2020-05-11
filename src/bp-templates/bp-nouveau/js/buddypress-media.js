@@ -2887,6 +2887,11 @@ window.bp = window.bp || {};
 						'click',
 						targetPopup + ' .breadcrumbs-append-ul-li .item span',
 						function ( event ) {
+
+							if( $( this ).parent().hasClass( 'is-disabled' ) ){
+								return;
+							}
+
 							var currentLiID = $( event.currentTarget ).attr('data-id');
 							$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
 							$( targetPopup ).find( '.bb-folder-selected-id' ).val( currentLiID );
@@ -3024,6 +3029,13 @@ window.bp = window.bp || {};
 					if ( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).length ) {
 						$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).text() );
 					}
+
+					if( $( targetPopup ).hasClass( 'bp-media-move-folder' ) ){
+						$( targetPopup ).find( '.location-folder-list li>span' ).removeClass('is-disabled');
+						$( targetPopup ).find( '.location-folder-list li>span[id="'+ $( targetPopup).find( '.bp-folder-move' ).attr( 'id' ) +'"]' ).parent().addClass('is-disabled');
+					}
+
+					
 
 				}
 
