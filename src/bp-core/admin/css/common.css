@@ -464,9 +464,12 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
 }
 
-.bp-admin-card.section-bp_media_settings_documents h2:before,
+.bp-admin-card.section-bp_media_settings_documents h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/folder-open.svg);
+}
+
 .bp-admin-card.section-bp_document_settings_extensions h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/folder.svg);
+  background-image: url(../../images/admin/icons/fontawesome/solid/clone.svg);
 }
 
 .bp-admin-card.section-bp_media_settings_emoji h2:before {
@@ -508,7 +511,7 @@ table.extension-listing thead th {
 table.extension-listing thead th.ext-head-enable,
 table.extension-listing thead th.ext-head-control {
   width: 30px;
-  padding: 0;
+  padding-left: 5px;
 }
 
 table.extension-listing thead th.ext-head-name {
