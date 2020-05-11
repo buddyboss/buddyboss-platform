@@ -275,6 +275,17 @@ window.bp = window.bp || {};
 					function(file, xhr, formData) {
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+						var tool_box = self.$el.parents( '#whats-new-form' );
+						if ( tool_box.find( '#activity-document-button' ) ) {
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#activity-gif-button' ) ) {
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
 					}
 				);
 
@@ -289,16 +300,6 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
-						}
-
-						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length > 0 ) {
-							var tool_box = self.$el.parents( '#whats-new-form' );
-							if ( tool_box.find( '#activity-document-button' ) ) {
-								tool_box.find( '#activity-document-button' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '#activity-gif-button' ) ) {
-								tool_box.find( '#activity-gif-button' ).addClass( 'disable' );
-							}
 						}
 					}
 				);
@@ -332,10 +333,13 @@ window.bp = window.bp || {};
 						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-document-button' ) ) {
-								tool_box.find( '#activity-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#activity-gif-button' ) ) {
-								tool_box.find( '#activity-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#activity-media-button' ) ) {
+								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
 					}
@@ -440,6 +444,17 @@ window.bp = window.bp || {};
 					function(file, xhr, formData) {
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+						var tool_box = self.$el.parents( '#whats-new-form' );
+						if ( tool_box.find( '#activity-media-button' ) ) {
+							tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#activity-gif-button' ) ) {
+							tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#activity-document-button' ) ) {
+							tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
 					}
 				);
 
@@ -454,16 +469,6 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'document', self.media );
-						}
-
-						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length > 0 ) {
-							var tool_box = self.$el.parents( '#whats-new-form' );
-							if ( tool_box.find( '#activity-media-button' ) ) {
-								tool_box.find( '#activity-media-button' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '#activity-gif-button' ) ) {
-								tool_box.find( '#activity-gif-button' ).addClass( 'disable' );
-							}
 						}
 					}
 				);
@@ -497,10 +502,13 @@ window.bp = window.bp || {};
 						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-media-button' ) ) {
-								tool_box.find( '#activity-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#activity-gif-button' ) ) {
-								tool_box.find( '#activity-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#activity-document-button' ) ) {
+								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
 					}
@@ -662,10 +670,13 @@ window.bp = window.bp || {};
 				$( '#whats-new-attachments' ).addClass( 'empty' );
 				var tool_box = this.$el.parents( '#whats-new-form' );
 				if ( tool_box.find( '#activity-document-button' ) ) {
-					tool_box.find( '#activity-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 				}
 				if ( tool_box.find( '#activity-media-button' ) ) {
-					tool_box.find( '#activity-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+				}
+				if ( tool_box.find( '#activity-gif-button' ) ) {
+					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'active' );
 				}
 			}
 		}
@@ -753,12 +764,13 @@ window.bp = window.bp || {};
 				this.$el.parent().removeClass( 'open' );
 				var model = this.gifDataItems.findWhere( {id: e.currentTarget.dataset.id} );
 				this.model.set( 'gif_data', model.attributes );
+
 				var tool_box = this.$el.parents( '#whats-new-form' );
 				if ( tool_box.find( '#activity-document-button' ) ) {
-					tool_box.find( '#activity-document-button' ).addClass( 'disable' );
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 				if ( tool_box.find( '#activity-media-button' ) ) {
-					tool_box.find( '#activity-media-button' ).addClass( 'disable' );
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 			},
 
@@ -1589,7 +1601,9 @@ window.bp = window.bp || {};
 				'click #activity-gif-button': 'toggleGifSelector',
 				'click #activity-media-button': 'toggleMediaSelector',
 				'click #activity-document-button': 'toggleDocumentSelector',
-				'click .post-elements-buttons-item': 'activeButton',
+				'click .post-elements-buttons-item:not( .post-gif ):not( .post-media )': 'activeButton',
+				'click .post-elements-buttons-item.post-gif': 'activeMediaButton',
+				'click .post-elements-buttons-item.post-media': 'activeMediaButton',
 				'click .show-toolbar': 'toggleToolbarSelector'
 			},
 
@@ -1634,7 +1648,13 @@ window.bp = window.bp || {};
 					var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: this.model} );
 					this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 				}
-				this.$self.toggleClass( 'open' );
+
+				var gif_box = $( e.currentTarget ).parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
+				if ( this.$self.hasClass( 'open' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+					this.$self.removeClass( 'open' );
+				} else {
+					this.$self.addClass( 'open' );
+				}
 				this.$gifPickerEl.toggleClass( 'open' );
 			},
 
@@ -1685,15 +1705,40 @@ window.bp = window.bp || {};
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) &&
 					! $targetEl.closest( '.post-gif' ).length) {
-					this.$self.removeClass( 'open' );
+
+					var gif_box = $targetEl.parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
+					if ( gif_box.length && $.trim( gif_box.html() ) !== '' ) {
+						this.$self.addClass( 'open' );
+					} else {
+						// this.$self.removeClass( 'open' );
+					}
+
 					this.$gifPickerEl.removeClass( 'open' );
 				}
 
 			},
 
 			activeButton: function (event) {
-				this.$el.find( '.post-elements-buttons-item' ).removeClass( 'active' );
-				event.currentTarget.classList.add( 'active' );
+				if ( $( event.currentTarget ).hasClass( 'active' ) ) {
+					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media )' ).removeClass( 'active' );
+				} else {
+					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media )' ).removeClass( 'active' );
+					event.currentTarget.classList.add( 'active' );
+				}
+
+				var gif_box = $( event.currentTarget ).parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
+				if ( this.$self.hasClass( 'open' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+					this.$self.removeClass( 'open' );
+				}
+			},
+
+			activeMediaButton: function (event) {
+				if ( $( event.currentTarget ).hasClass( 'active' ) ) {
+					this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media' ).removeClass( 'active' );
+				} else {
+					this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media' ).removeClass( 'active' );
+					event.currentTarget.classList.add( 'active' );
+				}
 			},
 
 			toggleToolbarSelector: function( e ) {
