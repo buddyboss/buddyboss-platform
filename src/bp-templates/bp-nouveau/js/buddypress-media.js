@@ -3030,13 +3030,6 @@ window.bp = window.bp || {};
 						$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).text() );
 					}
 
-					if( $( targetPopup ).hasClass( 'bp-media-move-folder' ) ){
-						$( targetPopup ).find( '.location-folder-list li>span' ).removeClass('is-disabled');
-						$( targetPopup ).find( '.location-folder-list li>span[id="'+ $( targetPopup).find( '.bp-folder-move' ).attr( 'id' ) +'"]' ).parent().addClass('is-disabled');
-					}
-
-					
-
 				}
 
 				$( targetPopup ).find( '.location-folder-list li' ).each(
@@ -3044,6 +3037,11 @@ window.bp = window.bp || {};
 						$( this ).children( 'ul' ).parent().addClass( 'has-ul' ).append( '<i class="bb-icon-angle-right sub-menu-anchor"></i>' );
 					}
 				);
+
+				if( $( targetPopup ).hasClass( 'bp-media-move-folder' ) ){
+					$( targetPopup ).find( '.location-folder-list li>span' ).removeClass('is-disabled');
+					$( targetPopup ).find( '.location-folder-list li>span[id="'+ $( targetPopup).find( '.bp-folder-move' ).attr( 'id' ) +'"]' ).parent().addClass('is-disabled');
+				}
 
 				var currentMoveItemID = $( targetPopup ).find( '.bp-folder-move' ).attr( 'id' );
 
