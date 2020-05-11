@@ -1020,28 +1020,28 @@ function bp_media_admin_setting_callback_document_section() {
 
 	if ( ! extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
 		?>
-		<p>
+		<p class="alert">
 		<?php
 
 			echo sprintf(
 				/* translators: 1: Imagick status, 2: libreoffice status */
-				_x( 'Server needs %1$s and %2$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
-				'Imagick',
-				'libreoffice'
+				_x( 'Your server needs %1$s and %2$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				'<code>Imagick</code>',
+				'<code>libreoffice</code>'
 			);
 
 		?>
-			</p>
+		</p>
 		<?php
 	} elseif ( extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
 		?>
-		<p>
+		<p class="alert">
 		<?php
 
 			echo sprintf(
 				/* translators: 1: libreoffice status */
-				_x( 'Server needs %1$s extension to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
-				'libreoffice'
+				_x( 'Server needs %1$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				'<code>libreoffice</code>'
 			);
 
 		?>
@@ -1049,12 +1049,12 @@ function bp_media_admin_setting_callback_document_section() {
 		<?php
 	} elseif ( ! extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
 		?>
-		<p>
+		<p class="alert">
 		<?php
 			echo sprintf(
 				/* translators: 1: Imagick status */
-				_x( 'Server needs %1$s extension to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
-				'Imagick'
+				_x( 'Server needs %1$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				'<code>Imagick</code>'
 			);
 		?>
 			</p>
