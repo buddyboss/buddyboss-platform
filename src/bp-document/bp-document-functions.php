@@ -1608,7 +1608,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
-	$file_name = sanitize_title( $title );
+	$file_name = $title;
 
 	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET file_name = %s, title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $file_name, $title, bp_core_current_time(), $document_id, $attachment_document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
