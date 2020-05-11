@@ -1382,6 +1382,8 @@ window.bp = window.bp || {};
 						accept			: function(file, done) {
 							if (file.size == 0) {
 								done( BP_Nouveau.media.empty_document_type );
+							} else {
+								done();
 							}
 						},
 						success			: function( file, response ){
