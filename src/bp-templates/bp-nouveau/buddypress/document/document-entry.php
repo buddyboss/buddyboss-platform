@@ -70,6 +70,12 @@ if ( $attachment_id ) {
 $document_id = bp_get_document_id();
 
 $link = ( $attachment_id ) ? $download_link : $folder_link;
+
+$class = '';
+if ( $attachment_id && bp_get_document_activity_id() ) {
+	$class = 'bb-open-document-theatre';
+}
+
 ?>
 <div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
@@ -78,13 +84,7 @@ $link = ( $attachment_id ) ? $download_link : $folder_link;
 		</a>
 	</div>
 	<div class="media-folder_details">
-		<a class="media-folder_name
-		<?php
-		if ( $attachment_id ) {
-			echo 'bb-open-document-theatre';
-		}
-		?>
-		" href="<?php echo esc_url( $link ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
+		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
 <!--			<span>--><?php // echo esc_html( $document_title ); ?><!--</span>-->
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" style="display: none;"></i>

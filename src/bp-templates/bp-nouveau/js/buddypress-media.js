@@ -330,7 +330,7 @@ window.bp = window.bp || {};
 				this.editGifPreview();
 			}
 
-			
+
 
 		},
 
@@ -4453,6 +4453,11 @@ window.bp = window.bp || {};
 			var target         = $( event.currentTarget );
 			var self           = this;
 			var media_elements = $( target ).closest( '.bb-media-container' ).length ? $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
+			var id 			   = parseInt( target.closest( '.media-folder_items' ).data( 'activity-id' ) );
+
+			if ( 0 === id ) {
+				return false;
+			}
 			if ( target.attr( 'data-extension' ) == 'css' || target.attr( 'data-extension' ) == 'txt' || target.attr( 'data-extension' ) == 'js' || target.attr( 'data-extension' ) == 'html' || target.attr( 'data-extension' ) == 'htm' || target.attr( 'data-extension' ) == 'csv' ) {
 				$.get(
 					target.attr( 'data-text-preview' ),
@@ -4477,7 +4482,7 @@ window.bp = window.bp || {};
 				}
 
 			}
-			var id = target.closest( '.media-folder_items' ).data( 'activity-id' );
+
 			bp.Nouveau.Media.Theatre.getDocumentActivity( id );
 
 			self.is_open = true;
