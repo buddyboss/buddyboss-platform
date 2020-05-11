@@ -71,7 +71,7 @@ $document_id = bp_get_document_id();
 
 $link = ( $attachment_id ) ? $download_link : $folder_link;
 ?>
-<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>">
+<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
 		<a href="<?php echo esc_url( $link ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>"></i>
@@ -166,7 +166,7 @@ if ( wp_is_mobile() ) {
 						<?php
 					} else {
 						?>
-						<span>
+						<span id="privacy-<?php echo esc_attr( bp_get_document_id() ); ?>">
 							<?php
 								bp_document_privacy();
 							?>
@@ -232,8 +232,8 @@ if ( wp_is_mobile() ) {
 						<?php
 						if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id ) {
 							?>
-							<li class="privacy_file">
-								<a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
+							<li class="privacy_file" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
+								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
 							</li>
 							<?php
 						}

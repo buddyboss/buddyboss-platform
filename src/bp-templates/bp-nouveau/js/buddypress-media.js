@@ -475,6 +475,7 @@ window.bp = window.bp || {};
 						data: data,
 						success: function (response) {
 							if (response.success) {
+								$( document ).find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
 							}
 						}
 					}
@@ -2549,6 +2550,8 @@ window.bp = window.bp || {};
 			var current_privacy = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_visibility' );
 
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
+			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).val( $( event.currentTarget ).attr( 'data-privacy') );
+
 
 			this.privacySelectorSelect = current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' );
 			this.privacySelectorSpan = current_privacy.find( '.media-folder_details__bottom span' );
@@ -2841,7 +2844,7 @@ window.bp = window.bp || {};
 						function ( event ) {
 							var currentLiID = $( event.currentTarget ).attr('data-id');
 							$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
-							$( targetPopup ).find( '.bb-folder-selected-id' ).val( $( targetPopup ).find( '.location-folder-list li.is_active' ).attr( 'data-id' ) );
+							$( targetPopup ).find( '.bb-folder-selected-id' ).val( currentLiID );
 							$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span' ).text() );
 
 							$( targetPopup ).find( '.location-folder-list li' ).hide();
