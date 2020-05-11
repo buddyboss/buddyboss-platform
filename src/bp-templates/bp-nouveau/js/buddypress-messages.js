@@ -91,7 +91,7 @@ window.bp = window.bp || {};
 				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				init: function(){
 					/* jshint ignore:start */
-					//this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
+					this.on('error', function(file){if (!file.accepted) alert( BP_Nouveau.media.document_select_error ); this.removeFile(file);});
 					/* jshint ignore:end */
 				},
 				accept			: function(file, done) {

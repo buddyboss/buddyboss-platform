@@ -227,7 +227,7 @@ if ( wp_is_mobile() ) {
 							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
 						</li>
 						<li class="move_file">
-							<a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+							<a href="#" data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 						</li>
 						<?php
 						if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id ) {

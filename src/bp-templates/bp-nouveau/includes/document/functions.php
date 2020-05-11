@@ -77,6 +77,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'          => $group_id,
 		'target_text'               => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title' => __( 'Please enter title of folder', 'buddyboss' ),
+		'document_select_error'     => __( 'This file not supporting in document', 'buddyboss' ),
 	);
 
 	$old_media = $params['media'];
