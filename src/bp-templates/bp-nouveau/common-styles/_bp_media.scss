@@ -2061,6 +2061,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	}
 }
 
+.document-type-navs.main-navs {
+	border-bottom: 1px solid #e7e9eC;
+}
 
 #media-stream.document-parent {
 
@@ -2215,6 +2218,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		.bp-dir-search-form {
 			border: 0;
 
+			.nouveau-search-submit {
+				width: auto;
+				padding: 4px;
+				height: auto;
+				z-index: 112;
+			}
+
 			#group-document-search {
 				background-image: none;
 				padding: 6px 10px 6px 2rem;
@@ -2222,6 +2232,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				font-size: 14px;
 			}
 		}
+	}
+
+	.bp-media-header-wrap .bb-title {
+		width: auto;
 	}
 
 }
