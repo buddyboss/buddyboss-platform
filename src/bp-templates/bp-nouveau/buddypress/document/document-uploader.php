@@ -45,7 +45,7 @@
 						</div>
 					</div>
 					<footer class="flex align-items-center bb-model-footer document-uploader-footer">
-						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" > <i class="bb-icon-folder-stacked"></i> <?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" ><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 						<a id="bp-media-document-prev" class="button bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
 						<a class="button" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
 					</footer>
