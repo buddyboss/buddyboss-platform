@@ -330,6 +330,8 @@ window.bp = window.bp || {};
 				this.editGifPreview();
 			}
 
+			
+
 		},
 
 		submitCreateFolderInPopup: function( event ) {

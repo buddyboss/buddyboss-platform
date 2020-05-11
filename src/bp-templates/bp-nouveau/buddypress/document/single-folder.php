@@ -41,7 +41,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 							if ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
-								if ( ! empty( $active_extensions ) ) {
+								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
 									if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
