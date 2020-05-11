@@ -1537,7 +1537,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
 				$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug() . '/folders/' . $element['id'];
 			}
-			$html .= '<li> <a href=" ' . $link . ' ">' . $element['title'] . '</a></li>';
+			$html .= '<li> <a href=" ' . $link . ' ">' . stripslashes( $element['title'] ) . '</a></li>';
 		}
 		$html .= '</ul>';
 	}
