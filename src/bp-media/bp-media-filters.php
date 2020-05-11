@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action( 'bp_media_album_after_save', 'bp_media_update_media_privacy' );
 add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+add_action( 'edit_attachment', 'bp_media_sync_media_data', 88, 2 );
 
 // Activity.
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
@@ -1159,6 +1160,33 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+}
+
+/**
+ * Synchoronize attachment data with Media.
+ *
+ * @param int $attachment_id Attachment ID.
+ *
+ * @since BuddyBoss 1.3.5
+ */
+function bp_media_sync_media_data( $attachment_id ) {
+
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$media_id = bp_get_attachment_media_id( (int) $attachment_id );
+
+	if ( empty( $media_id ) ) {
+	    return false;
+    }
+
+	$media = new BP_Media( $media_id );
+	if ( ! empty( $media->activity_id ) ) {
+	    $content = get_post_field('post_content', $attachment_id );
+	    bp_activity_update_meta( $media->activity_id, 'bp_media_description', $content );
+	}
+
 }
 
 /**

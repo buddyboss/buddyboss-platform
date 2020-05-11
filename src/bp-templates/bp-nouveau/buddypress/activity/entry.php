@@ -33,11 +33,15 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 		</div>
 
+		<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
+
 		<?php if ( bp_nouveau_activity_has_content() ) : ?>
 
 			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
 
 		<?php endif; ?>
+
+		<?php bp_nouveau_activity_hook( 'after', 'activity_content' ); ?>
 
 		<?php bp_nouveau_activity_state(); ?>
 

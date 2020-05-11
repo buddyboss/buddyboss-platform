@@ -2120,3 +2120,23 @@ function bp_media_directory_page_content() {
 }
 
 add_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
+
+/**
+ * Get media id for the attachment.
+ *
+ * @since BuddyBoss 1.3.5
+ * @param integer $attachment_id
+ *
+ * @return array|bool
+ */
+function bp_get_attachment_media_id( $attachment_id = 0 ) {
+	global $bp, $wpdb;
+
+	if ( ! $attachment_id ) {
+		return false;
+	}
+
+	$attachment_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.attachment_id = {$attachment_id}" );
+
+	return $attachment_media_id;
+}

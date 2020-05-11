@@ -79,6 +79,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'media_description_save' => array(
+					'function' => 'bp_nouveau_ajax_media_description_save',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -609,6 +615,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	}
 
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 
 	ob_start();
 	if ( bp_has_activities(
@@ -626,6 +633,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
+	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 
 	wp_send_json_success(
@@ -725,6 +733,52 @@ function bp_nouveau_ajax_media_update_privacy() {
 	$media->save();
 
 	wp_send_json_success();
+}
+
+/**
+ * Update media activity description.
+ *
+ * @since BuddyBoss 1.3.5
+ */
+function bp_nouveau_ajax_media_description_save() {
+	if ( empty( $_POST['activity_id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide activity id to update.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	$activity_id = $_POST['activity_id'];
+	$description = $_POST['description'];
+
+	$activity = new BP_Activity_Activity( (int) $activity_id );
+
+	if ( empty( $activity->id ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was an error for updating a description. Please try again.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	bp_activity_update_meta( $activity->id, 'bp_media_description', $description );
+
+	$media_id = BP_Media::get_activity_media_id( (int) $activity_id );
+
+	if ( ! empty( $media_id ) ) {
+		$media = new BP_Media( $media_id );
+		if ( ! empty( $media->attachment_id ) ) {
+			$media_post['ID']           = $media->attachment_id;
+			$media_post['post_content'] = $description;
+			wp_update_post( $media_post );
+		}
+	}
+
+	$response['description'] = $description;
+	wp_send_json_success( $response );
 }
 
 add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_media_tabs', 10, 2 );

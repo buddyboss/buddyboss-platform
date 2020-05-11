@@ -1187,3 +1187,56 @@ function bp_nouveau_activity_privacy() {
 		}
 	}
 }
+
+/**
+ * Fetch and update the media description.
+ *
+ * @param int $activity_id The current activity ID.
+ *
+ * @since BuddyBoss 1.3.5
+ */
+function bp_nouveau_activity_description( $activity_id = 0 ) {
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$activity_description = bp_activity_get_meta( $activity_id, 'bp_media_description', true );
+
+	echo '<div class="activity-media-description">' .
+	     '<div class="bp-media-activity-description">' . $activity_description . '</div>';
+
+        if ( bp_activity_user_can_edit() ) {
+            ?>
+
+            <a class="bp-add-media-activity-description <?php echo( ! empty( $activity_description ) ? 'show-edit' : 'show-add' ); ?>"
+               href="#">
+                <span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+                <span class="edit"><?php _e( 'Edit a description', 'buddyboss' ); ?></span>
+            </a>
+            <div class="bp-edit-media-activity-description" style="display: none;">
+                <div class="innerWrap">
+                        <textarea id="add-activity-description"
+                                  title="Add a description"
+                                  class="textInput"
+                                  name="caption_text"
+                                  placeholder="Add a description"
+                                  role="textbox"
+                                  style="height: 50px;"><?php echo $activity_description; ?></textarea>
+                </div>
+                <div class="in-profile description-new-submit">
+                    <input type="hidden" id="bp-activity-id" value="<?php echo $activity_id; ?>">
+                    <input type="submit" id="bp-activity-description-new-submit" class="button"
+                           name="description-new-submit" value="Finished Editing">
+                    <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="Cancel">
+                </div>
+            </div>
+
+            <?php
+        }
+
+	echo '</div>';
+}

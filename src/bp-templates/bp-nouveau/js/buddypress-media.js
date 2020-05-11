@@ -4384,6 +4384,9 @@ window.bp = window.bp || {};
 			$( document ).on( 'bp_activity_ajax_delete_request', this.activityDeleted.bind( this ) );
 			$( document ).on( 'click', '#bb-media-model-container .media-privacy>li', this.mediaPrivacyChange.bind( this ) );
 			$( document ).on( 'click', '#bb-media-model-container .bb-media-section span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
+			$( document ).on( 'click', '.bp-add-media-activity-description', this.openMediaActivityDescription.bind( this ) );
+			$( document ).on( 'click', '#bp-activity-description-new-reset', this.closeMediaActivityDescription.bind( this ) );
+			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitMediaActivityDescription.bind( this ) );
 			$( document ).click( this.togglePopupDropdown );
 
 		},
@@ -4819,6 +4822,77 @@ window.bp = window.bp || {};
 					},
 					error: function () {
 						target.closest( '.bb-media-privacy-wrap' ).find( '.privacy' ).removeClass( 'loading' );
+					}
+				}
+			);
+		},
+
+		openMediaActivityDescription: function (event) {
+			event.preventDefault();
+			var target = $( event.currentTarget );
+
+			if ( target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).length < 1 ) {
+				return false;
+			}
+
+			target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).show().addClass( 'open' );
+			target.parents( '.activity-media-description' ).find( '.bp-media-activity-description' ).hide();
+			target.hide();
+		},
+
+		closeMediaActivityDescription: function (event) {
+			event.preventDefault();
+			var target = $( event.currentTarget );
+
+			if ( target.parents( '.activity-media-description' ).length < 1 ) {
+				return false;
+			}
+
+			var default_value = target.parents( '.activity-media-description' ).find( '#add-activity-description' ).get(0).defaultValue;
+
+			target.parents( '.activity-media-description' ).find( '.bp-add-media-activity-description' ).show();
+			target.parents( '.activity-media-description' ).find( '.bp-media-activity-description' ).show();
+			target.parents( '.activity-media-description' ).find( '#add-activity-description' ).val( default_value );
+			target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).hide().removeClass( 'open' );
+		},
+
+		submitMediaActivityDescription: function (event) {
+			event.preventDefault();
+
+			var target = $( event.currentTarget ),
+				parent_wrap = target.parents( '.activity-media-description' ),
+				description = parent_wrap.find( '#add-activity-description' ).val(),
+				activity_id = parent_wrap.find( '#bp-activity-id' ).val();
+
+			var data = {
+				'action'	: 'media_description_save',
+				'description'		: description,
+				'activity_id'	: activity_id,
+			};
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					async: false,
+					success: function (response) {
+						if (response.success) {
+							target.parents( '.activity-media-description').find( '.bp-media-activity-description' ).html( response.data.description ).show();
+							target.parents( '.activity-media-description' ).find( '.bp-add-media-activity-description' ).show();
+							parent_wrap.find( '#add-activity-description' ).val( response.data.description );
+							parent_wrap.find( '#add-activity-description' ).get(0).defaultValue = response.data.description;
+							if ( response.data.description == '' ) {
+								target.parents( '.activity-media-description' ).find( '.bp-add-media-activity-description' ).removeClass( 'show-edit' ).addClass( 'show-add' );
+							} else {
+								target.parents( '.activity-media-description' ).find( '.bp-add-media-activity-description' ).addClass( 'show-edit' ).removeClass( 'show-add' );
+							}
+
+							target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).hide().removeClass( 'open' );
+							target.parents( '.activity-media-description' ).find( '.bp-media-activity-description' ).show();
+						} else {
+							target.parents( '.activity-media-description' ).prepend( response.data.feedback );
+						}
 					}
 				}
 			);

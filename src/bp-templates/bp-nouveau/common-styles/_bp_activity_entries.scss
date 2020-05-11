@@ -554,14 +554,18 @@
 		}
 	}
 
-	.toolbar-button.disable,
-	.toolbar-button.disable.active {
+	.post-elements-buttons-item.disable,
+	.post-elements-buttons-item.disable.active {
 		pointer-events: none;
 		opacity: 0.4;
 
 		.bb-icon {
 			color: rgba(18, 43, 70, 0.4);
 		}
+	}
+
+	.post-elements-buttons-item.no-click {
+		pointer-events: none;
 	}
 }
 
@@ -841,6 +845,28 @@ span.dashicons.dashicons-admin-file:before {
 
 	.activity-inner {
 		overflow: visible;
+	}
+}
+
+.activity-media-description {
+	.bp-add-media-activity-description.show-edit {
+		.add {
+			display: none;
+		}
+
+		.edit {
+			display: block;
+		}
+	}
+
+	.bp-add-media-activity-description.show-add {
+		.add {
+			display: block;
+		}
+
+		.edit {
+			display: none;
+		}
 	}
 }
 

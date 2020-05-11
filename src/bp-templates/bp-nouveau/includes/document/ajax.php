@@ -260,6 +260,7 @@ function bp_nouveau_ajax_document_get_activity() {
 	}
 
 	remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
+	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 
 	$post_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 
@@ -279,6 +280,7 @@ function bp_nouveau_ajax_document_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
+	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 
 	wp_send_json_success(
