@@ -2037,6 +2037,28 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			}
 		}
 	}
+
+	&:last-child {
+
+		.media-folder_action__list {
+			top: initial;
+			bottom: 33px;
+
+			&:after {
+				top: inherit;
+				bottom: -12px;
+				right: 7px;
+				-webkit-transform: rotate(137deg);
+				-ms-transform: rotate(137deg);
+				transform: rotate(137deg);
+			}
+
+			@media screen and (max-width: 540px) {
+				bottom: 30px;
+				right: -17px;
+			}
+		}
+	}
 }
 
 

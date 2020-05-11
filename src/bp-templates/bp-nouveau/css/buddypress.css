@@ -13364,6 +13364,27 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   }
 }
 
+#media-folder-document-data-table .media-folder_items:last-child .media-folder_action__list {
+  top: initial;
+  bottom: 33px;
+}
+
+#media-folder-document-data-table .media-folder_items:last-child .media-folder_action__list:after {
+  top: inherit;
+  bottom: -12px;
+  right: 7px;
+  -webkit-transform: rotate(137deg);
+  -ms-transform: rotate(137deg);
+  transform: rotate(137deg);
+}
+
+@media screen and (max-width: 540px) {
+  #media-folder-document-data-table .media-folder_items:last-child .media-folder_action__list {
+    bottom: 30px;
+    right: -17px;
+  }
+}
+
 #media-stream.document-parent .document-data-table-head .data-head-name {
   -ms-flex-preferred-size: calc(40% - 50px);
   flex-basis: calc(40% - 50px);
