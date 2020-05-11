@@ -39,6 +39,7 @@
 	<div class="document-options">
 		<?php
 		bp_get_template_part( 'common/search-and-filters-bar' );
+
 		if ( ! empty( $active_extensions ) && bp_is_profile_document_support_enabled() && is_user_logged_in() ) {
 			?>
 			<a href="#" id="bp-add-document" class="bb-add-document button small"><i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?></a>
