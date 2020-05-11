@@ -2133,7 +2133,7 @@ window.bp = window.bp || {};
 			if (typeof window.Dropzone !== 'undefined' && $( 'div#media-uploader' ).length) {
 
 				if ($( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' )) {
-					this.currentTargetParent = $( event.currentTarget ).closest( '#bp-media-single-folder' ).find( '#media-folder-document-data-table .media-folder_items' ).attr( 'data-parent-id' );
+
 					if ( ! this.currentTargetParent ) {
 						this.currentTargetParent = 0;
 					}
@@ -2710,15 +2710,13 @@ window.bp = window.bp || {};
 		openCreateFolderModal: function (event) {
 			event.preventDefault();
 			this.openDocumentFolderUploader( event );
-			this.folderLocationUI( '#bp-media-create-folder' );
+			this.folderLocationUI( '#bp-media-create-folder', this.currentTargetParent );
 			$( '#bp-media-create-folder' ).show();
 			$( '#bp-media-create-folder' ).addClass( 'open-popup' );
 		},
 
 		openCreateFolderChildModal: function (event) {
 			event.preventDefault();
-
-			this.currentTargetParent = $( event.currentTarget ).closest( '#bp-media-single-folder' ).find( '#media-folder-document-data-table .media-folder_items' ).attr( 'data-parent-id' );
 
 			if ( ! this.currentTargetParent ) {
 				this.currentTargetParent = 0;
