@@ -228,7 +228,7 @@ function bp_media_get_settings_fields() {
 	}
 
 	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
-		'title'    => __( 'Extensions', 'buddyboss' ),
+		'title'    => __( 'File Extensions', 'buddyboss' ),
 		'callback' => 'bp_media_settings_callback_extension_link',
 	);
 
@@ -1184,7 +1184,7 @@ function bp_media_settings_callback_extension_link() {
 	printf(
 		'<label>%s</label>',
 		sprintf(
-			__( '<a href="%s">Manage</a> the allowed file extensions.', 'buddyboss' ),
+			__( '<a href="%s" target="_blank">Manage</a> which file extensions are allowed to be uploaded.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -1221,7 +1221,7 @@ function bp_document_get_settings_sections() {
 		array(
 			'bp_document_settings_extensions' => array(
 				'page'     => 'document',
-				'title'    => __( 'Document Extensions', 'buddyboss' ),
+				'title'    => __( 'Documents &#8594; File Extensions', 'buddyboss' ),
 				'callback' => 'bp_document_settings_callback_extension_section',
 			),
 		)
@@ -1282,7 +1282,7 @@ function bp_document_get_settings_fields() {
  */
 function bp_document_settings_callback_extension_section() {
 	?>
-	<p><?php esc_html_e( 'Enable/Disable the following Document extensions:', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Enable or disable which file extensions are allowed to be uploaded:', 'buddyboss' ); ?></p>
 	<input id="bp_select_extensions" type="checkbox" value="1">
 	<label for="bp_select_extensions"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></label>
 
