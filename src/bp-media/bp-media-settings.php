@@ -1040,7 +1040,7 @@ function bp_media_admin_setting_callback_document_section() {
 
 			echo sprintf(
 				/* translators: 1: libreoffice status */
-				_x( 'Server needs %1$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
+				_x( 'Server needs %1$s extension to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
 				'libreoffice'
 			);
 
@@ -1053,7 +1053,7 @@ function bp_media_admin_setting_callback_document_section() {
 		<?php
 			echo sprintf(
 				/* translators: 1: Imagick status */
-				_x( 'Server needs %1$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
+				_x( 'Server needs %1$s extension to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
 				'Imagick'
 			);
 		?>
@@ -1182,9 +1182,9 @@ function bp_media_settings_callback_extension_document_support() {
 function bp_media_settings_callback_extension_link() {
 
 	printf(
-		'<p class="description">%s</p>',
+		'<label>%s</label>',
 		sprintf(
-			__( 'Click <a href="%s">here</a> add/edit/delete more extensions..', 'buddyboss' ),
+			__( '<a href="%s">Manage</a> the allowed file extensions.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
 					array(
