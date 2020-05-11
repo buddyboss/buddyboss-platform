@@ -102,7 +102,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		if ( bp_has_members(
 			array(
 				'include'         => $follower,
-				'max'             => $instance['max_users'],
+				'per_page'             => $instance['max_users'],
 				'populate_extras' => false,
 			)
 		) ) {
