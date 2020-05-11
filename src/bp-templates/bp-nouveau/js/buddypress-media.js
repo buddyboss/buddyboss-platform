@@ -69,7 +69,7 @@ window.bp = window.bp || {};
 				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				init: function(){
 					/* jshint ignore:start */
-					this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
+					//this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
 					/* jshint ignore:end */
 				},
 				accept			: function(file, done) {
@@ -108,7 +108,7 @@ window.bp = window.bp || {};
 					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					init: function(){
 						/* jshint ignore:start */
-						this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
+						//this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
 						/* jshint ignore:end */
 					},
 					accept			: function(file, done) {
@@ -204,7 +204,7 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bb-delete-media', this.deleteMedia.bind( this ) );
 			bpNouveau.on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
 			$( '#buddypress [data-bp-list="media"]' ).on( 'bp_ajax_request', this.bp_ajax_media_request );
-			// $( '#buddypress [data-bp-list="document"]' ).on('bp_ajax_request',this.bp_ajax_media_request);
+			$( '#buddypress [data-bp-list="document"]' ).on('bp_ajax_request',this.bp_ajax_document_request);
 
 			// albums.
 			bpNouveau.on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
@@ -329,8 +329,6 @@ window.bp = window.bp || {};
 				(Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length)) {
 				this.editGifPreview();
 			}
-
-
 
 		},
 
@@ -620,6 +618,35 @@ window.bp = window.bp || {};
 		bp_ajax_media_request: function (event, data) {
 			if (typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0) {
 				$( '.bb-photos-actions' ).hide();
+			}
+		},
+
+		bp_ajax_document_request: function () {
+			if ( $( '.document-data-table-head' ).length ) {
+				var storage = bp.Nouveau.getStorage( 'bp-document' );
+				if ( undefined !== storage.extras ) {
+					var sortValue 	   = storage.extras.sort;
+					var sortOrderValue = storage.extras.orderby;
+					var orderClass	   = ( 'DESC' === sortValue ) ? 'asce' : '';
+					$( document ).find( '.data-head' ).each(function() {
+						if ( $( this ).hasClass( 'asce') ) {
+							if ( ! $( this ).hasClass( 'data-head-origin') ) {
+								$(this).removeClass('asce');
+							}
+						}
+					});
+					setTimeout(
+						function()
+						{
+							if ( 'title' === sortOrderValue ) {
+								$( document ).find( '.data-head-name' ).addClass( orderClass );
+							} else if ( 'date_modified' === sortOrderValue ) {
+								$( document ).find( '.data-head-modified' ).addClass( orderClass );
+							} else if ( 'privacy' === sortOrderValue ) {
+								$( document ).find( '.data-head-visibility' ).addClass( orderClass );
+							}
+						}, 1000);
+				}
 			}
 		},
 

@@ -407,14 +407,12 @@ window.bp = window.bp || {};
 					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					init: function(){
 						/* jshint ignore:start */
-						this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
+						//this.on('error', function(file){if (!file.accepted) this.removeFile(file);});
 						/* jshint ignore:end */
 					},
 					accept			: function(file, done) {
 						if (file.size == 0) {
 							done( BP_Nouveau.media.empty_document_type );
-						} else {
-							done();
 						}
 					},
 					success			: function( file, response ){
