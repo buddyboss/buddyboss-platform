@@ -4597,7 +4597,7 @@ function bp_core_parse_url( $url ) {
 	$parsed_url_data = array();
 
 	// Fetch the oembed code for URL.
-	$embed_code = wp_oembed_get( $url );
+	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
 	if ( ! empty( $embed_code ) ) {
 		$parsed_url_data['title']       = ' ';
 		$parsed_url_data['description'] = $embed_code;
@@ -4680,11 +4680,24 @@ function bp_core_parse_url( $url ) {
 				$title = $description;
 			}
 
-			if ( ! empty( $title ) && ! empty( $description ) && ! empty( $images ) ) {
-				$parsed_url_data['title']       = $title;
+			if ( ! empty( $title ) && '' === trim( $description ) ) {
+				$description = $title;
+			}
+
+			if ( ! empty( $title ) ) {
+				$parsed_url_data['title'] = $title;
+			}
+
+			if ( ! empty( $description ) ) {
 				$parsed_url_data['description'] = $description;
-				$parsed_url_data['images']      = $images;
-				$parsed_url_data['error']       = '';
+			}
+
+			if ( ! empty( $images ) ) {
+				$parsed_url_data['images'] = $images;
+			}
+
+			if ( ! empty( $title ) || ! empty( $description ) || ! empty( $images ) ) {
+				$parsed_url_data['error'] = '';
 			}
 		}
 	}
