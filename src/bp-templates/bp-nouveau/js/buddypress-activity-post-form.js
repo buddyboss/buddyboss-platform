@@ -1725,6 +1725,11 @@ window.bp = window.bp || {};
 					this.$el.find( '.post-elements-buttons-item:not( .post-gif ):not( .post-media )' ).removeClass( 'active' );
 					event.currentTarget.classList.add( 'active' );
 				}
+
+				var gif_box = $( event.currentTarget ).parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
+				if ( this.$self.hasClass( 'open' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+					this.$self.removeClass( 'open' );
+				}
 			},
 
 			activeMediaButton: function (event) {
