@@ -435,6 +435,8 @@ window.bp = window.bp || {};
 			$( '.bp-document-open-create-popup-folder' ).show();
 			$( '.location-folder-list-wrap-main' ).show();
 			$( '.create-popup-folder-wrap' ).hide();
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().show();
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header p' ).hide();
 		},
 
 		createFolderInPopup: function( event ) {
@@ -451,6 +453,8 @@ window.bp = window.bp || {};
 			$( '.bp-document-open-create-popup-folder' ).hide();
 			$( '.location-folder-list-wrap-main' ).hide();
 			$( '.create-popup-folder-wrap' ).show();
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().hide();
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).append('<p> Create Folder</p>');
 			$( '.modal-container #bb-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 		},
 
@@ -2167,6 +2171,8 @@ window.bp = window.bp || {};
 
 					this.folderLocationUI( '#bp-media-uploader', this.currentTargetParent );
 					$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + this.currentTargetParent ).trigger( 'click' );
+
+					$( '#bp-media-uploader' ).find( '.bp-document-open-create-popup-folder' ).hide();
 				}
 
 				$( '#bp-media-uploader' ).show();

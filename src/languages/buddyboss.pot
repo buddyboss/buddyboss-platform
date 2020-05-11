@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-11 13:16:01+00:00\n"
+"POT-Creation-Date: 2020-05-11 18:15:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6280,13 +6280,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -7187,7 +7187,7 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-component.php:333
 #: bp-document/classes/class-bp-document-component.php:354
-#: bp-templates/bp-nouveau/includes/document/functions.php:134
+#: bp-templates/bp-nouveau/includes/document/functions.php:135
 msgid "My Documents"
 msgstr ""
 
@@ -11894,7 +11894,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:108
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:50
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:39
 #: bp-templates/bp-nouveau/includes/functions.php:1387
 #: bp-templates/bp-nouveau/includes/functions.php:1439
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1275
@@ -13335,7 +13335,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:43
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:35
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:35
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:37
 msgid "Next"
 msgstr ""
 
@@ -16066,7 +16065,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:48
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:40
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:40
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:42
 msgid "Search Folders"
 msgstr ""
 
@@ -16129,17 +16127,15 @@ msgstr ""
 msgid "Enter Folder Title"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:46
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:47
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:38
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:38
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:40
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:39
 msgid "Destination Folder"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:54
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:46
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:49
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:48
 msgid "Previous"
 msgstr ""
 
@@ -17325,25 +17321,29 @@ msgstr ""
 msgid "Please enter title of folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:95
+#: bp-templates/bp-nouveau/includes/document/functions.php:80
+msgid "This file not supporting in document"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:96
 msgid ""
 "Are you sure you want to delete this folder? Documents in this folder will "
 "also be deleted?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:96
+#: bp-templates/bp-nouveau/includes/document/functions.php:97
 msgid "Are you sure you want to delete this document?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:97
+#: bp-templates/bp-nouveau/includes/document/functions.php:98
 msgid "There was a problem deleting the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:98
+#: bp-templates/bp-nouveau/includes/document/functions.php:99
 msgid "Please select destination folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:123
+#: bp-templates/bp-nouveau/includes/document/functions.php:124
 msgid "All Documents"
 msgstr ""
 
