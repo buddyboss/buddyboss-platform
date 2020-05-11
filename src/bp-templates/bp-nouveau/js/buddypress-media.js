@@ -495,6 +495,8 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			target.addClass( 'loading' );
+
 			var data = {
 				'action'			: 'document_folder_move',
 				'currentFolderId'	: currentFolderId,
@@ -512,6 +514,7 @@ window.bp = window.bp || {};
 							documentStream.html( '' );
 							documentStream.html( response.data.html );
 						}
+						target.removeClass( 'loading' );
 					}
 				}
 			);
@@ -551,6 +554,7 @@ window.bp = window.bp || {};
 					{
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
+						asyc:false,
 						data: data,
 						success: function (response) {
 							if (response.success) {
@@ -561,6 +565,7 @@ window.bp = window.bp || {};
 						}
 					}
 				);
+				this.current_page = 1;
 			} else {
 
 				if ( ! confirm( BP_Nouveau.media.i18n_strings.document_delete_confirm )) {
@@ -2851,7 +2856,7 @@ window.bp = window.bp || {};
 							} else {
 
 								$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' ).closest( '.has-ul' ).addClass( 'is_active' );
-								
+
 								if( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul.no-folder-list' ).length ){
 									setTimeout( function(){
 										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show();
@@ -2859,7 +2864,7 @@ window.bp = window.bp || {};
 								} else {
 									$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span,i' ).hide().parent().children( 'ul' ).show().children( 'li' ).show();
 								}
-								
+
 							}
 
 							if ( currentLiID === '0' ) {
@@ -3001,7 +3006,7 @@ window.bp = window.bp || {};
 					} else {
 
 						$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' ).closest( '.has-ul' ).addClass( 'is_active' );
-						
+
 						if( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul.no-folder-list' ).length ){
 							setTimeout( function(){
 								$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show();
@@ -3009,7 +3014,7 @@ window.bp = window.bp || {};
 						} else {
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span,i' ).hide().parent().children( 'ul' ).show().children( 'li' ).show();
 						}
-						
+
 					}
 
 					$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
