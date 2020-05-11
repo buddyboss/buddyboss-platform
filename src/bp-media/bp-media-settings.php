@@ -1027,7 +1027,7 @@ function bp_media_admin_setting_callback_document_section() {
 				/* translators: 1: Imagick status, 2: libreoffice status */
 				_x( 'Your server needs %1$s and %2$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
 				'<code>Imagick</code>',
-				'<code>libreoffice</code>'
+				'<code>LibreOffice</code>'
 			);
 
 		?>
@@ -1041,7 +1041,7 @@ function bp_media_admin_setting_callback_document_section() {
 			echo sprintf(
 				/* translators: 1: libreoffice status */
 				_x( 'Your server needs %1$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
-				'<code>libreoffice</code>'
+				'<code>LibreOffice</code>'
 			);
 
 		?>
