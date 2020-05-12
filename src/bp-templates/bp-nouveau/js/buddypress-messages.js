@@ -830,6 +830,17 @@ window.bp = window.bp || {};
 					function(file, xhr, formData) {
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+						var tool_box = self.$el.parents( '#bp-message-content' );
+						if ( tool_box.find( '#messages-document-button' ) ) {
+							tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-gif-button' ) ) {
+							tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-media-button' ) ) {
+							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
 					}
 				);
 
@@ -844,16 +855,6 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
-						}
-
-						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length > 0 ) {
-							var tool_box = self.$el.parents( '#bp-message-content' );
-							if ( tool_box.find( '#messages-document-button' ) ) {
-								tool_box.find( '#messages-document-button' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '#messages-gif-button' ) ) {
-								tool_box.find( '#messages-gif-button' ).addClass( 'disable' );
-							}
 						}
 					}
 				);
@@ -887,10 +888,13 @@ window.bp = window.bp || {};
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#bp-message-content' );
 							if ( tool_box.find( '#messages-document-button' ) ) {
-								tool_box.find( '#messages-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#messages-gif-button' ) ) {
-								tool_box.find( '#messages-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-media-button' ) ) {
+								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
 					}
@@ -957,6 +961,17 @@ window.bp = window.bp || {};
 					function(file, xhr, formData) {
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+						var tool_box = self.$el.parents( '#bp-message-content' );
+						if ( tool_box.find( '#messages-media-button' ) ) {
+							tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-gif-button' ) ) {
+							tool_box.find( '#messages-gif-button').parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+						}
+						if ( tool_box.find( '#messages-document-button' ) ) {
+							tool_box.find( '#messages-document-button').parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+						}
 					}
 				);
 
@@ -971,16 +986,6 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
-						}
-
-						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length > 0 ) {
-							var tool_box = self.$el.parents( '#bp-message-content' );
-							if ( tool_box.find( '#messages-media-button' ) ) {
-								tool_box.find( '#messages-media-button' ).addClass( 'disable' );
-							}
-							if ( tool_box.find( '#messages-gif-button' ) ) {
-								tool_box.find( '#messages-gif-button').addClass( 'disable' );
-							}
 						}
 					}
 				);
@@ -1014,10 +1019,13 @@ window.bp = window.bp || {};
 						if ( ! _.isNull( bp.Nouveau.Messages.dropzone.files ) && bp.Nouveau.Messages.dropzone.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#bp-message-content' );
 							if ( tool_box.find( '#messages-media-button' ) ) {
-								tool_box.find( '#messages-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 							}
 							if ( tool_box.find( '#messages-gif-button' ) ) {
-								tool_box.find( '#messages-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
+								tool_box.find( '#messages-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+							}
+							if ( tool_box.find( '#messages-document-button' ) ) {
+								tool_box.find( '#messages-document-button').parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 							}
 						}
 					}
@@ -1072,10 +1080,13 @@ window.bp = window.bp || {};
 
 				var tool_box = this.$el.parents( '#bp-message-content' );
 				if ( tool_box.find( '#messages-media-button' ) ) {
-					tool_box.find( '#messages-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+					tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 				}
 				if ( tool_box.find( '#messages-document-button' ) ) {
-					tool_box.find( '#messages-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+					tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+				}
+				if ( tool_box.find( '#messages-gif-button' ) ) {
+					tool_box.find( '#messages-gif-button' ).removeClass( 'open active' );
 				}
 			}
 		}
@@ -1166,10 +1177,10 @@ window.bp = window.bp || {};
 
 				var tool_box = this.$el.parents( '#bp-message-content' );
 				if ( tool_box.find( '#messages-media-button' ) ) {
-					tool_box.find( '#messages-media-button' ).addClass( 'disable' );
+					tool_box.find( '#messages-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 				if ( tool_box.find( '#messages-document-button' ) ) {
-					tool_box.find( '#messages-document-button' ).addClass( 'disable' );
+					tool_box.find( '#messages-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 			},
 
@@ -1342,9 +1353,17 @@ window.bp = window.bp || {};
 					var gifMediaSearchDropdownView = new bp.Views.MessagesGifMediaSearchDropdown( {model: this.model} );
 					this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 				}
-				this.$self.toggleClass( 'open' );
+				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
+				if ( this.$self.hasClass( 'open' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+					this.$self.removeClass( 'open' );
+					$( e.currentTarget ).removeClass( 'active' );
+				} else {
+					this.$self.addClass( 'open' );
+					$( e.currentTarget ).addClass( 'active' );
+				}
+				// this.$self.toggleClass( 'open' );
 				this.$gifPickerEl.toggleClass( 'open' );
-				$( e.currentTarget ).toggleClass( 'active' );
+				// $( e.currentTarget ).toggleClass( 'active' );
 			},
 
 			toggleToolbarSelector: function( e ) {
@@ -1357,6 +1376,11 @@ window.bp = window.bp || {};
 				}
 				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
 				medium_editor_toolbar.toggleClass( 'active' );
+
+				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
+				if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
+					this.$self.removeClass( 'open active' );
+				}
 			},
 
 			focusEditor: function ( e ) {
@@ -1366,13 +1390,16 @@ window.bp = window.bp || {};
 			closeGifSelector: function() {
 				var event = new Event( 'messages_gif_close' );
 				document.dispatchEvent( event );
-				$( '#messages-gif-button' ).removeClass( 'active' );
+				$( '#messages-gif-button' ).removeClass( 'open active' );
 			},
 
 			closePickersOnEsc: function( event ) {
 				if ( event.key === 'Escape' || event.keyCode === 27 ) {
 					if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
-						this.$self.removeClass( 'open' );
+						var gif_box = this.$self.parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
+						if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
+							this.$self.removeClass( 'open active' );
+						}
 						this.$gifPickerEl.removeClass( 'open' );
 					}
 				}
@@ -1383,10 +1410,14 @@ window.bp = window.bp || {};
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) &&
 					! $targetEl.closest( '.post-gif' ).length) {
-					this.$self.removeClass( 'open' );
+
+					var gif_box = this.$self.parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
+					if ( gif_box.length > 0 && $.trim( gif_box.html() ) == '' ) {
+						this.$self.removeClass( 'open active' );
+					}
+					// this.$self.removeClass( 'open active' );
 					this.$gifPickerEl.removeClass( 'open' );
 				}
-
 			}
 
 		}

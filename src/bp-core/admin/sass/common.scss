@@ -587,8 +587,19 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
  * 2.7 Document Extensions
  */
 
-tr.document-extensions-listing > td {
-	padding: 0;
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing {
+
+	th {
+		display: none;
+	}
+
+	td table.extension-listing thead tr th {
+		display: table-cell;
+	}
+
+	> td {
+		padding: 0;
+	}
 }
 
 table.extension-listing {
@@ -596,14 +607,14 @@ table.extension-listing {
 	margin-bottom: 12px;
 
 	thead th {
-		padding: 8px 10px;
+		padding: 12px 10px;
 
 		&.ext-head-enable {
 			width: 1px;
 		}
 
 		&.ext-head-control {
-			width: 10px;
+			width: 30px;
 		}
 
 		&.ext-head-extension {
@@ -612,7 +623,7 @@ table.extension-listing {
 	}
 
 	tbody td {
-		padding: 8px 10px;
+		padding: 10px;
 
 		input.error {
 			border: 1px solid #f00;
@@ -620,12 +631,10 @@ table.extension-listing {
 
 		#btn-remove-extensions {
 			cursor: pointer;
-		}
-
-		#btn-add-extensions {
-			cursor: pointer;
-			float: right;
-			margin-right: 2px;
+			color: #a00;
+			text-decoration: none;
+			border-bottom: 1px solid #a00;
+			font-size: 13px;
 		}
 
 		input[type="text"] {
@@ -633,14 +642,16 @@ table.extension-listing {
 		}
 	}
 
-}
+	tfoot td {
 
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
-	display: none;
-}
+		#btn-add-extensions,
+		#btn-check-mime-type {
+			cursor: pointer;
+			float: right;
+			margin-left: 8px;
+		}
+	}
 
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
-	display: table-cell;
 }
 
 /*

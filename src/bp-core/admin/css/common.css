@@ -567,7 +567,15 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 /*
  * 2.7 Document Extensions
  */
-tr.document-extensions-listing > td {
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
+  display: none;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
+  display: table-cell;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing > td {
   padding: 0;
 }
 
@@ -577,7 +585,7 @@ table.extension-listing {
 }
 
 table.extension-listing thead th {
-  padding: 8px 10px;
+  padding: 12px 10px;
 }
 
 table.extension-listing thead th.ext-head-enable {
@@ -585,7 +593,7 @@ table.extension-listing thead th.ext-head-enable {
 }
 
 table.extension-listing thead th.ext-head-control {
-  width: 10px;
+  width: 30px;
 }
 
 table.extension-listing thead th.ext-head-extension {
@@ -593,7 +601,7 @@ table.extension-listing thead th.ext-head-extension {
 }
 
 table.extension-listing tbody td {
-  padding: 8px 10px;
+  padding: 10px;
 }
 
 table.extension-listing tbody td input.error {
@@ -602,24 +610,21 @@ table.extension-listing tbody td input.error {
 
 table.extension-listing tbody td #btn-remove-extensions {
   cursor: pointer;
-}
-
-table.extension-listing tbody td #btn-add-extensions {
-  cursor: pointer;
-  float: right;
-  margin-right: 2px;
+  color: #a00;
+  text-decoration: none;
+  border-bottom: 1px solid #a00;
+  font-size: 13px;
 }
 
 table.extension-listing tbody td input[type="text"] {
   width: 100%;
 }
 
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
-  display: none;
-}
-
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
-  display: table-cell;
+table.extension-listing tfoot td #btn-add-extensions,
+table.extension-listing tfoot td #btn-check-mime-type {
+  cursor: pointer;
+  float: right;
+  margin-left: 8px;
 }
 
 /*
