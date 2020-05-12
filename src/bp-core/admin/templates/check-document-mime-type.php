@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Find your file\'s MIME Type', 'buddyboss' ); ?></h1>
+			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Upload a sample file to determine it\'s MIME Type', 'buddyboss' ); ?></h1>
 		</div>
 	</div>
 

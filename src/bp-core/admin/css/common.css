@@ -585,7 +585,7 @@ table.extension-listing {
 }
 
 table.extension-listing thead th {
-  padding: 12px 10px;
+  padding: 12px 18px;
 }
 
 table.extension-listing thead th.ext-head-extension {
@@ -610,9 +610,13 @@ table.extension-listing tbody td input.error {
 
 table.extension-listing tbody td input.hide-border {
   border: none;
-  background: transparent;
+  background-color: transparent;
+  color: #555;
   margin: 0;
-  padding: 0;
+}
+
+table.extension-listing tbody td input.hide-border:focus {
+  background-color: #eee;
 }
 
 table.extension-listing tbody td input[type="text"] {

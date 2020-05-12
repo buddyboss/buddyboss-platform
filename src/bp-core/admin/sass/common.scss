@@ -607,7 +607,7 @@ table.extension-listing {
 	margin: 9px 0 12px;
 
 	thead th {
-		padding: 12px 10px;
+		padding: 12px 18px;
 
 		&.ext-head-extension {
 			width: 5%;
@@ -631,9 +631,13 @@ table.extension-listing {
 
 		input.hide-border {
 			border: none;
-			background: transparent;
+			background-color: transparent;
+			color: #555;
 			margin: 0;
-			padding: 0;
+
+			&:focus {
+				background-color: #eee;
+			}
 		}
 
 		input[type="text"] {
