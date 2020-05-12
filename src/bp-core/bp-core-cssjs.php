@@ -344,7 +344,7 @@ function bp_core_register_common_styles() {
 				'dependencies' => array(),
 			),
 			'jquery-datetimepicker' => array(
-					'file'         => "{$url}jquery.datetimepicker{$min}.css",
+					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
 					'dependencies' => array(),
 			),
 		)
