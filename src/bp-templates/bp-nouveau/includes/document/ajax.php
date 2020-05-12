@@ -578,26 +578,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['document'] ) ) {
 
-		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
-		$medias = $_POST['document'];
-		if ( ! empty( $medias ) && is_array( $medias ) ) {
-			// set album id for media.
-			foreach ( $medias as $key => $media ) {
-				$_POST['document'][ $key ]['folder_id'] = $folder_id;
-			}
-		}
-
-		// save all media uploaded.
-		bp_document_add_handler();
-
-		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
-	}
 
 	if ( $group_id > 0 ) {
 		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
