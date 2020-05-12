@@ -530,8 +530,17 @@ window.bp = window.bp || {};
 							var documentStream = $( '#media-stream' );
 							documentStream.html( '' );
 							documentStream.html( response.data.html );
+							$( document ).find( '.open-popup .error' ).hide();
+							$( document ).find( '.open-popup .error' ).html( '' );
+							target.removeClass( 'loading' );
+							$( document ).removeClass( 'open-popup' );
+						} else {
+							$( document ).find( '.open-popup .error' ).show();
+							$( document ).find( '.open-popup .error' ).html( response.data.feedback );
+							target.removeClass( 'loading' );
+							return false;
 						}
-						target.removeClass( 'loading' );
+
 					}
 				}
 			);
@@ -2522,6 +2531,7 @@ window.bp = window.bp || {};
 
 			$( currentTarget ).find( '.bb-model-header h4 .target_name' ).text( currentTargetName );
 			$( currentTarget ).show();
+			$( currentTarget ).addClass( 'open-popup' );
 
 			var parentsOpen = this.currentTargetParent;
 			if ( '' !== this.moveToIdPopup ) {

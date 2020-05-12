@@ -2137,3 +2137,13 @@ function bp_document_get_folder_attachemt_ids( $folder_id ) {
 	return $data;
 
 }
+
+function bp_document_get_folder_children( $folder_id ) {
+
+	global $bp, $wpdb;
+
+	$table = $bp->document->table_name_folders;
+
+	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) ) );
+
+}

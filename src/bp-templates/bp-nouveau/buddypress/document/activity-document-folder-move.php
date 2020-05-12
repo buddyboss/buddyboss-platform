@@ -23,6 +23,7 @@
 						<?php bp_get_template_part( 'document/location-move' ); ?>
 						<?php bp_get_template_part( 'document/document-create-folder' ); ?>
 					</div>
+					<div class="error" style="display: none;"></div>
 					<footer class="bb-model-footer">
 						<a href="#" class="bp-document-open-create-popup-folder"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 						<a class="ac-folder-close-button" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
