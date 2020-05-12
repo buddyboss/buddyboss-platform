@@ -41,7 +41,7 @@ if ( $group_id > 0 ) {
 		<a href="<?php echo esc_url( $download_url ); ?>" class="document-detail-wrap">
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
-			<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
+			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to Download', 'buddyboss' ); ?></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">
