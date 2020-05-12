@@ -497,7 +497,7 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card.section-bp_document_settings_extensions h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/clone.svg);
+	display: none;
 }
 
 .bp-admin-card.section-bp_media_settings_emoji h2:before {
@@ -604,22 +604,22 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 
 table.extension-listing {
 	border-radius: 4px;
-	margin-bottom: 12px;
+	margin: 9px 0 12px;
 
 	thead th {
 		padding: 12px 10px;
 
-		&.ext-head-enable {
-			width: 1px;
-		}
-
-		&.ext-head-control {
-			width: 30px;
-		}
-
 		&.ext-head-extension {
-			width: 100px;
+			width: 5%;
 		}
+
+		&.ext-head-desc {
+			width: 12%;
+		}
+	}
+
+	thead td.ext-head-enable {
+		width: 1.2em;
 	}
 
 	tbody td {
@@ -632,18 +632,24 @@ table.extension-listing {
 		input.hide-border {
 			border: none;
 			background: transparent;
+			margin: 0;
+			padding: 0;
+		}
+
+		input[type="text"] {
+			width: 100%;
+		}
+
+		input.extension-mime[type="text"] {
+			width: 92%;
 		}
 
 		#btn-remove-extensions {
 			cursor: pointer;
 			color: #a00;
-			text-decoration: none;
-			border-bottom: 1px solid #a00;
-			font-size: 13px;
-		}
-
-		input[type="text"] {
-			width: 100%;
+			font-size: 18px;
+			vertical-align: middle;
+			margin-left: 6px;
 		}
 	}
 

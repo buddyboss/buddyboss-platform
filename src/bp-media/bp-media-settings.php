@@ -1070,11 +1070,10 @@ function bp_media_settings_callback_extension_document_support() {
 	?>
 	<table class="extension-listing wp-list-table widefat fixed striped">
 		<thead>
-		<th class="ext-head ext-head-enable"><input id="bp_select_extensions" type="checkbox" value="1"></th>
+		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1"></td>
 		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-control"></th>
 		</thead>
 		<tbody>
 		<?php
@@ -1099,21 +1098,13 @@ function bp_media_settings_callback_extension_document_support() {
 				</td>
 				<td>
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>"/>
+					<?php
+					if ( ! $is_default ) {
+						?>
+						<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
+						<?php
+					} ?>
 				</td>
-				<?php
-				if ( ! $is_default ) {
-					?>
-					<td>
-						<span class="dashicons dashicons-dismiss" id="btn-remove-extensions"></span>
-					</td>
-					<?php
-				} else {
-					?>
-					<td>
-					</td>
-					<?php
-				}
-				?>
 			</tr>
 			<?php
 		}
@@ -1133,9 +1124,7 @@ function bp_media_settings_callback_extension_document_support() {
 			</td>
 			<td>
 				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" class="extension-mime"/>
-			</td>
-			<td>
-				<span id="btn-remove-extensions"><?php echo esc_html__( 'Delete', 'buddyboss' ); ?></span>
+				<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
 			</td>
 		</tr>
 		</tbody>
@@ -1158,7 +1147,6 @@ function bp_media_settings_callback_extension_document_support() {
 				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" id="btn-check-mime-type" class="button" target="_blank"><?php echo esc_html__( 'Find MIME Type', 'buddyboss' ); ?></a>
 
 			</td>
-			<td></td>
 		</tr>
 		</tfoot>
 	</table>
@@ -1268,6 +1256,6 @@ function bp_document_get_settings_fields() {
  */
 function bp_document_settings_callback_extension_section() {
 	?>
-	<p><?php esc_html_e( 'Check which file extensions are allowed to be uploaded. Add custom extensions at the bottom.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Check which file extensions are allowed to be uploaded. Add custom extensions at the bottom of the table.', 'buddyboss' ); ?></p>
 	<?php
 }

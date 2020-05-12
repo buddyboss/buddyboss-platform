@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-12 17:37:33+00:00\n"
+"POT-Creation-Date: 2020-05-12 22:32:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -933,7 +933,6 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:932
 #: bp-groups/classes/class-bp-groups-list-table.php:409
 #: bp-groups/classes/class-bp-groups-list-table.php:573
-#: bp-media/bp-media-settings.php:1138
 #: bp-members/classes/class-bp-members-list-table.php:177
 #: bp-members/classes/class-bp-members-list-table.php:327
 #: bp-members/classes/class-bp-members-ms-list-table.php:164
@@ -14151,29 +14150,29 @@ msgstr ""
 msgid "Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1146
+#: bp-media/bp-media-settings.php:1135
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1158
+#: bp-media/bp-media-settings.php:1147
 msgid "Find MIME Type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1173
+#: bp-media/bp-media-settings.php:1161
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Manage</a> which file extensions are "
 "allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1210
-msgid "Documents &#8594; File Extensions"
+#: bp-media/bp-media-settings.php:1198
+msgid "<a href=\"#\">Documents</a> &#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1252
+#: bp-media/bp-media-settings.php:1240
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1271
+#: bp-media/bp-media-settings.php:1259
 msgid ""
 "Check which file extensions are allowed to be uploaded. Add custom "
 "extensions at the bottom."
