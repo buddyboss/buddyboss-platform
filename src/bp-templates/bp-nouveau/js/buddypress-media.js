@@ -456,6 +456,7 @@ window.bp = window.bp || {};
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().hide();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).append('<p> Create Folder</p>');
 			$( '.modal-container #bb-folder-privacy' ).addClass( 'new-folder-create-privacy' );
+			$( document ).find( '.open-popup .error' ).hide();
 		},
 
 		savePrivacy: function( event ) {

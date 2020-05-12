@@ -1062,6 +1062,16 @@ function bp_nouveau_ajax_document_folder_move() {
 		wp_send_json_error( $response );
 	}
 
+	if ( $destination_folder_id ===  $folder_id ) {
+		$response = array(
+				'feedback' => sprintf(
+						'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+						esc_html__( 'Couldn’t move item. ', 'buddyboss' )
+				),
+		);
+		wp_send_json_error( $response );
+	}
+
 	$fetch_children = bp_document_get_folder_children( $folder_id );
 	if ( !empty( $fetch_children ) ) {
 		if ( in_array( $destination_folder_id, $fetch_children, true ) ) {
