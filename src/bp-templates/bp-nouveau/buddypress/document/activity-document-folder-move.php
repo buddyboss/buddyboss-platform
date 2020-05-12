@@ -16,9 +16,6 @@
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Move ', 'buddyboss' ); ?> <span class="target_name"></span> <?php esc_html_e( ' to ', 'buddyboss' ); ?><span class="target_folder">...</span></h4>
 					</header>
-					<div class="bb-field-wrap bb-field-wrap-search">
-						<input type="text" class="ac_document_search_folder" value="" placeholder="<?php esc_html_e( 'Search Folders', 'buddyboss' ); ?>" />
-					</div>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'document/location-move' ); ?>
 						<?php bp_get_template_part( 'document/document-create-folder' ); ?>

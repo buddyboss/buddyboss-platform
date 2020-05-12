@@ -3090,42 +3090,6 @@ window.bp = window.bp || {};
 					// 	}
 					// );
 
-					$( document ).on(
-						'keyup change',
-						targetPopup + ' .ac_document_search_folder',
-						function () {
-
-							var keyword = $( this ).val();
-							if (keyword == '') {
-
-								$( this ).closest( '.has-folderlocationUI' ).find( '.location-folder-list-wrap .location-folder-list' ).show().parent().siblings( '.ac_document_search_folder_list' ).hide();
-
-							} else {
-								$( this ).closest( '.has-folderlocationUI' ).find( '.ac_document_search_folder_list ul' ).html( ' ' );
-
-								var find_folder_selector = '';
-								if ($( this ).closest( '.has-folderlocationUI' ).find( '.location-folder-list-wrap ul.location-folder-list li.is_active' ).length > 0) {
-									find_folder_selector = '.is_active li';
-								}
-
-								$( this ).closest( '.has-folderlocationUI' ).find( '.location-folder-list-wrap ul.location-folder-list li' + find_folder_selector ).each(
-									function () {
-										/* jshint ignore:start */
-										if ($( this ).children( 'span' ).text().search( new RegExp( keyword, "i" ) ) >= 0) {
-											$( this ).closest( '.has-folderlocationUI' ).find( '.ac_document_search_folder_list ul' ).append( '<li data-id="' + $( this ).attr( 'data-id' ) + '"><span>' + $( this ).children( 'span' ).text() + '</span></li>' );
-										}
-										/* jshint ignore:end */
-									}
-								);
-
-								$( this ).closest( '.has-folderlocationUI' ).find( '.location-folder-list-wrap .location-folder-list' ).hide().parent().siblings( '.ac_document_search_folder_list' ).show();
-
-								keyword = '';
-							}
-
-						}
-					);
-
 					if ( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).length ) {
 						$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).text() );
 					}
