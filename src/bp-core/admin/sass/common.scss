@@ -18,6 +18,7 @@ TABLE OF CONTENTS:
 	2.4 Tooltips
 	2.5 Settings - Tabs
 	2.6 Settings - Cards
+	2.7 Document Extensions
 3.0 Content
 	3.1 Users List
 	3.2 Activity List
@@ -527,56 +528,6 @@ tr.bp-search-parent-field label {
 	width: 1px;
 }
 
-tr.document-extensions-listing > td {
-	padding: 0;
-}
-
-table.extension-listing thead th {
-	padding: 8px 10px;
-}
-
-table.extension-listing tbody td {
-	padding: 8px 10px;
-}
-
-table.extension-listing thead th.ext-head-enable {
-	width: 1px;
-}
-
-table.extension-listing thead th.ext-head-control {
-	width: 10px;
-}
-
-table.extension-listing thead th.ext-head-extension {
-	width: 100px;
-}
-
-table.extension-listing td input.error {
-	border: 1px solid #f00;
-}
-
-table.extension-listing td #btn-remove-extensions {
-	cursor: pointer;
-}
-
-table.extension-listing td #btn-add-extensions {
-	cursor: pointer;
-	float: right;
-	margin-right: 2px;
-}
-
-table.extension-listing td input[type="text"] {
-	width: 100%;
-}
-
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
-	display: none;
-}
-
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
-	display: table-cell;
-}
-
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/page.svg);
@@ -630,6 +581,66 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_compatibility-integration h2:before {
 	background-image: url(../../images/admin/icons/logos/buddypress.png);
 	background-size: 100% 100%;
+}
+
+/*
+ * 2.7 Document Extensions
+ */
+
+tr.document-extensions-listing > td {
+	padding: 0;
+}
+
+table.extension-listing {
+	border-radius: 4px;
+	margin-bottom: 12px;
+
+	thead th {
+		padding: 8px 10px;
+
+		&.ext-head-enable {
+			width: 1px;
+		}
+
+		&.ext-head-control {
+			width: 10px;
+		}
+
+		&.ext-head-extension {
+			width: 100px;
+		}
+	}
+
+	tbody td {
+		padding: 8px 10px;
+
+		input.error {
+			border: 1px solid #f00;
+		}
+
+		#btn-remove-extensions {
+			cursor: pointer;
+		}
+
+		#btn-add-extensions {
+			cursor: pointer;
+			float: right;
+			margin-right: 2px;
+		}
+
+		input[type="text"] {
+			width: 100%;
+		}
+	}
+
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
+	display: none;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
+	display: table-cell;
 }
 
 /*
