@@ -527,25 +527,27 @@ tr.bp-search-parent-field label {
 	width: 1px;
 }
 
-table.extension-listing tbody td {
-	padding: 6px 10px;
+tr.document-extensions-listing > td {
+	padding: 0;
 }
 
 table.extension-listing thead th {
-	padding: 6px 10px;
+	padding: 8px 10px;
 }
 
-table.extension-listing thead th.ext-head-enable,
+table.extension-listing tbody td {
+	padding: 8px 10px;
+}
+
+table.extension-listing thead th.ext-head-enable {
+	width: 1px;
+}
+
 table.extension-listing thead th.ext-head-control {
-	width: 30px;
-	padding-left: 5px;
+	width: 10px;
 }
 
-table.extension-listing thead th.ext-head-name {
-	width: 100px;
-}
-
-table.extension-listing td input[type="text"].extension-name {
+table.extension-listing thead th.ext-head-extension {
 	width: 100px;
 }
 
@@ -559,7 +561,8 @@ table.extension-listing td #btn-remove-extensions {
 
 table.extension-listing td #btn-add-extensions {
 	cursor: pointer;
-	font-size: 22px;
+	float: right;
+	margin-right: 2px;
 }
 
 table.extension-listing td input[type="text"] {

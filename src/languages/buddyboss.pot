@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-12 05:42:33+00:00\n"
+"POT-Creation-Date: 2020-05-12 05:53:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -527,7 +527,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:79
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:29
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:28
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:31
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:24
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:107
@@ -1891,7 +1891,7 @@ msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1251
-#: bp-media/bp-media-settings.php:1287 bp-search/bp-search-settings.php:435
+#: bp-media/bp-media-settings.php:1284 bp-search/bp-search-settings.php:435
 #: bp-search/bp-search-settings.php:449
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:22
@@ -2936,7 +2936,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:841
 #: bp-templates/bp-nouveau/includes/document/ajax.php:929
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1049
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1207
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1194
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:106
@@ -3441,6 +3441,7 @@ msgid "Your Uploaded Document MIME Type is: "
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:41
+#: bp-media/bp-media-settings.php:1076
 msgid "MIME Type"
 msgstr ""
 
@@ -5061,7 +5062,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
 #: bp-templates/bp-nouveau/includes/document/ajax.php:686
 #: bp-templates/bp-nouveau/includes/document/ajax.php:972
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1092
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1079
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr ""
@@ -10381,7 +10382,7 @@ msgid "Unspam"
 msgstr ""
 
 #: bp-forums/replies/template.php:2300
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:30
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:32
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:62
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:125
@@ -10592,7 +10593,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
 #: bp-templates/bp-nouveau/includes/document/ajax.php:700
 #: bp-templates/bp-nouveau/includes/document/ajax.php:986
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1106
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1093
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1653
 msgid "Visibility"
 msgstr ""
@@ -14148,38 +14149,36 @@ msgstr ""
 msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1073
-msgid "Enable"
-msgstr ""
-
 #: bp-media/bp-media-settings.php:1075
 msgid "Extension"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:1076
-msgid "Mime Type"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1164
 msgid "Check MIME Type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1187
+#: bp-media/bp-media-settings.php:1171
+msgid "Add Extension"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1184
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Manage</a> which file extensions are "
 "allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1224
+#: bp-media/bp-media-settings.php:1221
 msgid "Documents &#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1266
+#: bp-media/bp-media-settings.php:1263
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1285
-msgid "Enable or disable which file extensions are allowed to be uploaded:"
+#: bp-media/bp-media-settings.php:1282
+msgid ""
+"Check which file extensions are allowed to be uploaded. Add custom "
+"extensions at the bottom."
 msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:192
@@ -15710,7 +15709,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:59
 #: bp-templates/bp-nouveau/includes/document/ajax.php:724
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1010
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1130
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1117
 #: bp-templates/bp-nouveau/includes/media/ajax.php:148
 msgid "Load More"
 msgstr ""
@@ -16086,7 +16085,7 @@ msgstr ""
 msgid "Search Folders"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:28
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:27
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:30
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:25
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:56
@@ -16194,7 +16193,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:34
 #: bp-templates/bp-nouveau/includes/document/ajax.php:693
 #: bp-templates/bp-nouveau/includes/document/ajax.php:979
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1099
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1086
 msgid "Modified"
 msgstr ""
 
@@ -17327,12 +17326,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:683
 #: bp-templates/bp-nouveau/includes/document/ajax.php:969
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1089
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1076
 msgid "Sort By:"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1071
-msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/functions.php:72
