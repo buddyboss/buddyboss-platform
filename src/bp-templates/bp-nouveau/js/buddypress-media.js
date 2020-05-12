@@ -3003,6 +3003,15 @@ window.bp = window.bp || {};
 							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span' ).each(function() {
 								$(this).show();
 							});
+
+							if( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' )) ) {
+								$( targetPopup ).find( '.bp-document-move' ).addClass('is-disabled');
+								$( targetPopup ).find( '.bp-folder-move' ).addClass('is-disabled');
+							} else {
+								$( targetPopup ).find( '.bp-document-move' ).removeClass('is-disabled');
+								$( targetPopup ).find( '.bp-folder-move' ).removeClass('is-disabled');
+							}
+
 						}
 					);
 
@@ -3051,6 +3060,14 @@ window.bp = window.bp || {};
 							}
 
 							$( event.currentTarget ).nextAll().remove();
+
+							if( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' )) ) {
+								$( targetPopup ).find( '.bp-document-move' ).addClass('is-disabled');
+								$( targetPopup ).find( '.bp-folder-move' ).addClass('is-disabled');
+							} else {
+								$( targetPopup ).find( '.bp-document-move' ).removeClass('is-disabled');
+								$( targetPopup ).find( '.bp-folder-move' ).removeClass('is-disabled');
+							}
 
 						}
 					);
@@ -3176,6 +3193,19 @@ window.bp = window.bp || {};
 					$( targetPopup ).find( '.location-folder-back' ).hide();
 					$( targetPopup ).find( '.target_folder' ).text( BP_Nouveau.media.target_text );
 				}
+
+				//Disable move button if current folder is already a parent
+				setTimeout( function() {
+
+					if( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' )) ) {
+						$( targetPopup ).find( '.bp-document-move' ).addClass('is-disabled');
+						$( targetPopup ).find( '.bp-folder-move' ).addClass('is-disabled');
+					} else {
+						$( targetPopup ).find( '.bp-document-move' ).removeClass('is-disabled');
+						$( targetPopup ).find( '.bp-folder-move' ).removeClass('is-disabled');
+					}
+
+				},100);
 
 			}
 		},

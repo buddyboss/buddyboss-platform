@@ -13911,6 +13911,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   animation: spin 3s infinite linear;
 }
 
+.modal-container.has-folderlocationUI .bb-model-footer a.is-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .bp-media-move-file .bb-model-footer,
 .bp-media-move-folder .bb-model-footer {
   display: inline-block;

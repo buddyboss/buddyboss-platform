@@ -2659,6 +2659,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			}
 
 		}
+
+		&.is-disabled {
+			pointer-events: none;
+			opacity: 0.5;
+		}
 	}
 }
 
