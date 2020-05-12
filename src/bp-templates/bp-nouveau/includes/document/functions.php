@@ -578,7 +578,7 @@ function bp_media_allowed_document_type() {
 			'name'        => '7z',
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
-			'description' => 'Zip',
+			'description' => '7z Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
