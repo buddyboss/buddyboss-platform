@@ -73,7 +73,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 												<ul>
 													<li>
 														<a id="bp-edit-folder-open" href="#"><i
-																class="bb-icon-edit"></i> <?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
+																class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
 														</a>
 													</li>
 													<li><a href="#" id="bb-delete-folder"><i
@@ -95,7 +95,7 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 												<ul>
 													<li>
 														<a id="bp-edit-folder-open" href="#"><i
-																class="bb-icon-edit"></i> <?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
+																class="bb-icon-edit-square-small"></i><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?>
 														</a>
 													</li>
 													<li><a href="#" id="bb-delete-folder"><i

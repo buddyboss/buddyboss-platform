@@ -2441,7 +2441,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			.media-folder_action__list {
 				position: absolute;
 				top: 33px;
-				right: -4px;
+				right: -20px;
 				background: #fff;
 				box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 				border-radius: 4px;
@@ -2457,9 +2457,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 					height: 0;
 					top: 0;
 					margin: 0 auto;
-					right: 10px;
+					right: 27px;
 					box-sizing: border-box;
-					border: 8px solid #000;
+					border: 6px solid #000;
 					border-color: #fff #fff transparent transparent;
 					-webkit-transform-origin: 0 0;
 					-ms-transform-origin: 0 0;
@@ -2475,7 +2475,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 				ul {
 					list-style: none;
-					margin: 10px 0;
+					margin: 5px 0;
 					padding: 0;
 
 					li {
@@ -2508,16 +2508,23 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						}
 
 						a {
-							padding: 5px 10px;
+							padding: 10px 14px;
 							display: block;
-							font-size: 13px;
+							font-size: 14px;
+							line-height: 1;
+							color: #7f868f;
 
 							&:hover {
 								background-color: #f5f5f5;
+								color: $blue;
 							}
 
 							i {
+								display: inline-block;
 								margin-right: 10px;
+								width: 20px;
+								font-size: 15px;
+								text-align: center !important;
 							}
 						}
 
