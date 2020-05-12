@@ -1124,7 +1124,6 @@ function bp_media_settings_callback_extension_document_support() {
 			</td>
 			<td>
 				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
-				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" id="btn-check-mime-type" class="button" target="_blank"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
 				<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
 			</td>
 		</tr>
@@ -1145,6 +1144,8 @@ function bp_media_settings_callback_extension_document_support() {
 					bp_get_admin_url( 'admin.php' )
 				);
 				?>
+
+				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" id="btn-check-mime-type" class="button" target="_blank"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
 
 			</td>
 		</tr>
