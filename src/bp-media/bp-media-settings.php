@@ -1068,12 +1068,12 @@ function bp_media_settings_callback_extension_document_support() {
 	$extensions = bp_document_extensions_list();
 	$count      = count( $extensions ) + 1;
 	?>
-	<table class="extension-listing">
+	<table class="extension-listing wp-list-table widefat fixed striped">
 		<thead>
-		<th class="ext-head ext-head-enable"><?php echo esc_html__( 'Enable', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-name"><?php echo esc_html__( 'Name', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-name"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'Mime Type', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-enable"></th>
+		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Name', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-control"></th>
 		</thead>
@@ -1167,11 +1167,8 @@ function bp_media_settings_callback_extension_document_support() {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan="5">
-
-			</td>
-			<td>
-				<span class="dashicons dashicons-plus-alt" id="btn-add-extensions"></span>
+			<td colspan="6">
+				<div id="btn-add-extensions" class="button"><?php echo esc_html__( 'Add Extension', 'buddyboss' ); ?></div>
 			</td>
 		</tr>
 		</tfoot>
@@ -1282,7 +1279,7 @@ function bp_document_get_settings_fields() {
  */
 function bp_document_settings_callback_extension_section() {
 	?>
-	<p><?php esc_html_e( 'Enable or disable which file extensions are allowed to be uploaded:', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Check which file extensions are allowed to be uploaded. Add custom extensions at the bottom.', 'buddyboss' ); ?></p>
 	<input id="bp_select_extensions" type="checkbox" value="1">
 	<label for="bp_select_extensions"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></label>
 
