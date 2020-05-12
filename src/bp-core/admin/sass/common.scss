@@ -587,8 +587,19 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
  * 2.7 Document Extensions
  */
 
-tr.document-extensions-listing > td {
-	padding: 0;
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing {
+
+	th {
+		display: none;
+	}
+
+	td table.extension-listing thead tr th {
+		display: table-cell;
+	}
+
+	> td {
+		padding: 0;
+	}
 }
 
 table.extension-listing {
@@ -596,7 +607,7 @@ table.extension-listing {
 	margin-bottom: 12px;
 
 	thead th {
-		padding: 8px 10px;
+		padding: 12px 10px;
 
 		&.ext-head-enable {
 			width: 1px;
@@ -612,7 +623,7 @@ table.extension-listing {
 	}
 
 	tbody td {
-		padding: 8px 10px;
+		padding: 10px;
 
 		input.error {
 			border: 1px solid #f00;
@@ -637,14 +648,6 @@ table.extension-listing {
 		}
 	}
 
-}
-
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
-	display: none;
-}
-
-.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
-	display: table-cell;
 }
 
 /*
