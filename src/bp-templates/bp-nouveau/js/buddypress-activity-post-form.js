@@ -1729,7 +1729,7 @@ window.bp = window.bp || {};
 				}
 
 				var gif_box = $( event.currentTarget ).parents( '#whats-new-form' ).find( '#whats-new-attachments .activity-attached-gif-container' );
-				if ( this.$self.hasClass( 'open' ) && gif_box.length && $.trim( gif_box.html() ) == '' ) {
+				if ( gif_box.length && $.trim( gif_box.html() ) == '' ) {
 					this.$self.removeClass( 'open' );
 				}
 			},
