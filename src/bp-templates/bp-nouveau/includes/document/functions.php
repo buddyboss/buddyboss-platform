@@ -159,7 +159,6 @@ function bp_media_allowed_document_type() {
 
 	$extension_lists = array(
 		array(
-			'name'        => 'abw',
 			'extension'   => '.abw',
 			'mime_type'   => 'application/x-abiword',
 			'description' => 'AbiWord Document',
@@ -167,7 +166,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ace',
 			'extension'   => '.ace',
 			'mime_type'   => 'application/x-ace-compressed',
 			'description' => 'ACE Archive',
@@ -175,7 +173,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'adp',
 			'extension'   => '.adp',
 			'mime_type'   => 'audio/adpcm',
 			'description' => 'Adaptive differential pulse-code modulation',
@@ -183,7 +180,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ai',
 			'extension'   => '.ai',
 			'mime_type'   => 'application/postscript',
 			'description' => 'Illustrator File',
@@ -191,7 +187,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'apk',
 			'extension'   => '.apk',
 			'mime_type'   => 'application/vnd.android.package-archive',
 			'description' => 'Android Package',
@@ -199,7 +194,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'css',
 			'extension'   => '.css',
 			'mime_type'   => 'text/css',
 			'description' => 'CSS',
@@ -207,7 +201,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'css',
 			'extension'   => '.css',
 			'mime_type'   => 'text/plain',
 			'description' => 'CSS',
@@ -215,7 +208,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'csv',
 			'extension'   => '.csv',
 			'mime_type'   => 'text/csv',
 			'description' => 'CSV',
@@ -223,7 +215,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'doc',
 			'extension'   => '.doc',
 			'mime_type'   => 'application/msword',
 			'description' => 'Word Document',
@@ -231,7 +222,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'docm',
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
 			'description' => 'Word Document (Macro Enabled)',
@@ -239,7 +229,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'docm',
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Word Document (Macro Enabled)',
@@ -247,7 +236,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'docx',
 			'extension'   => '.docx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Word Document',
@@ -255,7 +243,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'dotm',
 			'extension'   => '.dotm',
 			'mime_type'   => 'application/vnd.ms-word.template.macroenabled.12',
 			'description' => 'Word Template (Macro Enabled)',
@@ -263,7 +250,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'dotx',
 			'extension'   => '.dotx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Word Template',
@@ -271,7 +257,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'gzip',
 			'extension'   => '.gzip',
 			'mime_type'   => 'application/gzip',
 			'description' => 'Gzip Archive',
@@ -279,7 +264,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'htm',
 			'extension'   => '.htm',
 			'mime_type'   => 'text/html',
 			'description' => 'HTML',
@@ -287,7 +271,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'html',
 			'extension'   => '.html',
 			'mime_type'   => 'text/html',
 			'description' => 'HTML',
@@ -295,7 +278,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ico',
 			'extension'   => '.ico',
 			'mime_type'   => 'image/x-icon',
 			'description' => 'ICO',
@@ -303,7 +285,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ics',
 			'extension'   => '.ics',
 			'mime_type'   => 'text/calendar',
 			'description' => 'iCalendar',
@@ -311,7 +292,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'jar',
 			'extension'   => '.jar',
 			'mime_type'   => 'application/java-archive',
 			'description' => 'JAR Archive',
@@ -319,7 +299,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'js',
 			'extension'   => '.js',
 			'mime_type'   => 'application/javascript',
 			'description' => 'JavaScript',
@@ -327,7 +306,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'mp3',
 			'extension'   => '.mp3',
 			'mime_type'   => 'audio/mpeg',
 			'description' => 'MP3',
@@ -335,7 +313,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ods',
 			'extension'   => '.ods',
 			'mime_type'   => 'application/vnd.oasis.opendocument.spreadsheet',
 			'description' => 'OpenDocument Spreadsheet',
@@ -343,7 +320,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'odt',
 			'extension'   => '.odt',
 			'mime_type'   => 'application/vnd.oasis.opendocument.text',
 			'description' => 'OpenDocument Text',
@@ -351,7 +327,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'pdf',
 			'extension'   => '.pdf',
 			'mime_type'   => 'application/pdf',
 			'description' => 'PDF',
@@ -359,7 +334,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'potm',
 			'extension'   => '.potm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.template.macroenabled.12',
 			'description' => 'PowerPoint Template (Macro Enabled)',
@@ -367,7 +341,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'potx',
 			'extension'   => '.potx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.template',
 			'description' => 'PowerPoint Template',
@@ -375,7 +348,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ppsx',
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
 			'description' => 'PowerPoint Slideshow',
@@ -383,7 +355,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ppsx',
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Slideshow',
@@ -391,7 +362,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'ppt',
 			'extension'   => '.ppt',
 			'mime_type'   => 'application/vnd.ms-powerpoint',
 			'description' => 'PowerPoint Presentation',
@@ -399,7 +369,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'pptm',
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
@@ -407,7 +376,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'pptm',
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/octet-stream',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
@@ -415,7 +383,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'pptx',
 			'extension'   => '.pptx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Presentation',
@@ -423,7 +390,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'psd',
 			'extension'   => '.psd',
 			'mime_type'   => 'image/vnd.adobe.photoshop',
 			'description' => 'Photoshop Document',
@@ -431,7 +397,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'rar',
 			'extension'   => '.rar',
 			'mime_type'   => 'application/x-rar-compressed',
 			'description' => 'RAR Archive',
@@ -439,7 +404,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'rss',
 			'extension'   => '.rss',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'RSS',
@@ -447,7 +411,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'rtf',
 			'extension'   => '.rtf',
 			'mime_type'   => 'application/rtf',
 			'description' => 'Rich Text Format',
@@ -455,7 +418,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'svg',
 			'extension'   => '.svg',
 			'mime_type'   => 'image/svg+xml',
 			'description' => 'SVG',
@@ -463,7 +425,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'tar',
 			'extension'   => '.tar',
 			'mime_type'   => 'application/x-tar',
 			'description' => 'TAR Archive',
@@ -471,7 +432,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'txt',
 			'extension'   => '.txt',
 			'mime_type'   => 'text/plain',
 			'description' => 'Text File',
@@ -479,7 +439,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'vcf',
 			'extension'   => '.vcf',
 			'mime_type'   => 'text/x-vcard',
 			'description' => 'vCard',
@@ -487,7 +446,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'wav',
 			'extension'   => '.wav',
 			'mime_type'   => 'audio/x-wav',
 			'description' => 'Waveform Audio',
@@ -495,7 +453,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xlam',
 			'extension'   => '.xlam',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
@@ -503,7 +460,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xls',
 			'extension'   => '.xls',
 			'mime_type'   => 'application/vnd.ms-excel',
 			'description' => 'Excel Spreadsheet',
@@ -511,7 +467,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xlsb',
 			'extension'   => '.xlsb',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
@@ -519,7 +474,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xlsm',
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
@@ -527,7 +481,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xlsx',
 			'extension'   => '.xlsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet',
@@ -535,7 +488,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xltm',
 			'extension'   => '.xltm',
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
 			'description' => 'Excel Template (Macro Enabled)',
@@ -543,7 +495,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xltx',
 			'extension'   => '.xltx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Excel Template',
@@ -551,7 +502,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'xml',
 			'extension'   => '.xml',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'XML',
@@ -559,7 +509,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'yaml',
 			'extension'   => '.yaml',
 			'mime_type'   => 'text/yaml',
 			'description' => 'YAML',
@@ -567,7 +516,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => 'zip',
 			'extension'   => '.zip',
 			'mime_type'   => 'application/zip',
 			'description' => 'Zip',
@@ -575,7 +523,6 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		array(
-			'name'        => '7z',
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
 			'description' => '7z Archive',

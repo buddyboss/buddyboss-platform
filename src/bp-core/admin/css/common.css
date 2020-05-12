@@ -608,6 +608,11 @@ table.extension-listing tbody td input.error {
   border: 1px solid #f00;
 }
 
+table.extension-listing tbody td input.hide-border {
+  border: none;
+  background: transparent;
+}
+
 table.extension-listing tbody td #btn-remove-extensions {
   cursor: pointer;
   color: #a00;
