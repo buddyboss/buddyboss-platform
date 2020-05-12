@@ -629,6 +629,11 @@ table.extension-listing {
 			border: 1px solid #f00;
 		}
 
+		input.hide-border {
+			border: none;
+			background: transparent;
+		}
+
 		#btn-remove-extensions {
 			cursor: pointer;
 			color: #a00;

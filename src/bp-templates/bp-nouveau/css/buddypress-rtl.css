@@ -2318,6 +2318,8 @@ input.search-query-input {
 .active#forums-document-button .bb-icon,
 .active#bp-group-messages-media-button .bb-icon,
 .active#bp-group-messages-document-button .bb-icon,
+.active#bp-group-messages-gif-button .bb-icon,
+.active#forums-gif-button .bb-icon,
 .active#messages-gif-button .bb-icon {
   color: #122b46;
 }
