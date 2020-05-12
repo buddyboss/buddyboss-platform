@@ -257,6 +257,10 @@ class BP_Members_Component extends BP_Component {
 			$default_tab = 'photos';
 		}
 
+		if ( 'document' === $default_tab ) {
+			$default_tab = 'documents';
+		}
+
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************

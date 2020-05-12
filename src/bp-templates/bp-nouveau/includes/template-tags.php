@@ -1005,6 +1005,12 @@ function bp_nouveau_get_nav_classes() {
 		if ( $nav_item->slug === $selected || ( $nav_item->slug == 'just-me' && strpos( $selected, 'just-me' ) !== false ) ) {
 			$classes = array_merge( $classes, array( 'current', 'selected' ) );
 		}
+
+		if ( 'document' === $nav_item->css_id && 'folders' === bp_current_action() && 'document' === bp_current_component() && (int) bp_action_variable( 0 ) > 0 ) {
+			$classes = array_merge( $classes, array( 'current', 'selected' ) );
+		}
+
+
 	}
 
 	if ( ! empty( $classes ) ) {
