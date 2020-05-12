@@ -32,8 +32,8 @@
 							</div>
 						</div>
 					</div>
-					<footer class="flex align-items-center bb-model-footer document-uploader-footer">
-						<a class="button" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+					<footer class="bb-model-footer document-uploader-footer">
+						<a class="button pull-right" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

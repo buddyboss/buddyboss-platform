@@ -12486,8 +12486,8 @@ ul.bb-albums-list .bb-more-photos strong {
   min-width: 130px;
 }
 
-.bb-model-footer.document-uploader-footer {
-  justify-content: space-around;
+.bb-model-footer .button.pull-right {
+  float: right;
 }
 
 .bbm-uploader-model-wrap .bb-model-header h4 {
@@ -13975,6 +13975,23 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .db-modal-buttons .button {
   min-width: 130px;
+}
+
+.db-modal-buttons .button.loading {
+  pointer-events: none;
+}
+
+.db-modal-buttons .button.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-left: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
 }
 
 .has-folderlocationUI .bb-field-wrap-search {

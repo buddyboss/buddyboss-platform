@@ -370,6 +370,8 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			$( event.currentTarget ).addClass( 'loading' );
+
 			//var parent = this.currentTargetParent;
 			var data = {
 				'action'	: 'document_folder_save',
@@ -396,6 +398,7 @@ window.bp = window.bp || {};
 							} else {
 								//location.reload( true );
 							}
+							$( event.currentTarget ).removeClass( 'loading' );
 							targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 							targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 							if (bp.Nouveau.Media.folderLocationUI) {
@@ -416,6 +419,8 @@ window.bp = window.bp || {};
 							targetPopup.find( '.create-popup-folder-wrap' ).hide();
 							targetPopup.find( '.bb-folder-selected-id' ).val();
 							targetPopup.find( '.bb-folder-selected-id' ).val( newParent );
+							targetPopup.find( '.bb-model-header' ).children().show();
+							targetPopup.find( '.bb-model-header p' ).hide();
 							titleSelector.val('');
 							if ( '' !== privacySelector ) {
 								privacySelector.val( 'public' );
