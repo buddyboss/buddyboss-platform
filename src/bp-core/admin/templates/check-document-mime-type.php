@@ -23,24 +23,24 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Check Your Document MimeType', 'buddyboss' ); ?></h1>
+			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'Find your file\'s MIME Type', 'buddyboss' ); ?></h1>
 		</div>
 	</div>
 
 	<div class="bp-hello-content">
         <br /><br />
         <form id="document-upload-check-mime-type" action="" method="post">
-	        <?php esc_html_e( 'Select document file to upload:', 'buddyboss' ); ?>
+	        <?php esc_html_e( 'Choose a file to upload:', 'buddyboss' ); ?>
             <input type="file" name="bp-document-file-input" id="bp-document-file-input">
-            <input type="submit" value="Get MimeType" name="submit">
+            <input type="submit" value="<?php esc_html_e( 'Get MIME Type', 'buddyboss' ); ?>" name="submit">
         </form>
 		<br /><br />
 
 		<div style="display: none;" class="show-document-mime-type">
-			<span class="info"><?php esc_html_e( 'Your Uploaded Document MimeType is: ', 'buddyboss' ); ?></span>
-			<label for="mime-type" class="screen-reader-text">Mine type</label>
+			<span class="info"><?php esc_html_e( 'Your Uploaded Document MIME Type is: ', 'buddyboss' ); ?></span>
+			<label for="mime-type" class="screen-reader-text"><?php esc_html_e( 'MIME Type', 'buddyboss' ); ?></label>
 			<input type="text" class="type" id="mime-type" value="" />
-			<button class="mime-copy" id="mime-copy">Copy to Clipboard</button>
+			<button class="mime-copy" id="mime-copy"><?php esc_html_e( 'Copy to Clipboard', 'buddyboss' ); ?></button>
 		</div>
 	</div>
 

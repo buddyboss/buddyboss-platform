@@ -1161,7 +1161,7 @@ function bp_media_settings_callback_extension_document_support() {
 					bp_get_admin_url( 'admin.php' )
 				);
 				?>
-				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" target="_blank"><?php echo esc_html__( 'Check Mime Type', 'buddyboss' ); ?></a>
+				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" class="button" target="_blank"><?php echo esc_html__( 'Check MIME Type', 'buddyboss' ); ?></a>
 			</td>
 			<td></td>
 			<td></td>

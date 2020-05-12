@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-11 20:35:51+00:00\n"
+"POT-Creation-Date: 2020-05-12 02:58:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14029,8 +14029,8 @@ msgstr ""
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:1266
-msgid "Extensions"
+#: bp-media/bp-media-settings.php:231
+msgid "File Extensions"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:236 bp-media/bp-media-settings.php:241
@@ -14149,19 +14149,25 @@ msgid "Mime Type"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1164
-msgid "Check Mime Type"
+msgid "Check MIME Type"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1187
-msgid "<a href=\"%s\">Manage</a> the allowed file extensions."
+msgid ""
+"<a href=\"%s\" target=\"_blank\">Manage</a> which file extensions are "
+"allowed to be uploaded."
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1224
-msgid "Document Extensions"
+msgid "Documents &#8594; File Extensions"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1266
+msgid "Extensions"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:1285
-msgid "Enable/Disable the following Document extensions:"
+msgid "Enable or disable which file extensions are allowed to be uploaded:"
 msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:192
@@ -19275,7 +19281,7 @@ msgstr ""
 #. translators: 1: Imagick status
 msgctxt "extension notification"
 msgid ""
-"Server needs %1$s installed to enable live previews for PDF and Word "
+"Your server needs %1$s installed to enable live previews for PDF and Word "
 "documents (optional). Ask your web host."
 msgstr ""
 
