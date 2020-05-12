@@ -375,6 +375,15 @@ tr.bp-search-parent-field label {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
+.bp-admin-card p.alert code a {
+  text-decoration: none;
+  color: #444;
+}
+
+.bp-admin-card p.alert code a:hover {
+  color: #0073aa;
+}
+
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);

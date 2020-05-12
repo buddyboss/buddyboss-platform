@@ -391,6 +391,15 @@ tr.bp-search-parent-field label {
 	border-radius: 3px;
 	border: 1px solid #ccd0d4;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+	code a {
+		text-decoration: none;
+		color: #444;
+
+		&:hover {
+			color: #0073aa;
+		}
+	}
 }
 
 
