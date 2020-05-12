@@ -593,7 +593,7 @@ table.extension-listing thead th.ext-head-enable {
 }
 
 table.extension-listing thead th.ext-head-control {
-  width: 10px;
+  width: 30px;
 }
 
 table.extension-listing thead th.ext-head-extension {
@@ -610,6 +610,10 @@ table.extension-listing tbody td input.error {
 
 table.extension-listing tbody td #btn-remove-extensions {
   cursor: pointer;
+  color: #a00;
+  text-decoration: none;
+  border-bottom: 1px solid #a00;
+  font-size: 13px;
 }
 
 table.extension-listing tbody td input[type="text"] {
@@ -620,7 +624,7 @@ table.extension-listing tfoot td #btn-add-extensions,
 table.extension-listing tfoot td #btn-check-mime-type {
   cursor: pointer;
   float: right;
-  margin-right: 5px;
+  margin-left: 8px;
 }
 
 /*

@@ -614,7 +614,7 @@ table.extension-listing {
 		}
 
 		&.ext-head-control {
-			width: 10px;
+			width: 30px;
 		}
 
 		&.ext-head-extension {
@@ -631,6 +631,10 @@ table.extension-listing {
 
 		#btn-remove-extensions {
 			cursor: pointer;
+			color: #a00;
+			text-decoration: none;
+			border-bottom: 1px solid #a00;
+			font-size: 13px;
 		}
 
 		input[type="text"] {
@@ -644,7 +648,7 @@ table.extension-listing {
 		#btn-check-mime-type {
 			cursor: pointer;
 			float: right;
-			margin-right: 5px;
+			margin-left: 8px;
 		}
 	}
 
