@@ -1224,12 +1224,11 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
                                   class="textInput"
                                   name="caption_text"
                                   placeholder="Add a description"
-                                  role="textbox"
-                                  style="height: 50px;"><?php echo $activity_description; ?></textarea>
+                                  role="textbox"><?php echo $activity_description; ?></textarea>
                 </div>
                 <div class="in-profile description-new-submit">
                     <input type="hidden" id="bp-activity-id" value="<?php echo $activity_id; ?>">
-                    <input type="submit" id="bp-activity-description-new-submit" class="button"
+                    <input type="submit" id="bp-activity-description-new-submit" class="button small"
                            name="description-new-submit" value="Finished Editing">
                     <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="Cancel">
                 </div>

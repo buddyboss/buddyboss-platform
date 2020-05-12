@@ -12027,6 +12027,22 @@ a.bb-close-model {
   max-width: 36px;
 }
 
+.bb-media-info-section .activity-media-description .bp-add-media-activity-description > span {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description {
+  width: 100%;
+  resize: none;
+  margin-bottom: 15px;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit {
+  margin-bottom: 10px;
+  text-align: right;
+}
+
 .bb-media-info-header {
   font-size: 14px;
   color: #939597;

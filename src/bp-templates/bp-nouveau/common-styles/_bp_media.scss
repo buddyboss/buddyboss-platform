@@ -649,6 +649,28 @@ a.bb-close-model {
 		border-radius: 50%;
 		max-width: 36px;
 	}
+
+	.activity-media-description {
+
+		.bp-add-media-activity-description > span {
+			font-size: 13px;
+    		font-weight: 400;
+		}
+
+		.bp-edit-media-activity-description {
+
+			#add-activity-description {
+				width: 100%;
+				resize: none;
+				margin-bottom: 15px;
+			}
+
+			.description-new-submit {
+				margin-bottom: 10px;
+				text-align: right;
+			}
+		}
+	}
 }
 
 .bb-media-info-header {
