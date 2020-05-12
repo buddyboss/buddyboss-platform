@@ -2318,6 +2318,7 @@ input.search-query-input {
 .active#forums-document-button .bb-icon,
 .active#bp-group-messages-media-button .bb-icon,
 .active#bp-group-messages-document-button .bb-icon,
+.active#forums-gif-button .bb-icon,
 .active#messages-gif-button .bb-icon {
   color: #122b46;
 }
@@ -13118,7 +13119,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #media-folder-document-data-table .media-folder_items.is-visible .media-folder_actions .media-folder_action__list {
   opacity: 1;
   visibility: visible;
-  z-index: 112;
+  z-index: 1199;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_icon {
