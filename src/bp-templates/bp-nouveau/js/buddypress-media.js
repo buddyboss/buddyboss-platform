@@ -313,6 +313,9 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
 				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+
+				document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
+				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 			}
 
 			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
@@ -1084,10 +1087,10 @@ window.bp = window.bp || {};
 
 				var tool_box = target.closest( 'form' );
 				if ( tool_box.find( '#forums-document-button' ) ) {
-					tool_box.find( '#forums-document-button' ).addClass( 'disable' );
+					tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 				if ( tool_box.find( '#forums-media-button' ) ) {
-					tool_box.find( '#forums-media-button' ).addClass( 'disable' );
+					tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
 				}
 			}
 		},
@@ -1139,9 +1142,8 @@ window.bp = window.bp || {};
 
 		resetForumsGifComponent: function(e) {
 			var target = $( e.target );
-			target.closest( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 			target.closest( 'form' ).find( '#whats-new-toolbar #forums-gif-button' ).removeClass( 'active' );
-
+			target.closest( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 			var $forums_attached_gif_container = target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' );
 			if ($forums_attached_gif_container) {
 				$forums_attached_gif_container.addClass( 'closed' );
@@ -1155,10 +1157,10 @@ window.bp = window.bp || {};
 
 			var tool_box = target.closest( 'form' );
 			if ( tool_box.find( '#forums-document-button' ) ) {
-				tool_box.find( '#forums-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+				tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 			}
 			if ( tool_box.find( '#forums-media-button' ) ) {
-				tool_box.find( '#forums-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+				tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 			}
 		},
 
@@ -1384,7 +1386,15 @@ window.bp = window.bp || {};
 			}
 
 			gif_search_dropdown.toggleClass( 'open' );
-			target.toggleClass( 'active' );
+
+			var gif_box = target.parents( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container img' );
+			if ( gif_box.length > 0 && gif_box.attr( 'src' ) != '' ) {
+				target.addClass( 'active' );
+			} else {
+				target.toggleClass( 'active' );
+			}
+			// target.toggleClass( 'active' );
+
 			var $forums_media_container = target.closest( 'form' ).find( '#forums-post-media-uploader' );
 			if ($forums_media_container.length) {
 				self.resetForumsMediaComponent( $forums_media_container.data( 'key' ) );
@@ -1392,6 +1402,43 @@ window.bp = window.bp || {};
 			var $forums_document_container = target.closest( 'form' ).find( '#forums-post-document-uploader' );
 			if ($forums_document_container.length) {
 				self.resetForumsDocumentComponent( $forums_document_container.data( 'key' ) );
+			}
+		},
+
+		closePickersOnEsc: function( event ) {
+			var target = $( event.currentTarget );
+			if ( event.key === 'Escape' || event.keyCode === 27 ) {
+				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
+					target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+					target.find( '#bbpress-forums form' ).each( function() {
+						$this = jQuery( this );
+						var gif_box = $this.find( '#whats-new-attachments .forums-attached-gif-container img' );
+						if ( gif_box.length > 0 && gif_box.attr( 'src' ) != '' ) {
+							$this.find( '#forums-gif-button' ).addClass( 'active' );
+						} else {
+							$this.find( '#forums-gif-button' ).removeClass( 'active' );
+						}
+					} );
+				}
+			}
+		},
+
+		closePickersOnClick: function( event ) {
+			var $targetEl = $( event.target );
+			var target = $( event.currentTarget );
+
+			if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.gif_api_key ) &&
+				! $targetEl.closest( '.post-gif' ).length) {
+				target.find( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+				target.find( '#bbpress-forums form' ).each( function() {
+					$this = jQuery( this );
+					var gif_box = $this.find( '#whats-new-attachments .forums-attached-gif-container img' );
+					if ( gif_box.length > 0 && gif_box.attr( 'src' ) != '' ) {
+						$this.find( '#forums-gif-button' ).addClass( 'active' );
+					} else {
+						$this.find( '#forums-gif-button' ).removeClass( 'active' );
+					}
+				} );
 			}
 		},
 
@@ -1536,6 +1583,17 @@ window.bp = window.bp || {};
 						function (file, xhr, formData) {
 							formData.append( 'action', 'media_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+							var tool_box = target.closest( 'form' );
+							if ( tool_box.find( '#forums-document-button' ) ) {
+								tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-gif-button' ) ) {
+								tool_box.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-media-button' ) ) {
+								tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							}
 						}
 					);
 
@@ -1563,16 +1621,6 @@ window.bp = window.bp || {};
 								self.dropzone_media[dropzone_obj_key].push( response.data );
 								self.addMediaIdsToForumsForm( dropzone_container );
 							}
-
-							if ( ! _.isNull( self.dropzone_obj[dropzone_obj_key].files ) && self.dropzone_obj[dropzone_obj_key].files.length > 0 ) {
-								var tool_box = target.closest( 'form' );
-								if ( tool_box.find( '#forums-document-button' ) ) {
-									tool_box.find( '#forums-document-button' ).addClass( 'disable' );
-								}
-								if ( tool_box.find( '#forums-gif-button' ) ) {
-									tool_box.find( '#forums-gif-button' ).addClass( 'disable' );
-								}
-							}
 						}
 					);
 
@@ -1597,10 +1645,13 @@ window.bp = window.bp || {};
 							if ( ! _.isNull( self.dropzone_obj[dropzone_obj_key].files ) && self.dropzone_obj[dropzone_obj_key].files.length === 0 ) {
 								var tool_box = target.closest( 'form' );
 								if ( tool_box.find( '#forums-document-button' ) ) {
-									tool_box.find( '#forums-document-button' ).removeClass( 'disable' ).removeClass( 'active' );
+									tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '#forums-gif-button' ) ) {
-									tool_box.find( '#forums-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
+									tool_box.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#forums-media-button' ) ) {
+									tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
 							}
 						}
@@ -1898,6 +1949,17 @@ window.bp = window.bp || {};
 						function (file, xhr, formData) {
 							formData.append( 'action', 'document_document_upload' );
 							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+
+							var tool_box = target.closest( 'form' );
+							if ( tool_box.find( '#forums-media-button' ) ) {
+								tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-gif-button' ) ) {
+								tool_box.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+							}
+							if ( tool_box.find( '#forums-document-button' ) ) {
+								tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+							}
 						}
 					);
 
@@ -1925,16 +1987,6 @@ window.bp = window.bp || {};
 								self.dropzone_media[dropzone_obj_key].push( response.data );
 								self.addDocumentIdsToForumsForm( dropzone_container );
 							}
-
-							if ( ! _.isNull( self.dropzone_obj[dropzone_obj_key].files ) && self.dropzone_obj[dropzone_obj_key].files.length > 0 ) {
-								var tool_box = target.closest( 'form' );
-								if ( tool_box.find( '#forums-media-button' ) ) {
-									tool_box.find( '#forums-media-button' ).addClass( 'disable' );
-								}
-								if ( tool_box.find( '#forums-gif-button' ) ) {
-									tool_box.find( '#forums-gif-button' ).addClass( 'disable' );
-								}
-							}
 						}
 					);
 
@@ -1959,10 +2011,13 @@ window.bp = window.bp || {};
 							if ( ! _.isNull( self.dropzone_obj[dropzone_obj_key].files ) && self.dropzone_obj[dropzone_obj_key].files.length === 0 ) {
 								var tool_box = target.closest( 'form' );
 								if ( tool_box.find( '#forums-media-button' ) ) {
-									tool_box.find( '#forums-media-button' ).removeClass( 'disable' ).removeClass( 'active' );
+									tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
 								}
 								if ( tool_box.find( '#forums-gif-button' ) ) {
-									tool_box.find( '#forums-gif-button' ).removeClass( 'disable' ).removeClass( 'active' );
+									tool_box.find( '#forums-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								}
+								if ( tool_box.find( '#forums-document-button' ) ) {
+									tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 								}
 							}
 						}
