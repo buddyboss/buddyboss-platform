@@ -294,9 +294,7 @@ class BP_Document_Component extends BP_Component {
 
 		}
 
-		if ( bp_is_user() ) {
-			parent::setup_nav( $main_nav, $sub_nav );
-		}
+		parent::setup_nav( $main_nav, $sub_nav );
 
 	}
 
