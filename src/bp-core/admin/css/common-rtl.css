@@ -624,7 +624,7 @@ table.extension-listing tbody td input[type="text"] {
 }
 
 table.extension-listing tbody td input.extension-mime[type="text"] {
-  width: 92%;
+  width: 70%;
 }
 
 table.extension-listing tbody td #btn-remove-extensions {
