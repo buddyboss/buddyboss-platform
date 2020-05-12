@@ -866,8 +866,6 @@
 
 					totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
 
-					parent.find( '.check-mimetype.hidden' ).show().removeClass( 'hidden' );
-
 				}
 			);
 

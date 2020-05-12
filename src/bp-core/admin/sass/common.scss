@@ -622,14 +622,18 @@ table.extension-listing {
 			cursor: pointer;
 		}
 
-		#btn-add-extensions {
-			cursor: pointer;
-			float: right;
-			margin-right: 2px;
-		}
-
 		input[type="text"] {
 			width: 100%;
+		}
+	}
+
+	tfoot td {
+
+		#btn-add-extensions,
+		#btn-check-mime-type {
+			cursor: pointer;
+			float: right;
+			margin-right: 5px;
 		}
 	}
 
