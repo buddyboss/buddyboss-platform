@@ -2274,7 +2274,30 @@ window.bp = window.bp || {};
 					$( '#bp-media-uploader' ).find( '.bp-document-open-create-popup-folder' ).hide();
 				}
 
+				$( document ).removeClass( 'open-popup' );
 				$( '#bp-media-uploader' ).show();
+				$( '#bp-media-uploader' ).addClass( 'open-popup' );
+
+				var parentsOpen = this.currentTargetParent;
+				$.ajax(
+					{
+						url : BP_Nouveau.ajaxurl,
+						type : 'post',
+						data : {
+							action: 'document_get_folder_view',
+							id: this.moveToIdPopup,
+							type: this.moveToTypePopup,
+						},success : function( response ) {
+							$( document ).find( '.open-popup .location-folder-list-wrap .location-folder-list' ).remove();
+							$( document ).find( '.open-popup .location-folder-list-wrap' ).append( response.data.html );
+							if (bp.Nouveau.Media.folderLocationUI) {
+								bp.Nouveau.Media.folderLocationUI( $( document ).find( '.open-popup' ), parentsOpen );
+								$( document ).find( '.open-popup ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
+								$( document ).find( '.open-popup .bb-folder-selected-id' ).val( parentsOpen );
+							}
+						}
+					}
+				);
 
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
 
@@ -3356,15 +3379,22 @@ window.bp = window.bp || {};
 
 			target.addClass( 'saving' );
 
-			folderId = self.album_id;
 
-			if ( false === folderId ) {
-				folderId = $( '.bb-folder-selected-id' ).val();
+			folderId = parseInt( $( event.currentTarget ).closest( '.open-popup' ).find( '.bb-folder-selected-id' ).val() );
+
+			if ( '' === folderId || 0 === folderId ) {
+				folderId = self.album_id;
 			}
 
 			if (self.current_tab === 'bp-dropzone-content') {
 
 				var post_content = $( '#bp-media-post-content' ).val();
+
+				if (self.dropzone_media.length) {
+					for (var i in self.dropzone_media) {
+						self.dropzone_media[i].folder_id = folderId;
+					}
+				}
 
 				data = {
 					'action'	: 'document_document_save',
@@ -3408,10 +3438,11 @@ window.bp = window.bp || {};
 								}
 
 								self.closeUploader( event );
-
+								$( document ).removeClass( 'open-popup' );
 								jQuery( window ).scroll();
 
 							} else {
+								$( document ).removeClass( 'open-popup' );
 								$( '#bp-dropzone-content' ).prepend( response.data.feedback );
 							}
 
