@@ -870,29 +870,12 @@ function bp_nouveau_ajax_document_edit_folder() {
 	}
 
 	// save media.
-	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
-	$parent   = ! empty( $_POST['parent'] ) ? (int) $_POST['parent'] : 0;
-	$move_to  = ! empty( $_POST['moveTo'] ) ? (int) $_POST['moveTo'] : 0;
+	$id 	  = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 
-	if ( 0 === $move_to ) {
-		$move_to = $parent;
-	}
 
-	if ( $parent === $move_to ) {
-		$move_to = 0;
-	}
-
-	$album_id = bp_folder_add(
-		array(
-			'id'       => $parent,
-			'title'    => $title,
-			'privacy'  => $privacy,
-			'group_id' => $group_id,
-			'parent'   => $move_to,
-		)
-	);
+	$album_id = bp_document_rename_folder( $id, $title, $privacy );
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
@@ -902,16 +885,9 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
-		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
-		$redirect_url = trailingslashit( $group_link . bp_get_document_slug() . '/folders/' . $album_id );
-	} else {
-		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() . '/folders/' . $album_id );
-	}
-
 	wp_send_json_success(
 		array(
-			'redirect_url' => $redirect_url,
+			'message' => 'success',
 		)
 	);
 }

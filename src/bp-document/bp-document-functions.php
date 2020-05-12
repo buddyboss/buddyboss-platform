@@ -1671,11 +1671,12 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
  *
  * @param int    $folder_id
  * @param string $title
+ * @param string $privacy
  *
  * @return bool|int
  * @since BuddyBoss 1.3.0
  */
-function bp_document_rename_folder( $folder_id = 0, $title = '' ) {
+function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' ) {
 
 	global $wpdb, $bp;
 
@@ -1683,7 +1684,12 @@ function bp_document_rename_folder( $folder_id = 0, $title = '' ) {
 		return false;
 	}
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+	if ( '' === $privacy ) {
+		$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+	} else {
+		$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, privacy = %s, date_modified = %s WHERE id = %d", $title, $privacy, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+	}
+
 
 	if ( false === $q ) {
 		return false;

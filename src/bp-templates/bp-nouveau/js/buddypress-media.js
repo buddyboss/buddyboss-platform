@@ -3698,25 +3698,17 @@ window.bp = window.bp || {};
 		},
 
 		renameChildFolder: function (event) {
-
+			event.preventDefault();
 			var target  = $( event.currentTarget ), self = this,
 				title   = $( '#bp-media-edit-child-folder #bb-album-child-title' ),
 				privacy = $( '#bp-media-edit-child-folder #bb-folder-privacy' ),
-				parent  = $( '#bp-media-edit-child-folder #parent_id' ),
-				moveTo  = $( '#bp-media-edit-child-folder .bb-folder-selected-id' );
+				id	    = this.currentTargetParent;
 
 			if ($.trim( title.val() ) === '') {
 				title.addClass( 'error' );
 				return false;
 			} else {
 				title.removeClass( 'error' );
-			}
-
-			if ( ! self.group_id && $.trim( privacy.val() ) === '') {
-				privacy.addClass( 'error' );
-				return false;
-			} else {
-				privacy.removeClass( 'error' );
 			}
 
 			target.prop( 'disabled', true ).addClass( 'loading' );
@@ -3726,17 +3718,8 @@ window.bp = window.bp || {};
 				'_wpnonce'	: BP_Nouveau.nonces.media,
 				'title'		: title.val(),
 				'privacy'	: privacy.val(),
-				'parent'	: parent.val(),
-				'moveTo'	: moveTo.val()
+				'id'		: id,
 			};
-
-			if (self.album_id) {
-				data.folder_id = self.album_id;
-			}
-
-			if (self.group_id) {
-				data.group_id = self.group_id;
-			}
 
 			// remove all feedback erros from the DOM.
 			$( '.bb-single-album-header .bp-feedback' ).remove();
@@ -3755,21 +3738,7 @@ window.bp = window.bp || {};
 							500
 						);
 						if (response.success) {
-
-							window.location.href = response.data.redirect_url;
-
-							var currentPopup = $( event.currentTarget ).closest( '#bp-media-create-child-folder' );
-
-							currentPopup.find( '#bp-media-edit-child-folder-submit' ).removeClass( 'loading' );
-
-							if (currentPopup.find( '.bb-field-steps' ).length) {
-								currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-								currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
-							}
-
-							this.clearFolderLocationUI( event );
-							currentPopup.hide();
-
+							window.location.reload( true );
 						} else {
 							if (self.album_id) {
 								$( '#bp-media-single-album' ).prepend( response.data.feedback );
