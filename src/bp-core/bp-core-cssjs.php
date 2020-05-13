@@ -173,6 +173,12 @@ function bp_core_register_common_scripts() {
 			'footer'       => true,
 		),
 
+		'jquery-datetimepicker' => array(
+				'file'         => "{$url}vendor/jquery.datetimepicker.full{$min}.js",
+				'dependencies' => array( 'jquery' ),
+				'footer'       => true,
+		),
+
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field
@@ -336,6 +342,10 @@ function bp_core_register_common_styles() {
 			'bp-select2'              => array(
 				'file'         => "{$url}select2.min.css",
 				'dependencies' => array(),
+			),
+			'jquery-datetimepicker' => array(
+					'file'         => "{$url}vendor/jquery.datetimepicker{$min}.css",
+					'dependencies' => array(),
 			),
 		)
 	);
