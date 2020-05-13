@@ -13140,8 +13140,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_icon {
-  -ms-flex-preferred-size: 52px;
-  flex-basis: 52px;
   width: 52px;
   padding-right: 10px;
 }
@@ -13158,16 +13156,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 #media-folder-document-data-table .media-folder_items .media-folder_visibility,
 #media-folder-document-data-table .media-folder_items .media-folder_modified {
-  -ms-flex-preferred-size: 20%;
-  flex-basis: 20%;
+  width: 20%;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_details {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -ms-flex-preferred-size: calc(+60% - 100px);
-  flex-basis: calc(60% - 100px);
   width: calc(60% - 100px);
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -13260,8 +13255,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  -ms-flex-preferred-size: 55px;
-  flex-basis: 55px;
+  width: 55px;
   position: relative;
 }
 
@@ -13440,14 +13434,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #media-stream.document-parent #media-folder-document-data-table .media-folder_items .media-folder_details {
-  -ms-flex-preferred-size: calc(40% - 100px);
-  flex-basis: calc(40% - 100px);
   width: calc(40% - 100px);
 }
 
 #media-stream.document-parent #media-folder-document-data-table .media-folder_items .media-folder_group {
-  -ms-flex-preferred-size: 20%;
-  flex-basis: 20%;
   width: 20%;
 }
 
