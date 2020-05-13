@@ -1016,21 +1016,73 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
 
 function bp_media_admin_setting_callback_document_section() {
 
-	exec( 'whereis libreoffice', $command_output, $return_val );
+	$disabled       = explode( ',', ini_get( 'disable_functions' ) );
+	$exec           = false;
+	$command_output = '';
+	$return_val     = '';
 
-	if ( ! extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
+	if ( ! in_array( 'exec', $disabled, true ) ) {
+		exec( 'whereis libreoffice', $command_output, $return_val );
+		$exec = true;
+	}
+
+	if ( ! extension_loaded( 'imagick' ) && ! $command_output && ! $return_val && ! $exec ) {
 		?>
 		<p class="alert">
 		<?php
 
-			echo sprintf(
-				/* translators: 1: Imagick status, 2: libreoffice status */
-				_x( 'Your server needs %1$s and %2$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+		echo sprintf(
+				/* translators: 1: exec status, 2: Imagick status, 3: libreoffice status */
+				_x( 'Your server needs %1$s and %2$s and %3$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				'<code><a href="https://www.php.net/manual/en/function.exec.php" target="_blank">exec function need to be enabled on your server</a></code>',
 				'<code><a href="https://imagemagick.org/script/install-source.php" target="_blank">Imagick</a></code>',
 				'<code><a href="https://wiki.ubuntu.com/LibreOffice" target="_blank">LibreOffice</a></code>'
-			);
+
+		);
 
 		?>
+		</p>
+		<?php
+	} elseif ( ! extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
+		?>
+		<p class="alert">
+			<?php
+
+			echo sprintf(
+			/* translators: 1: Imagick status, 2: libreoffice status */
+					_x( 'Your server needs %1$s and %2$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+					'<code><a href="https://imagemagick.org/script/install-source.php" target="_blank">Imagick</a></code>',
+					'<code><a href="https://wiki.ubuntu.com/LibreOffice" target="_blank">LibreOffice</a></code>'
+			);
+
+			?>
+		</p>
+		<?php
+	} elseif ( extension_loaded( 'imagick' ) && ! $exec && $command_output && $return_val ) {
+		?>
+		<p class="alert">
+			<?php
+			echo sprintf(
+			/* translators: 1: exec status */
+					_x( 'Your server needs %1$s installed to enable live previews for PDF documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+					'<code><a href="https://www.php.net/manual/en/function.exec.php" target="_blank">exec function need to be enabled on your server</a></code>'
+			);
+			?>
+		</p>
+		<?php
+	} elseif ( extension_loaded( 'imagick' ) && ! $exec && ! $command_output && ! $return_val ) {
+		?>
+		<p class="alert">
+			<?php
+
+			echo sprintf(
+			/* translators: 1: exec status, 2: libreoffice status */
+					_x( '%1$s and Your server needs %2$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+					'<code><a href="https://www.php.net/manual/en/function.exec.php" target="_blank">exec function need to be enabled on your server</a></code>',
+					'<code><a href="https://wiki.ubuntu.com/LibreOffice" target="_blank">LibreOffice</a></code>'
+			);
+
+			?>
 		</p>
 		<?php
 	} elseif ( extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
