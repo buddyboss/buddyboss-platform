@@ -1129,7 +1129,10 @@ function bp_media_settings_callback_extension_document_support() {
 		</thead>
 		<tbody>
 		<?php
+		$counter = 1;
 		foreach ( $extensions as $k => $extension ) {
+
+			$k = ( !empty( $k )  ? $k : $counter );
 
 			$name       = 'bp_document_extensions_support[' . $k . ']';
 			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
@@ -1159,6 +1162,7 @@ function bp_media_settings_callback_extension_document_support() {
 				</td>
 			</tr>
 			<?php
+			$counter++;
 		}
 
 		$name = 'bp_document_extensions_support[' . $count . ']';
@@ -1232,7 +1236,7 @@ function bp_media_settings_callback_extension_link() {
  * @since BuddyBoss 1.0.0
  */
 function bp_document_extensions_list() {
-	return apply_filters( 'bp_document_extensions_list', get_option( 'bp_document_extensions_support', bp_media_allowed_document_type() ) );
+	return apply_filters( 'bp_document_extensions_list', bp_get_option( 'bp_document_extensions_support', bp_media_allowed_document_type() ) );
 }
 
 /**

@@ -555,9 +555,14 @@ function bp_nouveau_ajax_document_folder_save() {
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
 	$parent   = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
+	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
 
 	if ( $parent > 0 ) {
 		$id = false;
+	}
+
+	if ( ! $id && ! $parent ) {
+		$parent = $folder_id;
 	}
 
 	$folder_id = bp_folder_add(

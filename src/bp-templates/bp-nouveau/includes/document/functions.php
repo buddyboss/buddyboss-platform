@@ -159,371 +159,371 @@ function bp_nouveau_get_document_directory_nav_items() {
 function bp_media_allowed_document_type() {
 
 	$extension_lists = array(
-		array(
+		'bb_doc_1'  => array(
 			'extension'   => '.abw',
 			'mime_type'   => 'application/x-abiword',
 			'description' => 'AbiWord Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_2'  => array(
 			'extension'   => '.ace',
 			'mime_type'   => 'application/x-ace-compressed',
 			'description' => 'ACE Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_3'  => array(
 			'extension'   => '.adp',
 			'mime_type'   => 'audio/adpcm',
 			'description' => 'Adaptive differential pulse-code modulation',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_4'   => array(
 			'extension'   => '.ai',
 			'mime_type'   => 'application/postscript',
 			'description' => 'Illustrator File',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_5'  => array(
 			'extension'   => '.apk',
 			'mime_type'   => 'application/vnd.android.package-archive',
 			'description' => 'Android Package',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_6'  => array(
 			'extension'   => '.css',
 			'mime_type'   => 'text/css',
 			'description' => 'CSS',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_7'  => array(
 			'extension'   => '.css',
 			'mime_type'   => 'text/plain',
 			'description' => 'CSS',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_8'  => array(
 			'extension'   => '.csv',
 			'mime_type'   => 'text/csv',
 			'description' => 'CSV',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_9'  => array(
 			'extension'   => '.doc',
 			'mime_type'   => 'application/msword',
 			'description' => 'Word Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_10'  => array(
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
 			'description' => 'Word Document (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_11'  => array(
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Word Document (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_12'  => array(
 			'extension'   => '.docx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Word Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_13'  => array(
 			'extension'   => '.dotm',
 			'mime_type'   => 'application/vnd.ms-word.template.macroenabled.12',
 			'description' => 'Word Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_14'  => array(
 			'extension'   => '.dotx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Word Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_15'  => array(
 			'extension'   => '.gzip',
 			'mime_type'   => 'application/gzip',
 			'description' => 'Gzip Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_16'  => array(
 			'extension'   => '.htm',
 			'mime_type'   => 'text/html',
 			'description' => 'HTML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_17'  => array(
 			'extension'   => '.html',
 			'mime_type'   => 'text/html',
 			'description' => 'HTML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_18'  => array(
 			'extension'   => '.ico',
 			'mime_type'   => 'image/x-icon',
 			'description' => 'ICO',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_19'  => array(
 			'extension'   => '.ics',
 			'mime_type'   => 'text/calendar',
 			'description' => 'iCalendar',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_20'  => array(
 			'extension'   => '.jar',
 			'mime_type'   => 'application/java-archive',
 			'description' => 'JAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_21'  => array(
 			'extension'   => '.js',
 			'mime_type'   => 'application/javascript',
 			'description' => 'JavaScript',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_22'  => array(
 			'extension'   => '.mp3',
 			'mime_type'   => 'audio/mpeg',
 			'description' => 'MP3',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_23'  => array(
 			'extension'   => '.ods',
 			'mime_type'   => 'application/vnd.oasis.opendocument.spreadsheet',
 			'description' => 'OpenDocument Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_24'  => array(
 			'extension'   => '.odt',
 			'mime_type'   => 'application/vnd.oasis.opendocument.text',
 			'description' => 'OpenDocument Text',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_25'  => array(
 			'extension'   => '.pdf',
 			'mime_type'   => 'application/pdf',
 			'description' => 'PDF',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_26'  => array(
 			'extension'   => '.potm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.template.macroenabled.12',
 			'description' => 'PowerPoint Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_27'  => array(
 			'extension'   => '.potx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.template',
 			'description' => 'PowerPoint Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_28'  => array(
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
 			'description' => 'PowerPoint Slideshow',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_29'  => array(
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Slideshow',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_30'  => array(
 			'extension'   => '.ppt',
 			'mime_type'   => 'application/vnd.ms-powerpoint',
 			'description' => 'PowerPoint Presentation',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_31'  => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_32'  => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/octet-stream',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_33'  => array(
 			'extension'   => '.pptx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Presentation',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_34'  => array(
 			'extension'   => '.psd',
 			'mime_type'   => 'image/vnd.adobe.photoshop',
 			'description' => 'Photoshop Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_35'  => array(
 			'extension'   => '.rar',
 			'mime_type'   => 'application/x-rar-compressed',
 			'description' => 'RAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_36'  => array(
 			'extension'   => '.rss',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'RSS',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_37'  => array(
 			'extension'   => '.rtf',
 			'mime_type'   => 'application/rtf',
 			'description' => 'Rich Text Format',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_38'  => array(
 			'extension'   => '.svg',
 			'mime_type'   => 'image/svg+xml',
 			'description' => 'SVG',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_39'  => array(
 			'extension'   => '.tar',
 			'mime_type'   => 'application/x-tar',
 			'description' => 'TAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_40'  => array(
 			'extension'   => '.txt',
 			'mime_type'   => 'text/plain',
 			'description' => 'Text File',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_41'  => array(
 			'extension'   => '.vcf',
 			'mime_type'   => 'text/x-vcard',
 			'description' => 'vCard',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_42'  => array(
 			'extension'   => '.wav',
 			'mime_type'   => 'audio/x-wav',
 			'description' => 'Waveform Audio',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_42'  => array(
 			'extension'   => '.xlam',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_43'  => array(
 			'extension'   => '.xls',
 			'mime_type'   => 'application/vnd.ms-excel',
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_44'  => array(
 			'extension'   => '.xlsb',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_45'  => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_46'  => array(
 			'extension'   => '.xlsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_46'  => array(
 			'extension'   => '.xltm',
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
 			'description' => 'Excel Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_48'  => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_49'  => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'XML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_50' => array(
 			'extension'   => '.yaml',
 			'mime_type'   => 'text/yaml',
 			'description' => 'YAML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_51'  => array(
 			'extension'   => '.zip',
 			'mime_type'   => 'application/zip',
 			'description' => 'Zip',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		array(
+		'bb_doc_52'   => array(
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
 			'description' => '7z Archive',
