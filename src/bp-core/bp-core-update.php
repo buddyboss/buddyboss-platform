@@ -22,8 +22,6 @@ function bp_is_install() {
 	return ! bp_get_db_version_raw();
 }
 
-
-
 /**
  * Is this a BuddyPress update?
  *
@@ -304,10 +302,6 @@ function bp_version_updater() {
 		if ( $raw_db_version < 15400 ) {
 			bp_update_to_1_3_1();
 		}
-
-		//if ( $raw_db_version < 15500 ) {
-
-		//}
 	}
 
 	/* All done! *************************************************************/
@@ -620,35 +614,35 @@ function bp_update_default_doc_extensions() {
 
 	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
 
-	$changed_array = array(
-		'bb_doc_52'   => array(
-			'description' => '7z Archive XYZ',
-		)
-	);
-
-
-	if ( !empty( $changed_array ) ) {
-		foreach ( $changed_array as $k => $v ) {
-			if ( array_key_exists( $k, $get_extensions ) ) {
-				$extension = $get_extensions[$k];
-				$get_extensions[$k] = array_replace( $extension, $v );
-			} else {
-				// For newly add key.
-				$get_extensions[$k] = $v;
-			}
-		}
-	}
-
-	$removed_array = array(
-		'bb_doc_51'
-	);
-
-	if ( !empty( $removed_array ) ) {
-		foreach (  $removed_array as $key ) {
-			unset( $get_extensions[$key] );
-		}
-
-	}
+//	$changed_array = array(
+//		'bb_doc_52'   => array(
+//			'description' => '7z Archive XYZ',
+//		)
+//	);
+//
+//
+//	if ( !empty( $changed_array ) ) {
+//		foreach ( $changed_array as $k => $v ) {
+//			if ( array_key_exists( $k, $get_extensions ) ) {
+//				$extension = $get_extensions[$k];
+//				$get_extensions[$k] = array_replace( $extension, $v );
+//			} else {
+//				// For newly add key.
+//				$get_extensions[$k] = $v;
+//			}
+//		}
+//	}
+//
+//	$removed_array = array(
+//		'bb_doc_51'
+//	);
+//
+//	if ( !empty( $removed_array ) ) {
+//		foreach (  $removed_array as $key ) {
+//			unset( $get_extensions[$key] );
+//		}
+//
+//	}
 
 
 
