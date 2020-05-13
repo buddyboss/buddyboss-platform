@@ -208,7 +208,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Topics started
 			$sub_nav[] = array(
-				'name'            => __( 'My Discussions', 'buddyboss' ),
+				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Discussions', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) ),
 				'slug'            => bbp_get_topic_archive_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
@@ -219,7 +219,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Replies to topics
 			$sub_nav[] = array(
-				'name'            => __( 'My Replies', 'buddyboss' ),
+				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Replies', 'buddyboss' ) : __( 'Replies', 'buddyboss' ) ),
 				'slug'            => bbp_get_reply_archive_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
@@ -230,7 +230,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			// Favorite topics
 			$sub_nav[] = array(
-				'name'            => __( 'My Favorites', 'buddyboss' ),
+				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
 				'slug'            => bbp_get_user_favorites_slug(),
 				'parent_url'      => $forums_link,
 				'parent_slug'     => $this->slug,
