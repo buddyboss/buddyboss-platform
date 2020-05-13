@@ -32,9 +32,9 @@ function document_screen_single_folder() {
 	}
 
 	// No access.
-	if ( ( ! albums_check_album_access( $folder_id ) && ! bp_is_my_profile() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ( ! folders_check_folder_access( $folder_id ) && ! bp_is_my_profile() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 		bp_core_add_message( __( 'You do not have access to that folder.', 'buddyboss' ), 'error' );
-		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/folders' ) );
+		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_document_slug() ) );
 	}
 
 	/**
