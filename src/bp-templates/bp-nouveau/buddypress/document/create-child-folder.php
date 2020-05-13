@@ -29,11 +29,6 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 						<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
 						<input id="bb-album-child-title" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
 					</div>
-					<?php
-					if ( ! bp_is_group() ) :
-						bp_get_template_part( 'document/document-privacy' );
-					endif;
-					?>
 					<footer class="bb-model-footer">
 						<a class="button" id="bp-media-create-child-folder-submit" href="#"><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 					</footer>

@@ -485,7 +485,7 @@ class BP_Document_Folder {
 	 * @param array $folder_ids Array of document IDs.
 	 * @return array
 	 */
-	protected static function get_folder_data( $folder_ids = array() ) {
+	public static function get_folder_data( $folder_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.

@@ -577,7 +577,7 @@ function bp_get_document_parent_id() {
 	 *
 	 * @param int $id The document ID.
 	 */
-	return apply_filters( 'bp_get_document_parent_id', $id );
+	return apply_filters( 'bp_get_document_parent_id', (int) $id );
 }
 
 /**

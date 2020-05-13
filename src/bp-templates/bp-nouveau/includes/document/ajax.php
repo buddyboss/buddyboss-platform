@@ -565,6 +565,11 @@ function bp_nouveau_ajax_document_folder_save() {
 		$parent = $folder_id;
 	}
 
+	if ( $parent > 0 ) {
+		$parent_folder  = BP_Document_Folder::get_folder_data( array( $parent ) );
+		$privacy = $parent_folder[0]->privacy;
+	}
+
 	$folder_id = bp_folder_add(
 		array(
 			'id'       => $id,
@@ -648,12 +653,13 @@ function bp_nouveau_ajax_document_move() {
 	// Move document.
 	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) $_POST['folder_id'] : 0;
 	$document_id = ! empty( $_POST['document_id'] ) ? (int) $_POST['document_id'] : 0;
+	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
 	if ( 0 === $document_id ) {
 		wp_send_json_error( $response );
 	}
 
-	$document = bp_document_move_to_folder( $document_id, $folder_id );
+	$document = bp_document_move_to_folder( $document_id, $folder_id, $group_id );
 
 	if ( $document > 0 ) {
 
@@ -1023,6 +1029,7 @@ function bp_nouveau_ajax_document_folder_move() {
 
 	$destination_folder_id = ! empty( $_POST['folderMoveToId'] ) ? (int) filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) : 0;
 	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
+	$group_id	           = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
 
 	if ( '' === $destination_folder_id ) {
 		wp_send_json_error( $response );
@@ -1051,7 +1058,7 @@ function bp_nouveau_ajax_document_folder_move() {
 		}
 	}
 
-	bp_document_move_folder( $folder_id, $destination_folder_id );
+	bp_document_move_folder( $folder_id, $destination_folder_id, $group_id );
 
 	$content = '';
 	ob_start();

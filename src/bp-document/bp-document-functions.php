@@ -1555,7 +1555,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
  * @return bool|int
  * @since BuddyBoss 1.3.0
  */
-function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
+function bp_document_move_to_folder( $document_id = 0, $folder_id = 0, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 
@@ -1563,7 +1563,16 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 		return false;
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET date_modified = %s, album_id = %d WHERE id = %d", bp_core_current_time(), $folder_id, $document_id );
+	$destination_privacy = 'loggedin';
+	if ( $group_id > 0 ) {
+		$destination_privacy = 'group_only';
+	} elseif ( $folder_id > 0 ) {
+		$destination_folder  = BP_Document_Folder::get_folder_data( array( $folder_id ) );
+		$destination_privacy = $destination_folder[0]->privacy;
+	}
+
+
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s, album_id = %d WHERE id = %d", $destination_privacy, bp_core_current_time(), $folder_id, $document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
 	if ( false === $query ) {
 		return false;
@@ -1733,7 +1742,7 @@ function bp_document_update_folder_modified_date( $folder_id = 0 ) {
  * @return bool
  * @since BuddyBoss 1.3.0
  */
-function bp_document_move_folder( $folder_id, $destination_folder_id ) {
+function bp_document_move_folder( $folder_id, $destination_folder_id, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 
@@ -1741,8 +1750,55 @@ function bp_document_move_folder( $folder_id, $destination_folder_id ) {
 		return false;
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET parent = %d WHERE id = %d", $destination_folder_id, $folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-	$query = $wpdb->query( $query );                                                                                                           // db call ok. no-cache ok.
+	$destination_privacy = 'loggedin';
+	if ( $group_id > 0 ) {
+		$destination_privacy = 'grouponly';
+	} elseif ( $destination_folder_id > 0 ) {
+		$destination_folder  = BP_Document_Folder::get_folder_data( array( $destination_folder_id ) );
+		$destination_privacy = $destination_folder[0]->privacy;
+	}
+
+
+	// Update parent of folder id.
+	$query_update_folder = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s, parent = %d WHERE id = %d", $destination_privacy, $destination_folder_id, $folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	$query = $wpdb->query( $query_update_folder );
+//	error_log( $query_update_folder );
+
+	// Get all the documents of particular folder.
+	$document_ids = bp_document_get_folder_document_ids( $folder_id );
+
+	if ( ! empty( $document_ids ) ) {
+		foreach ( $document_ids as $id ) {
+			// Update privacy of the document.
+			$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+			$query = $wpdb->query( $query_update_document );
+//			error_log( $query_update_document );
+		}
+	}
+
+	// Update Privacy of all children
+	$get_children = bp_document_get_folder_children( $folder_id );
+
+	foreach ( $get_children as $child ) {
+
+		// Update privacy of all the children folders.
+		$query_update_child    = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$query = $wpdb->query( $query_update_child );
+//		error_log( $query_update_child );
+
+		// Get all the documents of particular folder.
+		$document_ids = bp_document_get_folder_document_ids( $child );
+
+		if ( ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $id ) {
+				// Update privacy of the document.
+				$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$query = $wpdb->query( $query_update_document );
+//				error_log( $query_update_document );
+			}
+		}
+
+	}
 
 	if ( false === $query ) {
 		return false;
@@ -1750,6 +1806,13 @@ function bp_document_move_folder( $folder_id, $destination_folder_id ) {
 		return true;
 	}
 
+}
+
+function bp_document_get_folder_document_ids( $folder_id ) {
+	global $wpdb, $bp;
+
+//	error_log( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) );
+	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) ) );
 }
 
 /**
@@ -2149,7 +2212,7 @@ function bp_document_get_folder_children( $folder_id ) {
 	global $bp, $wpdb;
 
 	$table = $bp->document->table_name_folders;
-
+//	error_log( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) );
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) ) );
 
 }

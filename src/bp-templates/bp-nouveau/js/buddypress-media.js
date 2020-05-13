@@ -493,6 +493,12 @@ window.bp = window.bp || {};
 			//console.log( this.moveToTypePopup ); // Profile/Group.
 			//return false;
 
+			var getParentFolderId = parseInt( $( document ).find( '.open-popup .bb-folder-selected-id' ).val() );
+			if ( getParentFolderId > 0 ) {
+				$( document ).find( '.open-popup .privacy-field-wrap-hide-show' ).hide();
+			} else {
+				$( document ).find( '.open-popup .privacy-field-wrap-hide-show' ).show();
+			}
 
 			$( '.modal-container .bb-model-footer' ).hide();
 			$( '.bb-field-wrap-search' ).hide();
@@ -549,6 +555,7 @@ window.bp = window.bp || {};
 
 		folderMove: function( event ) {
 			var target = $( event.currentTarget );
+			var self   = this;
 			event.preventDefault();
 
 			var currentFolderId = target.attr( 'id' );
@@ -564,7 +571,8 @@ window.bp = window.bp || {};
 			var data = {
 				'action'			: 'document_folder_move',
 				'currentFolderId'	: currentFolderId,
-				'folderMoveToId'	: folderMoveToId
+				'folderMoveToId'	: folderMoveToId,
+				'group'				: self.group_id
 			};
 
 			$.ajax(
@@ -740,6 +748,7 @@ window.bp = window.bp || {};
 
 		moveDocumentIntoFolder: function (event) {
 			var target = $( event.currentTarget );
+			var self   = this;
 			event.preventDefault();
 
 			var document_id = target.attr( 'id' );
@@ -757,7 +766,8 @@ window.bp = window.bp || {};
 				'action'		: 'document_move',
 				'_wpnonce'		: BP_Nouveau.nonces.media,
 				'document_id'	: document_id,
-				'folder_id'		: folder_id
+				'folder_id'		: folder_id,
+				'group_id'		: self.group_id
 			};
 
 			$.ajax(
@@ -3419,8 +3429,7 @@ window.bp = window.bp || {};
 		},
 
 		saveChildFolder: function (event) {
-			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' ),
-				privacy = $( '#bp-media-create-child-folder #bb-folder-privacy' );
+			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' );
 			event.preventDefault();
 
 			if ($.trim( title.val() ) === '') {
@@ -3430,20 +3439,12 @@ window.bp = window.bp || {};
 				title.removeClass( 'error' );
 			}
 
-			if ( ! self.group_id && $.trim( privacy.val() ) === '') {
-				privacy.addClass( 'error' );
-				return false;
-			} else {
-				privacy.removeClass( 'error' );
-			}
-
 			target.prop( 'disabled', true ).addClass( 'loading' );
 
 			var data = {
 				'action'	: 'document_folder_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,
 				'title'		: title.val(),
-				'privacy'	: privacy.val(),
 				'folder_id'	: self.album_id,
 				'group_id'	: self.group_id,
 			};
