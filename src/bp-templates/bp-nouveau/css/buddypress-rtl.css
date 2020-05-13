@@ -2245,7 +2245,7 @@ input.search-query-input {
 #whats-new-messages-toolbar .bb-icon-text-format:before {
   font-size: 15px;
   vertical-align: top;
-  margin-top: 3px;
+  margin-top: 4px;
   display: inline-block;
   width: 24px;
 }
@@ -13828,11 +13828,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #5087e5;
 }
 
-#bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list ul li a i {
+#bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list ul li a i:before {
+  font-family: 'bb-icons';
+  /* stylelint-disable-line */
+  font-size: 16px;
   display: inline-block;
   margin-left: 10px;
   width: 20px;
-  font-size: 15px;
   text-align: center !important;
 }
 
