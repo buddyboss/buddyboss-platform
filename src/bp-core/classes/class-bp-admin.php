@@ -783,7 +783,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			if ( ! empty( $_GET['mime_type'] ) && 'check_mime_type' === $_GET['mime_type'] ) {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
@@ -831,7 +831,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		public function document_extension_mime_type_check_screen() {
-			if ( empty( $_GET['mime_type'] ) || $_GET['mime_type'] !== 'check_mime_type' ) {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) {
 				return;
 			}
 

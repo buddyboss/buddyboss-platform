@@ -849,7 +849,7 @@
 				function() {
 					var parent     = $( this ).closest( 'table.extension-listing' );
 					var newOption  = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
-					var totalCount = parseInt( $( '.extension-listing tr.default-extension' ).length );
+					var totalCount = 1;
 					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension document-extensions"> ' + newOption + ' </tr> ' );
 
 					parent.find( 'tbody tr.extra-extension' ).each(
@@ -860,6 +860,7 @@
 								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
 								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
 								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'a.btn-check-mime-type' ).attr( 'id', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
 								totalCount = totalCount + 1;
 						}
 					);
@@ -896,8 +897,8 @@
 			);
 
 			$( document ).on(
-				'submit',
-				'#document-upload-check-mime-type',
+				'click',
+				'#input-mime-type-submit-check',
 				function(e) {
 					e.preventDefault();
 					var file_data = $( '#bp-document-file-input' ).prop( 'files' )[0];
@@ -930,22 +931,72 @@
 				'.show-document-mime-type .mime-copy',
 				function(e) {
 					e.preventDefault();
-					if ( $( this ).hasClass( 'copying' ) ) {
+
+					var mimeToId =  $( this ).attr( 'id' );
+
+					console.log( mimeToId );
+					$( document ).find( 'input[name="' + mimeToId + '"]' ).val('');
+					var valueCopied = $( document ).find( '#mime-type' ).val();
+					console.log( valueCopied );
+					$( document ).find( 'input[name="' + mimeToId + '"]' ).val( valueCopied );
+					$( document ).find( '.close-modal' ).trigger( 'click' );
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'.btn-check-mime-type',
+				function(e) {
+					e.preventDefault();
+
+					var copiedValue = $( this ).attr( 'id' );
+					$( document ).find( '.mime-copy' ).attr( 'id', copiedValue );
+					$( document ).find( '.bp-hello-mime').attr( 'id', 'bp-hello-container' );
+					if ( $( document ).find( '#bp-hello-backdrop' ).length ) {
+					} else {
+						var finder = $( document ).find( '.bp-hello-mime' );
+						$( '<div id="bp-hello-backdrop" style="display: none;"></div>' ).insertBefore( finder );
+					}
+					var backdrop = document.getElementById( 'bp-hello-backdrop' ),
+						modal    = document.getElementById( 'bp-hello-container' );
+
+					if ( null === backdrop ) {
 						return;
 					}
-					$( this ).siblings( '.type' ).select();
-					document.execCommand( 'copy' );
-					$( this ).parent().append( '<span class="mimeCopied">Copied</span>' );
-					$( '.mimeCopied' ).fadeOut( 1000 );
-					$( this ).addClass( 'copying' );
-					setTimeout(
-						function() {
-								$( '.mimeCopied' ).remove();
-								$( '.mime-copy.copying' ).removeClass( 'copying' );
-						},
-						1000
-					);
+					document.body.classList.add( 'bp-disable-scroll' );
+
+					// Show modal and overlay.
+					backdrop.style.display = '';
+					modal.style.display    = '';
+
+					// Focus the "X" so bp_hello_handle_keyboard_events() works.
+					var focus_target = modal.querySelectorAll( 'a[href], button' );
+					focus_target     = Array.prototype.slice.call( focus_target );
+					focus_target[0].focus();
+
 				}
+			);
+
+			document.addEventListener(
+				'click',
+				function( event ) {
+					var backdrop = document.getElementById( 'bp-hello-backdrop' );
+					if ( ! backdrop || ! document.getElementById( 'bp-hello-container' ) ) {
+						return;
+					}
+
+					var backdrop_click = backdrop.contains( event.target ),
+						modal_close_click  = event.target.classList.contains( 'close-modal' );
+
+					if ( ! modal_close_click && ! backdrop_click ) {
+						return;
+					}
+
+					$( document ).find ( '#bp-document-file-input' ).val( '' );
+					$( document ).find ( '.show-document-mime-type' ).hide();
+					$( document ).find ( '.show-document-mime-type input#mime-type' ).val( '' );
+				},
+				false
 			);
 
 		}

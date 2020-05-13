@@ -1157,6 +1157,8 @@ function bp_media_settings_callback_extension_document_support() {
 					if ( ! $is_default ) {
 						?>
 						<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
+						<a href="#" id="<?php echo esc_attr( $name . '[mime_type]' ); ?>" class="btn-check-mime-type button"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
+
 						<?php
 					} ?>
 				</td>
@@ -1165,7 +1167,7 @@ function bp_media_settings_callback_extension_document_support() {
 			$counter++;
 		}
 
-		$name = 'bp_document_extensions_support[' . $count . ']';
+		$name = 'bp_document_extensions_support[1]';
 		?>
 		<tr style="display: none;" class="custom-extension-data">
 			<td>
@@ -1179,8 +1181,10 @@ function bp_media_settings_callback_extension_document_support() {
 				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 			</td>
 			<td>
-				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
+				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" value="" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
 				<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
+				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" id="" class="button btn-check-mime-type"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
+
 			</td>
 		</tr>
 		</tbody>
@@ -1190,18 +1194,6 @@ function bp_media_settings_callback_extension_document_support() {
 
 				<div id="btn-add-extensions" class="button-primary"><?php echo esc_html__( 'Add Extension', 'buddyboss' ); ?></div>
 
-				<?php
-				$check_mime_type_link = add_query_arg(
-					array(
-						'page'      => 'bp-settings',
-						'tab'       => 'bp-document',
-						'mime_type' => 'check_mime_type',
-					),
-					bp_get_admin_url( 'admin.php' )
-				);
-				?>
-
-				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" id="btn-check-mime-type" class="button" target="_blank"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
 
 			</td>
 		</tr>

@@ -609,6 +609,10 @@ table.extension-listing thead td.ext-head-enable {
   width: 1.2em;
 }
 
+table.extension-listing tbody tr.extra-extension td input[type="text"] {
+  width: 70%;
+}
+
 table.extension-listing tbody td {
   padding: 10px;
 }
