@@ -424,7 +424,6 @@
 .activity-link-preview-container {
 	padding: 25px;
 	line-height: 1.5;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	color: #82878c;
 	background: #fff;
 	border: 1px solid #e5e5e5;
@@ -469,7 +468,7 @@
 }
 
 .activity-link-preview-title {
-	font-weight: 600;
+	font-weight: 500;
 	font-size: 22px;
 	line-height: 1.3;
 	color: #32373c;
@@ -536,7 +535,7 @@
 }
 
 .activity-url-error {
-	color: #f00;
+	color: #d33;
 }
 
 #activity-url-scrapper-url {
@@ -592,7 +591,6 @@
 blockquote.wp-embedded-content {
 	padding: 25px;
 	line-height: 1.5;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 	font-size: 14px;
 	font-style: normal;
 	color: #82878c;
@@ -604,7 +602,7 @@ blockquote.wp-embedded-content {
 	> a,
 	> p:first-child > a {
 		color: #32373c;
-		font-weight: 600;
+		font-weight: 500;
 		font-size: 22px;
 		line-height: 1.3;
 

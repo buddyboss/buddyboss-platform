@@ -88,6 +88,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_media();
 	}
 
+	do_action( 'bp_core_install', $active_components );
 }
 
 /**
