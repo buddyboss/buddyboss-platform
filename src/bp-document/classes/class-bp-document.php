@@ -340,50 +340,55 @@ class BP_Document {
 
 			if ( 'pdf' === $extension ) {
 
-				$output_format = 'jpeg';
-				$antialiasing  = '4';
-				$preview_page  = '1';
-				$resolution    = '300';
-				$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
-				$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
-				$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
-				$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
-				$exec_command .= '-r' . $resolution . ' ';
-				$exec_command .= '-sOutputFile=' . $output_file . " '" . $file . "'";
+//				$output_format = 'jpeg';
+//				$antialiasing  = '4';
+//				$preview_page  = '1';
+//				$resolution    = '300';
+//				$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
+//				$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
+//				$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
+//				$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
+//				$exec_command .= '-r' . $resolution . ' ';
+//				$exec_command .= '-sOutputFile=' . $output_file . " '" . $file . "'";
 
-				exec( $exec_command, $command_output, $return_val );
 
-				if ( file_exists( $output_file ) ) {
-					$image_data = file_get_contents( $output_file );
-
-					$filename = basename( $output_file );
-
-					if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-						$file = $upload_dir['path'] . '/' . $filename;
-					} else {
-						$file = $upload_dir['basedir'] . '/' . $filename;
-					}
-
-					file_put_contents( $file, $image_data );
-
-					$wp_filetype = wp_check_filetype( $filename, null );
-
-					$attachment = array(
-						'post_mime_type' => $wp_filetype['type'],
-						'post_title'     => sanitize_file_name( $filename ),
-						'post_content'   => '',
-						'post_status'    => 'inherit',
-					);
-
-					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-					require_once ABSPATH . 'wp-admin/includes/image.php';
-					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
-					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
-					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
-					unlink( $output_file );
-
-				}
+				$preview_attachment_id = get_post_thumbnail_id( $attachment_id );
+				update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+				update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
+//
+//				exec( $exec_command, $command_output, $return_val );
+//
+//				if ( file_exists( $output_file ) ) {
+//					$image_data = file_get_contents( $output_file );
+//
+//					$filename = basename( $output_file );
+//
+//					if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+//						$file = $upload_dir['path'] . '/' . $filename;
+//					} else {
+//						$file = $upload_dir['basedir'] . '/' . $filename;
+//					}
+//
+//					file_put_contents( $file, $image_data );
+//
+//					$wp_filetype = wp_check_filetype( $filename, null );
+//
+//					$attachment = array(
+//						'post_mime_type' => $wp_filetype['type'],
+//						'post_title'     => sanitize_file_name( $filename ),
+//						'post_content'   => '',
+//						'post_status'    => 'inherit',
+//					);
+//
+//					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
+//					require_once ABSPATH . 'wp-admin/includes/image.php';
+//					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
+//					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+//					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+//					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
+//					unlink( $output_file );
+//
+//				}
 			} else {
 
 				$dir = $upload_dir['basedir'] . '/doc' . $attachment_id;
