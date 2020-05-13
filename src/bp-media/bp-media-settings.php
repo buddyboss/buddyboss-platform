@@ -1144,14 +1144,14 @@ function bp_media_settings_callback_extension_document_support() {
 				<td>
 					<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php ( isset( $extension['is_active'] ) ) ? checked( $extension['is_active'], 1 ) : ''; ?> />
 				</td>
-				<td>
+				<td data-colname="<?php echo esc_html__( 'Extension', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>"/>
 					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo ( isset( $extension['is_default'] ) ) ? esc_attr( $extension['is_default'] ) : ''; ?>"/>
 				</td>
-				<td>
+				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>"/>
 				</td>
-				<td>
+				<td data-colname="<?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>"/>
 					<?php
 					if ( ! $is_default ) {
