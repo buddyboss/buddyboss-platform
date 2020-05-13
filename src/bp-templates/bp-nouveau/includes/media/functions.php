@@ -90,12 +90,15 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	//initialize media vars because it is used globally
 	$params['media'] = array(
-		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
-		'profile_media'   => bp_is_profile_media_support_enabled(),
-		'profile_album'   => bp_is_profile_albums_support_enabled(),
-		'group_media'     => bp_is_group_media_support_enabled(),
-		'group_album'     => bp_is_group_albums_support_enabled(),
-		'messages_media'  => bp_is_messages_media_support_enabled(),
+		'max_upload_size'        => bp_media_file_upload_max_size( false, 'MB' ),
+		'profile_media'          => bp_is_profile_media_support_enabled(),
+		'profile_album'          => bp_is_profile_albums_support_enabled(),
+		'group_media'            => bp_is_group_media_support_enabled(),
+		'group_album'            => bp_is_group_albums_support_enabled(),
+		'messages_media'         => bp_is_messages_media_support_enabled(),
+		'dropzone_media_message' => __( 'Drop images here to upload', 'buddyboss' ),
+		'media_select_error'     => __( 'This file not supporting in media', 'buddyboss' ),
+		'empty_media_type'       => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {

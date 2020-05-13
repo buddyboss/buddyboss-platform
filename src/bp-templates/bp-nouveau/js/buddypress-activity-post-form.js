@@ -60,11 +60,40 @@ window.bp = window.bp || {};
 			this.dropzone_options = {
 				url				: BP_Nouveau.ajaxurl,
 				timeout			: 3 * 60 * 60 * 1000,
+				dictDefaultMessage : BP_Nouveau.media.dropzone_media_message,
 				acceptedFiles	: 'image/*',
 				autoProcessQueue: true,
 				addRemoveLinks	: true,
 				uploadMultiple	: false,
-				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				init: function(){
+					/* jshint ignore:start */
+					this.on('error', function(file){if (!file.accepted) alert( BP_Nouveau.media.media_select_error ); this.removeFile(file);});
+					/* jshint ignore:end */
+				},
+				accept			: function(file, done) {
+					if (file.size == 0) {
+						done( BP_Nouveau.media.empty_media_type );
+					} else {
+						done();
+					}
+				},
+				success			: function( file, response ){
+					if ( response.success ) {
+						return file.previewElement.classList.add( 'dz-success' );
+					} else {
+						var node, _i, _len, _ref, _results;
+						var message = response.data.feedback;
+						file.previewElement.classList.add( 'dz-error' );
+						_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+						_results = [];
+						for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+							node                            = _ref[_i];
+							_results.push( node.textContent = message );
+						}
+						return _results;
+					}
+				}
 			};
 
 			// if defined, add custom dropzone options.
@@ -405,6 +434,7 @@ window.bp = window.bp || {};
 					url				: BP_Nouveau.ajaxurl,
 					timeout			: 3 * 60 * 60 * 1000,
 					acceptedFiles	: BP_Nouveau.media.document_type,
+					dictDefaultMessage : BP_Nouveau.media.dropzone_document_message,
 					autoProcessQueue: true,
 					addRemoveLinks	: true,
 					uploadMultiple	: false,

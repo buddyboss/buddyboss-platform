@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-12 23:10:42+00:00\n"
+"POT-Creation-Date: 2020-05-13 05:00:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1042,7 +1042,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-component.php:178
 #: bp-document/classes/class-bp-document-component.php:160
 #: bp-document/classes/class-bp-document-folder.php:544
-#: bp-document/classes/class-bp-document.php:1398
+#: bp-document/classes/class-bp-document.php:1386
 #: bp-groups/bp-groups-admin.php:1192 bp-groups/bp-groups-admin.php:1213
 #: bp-groups/bp-groups-admin.php:1225
 #: bp-media/classes/class-bp-media-component.php:164
@@ -1895,7 +1895,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:22
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:14
-#: bp-templates/bp-nouveau/includes/media/functions.php:134
+#: bp-templates/bp-nouveau/includes/media/functions.php:137
 msgid "Select All"
 msgstr ""
 
@@ -3662,7 +3662,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:16
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:16
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
-#: bp-templates/bp-nouveau/includes/media/functions.php:137
+#: bp-templates/bp-nouveau/includes/media/functions.php:140
 msgid "Upload"
 msgstr ""
 
@@ -3796,6 +3796,7 @@ msgid "Diversity"
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:271
+#: bp-templates/bp-nouveau/includes/document/functions.php:81
 msgid "Drop files here to upload"
 msgstr ""
 
@@ -7190,7 +7191,7 @@ msgid "..."
 msgstr ""
 
 #: bp-document/classes/class-bp-document-component.php:168
-#: bp-document/classes/class-bp-document.php:1282
+#: bp-document/classes/class-bp-document.php:1270
 msgid "Group members"
 msgstr ""
 
@@ -7200,13 +7201,13 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-component.php:331
 #: bp-document/classes/class-bp-document-component.php:352
-#: bp-templates/bp-nouveau/includes/document/functions.php:135
+#: bp-templates/bp-nouveau/includes/document/functions.php:136
 msgid "My Documents"
 msgstr ""
 
 #: bp-document/classes/class-bp-document-folder.php:542
 #: bp-document/classes/class-bp-document-privacy.php:58
-#: bp-document/classes/class-bp-document.php:1396
+#: bp-document/classes/class-bp-document.php:1384
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-privacy.php:59
 msgid "Group Members"
@@ -14201,7 +14202,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:341
 #: bp-media/classes/class-bp-media-component.php:372
-#: bp-templates/bp-nouveau/includes/media/functions.php:174
+#: bp-templates/bp-nouveau/includes/media/functions.php:177
 msgid "My Photos"
 msgstr ""
 
@@ -15256,7 +15257,7 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/document/entry.php:18
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:26
-#: bp-templates/bp-nouveau/includes/media/functions.php:132
+#: bp-templates/bp-nouveau/includes/media/functions.php:135
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -17338,25 +17339,25 @@ msgstr ""
 msgid "This file not supporting in document"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:96
+#: bp-templates/bp-nouveau/includes/document/functions.php:97
 msgid ""
 "Are you sure you want to delete this folder? Documents in this folder will "
 "also be deleted?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:97
+#: bp-templates/bp-nouveau/includes/document/functions.php:98
 msgid "Are you sure you want to delete this document?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:98
+#: bp-templates/bp-nouveau/includes/document/functions.php:99
 msgid "There was a problem deleting the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:99
+#: bp-templates/bp-nouveau/includes/document/functions.php:100
 msgid "Please select destination folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/functions.php:124
+#: bp-templates/bp-nouveau/includes/document/functions.php:125
 msgid "All Documents"
 msgstr ""
 
@@ -18097,37 +18098,49 @@ msgstr ""
 msgid "There was an error for updating a description. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:133
-msgid "Unselect"
+#: bp-templates/bp-nouveau/includes/media/functions.php:99
+msgid "Drop images here to upload"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:135
-msgid "Unselect All"
+#: bp-templates/bp-nouveau/includes/media/functions.php:100
+msgid "This file not supporting in media"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/functions.php:101
+msgid "Empty media file will not be uploaded."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:136
-msgid "Sorry, no photos were found"
+msgid "Unselect"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:138
-msgid "Uploading"
+msgid "Unselect All"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:139
+msgid "Sorry, no photos were found"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/functions.php:141
+msgid "Uploading"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/functions.php:142
 msgid "%d out of %d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:140
+#: bp-templates/bp-nouveau/includes/media/functions.php:143
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:141
+#: bp-templates/bp-nouveau/includes/media/functions.php:144
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:163
+#: bp-templates/bp-nouveau/includes/media/functions.php:166
 msgid "All Photos"
 msgstr ""
 
@@ -19283,13 +19296,20 @@ msgid ""
 "and Word documents (optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1043 bp-media/bp-media-settings.php:1056
+#: bp-media/bp-media-settings.php:1043
 #. translators: 1: libreoffice status
+msgctxt "extension notification"
+msgid ""
+"Your server needs %1$s installed to enable live previews for Word documents "
+"(optional). Ask your web host."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1056
 #. translators: 1: Imagick status
 msgctxt "extension notification"
 msgid ""
-"Your server needs %1$s installed to enable live previews for PDF and Word "
-"documents (optional). Ask your web host."
+"Your server needs %1$s installed to enable live previews for PDF documents "
+"(optional). Ask your web host."
 msgstr ""
 
 #: bp-members/bp-members-template.php:123
