@@ -439,7 +439,7 @@ add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
 /**
  * Fix Medium Editor version conflict with user blog plugin
  *
- * @since BuddyBoss 1.3.3
+ * @since BuddyBoss 1.3.4
  *
  */
 function bp_remove_user_blog_disable_medium_editor_js() {
