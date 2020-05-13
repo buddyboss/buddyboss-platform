@@ -19,6 +19,8 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 ?>
 <div class="bb-dropdown-wrap">
 	<div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
+		<span class="no-folder-exists" style="display: none;"><?php esc_html_e( 'You don\'t have any folder yet. Create folder first.', 'buddyboss' ); ?></span>
+
 		<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
 		<div class="location-folder-list-wrap">
 			<div class="breadcrumbs-append-ul-li">

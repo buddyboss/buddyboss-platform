@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-13 05:00:53+00:00\n"
+"POT-Creation-Date: 2020-05-13 08:59:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1587,7 +1587,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:283
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:118
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:186
-#: bp-core/bp-core-functions.php:780 bp-core/bp-core-update.php:691
+#: bp-core/bp-core-functions.php:780 bp-core/bp-core-update.php:737
 msgid "Sites"
 msgstr ""
 
@@ -1700,7 +1700,7 @@ msgstr ""
 #: bp-core/profile-search/bps-admin.php:85
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
-#: bp-media/bp-media-settings.php:1075
+#: bp-media/bp-media-settings.php:1127
 msgid "Description"
 msgstr ""
 
@@ -2582,7 +2582,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:323
 #: bp-document/classes/class-bp-document-theme-compat.php:166
 #: bp-groups/classes/class-bp-groups-component.php:798
-#: bp-templates/bp-nouveau/buddypress/document/location-move.php:27
+#: bp-templates/bp-nouveau/buddypress/document/location-move.php:29
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:22
 #: bp-templates/bp-nouveau/includes/customizer.php:179
@@ -2613,7 +2613,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
 #: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:781
-#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:693
+#: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:739
 #: bp-core/classes/class-bp-email-tokens.php:394 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1360 bp-groups/bp-groups-admin.php:2016
 #: bp-groups/bp-groups-functions.php:3667
@@ -2667,7 +2667,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:111
 #: bp-core/admin/settings/bp-admin-setting-groups.php:23
 #: bp-core/bp-core-functions.php:779 bp-core/bp-core-template.php:565
-#: bp-core/bp-core-update.php:692 bp-core/gdpr/class-bp-group-export.php:27
+#: bp-core/bp-core-update.php:738 bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
 #: bp-groups/bp-groups-admin.php:38 bp-groups/bp-groups-admin.php:48
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
@@ -2932,12 +2932,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:179
 #: bp-templates/bp-nouveau/includes/document/ajax.php:450
 #: bp-templates/bp-nouveau/includes/document/ajax.php:521
-#: bp-templates/bp-nouveau/includes/document/ajax.php:621
-#: bp-templates/bp-nouveau/includes/document/ajax.php:748
-#: bp-templates/bp-nouveau/includes/document/ajax.php:822
-#: bp-templates/bp-nouveau/includes/document/ajax.php:886
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1006
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1174
+#: bp-templates/bp-nouveau/includes/document/ajax.php:626
+#: bp-templates/bp-nouveau/includes/document/ajax.php:753
+#: bp-templates/bp-nouveau/includes/document/ajax.php:827
+#: bp-templates/bp-nouveau/includes/document/ajax.php:891
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1011
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1179
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:106
@@ -3442,7 +3442,7 @@ msgid "Your Uploaded Document MIME Type is: "
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:41
-#: bp-media/bp-media-settings.php:1076
+#: bp-media/bp-media-settings.php:1128
 msgid "MIME Type"
 msgstr ""
 
@@ -5061,9 +5061,9 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:16
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
-#: bp-templates/bp-nouveau/includes/document/ajax.php:667
-#: bp-templates/bp-nouveau/includes/document/ajax.php:929
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1059
+#: bp-templates/bp-nouveau/includes/document/ajax.php:672
+#: bp-templates/bp-nouveau/includes/document/ajax.php:934
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1064
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr ""
@@ -5179,7 +5179,7 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:690
+#: bp-core/bp-core-update.php:736
 msgid "Site-Wide Activity"
 msgstr ""
 
@@ -10592,9 +10592,9 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:95
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:40
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
-#: bp-templates/bp-nouveau/includes/document/ajax.php:681
-#: bp-templates/bp-nouveau/includes/document/ajax.php:943
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1073
+#: bp-templates/bp-nouveau/includes/document/ajax.php:686
+#: bp-templates/bp-nouveau/includes/document/ajax.php:948
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1078
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1653
 msgid "Visibility"
 msgstr ""
@@ -14147,45 +14147,45 @@ msgstr ""
 msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1074
+#: bp-media/bp-media-settings.php:1126
 msgid "Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1119
+#: bp-media/bp-media-settings.php:1175
 msgid ".extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1123
+#: bp-media/bp-media-settings.php:1179
 msgid "description"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1126
+#: bp-media/bp-media-settings.php:1182
 msgid "MIME type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1135
+#: bp-media/bp-media-settings.php:1191
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1148
+#: bp-media/bp-media-settings.php:1204
 msgid "MIME Checker"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1162
+#: bp-media/bp-media-settings.php:1218
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Manage</a> which file extensions are "
 "allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1199
+#: bp-media/bp-media-settings.php:1255
 msgid "Documents &#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1241
+#: bp-media/bp-media-settings.php:1297
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1260
+#: bp-media/bp-media-settings.php:1316
 msgid ""
 "Check which file extensions are allowed to be uploaded. Add custom "
 "extensions at the bottom of the table."
@@ -15717,9 +15717,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:59
-#: bp-templates/bp-nouveau/includes/document/ajax.php:705
-#: bp-templates/bp-nouveau/includes/document/ajax.php:967
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1097
+#: bp-templates/bp-nouveau/includes/document/ajax.php:710
+#: bp-templates/bp-nouveau/includes/document/ajax.php:972
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1102
 #: bp-templates/bp-nouveau/includes/media/ajax.php:148
 msgid "Load More"
 msgstr ""
@@ -16180,9 +16180,9 @@ msgid "Edit Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:34
-#: bp-templates/bp-nouveau/includes/document/ajax.php:674
-#: bp-templates/bp-nouveau/includes/document/ajax.php:936
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1066
+#: bp-templates/bp-nouveau/includes/document/ajax.php:679
+#: bp-templates/bp-nouveau/includes/document/ajax.php:941
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1071
 msgid "Modified"
 msgstr ""
 
@@ -16214,6 +16214,10 @@ msgid "Rename Folder"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:22
+msgid "You don't have any folder yet. Create folder first."
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/location-move.php:24
 msgid "Select Folder"
 msgstr ""
 
@@ -17304,26 +17308,26 @@ msgid "Please upload a document before saving."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:546
-#: bp-templates/bp-nouveau/includes/document/ajax.php:847
+#: bp-templates/bp-nouveau/includes/document/ajax.php:852
 msgid "Please enter title of folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:576
-#: bp-templates/bp-nouveau/includes/document/ajax.php:864
+#: bp-templates/bp-nouveau/includes/document/ajax.php:581
+#: bp-templates/bp-nouveau/includes/document/ajax.php:869
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:664
-#: bp-templates/bp-nouveau/includes/document/ajax.php:926
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1056
+#: bp-templates/bp-nouveau/includes/document/ajax.php:669
+#: bp-templates/bp-nouveau/includes/document/ajax.php:931
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1061
 msgid "Sort By:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1026
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1031
 msgid "Couldn’t move item. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1038
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1043
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
@@ -19288,7 +19292,16 @@ msgctxt "Course Content Label"
 msgid "%s Content"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1028
+#: bp-media/bp-media-settings.php:1036
+#. translators: 1: exec status, 2: Imagick status, 3: libreoffice status
+msgctxt "extension notification"
+msgid ""
+"Your server needs %1$s function need to be enabled on your server and %2$s "
+"and %3$s installed to enable live previews for PDF and Word documents "
+"(optional). Ask your web host."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1053
 #. translators: 1: Imagick status, 2: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19296,7 +19309,24 @@ msgid ""
 "and Word documents (optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1043
+#: bp-media/bp-media-settings.php:1067
+#. translators: 1: exec status
+msgctxt "extension notification"
+msgid ""
+"Your server needs %1$s function need to be enabled on your server to enable "
+"live previews for PDF documents (optional). Ask your web host."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1080
+#. translators: 1: exec status, 2: libreoffice status
+msgctxt "extension notification"
+msgid ""
+"%1$s function need to be enabled on your server and your server needs %2$s "
+"installed to enable live previews for PDF and Word documents (optional). "
+"Ask your web host."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1095
 #. translators: 1: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19304,7 +19334,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1056
+#: bp-media/bp-media-settings.php:1108
 #. translators: 1: Imagick status
 msgctxt "extension notification"
 msgid ""
