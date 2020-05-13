@@ -810,7 +810,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		$nav = $group_nav->get_secondary(
 			array(
-				'parent_slug'     => $parent_slug,
+				'parent_slug'     => apply_filters( 'bp_nouveau_group_secondary_nav_parent_slug', $parent_slug ),
 				'user_has_access' => (bool) $n['user_has_access'],
 			)
 		);
