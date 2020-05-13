@@ -1040,7 +1040,7 @@ function bp_media_admin_setting_callback_document_section() {
 
 			echo sprintf(
 				/* translators: 1: libreoffice status */
-				_x( 'Your server needs %1$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				_x( 'Your server needs %1$s installed to enable live previews for Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
 				'<code><a href="https://wiki.ubuntu.com/LibreOffice" target="_blank">LibreOffice</a></code>'
 			);
 
@@ -1053,7 +1053,7 @@ function bp_media_admin_setting_callback_document_section() {
 		<?php
 			echo sprintf(
 				/* translators: 1: Imagick status */
-				_x( 'Your server needs %1$s installed to enable live previews for PDF and Word documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+				_x( 'Your server needs %1$s installed to enable live previews for PDF documents (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
 				'<code><a href="https://imagemagick.org/script/install-source.php" target="_blank">Imagick</a></code>'
 			);
 		?>
