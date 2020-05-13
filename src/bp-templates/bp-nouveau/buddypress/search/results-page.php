@@ -5,9 +5,15 @@
  * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
  */
 
-$post_title = BP_Search::instance()->has_search_results() ?
-	sprintf( __( 'Showing results for \'%s\'', "buddyboss" ), $_GET['s'] ):
-	sprintf( __( 'No results for \'%s\'', "buddyboss" ), $_GET['s'] ) ;
+$post_title = '';
+
+if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
+	$post_title = __( 'No results found', "buddyboss" );
+} elseif ( BP_Search::instance()->has_search_results() ) {
+	$post_title = sprintf( __( 'Showing results for \'%s\'', "buddyboss" ), $_GET['s'] );
+} else {
+	$post_title = sprintf( __( 'No results for \'%s\'', "buddyboss" ), $_GET['s'] );
+}
 ?>
 <header class="entry-header">
 	<h1 class="entry-title">
