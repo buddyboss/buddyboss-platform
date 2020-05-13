@@ -79,6 +79,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'create_folder_error_title' => __( 'Please enter title of folder', 'buddyboss' ),
 		'document_select_error'     => __( 'This file not supporting in document', 'buddyboss' ),
 		'dropzone_document_message' => __( 'Drop files here to upload', 'buddyboss' ),
+		'is_document_directory'     => ( bp_is_document_directory() ) ? 'yes' : 'no'
 	);
 
 	$old_media = $params['media'];

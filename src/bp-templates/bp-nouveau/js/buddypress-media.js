@@ -574,13 +574,25 @@ window.bp = window.bp || {};
 					data: data,
 					success: function ( response ) {
 						if ( response.success ) {
-							var documentStream = $( '#media-stream' );
-							documentStream.html( '' );
-							documentStream.html( response.data.html );
-							$( document ).find( '.open-popup .error' ).hide();
-							$( document ).find( '.open-popup .error' ).html( '' );
-							target.removeClass( 'loading' );
-							$( document ).removeClass( 'open-popup' );
+							if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
+								var store = bp.Nouveau.getStorage( 'bp-document' );
+								var scope = store.scope;
+								if ( 'personal' === scope ) {
+									$( document ).find( 'li#document-personal a' ).trigger( 'click' );
+									$( document ).find( 'li#document-personal' ).trigger( 'click' );
+								} else {
+									$( document ).find( 'li#document-all a' ).trigger( 'click' );
+									$( document ).find( 'li#document-all' ).trigger( 'click' );
+								}
+							} else {
+								var documentStream = $( '#media-stream' );
+								documentStream.html( '' );
+								documentStream.html( response.data.html );
+								$( document ).find( '.open-popup .error' ).hide();
+								$( document ).find( '.open-popup .error' ).html( '' );
+								target.removeClass( 'loading' );
+								$( document ).removeClass( 'open-popup' );
+							}
 						} else {
 							$( document ).find( '.open-popup .error' ).show();
 							$( document ).find( '.open-popup .error' ).html( response.data.feedback );
@@ -755,10 +767,25 @@ window.bp = window.bp || {};
 					data: data,
 					success: function (response) {
 						if (response.success) {
-							var documentStream = $( '#media-stream' );
-							documentStream.html( '' );
-							documentStream.html( response.data.html );
-
+							if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
+								var store = bp.Nouveau.getStorage( 'bp-document' );
+								var scope = store.scope;
+								if ( 'personal' === scope ) {
+									$( document ).find( 'li#document-personal a' ).trigger( 'click' );
+									$( document ).find( 'li#document-personal' ).trigger( 'click' );
+								} else {
+									$( document ).find( 'li#document-all a' ).trigger( 'click' );
+									$( document ).find( 'li#document-all' ).trigger( 'click' );
+								}
+							} else {
+								var documentStream = $( '#media-stream' );
+								documentStream.html( '' );
+								documentStream.html( response.data.html );
+								$( document ).find( '.open-popup .error' ).hide();
+								$( document ).find( '.open-popup .error' ).html( '' );
+								target.removeClass( 'loading' );
+								$( document ).removeClass( 'open-popup' );
+							}
 							target.closest( '.bp-media-move-file' ).find( '.ac-document-close-button' ).trigger( 'click' );
 						}
 					}
