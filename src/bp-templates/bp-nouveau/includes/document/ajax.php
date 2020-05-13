@@ -859,7 +859,11 @@ function bp_nouveau_ajax_document_edit_folder() {
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 	$id 	  = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
+	if ( $group_id > 0 ) {
+		$privacy = 'grouponly';
+	}
 
 	$album_id = bp_document_rename_folder( $id, $title, $privacy );
 

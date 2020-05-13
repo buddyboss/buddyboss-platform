@@ -3470,6 +3470,7 @@ window.bp = window.bp || {};
 				'title'		: title.val(),
 				'privacy'	: privacy.val(),
 				'id'		: id,
+				'group_id'	: self.group_id,
 			};
 
 			// remove all feedback erros from the DOM.
