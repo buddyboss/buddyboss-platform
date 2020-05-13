@@ -13562,6 +13562,28 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   width: auto;
 }
 
+body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner .bb-media-actions {
+  width: 75%;
+  -webkit-flex-basis: 75%;
+  -ms-flex-preferred-size: 75%;
+  flex-basis: 75%;
+  text-align: right;
+}
+
+body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner .bb-single-album-header {
+  width: 25%;
+  -webkit-flex-basis: 25%;
+  -ms-flex-preferred-size: 25%;
+  flex-basis: 25%;
+}
+
 @media screen and (max-width: 1120px) {
   .bp-media-header-wrap .media-search-form {
     width: 100%;
@@ -13665,6 +13687,19 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     width: 100%;
     margin: 0 0 10px;
   }
+  body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+  body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner .bb-single-album-header,
+  body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner .bb-media-actions {
+    width: 100%;
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+  }
 }
 
 #bp-media-single-folder .bp-media-header-wrap {
@@ -13734,6 +13769,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__anchor i {
   font-size: 21px;
+  margin-top: 5px;
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list {
