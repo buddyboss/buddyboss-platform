@@ -340,7 +340,7 @@ class BP_Document {
 
 			if ( 'pdf' === $extension ) {
 
-				$output_file = wp_get_attachment_image_url( $attachment_id );
+				$output_file = wp_get_attachment_image_url( $attachment_id, 'full' );
 				if ( '' !== $output_file ) {
 				$image_data = file_get_contents( $output_file );
 
