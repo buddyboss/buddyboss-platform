@@ -21,6 +21,7 @@ $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? tru
 $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 $db_privacy        = bp_get_db_document_privacy();
+$extension_lists   = bp_document_extensions_list();
 
 $group_id = bp_get_document_group_id();
 if ( $group_id > 0 ) {
@@ -31,6 +32,15 @@ if ( $group_id > 0 ) {
 	$move_type = 'profile';
 }
 
+$extension_description = '';
+
+if ( ! empty( $extension_lists ) ) {
+	$extension_lists = array_column( $extension_lists, 'description', 'extension' );
+	$extension_name  = '.' . $extension;
+	if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
+		$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
+	}
+}
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
@@ -41,6 +51,7 @@ if ( $group_id > 0 ) {
 		<a href="<?php echo esc_url( $download_url ); ?>" class="document-detail-wrap">
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
+			<?php echo $extension_description; ?>
 			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to Download', 'buddyboss' ); ?></span>
 		</a>
 	</div>
