@@ -14076,10 +14076,11 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   display: inline-block;
   vertical-align: middle;
   font-size: 12px;
+  white-space: nowrap;
 }
 
-.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:after,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:after {
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:before,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before {
   content: "\e827";
   font-family: "bb-icons";
   /* stylelint-disable-line */
@@ -14094,15 +14095,20 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   display: inline-block !important;
 }
 
-.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:hover,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:hover {
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:not(.more_options):hover,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:not(.more_options):hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
-.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:last-child:after,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:last-child:after {
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:first-child:before,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:first-child:before {
   display: none;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span.hidden,
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span.hidden {
+  display: none !important;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-back,

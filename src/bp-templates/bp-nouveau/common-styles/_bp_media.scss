@@ -2842,8 +2842,9 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			display: inline-block;
 			vertical-align: middle;
 			font-size: 12px;
+			white-space: nowrap;
 
-			span:after {
+			span:before {
 				content: "\e827";
 				font-family: "bb-icons";/* stylelint-disable-line */
 				font-size: 20px;
@@ -2855,14 +2856,19 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			span {
 				display: inline-block !important;
 
-				&:hover {
+				&:not(.more_options):hover {
 					text-decoration: underline;
 					cursor: pointer;
 				}
+
 			}
 
-			span:last-child:after {
+			span:first-child:before {
 				display: none;
+			}
+
+			span.hidden {
+				display: none !important;
 			}
 		}
 
