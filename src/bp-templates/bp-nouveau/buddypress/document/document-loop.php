@@ -17,6 +17,12 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 			</div>
+			<div class="data-head data-head-modified" data-target="modified">
+				<span>
+					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+			</div>
 			<?php
 			if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
 				?>
@@ -29,12 +35,6 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 				<?php
 			}
 			?>
-			<div class="data-head data-head-modified" data-target="modified">
-				<span>
-					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
-				</span>
-			</div>
 			<div class="data-head data-head-visibility" data-target="visibility">
 				<span>
 					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>

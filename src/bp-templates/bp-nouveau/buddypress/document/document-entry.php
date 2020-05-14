@@ -111,6 +111,18 @@ if ( wp_is_mobile() ) {
 ?>
 		</div>
 	</div>
+	<div class="media-folder_modified">
+		<div class="media-folder_details__bottom">
+			<span class="media-folder_date"><?php bp_document_date(); ?></span>
+			<?php
+			if ( ! bp_is_user() ) {
+				?>
+				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo bp_core_get_user_domain( bp_get_document_user_id() ); ?>"><?php bp_document_author(); ?></a></span>
+				<?php
+			}
+			?>
+		</div>
+	</div>
 	<?php
 	if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
 		?>
@@ -138,18 +150,6 @@ if ( wp_is_mobile() ) {
 		<?php
 	}
 	?>
-	<div class="media-folder_modified">
-		<div class="media-folder_details__bottom">
-			<span class="media-folder_date"><?php bp_document_date(); ?></span>
-			<?php
-			if ( ! bp_is_user() ) {
-				?>
-				<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo bp_core_get_user_domain( bp_get_document_user_id() ); ?>"><?php bp_document_author(); ?></a></span>
-				<?php
-			}
-			?>
-		</div>
-	</div>
 	<div class="media-folder_visibility">
 		<div class="media-folder_details__bottom">
 
