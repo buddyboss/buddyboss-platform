@@ -552,7 +552,7 @@ function bp_media_settings_callback_profiles_emoji_support() {
 		<?php checked( bp_is_profiles_emoji_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profiles_emoji_support">
-		<?php _e( 'Allow members to use emoji in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use emoji in <strong>profile activity</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -571,7 +571,7 @@ function bp_media_settings_callback_groups_emoji_support() {
 		<?php checked( bp_is_groups_emoji_support_enabled() ); ?>
 	/>
 	<label for="bp_media_groups_emoji_support">
-		<?php _e( 'Allow members to use emoji in <strong>group activity posts</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use emoji in <strong>group activity</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -592,7 +592,7 @@ function bp_media_settings_callback_messages_emoji_support() {
 	<label for="bp_media_messages_emoji_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to use emoji in <strong>private and group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to use emoji in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to use emoji in <strong>private messages</strong>', 'buddyboss' );
 		}
@@ -759,7 +759,7 @@ function bp_media_settings_callback_profiles_gif_support() {
 		<?php checked( bp_is_profiles_gif_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profiles_gif_support">
-		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -778,7 +778,7 @@ function bp_media_settings_callback_groups_gif_support() {
 		<?php checked( bp_is_groups_gif_support_enabled() ); ?>
 	/>
 	<label for="bp_media_groups_gif_support">
-		<?php _e( 'Allow members to use animated GIFs in <strong>group activity posts</strong>', 'buddyboss' ); ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>group activity</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -799,7 +799,7 @@ function bp_media_settings_callback_messages_gif_support() {
 	<label for="bp_media_messages_gif_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to use animated GIFs in <strong>private and group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to use animated GIFs in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' );
 		}
