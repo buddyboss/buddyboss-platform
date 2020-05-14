@@ -337,7 +337,13 @@ function bp_media_settings_callback_profile_media_support() {
 		<?php checked( bp_is_profile_media_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profile_media_support">
-		<?php _e( 'Allow members to upload photos in <strong>profiles</strong>', 'buddyboss' ); ?>
+		<?php
+		if( bp_is_active('activity') ) {
+			_e( 'Allow members to upload photos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );
+		} else {
+			_e( 'Allow members to upload photos in <strong>profiles</strong>', 'buddyboss' );
+		}
+		?>
 	</label>
 	<br/>
 	<input name="bp_media_profile_albums_support"
@@ -391,7 +397,13 @@ function bp_media_settings_callback_group_media_support() {
 		<?php checked( bp_is_group_media_support_enabled() ); ?>
 	/>
 	<label for="bp_media_group_media_support">
-		<?php _e( 'Allow members to upload photos in <strong>groups</strong>', 'buddyboss' ); ?>
+		<?php
+		if( bp_is_active('activity') ) {
+			_e( 'Allow members to upload photos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
+		} else {
+			_e( 'Allow members to upload photos in <strong>groups</strong>', 'buddyboss' );
+		}
+		?>
 	</label>
 	<br/>
 	<input name="bp_media_group_albums_support"
@@ -447,7 +459,7 @@ function bp_media_settings_callback_messages_media_support() {
 	<label for="bp_media_messages_media_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload photos in <strong>private and group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to upload photos in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload photos in <strong>private messages</strong>', 'buddyboss' );
 		}
