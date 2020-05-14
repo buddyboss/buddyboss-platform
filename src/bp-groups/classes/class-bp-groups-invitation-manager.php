@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  */
 
 // Exit if accessed directly.
@@ -16,13 +16,13 @@ defined( 'ABSPATH' ) || exit;
  * An extension of the core Invitations class that adapts the
  * core logic to accommodate group invitation behavior.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.5
  */
 class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	/**
 	 * Construct parameters.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array|string $args.
 	 */
@@ -34,7 +34,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * This is where custom actions are added to run when notifications of an
 	 * invitation or request need to be generated & sent.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param int $id The ID of the invitation to mark as sent.
 	 * @return bool True on success, false on failure.
@@ -61,7 +61,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * This is where custom actions are added to run when an invitation
 	 * or request is accepted.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param string $type Are we accepting an invitation or request?
 	 * @param array  $r    Parameters that describe the invitation being accepted.
@@ -129,7 +129,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * With group invitations, we don't need to keep the old record, so we delete rather than
 	 * mark invitations as "accepted."
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @see BP_Invitation::mark_accepted_by_data()
 	 *      for a description of arguments.
@@ -148,7 +148,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	/**
 	 * Should this invitation be created?
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args.
 	 * @return bool
@@ -175,7 +175,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	/**
 	 * Should this request be created?
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.5
 	 *
 	 * @param array $args.
 	 * @return bool.

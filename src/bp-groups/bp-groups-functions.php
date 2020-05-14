@@ -1048,7 +1048,7 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 		}
 	}
 
-	// Prime the invitations- and requests-as-memberships cache
+	// Prime the invitations- and requests-as-memberships cache.
 	$invitation_ids = array();
 	if ( true !== $r['is_confirmed'] || false !== $r['invite_sent'] ) {
 		$invitation_ids = groups_get_invites( array(
@@ -1996,7 +1996,7 @@ function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
 function groups_send_invites( $args = array() ) {
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || func_num_args() > 1 ) {
-		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'inviter_id',
@@ -2340,7 +2340,7 @@ function groups_remove_member( $user_id, $group_id ) {
 function groups_send_membership_request( $args = array() ) {
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || func_num_args() > 1 ) {
-		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'user_id',
@@ -2419,7 +2419,7 @@ function groups_send_membership_request( $args = array() ) {
  * @since BuddyPress 1.0.0
  * @since BuddyPress 5.0.0 Deprecated $membership_id argument.
  *
- * @param int $membership_id Deprecated 5.0.0.
+ * @param int $membership_id Deprecated 1.3.5
  * @param int $user_id       Required. ID of the user who requested membership.
  *                           Provide this value along with $group_id to override
  *                           $membership_id.
@@ -2431,7 +2431,7 @@ function groups_send_membership_request( $args = array() ) {
 function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ) {
-		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( ! $user_id || ! $group_id ) {
@@ -2464,7 +2464,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
 	if ( ! empty( $membership_id ) ){
-		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( ! groups_delete_membership_request( false, $user_id, $group_id ) ) {
@@ -2490,7 +2490,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  *
  * @since BuddyPress 1.2.0
  *
- * @param int $membership_id Deprecated 5.0.0.
+ * @param int $membership_id Deprecated 1.3.5
  * @param int $user_id       Optional. ID of the user who requested membership.
  *                           Provide this value along with $group_id to override
  *                           $membership_id.
@@ -2501,7 +2501,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  */
 function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 	if ( ! empty( $membership_id ) ){
-		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
 	if ( empty( $user_id ) || empty( $group_id ) ) {
