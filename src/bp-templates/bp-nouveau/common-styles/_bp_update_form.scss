@@ -455,6 +455,10 @@
 			line-height: 1;
 		}
 
+		&.no-change:after {
+			display: none;
+		}
+
 		&.onlyme:before {
 			content: "\e95f";
 		}

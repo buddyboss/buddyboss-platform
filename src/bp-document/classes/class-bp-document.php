@@ -1258,6 +1258,7 @@ class BP_Document {
 				$document->topic_id      = (int) $document->topic_id;
 				$document->reply_id      = (int) $document->reply_id;
 				$document->menu_order    = (int) $document->menu_order;
+				$document->parent        = (int) $document->album_id;
 			}
 
 			$group_name = '';

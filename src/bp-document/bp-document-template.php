@@ -562,9 +562,7 @@ function bp_get_document_parent_id() {
 
 	$id = 0;
 
-	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->album_id ) ) {
-		$id = $document_template->document->album_id;
-	} elseif ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->parent ) ) {
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->parent ) ) {
 		$id = $document_template->document->parent;
 	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->parent ) ) {
 		$id = $document_folder_template->folder->parent;

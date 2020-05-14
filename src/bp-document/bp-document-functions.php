@@ -1808,6 +1808,99 @@ function bp_document_move_folder( $folder_id, $destination_folder_id, $group_id 
 
 }
 
+/**
+ * Update document privacy with nested level.
+ *
+ * @param int    $document_id Document/Folder ID.
+ * @param string $privacy     Privacy term to update.
+ * @param string $type        Current type for the document.
+ *
+ * @return bool
+ */
+function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'folder' ) {
+
+	global $wpdb, $bp;
+
+	if ( '' === $document_id || '' === $privacy ) {
+		return false;
+	}
+
+	if ( 'folder' === $type ) {
+		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$wpdb->query( $q );
+
+		// Get main folder's child folders.
+		$get_children = bp_document_get_folder_children( $document_id );
+		if ( ! empty( $get_children ) ) {
+			foreach ( $get_children as $child ) {
+				$query_child_privacy = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$wpdb->query( $query_child_privacy );
+
+				// Get current folder's documents.
+				$child_document_ids = bp_document_get_folder_document_ids( $child );
+				if ( ! empty( $child_document_ids ) ) {
+					foreach ( $child_document_ids as $child_document_id ) {
+						$child_document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $child_document_id );
+						$wpdb->query( $child_document_query );
+
+						$document = new BP_Document( $child_document_id );
+						if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+							$post_attachment = $document->attachment_id;
+							$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+							if ( ! empty( $activity_id ) ) {
+								$activity = new BP_Activity_Activity( (int) $activity_id );
+								if ( bp_activity_user_can_delete( $activity ) ) {
+									$activity->privacy = $privacy;
+									$activity->save();
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+
+		// Get main folder's documents.
+		$get_document_ids = bp_document_get_folder_document_ids( $document_id );
+		if ( ! empty( $get_document_ids ) ) {
+			foreach ( $get_document_ids as $document_id ) {
+				$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $document_id );
+				$wpdb->query( $document_query );
+
+				$document = new BP_Document( $document_id );
+				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+					$post_attachment = $document->attachment_id;
+					$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+					if ( ! empty( $activity_id ) ) {
+						$activity = new BP_Activity_Activity( (int) $activity_id );
+						if ( bp_activity_user_can_delete( $activity ) ) {
+							$activity->privacy = $privacy;
+							$activity->save();
+						}
+					}
+				}
+			}
+		}
+	} else {
+		$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $document_id );
+		$wpdb->query( $document_query );
+
+		$document = new BP_Document( $document_id );
+		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+			$post_attachment = $document->attachment_id;
+			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+			if ( ! empty( $activity_id ) ) {
+				$activity = new BP_Activity_Activity( (int) $activity_id );
+				if ( bp_activity_user_can_delete( $activity ) ) {
+					$activity->privacy = $privacy;
+					$activity->save();
+				}
+			}
+		}
+	}
+}
+
 function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
 

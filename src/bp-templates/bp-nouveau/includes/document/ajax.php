@@ -1165,13 +1165,17 @@ function bp_nouveau_ajax_document_save_privacy() {
 	$type    = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$privacy = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
 
-	if ( 'folder' === $type ) {
-		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $id );
-	} else {
-		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
-	}
+	// Update document privacy with nested level.
+	bp_document_update_privacy( $id, $privacy, $type );
 
-	$wpdb->query( $q );
+//
+//	if ( 'folder' === $type ) {
+//		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $id );
+//	} else {
+//		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
+//	}
+//
+//	$wpdb->query( $q );
 
 	wp_send_json_success(
 		array(

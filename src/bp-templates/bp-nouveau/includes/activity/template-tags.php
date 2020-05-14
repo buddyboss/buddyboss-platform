@@ -1050,7 +1050,7 @@ function bp_nouveau_activity_privacy() {
 				if ( ! empty( $document ) ) {
 					$privacy   = $document->privacy;
 					$group_id  = $document->group_id;
-					$folder_id = $document->album_id;
+					$folder_id = $document->folder_id;
 
 					if ( ! empty( $folder_id ) ) {
 						$folder    = new BP_Document_Folder( $folder_id );
@@ -1093,7 +1093,7 @@ function bp_nouveau_activity_privacy() {
 				$folder_id         = $activity_folder_id;
 				$folder            = new BP_Document_Folder( $folder_id );
 				$privacy           = $folder->privacy;
-				$album_url         = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+				$folder_url         = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
 				$document_activity = true;
 			} else {
 				$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
@@ -1102,8 +1102,8 @@ function bp_nouveau_activity_privacy() {
 					$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
 					$document     = new BP_Document( $document_id );
 
-					if ( ! empty( $document->album_id ) ) {
-						$folder_id         = $document->album_id;
+					if ( ! empty( $document->folder_id ) ) {
+						$folder_id         = $document->folder_id;
 						$folder            = new BP_Document_Folder( $folder_id );
 						$privacy           = $folder->privacy;
 						$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
@@ -1138,7 +1138,7 @@ function bp_nouveau_activity_privacy() {
 
 		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 			?>
-			<div class="bb-media-privacy-wrap">
+			<div class="bb-media-privacy-wrap 123">
 			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			<ul class="activity-privacy">
 				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
@@ -1153,21 +1153,12 @@ function bp_nouveau_activity_privacy() {
 			</div><?php
 		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
 			?>
-			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
-				<ul class="activity-privacy">
-					<?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
-						<li class="bb-edit-privacy">
-							<a href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
-					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-						<li class="bb-edit-privacy">
-							<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
-						</li>
-					<?php endif; ?>
-				</ul>
+			<div class="bb-media-privacy-wrap 456">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] . __( ' - inherited from documents', 'buddyboss' ) : $privacy . __( ' - inherited from documents', 'buddyboss' ); ?>"><span class="privacy no-change selected <?php echo $privacy; ?>"></span></span>
 			</div><?php
-		} else { ?>
-			<div class="bb-media-privacy-wrap">
+		} else {
+			?>
+			<div class="bb-media-privacy-wrap 789">
 			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			<?php
 			$class = 'activity-privacy';

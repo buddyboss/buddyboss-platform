@@ -1467,6 +1467,10 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   line-height: 1;
 }
 
+.bb-media-privacy-wrap .privacy.no-change:after {
+  display: none;
+}
+
 .bb-media-privacy-wrap .privacy.onlyme:before {
   content: "\e95f";
 }

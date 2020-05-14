@@ -230,7 +230,11 @@ if ( wp_is_mobile() ) {
 							<a href="#" data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
 						</li>
 						<?php
-						if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id && 0 === bp_get_document_parent_id() ) {
+						if (
+							( 'document' === $document_type || 'folder' === $document_type )
+							&& 0 === $group_id
+							&& 0 === bp_get_document_parent_id()
+						) {
 							?>
 							<li class="privacy_file" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
 								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
