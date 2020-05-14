@@ -916,7 +916,13 @@ function bp_media_settings_callback_messages_document_support() {
 		<?php checked( bp_is_messages_document_support_enabled() ); ?>
 	/>
 	<label for="bp_media_messages_document_support">
-		<?php _e( 'Allow members to upload documents in <strong>private messages</strong>', 'buddyboss' ); ?>
+		<?php
+		if ( true === bp_disable_group_messages() ) {
+			_e( 'Allow members to upload documents in <strong>private messages</strong> and <strong>group messages</strong>', 'buddyboss' );
+		} else {
+			_e( 'Allow members to upload documents in <strong>private messages</strong>', 'buddyboss' );
+		}
+		?>
 	</label>
 	<?php
 }
@@ -947,7 +953,13 @@ function bp_media_settings_callback_group_document_support() {
 		<?php checked( bp_is_group_document_support_enabled() ); ?>
 	/>
 	<label for="bp_media_group_document_support">
-		<?php _e( 'Allow members to upload documents in <strong>groups</strong>', 'buddyboss' ); ?>
+		<?php
+		if( bp_is_active('activity') ) {
+			_e( 'Allow members to upload documents in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
+		} else {
+			_e( 'Allow members to upload documents in <strong>groups</strong>', 'buddyboss' );
+		}
+		?>
 	</label>
 	<?php
 }
@@ -1009,7 +1021,13 @@ function bp_media_settings_callback_profile_document_support() {
 		<?php checked( bp_is_profile_document_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profile_document_support">
-		<?php _e( 'Allow members to upload documents in <strong>profiles</strong>', 'buddyboss' ); ?>
+		<?php
+		if( bp_is_active('activity') ) {
+			_e( 'Allow members to upload documents in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );
+		} else {
+			_e( 'Allow members to upload documents in <strong>profiles</strong>', 'buddyboss' );
+		}
+		?>
 	</label>
 	<?php
 }
