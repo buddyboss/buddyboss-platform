@@ -1274,7 +1274,12 @@ class BP_Document {
 				}
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
-				$visibility       = $document_privacy[ $document->privacy ];
+				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
+					$visibility = esc_html__( 'Connections', 'buddyboss' );
+				} else {
+					$visibility = $document_privacy[ $document->privacy ];
+				}
+
 			}
 
 			// fetch attachment data.
@@ -1388,7 +1393,11 @@ class BP_Document {
 				}
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
-				$visibility       = $document_privacy[ $document->privacy ];
+				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
+					$visibility = esc_html__( 'Connections', 'buddyboss' );
+				} else {
+					$visibility = $document_privacy[ $document->privacy ];
+				}
 			}
 
 			$document->group_name = $group_name;
