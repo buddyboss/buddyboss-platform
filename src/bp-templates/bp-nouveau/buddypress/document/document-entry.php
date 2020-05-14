@@ -238,7 +238,7 @@ if ( wp_is_mobile() ) {
 						) {
 							?>
 							<li class="privacy_file" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
-								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Change Visibility', 'buddyboss' ); ?></a>
+								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
 							</li>
 							<?php
 						}
