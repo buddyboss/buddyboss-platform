@@ -13462,6 +13462,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #4d5c6d;
 }
 
+#media-stream.document-parent #media-folder-document-data-table .media-folder_items .media-folder_status {
+  display: block;
+  font-size: 13px;
+  color: #939597;
+}
+
 .bp-media-header-wrap h2 {
   float: left;
 }

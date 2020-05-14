@@ -136,8 +136,10 @@ if ( wp_is_mobile() ) {
 
 					$group_name = isset( $group->name ) ? bp_get_group_name( $group ) : '';
 					$group_link = bp_get_group_link( $group );
+					$group_status     = bp_get_group_status( $group );
 					?>
 					<span class="media-folder_group"><?php echo wp_kses_post( $group_link ); ?></span>
+					<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
 					<?php
 				} else {
 					?>
@@ -157,15 +159,8 @@ if ( wp_is_mobile() ) {
 				if ( bp_is_active( 'groups' ) ) {
 					$group_id = bp_get_document_group_id();
 					if ( $group_id > 0 ) {
-						$group      = groups_get_group( $group_id );
-						$status     = bp_get_group_status( $group );
-						$message = sprintf(
-							/* translator: Group status text. */
-							esc_attr__( 'Inherited from %s group', 'buddyboss' ),
-							ucfirst( $status )
-						);
 						?>
-						<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php echo $message; ?>">
+						<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Inherited from group', 'buddyboss' ); ?>">
 							<?php
 							bp_document_privacy();
 							?>
