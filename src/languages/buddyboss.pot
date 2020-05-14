@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-14 21:12:44+00:00\n"
+"POT-Creation-Date: 2020-05-14 23:00:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1701,7 +1701,7 @@ msgstr ""
 #: bp-core/profile-search/bps-admin.php:85
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
-#: bp-media/bp-media-settings.php:1127 bp-media/bp-media-settings.php:1151
+#: bp-media/bp-media-settings.php:1157 bp-media/bp-media-settings.php:1181
 msgid "Description"
 msgstr ""
 
@@ -2229,8 +2229,8 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
-#: bp-media/bp-media-settings.php:523 bp-media/bp-media-settings.php:680
-#: bp-media/bp-media-settings.php:887 bp-search/bp-search-settings.php:420
+#: bp-media/bp-media-settings.php:535 bp-media/bp-media-settings.php:692
+#: bp-media/bp-media-settings.php:899 bp-search/bp-search-settings.php:420
 msgid "View Tutorial"
 msgstr ""
 
@@ -3429,28 +3429,52 @@ msgid "Built by <a href=\"%s\">BuddyBoss</a>."
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:24
-msgid "Upload a sample file to determine it's MIME Type"
+msgid "Upload a file"
+msgstr ""
+
+#: bp-core/admin/templates/check-document-mime-type.php:29
+msgid "What is a MIME type?"
+msgstr ""
+
+#: bp-core/admin/templates/check-document-mime-type.php:30
+msgid ""
+"A MIME type is a way of identifying files on the Internet according to "
+"their nature and format. Your server needs this information to determine "
+"what kind of file has been uploaded, otherwise it will reject the file."
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:31
+msgid "Upload a file to check its MIME type"
+msgstr ""
+
+#: bp-core/admin/templates/check-document-mime-type.php:32
+msgid ""
+"We've made it easy to figure out your file's MIME type. Upload any sample "
+"file below and click \"Get MIME Type\" and we will display the MIME type "
+"for that file. So if you wanted to check the MIME type for the .zip "
+"extension, you would need to upload any random Zip file. Once you determine "
+"the correct MIME Type, click to enter that MIME type into the table cell."
+msgstr ""
+
+#: bp-core/admin/templates/check-document-mime-type.php:34
 msgid "Choose a file to upload:"
 msgstr ""
 
-#: bp-core/admin/templates/check-document-mime-type.php:33
+#: bp-core/admin/templates/check-document-mime-type.php:36
 msgid "Get MIME Type"
 msgstr ""
 
-#: bp-core/admin/templates/check-document-mime-type.php:38
-msgid "Your Uploaded Document MIME Type is: "
+#: bp-core/admin/templates/check-document-mime-type.php:41
+msgid "Your uploaded file's MIME type is: "
 msgstr ""
 
-#: bp-core/admin/templates/check-document-mime-type.php:39
-#: bp-media/bp-media-settings.php:1128 bp-media/bp-media-settings.php:1154
+#: bp-core/admin/templates/check-document-mime-type.php:42
+#: bp-media/bp-media-settings.php:1158 bp-media/bp-media-settings.php:1184
 msgid "MIME Type"
 msgstr ""
 
-#: bp-core/admin/templates/check-document-mime-type.php:41
-msgid "Use this mime type"
+#: bp-core/admin/templates/check-document-mime-type.php:44
+msgid "Use this MIME type"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:18
@@ -14033,7 +14057,7 @@ msgstr ""
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:697
+#: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:709
 msgid "GIPHY API Key"
 msgstr ""
 
@@ -14051,143 +14075,173 @@ msgstr ""
 msgid "&#160;"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:340
+#: bp-media/bp-media-settings.php:342
+msgid ""
+"Allow members to upload photos in <strong>profiles</strong> and "
+"<strong>profile activity</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:344
 msgid "Allow members to upload photos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:351 bp-media/bp-media-settings.php:405
+#: bp-media/bp-media-settings.php:357 bp-media/bp-media-settings.php:417
 msgid "Enable Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:394
+#: bp-media/bp-media-settings.php:402
+msgid ""
+"Allow members to upload photos in <strong>groups</strong> and <strong>group "
+"activity</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:404
 msgid "Allow members to upload photos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:450
+#: bp-media/bp-media-settings.php:462
 msgid ""
-"Allow members to upload photos in <strong>private and group "
-"messages</strong>"
+"Allow members to upload photos in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:452
+#: bp-media/bp-media-settings.php:464
 msgid "Allow members to upload photos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:485
+#: bp-media/bp-media-settings.php:497
 msgid "Allow members to upload photos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:543
-msgid "Allow members to use emoji in <strong>profile activity posts</strong>"
+#: bp-media/bp-media-settings.php:555
+msgid "Allow members to use emoji in <strong>profile activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:562
-msgid "Allow members to use emoji in <strong>group activity posts</strong>"
+#: bp-media/bp-media-settings.php:574
+msgid "Allow members to use emoji in <strong>group activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:583
-msgid "Allow members to use emoji in <strong>private and group messages</strong>"
+#: bp-media/bp-media-settings.php:595
+msgid ""
+"Allow members to use emoji in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:585
+#: bp-media/bp-media-settings.php:597
 msgid "Allow members to use emoji in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:606
+#: bp-media/bp-media-settings.php:618
 msgid "Allow members to use emoji in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:704
+#: bp-media/bp-media-settings.php:716
 msgid "This feature requires an account at"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:706
+#: bp-media/bp-media-settings.php:718
 msgid "Create your account, and then click"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:708
+#: bp-media/bp-media-settings.php:720
 msgid "Once done, copy the API key and paste it in the field above."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:750
+#: bp-media/bp-media-settings.php:762
+msgid "Allow members to use animated GIFs in <strong>profile activity</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:781
+msgid "Allow members to use animated GIFs in <strong>group activity</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:802
 msgid ""
-"Allow members to use animated GIFs in <strong>profile activity "
-"posts</strong>"
+"Allow members to use animated GIFs in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:769
-msgid "Allow members to use animated GIFs in <strong>group activity posts</strong>"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:790
-msgid ""
-"Allow members to use animated GIFs in <strong>private and group "
-"messages</strong>"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:792
+#: bp-media/bp-media-settings.php:804
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:813
+#: bp-media/bp-media-settings.php:825
 msgid "Allow members to use animated GIFs in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:907
+#: bp-media/bp-media-settings.php:921
+msgid ""
+"Allow members to upload documents in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:923
 msgid "Allow members to upload documents in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:938
+#: bp-media/bp-media-settings.php:958
+msgid ""
+"Allow members to upload documents in <strong>groups</strong> and "
+"<strong>group activity</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:960
 msgid "Allow members to upload documents in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:969
+#: bp-media/bp-media-settings.php:993
 msgid "Allow members to upload documents in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1000
+#: bp-media/bp-media-settings.php:1026
+msgid ""
+"Allow members to upload documents in <strong>profiles</strong> and "
+"<strong>profile activity</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1028
 msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1126 bp-media/bp-media-settings.php:1147
+#: bp-media/bp-media-settings.php:1156 bp-media/bp-media-settings.php:1177
 msgid "Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1159 bp-media/bp-media-settings.php:1184
-msgid "MIME Checker"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:1176
+#: bp-media/bp-media-settings.php:1178 bp-media/bp-media-settings.php:1206
 msgid ".extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1180
+#: bp-media/bp-media-settings.php:1182 bp-media/bp-media-settings.php:1210
 msgid "description"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1183
+#: bp-media/bp-media-settings.php:1185 bp-media/bp-media-settings.php:1213
 msgid "MIME type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1193
+#: bp-media/bp-media-settings.php:1189 bp-media/bp-media-settings.php:1214
+msgid "MIME Checker"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1223
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1208
+#: bp-media/bp-media-settings.php:1238
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Manage</a> which file extensions are "
 "allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1245
+#: bp-media/bp-media-settings.php:1275
 msgid "Documents &#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1287
+#: bp-media/bp-media-settings.php:1317
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1306
+#: bp-media/bp-media-settings.php:1336
 msgid ""
 "Check which file extensions are allowed to be uploaded. Add custom "
 "extensions at the bottom of the table."
@@ -17339,7 +17393,7 @@ msgid "Please enter title of folder"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/functions.php:80
-msgid "This file not supporting in document"
+msgid "This file type is not supported"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/functions.php:98
@@ -19291,7 +19345,7 @@ msgctxt "Course Content Label"
 msgid "%s Content"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1036
+#: bp-media/bp-media-settings.php:1066
 #. translators: 1: exec status, 2: Imagick status, 3: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19300,7 +19354,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1053
+#: bp-media/bp-media-settings.php:1083
 #. translators: 1: Imagick status, 2: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19308,7 +19362,7 @@ msgid ""
 "and Word documents (optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1067
+#: bp-media/bp-media-settings.php:1097
 #. translators: 1: exec status
 msgctxt "extension notification"
 msgid ""
@@ -19316,7 +19370,7 @@ msgid ""
 "live previews for PDF documents (optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1080
+#: bp-media/bp-media-settings.php:1110
 #. translators: 1: exec status, 2: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19325,7 +19379,7 @@ msgid ""
 "Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1095
+#: bp-media/bp-media-settings.php:1125
 #. translators: 1: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19333,7 +19387,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1108
+#: bp-media/bp-media-settings.php:1138
 #. translators: 1: Imagick status
 msgctxt "extension notification"
 msgid ""
