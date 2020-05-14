@@ -13450,6 +13450,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   width: 20%;
 }
 
+#media-stream.document-parent #media-folder-document-data-table .media-folder_items .media-folder_group a {
+  color: #4d5c6d;
+}
+
 .bp-media-header-wrap h2 {
   float: left;
 }
