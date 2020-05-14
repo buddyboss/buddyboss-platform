@@ -1043,7 +1043,7 @@ span.dashicons.dashicons-admin-file:before {
 				background: #fff;
 				box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 				border-radius: 4px;
-				width: 168px;
+				width: 198px;
 				z-index: 1;
 
 				ul {
@@ -1091,6 +1091,10 @@ span.dashicons.dashicons-admin-file:before {
 						&.privacy_file a:before {
 							content: "\e960";
 							font-size: 15px;
+						}
+
+						&.copy_download_file_url a:before {
+							content: "\e8ac";
 						}
 					}
 				}

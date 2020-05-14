@@ -59,15 +59,15 @@ if ( ! empty( $extension_lists ) ) {
 		<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 			<i class="bb-icon-download"></i>
 		</a>
-		<?php
-		if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
-			?>
+		
 			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icon-menu-dots-v"></i>
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<?php
+				<?php
+				if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
+					
 					if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 						?>
 					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
@@ -75,11 +75,14 @@ if ( ! empty( $extension_lists ) ) {
 					}
 					?>
 					<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+					<?php
+				}
+				?>
+					<li class="copy_download_file_url">
+						<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+					</li>
 				</ul>
 			</div>
-			<?php
-		}
-		?>
 	</div>
 	<?php
 	if ( 'mp3' === $extension || 'wav' === $extension || 'ogg' === $extension ) {
