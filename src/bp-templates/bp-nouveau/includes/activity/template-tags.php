@@ -1152,7 +1152,7 @@ function bp_nouveau_activity_privacy() {
 			</ul>
 			</div><?php
 		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
-			$join_text = ( ( $folder_id && ! empty( $folder_url ) ) ? __( ' - Inherited from Document.', 'buddyboss' ) : '' );
+			$join_text = ( ( $folder_id && ! empty( $folder_url ) ) ? __( ' &ndash; Inherited from parent folder', 'buddyboss' ) : '' );
 			?>
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] . $join_text : $privacy . $join_text; ?>"><span class="privacy selected <?php echo $privacy . ( ! empty( $join_text ) ? ' no-change' : '' ); ?>"></span></span>
