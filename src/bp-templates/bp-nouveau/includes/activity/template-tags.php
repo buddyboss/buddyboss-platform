@@ -1219,17 +1219,17 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
             <div class="bp-edit-media-activity-description" style="display: none;">
                 <div class="innerWrap">
                         <textarea id="add-activity-description"
-                                  title="Add a description"
+                                  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
                                   class="textInput"
                                   name="caption_text"
-                                  placeholder="Add a description"
+                                  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
                                   role="textbox"><?php echo $activity_description; ?></textarea>
                 </div>
                 <div class="in-profile description-new-submit">
                     <input type="hidden" id="bp-activity-id" value="<?php echo $activity_id; ?>">
                     <input type="submit" id="bp-activity-description-new-submit" class="button small"
-                           name="description-new-submit" value="Done Editing">
-                    <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="Cancel">
+                           name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+                    <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
                 </div>
             </div>
 
