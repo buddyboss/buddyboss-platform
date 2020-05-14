@@ -663,6 +663,11 @@ a.bb-close-model {
 				width: 100%;
 				resize: none;
 				margin-bottom: 15px;
+
+				&:focus {
+
+					@include box-shadow( 0 0 6px $med-light-grey );
+				}
 			}
 
 			.description-new-submit {

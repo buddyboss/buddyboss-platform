@@ -2589,10 +2589,12 @@ span.dashicons.dashicons-admin-file:before {
 
 .activity-media-description .bp-add-media-activity-description.show-edit .edit {
   display: block;
+  margin-bottom: 10px;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-add .add {
   display: block;
+  margin-bottom: 10px;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-add .edit {
@@ -3274,6 +3276,7 @@ form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   outline: none;
   padding: 0.5em;
   width: 100%;
+  border-radius: 3px;
   border: 1px solid #ccc;
 }
 
@@ -12053,6 +12056,12 @@ a.bb-close-model {
   width: 100%;
   resize: none;
   margin-bottom: 15px;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description:focus {
+  -webkit-box-shadow: 0 0 6px #d6d6d6;
+  -moz-box-shadow: 0 0 6px #d6d6d6;
+  box-shadow: 0 0 6px #d6d6d6;
 }
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit {
