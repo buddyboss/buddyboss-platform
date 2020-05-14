@@ -1214,7 +1214,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
             <a class="bp-add-media-activity-description <?php echo( ! empty( $activity_description ) ? 'show-edit' : 'show-add' ); ?>"
                href="#">
                 <span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-                <span class="edit"><?php _e( 'Edit a description', 'buddyboss' ); ?></span>
+                <span class="edit"><?php _e( 'Edit description', 'buddyboss' ); ?></span>
             </a>
             <div class="bp-edit-media-activity-description" style="display: none;">
                 <div class="innerWrap">
