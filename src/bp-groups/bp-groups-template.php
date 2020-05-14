@@ -839,7 +839,7 @@ function bp_get_group_status_description( $group = false ) {
 	if ( 'public' == $group->status ) {
 		$description = __( 'This group\'s content, including its members and activity, are visible to any site member.', 'buddyboss' );
 	} elseif ( 'hidden' == $group->status ) {
-		$description = __( 'Only group members can view its content, including its members and activity.', 'buddyboss' );
+		$description = __( 'This group and its content are only visible to members of the group.', 'buddyboss' );
 	} elseif ( 'private' == $group->status ) {
 		$description = __( 'This group\'s content is only visible to members of the group.', 'buddyboss' );
 	} else {
