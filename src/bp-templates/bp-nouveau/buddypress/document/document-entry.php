@@ -157,8 +157,15 @@ if ( wp_is_mobile() ) {
 				if ( bp_is_active( 'groups' ) ) {
 					$group_id = bp_get_document_group_id();
 					if ( $group_id > 0 ) {
+						$group      = groups_get_group( $group_id );
+						$status     = bp_get_group_status( $group );
+						$message = sprintf(
+							/* translator: Group status text. */
+							esc_attr__( 'Inherited from %s group', 'buddyboss' ),
+							ucfirst( $status )
+						);
 						?>
-						<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Inherited from group', 'buddyboss' ); ?>">
+						<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php echo $message; ?>">
 							<?php
 							bp_document_privacy();
 							?>
