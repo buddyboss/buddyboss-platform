@@ -230,12 +230,6 @@ if ( wp_is_mobile() ) {
 					}
 					if ( $can_manage_btn ) {
 						?>
-						<li class="rename_file">
-							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
-						</li>
-						<li class="move_file">
-							<a href="#" data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-						</li>
 						<?php
 						if (
 							( 'document' === $document_type || 'folder' === $document_type )
@@ -244,11 +238,17 @@ if ( wp_is_mobile() ) {
 						) {
 							?>
 							<li class="privacy_file" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
-								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
+								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Change Visibility', 'buddyboss' ); ?></a>
 							</li>
 							<?php
 						}
 						?>
+						<li class="rename_file">
+							<a href="#" data-type="<?php echo esc_attr( $document_type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a>
+						</li>
+						<li class="move_file">
+							<a href="#" data-parent-id="<?php echo esc_attr( bp_get_document_parent_id() ); ?>" data-id="<?php echo esc_attr( $document_id ); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="<?php echo esc_attr( $move_class ); ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+						</li>
 						<li class="delete_file">
 							<a class="document-file-delete" data-item-from="listing" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $document_type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>

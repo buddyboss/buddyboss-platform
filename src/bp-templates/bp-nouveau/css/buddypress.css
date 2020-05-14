@@ -2799,7 +2799,7 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.privacy_file a:before {
-  content: "\e960";
+  content: "\e90d";
   font-size: 15px;
 }
 
@@ -13361,7 +13361,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.privacy_file a:before {
-  content: "\e960";
+  content: "\e90d";
   font-size: 15px;
 }
 
