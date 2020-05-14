@@ -1544,8 +1544,12 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   display: block;
 }
 
+.activity-privacy > li a {
+  color: #7f868f;
+}
+
 .activity-privacy > li:before {
-  content: "\e960";
+  content: "\e90d";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
@@ -1554,6 +1558,10 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   margin-left: 10px;
   width: 20px;
   text-align: center;
+}
+
+.activity-privacy > li.public:before {
+  content: "\e960";
 }
 
 .activity-privacy > li.onlyme:before {
@@ -1566,14 +1574,6 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .activity-privacy > li.friends:before {
   content: "\e95e";
-}
-
-.activity-privacy > li.bb-edit-privacy a {
-  color: #7f868f;
-}
-
-.activity-privacy > li.bb-edit-privacy:before {
-  content: "\e90d";
 }
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy {

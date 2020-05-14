@@ -538,8 +538,12 @@
 
 	> li {
 
+		a {
+			color: #7f868f;
+		}
+
 		&:before {
-			content: "\e960";
+			content: "\e90d";
 			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
@@ -547,6 +551,10 @@
 			margin-right: 10px;
 			width: 20px;
 			text-align: center;
+		}
+
+		&.public:before {
+			content: "\e960";
 		}
 
 		&.onlyme:before {
@@ -559,17 +567,6 @@
 
 		&.friends:before {
 			content: "\e95e";
-		}
-	}
-
-	> li.bb-edit-privacy {
-
-		a {
-			color: #7f868f;
-		}
-
-		&:before {
-			content: "\e90d";
 		}
 	}
 }
