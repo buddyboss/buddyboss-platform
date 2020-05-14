@@ -659,7 +659,7 @@ function bp_nouveau_ajax_document_move() {
 		wp_send_json_error( $response );
 	}
 
-	$document = bp_document_move_to_folder( $document_id, $folder_id, $group_id );
+	$document = bp_document_move_document_to_folder( $document_id, $folder_id, $group_id );
 
 	if ( $document > 0 ) {
 
@@ -1058,7 +1058,7 @@ function bp_nouveau_ajax_document_folder_move() {
 		}
 	}
 
-	bp_document_move_folder( $folder_id, $destination_folder_id, $group_id );
+	bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, $group_id );
 
 	$content = '';
 	ob_start();
@@ -1167,15 +1167,6 @@ function bp_nouveau_ajax_document_save_privacy() {
 
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );
-
-//
-//	if ( 'folder' === $type ) {
-//		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $id );
-//	} else {
-//		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
-//	}
-//
-//	$wpdb->query( $q );
 
 	wp_send_json_success(
 		array(

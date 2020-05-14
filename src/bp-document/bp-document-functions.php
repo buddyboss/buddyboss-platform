@@ -1507,13 +1507,14 @@ function bp_document_folder_bradcrumb( $folder_id ) {
             (SELECT @r := %d, @l := 0) vars, {$document_folder_table} m
         WHERE @r <> 0) d
     JOIN {$document_folder_table} c
-    ON d._id = c.id ORDER BY c.id ASC",
+    ON d._id = c.id",
 		$folder_id
 	);
 	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 	$html                   = '';
 
 	if ( ! empty( $data ) ) {
+		$data = array_reverse( $data );
 		$html .= '<ul class="document-breadcrumb">';
 		if ( bp_is_group() && bp_is_group_single() ) {
 			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
@@ -1555,7 +1556,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
  * @return bool|int
  * @since BuddyBoss 1.3.0
  */
-function bp_document_move_to_folder( $document_id = 0, $folder_id = 0, $group_id = 0 ) {
+function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 
@@ -1574,6 +1575,22 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0, $group_id
 
 	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s, album_id = %d WHERE id = %d", $destination_privacy, bp_core_current_time(), $folder_id, $document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
+
+	// Update document activity privacy.
+	$document = new BP_Document( $document_id );
+	if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+		$post_attachment = $document->attachment_id;
+		$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+		if ( ! empty( $activity_id ) ) {
+			$activity = new BP_Activity_Activity( (int) $activity_id );
+			if ( bp_activity_user_can_delete( $activity ) ) {
+				$activity->privacy = $destination_privacy;
+				$activity->save();
+			}
+		}
+	}
+
+
 	if ( false === $query ) {
 		return false;
 	}
@@ -1742,7 +1759,7 @@ function bp_document_update_folder_modified_date( $folder_id = 0 ) {
  * @return bool
  * @since BuddyBoss 1.3.0
  */
-function bp_document_move_folder( $folder_id, $destination_folder_id, $group_id = 0 ) {
+function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 
@@ -1759,53 +1776,69 @@ function bp_document_move_folder( $folder_id, $destination_folder_id, $group_id 
 	}
 
 
-	// Update parent of folder id.
+	// Update main parent folder.
 	$query_update_folder = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s, parent = %d WHERE id = %d", $destination_privacy, $destination_folder_id, $folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 	$query = $wpdb->query( $query_update_folder );
-//	error_log( $query_update_folder );
 
-	// Get all the documents of particular folder.
+	// Get all the documents of main folder.
 	$document_ids = bp_document_get_folder_document_ids( $folder_id );
-
 	if ( ! empty( $document_ids ) ) {
 		foreach ( $document_ids as $id ) {
 			// Update privacy of the document.
 			$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 			$query = $wpdb->query( $query_update_document );
-//			error_log( $query_update_document );
+
+			// Update document activity privacy.
+			$document = new BP_Document( $id );
+			if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+				$post_attachment = $document->attachment_id;
+				$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+				if ( ! empty( $activity_id ) ) {
+					$activity = new BP_Activity_Activity( (int) $activity_id );
+					if ( bp_activity_user_can_delete( $activity ) ) {
+						$activity->privacy = $destination_privacy;
+						$activity->save();
+					}
+				}
+			}
 		}
 	}
 
-	// Update Privacy of all children
+	// Update privacy for all child folders.
 	$get_children = bp_document_get_folder_children( $folder_id );
 
 	foreach ( $get_children as $child ) {
-
-		// Update privacy of all the children folders.
 		$query_update_child    = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$query = $wpdb->query( $query_update_child );
-//		error_log( $query_update_child );
 
 		// Get all the documents of particular folder.
 		$document_ids = bp_document_get_folder_document_ids( $child );
 
 		if ( ! empty( $document_ids ) ) {
 			foreach ( $document_ids as $id ) {
+
 				// Update privacy of the document.
 				$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$query = $wpdb->query( $query_update_document );
-//				error_log( $query_update_document );
+
+				// Update document activity privacy.
+				$document = new BP_Document( $id );
+				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+					$post_attachment = $document->attachment_id;
+					$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+					if ( ! empty( $activity_id ) ) {
+						$activity = new BP_Activity_Activity( (int) $activity_id );
+						if ( bp_activity_user_can_delete( $activity ) ) {
+							$activity->privacy = $destination_privacy;
+							$activity->save();
+						}
+					}
+				}
 			}
 		}
-
 	}
 
-	if ( false === $query ) {
-		return false;
-	} else {
-		return true;
-	}
-
+	return true;
 }
 
 /**
