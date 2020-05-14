@@ -1545,7 +1545,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .activity-privacy > li:before {
-  content: "\e960";
+  content: "\e90d";
   font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
