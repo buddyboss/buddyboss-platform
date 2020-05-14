@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Attachments_Group_Cover_Endpoint class
  *
- * @package BuddyPress
- * @since 6.0.0
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * /groups/<group_id>/cover
  *
- * @since 6.0.0
+ * @since 0.1.0
  */
 class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 
@@ -22,7 +22,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	/**
 	 * BP_Attachment_Cover_Image Instance.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @var BP_Attachment_Cover_Image
 	 */
@@ -31,7 +31,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	/**
 	 * Reuse some parts of the BP_REST_Groups_Endpoint class.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Groups_Endpoint
 	 */
@@ -40,7 +40,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	/**
 	 * Hold the group object.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @var BP_Groups_Group
 	 */
@@ -49,7 +49,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	/**
 	 * Group object type.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @var string
 	 */
@@ -58,7 +58,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace           = bp_rest_namespace() . '/' . bp_rest_version();
@@ -70,7 +70,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -109,7 +109,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/groups/:group_id/cover Group Cover
 	 * @apiName        GetBBGroupCover
@@ -145,7 +145,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_attachments_group_cover_get_item', $cover_url, $response, $request );
 
@@ -158,7 +158,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval      = true;
@@ -180,7 +180,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_attachments_group_cover_get_item_permissions_check', $retval, $request );
 	}
@@ -191,7 +191,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/groups/:group_id/cover Create Group Cover
 	 * @apiName        CreateBBGroupCover
@@ -237,7 +237,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_attachments_group_cover_create_item', $cover_url, $response, $request );
 
@@ -250,7 +250,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = $this->delete_item_permissions_check( $request );
@@ -271,7 +271,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_attachments_group_cover_create_item_permissions_check', $retval, $request );
 	}
@@ -282,7 +282,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/groups/:group_id/cover Delete Group Cover
 	 * @apiName        DeleteBBGroupCover
@@ -330,7 +330,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_attachments_group_cover_delete_item', $this->group, $response, $request );
 
@@ -343,7 +343,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
@@ -382,7 +382,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_attachments_group_cover_delete_item_permissions_check', $retval, $request );
 	}
@@ -394,7 +394,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $cover_url, $request ) {
 		$data = array(
@@ -415,7 +415,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request Request used to generate the response.
 		 * @param string $cover_url Group cover url.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_attachments_group_cover_prepare_value', $response, $request, $cover_url );
 	}
@@ -424,7 +424,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * Get the plugin schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(

@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Activity_Comment_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Activity endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Activity endpoints class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Activity_Endpoint
 	 */
@@ -27,7 +27,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace         = bp_rest_namespace() . '/' . bp_rest_version();
@@ -38,7 +38,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		$activity_endpoint = '/' . $this->rest_base . '/(?P<id>[\d]+)';
@@ -70,7 +70,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {GET} /wp-json/buddyboss/v1/activity/:id/comment Get activity comments
 	 * @apiName GetActivityComment
@@ -110,7 +110,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_activity_comment_get_items', $response, $request );
 
@@ -123,7 +123,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -144,7 +144,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_activity_comment_get_items_permissions_check', $retval, $request );
 	}
@@ -155,7 +155,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {POST} /wp-json/buddyboss/v1/activity/:id/comment Create activity comment
 	 * @apiName CreateActivityComment
@@ -224,7 +224,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_activity_create_item', $response, $request );
 
@@ -237,7 +237,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -270,7 +270,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_activity_comment_create_item_permissions_check', $retval, $request );
 	}
@@ -281,7 +281,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = $this->get_collection_params();
@@ -311,7 +311,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 * @param array $args Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_activity_create_comment_query_arguments', $args, $method );
 	}
@@ -320,7 +320,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * Get the plugin schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -355,7 +355,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections of plugins.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -393,7 +393,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return BP_Activity_Activity|string An activity object.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function get_activity_object( $request ) {
 		$activity_id      = is_numeric( $request ) ? $request : (int) $request['id'];
@@ -419,7 +419,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array           An array of activity comments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_activity_comments( $comments, $request ) {
 		$data = array();
@@ -441,7 +441,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 * @param array $comments Comments.
 		 * @param WP_REST_Request $request Request used to generate the response.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_activity_prepare_comments', $data, $comments, $request );
 	}

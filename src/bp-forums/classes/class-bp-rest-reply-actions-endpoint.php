@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Reply_Actions_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Reply Actions endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 
@@ -39,7 +39,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
@@ -52,7 +52,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -142,7 +142,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/reply/action/:id Reply Actions
 	 * @apiName        ActionBBPReply
@@ -188,7 +188,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function action_items_permissions_check( $request ) {
 		$retval = true;
@@ -213,7 +213,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_action_item_permissions_check', $retval, $request );
 	}
@@ -224,7 +224,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/reply/move/:id Move Reply
 	 * @apiName        MoveBBPReply
@@ -443,8 +443,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		if ( strtotime( $move_reply->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 			// Set destination topic post_date to 1 second before from reply.
-			// phpcs:ignore
-			$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $move_reply->post_date ) - 1 );
+			$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $move_reply->post_date ) - 1 );
 
 			// Update destination topic.
 			wp_update_post(
@@ -519,7 +518,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function move_item_permissions_check( $request ) {
 		$retval = true;
@@ -544,7 +543,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_action_item_permissions_check', $retval, $request );
 	}

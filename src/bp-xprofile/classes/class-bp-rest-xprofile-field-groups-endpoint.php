@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_XProfile_Field_Groups_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  * Use /xprofile/groups
  * Use /xprofile/groups/{id}
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * XProfile Fields Class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_XProfile_Fields_Endpoint
 	 */
@@ -30,7 +30,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
@@ -41,7 +41,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -101,7 +101,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -126,7 +126,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param array $args Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_xprofile_field_groups_{$key}_query_arguments", $args, $method );
 	}
@@ -137,7 +137,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/groups Get xProfile Groups
 	 * @apiName        GetBBxProfileGroups
@@ -189,7 +189,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_xprofile_field_groups_get_items_query_args', $args, $request );
 
@@ -212,7 +212,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_field_groups_get_items', $field_groups, $response, $request );
 
@@ -225,7 +225,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 
@@ -235,7 +235,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param bool $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_get_items_permissions_check', true, $request );
 	}
@@ -246,7 +246,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/groups/:id Get xProfile Group
 	 * @apiName        GetBBxProfilGroup
@@ -289,7 +289,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_field_groups_get_item', $field_group, $response, $request );
 
@@ -302,7 +302,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = $this->get_items_permissions_check( $request );
@@ -313,7 +313,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_get_item_permissions_check', $retval, $request );
 	}
@@ -324,7 +324,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/groups Create xProfile Group
 	 * @apiName        CreateBBxProfileGroup
@@ -353,7 +353,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_xprofile_field_groups_create_item_query_args', $args, $request );
 
@@ -401,7 +401,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_field_groups_create_item', $field_group, $response, $request );
 
@@ -414,7 +414,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -435,7 +435,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_create_item_permissions_check', $retval, $request );
 	}
@@ -446,7 +446,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/groups/:id Update xProfile Group
 	 * @apiName        UpdateBBxProfileGroup
@@ -539,7 +539,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_field_groups_update_item', $field_group, $response, $request );
 
@@ -552,7 +552,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = $this->create_item_permissions_check( $request );
@@ -563,7 +563,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_update_item_permissions_check', $retval, $request );
 	}
@@ -574,7 +574,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/groups/:id Delete xProfile Group
 	 * @apiName        DeleteBBxProfileGroup
@@ -628,7 +628,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_field_groups_delete_item', $field_group, $response, $request );
 
@@ -641,7 +641,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = $this->create_item_permissions_check( $request );
@@ -652,7 +652,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_delete_item_permissions_check', $retval, $request );
 	}
@@ -664,7 +664,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request   $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $group, $request ) {
 		$data = array(
@@ -740,7 +740,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request Request used to generate the response.
 		 * @param BP_XProfile_Group $group XProfile field group.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_prepare_value', $response, $request, $group );
 	}
@@ -751,7 +751,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param BP_XProfile_Group $group XProfile field group.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $group ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -772,7 +772,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 		 * @param array $links The prepared links of the REST response.
 		 * @param BP_XProfile_Group $group XProfile field group object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_field_groups_prepare_links', $links, $group );
 	}
@@ -783,7 +783,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return BP_XProfile_Group|string XProfile field group object.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_group_object( $request ) {
 		$profile_group_id = is_numeric( $request ) ? $request : (int) $request['id'];
@@ -821,7 +821,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * Get the XProfile field group schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -903,7 +903,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * Get the query params for XProfile field groups.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();

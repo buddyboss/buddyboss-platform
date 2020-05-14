@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Groups_Details_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Groups Details endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 
@@ -25,7 +25,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
@@ -36,7 +36,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -79,7 +79,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error List of groups object data.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/groups/details Groups Details
 	 * @apiName        GetBBGroupsDetails
@@ -103,7 +103,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_groups_get_items', $response, $request );
 
@@ -116,7 +116,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -137,7 +137,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_details_get_items_permissions_check', $retval, $request );
 	}
@@ -148,9 +148,9 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error List of groups object data.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
-	 * @api            {GET} /wp-json/buddyboss/v1/groups/:id/details Group Detail
+	 * @api            {GET} /wp-json/buddyboss/v1/groups/:id/detail Group Detail
 	 * @apiName        GetBBGroupsDetail
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve groups detail tabs.
@@ -338,7 +338,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_groups_get_item', $response, $request );
 
@@ -351,7 +351,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -393,7 +393,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_details_get_items_permissions_check', $retval, $request );
 	}
@@ -402,7 +402,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * Get the group details schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -440,7 +440,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections of plugins.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params = array(

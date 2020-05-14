@@ -2,8 +2,8 @@
 /**
  * BP REST: Attachments Trait
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Attachments Trait
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 trait BP_REST_Attachments {
 
 	/**
 	 * Cover upload from file.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param array $file $_FILES superglobal.
 	 * @return string|WP_Error
@@ -147,7 +147,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Avatar upload from File.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param array $files $_FILES superglobal.
 	 * @return stdClass|WP_Error
@@ -242,7 +242,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Resize image.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param string $file Image to resize.
 	 * @return string|WP_Error
@@ -296,7 +296,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Crop image.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param string $image_file Image to crop.
 	 * @return array|WP_Error
@@ -372,7 +372,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Delete group's existing avatar if one exists.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function delete_existing_image() {
 		// Get existing avatar.
@@ -398,7 +398,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Returns the avatar object.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param array $args {
 	 *    An array of arguments to build the Avatar object.
@@ -423,7 +423,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Get item id.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @return int
 	 */
@@ -434,7 +434,7 @@ trait BP_REST_Attachments {
 	/**
 	 * Get cover object component.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @return string
 	 */

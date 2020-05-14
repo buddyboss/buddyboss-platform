@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Account_Settings_Options_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Account Settings endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -67,7 +67,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/account-settings/:nav Get Setting Options.
 	 * @apiName        GetBBAccountSettingsOptions
@@ -137,7 +137,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_account_settings_options_get_item', $fields, $response, $request );
 
@@ -150,7 +150,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -183,7 +183,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_account_settings_options_get_item_permissions_check', $retval, $request );
 	}
@@ -194,7 +194,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error | WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/account-settings/:nav Update Setting Options.
 	 * @apiName        UpdateBBAccountSettingsOptions
@@ -274,7 +274,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_account_settings_options_update_item', $response, $request );
 
@@ -287,7 +287,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -320,7 +320,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_account_settings_options_update_item_permissions_check', $retval, $request );
 	}
@@ -331,7 +331,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -362,7 +362,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_update_accounts_{$key}_query_arguments", $args, $method );
 	}
@@ -374,7 +374,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $field, $request ) {
 		$data = array(
@@ -400,7 +400,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request  Request used to generate the response.
 		 * @param object           $field    Field object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_account_setting_prepare_value', $response, $request, $field );
 	}
@@ -427,7 +427,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * Get the Account Settings schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -486,7 +486,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * Get the query params for the Account Settings collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -1164,7 +1164,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after the notification settings have been saved, and before redirect.
 		 *
-		 * @since BuddyPress 1.5.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_core_notification_settings_after_save' );
 
@@ -1203,7 +1203,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after saving xprofile field visibilities.
 		 *
-		 * @since BuddyPress 2.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_xprofile_settings_after_save' );
 

@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Forums_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Forums endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -92,7 +92,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/forums Forums
 	 * @apiName        GetBBPForums
@@ -108,6 +108,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array} [include] An array of forums IDs to retrieve.
 	 * @apiParam {Number} [offset] The number of forums to offset before retrieval.
 	 * @apiParam {String=asc,desc} [order=asc] Designates ascending or descending order of forums.
+	 * @apiParam {Array=date,ID,author,title,name,modified,parent,rand,menu_order,relevance,popular,activity} [orderby] Sort retrieved forums by parameter..
 	 * @apiParam {Array=publish,private,hidden} [status=publish private] Limit result set to forums assigned a specific status.
 	 * @apiParam {Number} [parent] Forum ID to retrieve child pages for. Use 0 to only retrieve top-level forums.
 	 * @apiParam {Boolean} [subscriptions] Retrieve subscribed forums by user.
@@ -170,7 +171,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_forums_get_items_query_args', $args, $request );
 
@@ -219,7 +220,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_forums_get_items', $forums, $response, $request );
 
@@ -232,7 +233,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -243,7 +244,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_forums_get_items_permissions_check', $retval, $request );
 	}
@@ -254,7 +255,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/forums/:id Forum
 	 * @apiName        GetBBPForum
@@ -280,7 +281,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_forum_get_item', $forum, $response, $request );
 
@@ -293,7 +294,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -340,7 +341,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_forum_get_item_permissions_check', $retval, $request );
 	}
@@ -351,7 +352,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/subscribe/:id Subscribe/Unsubscribe Forum
 	 * @apiName        GetBBPForumSubscribe
@@ -395,7 +396,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_forum_update_item', $forum, $response, $request );
 
@@ -408,7 +409,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -473,7 +474,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_forum_update_item_permissions_check', $retval, $request );
 	}
@@ -485,7 +486,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $forum, $request ) {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -595,7 +596,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request   Request used to generate the response.
 		 * @param array            $component The component and its values.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_forums_prepare_value', $response, $request, $forum );
 	}
@@ -604,7 +605,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * Get the forums schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -862,7 +863,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                        = parent::get_collection_params();
@@ -1029,7 +1030,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @param WP_Post $post Post object.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $post ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -1054,7 +1055,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		 * @param array   $links The prepared links of the REST response.
 		 * @param WP_Post $post  Post object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_forum_prepare_links', $links, $post );
 	}

@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Group_Membership_Request_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * Use /groups/membership-request/{request_id}
  * Use /groups/{group_id}/membership-request/{user_id}
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Reuse some parts of the BP_REST_Groups_Endpoint class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Groups_Endpoint
 	 */
@@ -31,7 +31,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	/**
 	 * Reuse some parts of the BP_REST_Group_Invites_Endpoint class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Group_Invites_Endpoint
 	 */
@@ -40,7 +40,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace              = bp_rest_namespace() . '/' . bp_rest_version();
@@ -53,7 +53,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -119,7 +119,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/groups/membership-requests Group Membership Requests
 	 * @apiName        GetBBGroupsMembershipsRequest
@@ -151,7 +151,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_group_membership_requests_get_items_query_args', $args, $request );
 
@@ -174,7 +174,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_group_membership_requests_get_items', $group_requests, $response, $request );
 
@@ -187,7 +187,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval      = true;
@@ -255,7 +255,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Whether the request can continue.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_get_items_permissions_check', $retval, $request );
 	}
@@ -266,7 +266,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {GET} /wp-json/buddyboss/v1/groups/membership-requests/:request_id  Get Membership Request
 	 * @apiName GetBBGroupsMembershipsRequest
@@ -291,7 +291,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_group_membership_requests_get_item', $group_request, $response, $request );
 
@@ -304,7 +304,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval        = true;
@@ -352,7 +352,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Whether the request can continue.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_get_item_permissions_check', $retval, $request );
 	}
@@ -363,7 +363,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/groups/membership-requests Create Group Membership Request
 	 * @apiName        CreateBBGroupsMembershipsRequest
@@ -429,7 +429,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_group_membership_requests_create_item', $user, $invite, $group, $response, $request );
 
@@ -442,7 +442,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval      = true;
@@ -505,7 +505,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_create_item_permissions_check', $retval, $request );
 	}
@@ -516,7 +516,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/groups/membership-requests/:request_id
 	 * @apiName        UpdateBBGroupsMembershipsRequest
@@ -559,7 +559,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_group_membership_requests_update_item', $g_member, $group, $response, $request );
 
@@ -572,7 +572,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval        = true;
@@ -619,7 +619,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Whether the request can continue.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_update_item_permissions_check', $retval, $request );
 	}
@@ -630,7 +630,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/groups/membership-requests/:request_id Delete Group Membership Request
 	 * @apiName        DeleteBBGroupsMembershipsRequest
@@ -695,7 +695,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_group_membership_requests_delete_item', $user, $group, $response, $request );
 
@@ -708,7 +708,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval        = true;
@@ -756,7 +756,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Whether the request may proceed.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_delete_item_permissions_check', $retval, $request );
 	}
@@ -768,7 +768,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $invite, $request ) {
 		$data = array(
@@ -799,7 +799,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request Request used to generate the response.
 		 * @param BP_Invitation $invite The invite object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_prepare_value', $response, $request, $invite );
 	}
@@ -810,7 +810,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param BP_Invitation $invite Invite object.
 	 *
 	 * @return array Links for the given plugin.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $invite ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -845,7 +845,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param array $links The prepared links of the REST response.
 		 * @param BP_Invitation $invite Invite object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_group_membership_requests_prepare_links', $links, $invite );
 	}
@@ -856,7 +856,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param int $request_id The ID of the request you wish to fetch.
 	 *
 	 * @return BP_Invitation|bool $group_request Membership request if found, false otherwise.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function fetch_single_membership_request( $request_id = 0 ) {
 		$group_requests = groups_get_requests( array( 'id' => $request_id ) );
@@ -873,7 +873,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -902,7 +902,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 		 * @param array $args Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_group_membership_requests_{$key}_query_arguments", $args, $method );
 	}
@@ -911,7 +911,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * Get the group membership request schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 
@@ -941,7 +941,7 @@ class BP_REST_Group_Membership_Request_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections of group invites.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = $this->invites_endpoint->get_collection_params();

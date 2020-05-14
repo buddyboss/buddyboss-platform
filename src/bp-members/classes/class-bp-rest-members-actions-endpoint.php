@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Members_Actions_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Members Actions endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 
 	/**
 	 * Reuse some parts of the BP_REST_Members_Endpoint class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Members_Endpoint
 	 */
@@ -27,7 +27,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
@@ -38,7 +38,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {POST} /wp-json/buddyboss/v1/members/action/:user_id Member Action
 	 * @apiName GetBBMembers-UpdateMembersAction
@@ -82,7 +82,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item( $request ) {
 		// Setting context.
@@ -103,7 +103,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_members_action_query_args', $args, $request );
 
@@ -146,7 +146,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_members_action_update_item', $response, $request );
 
@@ -160,7 +160,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -192,7 +192,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_action_update_item_permissions_check', $retval, $request );
 	}
@@ -201,7 +201,7 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * Get the members action schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(

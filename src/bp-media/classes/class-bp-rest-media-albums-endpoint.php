@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Media_Albums_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Media Albums endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 
@@ -25,7 +25,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace      = bp_rest_namespace() . '/' . bp_rest_version();
@@ -36,7 +36,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -98,7 +98,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/media/albums Get Albums
 	 * @apiName        GetBBAlbums
@@ -162,7 +162,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_media_albums_get_items_query_args', $args, $request );
 
@@ -185,7 +185,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_media_albums_get_items', $medias, $response, $request );
 
@@ -198,7 +198,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 
@@ -208,7 +208,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param bool            $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_albums_get_items_permissions_check', true, $request );
 	}
@@ -219,7 +219,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/media/albums/:id Get Album
 	 * @apiName        GetBBAlbum
@@ -257,7 +257,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_media_album_get_item', $response, $request );
 
@@ -270,7 +270,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -292,7 +292,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param bool            $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_album_get_item_permissions_check', $retval, $request );
 	}
@@ -303,7 +303,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/media/albums Create Album
 	 * @apiName        CreateBBAlbum
@@ -346,7 +346,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_media_albums_create_items_query_args', $args, $request );
 
@@ -377,7 +377,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_media_album_create_item', $response, $request );
 
@@ -390,7 +390,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -411,7 +411,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_create_items_permissions_check', $retval, $request );
 	}
@@ -422,7 +422,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/media/albums/:id Update Album
 	 * @apiName        UpdateBBAlbum
@@ -472,7 +472,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_media_albums_update_items_query_args', $args, $request );
 
@@ -503,7 +503,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_media_update_item', $response, $request );
 
@@ -516,7 +516,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -559,7 +559,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param bool            $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_album_update_item_permissions_check', $retval, $request );
 	}
@@ -570,7 +570,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/media/albums/:id Delete Album
 	 * @apiName        DeleteBBAlbum
@@ -628,7 +628,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_media_get_item', $response, $request );
 
@@ -641,7 +641,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = true;
@@ -684,7 +684,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param bool            $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_album_delete_item_permissions_check', $retval, $request );
 	}
@@ -715,7 +715,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = array();
@@ -781,7 +781,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_media_{$key}_query_arguments", $args, $method );
 	}
@@ -793,7 +793,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $album, $request ) {
 		$data = array(
@@ -819,7 +819,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request  Request used to generate the response.
 		 * @param BP_Media         $media    The Media object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_album_prepare_value', $response, $request, $album );
 	}
@@ -829,7 +829,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * Get the media album schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -930,7 +930,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params = parent::get_collection_params();
@@ -1021,7 +1021,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @param array $args Key value array of query var to query value.
 	 *
 	 * @return array|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function bp_rest_create_media_album( $args ) {
 		$upload_ids = ( ! empty( $args['upload_ids'] ) ? $args['upload_ids'] : '' );

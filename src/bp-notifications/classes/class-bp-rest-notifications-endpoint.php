@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Notifications_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Notifications endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -95,7 +95,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/notifications Notifications
 	 * @apiName        GetBBNotifications
@@ -142,7 +142,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_notifications_get_items_query_args', $args, $request );
 
@@ -165,7 +165,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response      The response data.
 		 * @param WP_REST_Request  $request       The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_notifications_get_items', $notifications, $response, $request );
 
@@ -178,7 +178,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -199,7 +199,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_get_items_permissions_check', $retval, $request );
 	}
@@ -210,7 +210,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/notifications/:id Notification
 	 * @apiName        GetBBNotification
@@ -236,7 +236,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_notifications_get_item', $notification, $response, $request );
 
@@ -249,7 +249,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -292,7 +292,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_get_item_permissions_check', $retval, $request );
 	}
@@ -303,7 +303,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/notifications Create Notification
 	 * @apiName        CreateBBNotifications
@@ -352,7 +352,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_notifications_create_item', $notification, $response, $request );
 
@@ -365,7 +365,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = $this->get_items_permissions_check( $request );
@@ -376,7 +376,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_create_item_permissions_check', $retval, $request );
 	}
@@ -387,7 +387,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/notifications/:id Update Notification
 	 * @apiName        UpdateBBNotification
@@ -452,7 +452,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_notifications_update_item', $notification, $response, $request );
 
@@ -465,7 +465,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
@@ -476,7 +476,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_update_item_permissions_check', $retval, $request );
 	}
@@ -487,7 +487,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/notifications/:id Delete Notification
 	 * @apiName        DeleteBBNotification
@@ -531,7 +531,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response              $response     The response data.
 		 * @param WP_REST_Request               $request      The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_notifications_delete_item', $notification, $response, $request );
 
@@ -544,7 +544,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
@@ -555,7 +555,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_delete_item_permissions_check', $retval, $request );
 	}
@@ -567,7 +567,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request               $request      Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $notification, $request ) {
 		$data = array(
@@ -676,7 +676,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request               $request      Request used to generate the response.
 		 * @param BP_Notifications_Notification $notification Notification object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_prepare_value', $response, $request, $notification );
 	}
@@ -687,7 +687,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Request object.
 	 *
 	 * @return stdClass
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$prepared_notification = new stdClass();
@@ -748,7 +748,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param stdClass        $prepared_notification An object prepared for inserting or updating the database.
 		 * @param WP_REST_Request $request               Request object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_pre_insert_value', $prepared_notification, $request );
 	}
@@ -759,7 +759,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param BP_Notifications_Notification $notification Notification item.
 	 *
 	 * @return array Links for the given plugin.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $notification ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -784,7 +784,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param array                         $links        The prepared links of the REST response.
 		 * @param BP_Notifications_Notification $notification Notification object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_notifications_prepare_links', $links, $notification );
 	}
@@ -795,7 +795,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param int $notification_id Notification ID.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function can_see( $notification_id = 0 ) {
 
@@ -818,7 +818,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return BP_Notifications_Notification|string A notification object.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_notification_object( $request ) {
 		$notification_id = is_numeric( $request ) ? $request : (int) $request['id'];
@@ -838,7 +838,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -862,7 +862,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_notifications_{$key}_query_arguments", $args, $method );
 	}
@@ -871,7 +871,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * Get the notification schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -998,7 +998,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 	 * Get the query params for the notifications collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();

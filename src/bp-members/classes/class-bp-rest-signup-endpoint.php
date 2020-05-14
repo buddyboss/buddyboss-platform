@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Signup_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Use /signup/{id}
  * Use /signup/activate/{id}
  *
- * @since 6.0.0
+ * @since 0.1.0
  */
 class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 
@@ -29,7 +29,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -58,7 +58,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -158,7 +158,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/signup/form Signup Form
 	 * @apiName        GetBBSignupFormFields
@@ -310,7 +310,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_signup_form_items', $fields, $response, $request );
 
@@ -323,7 +323,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function signup_form_items_permissions_check( $request ) {
 		$retval = true;
@@ -344,7 +344,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_form_items_permissions_check', $retval, $request );
 	}
@@ -355,7 +355,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/signup Signups
 	 * @apiName        GetBBSignups
@@ -390,7 +390,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_signup_get_items_query_args', $args, $request );
 
@@ -414,7 +414,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_signup_get_items', $signups, $response, $request );
 
@@ -427,7 +427,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -458,7 +458,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_get_items_permissions_check', $retval, $request );
 	}
@@ -469,7 +469,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/signup/:id Signup
 	 * @apiName        GetBBSignups
@@ -496,7 +496,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_signup_get_item', $signup, $response, $request );
 
@@ -509,7 +509,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -551,7 +551,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_get_item_permissions_check', $retval, $request );
 	}
@@ -562,7 +562,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/signup Create signup
 	 * @apiName        CreateBBSignups
@@ -600,14 +600,30 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		// phpcs verification.
+		// verification for phpcs.
 		wp_verify_nonce( wp_create_nonce( 'rest_signup' ), 'rest_signup' );
 
 		$_POST = array();
 		$_POST = $posted_data;
 
-		$user_name  = ( function_exists( 'bp_get_signup_username_value' ) ? bp_get_signup_username_value() : ( isset( $_POST['signup_username'] ) ? $_POST['signup_username'] : '' ) ); // phpcs:ignore
-		$user_email = ( function_exists( 'bp_get_signup_email_value' ) ? bp_get_signup_email_value() : ( isset( $_POST['signup_email'] ) ? $_POST['signup_email'] : '' ) ); // phpcs:ignore
+		$user_name  = (
+			function_exists( 'bp_get_signup_username_value' )
+			? bp_get_signup_username_value()
+			: (
+				isset( $_POST['signup_username'] )
+				? filter_input( INPUT_POST, 'signup_username' )
+				: ''
+			)
+		);
+		$user_email = (
+			function_exists( 'bp_get_signup_email_value' )
+			? bp_get_signup_email_value()
+			: (
+				isset( $_POST['signup_email'] )
+				? filter_input( INPUT_POST, 'signup_email' )
+				: ''
+			)
+		);
 
 		// Check the base account details for problems.
 		$account_details = bp_core_validate_user_signup( $user_name, $user_email );
@@ -802,16 +818,16 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param array $usermeta Array of user meta to add to signup.
 		 *
-		 * @since BuddyPress 1.1.0
+		 * @since 0.1.0
 		 */
 		$usermeta = apply_filters( 'bp_signup_usermeta', $usermeta );
 
 		// Finally, sign up the user and/or blog.
 		if ( isset( $_POST['signup_with_blog'] ) && is_multisite() ) {
 			$wp_user_id = bp_core_signup_blog(
-				$blog_details['domain'], // phpcs:ignore
-				$blog_details['path'], // phpcs:ignore
-				$blog_details['blog_title'], // phpcs:ignore
+				$blog_details['domain'],
+				$blog_details['path'],
+				$blog_details['blog_title'],
 				$user_name,
 				$user_email,
 				$usermeta
@@ -819,7 +835,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		} else {
 			$wp_user_id = bp_core_signup_user(
 				$user_name,
-				$_POST['signup_password'], // phpcs:ignore
+				filter_input( INPUT_POST, 'signup_password' ),
 				$user_email,
 				$usermeta
 			);
@@ -866,7 +882,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_signup_create_item', $signup, $response, $request );
 
@@ -879,7 +895,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -900,7 +916,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_create_item_permissions_check', $retval, $request );
 	}
@@ -911,7 +927,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/signup/:id Delete signup
 	 * @apiName        DeleteBBSignups
@@ -955,7 +971,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_signup_delete_item', $signup, $response, $request );
 
@@ -968,7 +984,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
@@ -979,7 +995,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_delete_item_permissions_check', $retval, $request );
 	}
@@ -990,7 +1006,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/signup/activate/:id Delete signup
 	 * @apiName        ActivateBBSignups
@@ -1029,7 +1045,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_signup_activate_item', $signup, $response, $request );
 
@@ -1042,7 +1058,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function activate_item_permissions_check( $request ) {
 		$retval = true;
@@ -1064,7 +1080,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_activate_item_permissions_check', $retval, $request );
 	}
@@ -1076,7 +1092,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $signup, $request ) {
 		$data = array(
@@ -1108,7 +1124,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request  Request used to generate the response.
 		 * @param BP_Signup        $signup   Signup object.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_prepare_value', $response, $request, $signup );
 	}
@@ -1119,7 +1135,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param int $identifier Signup identifier.
 	 *
 	 * @return BP_Signup|bool
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_signup_object( $identifier ) {
 		if ( is_numeric( $identifier ) ) {
@@ -1146,7 +1162,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -1255,7 +1271,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_signup_{$key}_query_arguments", $args, $method );
 	}
@@ -1266,7 +1282,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @param BP_Signup $signup Signup object.
 	 *
 	 * @return array Links for the given plugin.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $signup ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -1293,7 +1309,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 		 * @param array     $links  The prepared links of the REST response.
 		 * @param BP_Signup $signup Signup object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_signup_prepare_links', $links, $signup );
 	}
@@ -1302,7 +1318,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * Get the signup schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -1366,7 +1382,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();

@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Learndash_Courses_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Learndash Courses endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 
@@ -19,7 +19,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -29,7 +29,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -53,7 +53,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/learndash/courses Learndash Courses
 	 * @apiName        GetBBLearndashCourses
@@ -193,7 +193,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_learndash_courses_get_items_query_args', $args, $request );
 
@@ -219,7 +219,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_learndash_courses_get_items', $courses, $response, $request );
 
@@ -232,7 +232,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -253,7 +253,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_learndash_courses_get_items_permissions_check', $retval, $request );
 	}
@@ -265,7 +265,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $course, $request ) {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -341,7 +341,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request  Request used to generate the response.
 		 * @param array            $course   The component and its values.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_learndash_course_prepare_value', $response, $request, $course );
 	}
@@ -350,7 +350,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * Get the forums schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -559,7 +559,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -729,7 +729,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * @param WP_Post $course Course object.
 	 *
 	 * @return array Links for the given plugin.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $course ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -751,7 +751,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 		 * @param array   $links  The prepared links of the REST response.
 		 * @param WP_post $course Course object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_learndash_course_prepare_links', $links, $course );
 	}

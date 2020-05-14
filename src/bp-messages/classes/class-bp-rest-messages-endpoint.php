@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Messages_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Messages endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -154,7 +154,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages Threads
 	 * @apiName        GetBBThreads
@@ -195,7 +195,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_messages_get_items_query_args', $args, $request );
 
@@ -203,10 +203,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$messages_box = new BP_Messages_Box_Template( $args );
 
 		$retval = array();
-		foreach ( (array) $messages_box->threads as $thread ) {
-			$retval[] = $this->prepare_response_for_collection(
-				$this->prepare_item_for_response( $thread, $request )
-			);
+		if ( ! empty( $messages_box->threads ) ) {
+			foreach ( (array) $messages_box->threads as $thread ) {
+				$retval[] = $this->prepare_response_for_collection(
+					$this->prepare_item_for_response( $thread, $request )
+				);
+			}
 		}
 
 		$response = rest_ensure_response( $retval );
@@ -219,7 +221,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response         $response     The response data.
 		 * @param WP_REST_Request          $request      The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_messages_get_items', $messages_box, $response, $request );
 
@@ -232,7 +234,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -275,7 +277,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_get_items_permissions_check', $retval, $request );
 	}
@@ -286,7 +288,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/:id Thread
 	 * @apiName        GetBBThread
@@ -312,7 +314,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response   $retval  The response data.
 		 * @param WP_REST_Request    $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_messages_get_item', $thread, $response, $request );
 
@@ -325,7 +327,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -377,7 +379,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_get_item_permissions_check', $retval, $request );
 	}
@@ -388,7 +390,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/messages Create Thread
 	 * @apiName        CreateBBThread
@@ -443,7 +445,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response   $retval  The response data.
 		 * @param WP_REST_Request    $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_messages_create_item', $thread, $response, $request );
 
@@ -456,7 +458,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -477,7 +479,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_create_item_permissions_check', $retval, $request );
 	}
@@ -488,7 +490,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/search-recipients Search Recipients
 	 * @apiName        SearchBBRecipients
@@ -547,7 +549,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_messages_search_recipients_items', $results, $response, $request );
 
@@ -560,7 +562,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function search_recipients_items_permissions_check( $request ) {
 		$retval = true;
@@ -581,7 +583,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_search_recipients_items_permissions_check', $retval, $request );
 	}
@@ -592,7 +594,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/:id Update Thread
 	 * @apiName        UpdateBBThread
@@ -638,7 +640,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param BP_Messages_Message $updated_message The updated message object.
 		 * @param WP_REST_Request     $request         The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$can_edit_item_meta = apply_filters(
 			'bp_rest_messages_can_edit_item_meta',
@@ -670,7 +672,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response    $response        The response data.
 		 * @param WP_REST_Request     $request         The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_messages_update_item', $updated_message, $response, $request );
 
@@ -683,7 +685,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
@@ -694,7 +696,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_update_item_permissions_check', $retval, $request );
 	}
@@ -705,7 +707,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/starred/:id Update Starred Thread
 	 * @apiName        UpdateBBThreadStarred
@@ -775,7 +777,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response    $response The response data.
 		 * @param WP_REST_Request     $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_message_update_starred_item', $message, $action, $response, $request );
 
@@ -788,7 +790,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_starred_permissions_check( $request ) {
 		$retval    = true;
@@ -810,7 +812,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_update_starred_permissions_check', $retval, $request );
 	}
@@ -821,7 +823,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/:id Delete Thread
 	 * @apiName        DeleteBBThread
@@ -875,7 +877,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response   $response The response data.
 		 * @param WP_REST_Request    $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_messages_delete_item', $thread, $response, $request );
 
@@ -888,7 +890,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = $this->get_item_permissions_check( $request );
@@ -899,7 +901,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_delete_item_permissions_check', $retval, $request );
 	}
@@ -910,7 +912,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request The request sent to the API.
 	 *
 	 * @return stdClass
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$prepared_thread = new stdClass();
@@ -955,7 +957,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param stdClass        $prepared_thread An object prepared for inserting into the database.
 		 * @param WP_REST_Request $request         Request object.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_message_pre_insert_value', $prepared_thread, $request );
 	}
@@ -967,7 +969,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request     $request Full details about the request.
 	 *
 	 * @return array The Message data for the REST response.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_message_for_response( $message, $request ) {
 		global $wpdb;
@@ -1134,7 +1136,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param BP_Messages_Message $message The Message object.
 		 * @param WP_REST_Request     $request Request used to generate the response.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_message_prepare_value', $data, $message, $request );
 	}
@@ -1146,7 +1148,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request   Full details about the request.
 	 *
 	 * @return array                     The recipient data for the REST response.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_recipient_for_response( $recipient, $request ) {
 		$data = array(
@@ -1189,7 +1191,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param object          $recipient The recipient object.
 		 * @param WP_REST_Request $request   Request used to generate the response.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_prepare_recipient_value', $data, $recipient, $request );
 	}
@@ -1201,7 +1203,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request    $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $thread, $request ) {
 		global $wpdb;
@@ -1322,7 +1324,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			'group_message_users' => ( isset( $message_users ) ? $message_users : '' ),
 			'group_message_type'  => ( isset( $message_type ) ? $message_type : '' ),
 			'group_message_from'  => ( isset( $message_from ) ? $message_from : '' ),
-			'recipients_count'    => ( count( $thread->recipients ) > 1 ? count( $thread->recipients ) - ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ? 1 : 0 ) : 0 ),
+			'recipients_count'    => ( ( isset( $thread->recipients ) && count( $thread->recipients ) > 1 ) ? count( $thread->recipients ) - ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ? 1 : 0 ) : 0 ),
 			'recipients'          => array(),
 			'messages'            => array(),
 		);
@@ -1358,7 +1360,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request    $request  Request used to generate the response.
 		 * @param BP_Messages_Thread $thread   The thread object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_prepare_value', $response, $request, $thread );
 	}
@@ -1369,7 +1371,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param BP_Messages_Thread $thread Thread object.
 	 *
 	 * @return array Links for the given thread.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $thread ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -1401,7 +1403,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param array              $links  The prepared links of the REST response.
 		 * @param BP_Messages_Thread $thread Thread object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_prepare_links', $links, $thread );
 	}
@@ -1412,7 +1414,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param int $thread_id Thread ID.
 	 *
 	 * @return BP_Messages_Thread
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_thread_object( $thread_id ) {
 		return new BP_Messages_Thread( $thread_id );
@@ -1424,7 +1426,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param int $message_id Message ID.
 	 *
 	 * @return BP_Messages_Message
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_message_object( $message_id ) {
 		return new BP_Messages_Message( $message_id );
@@ -1436,7 +1438,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$key                       = 'get_item';
@@ -1514,7 +1516,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_messages_{$key}_query_arguments", $args, $method );
 	}
@@ -1523,7 +1525,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * Get the message schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -1754,7 +1756,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param array $schema The endpoint schema.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_message_schema', $this->add_additional_fields_schema( $schema ) );
 	}
@@ -1763,7 +1765,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * Get the query params for Messages collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -1816,7 +1818,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request   Full details about the request.
 	 *
 	 * @return array                     Get current user permission.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_current_user_permissions( $recipient, $request ) {
 		return array(
@@ -1839,7 +1841,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @param array $user_query Array of argument.
 	 *
 	 * @return mixed
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function bp_rest_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 		if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {

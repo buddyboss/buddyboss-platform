@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Components_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Components endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Components_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -70,7 +70,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {GET} /wp-json/buddyboss/v1/components Components
 	 * @apiName GetBBComponents
@@ -96,7 +96,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_components_get_items_query_args', $args, $request );
 
@@ -154,7 +154,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_components_get_items', $current_components, $response, $request );
 
@@ -167,7 +167,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -188,7 +188,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_components_get_items_permissions_check', $retval, $request );
 	}
@@ -199,7 +199,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {PATCH} /wp-json/buddyboss/v1/components Update component
 	 * @apiName UpdateBBComponent
@@ -287,7 +287,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_components_update_item', $component_info, $response, $request );
 
@@ -300,7 +300,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = $this->get_items_permissions_check( $request );
@@ -311,7 +311,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_components_update_item_permissions_check', $retval, $request );
 	}
@@ -323,7 +323,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $component, $request ) {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -340,7 +340,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request Request used to generate the response.
 		 * @param array $component The component and its values.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_components_prepare_value', $response, $request, $component );
 	}
@@ -351,7 +351,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param string $name Component name.
 	 *
 	 * @return string
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function verify_component_status( $name ) {
 		if ( 'core' === $name || bp_is_active( $name ) ) {
@@ -367,7 +367,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param string $component Component id.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function deactivate_helper( $component ) {
 
@@ -388,7 +388,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param string $component Component id.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function activate_helper( $component ) {
 
@@ -420,7 +420,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param string $component Component id.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_component_info( $component ) {
 
@@ -449,7 +449,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * @param string $component Component.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function component_exists( $component ) {
 		return in_array( $component, array_keys( bp_core_get_components() ), true );
@@ -459,7 +459,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * Get the components schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -503,7 +503,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();

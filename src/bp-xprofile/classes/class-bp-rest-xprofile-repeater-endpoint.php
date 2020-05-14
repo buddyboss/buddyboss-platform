@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_XProfile_Repeater_Fields_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Use /xprofile/repeater
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * XProfile Repeater Class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_XProfile_Repeater_Endpoint
 	 */
@@ -29,7 +29,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace             = bp_rest_namespace() . '/' . bp_rest_version();
@@ -40,7 +40,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -70,7 +70,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/repeater/:id Create xProfile Repeater
 	 * @apiName        CreateBBxProfileRepeaterFields
@@ -142,7 +142,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile repeater fields created via the REST API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 *
 		 * @param BP_XProfile_Group $field_group Deleted field group.
 		 * @param WP_REST_Response  $response  The response data.
@@ -156,7 +156,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to create a new Repeater Group.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
@@ -202,7 +202,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the XProfile repeater fields `create_item` permissions check.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -216,7 +216,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/repeater/:id Delete xProfile Repeater
 	 * @apiName        DeleteBBxProfileRepeaterFields
@@ -332,7 +332,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a XProfile repeater field is deleted via the REST API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 *
 		 * @param BP_XProfile_Group $field_group Deleted field group.
 		 * @param WP_REST_Response  $response  The response data.
@@ -346,7 +346,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to delete a XProfile Repeater field.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|bool
@@ -392,7 +392,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the XProfile fields `delete_item` permissions check.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -403,7 +403,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the XProfile Repeater field schema, conforming to JSON Schema.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @return array
 	 */
@@ -435,7 +435,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Edit some properties for the EDITABLE methods.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @param string $method Optional. HTTP method of the request.
 	 * @return array Endpoint arguments.
@@ -454,7 +454,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filters the method query arguments.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 *
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
@@ -465,7 +465,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the query params for XProfile Repeater field.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @return array
 	 */

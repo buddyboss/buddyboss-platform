@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Reply_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Reply endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 
@@ -39,7 +39,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace        = bp_rest_namespace() . '/' . bp_rest_version();
@@ -52,7 +52,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -115,7 +115,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/reply Replies
 	 * @apiName        GetBBPReplies
@@ -134,6 +134,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Array=meta_value,date,ID,author,title,modified,parent,rand} [orderby] Sort retrieved replies by parameter.
 	 * @apiParam {Number} [parent] Topic ID or Reply ID to retrieve all the child replies.
 	 * @apiParam {Boolean} [thread_replies] Calculated value and the thread replies depth.
+	 * @apiParam {String=all} [view] If current user can and is viewing all replies.
 	 */
 	public function get_items( $request ) {
 
@@ -181,7 +182,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param array           $args    Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_reply_get_items_query_args', $args, $request );
 
@@ -317,7 +318,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_replies_get_items', $replies, $response, $request );
 
@@ -330,7 +331,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
@@ -341,7 +342,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_replies_get_items_permissions_check', $retval, $request );
 	}
@@ -352,7 +353,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/reply/:id Reply
 	 * @apiName        GetBBPReply
@@ -441,7 +442,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_reply_get_item', $reply, $response, $request );
 
@@ -454,7 +455,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -501,7 +502,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_get_item_permissions_check', $retval, $request );
 	}
@@ -512,7 +513,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/reply Create Reply
 	 * @apiName        CreateBBPReply
@@ -1026,7 +1027,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param array           $forum_id Reply's form ID.
 		 * @param WP_REST_Request $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_reply_create_item', $reply, $topic_id, $forum_id, $request );
 
@@ -1044,7 +1045,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -1065,7 +1066,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_create_item_permissions_check', $retval, $request );
 	}
@@ -1076,7 +1077,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/reply/:id Update Reply
 	 * @apiName        UpdateBBPReply
@@ -1446,7 +1447,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param array           $reply   Edited Reply.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_reply_update_item', $reply, $request );
 
@@ -1465,7 +1466,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -1503,7 +1504,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_update_item_permissions_check', $retval, $request );
 	}
@@ -1514,7 +1515,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/reply/:id Trash/Delete Reply
 	 * @apiName        DeleteBBPReply
@@ -1550,7 +1551,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_reply_delete_item', $reply, $response, $request );
 
@@ -1563,7 +1564,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = true;
@@ -1598,7 +1599,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_delete_item_permissions_check', $retval, $request );
 	}
@@ -1609,7 +1610,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -1721,7 +1722,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param array  $args   Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_reply_{$key}_query_arguments", $args, $method );
 	}
@@ -1733,7 +1734,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $reply, $request ) {
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -1817,7 +1818,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request   Request used to generate the response.
 		 * @param array            $component The component and its values.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_forums_prepare_value', $response, $request, $reply );
 	}
@@ -1826,7 +1827,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * Get the forums schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -2068,7 +2069,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -2171,7 +2172,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @param WP_Post $post Post object.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $post ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -2196,7 +2197,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 * @param array   $links The prepared links of the REST response.
 		 * @param WP_Post $post  Post object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_reply_prepare_links', $links, $post );
 	}

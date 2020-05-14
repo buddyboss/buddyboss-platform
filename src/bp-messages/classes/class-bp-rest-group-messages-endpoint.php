@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Group_Messages_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Group Messages endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Reuse some parts of the BP_REST_Messages_Endpoint class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Messages_Endpoint
 	 */
@@ -27,7 +27,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace         = bp_rest_namespace() . '/' . bp_rest_version();
@@ -38,7 +38,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -63,7 +63,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/messages/group Create Group Thread
 	 * @apiName        CreateBBGroupThread
@@ -87,7 +87,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		$message_users = ( isset( $request['users'] ) && ! empty( $request['users'] ) ) ? $request['users'] : '';
 		$message_type  = ( isset( $request['type'] ) && ! empty( $request['type'] ) ) ? $request['type'] : '';
 
-		// phpcs verification.
+		// verification for phpcs.
 		wp_verify_nonce( wp_create_nonce( 'group_messages' ), 'group_messages' );
 
 		// Get Members list if "All Group Members" selected.
@@ -933,7 +933,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			 * @param WP_REST_Response         $response     The response data.
 			 * @param WP_REST_Request          $request      The request sent to the API.
 			 *
-			 * @since 1.3.5
+			 * @since 0.1.0
 			 */
 			do_action( 'bp_rest_group_messages_create_items', $message, $response, $request );
 
@@ -948,7 +948,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -979,7 +979,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_group_create_item_permissions_check', $retval, $request );
 	}
@@ -988,7 +988,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * Get the message schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -1018,7 +1018,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		 *
 		 * @param array $schema The endpoint schema.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_message_schema', $this->add_additional_fields_schema( $schema ) );
 	}
@@ -1027,7 +1027,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * Get the query params for Messages collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -1194,7 +1194,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			 * @param WP_REST_Response         $response     The response data.
 			 * @param WP_REST_Request          $request      The request sent to the API.
 			 *
-			 * @since 1.3.5
+			 * @since 0.1.0
 			 */
 			do_action( 'bp_rest_group_messages_create_items', $thread, $response, $request );
 

@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Topics_Actions_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Topics Actions endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 
@@ -25,7 +25,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace      = bp_rest_namespace() . '/' . bp_rest_version();
@@ -36,7 +36,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 
@@ -222,7 +222,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/merge/:id Merge Topic
 	 * @apiName        MergeBBPTopic
@@ -329,8 +329,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( strtotime( $source_topic->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 			// Set destination topic post_date to 1 second before source topic.
-			// phpcs:ignore
-			$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
+			$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $source_topic->post_date ) - 1 );
 
 			// Update destination topic.
 			wp_update_post(
@@ -428,8 +427,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				wp_update_post(
 					array(
 						'ID'          => $reply->ID,
-						// phpcs:ignore
-						'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
+						'post_title'  => sprintf(
+							/* translators: Topic Title. */
+							__( 'Reply To: %s', 'buddyboss' ),
+							$destination_topic->post_title
+						),
 						'post_name'   => false,
 						'post_type'   => bbp_get_reply_post_type(),
 						'post_parent' => $destination_topic->ID,
@@ -470,7 +472,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param array           $source_topic      Source topic.
 		 * @param WP_REST_Request $request           The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_topic_get_item', $destination_topic, $source_topic, $request );
 
@@ -488,7 +490,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function merge_item_permissions_check( $request ) {
 		$retval = true;
@@ -525,7 +527,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_topic_merge_item_permissions_check', $retval, $request );
 	}
@@ -536,7 +538,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/split/:id Split Topic
 	 * @apiName        SplitBBPTopic
@@ -745,8 +747,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		if ( strtotime( $from_reply->post_date ) < strtotime( $destination_topic->post_date ) ) {
 
 			// Set destination topic post_date to 1 second before from reply.
-			// phpcs:ignore
-			$destination_post_date = date( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
+			$destination_post_date = gmdate( 'Y-m-d H:i:s', strtotime( $from_reply->post_date ) - 1 );
 
 			// Update destination topic.
 			wp_update_post(
@@ -838,8 +839,11 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 				wp_update_post(
 					array(
 						'ID'          => $reply->ID,
-						// phpcs:ignore
-						'post_title'  => sprintf( __( 'Reply To: %s', 'buddyboss' ), $destination_topic->post_title ),
+						'post_title'  => sprintf(
+							/* translators: Topic Title. */
+							__( 'Reply To: %s', 'buddyboss' ),
+							$destination_topic->post_title
+						),
 						'post_name'   => false, // will be automatically generated.
 						'post_parent' => $destination_topic->ID,
 						'menu_order'  => $reply_position,
@@ -911,7 +915,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param array           $destination_topic Destination topic.
 		 * @param WP_REST_Request $request           The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_split_get_item', $from_reply, $source_topic, $destination_topic, $request );
 
@@ -929,7 +933,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function split_item_permissions_check( $request ) {
 		$retval = true;
@@ -966,7 +970,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_topic_split_item_permissions_check', $retval, $request );
 	}
@@ -977,7 +981,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/action/:id Topic Actions
 	 * @apiName        ActionBBPTopic
@@ -1037,7 +1041,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function action_items_permissions_check( $request ) {
 		$retval = true;
@@ -1062,7 +1066,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_topic_action_item_permissions_check', $retval, $request );
 	}
@@ -1073,7 +1077,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/dropdown/:id Topic Actions
 	 * @apiName        DropdownBBPTopic
@@ -1136,7 +1140,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_topics_dropdown_items', $topics, $response, $request );
 
@@ -1149,7 +1153,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function dropdown_items_permissions_check( $request ) {
 		$retval = true;
@@ -1181,7 +1185,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_topic_dropdown_items_permissions_check', $retval, $request );
 	}
@@ -1190,7 +1194,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * Get the forums schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_dropdown_item_schema() {
 		$schema = array(

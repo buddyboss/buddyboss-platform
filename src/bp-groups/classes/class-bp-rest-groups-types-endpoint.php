@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Groups_Types_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Use /groups/types
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -30,7 +30,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -55,7 +55,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/groups/types Groups Types
 	 * @apiName        GetBBGroupsTypes
@@ -84,7 +84,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response         The response data.
 		 * @param WP_REST_Request  $request          The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_groups_types_get_items', $registered_types, $response, $request );
 
@@ -97,7 +97,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 
@@ -107,7 +107,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		 * @param bool            $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_groups_types_get_items_permissions_check', true, $request );
 	}
@@ -119,7 +119,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $type, $request ) {
 		$data = array(
@@ -229,7 +229,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request  $request  Request used to generate the response.
 		 * @param array            $type     Xprofile Type
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_groups_types_prepare_value', $response, $request, $type );
 	}
@@ -239,7 +239,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * Get the Groups types schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 
@@ -373,7 +373,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * Get the query params for the Groups types.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();

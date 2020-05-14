@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Attachments_Blog_Avatar_Endpoint class
  *
- * @package BuddyPress
- * @since 6.0.0
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Blog avatar endpoints.
  *
- * @since 6.0.0
+ * @since 0.1.0
  */
 class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 
@@ -20,7 +20,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Reuse some parts of the BP_REST_Blogs_Endpoint class.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_Blogs_Endpoint
 	 */
@@ -30,7 +30,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	 * This variable is used to query for the requested blog only once.
 	 * It is set during the permission check methods.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @var BP_Blogs_Blog
 	 */
@@ -39,7 +39,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace      = bp_rest_namespace() . '/' . bp_rest_version();
@@ -50,7 +50,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -77,7 +77,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Fetch an existing blog avatar.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error
@@ -133,7 +133,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		/**
 		 * Fires after a blog avatar is fetched via the REST API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 *
 		 * @param stdClass          $avatar   The avatar object.
 		 * @param WP_REST_Response  $response The response data.
@@ -147,7 +147,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Checks if a given request has access to get a blog avatar.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error
@@ -179,7 +179,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the blog avatar `get_item` permissions check.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 *
 		 * @param bool|WP_Error   $retval  Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
@@ -190,7 +190,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Prepares avatar data to return as an object.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @param stdClass        $avatar  Avatar object.
 	 * @param WP_REST_Request $request Full details about the request.
@@ -210,7 +210,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter a blog avatar value returned from the API.
 		 *
-		 * @since 6.0.0
+		 * @since 0.1.0
 		 *
 		 * @param WP_REST_Response  $response Response.
 		 * @param WP_REST_Request   $request  Request used to generate the response.
@@ -222,7 +222,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the blog avatar schema, conforming to JSON Schema.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @return array
 	 */
@@ -260,7 +260,7 @@ class BP_REST_Attachments_Blog_Avatar_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the query params for the `get_item`.
 	 *
-	 * @since 6.0.0
+	 * @since 0.1.0
 	 *
 	 * @return array
 	 */

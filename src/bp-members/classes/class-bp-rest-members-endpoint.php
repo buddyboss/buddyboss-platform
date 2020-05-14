@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_Members_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,14 +11,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Members endpoints.
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace = bp_rest_namespace() . '/' . bp_rest_version();
@@ -28,7 +28,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -137,7 +137,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/members Get Members
 	 * @apiName        GetBBMembers
@@ -260,7 +260,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param array $args Key value array of query var to query value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_members_get_items_query_args', $args, $request );
 
@@ -285,7 +285,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_members_get_items', $members, $response, $request );
 
@@ -298,7 +298,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 
@@ -308,7 +308,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param bool $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_get_items_permissions_check', true, $request );
 	}
@@ -319,7 +319,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -364,7 +364,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_get_item_permissions_check', $retval, $request );
 	}
@@ -375,7 +375,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -396,7 +396,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_create_item_permissions_check', $retval, $request );
 	}
@@ -407,7 +407,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -444,7 +444,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_update_item_permissions_check', $retval, $request );
 	}
@@ -455,7 +455,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/members/:id Delete Member
 	 * @apiName        DeleteBBMembers
@@ -528,7 +528,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = true;
@@ -569,7 +569,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_delete_item_permissions_check', $retval, $request );
 	}
@@ -582,7 +582,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error                WP_Error object to inform it's not implemented.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_current_item_permissions_check( $request ) {
 		return new WP_Error(
@@ -603,7 +603,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error                WP_Error to inform it's not implemented.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_current_item( $request ) {
 		return new WP_Error(
@@ -623,7 +623,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $user, $request ) {
 		$context  = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -641,7 +641,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param WP_REST_Request  $request  The request object.
 		 * @param WP_User          $user     WP_User object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_prepare_value', $response, $request, $user );
 	}
@@ -655,7 +655,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param string  $context The context of the request. Defaults to 'view'.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function user_data( $user, $context = 'view' ) {
 		$data = array(
@@ -669,7 +669,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'extra_capabilities' => array(),
 			'registered_date'    => bp_rest_prepare_date_response( get_userdata( $user->ID )->user_registered ),
 			'profile_name'       => bp_core_get_user_displayname( $user->ID ),
-			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID ),
+			'last_activity'      => $this->bp_rest_get_member_last_active( $user->ID, array( 'relative' => false ) ),
 			'xprofile'           => $this->xprofile_data( $user->ID ),
 			'followers'          => count( $this->rest_bp_get_follower_ids( array( 'user_id' => $user->ID ) ) ),
 			'following'          => count( $this->rest_bp_get_following_ids( array( 'user_id' => $user->ID ) ) ),
@@ -779,7 +779,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @return stdClass
 	 * @todo Improve sanitization and schema verification.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_item_for_database( $request ) {
 		$prepared_user = parent::prepare_item_for_database( $request );
@@ -802,7 +802,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param stdClass $prepared_user An object prepared for inserting or updating the database.
 		 * @param WP_REST_Request $request Request object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_members_pre_insert_value', $prepared_user, $request );
 	}
@@ -813,7 +813,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param int $user_id User ID.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function xprofile_data( $user_id ) {
 		$data = array();
@@ -892,7 +892,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param string  $action The action to perform (update or delete).
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function can_manage_member( $user, $action = 'delete' ) {
 		$capability = 'delete_user';
@@ -914,7 +914,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|WP_Error True on success, WP_Error object if a field cannot be updated.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function update_additional_fields_for_object( $object, $request ) {
 		if ( ! isset( $object->data ) ) {
@@ -936,7 +936,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param string $method Optional. HTTP method of the request.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
@@ -991,7 +991,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		 * @param array $args Query arguments.
 		 * @param string $method HTTP method of the request.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( "bp_rest_members_{$key}_query_arguments", $args, $method );
 	}
@@ -1000,7 +1000,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * Get the members schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -1188,7 +1188,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * Get the query params for collections.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_collection_params() {
 		$params = array_intersect_key(
@@ -1291,7 +1291,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @param array $request Array of filter's data.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 * - bp-core\profile-search\bps-search.php bp_ps_search()
 	 */
 	public function rest_bp_ps_search( $request ) {
@@ -1322,14 +1322,14 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				foreach ( $copied_arr as $key => $user ) {
 					$field_visibility = xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
 					if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-						// phpcs:ignore
-						if ( ( $key = array_search( $user, $found ) ) !== false ) {
+						$key = array_search( $user, $found, true );
+						if ( false !== $key ) {
 							unset( $found[ $key ] );
 						}
 					}
 					if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user ), get_current_user_id() ) ) {
-						// phpcs:ignore
-						if ( ( $key = array_search( $user, $found ) ) !== false ) {
+						$key = array_search( $user, $found, true );
+						if ( false !== $key ) {
 							unset( $found[ $key ] );
 						}
 					}
@@ -1390,15 +1390,9 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * Return the current member's last active time.
 	 * -- from bp_get_member_last_active().
 	 *
-	 * @param int   $user_id         User ID.
-	 * @param array $args            {
-	 *                               Array of optional arguments.
+	 * @param int   $user_id User ID.
+	 * @param array $args    Array of optional arguments.
 	 *
-	 * @type mixed  $active_format   If true, formatted "active 5 minutes ago". If false, formatted "5 minutes
-	 *                                ago". If string, should be sprintf'able like 'last seen %s ago'.
-	 * @type bool   $relative        If true, will return relative time "5 minutes ago". If false, will return
-	 *                                date from database. Default: true.
-	 * }
 	 * @return string
 	 */
 	public function bp_rest_get_member_last_active( $user_id, $args = array() ) {
@@ -1425,7 +1419,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			// We do not want relative time, so return now.
 			// @todo Should the 'bp_member_last_active' filter be applied here?
 			if ( ! $r['relative'] ) {
-				return esc_attr( $last_active );
+				return ( empty( $last_active ) ? __( 'Not recently active', 'buddyboss' ) : bp_rest_prepare_date_response( $last_active ) );
 			}
 
 			// Backwards compatibility for pre 1.5 'ago' strings.
@@ -1440,8 +1434,6 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		/**
 		 * Filters the current members last active time.
-		 *
-		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $last_activity Formatted time since last activity.
 		 * @param array  $r             Array of parsed arguments for query.

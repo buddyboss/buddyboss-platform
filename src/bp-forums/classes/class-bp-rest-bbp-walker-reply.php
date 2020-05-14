@@ -2,8 +2,8 @@
 /**
  * Create hierarchical list of bbPress replies.
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 class Rest_BBP_Walker_Reply extends Walker {
 

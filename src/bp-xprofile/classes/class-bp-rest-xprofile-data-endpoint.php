@@ -2,8 +2,8 @@
 /**
  * BP REST: BP_REST_XProfile_Data_Endpoint class
  *
- * @package BuddyPress
- * @since 1.3.5
+ * @package BuddyBoss
+ * @since 0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Use /xprofile/{field_id}/data/{user_id}
  *
- * @since 1.3.5
+ * @since 0.1.0
  */
 class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * XProfile Fields Class.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @var BP_REST_XProfile_Fields_Endpoint
 	 */
@@ -29,7 +29,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function __construct() {
 		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
@@ -40,7 +40,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	/**
 	 * Register the component routes.
 	 *
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -96,7 +96,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Get xProfile Field Data
 	 * @apiName        GetBBxProfileFieldData
@@ -123,7 +123,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_data_get_item', $field_data, $response, $request );
 
@@ -136,7 +136,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
@@ -188,7 +188,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_get_item_permissions_check', $retval, $request );
 	}
@@ -199,7 +199,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Update xProfile Field Data
 	 * @apiName        UpdateBBxProfileData
@@ -273,7 +273,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_data_save_item', $field, $field_data, $user, $response, $request );
 
@@ -286,7 +286,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		$retval = true;
@@ -344,7 +344,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_update_item_permissions_check', $retval, $request );
 	}
@@ -355,7 +355,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 *
 	 * @api {DELETE} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Delete xProfile Field Data
 	 * @apiName DeleteBBxProfileData
@@ -419,7 +419,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		do_action( 'bp_rest_xprofile_data_delete_item', $field, $field_data, $user, $response, $request );
 
@@ -432,7 +432,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full data about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		$retval = $this->update_item_permissions_check( $request );
@@ -443,7 +443,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param bool|WP_Error $retval Returned value.
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_delete_item_permissions_check', $retval, $request );
 	}
@@ -455,7 +455,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param WP_REST_Request         $request Full data about the request.
 	 *
 	 * @return WP_REST_Response
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function prepare_item_for_response( $field_data, $request ) {
 		$data = array(
@@ -484,7 +484,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request Request used to generate the response.
 		 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_prepare_value', $response, $request, $field_data );
 	}
@@ -495,7 +495,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function prepare_links( $field_data ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -517,7 +517,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * @param array $links The prepared links of the REST response.
 		 * @param BP_XProfile_ProfileData $field_data XProfile field data object.
 		 *
-		 * @since 1.3.5
+		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_xprofile_data_prepare_links', $links, $field_data );
 	}
@@ -528,7 +528,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param int $field_id Field id.
 	 *
 	 * @return BP_XProfile_Field
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_object( $field_id ) {
 		return $this->fields_endpoint->get_xprofile_field_object( $field_id );
@@ -541,7 +541,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param int $user_id User id.
 	 *
 	 * @return BP_XProfile_ProfileData
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_xprofile_field_data_object( $field_id, $user_id ) {
 		return new BP_XProfile_ProfileData( $field_id, $user_id );
@@ -553,7 +553,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @param int $field_user_id User ID of the field.
 	 *
 	 * @return bool
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	protected function can_see( $field_user_id ) {
 		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $field_user_id );
@@ -563,7 +563,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * Get the XProfile data schema, conforming to JSON Schema.
 	 *
 	 * @return array
-	 * @since 1.3.5
+	 * @since 0.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
