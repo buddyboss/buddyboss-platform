@@ -65,6 +65,9 @@ if ( ! empty( $extension_lists ) ) {
 			</a>
 			<div class="document-action_list">
 				<ul>
+					<li class="copy_download_file_url">
+						<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+					</li>
 				<?php
 				if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
 					
@@ -78,9 +81,6 @@ if ( ! empty( $extension_lists ) ) {
 					<?php
 				}
 				?>
-					<li class="copy_download_file_url">
-						<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
-					</li>
 				</ul>
 			</div>
 	</div>
