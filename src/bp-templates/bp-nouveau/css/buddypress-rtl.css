@@ -12055,7 +12055,7 @@ a.bb-close-model {
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description {
   width: 100%;
   resize: none;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description:focus {
@@ -12065,8 +12065,30 @@ a.bb-close-model {
 }
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit {
-  margin-bottom: 10px;
-  text-align: left;
+  margin-bottom: 17px;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit #bp-activity-description-new-submit {
+  padding: 7px 20px;
+  height: auto;
+  min-height: 10px;
+  line-height: 1;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit #bp-activity-description-new-reset {
+  background: 100% 0;
+  box-shadow: none;
+  border: 0;
+  font-size: 14px;
+  color: #a3a5a9;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 10px;
+  width: auto;
+}
+
+.bb-media-info-section .activity-media-description .bp-edit-media-activity-description .description-new-submit #bp-activity-description-new-reset:hover {
+  color: #000;
 }
 
 .bb-media-info-header {
