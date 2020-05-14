@@ -2855,6 +2855,15 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			span {
 				display: inline-block !important;
+				max-width: 300px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				vertical-align: middle;
+
+				@media screen and ( max-width: 520px ) {
+					max-width: 120px;
+				}
 
 				&:not(.more_options):hover {
 					text-decoration: underline;
@@ -2930,6 +2939,10 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 					display: block;
 					cursor: pointer;
 					font-size: 14px;
+					width: 100%;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
 
 					&:before {
 						content: "\e959";
