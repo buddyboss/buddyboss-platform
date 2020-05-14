@@ -264,8 +264,7 @@ module.exports = function (grunt) {
 				],
 				options: {
 					process : function( content ) {
-						content = content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
-						return content.replace( /\@since 0\.1\.0/g, '@since 1.3.5' ); // update @since to 1.3.5
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 					}
 				}
 			},
@@ -297,8 +296,7 @@ module.exports = function (grunt) {
 				],
 				options: {
 					process : function( content ) {
-						content = content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
-						return content.replace( /\@since 0\.1\.0/g, '@since 1.3.5' ); // update @since to 1.3.5
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
 					}
 				}
 			}
