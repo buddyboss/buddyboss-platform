@@ -1228,7 +1228,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
                 <div class="in-profile description-new-submit">
                     <input type="hidden" id="bp-activity-id" value="<?php echo $activity_id; ?>">
                     <input type="submit" id="bp-activity-description-new-submit" class="button small"
-                           name="description-new-submit" value="Finished Editing">
+                           name="description-new-submit" value="Done Editing">
                     <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="Cancel">
                 </div>
             </div>
