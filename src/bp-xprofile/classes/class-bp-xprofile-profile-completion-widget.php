@@ -304,6 +304,34 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$group_total_fields     = 0;
 			$group_completed_fields = 0;
 			foreach ( $single_group_details->fields as $group_single_field ) {
+				/**
+				 * Check if field is disable from the display setting if yes then this will no count
+				 */
+				$field_id     = $group_single_field->id;
+				// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+				$current_value = bp_get_option( 'bp-display-name-format' );
+
+				// If First Name selected then do not add last name field.
+				if ( 'first_name' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+					if ( function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+						continue;
+					}
+					// If Nick Name selected then do not add first & last name field.
+				} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+					if ( function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+						continue;
+					}
+				} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_firstname_field_id() ) {
+					if ( function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+						continue;
+					}
+				}
+
+				if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+					if ( function_exists( 'bp_get_xprofile_member_type_field_id') && $field_id === bp_get_xprofile_member_type_field_id() ) {
+						continue;
+					}
+				}
 
 				// If current group is repeater then only consider first set of fields.
 				if ( $is_group_repeater ) {
