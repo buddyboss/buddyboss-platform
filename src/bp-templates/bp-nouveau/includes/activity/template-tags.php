@@ -1145,11 +1145,11 @@ function bp_nouveau_activity_privacy() {
 			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			<ul class="activity-privacy">
 				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
-					<li class="bb-edit-privacy">
-						<a href="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
+					<li class="bb-edit-privacy" data-value="<?php echo $album_url; ?>" >
+						<a href="<?php echo $album_url; ?>" data-value="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
 				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-					<li class="bb-edit-privacy">
-						<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+					<li class="bb-edit-privacy" data-value="<?php echo $parent_activity_permalink; ?>" >
+						<a href="<?php echo $parent_activity_permalink; ?>" data-value="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 					</li>
 				<?php endif; ?>
 			</ul>
@@ -1160,11 +1160,11 @@ function bp_nouveau_activity_privacy() {
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 				<ul class="activity-privacy">
 					<?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
-						<li class="bb-edit-privacy">
-							<a href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
+						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy">
+							<a data-value="<?php echo $folder_url; ?>" href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
 					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-						<li class="bb-edit-privacy">
-							<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy">
+							<a data-value="<?php echo $parent_activity_permalink; ?>" href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php endif; ?>
 				</ul>

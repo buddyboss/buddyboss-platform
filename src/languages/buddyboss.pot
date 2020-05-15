@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-15 05:02:43+00:00\n"
+"POT-Creation-Date: 2020-05-15 07:29:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -945,7 +945,7 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:15
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:80
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:248
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:253
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -1206,9 +1206,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:276
 #: bp-forums/classes/class-bp-forums-component.php:327
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:1044 bp-media/bp-media-settings.php:202
-#: bp-media/bp-media-settings.php:209 bp-media/bp-media-settings.php:216
-#: bp-media/bp-media-settings.php:223 bp-search/bp-search-functions.php:369
+#: bp-media/bp-media-filters.php:1044 bp-media/bp-media-settings.php:208
+#: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
+#: bp-media/bp-media-settings.php:229 bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
 msgid "Forums"
 msgstr ""
@@ -1701,7 +1701,7 @@ msgstr ""
 #: bp-core/profile-search/bps-admin.php:85
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
-#: bp-media/bp-media-settings.php:1157 bp-media/bp-media-settings.php:1181
+#: bp-media/bp-media-settings.php:1163 bp-media/bp-media-settings.php:1187
 msgid "Description"
 msgstr ""
 
@@ -2229,8 +2229,8 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
-#: bp-media/bp-media-settings.php:535 bp-media/bp-media-settings.php:692
-#: bp-media/bp-media-settings.php:899 bp-search/bp-search-settings.php:420
+#: bp-media/bp-media-settings.php:541 bp-media/bp-media-settings.php:698
+#: bp-media/bp-media-settings.php:905 bp-search/bp-search-settings.php:420
 msgid "View Tutorial"
 msgstr ""
 
@@ -2680,8 +2680,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:982
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
-#: bp-media/bp-media-settings.php:131 bp-media/bp-media-settings.php:138
-#: bp-media/bp-media-settings.php:154 bp-media/bp-media-settings.php:161
+#: bp-media/bp-media-settings.php:134 bp-media/bp-media-settings.php:141
+#: bp-media/bp-media-settings.php:159 bp-media/bp-media-settings.php:166
 #: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:691
 #: bp-templates/bp-nouveau/includes/activity/functions.php:285
 #: bp-templates/bp-nouveau/includes/customizer.php:170
@@ -2938,9 +2938,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/ajax.php:631
 #: bp-templates/bp-nouveau/includes/document/ajax.php:759
 #: bp-templates/bp-nouveau/includes/document/ajax.php:833
-#: bp-templates/bp-nouveau/includes/document/ajax.php:901
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1021
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1185
+#: bp-templates/bp-nouveau/includes/document/ajax.php:908
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1028
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1192
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:106
@@ -3158,8 +3158,8 @@ msgid "Media"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-messages.php:21
-#: bp-media/bp-media-settings.php:171 bp-media/bp-media-settings.php:178
-#: bp-media/bp-media-settings.php:185 bp-media/bp-media-settings.php:192
+#: bp-media/bp-media-settings.php:177 bp-media/bp-media-settings.php:184
+#: bp-media/bp-media-settings.php:191 bp-media/bp-media-settings.php:198
 #: bp-messages/bp-messages-notifications.php:30
 #: bp-messages/bp-messages-notifications.php:302
 #: bp-messages/classes/class-bp-messages-component.php:224
@@ -3181,8 +3181,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:21
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:453
 #: bp-media/bp-media-settings.php:59 bp-media/bp-media-settings.php:78
-#: bp-media/bp-media-settings.php:97 bp-media/bp-media-settings.php:114
-#: bp-media/bp-media-settings.php:122 bp-xprofile/bp-xprofile-admin.php:29
+#: bp-media/bp-media-settings.php:109 bp-media/bp-media-settings.php:117
+#: bp-media/bp-media-settings.php:125 bp-xprofile/bp-xprofile-admin.php:29
 #: bp-xprofile/bp-xprofile-admin.php:30
 msgid "Profiles"
 msgstr ""
@@ -3469,7 +3469,7 @@ msgid "Your uploaded file's MIME type is: "
 msgstr ""
 
 #: bp-core/admin/templates/check-document-mime-type.php:42
-#: bp-media/bp-media-settings.php:1158 bp-media/bp-media-settings.php:1184
+#: bp-media/bp-media-settings.php:1164 bp-media/bp-media-settings.php:1190
 msgid "MIME Type"
 msgstr ""
 
@@ -5089,8 +5089,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:16
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
 #: bp-templates/bp-nouveau/includes/document/ajax.php:678
-#: bp-templates/bp-nouveau/includes/document/ajax.php:944
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1075
+#: bp-templates/bp-nouveau/includes/document/ajax.php:951
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1082
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr ""
@@ -10413,7 +10413,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:27
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:76
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:245
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:250
 msgid "Move"
 msgstr ""
 
@@ -10619,8 +10619,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:40
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
 #: bp-templates/bp-nouveau/includes/document/ajax.php:692
-#: bp-templates/bp-nouveau/includes/document/ajax.php:958
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1089
+#: bp-templates/bp-nouveau/includes/document/ajax.php:965
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1096
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1653
 msgid "Visibility"
 msgstr ""
@@ -10866,7 +10866,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:242
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:247
 msgid "Rename"
 msgstr ""
 
@@ -11934,7 +11934,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:108
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:39
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:41
 #: bp-templates/bp-nouveau/includes/functions.php:1387
 #: bp-templates/bp-nouveau/includes/functions.php:1439
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1275
@@ -14057,191 +14057,191 @@ msgstr ""
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:709
+#: bp-media/bp-media-settings.php:97 bp-media/bp-media-settings.php:715
 msgid "GIPHY API Key"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:145
+#: bp-media/bp-media-settings.php:148
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:171
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:231
+#: bp-media/bp-media-settings.php:237
 msgid "File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:236 bp-media/bp-media-settings.php:241
-#: bp-media/bp-media-settings.php:246
+#: bp-media/bp-media-settings.php:242 bp-media/bp-media-settings.php:247
+#: bp-media/bp-media-settings.php:252
 msgid "&#160;"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:342
+#: bp-media/bp-media-settings.php:348
 msgid ""
 "Allow members to upload photos in <strong>profiles</strong> and "
 "<strong>profile activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:344
+#: bp-media/bp-media-settings.php:350
 msgid "Allow members to upload photos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:357 bp-media/bp-media-settings.php:417
+#: bp-media/bp-media-settings.php:363 bp-media/bp-media-settings.php:423
 msgid "Enable Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:402
+#: bp-media/bp-media-settings.php:408
 msgid ""
 "Allow members to upload photos in <strong>groups</strong> and <strong>group "
 "activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:404
+#: bp-media/bp-media-settings.php:410
 msgid "Allow members to upload photos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:462
+#: bp-media/bp-media-settings.php:468
 msgid ""
 "Allow members to upload photos in <strong>private messages</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:464
+#: bp-media/bp-media-settings.php:470
 msgid "Allow members to upload photos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:497
+#: bp-media/bp-media-settings.php:503
 msgid "Allow members to upload photos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:555
+#: bp-media/bp-media-settings.php:561
 msgid "Allow members to use emoji in <strong>profile activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:574
+#: bp-media/bp-media-settings.php:580
 msgid "Allow members to use emoji in <strong>group activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:595
+#: bp-media/bp-media-settings.php:601
 msgid ""
 "Allow members to use emoji in <strong>private messages</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:597
+#: bp-media/bp-media-settings.php:603
 msgid "Allow members to use emoji in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:618
+#: bp-media/bp-media-settings.php:624
 msgid "Allow members to use emoji in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:716
+#: bp-media/bp-media-settings.php:722
 msgid "This feature requires an account at"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:718
+#: bp-media/bp-media-settings.php:724
 msgid "Create your account, and then click"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:720
+#: bp-media/bp-media-settings.php:726
 msgid "Once done, copy the API key and paste it in the field above."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:762
+#: bp-media/bp-media-settings.php:768
 msgid "Allow members to use animated GIFs in <strong>profile activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:781
+#: bp-media/bp-media-settings.php:787
 msgid "Allow members to use animated GIFs in <strong>group activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:802
+#: bp-media/bp-media-settings.php:808
 msgid ""
 "Allow members to use animated GIFs in <strong>private messages</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:804
+#: bp-media/bp-media-settings.php:810
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:825
+#: bp-media/bp-media-settings.php:831
 msgid "Allow members to use animated GIFs in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:921
+#: bp-media/bp-media-settings.php:927
 msgid ""
 "Allow members to upload documents in <strong>private messages</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:923
+#: bp-media/bp-media-settings.php:929
 msgid "Allow members to upload documents in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:958
+#: bp-media/bp-media-settings.php:964
 msgid ""
 "Allow members to upload documents in <strong>groups</strong> and "
 "<strong>group activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:960
+#: bp-media/bp-media-settings.php:966
 msgid "Allow members to upload documents in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:993
+#: bp-media/bp-media-settings.php:999
 msgid "Allow members to upload documents in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1026
+#: bp-media/bp-media-settings.php:1032
 msgid ""
 "Allow members to upload documents in <strong>profiles</strong> and "
 "<strong>profile activity</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1028
+#: bp-media/bp-media-settings.php:1034
 msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1156 bp-media/bp-media-settings.php:1177
+#: bp-media/bp-media-settings.php:1162 bp-media/bp-media-settings.php:1183
 msgid "Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1178 bp-media/bp-media-settings.php:1206
+#: bp-media/bp-media-settings.php:1184 bp-media/bp-media-settings.php:1212
 msgid ".extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1182 bp-media/bp-media-settings.php:1210
+#: bp-media/bp-media-settings.php:1188 bp-media/bp-media-settings.php:1216
 msgid "description"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1185 bp-media/bp-media-settings.php:1213
+#: bp-media/bp-media-settings.php:1191 bp-media/bp-media-settings.php:1219
 msgid "MIME type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1189 bp-media/bp-media-settings.php:1214
+#: bp-media/bp-media-settings.php:1195 bp-media/bp-media-settings.php:1220
 msgid "MIME Checker"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1223
+#: bp-media/bp-media-settings.php:1229
 msgid "Add Extension"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1238
+#: bp-media/bp-media-settings.php:1244
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Manage</a> which file extensions are "
 "allowed to be uploaded."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1275
+#: bp-media/bp-media-settings.php:1281
 msgid "Documents &#8594; File Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1317
+#: bp-media/bp-media-settings.php:1323
 msgid "Extensions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1336
+#: bp-media/bp-media-settings.php:1342
 msgid ""
 "Check which file extensions are allowed to be uploaded. Add custom "
 "extensions at the bottom of the table."
@@ -15774,8 +15774,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:59
 #: bp-templates/bp-nouveau/includes/document/ajax.php:716
-#: bp-templates/bp-nouveau/includes/document/ajax.php:982
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1113
+#: bp-templates/bp-nouveau/includes/document/ajax.php:989
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1120
 #: bp-templates/bp-nouveau/includes/media/ajax.php:148
 msgid "Load More"
 msgstr ""
@@ -16157,7 +16157,7 @@ msgid "Click to Download"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:59
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:219
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:224
 msgid "Download"
 msgstr ""
 
@@ -16166,7 +16166,7 @@ msgid "More actions"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:69
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:222
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:227
 msgid "Copy Download Link"
 msgstr ""
 
@@ -16196,7 +16196,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:30
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:22
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:16
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:30
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:29
 msgid "Enter Folder Title"
 msgstr ""
 
@@ -16218,22 +16218,22 @@ msgstr ""
 msgid "by "
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:146
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:151
 msgid "-"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:163
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:168
 msgid "Based on group privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:236
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:241
 msgid "Edit Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:22
 #: bp-templates/bp-nouveau/includes/document/ajax.php:685
-#: bp-templates/bp-nouveau/includes/document/ajax.php:951
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1082
+#: bp-templates/bp-nouveau/includes/document/ajax.php:958
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1089
 msgid "Modified"
 msgstr ""
 
@@ -16260,7 +16260,7 @@ msgstr ""
 msgid "Edit Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:29
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:28
 msgid "Rename Folder"
 msgstr ""
 
@@ -17366,21 +17366,21 @@ msgid "Please enter title of folder."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:586
-#: bp-templates/bp-nouveau/includes/document/ajax.php:879
+#: bp-templates/bp-nouveau/includes/document/ajax.php:886
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/ajax.php:675
-#: bp-templates/bp-nouveau/includes/document/ajax.php:941
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1072
+#: bp-templates/bp-nouveau/includes/document/ajax.php:948
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1079
 msgid "Sort By:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1042
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1049
 msgid "Couldn’t move item. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1054
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1061
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
@@ -19345,7 +19345,7 @@ msgctxt "Course Content Label"
 msgid "%s Content"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1066
+#: bp-media/bp-media-settings.php:1072
 #. translators: 1: exec status, 2: Imagick status, 3: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19354,7 +19354,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1083
+#: bp-media/bp-media-settings.php:1089
 #. translators: 1: Imagick status, 2: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19362,7 +19362,7 @@ msgid ""
 "and Word documents (optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1097
+#: bp-media/bp-media-settings.php:1103
 #. translators: 1: exec status
 msgctxt "extension notification"
 msgid ""
@@ -19370,7 +19370,7 @@ msgid ""
 "live previews for PDF documents (optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1110
+#: bp-media/bp-media-settings.php:1116
 #. translators: 1: exec status, 2: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19379,7 +19379,7 @@ msgid ""
 "Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1125
+#: bp-media/bp-media-settings.php:1131
 #. translators: 1: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -19387,7 +19387,7 @@ msgid ""
 "(optional). Ask your web host."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1138
+#: bp-media/bp-media-settings.php:1144
 #. translators: 1: Imagick status
 msgctxt "extension notification"
 msgid ""
