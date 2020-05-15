@@ -2112,6 +2112,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 #media-stream.document-parent {
 
+	> #bp-ajax-loader {
+		margin: 20px;
+	}
+
 	.document-data-table-head {
 
 		.data-head-name {

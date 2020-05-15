@@ -13475,6 +13475,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-bottom: 1px solid #e7e9ec;
 }
 
+#media-stream.document-parent > #bp-ajax-loader {
+  margin: 20px;
+}
+
 #media-stream.document-parent .document-data-table-head .data-head-name {
   -ms-flex-preferred-size: calc(40% - 50px);
   flex-basis: calc(40% - 50px);
