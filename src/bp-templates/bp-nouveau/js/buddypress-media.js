@@ -273,6 +273,9 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
 
+			$( document ).on( 'click', 'ul.document-nav li', this.resetPageDocumentDirectory.bind( this ) );
+			$( document ).on( 'click', 'ul.document-nav li a', this.resetPageDocumentDirectory.bind( this ) );
+
 			// forums.
 			$( document ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
 			$( document ).on( 'click', '#forums-document-button', this.openForumsDocumentUploader.bind( this ) );
@@ -364,6 +367,11 @@ window.bp = window.bp || {};
 				this.editGifPreview();
 			}
 
+		},
+
+		resetPageDocumentDirectory: function( event ) {
+			event.preventDefault();
+			this.current_page = 1;
 		},
 
 		submitCreateFolderInPopup: function( event ) {
