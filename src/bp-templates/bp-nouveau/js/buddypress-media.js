@@ -157,34 +157,6 @@ window.bp = window.bp || {};
 					addRemoveLinks	: true,
 					uploadMultiple	: false,
 					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-					init: function(){
-						/* jshint ignore:start */
-						this.on('error', function(file){if (!file.accepted) alert( BP_Nouveau.media.media_select_error ); this.removeFile(file);});
-						/* jshint ignore:end */
-					},
-					accept			: function(file, done) {
-						if (file.size == 0) {
-							done( BP_Nouveau.media.empty_media_type );
-						} else {
-							done();
-						}
-					},
-					success			: function( file, response ){
-						if ( response.success ) {
-							return file.previewElement.classList.add( 'dz-success' );
-						} else {
-							var node, _i, _len, _ref, _results;
-							var message = response.data.feedback;
-							file.previewElement.classList.add( 'dz-error' );
-							_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
-							_results = [];
-							for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-								node                            = _ref[_i];
-								_results.push( node.textContent = message );
-							}
-							return _results;
-						}
-					}
 				};
 			}
 
@@ -3170,11 +3142,6 @@ window.bp = window.bp || {};
 
 			target.addClass( 'saving' );
 
-			folderId = self.album_id;
-			if ( false === folderId ) {
-				folderId = $( '.bb-folder-selected-id' ).val();
-			}
-
 			if (self.current_tab === 'bp-dropzone-content') {
 
 				var post_content = $( '#bp-media-post-content' ).val();
@@ -3183,7 +3150,7 @@ window.bp = window.bp || {};
 					'_wpnonce'	: BP_Nouveau.nonces.media,
 					'medias'	: self.dropzone_media,
 					'content'	: post_content,
-					'album_id'	: folderId,
+					'album_id'	: self.album_id,
 					'group_id'	: self.group_id,
 					'privacy'	: privacy.val()
 				};
@@ -3204,13 +3171,8 @@ window.bp = window.bp || {};
 									$( '.bb-photos-actions' ).show();
 								}
 
-								if ( 0 === parseInt( folderId ) ) {
-									// Prepend the activity.
-									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
-								}
-
-								$( '#bp-media-post-content' ).val( '' );
-								$( '.bb-folder-selected-id' ).val( '0' );
+								// Prepend the activity.
+								bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
 
 								for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 									self.dropzone_media[i].saved = true;
@@ -3241,7 +3203,7 @@ window.bp = window.bp || {};
 					'action'	: 'media_move_to_album',
 					'_wpnonce'	: BP_Nouveau.nonces.media,
 					'medias'	: selected,
-					'album_id'	: folderId,
+					'album_id'	: self.album_id,
 					'group_id'	: self.group_id
 				};
 
@@ -3261,13 +3223,8 @@ window.bp = window.bp || {};
 									$( '.bb-photos-actions' ).show();
 								}
 
-								if ( 0 === parseInt( folderId ) ) {
-									// Prepend the activity.
-									bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
-								}
-
-								$( '#bp-media-post-content' ).val( '' );
-								$( '.bb-folder-selected-id' ).val( '0' );
+								// Prepend the activity.
+								bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
 
 								// remove selected media from existing media list.
 								$( '.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked' ).each(
