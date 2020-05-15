@@ -643,6 +643,17 @@ window.bp = window.bp || {};
 					'attachment_id'			: attachment_id
 				};
 
+				if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
+					var store = bp.Nouveau.getStorage( 'bp-document' ),
+						scope = store.scope;
+						if ( '' === scope ) {
+							data.scope = 'all';
+						} else {
+							data.scope = scope;
+						}
+
+				}
+
 				$.ajax(
 					{
 						type: 'POST',
@@ -2789,7 +2800,7 @@ window.bp = window.bp || {};
 							if( !$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span.hidden' ).length ) {
 								$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb' ).find( '.item' ).append( '<span class="hidden"></span>');
 							}
-							
+
 							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)').each( function( i ) {
 
 								if( i > 0 ) {
@@ -2917,7 +2928,7 @@ window.bp = window.bp || {};
 							if( !$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span.hidden' ).length ) {
 								$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb' ).find( '.item' ).append( '<span class="hidden"></span>');
 							}
-							
+
 							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)').each( function( i ) {
 
 								if( i > 0 ) {
@@ -2932,7 +2943,7 @@ window.bp = window.bp || {};
 									}
 								}
 							});
-							
+
 
 						}
 					);

@@ -917,6 +917,7 @@ function bp_nouveau_ajax_document_delete() {
 	$id            = ! empty( $_POST['id'] ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
 	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
 	$type          = ! empty( $_POST['type'] ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
+	$scope         = ! empty( $_POST['scope'] ) ? filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING ) : '';
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );
@@ -939,7 +940,12 @@ function bp_nouveau_ajax_document_delete() {
 	$content = '';
 	ob_start();
 
-	if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
+	$string = '';
+	if ( '' !== $scope && 'personal' === $scope ) {
+		$string = '&scope='.$scope;
+	}
+
+	if ( bp_has_document( bp_ajax_querystring( 'document' ) . $string ) ) :
 
 		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 			?>
