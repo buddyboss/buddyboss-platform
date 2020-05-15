@@ -210,10 +210,11 @@ if ( wp_is_mobile() ) {
 		$show = true;
 	} elseif ( $can_manage_btn ) {
 		$show = true;
-	}
-	if ( $show ) {
-		?>
+	} ?>
 		<div class="media-folder_actions">
+			<?php
+				if ( $show ) {
+			?>
 			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
@@ -257,8 +258,9 @@ if ( wp_is_mobile() ) {
 					?>
 				</ul>
 			</div>
+			<?php
+				}
+			?>
 		</div>
-		<?php
-	}
-	?>
+		
 </div>
