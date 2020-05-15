@@ -32,7 +32,9 @@ defined( 'ABSPATH' ) || exit;
         <p><?php esc_html_e( 'We\'ve made it easy to figure out your file\'s MIME type. Upload any sample file below and click "Get MIME Type" and we will display the MIME type for that file. So if you wanted to check the MIME type for the .zip extension, you would need to upload any random Zip file. Once you determine the correct MIME Type, click to enter that MIME type into the table cell.', 'buddyboss' ); ?></p>
         <form id="document-upload-check-mime-type" action="" method="post">
 	        <?php esc_html_e( 'Choose a file to upload:', 'buddyboss' ); ?>
-            <input type="file" name="bp-document-file-input" id="bp-document-file-input">
+			<label for="bp-document-file-input" class="screen-reader-text"><?php esc_html_e( 'Add file to check MIME Type', 'buddyboss' ); ?></label>
+			<input type="file" name="bp-document-file-input" id="bp-document-file-input">
+			<label for="input-mime-type-submit-check" class="screen-reader-text"><?php esc_html_e( 'Get MIME Type', 'buddyboss' ); ?></label>
             <input type="submit" id="input-mime-type-submit-check" value="<?php esc_html_e( 'Get MIME Type', 'buddyboss' ); ?>" name="submit">
         </form>
 		<br /><br />

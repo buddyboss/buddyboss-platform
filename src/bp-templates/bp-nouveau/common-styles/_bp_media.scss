@@ -1513,7 +1513,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	.dz-preview.dz-file-preview .dz-details .dz-size {
 		margin-bottom: 0;
-		font-size: 12px;
+		font-size: 14px;
 	}
 
 	.dz-preview.dz-file-preview .dz-details .dz-filename {
@@ -1560,7 +1560,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 .bp-media-document-uploader .dropzone .dz-preview,
 #whats-new-attachments #forums-post-document-uploader,
 #messages-post-document-uploader,
-.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader {
+.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader,
+.activity_update .activity-comments .ac-reply-content .dropzone {
 
 	.dz-success-mark,
 	.dz-progress,
