@@ -221,7 +221,8 @@ module.exports = function (grunt) {
 			}
 		},
 		clean: {
-			all: [BUILD_DIR]
+			all: [BUILD_DIR],
+			bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/']
 		},
 		copy: {
 			files: {
@@ -240,6 +241,64 @@ module.exports = function (grunt) {
 						src: ['composer.json']
 					}
 				]
+			},
+			bp_rest_components: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
+				dest: SOURCE_DIR,
+				dot: true,
+				expand: true,
+				src: [
+					'**/bp-activity/**',
+					'**/bp-blogs/**',
+					'**/bp-forums/**',
+					'**/bp-friends/**',
+					'**/bp-groups/**',
+					'**/bp-invites/**',
+					'**/bp-media/**',
+					'**/bp-members/**',
+					'**/bp-messages/**',
+					'**/bp-notifications/**',
+					'**/bp-settings/**',
+					'**/bp-xprofile/**',
+					'**/bp-integrations/**'
+				],
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
+			},
+			bp_rest_core: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
+				dest: SOURCE_DIR + 'bp-core/classes/',
+				dot: true,
+				expand: true,
+				flatten: true,
+				filter: 'isFile',
+				src: [
+					'**',
+					'!actions.php',
+					'!filters.php',
+					'!functions.php',
+					'!**/bp-activity/**',
+					'!**/bp-blogs/**',
+					'!**/bp-forums/**',
+					'!**/bp-friends/**',
+					'!**/bp-groups/**',
+					'!**/bp-invites/**',
+					'!**/bp-media/**',
+					'!**/bp-members/**',
+					'!**/bp-messages/**',
+					'!**/bp-notifications/**',
+					'!**/bp-settings/**',
+					'!**/bp-xprofile/**',
+					'**/bp-integrations/**'
+				],
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
 			}
 		},
 		uglify: {
@@ -314,6 +373,11 @@ module.exports = function (grunt) {
 				command: 'git add .; git commit -am "grunt release build";',
 				cwd: '.',
 				stdout: false
+			},
+			rest_api: {
+				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+				cwd: SOURCE_DIR,
+				stdout: false
 			}
 		},
 		jsvalidate: {
@@ -345,6 +409,16 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+		apidoc: {
+			api: {
+				src: SOURCE_DIR,
+				dest: SOURCE_DIR + "endpoints/",
+				options : {
+					includeFilters: [".*\\.php$"],
+					excludeFilters : ["assets/", "bin/","languages/", "node_modules/", "src/bp-core/admin/js/lib/"],
+				},
+			}
+		},
 	});
 
 
@@ -352,6 +426,7 @@ module.exports = function (grunt) {
 	 * Register tasks.
 	 */
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+    grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'apidoc', 'clean:bp_rest']);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 

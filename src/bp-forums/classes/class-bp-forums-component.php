@@ -338,5 +338,29 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 
 			parent::setup_title();
 		}
+
+		/**
+		 * Init the BuddyBoss REST API.
+		 *
+		 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+		 *
+		 * @since BuddyBoss 1.3.5
+		 */
+		public function rest_api_init( $controllers = array() ) {
+
+			$path = buddypress()->plugin_dir . 'bp-forums/classes/class-bp-rest-bbp-walker-reply.php';
+
+			if ( file_exists( $path ) ) {
+				require_once $path;
+			}
+
+			parent::rest_api_init( array(
+				'BP_REST_Forums_Endpoint',
+				'BP_REST_Topics_Endpoint',
+				'BP_REST_Topics_Actions_Endpoint',
+				'BP_REST_Reply_Endpoint',
+				'BP_REST_Reply_Actions_Endpoint',
+			) );
+		}
 	}
 endif;

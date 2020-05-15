@@ -24,6 +24,10 @@ if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
 	define( 'BP_PLATFORM_VERSION', '1.3.4' );
 }
 
+if ( ! defined( 'BP_PLATFORM_API' ) ) {
+	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
+}
+
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
 global $is_bp_active;

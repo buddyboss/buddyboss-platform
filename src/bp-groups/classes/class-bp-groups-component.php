@@ -1107,4 +1107,30 @@ class BP_Groups_Component extends BP_Component {
 			)
 		);
 	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			'BP_REST_Groups_Endpoint',
+			'BP_REST_Groups_Details_Endpoint',
+			'BP_REST_Group_Membership_Endpoint',
+			'BP_REST_Group_Invites_Endpoint',
+			'BP_REST_Group_Membership_Request_Endpoint',
+			'BP_REST_Groups_Types_Endpoint',
+			'BP_REST_Attachments_Group_Avatar_Endpoint',
+		);
+
+		// Support to Group Cover.
+		if ( bp_is_active( 'groups', 'cover_image' ) ) {
+			$controllers[] = 'BP_REST_Attachments_Group_Cover_Endpoint';
+		}
+
+		parent::rest_api_init( $controllers );
+	}
 }
