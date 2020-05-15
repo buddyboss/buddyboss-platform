@@ -70,7 +70,12 @@ window.bp = window.bp || {};
 				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				init: function(){
 					/* jshint ignore:start */
-					this.on('error', function(file){if (!file.accepted) alert( BP_Nouveau.media.document_select_error ); this.removeFile(file);});
+					this.on('error', function(file){
+						if (!file.accepted){
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.document_select_error + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
+						}
+					});
 					/* jshint ignore:end */
 				},
 				accept			: function(file, done) {
@@ -110,7 +115,12 @@ window.bp = window.bp || {};
 					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 					init: function(){
 						/* jshint ignore:start */
-						this.on('error', function(file){if (!file.accepted) alert( BP_Nouveau.media.document_select_error ); this.removeFile(file);});
+						this.on('error', function(file){
+							if (!file.accepted){
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.document_select_error + '</p></div></div></div></div></transition></div>');
+								this.removeFile(file);
+							}
+						});
 						/* jshint ignore:end */
 					},
 					accept			: function(file, done) {

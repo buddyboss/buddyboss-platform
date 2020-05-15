@@ -77,6 +77,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'          => $group_id,
 		'target_text'               => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title' => __( 'Please enter title of folder', 'buddyboss' ),
+		'invalid_file_type'			=> __( 'Invalid file type', 'buddyboss' ),
 		'document_select_error'     => __( 'This file is not allowed. Please upload an ', 'buddyboss' ) . implode( ', ', $extensions ) . __( ' files only. ', 'buddyboss' ),
 		'dropzone_document_message' => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'     => ( bp_is_document_directory() ) ? 'yes' : 'no'
