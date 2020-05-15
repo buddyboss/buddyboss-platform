@@ -3083,6 +3083,15 @@ window.bp = window.bp || {};
 
 				},100);
 
+				var $this = $( targetPopup ).find( '.location-folder-list .is_active > span' ),
+				$bc = $('<div class="item"></div>');
+
+				$this.parents('li').each(function(n, li) {
+					var $a = $(li).children('span').clone();
+					$bc.prepend('', $a);
+				});
+				$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb' ).html( $bc.prepend('<span data-id="0">'+ BP_Nouveau.media.target_text +'</span>') );
+
 			}
 		},
 
