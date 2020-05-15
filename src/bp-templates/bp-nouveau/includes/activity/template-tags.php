@@ -1091,6 +1091,7 @@ function bp_nouveau_activity_privacy() {
 			$activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
 			if ( ! empty( $activity_folder_id ) ) {
 				$folder_id         = $activity_folder_id;
+				$folder_id         = bp_document_get_root_parent_id( $folder_id );
 				$folder            = new BP_Document_Folder( $folder_id );
 				$privacy           = $folder->privacy;
 				$folder_url         = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
@@ -1138,7 +1139,7 @@ function bp_nouveau_activity_privacy() {
 
 		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 			?>
-			<div class="bb-media-privacy-wrap 123">
+			<div class="bb-media-privacy-wrap">
 			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			<ul class="activity-privacy">
 				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
@@ -1152,21 +1153,23 @@ function bp_nouveau_activity_privacy() {
 			</ul>
 			</div><?php
 		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
-			$join_text = ( ( $folder_id && ! empty( $folder_url ) ) ? __( ' &ndash; based on folder privacy', 'buddyboss' ) : '' );
 			?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] . $join_text : $privacy . $join_text; ?>"><span class="privacy selected <?php echo $privacy . ( ! empty( $join_text ) ? ' no-change' : '' ); ?>"></span></span>
-				<?php if ( $parent_activity_id && $parent_activity_permalink ) : ?>
-					<ul class="activity-privacy">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<ul class="activity-privacy">
+					<?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
+						<li class="bb-edit-privacy">
+							<a href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
+					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
 						<li class="bb-edit-privacy">
 							<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 						</li>
-					</ul>
-				<?php endif; ?>
+					<?php endif; ?>
+				</ul>
 			</div><?php
 		} else {
 			?>
-			<div class="bb-media-privacy-wrap 789">
+			<div class="bb-media-privacy-wrap">
 			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			<?php
 			$class = 'activity-privacy';

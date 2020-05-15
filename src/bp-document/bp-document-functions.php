@@ -2342,3 +2342,19 @@ function bp_document_get_folder_children( $folder_id ) {
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) ) );
 
 }
+
+function bp_document_get_root_parent_id( $child_id ){
+
+	global $bp, $wpdb;
+
+	$table = $bp->document->table_name_folders;
+	$parent_id = $wpdb->get_var( $wpdb->prepare( "SELECT f.id
+FROM (
+    SELECT @id AS _id, (SELECT @id := parent FROM {$table} WHERE id = _id)
+    FROM (SELECT @id := %d) tmp1
+    JOIN {$table} ON @id <> 0
+    ) tmp2
+JOIN {$table} f ON tmp2._id = f.id
+WHERE f.parent = 0", $child_id ) );
+	return $parent_id;
+}
