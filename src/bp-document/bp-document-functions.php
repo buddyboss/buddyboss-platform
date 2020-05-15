@@ -368,7 +368,8 @@ function bp_document_add( $args = '' ) {
  * @return mixed|void
  * @since BuddyBoss 1.3.0
  */
-function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
+function bp_document_add_handler( $documents = array() ) {
+	global $bp_document_upload_count;
 	$document_ids = array();
 
 	if ( empty( $documents ) && ! empty( $_POST['document'] ) ) {
@@ -378,6 +379,10 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_document_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
 
 	if ( ! empty( $documents ) && is_array( $documents ) ) {
+
+		// update count of documents for later use.
+		$bp_document_upload_count = count( $documents );
+
 		// save  document.
 		foreach ( $documents as $document ) {
 
@@ -388,7 +393,6 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 
 			$document_id = bp_document_add(
 				array(
-					'activity_id'   => $activity_id,
 					'attachment_id' => $document['id'],
 					'title'         => $document['name'],
 					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,

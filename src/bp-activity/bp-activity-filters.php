@@ -1384,31 +1384,50 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
  * @since BuddyBoss 1.2.0
  */
 function bp_activity_document_add( $document ) {
+	global $bp_document_upload_count;
 
 	if ( ! empty( $document ) ) {
 
-		$args = array(
-			'hide_sitewide' => true,
-			'privacy'       => 'document',
-		);
+		$parent_activity_id = false;
+		if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
+			$parent_activity_id = (int) $_POST['bp_activity_id'];
+		}
 
-		$activity_id = bp_activity_post_update( $args );
+		if ( $bp_document_upload_count > 1 ) {
 
-		if ( $activity_id ) {
+			$args = array(
+				'hide_sitewide' => true,
+				'privacy'       => 'document',
+			);
 
-			// save media activity id in media.
-			$document->activity_id = $activity_id;
-			$document->save();
+			$activity_id = bp_activity_post_update( $args );
 
-			// update activity meta.
-			bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+			if ( $activity_id ) {
 
-			// save attachment meta for activity.
-			update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
+				// save media activity id in media.
+				$document->activity_id = $activity_id;
+				$document->save();
 
-			if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
-				// save parent activity id in attachment meta.
-				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $_POST['bp_activity_id'] );
+				// update activity meta.
+				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+
+				// save attachment meta for activity.
+				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
+
+				if ( ! empty( $parent_activity_id ) ) {
+					// save parent activity id in attachment meta.
+					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
+				}
+			}
+		} else {
+			if ( $parent_activity_id ) {
+
+				//save document activity id
+				$document->activity_id = $parent_activity_id;
+				$document->save();
+
+				//save parent activity id in attachment meta
+				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 			}
 		}
 	}
@@ -1424,6 +1443,7 @@ function bp_activity_document_add( $document ) {
  *
  */
 function bp_activity_create_parent_document_activity( $document_ids ) {
+	global $bp_document_upload_count;
 
 	if ( ! empty( $document_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
 
@@ -1467,13 +1487,19 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 					$folder_id = $document->album_id;
 				}
 
+				if ( 1 === $bp_document_upload_count ) {
+					//save media activity id in media
+					$document->activity_id = $activity_id;
+					$document->save();
+				}
+
 				//save parent activity id in attachment meta.
 				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $activity_id );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $added_document_ids ) );
 
-			// if media is from album then save album id in activity media.
+			// if document is from folder then save folder id in activity meta.
 			if ( ! empty( $folder_id ) ) {
 				bp_activity_update_meta( $activity_id, 'bp_document_folder_activity', $folder_id );
 			}

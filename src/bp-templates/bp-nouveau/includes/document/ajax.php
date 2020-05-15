@@ -259,19 +259,28 @@ function bp_nouveau_ajax_document_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
-	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
-
 	$post_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 
-	ob_start();
-	if ( bp_has_activities(
-		array(
+	// check activity is document or not.
+	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
+
+	remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
+	if ( ! empty( $document_activity ) ) {
+		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+
+		$args = array(
 			'include'     => $post_id,
 			'show_hidden' => true,
 			'privacy'     => array( 'document' ),
-		)
-	) ) {
+		);
+	} else {
+		$args = array(
+			'include' => $post_id,
+		);
+	}
+
+	ob_start();
+	if ( bp_has_activities( $args ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
@@ -280,7 +289,9 @@ function bp_nouveau_ajax_document_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
-	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+	if ( ! empty( $document_activity ) ) {
+		remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+	}
 	add_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 
 	wp_send_json_success(

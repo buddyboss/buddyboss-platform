@@ -185,7 +185,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler( array(), $activity_id );
+	$document_ids = bp_document_add_handler();
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
