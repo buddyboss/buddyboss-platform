@@ -24,13 +24,15 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 						<h4><?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?> '<?php bp_folder_title(); ?>'</h4>
 						<a class="bb-model-close-button" id="bp-media-edit-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
 					</header>
-
 						<div class="bb-field-wrap">
 							<label for="bb-album-child-title" class="bb-label"><?php esc_html_e( 'Rename Folder', 'buddyboss' ); ?></label>
 							<input id="bb-album-child-title" type="text" value="<?php bp_folder_title(); ?>" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>"/>
 						</div>
 						<?php
-						if ( ! bp_is_group() ) :
+						$current_folder = bp_get_folder_id();
+						$folder_id = (int) bp_document_get_root_parent_id( bp_get_folder_id() );
+						$folder    = new BP_Document_Folder( $folder_id );
+						if ( ! bp_is_group() && (int) $folder->id === $current_folder ) :
 							bp_get_template_part( 'document/document-privacy' );
 						endif;
 						?>

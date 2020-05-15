@@ -1710,11 +1710,9 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		return false;
 	}
 
-	if ( '' === $privacy ) {
-		$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
-	} else {
-		$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, privacy = %s, date_modified = %s WHERE id = %d", $title, $privacy, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
-	}
+	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+
+	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
 
 
 	if ( false === $q ) {

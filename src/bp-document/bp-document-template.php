@@ -1432,7 +1432,7 @@ function bp_get_folder_id() {
 	 *
 	 * @param int $id The document folder ID.
 	 */
-	return apply_filters( 'bp_get_folder_id', $id );
+	return apply_filters( 'bp_get_folder_id', (int) $id );
 }
 
 /**

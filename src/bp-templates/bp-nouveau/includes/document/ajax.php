@@ -861,9 +861,16 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! empty( $_POST['privacy'] ) ) {
+		$privacy = $_POST['privacy'];
+	} else {
+		$folder_id = bp_document_get_root_parent_id( $_POST['id'] );
+		$folder    = new BP_Document_Folder( $folder_id );
+		$privacy   = $folder->privacy;
+	}
+
 	// save media.
 	$title    = $_POST['title'];
-	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 	$id 	  = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
