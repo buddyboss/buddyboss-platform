@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 		BP_CSS = [
 			'**/*.css',
 			'!**/*.min.css',
-			'!**/vendor/*.css'
+			'!**/vendor/**/*.css'
 		],
 
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss
