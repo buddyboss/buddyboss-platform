@@ -539,14 +539,6 @@
 		display: flex;
 		align-items: center;
 		overflow: auto;
-
-		&.document-theatre {
-			display: none !important;
-
-			&.is-visible {
-				display: flex !important;
-			}
-		}
 	}
 }
 

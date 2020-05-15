@@ -11938,14 +11938,6 @@ body.login .login-popup .mfp-close:hover {
   overflow: auto;
 }
 
-.bb-media-model-wrapper.bb-internal-model.document-theatre {
-  display: none !important;
-}
-
-.bb-media-model-wrapper.bb-internal-model.document-theatre.is-visible {
-  display: flex !important;
-}
-
 .bb-media-model-container {
   max-width: 90%;
   min-width: 90%;
