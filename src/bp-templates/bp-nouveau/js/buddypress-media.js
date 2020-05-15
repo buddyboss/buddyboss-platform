@@ -4346,7 +4346,7 @@ window.bp = window.bp || {};
 
 			self.is_open = true;
 
-			$( '.document-theatre' ).show();
+			$( '.document-theatre' ).addClass('is-visible').show();
 			document.addEventListener( 'keyup', bp.Nouveau.Media.Theatre.checkPressedKeyDocuments( event ) );
 		},
 
@@ -4400,7 +4400,7 @@ window.bp = window.bp || {};
 
 			var media_elements = $( target ).closest( '.bb-media-container' ).find( '.document-theatre' );
 			media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '' );
-			media_elements.hide();
+			media_elements.removeClass('is-visible').hide();
 			self.is_open = false;
 			document.removeEventListener( 'keyup', bp.Nouveau.Media.Theatre.checkPressedKeyDocuments( event ) );
 		},
