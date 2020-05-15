@@ -91,16 +91,6 @@ function bp_media_get_settings_fields() {
 		),
 	);
 
-	$fields['bp_media_settings_emoji'] = array(
-
-		'bp_media_profiles_emoji_support' => array(
-			'title'             => __( 'Profiles', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_profiles_emoji_support',
-			'sanitize_callback' => 'absint',
-			'args'              => array(),
-		),
-	);
-
 	$fields['bp_media_settings_gifs'] = array(
 
 		'bp_media_gif_api_key'          => array(
@@ -110,13 +100,26 @@ function bp_media_get_settings_fields() {
 			'args'              => array(),
 		),
 
-		'bp_media_profiles_gif_support' => array(
+	);
+
+	if ( bp_is_active( 'activity' ) ) {
+		$fields['bp_media_settings_emoji'] = array(
+
+			'bp_media_profiles_emoji_support' => array(
+				'title'             => __( 'Profiles', 'buddyboss' ),
+				'callback'          => 'bp_media_settings_callback_profiles_emoji_support',
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			),
+		);
+
+		$fields['bp_media_settings_gifs']['bp_media_profiles_gif_support'] = array(
 			'title'             => __( 'Profiles', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_profiles_gif_support',
 			'sanitize_callback' => 'absint',
 			'args'              => array(),
-		),
-	);
+		);
+	}
 
 	$fields['bp_media_settings_documents']['bp_media_profile_document_support'] = array(
 		'title'             => __( 'Profiles', 'buddyboss' ),
@@ -150,19 +153,22 @@ function bp_media_get_settings_fields() {
 			),
 		);
 
-		$fields['bp_media_settings_emoji']['bp_media_groups_emoji_support'] = array(
-			'title'             => __( 'Groups', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_groups_emoji_support',
-			'sanitize_callback' => 'absint',
-			'args'              => array(),
-		);
+		if ( bp_is_active( 'activity' ) ) {
 
-		$fields['bp_media_settings_gifs']['bp_media_groups_gif_support'] = array(
-			'title'             => __( 'Groups', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_groups_gif_support',
-			'sanitize_callback' => 'absint',
-			'args'              => array(),
-		);
+			$fields['bp_media_settings_emoji']['bp_media_groups_emoji_support'] = array(
+				'title'             => __( 'Groups', 'buddyboss' ),
+				'callback'          => 'bp_media_settings_callback_groups_emoji_support',
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			);
+
+			$fields['bp_media_settings_gifs']['bp_media_groups_gif_support'] = array(
+				'title'             => __( 'Groups', 'buddyboss' ),
+				'callback'          => 'bp_media_settings_callback_groups_gif_support',
+				'sanitize_callback' => 'absint',
+				'args'              => array(),
+			);
+		}
 	}
 
 	if ( bp_is_active( 'messages' ) ) {
