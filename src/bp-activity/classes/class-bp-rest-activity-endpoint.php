@@ -286,6 +286,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
+		$retval = true;
+
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
 
 		/**
 		 * Filter the activity `get_items` permissions check.
@@ -295,7 +306,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 */
-		return apply_filters( 'bp_rest_activity_get_items_permissions_check', true, $request );
+		return apply_filters( 'bp_rest_activity_get_items_permissions_check', $retval, $request );
 	}
 
 	/**
@@ -358,7 +369,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! $this->can_see( $request ) ) {
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! $this->can_see( $request ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you cannot view the activities.', 'buddyboss' ),
@@ -409,7 +430,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		if ( empty( $request['content'] ) ) {
+		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
 			return new WP_Error(
 				'bp_rest_create_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
@@ -581,7 +602,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 
-		if ( empty( $request['content'] ) ) {
+		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
 			return new WP_Error(
 				'bp_rest_update_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
@@ -917,7 +938,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	public function update_favorite_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! ( is_user_logged_in() && bp_activity_can_favorite() ) ) {
+		if (
+			! ( is_user_logged_in() && bp_activity_can_favorite() )
+			|| function_exists( 'bp_is_activity_like_active' ) && true !== bp_is_activity_like_active()
+		) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update favorites.', 'buddyboss' ),
@@ -1756,5 +1780,29 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count', true );
 
 		return ( ! empty( $fav_count ) ? $fav_count : 0 );
+	}
+
+	/**
+	 * Validate
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return int|mixed
+	 */
+	public function bp_rest_activity_content_validate( $request ) {
+		$toolbar_option = false;
+
+		if ( ! empty( $request['content'] ) ) {
+			return false;
+		}
+
+		// check activity toolbar options if one of them is set, activity can be empty.
+		if ( bp_is_active( 'media' ) && empty( $request['bp_media_ids'] ) ) {
+			$toolbar_option = true;
+		} elseif ( bp_is_active( 'media' ) && empty( $request['media_gif'] ) ) {
+			$toolbar_option = true;
+		}
+
+		return $toolbar_option;
 	}
 }

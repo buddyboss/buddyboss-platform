@@ -336,6 +336,16 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the replies `get_items` permissions check.
 		 *
@@ -460,9 +470,19 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		$reply = get_post( $request['id'] );
 
-		if ( empty( $reply->ID ) ) {
+		if ( true === $retval && empty( $reply->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_reply_invalid_id',
 				__( 'Invalid reply ID.', 'buddyboss' ),
@@ -482,10 +502,9 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( isset( $reply->post_type ) ) {
+		if ( true === $retval && isset( $reply->post_type ) ) {
 			$post_type = get_post_type_object( $reply->post_type );
-
-			if ( true === $retval && ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
+			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this reply.', 'buddyboss' ),

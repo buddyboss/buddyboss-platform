@@ -7280,7 +7280,7 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Array",
             "allowedValues": [
               "public",
               "loggedin",
@@ -7293,6 +7293,18 @@ define({ "api": [
             "field": "privacy",
             "defaultValue": "public",
             "description": "<p>Privacy of the media.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "friends",
+              "groups",
+              "personal"
+            ],
+            "optional": true,
+            "field": "scope",
+            "description": "<p>Scope of the media.</p>"
           },
           {
             "group": "Parameter",
@@ -7416,7 +7428,7 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Array",
             "allowedValues": [
               "public",
               "loggedin",
@@ -7429,6 +7441,18 @@ define({ "api": [
             "field": "privacy",
             "defaultValue": "public",
             "description": "<p>Privacy of the media.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "friends",
+              "groups",
+              "personal"
+            ],
+            "optional": true,
+            "field": "scope",
+            "description": "<p>Scope of the media.</p>"
           },
           {
             "group": "Parameter",

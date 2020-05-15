@@ -250,7 +250,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'register-confirm-email'                   => bp_register_confirm_email(),
 			'register-confirm-password'                => bp_register_confirm_password(),
 			'bp-disable-account-deletion'              => bp_disable_account_deletion(),
-			'bp-enable-private-network'                => bp_enable_private_network(),
+			'bp-enable-private-network'                => ! bp_enable_private_network(),
 			'bp-enable-private-network-public-content' => bp_enable_private_network_public_content(),
 
 			// Profile settings.

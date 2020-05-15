@@ -144,6 +144,16 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( true === $retval && function_exists( 'bp_is_activity_link_preview_active' ) && true !== bp_is_activity_link_preview_active() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Link Previews is disabled.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		if ( true === $retval && ! is_user_logged_in() ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',

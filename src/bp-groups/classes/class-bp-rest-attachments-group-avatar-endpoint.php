@@ -176,10 +176,21 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		$retval      = true;
+		$retval = true;
+
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		$this->group = $this->groups_endpoint->get_group_object( $request );
 
-		if ( ! $this->group ) {
+		if ( true === $retval && ! $this->group ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
 				__( 'Invalid group ID.', 'buddyboss' ),

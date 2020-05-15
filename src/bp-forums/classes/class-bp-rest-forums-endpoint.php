@@ -238,6 +238,16 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the forums `get_items` permissions check.
 		 *
@@ -299,9 +309,19 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		$forum = get_post( $request['id'] );
 
-		if ( empty( $forum->ID ) ) {
+		if ( true === $retval && empty( $forum->ID ) ) {
 			$retval = new WP_Error(
 				'bp_rest_forum_invalid_id',
 				__( 'Invalid forum ID.', 'buddyboss' ),
@@ -321,10 +341,10 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( isset( $forum->post_type ) ) {
+		if ( true === $retval && isset( $forum->post_type ) ) {
 			$post_type = get_post_type_object( $forum->post_type );
 
-			if ( true === $retval && ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
+			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
 				$retval = new WP_Error(
 					'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this forum.', 'buddyboss' ),

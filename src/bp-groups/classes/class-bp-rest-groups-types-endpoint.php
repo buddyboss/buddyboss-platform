@@ -100,6 +100,17 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
+		$retval = true;
+
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
 
 		/**
 		 * Filter the Groups types `get_items` permissions check.
@@ -109,7 +120,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 */
-		return apply_filters( 'bp_rest_groups_types_get_items_permissions_check', true, $request );
+		return apply_filters( 'bp_rest_groups_types_get_items_permissions_check', $retval, $request );
 	}
 
 	/**

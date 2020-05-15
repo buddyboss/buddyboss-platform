@@ -172,72 +172,10 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			foreach ( $nav_items as $key => $item ) {
 				$nav[ $key ]['title']    = $item['text'];
 				$nav[ $key ]['position'] = $item['position'];
-				$nav[ $key ]['count']    = $this->get_activity_tab_count( $item['slug'] );
 			}
 		}
 
 		return $nav;
-	}
-
-	/**
-	 * Get Activity tab count.
-	 *
-	 * @param string $slug Component slug.
-	 *
-	 * @return int
-	 */
-	protected function get_activity_tab_count( $slug ) {
-		$count   = 0;
-		$user_id = get_current_user_id();
-
-		switch ( $slug ) {
-			case 'all':
-				$count = bp_get_total_member_count();
-				break;
-			case 'favorites':
-				$count = bp_get_total_favorite_count_for_user( $user_id );
-				break;
-			case 'friends':
-				$count = bp_get_total_friend_count( $user_id );
-				break;
-			case 'groups':
-				$count = bp_get_total_group_count_for_user( $user_id );
-				break;
-			case 'mentions':
-				$count = (int) bp_get_user_meta( $user_id, 'bp_new_mention_count', true );
-				break;
-			case 'following':
-				$count = $this->rest_bp_get_following_ids( array( 'user_id' => $user_id ) );
-				break;
-		}
-
-		return $count;
-	}
-
-	/**
-	 * Returns a comma separated list of user_ids for a given user's following.
-	 *
-	 * @param mixed $args Arguments can be passed as an associative array or as a URL argument string.
-	 *
-	 * @return mixed      Comma-seperated string of user IDs on success. Integer zero on failure.
-	 */
-	private function rest_bp_get_following_ids( $args ) {
-		$following_ids;
-		if ( bp_is_active( 'follow' ) ) {
-			$following_ids = bp_get_following_ids( $args );
-		} else {
-			$following_ids = ( function_exists( 'bp_get_following' ) ? bp_get_following( $args ) : '' );
-		}
-
-		if ( ! empty( $following_ids ) ) {
-			if ( is_array( $following_ids ) ) {
-				return count( $following_ids );
-			} else {
-				return count( explode( ',', $following_ids ) );
-			}
-		}
-
-		return 0;
 	}
 
 	/**

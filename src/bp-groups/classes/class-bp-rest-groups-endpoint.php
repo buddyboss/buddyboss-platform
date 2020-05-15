@@ -213,7 +213,17 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! $this->can_see_hidden_groups( $request ) ) {
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! $this->can_see_hidden_groups( $request ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you cannot view hidden groups.', 'buddyboss' ),
@@ -283,9 +293,20 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
-		$group  = $this->get_group_object( $request );
 
-		if ( empty( $group->id ) ) {
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		$group = $this->get_group_object( $request );
+
+		if ( true === $retval && empty( $group->id ) ) {
 			$retval = new WP_Error(
 				'bp_rest_group_invalid_id',
 				__( 'Invalid group ID.', 'buddyboss' ),

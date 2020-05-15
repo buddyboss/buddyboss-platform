@@ -128,7 +128,17 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function get_items_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! bp_is_active( 'activity' ) ) {
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! bp_is_active( 'activity' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_component_required',
 				__( 'Sorry, Activity component was not enabled.', 'buddyboss' ),
