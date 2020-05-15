@@ -34,6 +34,7 @@ defined( 'ABSPATH' ) || exit;
 	        <?php esc_html_e( 'Choose a file to upload:', 'buddyboss' ); ?>
 			<label for="bp-document-file-input" class="screen-reader-text"><?php esc_html_e( 'Add file to check MIME Type', 'buddyboss' ); ?></label>
 			<input type="file" name="bp-document-file-input" id="bp-document-file-input">
+			<label for="input-mime-type-submit-check" class="screen-reader-text"><?php esc_html_e( 'Get MIME Type', 'buddyboss' ); ?></label>
             <input type="submit" id="input-mime-type-submit-check" value="<?php esc_html_e( 'Get MIME Type', 'buddyboss' ); ?>" name="submit">
         </form>
 		<br /><br />
