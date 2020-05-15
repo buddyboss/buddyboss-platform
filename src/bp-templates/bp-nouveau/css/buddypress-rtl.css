@@ -14159,7 +14159,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span,
 .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span {
   display: inline-block !important;
-  max-width: 300px;
+  max-width: 210px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
