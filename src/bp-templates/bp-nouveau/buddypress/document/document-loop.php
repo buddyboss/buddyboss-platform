@@ -9,15 +9,29 @@
 bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
-	if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) : ?>
+	if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) : 
+		$activeTitleClass = '';
+		$activeDateClass = '';
+		$activePrivacyClass = '';
+		$activeGroupClass = '';
+		if( 'title' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
+			$activeTitleClass = 'asce';
+		} else if( 'date_modified' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
+			$activeDateClass = 'asce';
+		} else if( 'privacy' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
+			$activePrivacyClass = 'asce';
+		} else if( 'group_id' === $_POST['order_by'] && 'DESC' === $_POST['sort'] ) {
+			$activeGroupClass = 'asce';
+		}
+	?>
 		<div class="document-data-table-head">
-			<div class="data-head data-head-name" data-target="name">
+			<div class="data-head data-head-name <?php echo $activeTitleClass; ?>" data-target="name">
 				<span>
 					<?php esc_html_e( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 			</div>
-			<div class="data-head data-head-modified" data-target="modified">
+			<div class="data-head data-head-modified <?php echo $activeDateClass; ?>" data-target="modified">
 				<span>
 					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
@@ -26,7 +40,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 			<?php
 			if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
 				?>
-				<div class="data-head data-head-origin" data-target="group">
+				<div class="data-head data-head-origin <?php echo $activeGroupClass; ?>" data-target="group">
 				<span>
 					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
@@ -35,7 +49,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 				<?php
 			}
 			?>
-			<div class="data-head data-head-visibility" data-target="visibility">
+			<div class="data-head data-head-visibility <?php echo $activePrivacyClass; ?>" data-target="visibility">
 				<span>
 					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>

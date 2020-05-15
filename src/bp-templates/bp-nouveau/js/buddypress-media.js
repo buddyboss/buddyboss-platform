@@ -217,7 +217,6 @@ window.bp = window.bp || {};
 			bpNouveau.on( 'click', '#bb-delete-media', this.deleteMedia.bind( this ) );
 			bpNouveau.on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
 			$( '#buddypress [data-bp-list="media"]' ).on( 'bp_ajax_request', this.bp_ajax_media_request );
-			$( '#buddypress [data-bp-list="document"]' ).on('bp_ajax_request',this.bp_ajax_document_request);
 
 			// albums.
 			bpNouveau.on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
@@ -699,35 +698,6 @@ window.bp = window.bp || {};
 		bp_ajax_media_request: function (event, data) {
 			if (typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0) {
 				$( '.bb-photos-actions' ).hide();
-			}
-		},
-
-		bp_ajax_document_request: function () {
-			if ( $( '.document-data-table-head' ).length ) {
-				var storage = bp.Nouveau.getStorage( 'bp-document' );
-				if ( undefined !== storage.extras ) {
-					var sortValue 	   = storage.extras.sort;
-					var sortOrderValue = storage.extras.orderby;
-					var orderClass	   = ( 'DESC' === sortValue ) ? 'asce' : '';
-					$( document ).find( '.data-head' ).each(function() {
-						if ( $( this ).hasClass( 'asce') ) {
-							if ( ! $( this ).hasClass( 'data-head-origin') ) {
-								$(this).removeClass('asce');
-							}
-						}
-					});
-					setTimeout(
-						function()
-						{
-							if ( 'title' === sortOrderValue ) {
-								$( document ).find( '.data-head-name' ).addClass( orderClass );
-							} else if ( 'date_modified' === sortOrderValue ) {
-								$( document ).find( '.data-head-modified' ).addClass( orderClass );
-							} else if ( 'privacy' === sortOrderValue ) {
-								$( document ).find( '.data-head-visibility' ).addClass( orderClass );
-							}
-						}, 1000);
-				}
 			}
 		},
 
@@ -3133,7 +3103,7 @@ window.bp = window.bp || {};
 		},
 
 		submitMedia: function (event) {
-			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-media-privacy' ), folderId = 0;
+			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-media-privacy' );
 			event.preventDefault();
 
 			if (target.hasClass( 'saving' )) {
@@ -3823,18 +3793,7 @@ window.bp = window.bp || {};
 					method		: 'reset',
 					target		: '#buddypress [data-bp-list]'
 				}
-			).done(
-				function (response) {
-					setTimeout(
-						function(){
-								currentFilterTarget = '.' + currentFilter.replace( ' ','.' );
-								$( currentFilterTarget ).hasClass( 'asce' ) ? $( currentFilterTarget ).removeClass( 'asce' ) : $( currentFilterTarget ).addClass( 'asce' );
-						},
-						300
-					);
-
-				}
-			);
+			).done();
 
 		},
 		/* jshint ignore:end */
