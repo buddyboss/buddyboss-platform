@@ -7,7 +7,7 @@
  */
 
 ?>
-<div class="bb-media-model-wrapper bb-internal-model media document-theatre" style="display: none;">
+<div class="bb-media-model-wrapper bb-internal-model document document-theatre" style="display: none;">
 
 	<a data-balloon-pos="left" data-balloon="<?php esc_html_e( 'Close', 'buddyboss' ); ?>" class="bb-close-media-theatre bb-close-model bb-close-document-theatre" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7"/></svg></a>
 

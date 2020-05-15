@@ -4310,7 +4310,7 @@ window.bp = window.bp || {};
 			self.navigationCommands();
 			self.getActivity();
 
-			$( '.bb-media-model-wrapper' ).show();
+			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open = true;
 
 			document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
@@ -4474,7 +4474,7 @@ window.bp = window.bp || {};
 			}
 
 			// refresh img.
-			$( '.bb-media-model-wrapper .bb-media-section' ).find( 'img' ).attr( 'src', self.current_media.attachment + '?' + new Date().getTime() );
+			$( '.bb-media-model-wrapper.media .bb-media-section' ).find( 'img' ).attr( 'src', self.current_media.attachment + '?' + new Date().getTime() );
 
 			// privacy.
 			var media_privacy_wrap = $( '.bb-media-section .bb-media-privacy-wrap' );
