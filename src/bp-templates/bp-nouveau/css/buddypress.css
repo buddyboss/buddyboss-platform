@@ -12881,7 +12881,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-size,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
