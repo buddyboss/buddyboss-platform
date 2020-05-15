@@ -1556,6 +1556,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
  *
  * @param int $document_id
  * @param int $folder_id
+ * @param int $group_id
  *
  * @return bool|int
  * @since BuddyBoss 1.3.0
@@ -1570,7 +1571,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 
 	$destination_privacy = 'loggedin';
 	if ( $group_id > 0 ) {
-		$destination_privacy = 'group_only';
+		$destination_privacy = 'grouponly';
 	} elseif ( $folder_id > 0 ) {
 		$destination_folder  = BP_Document_Folder::get_folder_data( array( $folder_id ) );
 		$destination_privacy = $destination_folder[0]->privacy;
@@ -1581,15 +1582,17 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
 
 	// Update document activity privacy.
-	$document = new BP_Document( $document_id );
-	if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
-		$post_attachment = $document->attachment_id;
-		$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-		if ( ! empty( $activity_id ) ) {
-			$activity = new BP_Activity_Activity( (int) $activity_id );
-			if ( bp_activity_user_can_delete( $activity ) ) {
-				$activity->privacy = $destination_privacy;
-				$activity->save();
+	if ( ! $group_id ) {
+		$document = new BP_Document( $document_id );
+		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
+			$post_attachment = $document->attachment_id;
+			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
+			if ( ! empty( $activity_id ) ) {
+				$activity = new BP_Activity_Activity( (int) $activity_id );
+				if ( bp_activity_user_can_delete( $activity ) ) {
+					$activity->privacy = $destination_privacy;
+					$activity->save();
+				}
 			}
 		}
 	}
