@@ -112,6 +112,16 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( function_exists( 'bp_disable_group_type_creation' ) && false === bp_disable_group_type_creation() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Group Type is disabled from setting.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the Groups types `get_items` permissions check.
 		 *

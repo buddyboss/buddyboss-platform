@@ -2452,7 +2452,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
  *
  * @since BuddyPress 1.0.0
  *
- * @param int $membership_id Deprecated BuddyPress 5.0.0.
+ * @param int $membership_id Deprecated BuddyPress 1.3.5.
  * @param int $user_id       Optional. ID of the user who requested membership.
  *                           Provide this value along with $group_id to override
  *                           $membership_id.
