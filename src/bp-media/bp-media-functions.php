@@ -505,6 +505,7 @@ function bp_media_add( $args = '' ) {
  * @return mixed|void
  */
 function bp_media_add_handler( $medias = array() ) {
+	global $bp_media_upload_count;
 	$media_ids = array();
 
 	if ( empty( $medias ) && ! empty( $_POST['medias'] ) ) {
@@ -514,6 +515,10 @@ function bp_media_add_handler( $medias = array() ) {
 	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_media_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
+
+		// update count of media for later use.
+		$bp_media_upload_count = count( $medias );
+
 		// save  media.
 		foreach ( $medias as $media ) {
 
