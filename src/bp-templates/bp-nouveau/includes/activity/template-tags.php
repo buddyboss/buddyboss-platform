@@ -1053,6 +1053,7 @@ function bp_nouveau_activity_privacy() {
 					$folder_id = $document->folder_id;
 
 					if ( ! empty( $folder_id ) ) {
+						$folder_id = bp_document_get_root_parent_id( $folder_id );
 						$folder    = new BP_Document_Folder( $folder_id );
 						$privacy   = $folder->privacy;
 						$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
@@ -1105,6 +1106,7 @@ function bp_nouveau_activity_privacy() {
 
 					if ( ! empty( $document->folder_id ) ) {
 						$folder_id         = $document->folder_id;
+						$folder_id         = bp_document_get_root_parent_id( $folder_id );
 						$folder            = new BP_Document_Folder( $folder_id );
 						$privacy           = $folder->privacy;
 						$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
