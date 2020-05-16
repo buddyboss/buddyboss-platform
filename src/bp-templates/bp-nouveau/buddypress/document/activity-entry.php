@@ -23,6 +23,10 @@ $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : 
 $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
 
+if ( $attachment_id ) {
+	$text_attachment_url = wp_get_attachment_url( $attachment_id );
+}
+
 $group_id = bp_get_document_group_id();
 if ( $group_id > 0 ) {
 	$move_id   = $group_id;
@@ -34,6 +38,10 @@ if ( $group_id > 0 ) {
 
 $extension_description = '';
 
+if ( 'pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension ) {
+	$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+}
+
 if ( ! empty( $extension_lists ) ) {
 	$extension_lists = array_column( $extension_lists, 'description', 'extension' );
 	$extension_name  = '.' . $extension;
@@ -41,21 +49,27 @@ if ( ! empty( $extension_lists ) ) {
 		$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
 	}
 }
+
+$class = '';
+if ( $attachment_id && bp_get_document_activity_id() ) {
+	$class = 'bb-open-document-theatre';
+}
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
 	<div class="document-description-wrap">
-		<a href="<?php echo esc_url( $download_url ); ?>" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
+		<a href="<?php echo esc_url( $download_url ); ?>" class="entry-img <?php echo esc_attr( $class ); ?>" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>
 		</a>
-		<a href="<?php echo esc_url( $download_url ); ?>" class="document-detail-wrap">
+		<a href="<?php echo esc_url( $download_url ); ?>" class="document-detail-wrap <?php echo esc_attr( $class ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
-			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to Download', 'buddyboss' ); ?></span>
+			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to View Details', 'buddyboss' ); ?></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">
+		<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
 		<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 			<i class="bb-icon-download"></i>
 		</a>

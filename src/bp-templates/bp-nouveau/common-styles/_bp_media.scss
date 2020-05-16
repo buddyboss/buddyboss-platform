@@ -1714,6 +1714,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			background-color: #fff;
 			align-items: center;
 
+			.bb-icon-loader {
+				font-size: 20px;
+			}
+
 			.img-section {
 				justify-content: center;
 				display: flex;
@@ -1779,6 +1783,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		.bb-media-section {
 			border-right: 1px solid #ecedee;
 		}
+	}
+
+	.bb-media-info-section .bb-icon-loader {
+		font-size: 20px;
 	}
 
 }

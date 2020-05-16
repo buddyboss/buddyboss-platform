@@ -4252,34 +4252,77 @@ window.bp = window.bp || {};
 
 		openDocumentTheatre: function (event) {
 			event.preventDefault();
-			var target         = $( event.currentTarget );
-			var self           = this;
-			var media_elements = $( target ).closest( '.bb-media-container' ).length ? $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
-			var id 			   = parseInt( target.closest( '.media-folder_items' ).data( 'activity-id' ) );
+			var target         		= $( event.currentTarget );
+			var self           		= this;
+			var target_text	   		= target.text();
+			var target_icon_class	= target.closest( '.media-folder_items' ).find( '.media-folder_icon > a > i' ).attr( 'class' );
+			var media_elements 		= $( target ).closest( '.bb-media-container' ).length ? $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
+			var id 					= parseInt( target.closest( '.media-folder_items' ).data( 'activity-id' ) );
+
+			if( !media_elements.length && $( target ).closest( '.buddypress-wrap' ).length ) {
+				media_elements 		= $( target ).closest( '.buddypress-wrap' ).find( '.document-theatre' );
+				target_text 		= target.find( '.document-title' ).text();
+				target_icon_class   = target.closest( '.document-description-wrap' ).find( '.entry-img > i' ).attr( 'class' );
+				id					= parseInt( target.closest( '.activity_update' ).data( 'bp-activity-id' ) );
+			}
+
+			
 
 			if ( 0 === id ) {
 				return false;
 			}
 			if ( target.attr( 'data-extension' ) == 'css' || target.attr( 'data-extension' ) == 'txt' || target.attr( 'data-extension' ) == 'js' || target.attr( 'data-extension' ) == 'html' || target.attr( 'data-extension' ) == 'htm' || target.attr( 'data-extension' ) == 'csv' ) {
-				$.get(
-					target.attr( 'data-text-preview' ),
-					function(data) {
-						media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target.text() + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
-						media_elements.find( '.bb-media-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );
-						media_elements.find( '.bb-media-section .document-text textarea' ).html( data.replace( 'n','' ) );
 
-						bp.Nouveau.Media.documentCodeMirror();
-					}
-				);
+				media_elements.find( '.bb-media-section' ).html('<i class="bb-icon-loader animate-spin"></i>');
+
+				$.ajax( target.attr( 'data-text-preview' ) )
+				.done( function( data ) {
+					media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
+					media_elements.find( '.bb-media-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );
+					media_elements.find( '.bb-media-section .document-text textarea' ).html( data.replace( 'n','' ) );
+					bp.Nouveau.Media.documentCodeMirror();
+				})
+				.fail( function() {
+					media_elements.find( '.bb-media-section' ).addClass( 'bb-media-no-preview' ).html('<p><i class="bb-icon-alert-triangle"></i> Something went wrong.');
+				});
+
+				// $.ajax({
+				// 	url: target.attr( 'data-text-preview' ),
+				// 	type: 'GET',
+				// 	dataType: 'html',
+				// 	success: function( data ) {
+
+				// 		setTimeout( function() {
+				// 			media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
+				// 			media_elements.find( '.bb-media-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );
+				// 			media_elements.find( '.bb-media-section .document-text textarea' ).html( data.replace( 'n','' ) );
+				// 			bp.Nouveau.Media.documentCodeMirror();
+				// 		});
+
+				// 	}
+				// });
+
+				// $.get(
+				// 	target.attr( 'data-text-preview' )
+				// ).done(function( data ) {
+				// 		media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
+				// 		media_elements.find( '.bb-media-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );
+				// 		media_elements.find( '.bb-media-section .document-text textarea' ).html( data.replace( 'n','' ) );
+
+				// 		bp.Nouveau.Media.documentCodeMirror();
+				//   }).fail(function() {
+				// 	alert( "error" );
+				//   });
+
 			} else {
 
 				if ( target.attr( 'data-preview' ) ) {
 
-					media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target.text() + '</h3><div class="img-section"> <img src="' + target.attr( 'data-preview' ) + '" /> </div>' );
+					media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"> <img src="' + target.attr( 'data-preview' ) + '" /> </div>' );
 
 				} else {
 
-					media_elements.find( '.bb-media-section' ).addClass( 'bb-media-no-preview' ).html( '<div class="img-section"> <i class="' + target.closest( '.media-folder_items' ).find( '.media-folder_icon > a > i' ).attr( 'class' ) + '"></i><p>' + target.text() + '</p> </div>' );
+					media_elements.find( '.bb-media-section' ).addClass( 'bb-media-no-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p> </div>' );
 
 				}
 
@@ -4304,7 +4347,7 @@ window.bp = window.bp || {};
 
 			var self = this;
 
-			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			self.activity_ajax = $.ajax(
 				{

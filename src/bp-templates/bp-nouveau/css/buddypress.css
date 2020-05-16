@@ -13103,6 +13103,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   align-items: center;
 }
 
+.bb-document-theater .bb-media-section.bb-media-no-preview .bb-icon-loader {
+  font-size: 20px;
+}
+
 .bb-document-theater .bb-media-section.bb-media-no-preview .img-section {
   justify-content: center;
   display: flex;
@@ -13163,6 +13167,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   .bb-document-theater .bb-media-section {
     border-right: 1px solid #ecedee;
   }
+}
+
+.bb-document-theater .bb-media-info-section .bb-icon-loader {
+  font-size: 20px;
 }
 
 #media-folder-document-data-table .media-folder_items {
