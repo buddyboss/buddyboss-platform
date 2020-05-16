@@ -65,7 +65,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
-			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to View Details', 'buddyboss' ); ?></span>
+			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to view', 'buddyboss' ); ?></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">
