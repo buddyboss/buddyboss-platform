@@ -12616,6 +12616,12 @@ ul.bb-albums-list .bb-more-photos strong {
   margin-bottom: 20px;
 }
 
+.bb-field-wrap .bb-allowed-file-types {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #888;
+}
+
 .bb-model-footer.flex .bb-dropdown-wrap {
   margin-bottom: 0;
 }
