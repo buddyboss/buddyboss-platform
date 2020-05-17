@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API
+* Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
 * WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
 * Translations - Updated German (formal) language files
 
