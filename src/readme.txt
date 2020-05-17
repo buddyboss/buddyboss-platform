@@ -59,6 +59,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API
+* Activity - Fixed website link previews not all using the same formatting
+* Activity - Fixed some websites not properly fetching link preview content
 * Text Editor - Fixed text formatting buttons overlapping with media uploader
 * Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
 * WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
