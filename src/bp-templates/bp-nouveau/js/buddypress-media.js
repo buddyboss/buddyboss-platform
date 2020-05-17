@@ -4216,7 +4216,7 @@ window.bp = window.bp || {};
 		checkPressedKeyDocuments: function (e) {
 			e = e || window.event;
 			if ( e.keyCode == 27 ) {
-				bp.Nouveau.Media.Theatre.closeDocumentTheatre( e );
+				$( '.document-theatre' ).hide().find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '' );
 			}
 		},
 
@@ -4284,7 +4284,7 @@ window.bp = window.bp || {};
 			media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '' );
 			media_elements.hide();
 			self.is_open = false;
-			document.removeEventListener( 'keyup', bp.Nouveau.Media.Theatre.checkPressedKeyDocuments( event ) );
+			document.removeEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
 		setMedias: function (target) {
