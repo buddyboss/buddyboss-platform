@@ -36,7 +36,7 @@
 	            </div>
 
             </div>
-            <div class="bb-media-info-section">
+            <div class="bb-media-info-section media">
                 <ul class="activity-list item-list bp-list"><span><i class="bb-icon-spin5 animate-spin"></i></span></ul>
             </div>
         </div>

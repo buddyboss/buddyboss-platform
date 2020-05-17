@@ -17,6 +17,7 @@ $move_id             = '';
 $move_type           = '';
 $folder_link         = '';
 $document_id         = bp_get_document_id();
+$filename            = basename( get_attached_file( $attachment_id ) );
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension );
@@ -84,7 +85,20 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		</a>
 	</div>
 	<div class="media-folder_details">
-		<a class="media-folder_name <?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $link ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
+		<a class="media-folder_name <?php echo esc_attr( $class ); ?>"
+		   href="<?php echo esc_url( $link ); ?>"
+		   data-id="<?php bp_document_id(); ?>"
+		   data-attachment-full=""
+		   data-privacy="<?php bp_db_document_privacy(); ?>"
+		   data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
+		   data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
+		   data-activity-id="<?php bp_document_activity_id(); ?>"
+		   data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
+		   data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
+		   data-album-id="<?php bp_document_folder_id(); ?>"
+		   data-group-id="<?php bp_document_group_id(); ?>"
+		   data-document-title="<?php echo esc_html( $filename ); ?>"
+		   data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 <!--			<span>--><?php // echo esc_html( $document_title ); ?><!--</span>-->
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
 			<i class="media-document-id" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" style="display: none;"></i>
@@ -262,5 +276,5 @@ if ( wp_is_mobile() ) {
 				}
 			?>
 		</div>
-		
+
 </div>

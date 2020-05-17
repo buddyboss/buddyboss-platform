@@ -13,8 +13,18 @@
 
 	<div id="bb-media-model-container" class="bb-media-model-container bb-document-theater">
 		<div class="bb-media-model-inner">
-			<div class="bb-media-section">
-			<div class="bb-dropdown-wrap bb-media-only-privacy">
+			<div class="bb-media-section bb-document-section">
+
+				<a class="theater-command bb-prev-document" href="#previous">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 29L1 15 15 1" opacity=".7"/></svg>
+				</a>
+
+				<a class="theater-command bb-next-document" href="#next">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l14 14L1 29" opacity=".7"/></svg>
+				</a>
+
+
+				<div class="bb-dropdown-wrap bb-media-only-privacy">
 					<div class="bb-media-privacy-wrap" style="display: none;">
 						<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="left" data-bp-tooltip=""><span class="privacy selected"></span></span>
 						<ul class="media-privacy">
@@ -29,7 +39,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="bb-media-info-section">
+			<div class="bb-media-info-section document">
 				<ul class="activity-list item-list bp-list"><span><i class="bb-icon-spin5 animate-spin"></i></span></ul>
 			</div>
 		</div>

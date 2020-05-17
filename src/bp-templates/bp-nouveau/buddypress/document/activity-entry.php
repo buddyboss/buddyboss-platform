@@ -22,6 +22,7 @@ $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true 
 $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
+$attachment_url	   = '';
 
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
@@ -58,10 +59,38 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
 	<div class="document-description-wrap">
-		<a href="<?php echo esc_url( $download_url ); ?>" class="entry-img <?php echo esc_attr( $class ); ?>" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
+		<a
+				href="<?php echo esc_url( $download_url ); ?>"
+				class="entry-img <?php echo esc_attr( $class ); ?>"
+				data-id="<?php bp_document_id(); ?>"
+				data-attachment-full=""
+				data-privacy="<?php bp_db_document_privacy(); ?>"
+				data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
+				data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
+				data-activity-id="<?php bp_document_activity_id(); ?>"
+				data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
+				data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
+				data-album-id="<?php bp_document_folder_id(); ?>"
+				data-group-id="<?php bp_document_group_id(); ?>"
+				data-document-title="<?php echo esc_html( $filename ); ?>"
+				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>
 		</a>
-		<a href="<?php echo esc_url( $download_url ); ?>" class="document-detail-wrap <?php echo esc_attr( $class ); ?>" data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>" data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>" data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>">
+		<a
+				href="<?php echo esc_url( $download_url ); ?>"
+				class="document-detail-wrap document-detail-wrap-description-popup"
+				data-id="<?php bp_document_id(); ?>"
+				data-attachment-full=""
+				data-privacy="<?php bp_db_document_privacy(); ?>"
+				data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
+				data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
+				data-activity-id="<?php bp_document_activity_id(); ?>"
+				data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
+				data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
+				data-album-id="<?php bp_document_folder_id(); ?>"
+				data-group-id="<?php bp_document_group_id(); ?>"
+				data-document-title="<?php echo esc_html( $filename ); ?>"
+				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
@@ -73,27 +102,29 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 			<i class="bb-icon-download"></i>
 		</a>
-		
+
 			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icon-menu-dots-v"></i>
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<li class="copy_download_file_url">
-						<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
-					</li>
-				<?php
-				if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
-					
-					if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+					<?php
+					if ( $can_download_btn ) {
 						?>
-					<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+						<li class="copy_download_file_url">
+							<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
+						</li><?php
+					}
+					if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
+						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+							?>
+						<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+							<?php
+						}
+						?>
+						<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						<?php
 					}
-					?>
-					<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
-					<?php
-				}
 				?>
 				</ul>
 			</div>

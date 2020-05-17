@@ -341,35 +341,34 @@ class BP_Document {
 			if ( 'pdf' === $extension ) {
 
 				$output_file = wp_get_attachment_image_url( $attachment_id, 'full' );
-				if ( '' !== $output_file ) {
-				$image_data = file_get_contents( $output_file );
+				if ( '' !== $output_file && '' !== basename( $output_file ) ) {
+					$image_data = file_get_contents( $output_file );
 
-				$filename = basename( $output_file );
+					$filename = basename( $output_file );
 
-				if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-					$file = $upload_dir['path'] . '/' . $filename;
-				} else {
-					$file = $upload_dir['basedir'] . '/' . $filename;
-				}
+					if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+						$file = $upload_dir['path'] . '/' . $filename;
+					} else {
+						$file = $upload_dir['basedir'] . '/' . $filename;
+					}
 
-				file_put_contents( $file, $image_data );
+					file_put_contents( $file, $image_data );
 
-				$wp_filetype = wp_check_filetype( $filename, null );
+					$wp_filetype = wp_check_filetype( $filename, null );
 
-				$attachment = array(
-					'post_mime_type' => $wp_filetype['type'],
-					'post_title'     => sanitize_file_name( $filename ),
-					'post_content'   => '',
-					'post_status'    => 'inherit',
-				);
+					$attachment = array(
+						'post_mime_type' => $wp_filetype['type'],
+						'post_title'     => sanitize_file_name( $filename ),
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					);
 
-				$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-				require_once ABSPATH . 'wp-admin/includes/image.php';
-				$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
-				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-				update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
-				update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
-				unlink( $output_file );
+					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
+					require_once ABSPATH . 'wp-admin/includes/image.php';
+					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
+					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
 
 				}
 			} else {
