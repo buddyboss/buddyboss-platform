@@ -241,7 +241,7 @@ class BP_Core_Members_Switching {
 		if ( $old_user ) {
 			?>
 			<div id="bp_member_switching" class="updated notice is-dismissible">
-				<p><span class="dashicons dashicons-admin-users" style="color:#56c234" aria-hidden="true"></span>
+				<p><span class="dashicons dashicons-admin-users" aria-hidden="true"></span>
 					<?php
 					$message       = '';
 					$just_switched = isset( $_GET['user_switched'] );
@@ -505,10 +505,9 @@ class BP_Core_Members_Switching {
 				);
 			}
 
-			$message .= '<p class="message" id="bp_member_switching_switch_on">';
-			$message .= '<span class="dashicons dashicons-admin-users" style="color:#56c234" aria-hidden="true"></span> ';
+			$message .= '<div class="message" id="bp_member_switching_switch_on">';
 			$message .= '<a href="' . esc_url( $url ) . '" onclick="window.location.href=\'' . esc_url( $url ) . '\';return false;">' . esc_html( $link ) . '</a>';
-			$message .= '</p>';
+			$message .= '</div>';
 		}
 
 		return $message;

@@ -1168,13 +1168,9 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
   color: #4d5c6d;
 }
 
-.activity-update-form #whats-new-content {
-  position: relative;
-}
-
 .activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
-  bottom: -52px;
+  bottom: 56px;
   left: 38px;
   visibility: hidden;
   z-index: 99;
@@ -1195,7 +1191,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: -51px;
+  bottom: 56px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1570,6 +1566,15 @@ input.search-query-input {
   }
 }
 
+@media screen and (max-width: 560px) {
+  #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 109px;
+  }
+  div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 109px;
+  }
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.2 - Activity Entries
@@ -1940,7 +1945,6 @@ input.search-query-input {
 .activity-link-preview-container {
   padding: 25px;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: #82878c;
   background: #fff;
   border: 1px solid #e5e5e5;
@@ -1985,7 +1989,7 @@ input.search-query-input {
 }
 
 .activity-link-preview-title {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 22px;
   line-height: 1.3;
   color: #32373c;
@@ -2107,7 +2111,6 @@ input.search-query-input {
 blockquote.wp-embedded-content {
   padding: 25px;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   font-size: 14px;
   font-style: normal;
   color: #82878c;
@@ -2120,7 +2123,7 @@ blockquote.wp-embedded-content {
 blockquote.wp-embedded-content > a,
 blockquote.wp-embedded-content > p:first-child > a {
   color: #32373c;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 22px;
   line-height: 1.3;
 }
