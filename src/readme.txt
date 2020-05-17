@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.5 =
+* Translations - Updated German (formal) language files
 
 = 1.3.4 =
 * Activity - Fixed certain link previews displaying doubled in activity posts
