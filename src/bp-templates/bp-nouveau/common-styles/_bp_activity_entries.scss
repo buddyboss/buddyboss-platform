@@ -961,14 +961,15 @@ span.dashicons.dashicons-admin-file:before {
 					font-size: 13px;
 				}
 
+				.document-extension-description {
+					transition: opacity ease 0.3s;
+				}
+
 				.document-helper-text {
 					position: relative;
 					top: -10px;
 					opacity: 0;
 					visibility: hidden;
-					-webkit-transition: all 0.3s ease;
-					-o-transition: all 0.3s ease;
-					transition: all 0.3s ease;
 				}
 			}
 		}
@@ -1161,10 +1162,24 @@ span.dashicons.dashicons-admin-file:before {
 				visibility: visible;
 			}
 
-			.document-detail-wrap .document-helper-text {
-				top: 0;
-				opacity: 1;
-				visibility: visible;
+			.document-detail-wrap {
+
+				.document-helper-text {
+					top: 0;
+					opacity: 1;
+					visibility: visible;
+					-webkit-transition: all 0.3s ease;
+					-o-transition: all 0.3s ease;
+					transition: all 0.3s ease;
+				}
+
+				.document-extension-description {
+					visibility: hidden;
+					opacity: 0;
+					width: 0;
+					height: 0;
+					overflow: hidden;
+				}
 			}
 
 			.is_large .document-expand .document-expand-anchor {
@@ -1192,11 +1207,6 @@ span.dashicons.dashicons-admin-file:before {
 				visibility: visible;
 			}
 
-			.document-detail-wrap .document-helper-text {
-				top: 0;
-				opacity: 1;
-				visibility: visible;
-			}
 		}
 
 		&.is-mobile {

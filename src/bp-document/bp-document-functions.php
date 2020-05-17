@@ -1305,6 +1305,9 @@ function bp_document_svg_icon( $extension ) {
 		case 'doc':
 			$svg = 'bb-icon-doc';
 			break;
+		case 'docm':
+			$svg = 'bb-icon-doc';
+			break;
 		case 'docx':
 			$svg = 'bb-icon-doc';
 			break;

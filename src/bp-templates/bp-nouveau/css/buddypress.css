@@ -2689,14 +2689,15 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 13px;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-extension-description {
+  transition: opacity ease 0.3s;
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
   position: relative;
   top: -10px;
   opacity: 0;
   visibility: hidden;
-  -webkit-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap {
@@ -2877,6 +2878,17 @@ span.dashicons.dashicons-admin-file:before {
   top: 0;
   opacity: 1;
   visibility: visible;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-detail-wrap .document-extension-description {
+  visibility: hidden;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor {
@@ -2900,12 +2912,6 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap,
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_list {
-  opacity: 1;
-  visibility: visible;
-}
-
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-detail-wrap .document-helper-text {
-  top: 0;
   opacity: 1;
   visibility: visible;
 }
