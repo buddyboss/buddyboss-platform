@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.3.4\n"
+"Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-15 17:09:46+00:00\n"
+"POT-Creation-Date: 2020-05-17 01:48:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -153,7 +153,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:416
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
-#: bp-core/bp-core-cssjs.php:253 bp-search/bp-search-functions.php:376
+#: bp-core/bp-core-cssjs.php:259 bp-search/bp-search-functions.php:376
 #: bp-search/bp-search-settings.php:726
 msgid "Activity"
 msgstr ""
@@ -1183,7 +1183,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-core/bp-core-cssjs.php:371
+#: bp-core/bp-core-cssjs.php:381
 #: bp-templates/bp-nouveau/buddypress-functions.php:568
 msgid "Are you sure?"
 msgstr ""
@@ -1879,7 +1879,7 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:1393
 #: bp-core/admin/settings/bp-admin-setting-search.php:22
-#: bp-core/bp-core-cssjs.php:259 bp-core/deprecated/buddypress/1.5.php:440
+#: bp-core/bp-core-cssjs.php:265 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
 #: bp-forums/common/template.php:2508 bp-forums/search/template.php:228
@@ -2717,13 +2717,13 @@ msgstr ""
 msgid "Create Page"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:435
+#: bp-core/admin/bp-core-admin-schema.php:436
 #: bp-core/admin/settings/bp-admin-setting-general.php:21
 #: bp-forums/core/update.php:188
 msgid "General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:439
+#: bp-core/admin/bp-core-admin-schema.php:440
 #: bp-core/admin/bp-core-admin-settings.php:925
 #: bp-core/admin/bp-core-admin-settings.php:953
 #: bp-core/admin/bp-core-admin-settings.php:981
@@ -2732,14 +2732,14 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:443
+#: bp-core/admin/bp-core-admin-schema.php:444
 #: bp-core/admin/bp-core-admin-settings.php:930
 #: bp-core/admin/bp-core-admin-settings.php:958
 #: bp-core/admin/bp-core-admin-settings.php:995 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:447
+#: bp-core/admin/bp-core-admin-schema.php:448
 #: bp-core/admin/bp-core-admin-settings.php:935
 #: bp-core/admin/bp-core-admin-settings.php:963
 #: bp-core/admin/bp-core-admin-settings.php:1000
@@ -4192,97 +4192,97 @@ msgstr ""
 msgid "You must log in to access the page you requested."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:249
+#: bp-core/bp-core-cssjs.php:255
 msgid "Recent"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:250
+#: bp-core/bp-core-cssjs.php:256
 msgid "Smileys & People"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:251
+#: bp-core/bp-core-cssjs.php:257
 msgid "Animals & Nature"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:252
+#: bp-core/bp-core-cssjs.php:258
 msgid "Food & Drink"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:254
+#: bp-core/bp-core-cssjs.php:260
 msgid "Travel & Places"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:255
+#: bp-core/bp-core-cssjs.php:261
 msgid "Objects"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:256
+#: bp-core/bp-core-cssjs.php:262
 msgid "Symbols"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:257
+#: bp-core/bp-core-cssjs.php:263
 msgid "Flags"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:258
+#: bp-core/bp-core-cssjs.php:264
 msgid "Diversity"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:271
+#: bp-core/bp-core-cssjs.php:277
 msgid "Drop files here to upload"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:272
+#: bp-core/bp-core-cssjs.php:278
 msgid "Your browser does not support drag'n'drop file uploads."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:273
+#: bp-core/bp-core-cssjs.php:279
 msgid ""
 "Please use the fallback form below to upload your files like in the olden "
 "days."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:274
+#: bp-core/bp-core-cssjs.php:280
 msgid "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:275
+#: bp-core/bp-core-cssjs.php:281
 msgid "You can't upload files of this type."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:276
+#: bp-core/bp-core-cssjs.php:282
 msgid "Server responded with {{statusCode}} code."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:277
+#: bp-core/bp-core-cssjs.php:283
 msgid "Cancel upload"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:278
+#: bp-core/bp-core-cssjs.php:284
 msgid "Upload canceled."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:279
+#: bp-core/bp-core-cssjs.php:285
 msgid "Are you sure you want to cancel this upload?"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:280
+#: bp-core/bp-core-cssjs.php:286
 msgid "Remove file"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:281
+#: bp-core/bp-core-cssjs.php:287
 msgid "You can not upload any more files."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:906
+#: bp-core/bp-core-cssjs.php:916
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:907
+#: bp-core/bp-core-cssjs.php:917
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:908
+#: bp-core/bp-core-cssjs.php:918
 #: bp-members/classes/class-bp-rest-signup-endpoint.php:718
 #: bp-members/screens/register.php:160
 msgid "This is a required field."
@@ -11783,8 +11783,8 @@ msgid "%1$s on %2$s %3$s"
 msgstr ""
 
 #: bp-forums/common/widgets.php:1288
-#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:158
-#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:163
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:154
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:159
 #. translators: 1: reply link, 2: reply timestamp
 msgid "%1$s %2$s"
 msgstr ""
@@ -14540,7 +14540,7 @@ msgid ""
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:842
-msgid "Only group members can view its content, including its members and activity."
+msgid "This group and its content are only visible to members of the group."
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:844
@@ -16513,7 +16513,7 @@ msgstr ""
 msgid "%s Lesson"
 msgstr ""
 
-#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:172
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:168
 msgid "0 %s"
 msgstr ""
 
@@ -17617,9 +17617,9 @@ msgstr ""
 
 #: bp-members/bp-members-template.php:2731
 #: bp-members/classes/class-bp-core-members-switching.php:87
-#: bp-members/classes/class-bp-core-members-switching.php:534
-#: bp-members/classes/class-bp-core-members-switching.php:577
-#: bp-members/classes/class-bp-core-members-switching.php:610
+#: bp-members/classes/class-bp-core-members-switching.php:533
+#: bp-members/classes/class-bp-core-members-switching.php:576
+#: bp-members/classes/class-bp-core-members-switching.php:609
 msgid "View As"
 msgstr ""
 
