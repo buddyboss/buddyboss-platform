@@ -369,7 +369,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api {DELETE} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Delete xProfile Field Data
 	 * @apiName DeleteBBxProfileData
-	 * @apiGroup xProfile
+	 * @apiGroup Profile Fields
 	 * @apiDescription Delete user's xProfile data.
 	 * @apiVersion 1.0.0
 	 * @apiPermission LoggedInUser

@@ -14529,6 +14529,78 @@ define({ "api": [
     "groupTitle": "ProfileFields"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id",
+    "title": "Delete xProfile Field Data",
+    "name": "DeleteBBxProfileData",
+    "group": "Profile_Fields",
+    "description": "<p>Delete user's xProfile data.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "field_id",
+            "description": "<p>The ID of the field the data is from.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>The ID of user the field data is from.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
+    "groupTitle": "Profile_Fields"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id",
+    "title": "Delete xProfile Field Data",
+    "name": "DeleteBBxProfileData",
+    "group": "Profile_Fields",
+    "description": "<p>Delete user's xProfile data.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "field_id",
+            "description": "<p>The ID of the field the data is from.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>The ID of user the field data is from.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
+    "groupTitle": "Profile_Fields"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/settings",
     "title": "Settings",
@@ -14963,77 +15035,5 @@ define({ "api": [
     },
     "filename": "src/buddyboss-platform-api/includes/bp-members/classes/class-bp-rest-signup-endpoint.php",
     "groupTitle": "Signups"
-  },
-  {
-    "type": "DELETE",
-    "url": "/wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id",
-    "title": "Delete xProfile Field Data",
-    "name": "DeleteBBxProfileData",
-    "group": "xProfile",
-    "description": "<p>Delete user's xProfile data.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "field_id",
-            "description": "<p>The ID of the field the data is from.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>The ID of user the field data is from.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "xProfile"
-  },
-  {
-    "type": "DELETE",
-    "url": "/wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id",
-    "title": "Delete xProfile Field Data",
-    "name": "DeleteBBxProfileData",
-    "group": "xProfile",
-    "description": "<p>Delete user's xProfile data.</p>",
-    "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "field_id",
-            "description": "<p>The ID of the field the data is from.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "user_id",
-            "description": "<p>The ID of user the field data is from.</p>"
-          }
-        ]
-      }
-    },
-    "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "xProfile"
   }
 ] });
