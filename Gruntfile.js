@@ -8,20 +8,23 @@ module.exports = function (grunt) {
 		BP_CSS = [
 			'**/*.css',
 			'!**/*.min.css',
-			'!**/vendor/**/*.css'
+			'!**/vendor/**/*.css',
+			'!**/endpoints/**/*.css'
 		],
 
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
-			'!bp-forums/**/*.css'
+			'!bp-forums/**/*.css',
+			'!**/endpoints/**/*.css'
 		],
 
 		BP_JS = [
 			'**/*.js',
 			'!**/*.min.js',
 			'!bp-forums/**/*.js',
-			'!**/vendor/**/*.js'
+			'!**/vendor/**/*.js',
+			'!**/endpoints/**/*.js',
 		],
 
 		BP_EXCLUDED_MISC = [],
@@ -32,7 +35,8 @@ module.exports = function (grunt) {
 			'!bp-templates/bp-nouveau/css/buddypress.css',
 			'!bp-core/admin/css/hello.css',
 			'!bp-core/css/medium-editor-beagle.css',
-			'!bp-core/css/medium-editor.css'
+			'!bp-core/css/medium-editor.css',
+			'!**/endpoints/**/*.css'
 		],
 
 		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
@@ -315,6 +319,7 @@ module.exports = function (grunt) {
 					'!**/emojione-edited.js',
 					'!**/emojionearea-edited.js',
 					'!**/node_modules/**/*.js',
+					'!**/endpoints/**/*.js',
 				])
 			}
 		},
@@ -330,7 +335,8 @@ module.exports = function (grunt) {
 					[
 						'!**/*.min.css',
 						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css'
+						'!**/emojionearea-edited.css',
+						'!**/endpoints/**/*.css'
 					]
 				)
 			},
@@ -393,7 +399,8 @@ module.exports = function (grunt) {
 						'!**/emojione-edited.js',
 						'!**/emojionearea-edited.js',
 						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js'
+						'!**/node_modules/**/*.js',
+						'!**/endpoints/**/*.js'
 					].concat(BP_EXCLUDED_MISC)
 				}
 			}
@@ -412,10 +419,10 @@ module.exports = function (grunt) {
 		apidoc: {
 			api: {
 				src: SOURCE_DIR,
-				dest: SOURCE_DIR + "endpoints/",
+				dest: SOURCE_DIR + 'endpoints/',
 				options : {
-					includeFilters: [".*\\.php$"],
-					excludeFilters : ["assets/", "bin/","languages/", "node_modules/", "src/bp-core/admin/js/lib/"],
+					includeFilters: ['.*\\.php$'],
+					excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'src/bp-core/admin/js/lib/'],
 				},
 			}
 		},
