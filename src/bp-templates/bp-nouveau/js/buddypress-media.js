@@ -422,13 +422,9 @@ window.bp = window.bp || {};
 							targetPopup.find( '.location-folder-list-wrap .location-folder-list' ).remove();
 							targetPopup.find( '.location-folder-list-wrap' ).append( response.data.tree_view );
 							if (bp.Nouveau.Media.folderLocationUI) {
-								//console.log( 'come' );
-								//console.log( targetPopup );
-								//console.log( currentFolder );
 								bp.Nouveau.Media.folderLocationUI( targetPopup, response.data.folder_id );
 							}
 							newParent = response.data.folder_id;
-							//console.log( newParent );
 
 							if ( '' === response.data.tree_view ) {
 								targetPopup.find( '.location-folder-list-wrap' ).hide();
@@ -439,7 +435,6 @@ window.bp = window.bp || {};
 
 							}
 
-							//console.log( this.currentTargetParent );
 							targetPopup.find( 'ul.location-folder-list span#' + newParent ).trigger( 'click' );
 							targetPopup.find( '.bb-model-footer' ).show();
 							targetPopup.find( '.bb-field-wrap-search' ).show();
@@ -459,7 +454,6 @@ window.bp = window.bp || {};
 				}
 			);
 			this.currentTargetParent = newParent;
-			//console.log( this.currentTargetParent );
 		},
 
 		closeCreateFolderInPopup: function( event ) {
@@ -476,11 +470,6 @@ window.bp = window.bp || {};
 
 		createFolderInPopup: function( event ) {
 			event.preventDefault();
-
-			//console.log( this.currentTargetParent ); // Parent.
-			//console.log( this.moveToIdPopup ); // userID/GroupID.
-			//console.log( this.moveToTypePopup ); // Profile/Group.
-			//return false;
 
 			var getParentFolderId = parseInt( $( document ).find( '.open-popup .bb-folder-selected-id' ).val() );
 			if ( getParentFolderId > 0 ) {
@@ -4337,7 +4326,6 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-			console.log( self.medias );
 		},
 
 		setDocuments: function (target) {
@@ -4384,7 +4372,6 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-			console.log( self.documents );
 		},
 
 		setCurrentMedia: function (id) {
