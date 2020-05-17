@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.5 =
+* REST API - Added official BuddyBoss REST API
 * Translations - Updated German (formal) language files
 
 = 1.3.4 =
