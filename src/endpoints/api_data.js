@@ -14533,7 +14533,7 @@ define({ "api": [
     "url": "/wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id",
     "title": "Delete xProfile Field Data",
     "name": "DeleteBBxProfileData",
-    "group": "Profile_Fields",
+    "group": "ProfileFields",
     "description": "<p>Delete user's xProfile data.</p>",
     "version": "1.0.0",
     "permission": [
@@ -14562,14 +14562,14 @@ define({ "api": [
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "Profile_Fields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
     "url": "/wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id",
     "title": "Delete xProfile Field Data",
     "name": "DeleteBBxProfileData",
-    "group": "Profile_Fields",
+    "group": "ProfileFields",
     "description": "<p>Delete user's xProfile data.</p>",
     "version": "1.0.0",
     "permission": [
@@ -14598,7 +14598,7 @@ define({ "api": [
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "Profile_Fields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
