@@ -13,7 +13,7 @@
       }
     ],
     "filename": "src/bp-settings/classes/class-bp-rest-account-settings-endpoint.php",
-    "groupTitle": "AccountSettings"
+    "groupTitle": "Account Settings"
   },
   {
     "type": "GET",
@@ -29,7 +29,7 @@
       }
     ],
     "filename": "src/buddyboss-platform-api/includes/bp-settings/classes/class-bp-rest-account-settings-endpoint.php",
-    "groupTitle": "AccountSettings"
+    "groupTitle": "Account Settings"
   },
   {
     "type": "GET",
@@ -66,7 +66,7 @@
       }
     },
     "filename": "src/bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php",
-    "groupTitle": "AccountSettings"
+    "groupTitle": "Account Settings"
   },
   {
     "type": "GET",
@@ -103,7 +103,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php",
-    "groupTitle": "AccountSettings"
+    "groupTitle": "Account Settings"
   },
   {
     "type": "PATCH",
@@ -147,7 +147,7 @@
       }
     },
     "filename": "src/bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php",
-    "groupTitle": "AccountSettings"
+    "groupTitle": "Account Settings"
   },
   {
     "type": "PATCH",
@@ -191,7 +191,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php",
-    "groupTitle": "AccountSettings"
+    "groupTitle": "Account Settings"
   },
   {
     "type": "POST",
@@ -2668,7 +2668,7 @@
       }
     },
     "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
-    "groupTitle": "EmailInvites"
+    "groupTitle": "Email Invites"
   },
   {
     "type": "POST",
@@ -2711,7 +2711,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-invites/classes/class-bp-rest-invites-endpoint.php",
-    "groupTitle": "EmailInvites"
+    "groupTitle": "Email Invites"
   },
   {
     "type": "DELETE",
@@ -2740,7 +2740,7 @@
       }
     },
     "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
-    "groupTitle": "EmailInvites"
+    "groupTitle": "Email Invites"
   },
   {
     "type": "DELETE",
@@ -2769,7 +2769,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-invites/classes/class-bp-rest-invites-endpoint.php",
-    "groupTitle": "EmailInvites"
+    "groupTitle": "Email Invites"
   },
   {
     "type": "GET",
@@ -2832,7 +2832,7 @@
       }
     },
     "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
-    "groupTitle": "EmailInvites"
+    "groupTitle": "Email Invites"
   },
   {
     "type": "GET",
@@ -2895,7 +2895,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-invites/classes/class-bp-rest-invites-endpoint.php",
-    "groupTitle": "EmailInvites"
+    "groupTitle": "Email Invites"
   },
   {
     "type": "POST",
@@ -2942,7 +2942,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-actions-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "POST",
@@ -2989,7 +2989,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-actions-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "POST",
@@ -3074,7 +3074,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "POST",
@@ -3159,7 +3159,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "DELETE",
@@ -3188,7 +3188,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "DELETE",
@@ -3217,7 +3217,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "GET",
@@ -3345,7 +3345,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "GET",
@@ -3473,7 +3473,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "GET",
@@ -3497,7 +3497,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "GET",
@@ -3521,7 +3521,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "POST",
@@ -3575,7 +3575,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-actions-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "POST",
@@ -3629,7 +3629,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-actions-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "PATCH",
@@ -3735,7 +3735,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "PATCH",
@@ -3841,7 +3841,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-reply-endpoint.php",
-    "groupTitle": "ForumReplies"
+    "groupTitle": "Forum Replies"
   },
   {
     "type": "POST",
@@ -3893,7 +3893,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -3945,7 +3945,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4044,7 +4044,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4143,7 +4143,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "DELETE",
@@ -4172,7 +4172,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "DELETE",
@@ -4201,7 +4201,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4230,7 +4230,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4259,7 +4259,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "GET",
@@ -4283,7 +4283,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "GET",
@@ -4307,7 +4307,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "GET",
@@ -4464,7 +4464,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "GET",
@@ -4621,7 +4621,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4681,7 +4681,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4741,7 +4741,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4826,7 +4826,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "POST",
@@ -4911,7 +4911,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-actions-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "PATCH",
@@ -5031,7 +5031,7 @@
       }
     },
     "filename": "src/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "PATCH",
@@ -5151,7 +5151,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-forums/classes/class-bp-rest-topics-endpoint.php",
-    "groupTitle": "ForumTopics"
+    "groupTitle": "Forum Topics"
   },
   {
     "type": "GET",
@@ -8354,7 +8354,7 @@
       }
     },
     "filename": "src/bp-core/classes/class-bp-rest-learndash-courses-endpoint.php",
-    "groupTitle": "Learndash"
+    "groupTitle": "LearnDash"
   },
   {
     "type": "GET",
@@ -8539,7 +8539,7 @@
       }
     },
     "filename": "src/bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php",
-    "groupTitle": "Learndash"
+    "groupTitle": "LearnDash"
   },
   {
     "type": "GET",
@@ -8724,7 +8724,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-integrations/learndash/classes/class-bp-rest-learndash-courses-endpoint.php",
-    "groupTitle": "Learndash"
+    "groupTitle": "LearnDash"
   },
   {
     "type": "POST",
@@ -12394,7 +12394,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -12548,7 +12548,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -12600,7 +12600,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -12652,7 +12652,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -12705,7 +12705,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -12758,7 +12758,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
@@ -12795,7 +12795,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
@@ -12832,7 +12832,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
@@ -12861,7 +12861,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
@@ -12890,7 +12890,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
@@ -12950,7 +12950,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "DELETE",
@@ -13010,7 +13010,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-repeater-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13021,7 +13021,7 @@
     "description": "<p>Retrieve Profile Types.</p>",
     "version": "1.0.0",
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13032,7 +13032,7 @@
     "description": "<p>Retrieve Profile Types.</p>",
     "version": "1.0.0",
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13118,7 +13118,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13204,7 +13204,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13243,7 +13243,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13282,7 +13282,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13313,7 +13313,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13344,7 +13344,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13437,7 +13437,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13530,7 +13530,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13631,7 +13631,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13732,7 +13732,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13756,7 +13756,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-search-form-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
@@ -13780,7 +13780,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-search-form-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -13885,7 +13885,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "POST",
@@ -13990,7 +13990,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "PATCH",
@@ -14033,7 +14033,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "PATCH",
@@ -14076,7 +14076,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-data-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "PATCH",
@@ -14237,7 +14237,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "PATCH",
@@ -14398,7 +14398,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-fields-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "PATCH",
@@ -14462,7 +14462,7 @@
       }
     },
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "PATCH",
@@ -14526,7 +14526,7 @@
       }
     },
     "filename": "src/buddyboss-platform-api/includes/bp-xprofile/classes/class-bp-rest-xprofile-field-groups-endpoint.php",
-    "groupTitle": "ProfileFields"
+    "groupTitle": "Profile Fields"
   },
   {
     "type": "GET",
