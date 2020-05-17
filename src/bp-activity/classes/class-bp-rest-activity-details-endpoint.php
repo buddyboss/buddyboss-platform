@@ -47,17 +47,17 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 
 
 	/**
-	 * Retrieve activities details.
+	 * Retrieve activity details.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api {GET} /wp-json/buddyboss/v1/activity/details Activities Details
+	 * @api {GET} /wp-json/buddyboss/v1/activity/details Activity details
 	 * @apiName GetBBActivitiesDetails
 	 * @apiGroup Activity
-	 * @apiDescription Retrieve activities details(includes nav, filters and post_in)
+	 * @apiDescription Retrieve activity details (includes nav, filters and post_in)
 	 * @apiVersion 1.0.0
 	 */
 	public function get_items( $request ) {

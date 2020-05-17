@@ -120,8 +120,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/fields Get xProfile Fields
 	 * @apiName        GetBBxProfileFields
-	 * @apiGroup       xProfile
-	 * @apiDescription Retrieve xProfile Fields
+	 * @apiGroup       ProfileFields
+	 * @apiDescription Retrieve Multiple xProfile Fields
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} [profile_group_id] ID of the profile group of fields that have profile fields
 	 * @apiParam {Boolean} [hide_empty_groups=false] Whether to hide profile groups of fields that do not have any profile fields or not.
@@ -265,7 +265,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/fields/:field_id Get xProfile Field
 	 * @apiName        GetBBxProfileField
-	 * @apiGroup       xProfile
+	 * @apiGroup       ProfileFields
 	 * @apiDescription Retrieve xProfile single Field
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} id A unique numeric ID for the profile field.
@@ -441,8 +441,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/fields Create xProfile Field
 	 * @apiName        CreateBBxProfileField
-	 * @apiGroup       xProfile
-	 * @apiDescription Create a xProfile field.
+	 * @apiGroup       ProfileFields
+	 * @apiDescription Create xProfile Field.
 	 * @apiVersion     1.0.0
 	 * @apiPermission LoggedInUser
 	 * @apiParam {Number} group_id The ID of the group the field is part of.
@@ -574,8 +574,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/fields/:field_id Update xProfile Field
 	 * @apiName        UpdateBBxProfileField
-	 * @apiGroup       xProfile
-	 * @apiDescription Update a xProfile field.
+	 * @apiGroup       ProfileFields
+	 * @apiDescription Update xProfile Field.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the profile field.
@@ -716,8 +716,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/fields/:field_id Delete xProfile Field
 	 * @apiName        DeleteBBxProfileField
-	 * @apiGroup       xProfile
-	 * @apiDescription Delete a xProfile field.
+	 * @apiGroup       ProfileFields
+	 * @apiDescription Delete xProfile Field.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the profile field.

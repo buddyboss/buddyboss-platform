@@ -69,7 +69,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {GET} /wp-json/buddyboss/v1/account-settings/:nav Get Setting Options.
+	 * @api            {GET} /wp-json/buddyboss/v1/account-settings/:nav Get Settings Options
 	 * @apiName        GetBBAccountSettingsOptions
 	 * @apiGroup       AccountSettings
 	 * @apiDescription Retrieve account setting options based on navigation tab.
@@ -196,7 +196,7 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 	 * @return WP_Error | WP_REST_Response
 	 * @since 0.1.0
 	 *
-	 * @api            {PATCH} /wp-json/buddyboss/v1/account-settings/:nav Update Setting Options.
+	 * @api            {PATCH} /wp-json/buddyboss/v1/account-settings/:nav Update Settings Options
 	 * @apiName        UpdateBBAccountSettingsOptions
 	 * @apiGroup       AccountSettings
 	 * @apiDescription Update account setting options based on navigation tab.

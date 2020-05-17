@@ -121,7 +121,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/friends Friendships
 	 * @apiName        GetBBFriendships
-	 * @apiGroup       Friendships
+	 * @apiGroup       Connections
 	 * @apiDescription Retrieve Friendships
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -246,7 +246,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/friends/:id Friendship
 	 * @apiName        GetBBFriendship
-	 * @apiGroup       Friendships
+	 * @apiGroup       Connections
 	 * @apiDescription Retrieve single friendship
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -328,7 +328,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 * @api            {POST} /wp-json/buddyboss/v1/friends/ Create Friendship
 	 * @apiName        CreateBBFriendship
-	 * @apiGroup       Friendships
+	 * @apiGroup       Connections
 	 * @apiDescription Create friendship
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -421,7 +421,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/friends/:id Update Friendship
 	 * @apiName        UpdateBBFriendship
-	 * @apiGroup       Friendships
+	 * @apiGroup       Connections
 	 * @apiDescription Update friendship
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -509,7 +509,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/friends/ Unfriend a friendship
 	 * @apiName        UnfriendBBFriendship
-	 * @apiGroup       Friendships
+	 * @apiGroup       Connections
 	 * @apiDescription Unfriend friendship
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -617,7 +617,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/friends/:id Delete Friendship
 	 * @apiName        DeleteBBFriendship
-	 * @apiGroup       Friendships
+	 * @apiGroup       Connections
 	 * @apiDescription Delete friendship
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

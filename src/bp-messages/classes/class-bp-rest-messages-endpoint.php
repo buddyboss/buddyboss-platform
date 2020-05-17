@@ -158,7 +158,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages Threads
 	 * @apiName        GetBBThreads
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Retrieve threads
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -292,7 +292,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/:id Thread
 	 * @apiName        GetBBThread
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Retrieve single thread
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -394,7 +394,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/messages Create Thread
 	 * @apiName        CreateBBThread
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Create thread
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -494,7 +494,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/search-recipients Search Recipients
 	 * @apiName        SearchBBRecipients
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Search Recipients
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -598,7 +598,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/:id Update Thread
 	 * @apiName        UpdateBBThread
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Update thread
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -711,7 +711,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/starred/:id Update Starred Thread
 	 * @apiName        UpdateBBThreadStarred
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Update starred thread
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -827,7 +827,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/messages/:id Delete Thread
 	 * @apiName        DeleteBBThread
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Delete thread
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
