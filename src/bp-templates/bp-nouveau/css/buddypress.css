@@ -13097,6 +13097,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   animation: spin 3s infinite linear;
 }
 
+.bb-document-theater {
+  max-width: 1750px;
+  width: 90%;
+  min-width: auto;
+}
+
 .bb-document-theater .bb-media-section {
   height: 90vh;
   overflow: auto;
