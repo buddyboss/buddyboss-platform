@@ -154,7 +154,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
 	 * @apiParam {Array} [exclude] Ensure result set excludes specific IDs.
 	 * @apiParam {String} [member_type] Limit results set to certain type(s).
-	 * @apiParam {String} [xprofile] Limit results set to a certain XProfile field.
+	 * @apiParam {String} [xprofile] Limit results set to a certain xProfile field.
 	 * @apiParam {Array} [bp_ps_search] Profile Search form field data(s).
 	 * @apiParam {String=all,personal,following,followers} [scope=all] Limit result set to items with a specific scope.
 	 */
@@ -1266,7 +1266,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		$params['xprofile'] = array(
-			'description'       => __( 'Limit results set to a certain XProfile field.', 'buddyboss' ),
+			'description'       => __( 'Limit results set to a certain xProfile field.', 'buddyboss' ),
 			'default'           => '',
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_key',

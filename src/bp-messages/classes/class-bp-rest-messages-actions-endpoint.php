@@ -90,7 +90,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/messages/action/:id Thread Action
 	 * @apiName        GetBBThreadsAction
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Perform Action on the Message Thread.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

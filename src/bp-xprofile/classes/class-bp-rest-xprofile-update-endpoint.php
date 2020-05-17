@@ -69,7 +69,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/update Update xProfile
 	 * @apiName        UpdateBBxProfile
-	 * @apiGroup       xProfile
+	 * @apiGroup       ProfileFields
 	 * @apiDescription Update xProfile for user.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

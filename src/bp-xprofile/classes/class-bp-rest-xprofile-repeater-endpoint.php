@@ -74,7 +74,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/repeater/:id Create xProfile Repeater
 	 * @apiName        CreateBBxProfileRepeaterFields
-	 * @apiGroup       xProfile
+	 * @apiGroup       ProfileFields
 	 * @apiDescription Create a new Repeater Fields Set in Group.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -220,7 +220,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/repeater/:id Delete xProfile Repeater
 	 * @apiName        DeleteBBxProfileRepeaterFields
-	 * @apiGroup       xProfile
+	 * @apiGroup       ProfileFields
 	 * @apiDescription Delete a Repeater Fields Set in Group.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
