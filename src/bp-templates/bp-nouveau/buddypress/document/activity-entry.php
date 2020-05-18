@@ -39,7 +39,7 @@ if ( $group_id > 0 ) {
 
 $extension_description = '';
 
-if ( 'pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension ) {
+if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 	$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
 }
 
@@ -130,7 +130,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 			</div>
 	</div>
 	<?php
-	if ( 'mp3' === $extension || 'wav' === $extension || 'ogg' === $extension ) {
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 		?>
 		<div class="document-audio-wrap">
 			<audio controls>
@@ -140,7 +140,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		</div>
 		<?php
 	}
-	if ( 'pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension ) {
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
 		if ( $attachment_url ) {
 			?>
@@ -152,7 +152,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 	}
 	$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
 	if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
-		if ( 'css' === $extension || 'txt' === $extension || 'html' === $extension || 'htm' === $extension || 'js' === $extension || 'csv' === $extension ) {
+		if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 			$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
 			$file_data = $data['text'];
 			$more_text = $data['more_text']

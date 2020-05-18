@@ -760,47 +760,33 @@ function bp_document_create_folder_recursive( $array, $parent_folder ) {
 	}
 }
 
-function bp_document_preview_extension_list() {
-	$extension_arr = apply_filters(
-		'bp_document_preview_extension_list',
-		array(
-			'xlsm',
-			'potx',
-			'pps',
-			'docm',
-			'dotx',
-			'doc',
-			'docx',
-			'xls',
-			'xlsx',
-			'xlr',
-			'wps',
-			'wpd',
-			'rtf',
-			'pptx',
-			'ppt',
-			'pps',
-			'odt',
-		)
-	);
-
-	return $extension_arr;
-}
-
+/**
+ * Return the ouptput of the file.
+ *
+ * @param $attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 
-	$file_open = fopen( get_attached_file( $attachment_id ), 'r' );
-	$file_data = fread( $file_open, 10000 );
-	$more_text = false;
-	if ( strlen( $file_data ) >= 9999 ) {
-		$file_data .= '...';
-		$more_text  = true;
-	}
-	fclose( $file_open );
+	$data = get_transient( 'attachment_text' . $attachment_id );
+	if ( false === $data ) {
+		$file_open = fopen( get_attached_file( $attachment_id ), 'r' );
+		$file_data = fread( $file_open, 10000 );
+		$more_text = false;
+		if ( strlen( $file_data ) >= 9999 ) {
+			$file_data .= '...';
+			$more_text  = true;
+		}
+		fclose( $file_open );
 
-	$data              = array();
-	$data['text']      = $file_data;
-	$data['more_text'] = $more_text;
+		$data              = array();
+		$data['text']      = $file_data;
+		$data['more_text'] = $more_text;
+		set_transient( 'attachment_text' . $attachment_id, $data );
+	}
 
 	return apply_filters( 'bp_document_get_preview_text_from_attachment', $data, $attachment_id );
 }
