@@ -892,11 +892,15 @@ window.bp = window.bp || {};
 			// Displaying the comment form.
 			if ( target.hasClass( 'activity-state-comments' ) || target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
 				var comment_link = target;
-
-				form    = $( '#ac-form-' + activity_id );
 				item_id = activity_id;
-
+				form    = $( '#ac-form-' + activity_id );
 				var $activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
+
+				if ( target.closest('.bb-media-model-container').length ) {
+					form    = target.closest('.bb-media-model-container').find( '#ac-form-' + activity_id );
+					$activity_comments = target.closest('.bb-media-model-container').find( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
+				}
+
 				// Stop event propagation.
 				event.preventDefault();
 
@@ -1266,6 +1270,7 @@ window.bp = window.bp || {};
 			if ( ! _.isNull( self.dropzone_obj ) ) {
 				self.dropzone_obj.destroy();
 				$( '#ac-reply-post-media-uploader-' + comment_id ).html( '' );
+				$( '#ac-reply-post-media-uploader-1-' + comment_id ).html( '' );
 			}
 			self.dropzone_media = [];
 			$( '#ac-reply-post-media-uploader-' + comment_id ).removeClass( 'open' ).addClass( 'closed' );

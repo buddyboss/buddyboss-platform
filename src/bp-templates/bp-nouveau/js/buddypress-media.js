@@ -4283,7 +4283,83 @@ window.bp = window.bp || {};
 			document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
-
+		resetRemoveActivityCommentsData: function() {
+			var self = this, activity_comments = false, activity_meta = false, activity_state = false, activity = false, html = false, classes = false;
+			if ( self.current_media.parent_activity_comments ) {
+				activity = $('.bb-media-model-wrapper.media [data-bp-activity-id="' + self.current_media.activity_id + '"]');
+				activity_comments = activity.find('.activity-comments');
+				if (activity_comments.length) {
+					html = activity_comments.html();
+					classes = activity_comments.attr('class');
+					activity_comments.remove();
+					activity_comments = $('[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments');
+					if ( activity_comments.length ) {
+						activity_comments.html(html);
+						activity_comments.attr('class', classes);
+					}
+				}
+				activity_state = activity.find('.activity-state');
+				if (activity_state.length) {
+					html = activity_state.html();
+					classes = activity_state.attr('class');
+					activity_state.remove();
+					activity_state = $('[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-state');
+					if( activity_state.length ) {
+						activity_state.html(html);
+						activity_state.attr('class', classes);
+					}
+				}
+				activity_meta = activity.find('.activity-meta');
+				if (activity_meta.length) {
+					html = activity_meta.html();
+					classes = activity_meta.attr('class');
+					activity_meta.remove();
+					activity_meta = $('[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-meta');
+					if( activity_meta.length ) {
+						activity_meta.html(html);
+						activity_meta.attr('class', classes);
+					}
+				}
+				activity.remove();
+			}
+			if ( self.current_document.parent_activity_comments ) {
+				activity = $('.bb-media-model-wrapper.document [data-bp-activity-id="' + self.current_document.activity_id + '"]');
+				activity_comments = activity.find('.activity-comments');
+				if (activity_comments.length) {
+					html = activity_comments.html();
+					classes = activity_comments.attr('class');
+					activity_comments.remove();
+					activity_comments = $('[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments');
+					if ( activity_comments.length ) {
+						activity_comments.html(html);
+						activity_comments.attr('class', classes);
+					}
+				}
+				activity_state = activity.find('.activity-state');
+				if (activity_state.length) {
+					html = activity_state.html();
+					classes = activity_state.attr('class');
+					activity_state.remove();
+					activity_state = $('[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-state');
+					if( activity_state.length ) {
+						activity_state.html(html);
+						activity_state.attr('class', classes);
+					}
+				}
+				activity_meta = activity.find('.activity-meta');
+				if (activity_meta.length) {
+					html = activity_meta.html();
+					classes = activity_meta.attr('class');
+					activity_meta.remove();
+					activity_meta = $('[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-meta');
+					if( activity_meta.length ) {
+						activity_meta.html(html);
+						activity_meta.attr('class', classes);
+					}
+				}
+				activity.remove();
+			}
+		},
 
 		closeTheatre: function (event) {
 			event.preventDefault();
@@ -4292,6 +4368,9 @@ window.bp = window.bp || {};
 			$( '.bb-media-model-wrapper' ).hide();
 			self.is_open = false;
 
+			self.resetRemoveActivityCommentsData();
+
+			self.current_media = false;
 			document.removeEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
 
@@ -4304,6 +4383,10 @@ window.bp = window.bp || {};
 			media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '' );
 			media_elements.hide();
 			self.is_open = false;
+
+			self.resetRemoveActivityCommentsData();
+
+			self.current_document = false;
 			document.removeEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
@@ -4529,6 +4612,7 @@ window.bp = window.bp || {};
 		nextDocument: function (event) {
 			event.preventDefault();
 			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
 			if (typeof self.documents[self.current_index + 1] !== 'undefined') {
 				self.current_index = self.current_index + 1;
 				activity_id        = self.current_document.activity_id;
@@ -4545,6 +4629,7 @@ window.bp = window.bp || {};
 		next: function (event) {
 			event.preventDefault();
 			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
 			if (typeof self.medias[self.current_index + 1] !== 'undefined') {
 				self.current_index = self.current_index + 1;
 				activity_id        = self.current_media.activity_id;
@@ -4561,6 +4646,7 @@ window.bp = window.bp || {};
 		previous: function (event) {
 			event.preventDefault();
 			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
 			if (typeof self.medias[self.current_index - 1] !== 'undefined') {
 				self.current_index = self.current_index - 1;
 				activity_id        = self.current_media.activity_id;
@@ -4577,6 +4663,7 @@ window.bp = window.bp || {};
 		previousDocument: function (event) {
 			event.preventDefault();
 			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
 			if (typeof self.documents[self.current_index - 1] !== 'undefined') {
 				self.current_index = self.current_index - 1;
 				activity_id        = self.documents.activity_id;
@@ -4640,6 +4727,12 @@ window.bp = window.bp || {};
 					self.activity_ajax.abort();
 				}
 
+				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_media.activity_id + '"] .activity-comments' );
+				if ( on_page_activity_comments.length ) {
+					self.current_media.parent_activity_comments = true;
+					on_page_activity_comments.html('');
+				}
+
 				self.activity_ajax = $.ajax(
 					{
 						type	: 'POST',
@@ -4678,6 +4771,12 @@ window.bp = window.bp || {};
 
 				if (self.activity_ajax != false) {
 					self.activity_ajax.abort();
+				}
+
+				var on_page_activity_comments = $( '[data-bp-activity-id="' + self.current_document.activity_id + '"] .activity-comments' );
+				if ( on_page_activity_comments.length ) {
+					self.current_document.parent_activity_comments = true;
+					on_page_activity_comments.html('');
 				}
 
 				self.activity_ajax = $.ajax(

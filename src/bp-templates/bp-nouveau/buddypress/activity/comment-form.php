@@ -27,9 +27,9 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 					<?php if ( bp_is_active( 'media' ) ) : ?>
 
-                        <div class="dropzone closed" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
+                        <div class="dropzone closed media" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
 
-						<div class="dropzone closed" id="ac-reply-post-document-uploader-<?php bp_activity_id(); ?>"></div>
+						<div class="dropzone closed document" id="ac-reply-post-document-uploader-<?php bp_activity_id(); ?>"></div>
 
                         <div id="ac-reply-post-gif-<?php bp_activity_id(); ?>"></div>
 
