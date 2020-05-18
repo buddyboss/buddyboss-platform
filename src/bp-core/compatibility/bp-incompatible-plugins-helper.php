@@ -439,7 +439,7 @@ add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
 /**
  * Fix Medium Editor version conflict with user blog plugin
  *
- * @since BuddyBoss 1.3.3
+ * @since BuddyBoss 1.3.4
  *
  */
 function bp_remove_user_blog_disable_medium_editor_js() {
@@ -448,3 +448,16 @@ function bp_remove_user_blog_disable_medium_editor_js() {
 	}
 }
 add_action('wp_enqueue_scripts', 'bp_remove_user_blog_disable_medium_editor_js', 100);
+
+/**
+ * Removed WC filter to the settings page when its active.
+ *
+ * @since BuddyBoss 1.3.3
+ */
+function bp_settings_remove_wc_lostpassword_url() {
+	if ( class_exists( 'woocommerce' ) ) {
+		remove_filter( 'lostpassword_url', 'wc_lostpassword_url', 10, 1 );
+	}
+}
+add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
+add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );

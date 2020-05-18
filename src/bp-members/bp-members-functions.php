@@ -4124,7 +4124,7 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 					$membership = new BP_Groups_Member( $user_id, $group_id );
 					if ( ! isset( $membership->id ) ) {
 						// add as member
-						groups_accept_invite( $user_id, $group_id );
+						groups_join_group( $group_id, $user_id );
 					}
 
 				endwhile;
