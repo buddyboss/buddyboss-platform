@@ -175,6 +175,14 @@ class BP_Document {
 	var $description;
 
 	/**
+	 * document type.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 * @var string
+	 */
+	var $type;
+
+	/**
 	 * Upload document extension.
 	 *
 	 * @since BuddyBoss 1.3.6
@@ -588,7 +596,7 @@ class BP_Document {
 	 *                       but merged with defaults.
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.3.6
 	 */
 	public static function get_scope_query_sql( $scope = false, $r = array() ) {
 
@@ -642,7 +650,7 @@ class BP_Document {
 			 *
 			 * @param array $r        Current activity arguments passed in BP_Document::get().
 			 *
-			 * @since BuddyBoss 1.1.9
+			 * @since BuddyBoss 1.3.6
 			 */
 			$scope_args = apply_filters( "bp_document_set_{$scope}_scope_args", array(), $r );
 
@@ -1177,7 +1185,7 @@ class BP_Document {
 	 *                       but merged with defaults.
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.3.6
 	 */
 	public static function get_scope_document_query_sql( $scope = false, $r = array() ) {
 
@@ -1231,7 +1239,7 @@ class BP_Document {
 			 *
 			 * @param array $r        Current activity arguments passed in BP_Document::get().
 			 *
-			 * @since BuddyBoss 1.1.9
+			 * @since BuddyBoss 1.3.6
 			 */
 			$scope_args = apply_filters( "bp_document_set_document_{$scope}_scope_args", array(), $r );
 
@@ -1279,7 +1287,7 @@ class BP_Document {
 	 *                       but merged with defaults.
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.3.6
 	 */
 	public static function get_scope_folder_query_sql( $scope = false, $r = array() ) {
 
@@ -1333,7 +1341,7 @@ class BP_Document {
 			 *
 			 * @param array $r        Current activity arguments passed in BP_Document::get().
 			 *
-			 * @since BuddyBoss 1.1.9
+			 * @since BuddyBoss 1.3.6
 			 */
 			$scope_args = apply_filters( "bp_document_set_folder_{$scope}_scope_args", array(), $r );
 
@@ -1373,7 +1381,7 @@ class BP_Document {
 	/**
 	 * Convert document IDs to document objects, as expected in template loop.
 	 *
-	 * @param array $document_ids Array of document IDs.
+	 * @param array $folder_ids Array of document IDs.
 	 *
 	 * @return array
 	 * @since BuddyBoss 1.3.6
@@ -1481,6 +1489,16 @@ class BP_Document {
 		return $documents;
 	}
 
+	/**
+	 * Sort data based on order.
+	 *
+	 * @param $array
+	 * @param $cols
+	 *
+	 * @return array|mixed
+	 *
+	 * @since BuddyBoss 1.3.6
+	 */
 	public static function array_msort( $array, $cols ) {
 
 		$array = json_decode( json_encode( $array ), true );
@@ -1523,6 +1541,15 @@ class BP_Document {
 
 	}
 
+	/**
+	 * Sort by column.
+	 *
+	 * @param     $array
+	 * @param     $column
+	 * @param int $direction
+	 *
+	 * @since BuddyBoss 1.3.6
+	 */
 	public static function array_sort_by_column( $array, $column, $direction = SORT_DESC ) {
 
 		$new_array = json_decode( json_encode( $array ), true );
@@ -1550,7 +1577,7 @@ class BP_Document {
 	 *
 	 * @return string|false
 	 * @see   BP_Document::get_filter_sql()
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.3.6
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
 		global $wpdb;
@@ -1785,7 +1812,7 @@ class BP_Document {
 	}
 
 	/**
-	 * Count total document for the given user
+	 * Count total document for the given user.
 	 *
 	 * @param int $user_id
 	 *
@@ -1815,7 +1842,7 @@ class BP_Document {
 	}
 
 	/**
-	 * Count total document for the given group
+	 * Count total document for the given group.
 	 *
 	 * @param int $group_id
 	 *
@@ -1833,7 +1860,7 @@ class BP_Document {
 	}
 
 	/**
-	 * Get all document ids for the folder
+	 * Get all document ids for the folder.
 	 *
 	 * @param bool $folder_id
 	 *

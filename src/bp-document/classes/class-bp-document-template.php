@@ -10,7 +10,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * The main document template loop class.
- *
  * Responsible for loading a group of document into a loop for display.
  *
  * @since BuddyBoss 1.3.6
@@ -23,7 +22,7 @@ class BP_Document_Template {
 	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
-	public $current_document = -1;
+	public $current_document = - 1;
 
 	/**
 	 * The document count.
@@ -107,31 +106,29 @@ class BP_Document_Template {
 
 	/**
 	 * Constructor method.
-	 *
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Document::get()}.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @param array $args     {
+	 *                        Array of arguments. Supports all arguments from
+	 *                        BP_Document::get(), as well as 'page_arg' and
+	 *                        'include'. Default values for 'per_page'
+	 *                        differ from the originating function, and are described below.
 	 *
-	 * @see BP_Document::get() for a description of the argument
-	 *      structure, as well as default values.
-	 *
-	 * @param array $args {
-	 *     Array of arguments. Supports all arguments from
-	 *     BP_Document::get(), as well as 'page_arg' and
-	 *     'include'. Default values for 'per_page'
-	 *     differ from the originating function, and are described below.
-	 *     @type string      $page_arg         The string used as a query parameter in
+	 * @type string     $page_arg The string used as a query parameter in
 	 *                                         pagination links. Default: 'acpage'.
-	 *     @type array|bool  $include          Pass an array of document IDs to
+	 * @type array|bool $include  Pass an array of document IDs to
 	 *                                         retrieve only those items, or false to noop the 'include'
 	 *                                         parameter. 'include' differs from 'in' in that 'in' forms
 	 *                                         an IN clause that works in conjunction with other filters
 	 *                                         passed to the function, while 'include' is interpreted as
 	 *                                         an exact list of items to retrieve, which skips all other
 	 *                                         filter-related parameters. Default: false.
-	 *     @type int|bool    $per_page         Default: 20.
+	 * @type int|bool   $per_page Default: 20.
 	 * }
+	 * @see   BP_Document::get() for a description of the argument
+	 *        structure, as well as default values.
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function __construct( $args ) {
 
@@ -250,11 +247,9 @@ class BP_Document_Template {
 	/**
 	 * Whether there are document items available in the loop.
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see bp_has_document()
-	 *
 	 * @return bool True if there are items in the loop, otherwise false.
+	 * @see   bp_has_document()
+	 * @since BuddyBoss 1.3.6
 	 */
 	function has_document() {
 		if ( $this->document_count ) {
@@ -265,44 +260,15 @@ class BP_Document_Template {
 	}
 
 	/**
-	 * Set up the next document item and iterate index.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @return object The next document item to iterate over.
-	 */
-	public function next_document() {
-		$this->current_document++;
-		$this->document = $this->documents[ $this->current_document ];
-
-		return $this->document;
-	}
-
-	/**
-	 * Rewind the posts and reset post index.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 */
-	public function rewind_documents() {
-		$this->current_document = -1;
-		if ( $this->document_count > 0 ) {
-			$this->document = $this->documents[0];
-		}
-	}
-
-	/**
 	 * Whether there are document items left in the loop to iterate over.
-	 *
 	 * This method is used by {@link bp_document()} as part of the while loop
 	 * that controls iteration inside the document loop, eg:
 	 *     while ( bp_document() ) { ...
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see bp_document()
-	 *
 	 * @return bool True if there are more document items to show,
 	 *              otherwise false.
+	 * @see   bp_document()
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function user_documents() {
 		if ( ( $this->current_document + 1 ) < $this->document_count ) {
@@ -326,15 +292,25 @@ class BP_Document_Template {
 	}
 
 	/**
-	 * Set up the current document item inside the loop.
+	 * Rewind the posts and reset post index.
 	 *
+	 * @since BuddyBoss 1.3.6
+	 */
+	public function rewind_documents() {
+		$this->current_document = - 1;
+		if ( $this->document_count > 0 ) {
+			$this->document = $this->documents[0];
+		}
+	}
+
+	/**
+	 * Set up the current document item inside the loop.
 	 * Used by {@link bp_the_document()} to set up the current document item
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current document item.
 	 *
 	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see bp_the_document()
+	 * @see   bp_the_document()
 	 */
 	public function the_document() {
 
@@ -355,5 +331,18 @@ class BP_Document_Template {
 			 */
 			do_action( 'document_loop_start' );
 		}
+	}
+
+	/**
+	 * Set up the next document item and iterate index.
+	 *
+	 * @return object The next document item to iterate over.
+	 * @since BuddyBoss 1.3.6
+	 */
+	public function next_document() {
+		$this->current_document ++;
+		$this->document = $this->documents[ $this->current_document ];
+
+		return $this->document;
 	}
 }

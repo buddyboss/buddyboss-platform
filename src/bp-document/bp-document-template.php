@@ -1935,7 +1935,7 @@ function bp_get_db_document_privacy() {
 /**
  * Output the document parent activity id.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_parent_activity_id() {
 	echo bp_get_document_parent_activity_id();
@@ -1944,7 +1944,7 @@ function bp_document_parent_activity_id() {
 /**
  * Return the document parent activity id.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.3.6
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1956,7 +1956,7 @@ function bp_get_document_parent_activity_id() {
 	/**
 	 * Filters the document parent activity id.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param int $id The document parent activity id.
 	 */

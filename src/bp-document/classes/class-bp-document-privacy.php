@@ -39,10 +39,10 @@ class BP_Document_Privacy {
 	}
 
 	/**
-	 * get options for visibility
+	 * get options for visibility.
 	 *
 	 * @since BuddyBoss 1.3.6
-	 * @param bool $group
+	 * @param bool $is_group
 	 * @return array
 	 */
 	function get_visibility_options( $is_group = false ) {
@@ -101,14 +101,14 @@ class BP_Document_Privacy {
 		if ( bp_loggedin_user_id() != $document->user_id ) {
 
 			switch ( $visibility ) {
-				// Logged in users
+				// Logged in users.
 				case 'loggedin':
 					if ( ! bp_loggedin_user_id() ) {
 						$visible = false;
 					}
 					break;
 
-				// My friends
+				// My friends.
 				case 'friends':
 					if ( bp_is_active( 'friends' ) ) {
 						$is_friend = friends_check_friendship( bp_loggedin_user_id(), $document->user_id );
@@ -118,7 +118,7 @@ class BP_Document_Privacy {
 					}
 					break;
 
-				// Only group members
+				// Only group members.
 				case 'grouponly':
 					$group_is_user_member = groups_is_user_member( bp_loggedin_user_id(), $document->activity_id );
 					if ( ! $group_is_user_member ) {
@@ -126,7 +126,7 @@ class BP_Document_Privacy {
 					}
 					break;
 
-				// Only Me
+				// Only Me.
 				case 'onlyme':
 					if ( bp_loggedin_user_id() != $document->user_id ) {
 						$visible = false;
@@ -134,7 +134,7 @@ class BP_Document_Privacy {
 					break;
 
 				default:
-					// public
+					// public.
 					break;
 			}
 		}

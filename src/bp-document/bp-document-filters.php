@@ -96,12 +96,11 @@ function bp_document_activity_entry() {
 /**
  * Append the document content to activity read more content
  *
- * @BuddyBoss 1.1.3
- *
  * @param $content
  * @param $activity
  *
  * @return string
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_activity_append_document( $content, $activity ) {
 
@@ -133,7 +132,11 @@ function bp_document_activity_append_document( $content, $activity ) {
 }
 
 /**
- * Get activity comment entry document to render on front end
+ * Get activity comment entry document to render on front end.
+ *
+ * @param $comment_id
+ *
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_activity_comment_entry( $comment_id ) {
 
@@ -160,15 +163,14 @@ function bp_document_activity_comment_entry( $comment_id ) {
 }
 
 /**
- * Update document for activity
+ * Update document for activity.
  *
  * @param $content
  * @param $user_id
  * @param $activity_id
  *
- * @since BuddyBoss 1.3.6
- *
  * @return bool
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 
@@ -199,7 +201,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 }
 
 /**
- * Update document for group activity
+ * Update document for group activity.
  *
  * @param $content
  * @param $user_id
@@ -207,23 +209,19 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
  * @param $activity_id
  *
  * @since BuddyBoss 1.3.6
- *
- * @return bool
  */
 function bp_document_groups_activity_update_document_meta( $content, $user_id, $group_id, $activity_id ) {
 	bp_document_update_activity_document_meta( $content, $user_id, $activity_id );
 }
 
 /**
- * Update document for activity comment
+ * Update document for activity comment.
  *
  * @param $comment_id
  * @param $r
  * @param $activity
  *
  * @since BuddyBoss 1.3.6
- *
- * @return bool
  */
 function bp_document_activity_comments_update_document_meta( $comment_id, $r, $activity ) {
 	bp_document_update_activity_document_meta( false, false, $comment_id );
@@ -232,8 +230,9 @@ function bp_document_activity_comments_update_document_meta( $comment_id, $r, $a
 /**
  * Delete document when related activity is deleted.
  *
- * @since BuddyBoss 1.3.6
  * @param $activities
+ *
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_delete_activity_document( $activities ) {
 	if ( ! empty( $activities ) ) {
@@ -259,10 +258,11 @@ function bp_document_delete_activity_document( $activities ) {
 }
 
 /**
- * Update document privacy according to folder's privacy
+ * Update document privacy according to folder's privacy.
+ *
+ * @param $folder
  *
  * @since BuddyBoss 1.3.6
- * @param $folder
  */
 function bp_document_update_document_privacy( &$folder ) {
 
@@ -303,8 +303,9 @@ function bp_document_update_document_privacy( &$folder ) {
 /**
  * Save document when new topic or reply is saved
  *
- * @since BuddyBoss 1.3.6
  * @param $post_id
+ *
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_forums_new_post_document_save( $post_id ) {
 
@@ -420,13 +421,13 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 }
 
 /**
- * Embed topic or reply attachments in a post
+ * Embed topic or reply attachments in a post.
  *
- * @since BuddyBoss 1.3.6
  * @param $content
  * @param $id
  *
  * @return string
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_forums_embed_attachments( $content, $id ) {
 
@@ -463,10 +464,11 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 }
 
 /**
- * Attach document to the message object
+ * Attach document to the message object.
+ *
+ * @param $message
  *
  * @since BuddyBoss 1.3.6
- * @param $message
  */
 function bp_document_attach_document_to_message( &$message ) {
 
@@ -519,11 +521,12 @@ function bp_document_attach_document_to_message( &$message ) {
 }
 
 /**
- * Delete document attached to messages
+ * Delete document attached to messages.
  *
- * @since BuddyBoss 1.3.6
  * @param $thread_id
  * @param $message_ids
+ *
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_messages_delete_attached_document( $thread_id, $message_ids ) {
 
@@ -544,11 +547,12 @@ function bp_document_messages_delete_attached_document( $thread_id, $message_ids
 }
 
 /**
- * Delete document attached to messages
+ * Delete document attached to messages.
  *
- * @since BuddyBoss 1.3.6
  * @param $thread_id
  * @param $message_ids
+ *
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_user_messages_delete_attached_document( $thread_id, $message_ids, $user_id, $update_message_ids ) {
 
@@ -569,11 +573,13 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
 }
 
 /**
- * Delete document entries attached to the attachment
- *
- * @since BuddyBoss 1.3.6
+ * Delete document entries attached to the attachment.
  *
  * @param int $attachment_id ID of the attachment being deleted.
+ *
+ * @return bool
+ *
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_delete_attachment_document( $attachment_id ) {
 	global $wpdb;
@@ -581,30 +587,28 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 	$bp = buddypress();
 
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE attachment_id = %d", $attachment_id ) ); // db call ok; no-cache ok;
-
 	if ( ! $document ) {
 		return false;
 	}
-
 	remove_action( 'delete_attachment', 'bp_document_delete_attachment_document', 0 );
-
 	bp_document_delete( array( 'id' => $document->id ), 'attachment' );
-
 	add_action( 'delete_attachment', 'bp_document_delete_attachment_document', 0 );
 }
 
+/**
+ * Check if user have a access to download the file. If not redirect to homepage.
+ *
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_download_url_file() {
-
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-
 		if ( 'folder' !== $_GET['document_type'] ) {
 			$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
 		} else {
-			$folder_privacy = bp_document_user_can_manage_folder( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+			$folder_privacy   = bp_document_user_can_manage_folder( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
-
 		if ( $can_download_btn ) {
 			bp_document_download_file( $_GET['attachment_id'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
@@ -613,32 +617,31 @@ function bp_document_download_url_file() {
 	}
 }
 
+/** Sync the description of the document with the media attachment.
+ *
+ * @param $attachment_id
+ *
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_sync_document_data( $attachment_id ) {
-
 	if ( ! is_admin() || wp_doing_ajax() ) {
 		return;
 	}
-
 	global $wpdb, $bp;
-
 	// Check if document is attached to a document.
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE type = %s AND attachment_id = %d", 'document', $attachment_id ) ); // db call ok; no-cache ok;
-
 	if ( $document ) {
-
 		$document_post = get_post( $attachment_id );
-
 		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, $document_post->post_excerpt, $document_post->post_content, true );
-
 	}
 }
 
 /**
  * Update document privacy when activity is updated.
  *
- * @since BuddyBoss 1.2.3
+ * @param $activity Activity object.
  *
- * @param BP_Activity_Activity $activity Activity object.
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_activity_update_document_privacy( $activity ) {
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );

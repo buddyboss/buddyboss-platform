@@ -626,7 +626,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			wp_mkdir_p( $parent_folder );
 
 			// Fetch all the attachments of the parent folder.
-			$get_parent_attachments = bp_document_get_folder_attachemt_ids( $folder->id );
+			$get_parent_attachments = bp_document_get_folder_attachment_ids( $folder->id );
 			if ( ! empty( $get_parent_attachments ) ) {
 				foreach ( $get_parent_attachments as $attachment ) {
 					$the_file  = get_attached_file( $attachment->attachment_id );
@@ -746,7 +746,7 @@ function bp_document_create_folder_recursive( $array, $parent_folder ) {
 		wp_mkdir_p( $sub_parent_folder );
 
 		// Fetch all the attachments of the parent folder.
-		$get_current_attachments = bp_document_get_folder_attachemt_ids( $id );
+		$get_current_attachments = bp_document_get_folder_attachment_ids( $id );
 		if ( ! empty( $get_current_attachments ) ) {
 			foreach ( $get_current_attachments as $attachment ) {
 				$the_file  = get_attached_file( $attachment->attachment_id );

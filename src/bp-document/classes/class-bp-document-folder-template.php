@@ -10,7 +10,6 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * The main document template loop class.
- *
  * Responsible for loading a group of document folders into a loop for display.
  *
  * @since BuddyBoss 1.3.6
@@ -23,7 +22,7 @@ class BP_Document_Folder_Template {
 	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
-	public $current_folder = -1;
+	public $current_folder = - 1;
 
 	/**
 	 * The folder count.
@@ -107,31 +106,29 @@ class BP_Document_Folder_Template {
 
 	/**
 	 * Constructor method.
-	 *
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Document_Folder::get()}.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @param array $args     {
+	 *                        Array of arguments. Supports all arguments from
+	 *                        BP_Document_Folder::get(), as well as 'page_arg' and
+	 *                        'include'. Default values for 'per_page'
+	 *                        differ from the originating function, and are described below.
 	 *
-	 * @see BP_Document_Folder::get() for a description of the argument
-	 *      structure, as well as default values.
-	 *
-	 * @param array $args {
-	 *     Array of arguments. Supports all arguments from
-	 *     BP_Document_Folder::get(), as well as 'page_arg' and
-	 *     'include'. Default values for 'per_page'
-	 *     differ from the originating function, and are described below.
-	 *     @type string      $page_arg         The string used as a query parameter in
+	 * @type string     $page_arg The string used as a query parameter in
 	 *                                         pagination links. Default: 'acpage'.
-	 *     @type array|bool  $include          Pass an array of activity IDs to
+	 * @type array|bool $include  Pass an array of activity IDs to
 	 *                                         retrieve only those items, or false to noop the 'include'
 	 *                                         parameter. 'include' differs from 'in' in that 'in' forms
 	 *                                         an IN clause that works in conjunction with other filters
 	 *                                         passed to the function, while 'include' is interpreted as
 	 *                                         an exact list of items to retrieve, which skips all other
 	 *                                         filter-related parameters. Default: false.
-	 *     @type int|bool    $per_page         Default: 20.
+	 * @type int|bool   $per_page Default: 20.
 	 * }
+	 * @see   BP_Document_Folder::get() for a description of the argument
+	 *        structure, as well as default values.
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function __construct( $args ) {
 
@@ -234,11 +231,9 @@ class BP_Document_Folder_Template {
 	/**
 	 * Whether there are folder items available in the loop.
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see bp_has_folders()
-	 *
 	 * @return bool True if there are items in the loop, otherwise false.
+	 * @see   bp_has_folders()
+	 * @since BuddyBoss 1.3.6
 	 */
 	function has_folders() {
 		if ( $this->folder_count ) {
@@ -249,44 +244,15 @@ class BP_Document_Folder_Template {
 	}
 
 	/**
-	 * Set up the next folder item and iterate index.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @return object The next folder item to iterate over.
-	 */
-	public function next_folder() {
-		$this->current_folder++;
-		$this->folder = $this->folders[ $this->current_folder ];
-
-		return $this->folder;
-	}
-
-	/**
-	 * Rewind the posts and reset post index.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 */
-	public function rewind_folders() {
-		$this->current_folder = -1;
-		if ( $this->folder_count > 0 ) {
-			$this->folder = $this->folders[0];
-		}
-	}
-
-	/**
 	 * Whether there are folder items left in the loop to iterate over.
-	 *
 	 * This method is used by {@link bp_folders()} as part of the while loop
 	 * that controls iteration inside the folder loop, eg:
 	 *     while ( bp_folders() ) { ...
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see bp_folders()
-	 *
 	 * @return bool True if there are more folder items to show,
 	 *              otherwise false.
+	 * @see   bp_folders()
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function user_folders() {
 		if ( ( $this->current_folder + 1 ) < $this->folder_count ) {
@@ -310,15 +276,25 @@ class BP_Document_Folder_Template {
 	}
 
 	/**
-	 * Set up the current folder item inside the loop.
+	 * Rewind the posts and reset post index.
 	 *
+	 * @since BuddyBoss 1.3.6
+	 */
+	public function rewind_folders() {
+		$this->current_folder = - 1;
+		if ( $this->folder_count > 0 ) {
+			$this->folder = $this->folders[0];
+		}
+	}
+
+	/**
+	 * Set up the current folder item inside the loop.
 	 * Used by {@link bp_the_folder()} to set up the current folder item
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current folder item.
 	 *
 	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see bp_the_folder()
+	 * @see   bp_the_folder()
 	 */
 	public function the_folder() {
 
@@ -339,5 +315,18 @@ class BP_Document_Folder_Template {
 			 */
 			do_action( 'folder_loop_start' );
 		}
+	}
+
+	/**
+	 * Set up the next folder item and iterate index.
+	 *
+	 * @return object The next folder item to iterate over.
+	 * @since BuddyBoss 1.3.6
+	 */
+	public function next_folder() {
+		$this->current_folder ++;
+		$this->folder = $this->folders[ $this->current_folder ];
+
+		return $this->folder;
 	}
 }

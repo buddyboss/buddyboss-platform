@@ -7,7 +7,7 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss\Document\Functions
- * @since BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly.
@@ -58,10 +58,11 @@ function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes'
 }
 
 /**
- * Format file size units
+ * Format file size units.
  *
- * @param      $bytes
- * @param bool  $post_string
+ * @param           $bytes
+ * @param bool   $post_string
+ * @param string $type
  *
  * @return string
  * @since BuddyBoss 1.3.6
@@ -1146,7 +1147,7 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 		unset( $attachment['ID'] );
 	}
 
-	// Save the attachment metadata
+	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
 
 	if ( ! is_wp_error( $id ) ) {
@@ -1157,14 +1158,14 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 }
 
 /**
- * Create and upload the document file
+ * Create and upload the document file.
  *
  * @return array|null|WP_Error|WP_Post
  * @since BuddyBoss 1.3.6
  */
 function bp_document_upload() {
 	/**
-	 * Make sure user is logged in
+	 * Make sure user is logged in.
 	 */
 	if ( ! is_user_logged_in() ) {
 		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file document.', 'buddyboss' ), array( 'status' => 500 ) );
@@ -1199,7 +1200,7 @@ function bp_document_upload() {
 function bp_document_upload_handler( $file_id = 'file' ) {
 
 	/**
-	 * Include required files
+	 * Include required files.
 	 */
 
 	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
@@ -1253,9 +1254,9 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 }
 
 /**
- * Mine type for uploader allowed by buddyboss document for security reason
+ * Mine type for uploader allowed by buddyboss document for security reason.
  *
- * @param Array $mime_types carry mime information
+ * @param Array $existing_mimes carry mime information.
  *
  * @return Array
  * @since BuddyBoss 1.3.6
@@ -1276,6 +1277,14 @@ function bp_document_allowed_mimes( $existing_mimes = array() ) {
 	return $existing_mimes;
 }
 
+/**
+ * Return the extension of the attachment.
+ *
+ * @param $attachment_id
+ *
+ * @return mixed|string
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_extension( $attachment_id ) {
 
 	$file_url  = wp_get_attachment_url( $attachment_id );
@@ -1291,6 +1300,14 @@ function bp_document_extension( $attachment_id ) {
 
 }
 
+/**
+ * Return the icon based on the extension.
+ *
+ * @param $extension
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_svg_icon( $extension ) {
 
 	$svg = '';
@@ -1414,6 +1431,15 @@ function bp_document_svg_icon( $extension ) {
 	return apply_filters( 'bp_document_svg_icon', $svg, $extension );
 }
 
+/**
+ * Return the breadcrumbs.
+ *
+ * @param int $user_id
+ * @param int $group_id
+ *
+ * @return string
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
 	global $wpdb, $bp;
@@ -1521,7 +1547,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 	$html                   = '';
 
 	if ( ! empty( $data ) ) {
-		$data = array_reverse( $data );
+		$data  = array_reverse( $data );
 		$html .= '<ul class="document-breadcrumb">';
 		if ( bp_is_group() && bp_is_group_single() ) {
 			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
@@ -1580,7 +1606,6 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		$destination_privacy = $destination_folder[0]->privacy;
 	}
 
-
 	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s, album_id = %d WHERE id = %d", $destination_privacy, bp_core_current_time(), $folder_id, $document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
 
@@ -1599,7 +1624,6 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 			}
 		}
 	}
-
 
 	if ( false === $query ) {
 		return false;
@@ -1724,7 +1748,6 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 
 	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
 
-
 	if ( false === $q ) {
 		return false;
 	}
@@ -1735,8 +1758,7 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 /**
  * This function will rename the folder name.
  *
- * @param int    $folder_id
- * @param string $title
+ * @param int $folder_id
  *
  * @return bool|int
  * @since BuddyBoss 1.3.6
@@ -1783,10 +1805,9 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		$destination_privacy = $destination_folder[0]->privacy;
 	}
 
-
 	// Update main parent folder.
 	$query_update_folder = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s, parent = %d WHERE id = %d", $destination_privacy, $destination_folder_id, $folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-	$query = $wpdb->query( $query_update_folder );
+	$query               = $wpdb->query( $query_update_folder );
 
 	// Get all the documents of main folder.
 	$document_ids = bp_document_get_folder_document_ids( $folder_id );
@@ -1794,7 +1815,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		foreach ( $document_ids as $id ) {
 			// Update privacy of the document.
 			$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-			$query = $wpdb->query( $query_update_document );
+			$query                 = $wpdb->query( $query_update_document );
 
 			// Update document activity privacy.
 			$document = new BP_Document( $id );
@@ -1816,8 +1837,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	$get_children = bp_document_get_folder_children( $folder_id );
 
 	foreach ( $get_children as $child ) {
-		$query_update_child    = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		$query = $wpdb->query( $query_update_child );
+		$query_update_child = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$query              = $wpdb->query( $query_update_child );
 
 		// Get all the documents of particular folder.
 		$document_ids = bp_document_get_folder_document_ids( $child );
@@ -1827,7 +1848,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 
 				// Update privacy of the document.
 				$query_update_document = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $destination_privacy, $id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-				$query = $wpdb->query( $query_update_document );
+				$query                 = $wpdb->query( $query_update_document );
 
 				// Update document activity privacy.
 				$document = new BP_Document( $id );
@@ -1857,6 +1878,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
  * @param string $type        Current type for the document.
  *
  * @return bool
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'folder' ) {
 
@@ -1898,7 +1920,6 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 						}
 					}
 				}
-
 			}
 		}
 
@@ -1942,18 +1963,29 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 	}
 }
 
+/**
+ * Return all the documents ids of the folder.
+ *
+ * @param $folder_id
+ *
+ * @return array
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
 
-//	error_log( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) );
+	// error_log( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) );
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) ) );
 }
 
 /**
+ * Return download link of the document.
+ *
  * @param $attachment_id
  * @param $document_id
  *
  * @return mixed|void
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_download_link( $attachment_id, $document_id ) {
 
@@ -1968,9 +2000,12 @@ function bp_document_download_link( $attachment_id, $document_id ) {
 }
 
 /**
+ * Return download link of the folder.
+ *
  * @param $folder_id
  *
  * @return mixed|void
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_folder_download_link( $folder_id ) {
 
@@ -1985,10 +2020,13 @@ function bp_document_folder_download_link( $folder_id ) {
 }
 
 /**
+ * Check user have a permission to manage the folder.
+ *
  * @param int $folder_id
  * @param int $user_id
  *
  * @return mixed|void
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
@@ -2028,59 +2066,6 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 						$can_download = true;
 					}
 				}
-
-				// $group           = groups_get_group( $folder->group_id );
-				// $group_status    = bp_get_group_status( $group );
-				// $document_status = bp_group_get_document_status( $folder->group_id );
-				// $is_admin        = groups_is_user_admin( $user_id, $folder->group_id );
-				// $is_mod          = groups_is_user_mod( $user_id, $folder->group_id );
-				// $is_member       = groups_is_user_member( $user_id, $folder->group_id );
-				// if ( 'private' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'private' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'private' === $group_status && $is_member && 'members' === $document_status ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'private' === $group_status && $is_member ) {
-				// $can_manage = false;
-				// $can_view   = true;
-				// } elseif ( 'private' === $group_status && ! $is_member ) {
-				// $can_manage = false;
-				// $can_view   = false;
-				// } elseif ( 'hidden' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'hidden' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'hidden' === $group_status && $is_member && 'members' === $document_status ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'hidden' === $group_status && $is_member ) {
-				// $can_manage = false;
-				// $can_view   = true;
-				// } elseif ( 'hidden' === $group_status && ! $is_member ) {
-				// $can_manage = false;
-				// $can_view   = false;
-				// } elseif ( 'public' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'public' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'public' === $group_status && $is_member && 'members' === $document_status ) {
-				// $can_manage = true;
-				// $can_view   = true;
-				// } elseif ( 'public' === $group_status && $is_member ) {
-				// $can_manage = false;
-				// $can_view   = true;
-				// } elseif ( 'public' === $group_status && ! $is_member ) {
-				// $can_manage = false;
-				// $can_view   = true;
-				// }
 			}
 
 			break;
@@ -2128,10 +2113,13 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 }
 
 /**
+ * Check user have a permission to manage the document.
+ *
  * @param int $document_id
  * @param int $user_id
  *
  * @return mixed|void
+ * @since BuddyBoss 1.3.6
  */
 function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) {
 
@@ -2171,74 +2159,6 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 						$can_download = true;
 					}
 				}
-
-				// $group           = groups_get_group( $document->group_id );
-				// $group_status    = bp_get_group_status( $group );
-				// $document_status = bp_group_get_document_status( $document->group_id );
-				// $is_admin        = groups_is_user_admin( $user_id, $document->group_id );
-				// $is_mod          = groups_is_user_mod( $user_id, $document->group_id );
-				// $is_member       = groups_is_user_member( $user_id, $document->group_id );
-				// if ( 'private' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'private' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'private' === $group_status && $is_member && 'members' === $document_status ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'private' === $group_status && $is_member ) {
-				// $can_manage   = false;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'private' === $group_status && ! $is_member ) {
-				// $can_manage   = false;
-				// $can_view     = false;
-				// $can_download = false;
-				// } elseif ( 'hidden' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'hidden' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'hidden' === $group_status && $is_member && 'members' === $document_status ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'hidden' === $group_status && $is_member ) {
-				// $can_manage   = false;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'hidden' === $group_status && ! $is_member ) {
-				// $can_manage   = false;
-				// $can_view     = false;
-				// $can_download = false;
-				// } elseif ( 'public' === $group_status && $is_admin && ( 'admins' === $document_status || 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'public' === $group_status && $is_mod && ( 'mods' === $document_status || 'members' === $document_status ) ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'public' === $group_status && $is_member && 'members' === $document_status ) {
-				// $can_manage   = true;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'public' === $group_status && $is_member ) {
-				// $can_manage   = false;
-				// $can_view     = true;
-				// $can_download = true;
-				// } elseif ( 'public' === $group_status && ! $is_member ) {
-				// $can_manage   = false;
-				// $can_view     = true;
-				// $can_download = true;
-				// }
 			}
 
 			break;
@@ -2316,6 +2236,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $document_id, $user_id );
 }
 
+/**
+ * Return all the allowed document extensions.
+ *
+ * @return array
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_get_allowed_extension() {
 	$extensions     = array();
 	$all_extensions = bp_document_extensions_list();
@@ -2325,10 +2251,18 @@ function bp_document_get_allowed_extension() {
 		}
 	}
 
-	return $extensions;
+	return apply_filters( 'bp_document_get_allowed_extension', $extensions );
 }
 
-function bp_document_get_folder_attachemt_ids( $folder_id ) {
+/**
+ * Return all the document ids inside folder.
+ *
+ * @param $folder_id
+ *
+ * @return array|object|null
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_get_folder_attachment_ids( $folder_id ) {
 
 	global $bp, $wpdb;
 
@@ -2341,28 +2275,51 @@ function bp_document_get_folder_attachemt_ids( $folder_id ) {
 
 }
 
+/**
+ * Return all the children folder of the given folder.
+ *
+ * @param $folder_id
+ *
+ * @return array
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_get_folder_children( $folder_id ) {
 
 	global $bp, $wpdb;
 
 	$table = $bp->document->table_name_folders;
-//	error_log( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) );
+
+	// error_log( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) );
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) ) );
 
 }
 
-function bp_document_get_root_parent_id( $child_id ){
+/**
+ * Return root parent of the given child folder.
+ *
+ * @param $child_id
+ *
+ * @return string|null
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_get_root_parent_id( $child_id ) {
 
 	global $bp, $wpdb;
 
-	$table = $bp->document->table_name_folders;
-	$parent_id = $wpdb->get_var( $wpdb->prepare( "SELECT f.id
+	$table     = $bp->document->table_name_folders;
+	$parent_id = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT f.id
 FROM (
     SELECT @id AS _id, (SELECT @id := parent FROM {$table} WHERE id = _id)
     FROM (SELECT @id := %d) tmp1
     JOIN {$table} ON @id <> 0
     ) tmp2
 JOIN {$table} f ON tmp2._id = f.id
-WHERE f.parent = 0", $child_id ) );
+WHERE f.parent = 0",
+			$child_id
+		)
+	);
+
 	return $parent_id;
 }
