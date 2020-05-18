@@ -585,7 +585,10 @@
 .active#bp-group-messages-document-button,
 .active#bp-group-messages-gif-button,
 .active#forums-gif-button,
-.active#messages-gif-button {
+.active#messages-gif-button,
+.ac-reply-media-button.active,
+.ac-reply-document-button.active,
+.ac-reply-gif-button.active {
 
 	.bb-icon {
 		color: #122b46;

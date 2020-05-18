@@ -1449,6 +1449,16 @@ window.bp = window.bp || {};
 							$this.find( '#bp-group-messages-gif-button' ).removeClass( 'active' );
 						}
 					} );
+
+					target.find( '.activity-comments form' ).each( function() {
+						var $this = jQuery( this );
+						var gif_box_comment = $this.find( '.ac-textarea' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
+						if ( gif_box_comment.length && $.trim( gif_box_comment.html() ) != '' ) {
+							$this.find( '.ac-reply-gif-button' ).addClass( 'active' );
+						} else {
+							$this.find( '.ac-reply-gif-button' ).removeClass( 'active' );
+						}
+					} );
 				}
 			}
 		},
@@ -1477,6 +1487,16 @@ window.bp = window.bp || {};
 						$this.find( '#bp-group-messages-gif-button' ).addClass( 'active' );
 					} else {
 						$this.find( '#bp-group-messages-gif-button' ).removeClass( 'active' );
+					}
+				} );
+
+				target.find( '.activity-comments form' ).each( function() {
+					var $this = jQuery( this );
+					var gif_box_comment = $this.find( '.ac-textarea' ).find( '.ac-reply-attachments .activity-attached-gif-container' );
+					if ( gif_box_comment.length && $.trim( gif_box_comment.html() ) != '' ) {
+						$this.find( '.ac-reply-gif-button' ).addClass( 'active' );
+					} else {
+						$this.find( '.ac-reply-gif-button' ).removeClass( 'active' );
 					}
 				} );
 			}
