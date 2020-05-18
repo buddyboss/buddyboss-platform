@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Media Entry
+ * BuddyBoss - Document Entry
  *
  * @since BuddyBoss 1.3.6
  * @package BuddyBoss\Core

@@ -6,7 +6,7 @@
  * @package BuddyBoss\Core
  */
 
-global $media_album_template;
+global $document_folder_template;
 $album_id = 0;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();

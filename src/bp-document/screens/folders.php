@@ -38,18 +38,18 @@ function document_screen_single_folder() {
 	}
 
 	/**
-	 * Fires right before the loading of the single album view screen template file.
+	 * Fires right before the loading of the single folder view screen template file.
 	 *
 	 * @since BuddyBoss 1.3.6
 	 */
 	do_action( 'document_screen_single_folder' );
 
 	/**
-	 * Filters the template to load for the Single Album view screen.
+	 * Filters the template to load for the Single Folder view screen.
 	 *
 	 * @since BuddyBoss 1.3.6
 	 *
-	 * @param string $template Path to the album template to load.
+	 * @param string $template Path to the folder template to load.
 	 */
 	bp_core_load_template( apply_filters( 'document_template_single_folder', 'members/single/home' ) );
 }

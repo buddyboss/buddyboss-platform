@@ -7,7 +7,7 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss\Document\Functions
- * @since   BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly.
@@ -1617,7 +1617,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 function bp_document_get_visibility_levels() {
 
 	/**
-	 * Filters the media visibility levels out of the $bp global.
+	 * Filters the document visibility levels out of the $bp global.
 	 *
 	 * @param array $visibility_levels Array of visibility levels.
 	 *

@@ -1,18 +1,18 @@
 <?php
 /**
- * BuddyBoss Media Loader.
+ * BuddyBoss Document Loader.
  *
- * A media component, Allow your users to upload photos and create albums.
+ * A document component, Allow your users to upload photos and create folders.
  *
- * @package BuddyBoss\Media\Loader
- * @since BuddyBoss 1.0.0
+ * @package BuddyBoss\Document\Loader
+ * @since BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the bp-media component.
+ * Set up the bp-document component.
  *
  * @since BuddyBoss 1.3.6
  */

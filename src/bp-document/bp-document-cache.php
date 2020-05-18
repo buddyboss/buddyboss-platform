@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Clear a cached document item when that item is updated.
  *
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.3.6
  *
  * @param BP_Document $document Document object.
  */
@@ -52,14 +52,14 @@ add_action( 'bp_document_delete', 'bp_document_reset_cache_incrementor' );
 add_action( 'bp_document_add', 'bp_document_reset_cache_incrementor' );
 
 /**
- * Clear a user's cached media count.
+ * Clear a user's cached document count.
  *
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.3.6
  *
- * @param object $media Media object item.
+ * @param object $document Document object item.
  */
-function bp_document_clear_document_user_object_cache( $media ) {
-	$user_id = ! empty( $media->user_id ) ? $media->user_id : false;
+function bp_document_clear_document_user_object_cache( $document ) {
+	$user_id = ! empty( $document->user_id ) ? $document->user_id : false;
 
 	if ( $user_id ) {
 		wp_cache_delete( 'bp_total_document_for_user_' . $user_id, 'bp' );
@@ -140,7 +140,7 @@ add_action( 'bp_document_before_delete', 'bp_document_clear_document_group_objec
  *
  * @since BuddyBoss 1.3.6
  *
- * @param BP_Document_Folder $folder Album object.
+ * @param BP_Document_Folder $folder Folder object.
  */
 function bp_document_clear_cache_for_folder( $folder ) {
 	wp_cache_delete( $folder->id, 'bp_document_folder' );
@@ -198,7 +198,7 @@ add_action( 'bp_folder_add', 'bp_document_clear_folder_group_object_cache', 10 )
  *
  * @since BuddyBoss 1.3.6
  *
- * @param array $folders DB results of album items.
+ * @param array $folders DB results of folder items.
  */
 function bp_document_clear_folder_group_object_cache_on_delete( $folders ) {
 	if ( ! empty( $folders[0] ) ) {

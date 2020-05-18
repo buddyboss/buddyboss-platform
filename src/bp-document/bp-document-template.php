@@ -1933,7 +1933,7 @@ function bp_get_db_document_privacy() {
 }
 
 /**
- * Output the media parent activity id.
+ * Output the document parent activity id.
  *
  * @since BuddyBoss 1.2.0
  */
@@ -1942,23 +1942,23 @@ function bp_document_parent_activity_id() {
 }
 
 /**
- * Return the media parent activity id.
+ * Return the document parent activity id.
  *
  * @since BuddyBoss 1.2.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
- * @return int The media parent activity id.
+ * @return int The document parent activity id.
  */
 function bp_get_document_parent_activity_id() {
 	global $document_template;
 
 	/**
-	 * Filters the media parent activity id.
+	 * Filters the document parent activity id.
 	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param int $id The media parent activity id.
+	 * @param int $id The document parent activity id.
 	 */
 	return apply_filters( 'bp_get_document_parent_activity_id', get_post_meta( $document_template->document->attachment_id, 'bp_document_parent_activity_id', true ) );
 }

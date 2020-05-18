@@ -29,7 +29,7 @@
 						<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="left" data-bp-tooltip=""><span class="privacy selected"></span></span>
 						<ul class="media-privacy">
 							<?php
-							foreach ( bp_media_get_visibility_levels() as $item_key => $privacy_item ) {
+							foreach ( bp_document_get_visibility_levels() as $item_key => $privacy_item ) {
 								?>
 								<li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?>"><?php echo esc_attr( $privacy_item ); ?></li>
 								<?php

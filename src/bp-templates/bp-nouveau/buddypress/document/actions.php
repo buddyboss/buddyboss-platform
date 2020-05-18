@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Media Actions
+ * BuddyBoss - Folder Actions
  *
  * @since BuddyBoss 1.3.6
  * @package BuddyBoss\Core

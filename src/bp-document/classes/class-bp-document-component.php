@@ -3,7 +3,7 @@
  * BuddyBoss Document Component Class.
  *
  * @package BuddyBoss\Document\Loader
- * @since BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly.
@@ -28,7 +28,7 @@ class BP_Document_Component extends BP_Component {
 	 * Default document extension.
 	 *
 	 * @since BuddyBoss 1.3.6
-	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
+	 * @todo  Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
 	var $default_component;
@@ -50,10 +50,9 @@ class BP_Document_Component extends BP_Component {
 	public $forbidden_names;
 
 	/**
-	 * The acceptable visibility levels for media.
+	 * The acceptable visibility levels for document.
 	 *
-	 * @see bp_document_get_visibility_levels()
-	 *
+	 * @see   bp_document_get_visibility_levels()
 	 * @since BuddyBoss 1.3.6
 	 * @var array
 	 */
@@ -80,11 +79,10 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Include Document component files.
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see BP_Component::includes() for a description of arguments.
-	 *
 	 * @param array $includes See BP_Component::includes() for a description.
+	 *
+	 * @see   BP_Component::includes() for a description of arguments.
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
@@ -100,7 +98,6 @@ class BP_Document_Component extends BP_Component {
 
 	/**
 	 * Late includes method.
-	 *
 	 * Only load up certain code when on specific pages.
 	 *
 	 * @since BuddyBoss 1.3.6
@@ -140,11 +137,10 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up component global data.
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see BP_Component::setup_globals() for a description of arguments.
-	 *
 	 * @param array $args See BP_Component::setup_globals() for a description.
+	 *
+	 * @see   BP_Component::setup_globals() for a description of arguments.
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function setup_globals( $args = array() ) {
 		$bp = buddypress();
@@ -196,9 +192,7 @@ class BP_Document_Component extends BP_Component {
 		/* Single Folder Globals **********************************************/
 
 		// Are we viewing a single folder?
-		if ( bp_is_document_component() && bp_is_single_folder()
-			 && ( $folder_id = BP_Document_Folder::folder_exists( bp_action_variable( 0 ) ) )
-		) {
+		if ( bp_is_document_component() && bp_is_single_folder() && ( $folder_id = BP_Document_Folder::folder_exists( bp_action_variable( 0 ) ) ) ) {
 			$bp->is_single_item   = true;
 			$this->current_folder = folders_get_folder( $folder_id );
 
@@ -229,12 +223,11 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
-	 *
 	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
 	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 * @see   BP_Component::setup_nav() for a description of arguments.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
@@ -254,18 +247,6 @@ class BP_Document_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-//				$count    = bp_document_get_total_document_count( bp_displayed_user_id() );
-//				$class    = ( 0 === $count ) ? 'no-count' : 'count';
-//				$nav_name = sprintf(
-//					/* translators: %s: total document count for the current user */
-//					__( 'Documents %s', 'buddyboss' ),
-//					sprintf(
-//						'<span class="%s">%s</span>',
-//						esc_attr( $class ),
-//						bp_core_number_format( $count )
-//					)
-//				);
-
 				$nav_name = __( 'Documents', 'buddyboss' );
 			} else {
 				$nav_name = __( 'Documents', 'buddyboss' );
@@ -301,12 +282,11 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyBoss 1.3.6
-	 *
-	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
-	 *      parameter array.
-	 *
 	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a description.
+	 *
+	 * @see   BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 *        parameter array.
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 
