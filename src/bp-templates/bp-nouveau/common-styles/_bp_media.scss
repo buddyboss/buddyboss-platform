@@ -1780,6 +1780,45 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 }
 
+.activity.activity_update .activity-comments {
+
+	.document-detail-wrap .document-extension-description {
+		max-width: calc(100% - 55px);
+		vertical-align: middle;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.document-helper-text {
+		height: 0;
+		overflow: hidden;
+		width: 0;
+	}
+
+	.bb-activity-media-elem.document-activity {
+
+		&:hover .document-helper-text {
+			height: auto;
+			overflow: initial;
+			width: auto;
+		}
+
+		.document-helper-text {
+			max-width: calc(100% - 55px);
+			vertical-align: middle;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+	}
+
+	.acomment-content {
+		overflow: initial;
+	}
+}
+
 .bb-document-theater {
 	max-width: 1750px;
 	width: 90%;
