@@ -25,13 +25,13 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		$name        = __( '(BB) Who\'s Online', 'buddyboss' );
 		$description = __( 'Profile photos of online users', 'buddyboss' );
 		parent::__construct(
-			false,
-			$name,
-			array(
-				'description'                 => $description,
-				'classname'                   => 'widget_bp_core_whos_online_widget buddypress widget',
-				'customize_selective_refresh' => true,
-			)
+				false,
+				$name,
+				array(
+						'description'                 => $description,
+						'classname'                   => 'widget_bp_core_whos_online_widget buddypress widget',
+						'customize_selective_refresh' => true,
+				)
 		);
 	}
 
@@ -62,6 +62,15 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		 * @param string $id_base  Root ID for all widgets of this type.
 		 */
 		$title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
+
+		// Back up global.
+		$old_members_template = $members_template;
+		$online_count         = 0;
+		$connection_count     = 0;
+
+		/**
+		 * Get all the users who selected profile type which has option enable "Hide all members of this type from Members Directory and also exclude from the Connections"
+		 */
 		$exclude_ids = [];
 		if ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) {
 			$exclude_ids 	= bp_get_users_of_removed_member_types();
@@ -71,27 +80,97 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		}
 
 		// Setup args for querying members.
-		$members_args = array(
-			'user_id'         => 0,
-			'type'            => 'online',
-			'per_page'        => $settings['max_members'],
-			'max'             => $settings['max_members'],
-			'populate_extras' => true,
-			'search_terms'    => false,
-			'exclude'         => $exclude_ids,
+		$online_args = array(
+				'user_id'         => 0,
+				'type'            => 'online',
+				'per_page'        => $settings['max_members'],
+				'max'             => $settings['max_members'],
+				'populate_extras' => true,
+				'search_terms'    => false,
+				'exclude'         => $exclude_ids,
 		);
 
-		$total_online         = 0;
-		if ( function_exists( 'bp_get_total_online_member_count' ) ) {
-			$total_online = bp_get_total_online_member_count();
-		}
+		ob_start();
+		if ( bp_has_members( $online_args ) ) : ?>
+
+			<div class="avatar-block">
+
+				<?php
+				while ( bp_members() ) :
+					bp_the_member();
+					?>
+
+					<div class="item-avatar">
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+					</div>
+
+				<?php endwhile; ?>
+
+			</div>
+
+			<?php
+			$online_count = $members_template->total_member_count;
+			if ( $online_count > (int) $settings['max_members'] ) { ?>
+				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+			<?php } ?>
+
+		<?php else : ?>
+
+			<div class="widget-error">
+				<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+			</div>
+
+		<?php endif;
+		$online_html = ob_get_clean();
+
+		$connection_args = array(
+				'user_id'         => bp_loggedin_user_id(),
+				'scope'           => 'personal',
+				'type'            => 'online',
+				'per_page'        => $settings['max_members'],
+				'max'             => $settings['max_members'],
+				'populate_extras' => true,
+				'search_terms'    => false,
+				'exclude'         => $exclude_ids,
+		);
+
+		ob_start();
+		if ( bp_has_members( $connection_args ) ) : ?>
+
+			<div class="avatar-block">
+
+				<?php
+				while ( bp_members() ) :
+					bp_the_member();
+					?>
+
+					<div class="item-avatar">
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+					</div>
+
+				<?php endwhile; ?>
+
+			</div>
+
+			<?php
+			$connection_count = $members_template->total_member_count;
+			if ( $connection_count > (int) $settings['max_members'] ) { ?>
+				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+			<?php } ?>
+
+		<?php else : ?>
+
+			<div class="widget-error">
+				<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+			</div>
+
+		<?php endif;
+
+		$connection_html = ob_get_clean();
 
 		$refresh_online_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" title="reload"><i class="bb-icon-spin6"></i></a>';
 
 		echo $args['before_widget'] . $args['before_title'] . $title . $refresh_online_users . $args['after_title'];
-
-		// Back up global.
-		$old_members_template = $members_template;
 
 		$separator = apply_filters( 'bp_members_online_widget_separator', '|' );
 
@@ -99,116 +178,33 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		<div class="item-options" id="who-online-members-list-options">
 			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat">
 				<?php esc_html_e( 'Online', 'buddyboss' ); ?>
-				<span class="widget-num-count"><?php echo $total_online; ?></span>
+				<span class="widget-num-count"><?php echo $online_count; ?></span>
 			</a>
 			<?php
-			if ( bp_is_active( 'friends' ) ) :
-
-				$count        = 0;
-				$friend_array = array();
-				if ( bp_is_active( 'friends' ) ) {
-
-					$personal_friend_comma_separated_string = bp_get_friend_ids( bp_loggedin_user_id() );
-					if ( false !== $personal_friend_comma_separated_string ) {
-						$friend_array = explode( ',', $personal_friend_comma_separated_string );
-						foreach ( $friend_array as $key => $id ){
-							if (in_array( $id, $exclude_ids)){
-								unset( $friend_array[$key] );
-							}
-						}
-					}
-					$count = is_array( $friend_array ) ? count( $friend_array ) : 0;
-				}
+			if ( is_user_logged_in() && bp_is_active( 'friends') ) :
 				?>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections">
 					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
-					<span class="widget-num-count"><?php echo $count; ?></span>
+					<span class="widget-num-count"><?php echo $connection_count; ?></span>
 				</a>
-				<?php
+			<?php
 			endif;
 			?>
-
 		</div>
 		<div class="widget-content" id="boss_whos_online_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
-			<?php if ( bp_has_members( $members_args ) ) : ?>
-
-				<div class="avatar-block">
-
-					<?php
-					while ( bp_members() ) :
-						bp_the_member();
-						?>
-
-						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
-						</div>
-
-					<?php endwhile; ?>
-
-				</div>
-
-				<?php if ( $members_template->total_member_count < $total_online ) { ?>
-					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
-				<?php } ?>
-
-			<?php else : ?>
-
-				<div class="widget-error">
-					<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
-				</div>
-
-			<?php endif; ?>
+			<?php echo $online_html; ?>
 		</div>
-		<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">
-			<?php
 
-			$connections_args = is_array( $members_args ) ? $members_args : [];
-			$connections_args['user_id'] = bp_loggedin_user_id();
-			unset($connections_args['type']);
-            if ( is_user_logged_in() && bp_has_members( $connections_args ) ) {
-                ?>
-                <div class="avatar-block">
-				<?php
-				while ( bp_members() ) :
-					bp_the_member();
-					?>
-                    <div class="item-avatar">
-                        <a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up"
-                           data-bp-tooltip="<?php bp_member_name(); ?>">
-							<?php
-							bp_member_avatar();
-
-							$current_time = current_time( 'mysql', 1 );
-							$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
-							if ( $diff < 300 ) { // 5 minutes  =  5 * 60
-								?>
-                                <span class="member-status online"></span>
-								<?php
-							}
-							?>
-                        </a>
-                    </div>
-				<?php endwhile; ?>
-            </div>
-                <?php
-                if ( $members_template->total_member_count > (int) $settings['max_members'] ) {
-                    ?>
-                    <div class="more-block">
-                        <a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
-                            <?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
-                        </a>
-                    </div>
-                    <?php
-                }
-			} else { ?>
-                <div class="widget-error">
-		            <?php esc_html_e( 'Sorry, no members were found.', 'buddyboss' ); ?>
-                </div>
-	            <?php
-            } ?>
-		</div>
 		<?php
+		if ( is_user_logged_in() && bp_is_active( 'friends') ) {
+			?>
+			<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">
+				<?php echo $connection_html; ?>
+			</div>
+			<?php
+		}
+
 		echo $args['after_widget'];
 
 		// Restore the global.
@@ -275,12 +271,12 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bp_parse_args(
-			$instance,
-			array(
-				'title'       => __( "Who's Online", 'buddyboss' ),
-				'max_members' => 15,
-			),
-			'members_widget_settings'
+				$instance,
+				array(
+						'title'       => __( "Who's Online", 'buddyboss' ),
+						'max_members' => 15,
+				),
+				'members_widget_settings'
 		);
 	}
 }
@@ -296,20 +292,14 @@ if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
 		global $members_template;
 
 		$total = 0;
-		$exclude_ids = [];
-		if ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) {
-			$exclude_ids 	= bp_get_users_of_removed_member_types();
-			$exclude_ids[] 	= bp_loggedin_user_id();
-		} else {
-			$exclude_ids[] 	= bp_loggedin_user_id();
-		}
+
 		$members_args = array(
-			'user_id'         => 0,
-			'type'            => 'online',
-			'max'             => 9999999,
-			'populate_extras' => false,
-			'search_terms'    => false,
-			'exclude'         => $exclude_ids,
+				'user_id'         => 0,
+				'type'            => 'online',
+				'max'             => 9999999,
+				'populate_extras' => false,
+				'search_terms'    => false,
+				'exclude'         => bp_loggedin_user_id(),
 		);
 
 		$old_members_template = $members_template;
@@ -335,7 +325,12 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 
 	$number = (int) $data['boss_whos_online_widget'];
 
-	ob_start();
+	// Back up global.
+	$old_members_template = $members_template;
+
+	/**
+	 * Get all the users who selected profile type which has option enable "Hide all members of this type from Members Directory and also exclude from the Connections"
+	 */
 	$exclude_ids = [];
 	if ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) {
 		$exclude_ids 	= bp_get_users_of_removed_member_types();
@@ -343,28 +338,20 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 	} else {
 		$exclude_ids[] 	= bp_loggedin_user_id();
 	}
+
 	// Setup args for querying members.
-	$members_args = array(
-		'user_id'         => 0,
-		'type'            => 'online',
-		'per_page'        => $number,
-		'max'             => $number,
-		'populate_extras' => true,
-		'search_terms'    => false,
-		'exclude'         => $exclude_ids,
+	$online_args = array(
+			'user_id'         => 0,
+			'type'            => 'online',
+			'per_page'        => $number,
+			'max'             => $number,
+			'populate_extras' => true,
+			'search_terms'    => false,
+			'exclude'         => $exclude_ids,
 	);
 
-	$total_online = 0;
-	if ( function_exists( 'bp_get_total_online_member_count' ) ) {
-		$total_online = bp_get_total_online_member_count();
-	}
-
-	// Back up global.
-	$old_members_template = $members_template;
-
-	?>
-
-	<?php if ( bp_has_members( $members_args ) ) : ?>
+	ob_start();
+	if ( bp_has_members( $online_args ) ) : ?>
 
 		<div class="avatar-block">
 
@@ -374,14 +361,16 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 				?>
 
 				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" title="<?php bp_member_name(); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
 				</div>
 
 			<?php endwhile; ?>
 
 		</div>
 
-		<?php if ( $members_template->total_member_count < $total_online ) { ?>
+		<?php
+		$online_count = $members_template->total_member_count;
+		if ( $online_count > $number  ) { ?>
 			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 		<?php } ?>
 
@@ -391,15 +380,63 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 			<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
 		</div>
 
-	<?php endif; ?>
+	<?php endif;
+	$online_html = ob_get_clean();
 
-	<?php
+	$connection_args = array(
+			'user_id'         => bp_loggedin_user_id(),
+			'scope'           => 'personal',
+			'type'            => 'online',
+			'per_page'        => $number,
+			'max'             => $number,
+			'populate_extras' => true,
+			'search_terms'    => false,
+			'exclude'         => $exclude_ids,
+	);
+
+	ob_start();
+	if ( bp_has_members( $connection_args ) ) : ?>
+
+		<div class="avatar-block">
+
+			<?php
+			while ( bp_members() ) :
+				bp_the_member();
+				?>
+
+				<div class="item-avatar">
+					<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+				</div>
+
+			<?php endwhile; ?>
+
+		</div>
+
+		<?php
+		$connection_count = $members_template->total_member_count;
+		if ( $connection_count > $number ) { ?>
+			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+		<?php } ?>
+
+	<?php else : ?>
+
+		<div class="widget-error">
+			<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
+		</div>
+
+	<?php endif;
+
+	$connection_html = ob_get_clean();
+
+
 
 	// Restore the global.
 	$members_template = $old_members_template;
 
-	$response['boss_whos_online_widget']       = ob_get_clean();
-	$response['boss_whos_online_widget_total'] = $total_online;
+	$response['boss_whos_online_widget']                  = $online_html;
+	$response['boss_whos_online_widget_total']            = $online_count;
+	$response['boss_whos_online_widget_connection']       = $connection_html;
+	$response['boss_whos_online_widget_total_connection'] = $connection_count;
 	return $response;
 }
 

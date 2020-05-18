@@ -794,12 +794,19 @@ class BP_Groups_Component extends BP_Component {
 				}
 			}
 
-			$message_status = groups_get_groupmeta( $this->current_group->id, 'message_status' );
-			$show = false;
+			$message_status = bp_group_get_message_status( $this->current_group->id );
+			$show           = false;
 			if ( 'mods' === $message_status ) {
-				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$admin     = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
 				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
 				if ( $admin || $moderator ) {
+					$show = true;
+				}
+			} elseif ( 'members' === $message_status ) {
+				$member    = groups_is_user_member( bp_loggedin_user_id(), $this->current_group->id );
+				$admin     = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
+				if ( $member || $admin || $moderator ) {
 					$show = true;
 				}
 			} else {
@@ -1099,5 +1106,31 @@ class BP_Groups_Component extends BP_Component {
 				'public' => false,
 			)
 		);
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			'BP_REST_Groups_Endpoint',
+			'BP_REST_Groups_Details_Endpoint',
+			'BP_REST_Group_Membership_Endpoint',
+			'BP_REST_Group_Invites_Endpoint',
+			'BP_REST_Group_Membership_Request_Endpoint',
+			'BP_REST_Groups_Types_Endpoint',
+			'BP_REST_Attachments_Group_Avatar_Endpoint',
+		);
+
+		// Support to Group Cover.
+		if ( bp_is_active( 'groups', 'cover_image' ) ) {
+			$controllers[] = 'BP_REST_Attachments_Group_Cover_Endpoint';
+		}
+
+		parent::rest_api_init( $controllers );
 	}
 }

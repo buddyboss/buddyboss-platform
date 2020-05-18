@@ -4124,6 +4124,7 @@ function bp_get_allowedtags() {
 			'u'       => array(),
 			'i'       => array(),
 			'br'      => array(),
+			'pre'     => array(),
 
 		)
 	);
@@ -4385,6 +4386,8 @@ function bp_ajax_get_suggestions() {
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
+	} else if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+		$args['only_friends'] = true;
 	}
 
 	// Support per-Group suggestions.
@@ -4482,4 +4485,291 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 	}
 
 	return $user_id;
+}
+
+/**
+ * Get unique ID.
+ *
+ * This is a PHP implementation of Underscore's uniqueId method. A static variable
+ * contains an integer that is incremented with each call. This number is returned
+ * with the optional prefix. As such the returned value is not universally unique,
+ * but it is unique across the life of the PHP process.
+ *
+ * @since 1.2.10
+ *
+ * @staticvar int $id_counter
+ *
+ * @param string $prefix Prefix for the returned ID.
+ * @return string Unique ID.
+ */
+function bp_unique_id( $prefix = '' ) {
+	static $id_counter = 0;
+	return $prefix . (string) ++$id_counter;
+}
+
+/**
+ * Get Group avatar.
+ *
+ * This function will give you the group avatar if previously group is created and
+ * group is not deleted but if admin disabled group component then in Messages
+ * section if previously group thread created then will show the actual group avatar
+ * in messages view.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $avatar_size
+ * @param $avatar_folder_dir
+ * @param $avatar_folder_url
+ *
+ * @return mixed
+ */
+function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url ) {
+
+	$group_avatar = '';
+
+	if ( file_exists( $avatar_folder_dir ) ) {
+
+		// Open directory.
+		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+			// Stash files in an array once to check for one that matches.
+			$avatar_files = array();
+			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+				// Only add files to the array (skip directories).
+				if ( 2 < strlen( $avatar_file ) ) {
+					$avatar_files[] = $avatar_file;
+				}
+			}
+
+			// Check for array.
+			if ( 0 < count( $avatar_files ) ) {
+
+				// Check for current avatar.
+				foreach ( $avatar_files as $key => $value ) {
+					if ( strpos( $value, $avatar_size ) !== false ) {
+						$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+					}
+				}
+
+				// Legacy avatar check.
+				if ( ! isset( $group_avatar ) ) {
+					foreach ( $avatar_files as $key => $value ) {
+						if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+							$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+						}
+					}
+
+					// Legacy group avatar check.
+					if ( ! isset( $group_avatar ) ) {
+						foreach ( $avatar_files as $key => $value ) {
+							if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+								$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+							}
+						}
+					}
+				}
+			}
+		}
+		// Close the avatar directory.
+		closedir( $av_dir );
+	}
+
+	return $group_avatar;
+}
+
+/**
+ * Parse url and get data about URL.
+ *
+ * @param string $url URL to parse data.
+ *
+ * @return array Parsed URL data.
+ * @since BuddyBoss 1.3.2
+ */
+function bp_core_parse_url( $url ) {
+	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+
+	// get transient data for url.
+	$parsed_url_data = get_transient( $cache_key );
+	if ( ! empty( $parsed_url_data ) ) {
+		return $parsed_url_data;
+	}
+
+	$parsed_url_data = array();
+
+	// Fetch the oembed code for URL.
+	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
+	if ( ! empty( $embed_code ) ) {
+		$parsed_url_data['title']       = ' ';
+		$parsed_url_data['description'] = $embed_code;
+		$parsed_url_data['images']      = '';
+		$parsed_url_data['error']       = '';
+		$parsed_url_data['wp_embed']    = true;
+	} else {
+
+		// safely get URL and response body.
+		$response = wp_safe_remote_get( $url );
+		$body     = wp_remote_retrieve_body( $response );
+
+		// if response is not empty
+		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
+
+			// Load HTML to DOM Object
+			$dom = new DOMDocument();
+			@$dom->loadHTML( $body );
+
+			$meta_tags   = array();
+			$images      = array();
+			$description = '';
+			$title       = '';
+
+			$xpath       = new DOMXPath( $dom );
+			$query       = '//*/meta[starts-with(@property, \'og:\')]';
+			$metas_query = $xpath->query( $query );
+			foreach ( $metas_query as $meta ) {
+				$property    = $meta->getAttribute( 'property' );
+				$content     = $meta->getAttribute( 'content' );
+				$meta_tags[] = array( $property, $content );
+			}
+
+			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+				foreach ( $meta_tags as $tag ) {
+					if ( is_array( $tag ) && ! empty( $tag ) ) {
+						if ( $tag[0] == 'og:title' ) {
+							$title = $tag[1];
+						}
+						if ( $tag[0] == 'og:description' || 'description' === strtolower( $tag[0] ) ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
+						}
+						if ( $tag[0] == 'og:image' ) {
+							$images[] = $tag[1];
+						}
+					}
+				}
+			}
+
+			// Parse DOM to get Title
+			if ( empty( $title ) ) {
+				$nodes = $dom->getElementsByTagName( 'title' );
+				$title = $nodes->item( 0 )->nodeValue;
+			}
+
+			// Parse DOM to get Meta Description
+			if ( empty( $description ) ) {
+				$metas = $dom->getElementsByTagName( 'meta' );
+				for ( $i = 0; $i < $metas->length; $i ++ ) {
+					$meta = $metas->item( $i );
+					if ( 'description' === $meta->getAttribute( 'name' ) ) {
+						$description = $meta->getAttribute( 'content' );
+						break;
+					}
+				}
+			}
+
+			// Parse DOM to get Images
+			$image_elements = $dom->getElementsByTagName( 'img' );
+			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+				$image = $image_elements->item( $i );
+				$src   = $image->getAttribute( 'src' );
+
+				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
+					$images[] = $src;
+				}
+			}
+
+			if ( ! empty( $description ) && '' === trim( $title ) ) {
+				$title = $description;
+			}
+
+			if ( ! empty( $title ) && '' === trim( $description ) ) {
+				$description = $title;
+			}
+
+			if ( ! empty( $title ) ) {
+				$parsed_url_data['title'] = $title;
+			}
+
+			if ( ! empty( $description ) ) {
+				$parsed_url_data['description'] = $description;
+			}
+
+			if ( ! empty( $images ) ) {
+				$parsed_url_data['images'] = $images;
+			}
+
+			if ( ! empty( $title ) || ! empty( $description ) || ! empty( $images ) ) {
+				$parsed_url_data['error'] = '';
+			}
+		}
+	}
+
+	if ( ! empty( $parsed_url_data ) ) {
+		// set the transient.
+		set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Filters parsed URL data.
+	 *
+	 * @since BuddyBoss 1.3.2
+	 * @param array $parsed_url_data Parse URL data.
+	 */
+	return apply_filters( 'bp_core_parse_url', $parsed_url_data );
+}
+
+/**
+ * Format file size units
+ *
+ * @param int $bytes
+ * @param bool $unit_label
+ * @param string $type
+ *
+ * @return string
+ * @since BuddyBoss 1.3.5
+ *
+ */
+function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
+
+	if ( $bytes > 0 && ! $unit_label ) {
+		if ( 'GB' === $type ) {
+			return $bytes / 1073741824;
+		} elseif ( 'MB' === $type ) {
+			return $bytes / 1048576;
+		} elseif ( 'KB' === $type ) {
+			return $bytes / 1024;
+		} else {
+			return $bytes;
+		}
+	}
+
+	if ( empty( $type ) ) {
+		if ( $bytes >= 1073741824 ) {
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+		} elseif ( $bytes >= 1048576 ) {
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+		} elseif ( $bytes >= 1024 ) {
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+		} elseif ( $bytes > 1 ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( $bytes == 1 ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0' . ' bytes';
+		}
+	} else {
+		if ( 'GB' === $type ) {
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+		} elseif ( 'MB' === $type ) {
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+		} elseif ( 'KB' === $type ) {
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+		} elseif ( 'bytes' === $type ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( 1 === $bytes ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0' . ' bytes';
+		}
+	}
+
+	return $bytes;
 }
