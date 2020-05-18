@@ -1967,3 +1967,39 @@ function bp_get_document_parent_activity_id() {
 	 */
 	return apply_filters( 'bp_get_document_parent_activity_id', get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true ) );
 }
+
+/**
+ * Return the extensions list which need the music preview.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_get_document_preview_music_extensions() {
+
+	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
+}
+
+/**
+ * Return the extensions list which need the doc preview.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_get_document_preview_doc_extensions() {
+
+	return apply_filters( 'bp_get_document_preview_doc_extensions', array( 'pdf', 'pptx', 'pps', 'xls', 'xlsx', 'pps', 'ppt', 'pptx', 'doc', 'docx', 'dot', 'rtf', 'wps', 'wpt', 'dotx', 'potx', 'xlsm' ) );
+}
+
+/**
+ * Return the extensions list which need the code preview.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_get_document_preview_code_extensions() {
+
+	return apply_filters( 'bp_get_document_preview_code_extensions', array( 'css', 'txt', 'html', 'htm', 'js', 'csv' ) );
+}

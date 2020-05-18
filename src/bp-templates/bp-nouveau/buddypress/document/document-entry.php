@@ -42,7 +42,7 @@ if ( $attachment_id ) {
 		$move_type = 'profile';
 	}
 
-	if ( 'pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension ) {
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
 	}
 } else {
