@@ -3,7 +3,7 @@
  * BuddyBoss Document Component Class.
  *
  * @package BuddyBoss\Document\Loader
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Document component.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 class BP_Document_Component extends BP_Component {
 
 	/**
 	 * The folder being currently accessed.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var BP_Document_Folder
 	 */
 	public $current_folder;
@@ -27,7 +27,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Default document extension.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Default document extension.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var string
 	 */
 	public $default_extension;
@@ -44,7 +44,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Illegal document names/slugs.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var array
 	 */
 	public $forbidden_names;
@@ -54,7 +54,7 @@ class BP_Document_Component extends BP_Component {
 	 *
 	 * @see bp_document_get_visibility_levels()
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var array
 	 */
 	public $visibility_levels = array();
@@ -62,7 +62,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Start the document component creation process.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function __construct() {
 		parent::start(
@@ -80,7 +80,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Include Document component files.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -103,7 +103,7 @@ class BP_Document_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -140,7 +140,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up component global data.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -212,7 +212,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the actions.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function setup_actions() {
 
@@ -229,7 +229,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -301,7 +301,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -341,7 +341,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function setup_title() {
 
@@ -369,7 +369,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function setup_cache_groups() {
 

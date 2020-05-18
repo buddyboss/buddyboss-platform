@@ -2,14 +2,14 @@
 /**
  * BuddyBoss - Document Loop
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.6
  * @package BuddyBoss\Core
  */
 
 bp_nouveau_before_loop();
 
 if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
-	if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) : 
+	if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 		$activeTitleClass = '';
 		$activeDateClass = '';
 		$activePrivacyClass = '';

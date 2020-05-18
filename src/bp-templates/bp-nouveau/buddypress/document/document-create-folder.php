@@ -3,14 +3,14 @@
 /**
  * BuddyBoss - Document Create Folder
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.6
  * @package BuddyBoss\Core
  */
 
 ?>
 
 <div class="create-popup-folder-wrap popup-on-fly-create-folder" style="display: none;">
-	
+
 	<div class="bb-field-wrap">
 		<label for="new_folder_name_input" class="bb-label">Folder Title</label>
 		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>" id="new_folder_name_input">

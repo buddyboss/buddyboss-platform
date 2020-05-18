@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-media component.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 function bp_setup_document() {
 	buddypress()->document = new BP_Document_Component();

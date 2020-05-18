@@ -166,7 +166,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
  * @param $user_id
  * @param $activity_id
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @return bool
  */
@@ -206,7 +206,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
  * @param $group_id
  * @param $activity_id
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @return bool
  */
@@ -221,7 +221,7 @@ function bp_document_groups_activity_update_document_meta( $content, $user_id, $
  * @param $r
  * @param $activity
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @return bool
  */
@@ -232,7 +232,7 @@ function bp_document_activity_comments_update_document_meta( $comment_id, $r, $a
 /**
  * Delete document when related activity is deleted.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $activities
  */
 function bp_document_delete_activity_document( $activities ) {
@@ -261,7 +261,7 @@ function bp_document_delete_activity_document( $activities ) {
 /**
  * Update document privacy according to folder's privacy
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $folder
  */
 function bp_document_update_document_privacy( &$folder ) {
@@ -303,7 +303,7 @@ function bp_document_update_document_privacy( &$folder ) {
 /**
  * Save document when new topic or reply is saved
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $post_id
  */
 function bp_document_forums_new_post_document_save( $post_id ) {
@@ -422,7 +422,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 /**
  * Embed topic or reply attachments in a post
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $content
  * @param $id
  *
@@ -465,7 +465,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
 /**
  * Attach document to the message object
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $message
  */
 function bp_document_attach_document_to_message( &$message ) {
@@ -521,7 +521,7 @@ function bp_document_attach_document_to_message( &$message ) {
 /**
  * Delete document attached to messages
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $thread_id
  * @param $message_ids
  */
@@ -546,7 +546,7 @@ function bp_document_messages_delete_attached_document( $thread_id, $message_ids
 /**
  * Delete document attached to messages
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  * @param $thread_id
  * @param $message_ids
  */
@@ -571,7 +571,7 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
 /**
  * Delete document entries attached to the attachment
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param int $attachment_id ID of the attachment being deleted.
  */

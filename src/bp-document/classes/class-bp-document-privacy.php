@@ -3,7 +3,7 @@
  * BuddyBoss Document Privacy
  *
  * @package BuddyBoss\Document
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Handles document privacy information.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 
 class BP_Document_Privacy {
@@ -41,7 +41,7 @@ class BP_Document_Privacy {
 	/**
 	 * get options for visibility
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @param bool $group
 	 * @return array
 	 */
@@ -64,7 +64,7 @@ class BP_Document_Privacy {
 	/**
 	 * Get visibility of document
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @param $document_id
 	 *
 	 * @return WP_Error
@@ -82,7 +82,7 @@ class BP_Document_Privacy {
 	/**
 	 * Check if document is visible or not to the logged in user
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @param bool $document_id
 	 *
 	 * @return bool|mixed|WP_Error

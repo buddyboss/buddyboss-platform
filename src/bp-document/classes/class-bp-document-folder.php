@@ -3,7 +3,7 @@
  * BuddyBoss Document Classes
  *
  * @package BuddyBoss\Document
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an document folders,
  * static methods for querying document folder.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 class BP_Document_Folder {
 
@@ -25,7 +25,7 @@ class BP_Document_Folder {
 	/**
 	 * ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
 	var $id;
@@ -33,7 +33,7 @@ class BP_Document_Folder {
 	/**
 	 * User ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
 	var $user_id;
@@ -41,7 +41,7 @@ class BP_Document_Folder {
 	/**
 	 * Group ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
 	var $group_id;
@@ -49,7 +49,7 @@ class BP_Document_Folder {
 	/**
 	 * Title of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var string
 	 */
 	var $title;
@@ -57,7 +57,7 @@ class BP_Document_Folder {
 	/**
 	 * Privacy of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var string
 	 */
 	var $privacy;
@@ -65,7 +65,7 @@ class BP_Document_Folder {
 	/**
 	 * Upload date of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var string
 	 */
 	var $date_created;
@@ -73,7 +73,7 @@ class BP_Document_Folder {
 	/**
 	 * Update date of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var string
 	 */
 	var $date_modified;
@@ -81,7 +81,7 @@ class BP_Document_Folder {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @var WP_Error
 	 */
@@ -90,7 +90,7 @@ class BP_Document_Folder {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @var string
 	 */
@@ -99,7 +99,7 @@ class BP_Document_Folder {
 	/**
 	 * Parent ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
 	public $parent;
@@ -107,7 +107,7 @@ class BP_Document_Folder {
 	/**
 	 * Constructor method.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param int|bool $id Optional. The ID of a specific document folder.
 	 */
@@ -124,7 +124,7 @@ class BP_Document_Folder {
 	/**
 	 * Populate the object with data about the specific folder item.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function populate() {
 
@@ -157,7 +157,7 @@ class BP_Document_Folder {
 	/**
 	 * Save the document folder to the database.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -181,7 +181,7 @@ class BP_Document_Folder {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param BP_Media $this Current instance of the folder being saved. Passed by reference.
 		 */
@@ -211,7 +211,7 @@ class BP_Document_Folder {
 		/**
 		 * Fires after an album has been saved to the database.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param BP_Media $this Current instance of album being saved. Passed by reference.
 		 */
@@ -225,7 +225,7 @@ class BP_Document_Folder {
 	/**
 	 * Get folders, as specified by parameters.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param array $args {
 	 *     An array of arguments. All items are optional.
@@ -288,7 +288,7 @@ class BP_Document_Folder {
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
-			 * @since BuddyBoss 1.3.0
+			 * @since BuddyBoss 1.3.6
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
@@ -351,7 +351,7 @@ class BP_Document_Folder {
 		/**
 		 * Filters the MySQL WHERE conditions for the albums get method.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -371,7 +371,7 @@ class BP_Document_Folder {
 		/**
 		 * Filter the MySQL JOIN clause for the main media query.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -403,7 +403,7 @@ class BP_Document_Folder {
 		/**
 		 * Filters the paged media MySQL statement.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param string $folder_ids_sql    MySQL statement used to query for Media IDs.
 		 * @param array  $r                Array of arguments passed into method.
@@ -450,7 +450,7 @@ class BP_Document_Folder {
 			/**
 			 * Filters the total document MySQL statement.
 			 *
-			 * @since BuddyBoss 1.3.0
+			 * @since BuddyBoss 1.3.6
 			 *
 			 * @param string $value     MySQL statement used to query for total documents.
 			 * @param string $where_sql MySQL WHERE statement portion.
@@ -480,7 +480,7 @@ class BP_Document_Folder {
 	/**
 	 * Convert document IDs to document objects, as expected in template loop.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param array $folder_ids Array of document IDs.
 	 * @return array
@@ -583,7 +583,7 @@ class BP_Document_Folder {
 	/**
 	 * Get whether an folder exists for a given id.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param string $id       ID to check.
 	 * @return int|bool Album ID if found; false if not.
@@ -610,7 +610,7 @@ class BP_Document_Folder {
 	/**
 	 * Append xProfile fullnames to an document array.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param array $folders Folders array.
 	 * @return array
@@ -643,7 +643,7 @@ class BP_Document_Folder {
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param array $folders Array of document folders.
 	 * @return array $folders Array of document folders.
@@ -653,7 +653,7 @@ class BP_Document_Folder {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with folder.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param array $documents Array of document folders.
 		 */
@@ -663,7 +663,7 @@ class BP_Document_Folder {
 	/**
 	 * Count total folder for the given group
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param int $group_id
 	 *
@@ -683,7 +683,7 @@ class BP_Document_Folder {
 	 * To delete a specific folder, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
-	 * @since BuddyBoss 1.3.0
+	 * @since BuddyBoss 1.3.6
 	 *
 	 * @param array $args {
 	 * @int    $id                Optional. The ID of a specific item to delete.
@@ -751,7 +751,7 @@ class BP_Document_Folder {
 		/**
 		 * Action to allow intercepting folders to be deleted.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param array $albums Array of document folders.
 		 * @param array $r          Array of parsed arguments.
@@ -785,7 +785,7 @@ class BP_Document_Folder {
 		/**
 		 * Action to allow intercepting albums just deleted.
 		 *
-		 * @since BuddyBoss 1.3.0
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param array $folders     Array of document folders.
 		 * @param array $r          Array of parsed arguments.

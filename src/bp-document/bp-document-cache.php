@@ -3,7 +3,7 @@
  * Functions related to the BuddyBoss Document component and the WP Cache.
  *
  * @package BuddyBoss\Document
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ add_action( 'bp_document_after_save', 'bp_document_clear_cache_for_document' );
 /**
  * Clear cached data for deleted document items.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param array $deleted_ids IDs of deleted document items.
  */
@@ -41,7 +41,7 @@ add_action( 'bp_document_deleted_documents', 'bp_document_clear_cache_for_delete
  * Called whenever an document item is created, updated, or deleted, this
  * function effectively invalidates all cached results of document queries.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @return bool True on success, false on failure.
  */
@@ -70,7 +70,7 @@ add_action( 'bp_document_add', 'bp_document_clear_document_user_object_cache', 1
 /**
  * Clear a user's cached document count when delete.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param array $documents DB results of document items.
  */
@@ -90,7 +90,7 @@ add_action( 'bp_document_before_delete', 'bp_document_clear_document_user_object
 /**
  * Clear a user's cached document count.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param int $user_id ID of the user deleted.
  */
@@ -102,7 +102,7 @@ add_action( 'bp_document_remove_all_user_data', 'bp_document_remove_all_user_obj
 /**
  * Clear a group's cached document count.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param object $document Document object item.
  */
@@ -118,7 +118,7 @@ add_action( 'bp_document_add', 'bp_document_clear_document_group_object_cache', 
 /**
  * Clear a group's cached document count when delete.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param array $documents DB results of document items.
  */
@@ -138,7 +138,7 @@ add_action( 'bp_document_before_delete', 'bp_document_clear_document_group_objec
 /**
  * Clear a cached folder item when that item is updated.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param BP_Document_Folder $folder Album object.
  */
@@ -150,7 +150,7 @@ add_action( 'bp_document_folder_after_save', 'bp_document_clear_cache_for_folder
 /**
  * Clear cached data for deleted folder items.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param array $deleted_ids IDs of deleted folder items.
  */
@@ -167,7 +167,7 @@ add_action( 'bp_folders_deleted_folders', 'bp_document_clear_cache_for_deleted_f
  * Called whenever an folder item is created, updated, or deleted, this
  * function effectively invalidates all cached results of folder queries.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @return bool True on success, false on failure.
  */
@@ -180,7 +180,7 @@ add_action( 'bp_folder_add', 'bp_document_folder_reset_cache_incrementor' );
 /**
  * Clear a group's cached folder count.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param object $folder Folder object item.
  */
@@ -196,7 +196,7 @@ add_action( 'bp_folder_add', 'bp_document_clear_folder_group_object_cache', 10 )
 /**
  * Clear a group's cached folder count when delete.
  *
- * @since BuddyBoss 1.3.0
+ * @since BuddyBoss 1.3.6
  *
  * @param array $folders DB results of album items.
  */

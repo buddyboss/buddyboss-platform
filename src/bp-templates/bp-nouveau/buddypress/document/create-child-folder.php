@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Document Create Child Folder
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.6
  * @package BuddyBoss\Core
  */
 
