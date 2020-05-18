@@ -499,4 +499,23 @@ class BP_XProfile_Component extends BP_Component {
 
 		return $wp_admin_nav;
 	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array(
+			'BP_REST_XProfile_Fields_Endpoint',
+			'BP_REST_XProfile_Field_Groups_Endpoint',
+			'BP_REST_XProfile_Data_Endpoint',
+			'BP_REST_XProfile_Update_Endpoint',
+			'BP_REST_XProfile_Repeater_Endpoint',
+			'BP_REST_XProfile_Search_Form_Fields_Endpoint',
+			'BP_REST_XProfile_Types_Endpoint',
+		) );
+	}
 }

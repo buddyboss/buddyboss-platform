@@ -1135,7 +1135,7 @@ class BP_Email_Tokens {
 			return '';
 		}
 
-		if ( empty( $formatted_tokens['invites.message'] ) ) {
+		if ( empty( $tokens['invite.message'] ) ) {
 			return $output;
 		}
 
@@ -1157,7 +1157,7 @@ class BP_Email_Tokens {
 						<tr>
 							<td>
 								<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-									<?php echo wpautop( $formatted_tokens['invites.message'] ); ?>
+									<?php echo wpautop( $tokens['invite.message'] ); ?>
 								</div>
 							</td>
 						</tr>

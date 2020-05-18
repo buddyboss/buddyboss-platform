@@ -542,4 +542,20 @@ class BP_Activity_Component extends BP_Component {
 
 		parent::setup_cache_groups();
 	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		parent::rest_api_init( array(
+			'BP_REST_Activity_Endpoint',
+			'BP_REST_Activity_Comment_Endpoint',
+			'BP_REST_Activity_Details_Endpoint',
+			'BP_REST_Activity_Link_Preview_Endpoint',
+		) );
+	}
 }
