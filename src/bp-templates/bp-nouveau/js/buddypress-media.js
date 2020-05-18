@@ -4174,9 +4174,10 @@ window.bp = window.bp || {};
 			this.current_media 			= false;
 			this.current_document 		= false;
 			this.current_index 			= 0;
+			this.current_document_index = 0;
 			this.is_open 				= false;
 			this.nextLink 				= $('.bb-next-media');
-			this.nextDocumentLink 		= $('.bb-next-media');
+			this.nextDocumentLink 		= $('.bb-next-document');
 			this.previousDocumentLink 	= $('.bb-prev-document');
 			this.previousLink 			= $('.bb-prev-media');
 			this.activity_ajax 			= false;
@@ -4196,6 +4197,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-close-document-theatre', this.closeDocumentTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-prev-media', this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media', this.next.bind( this ) );
+			$( document ).on( 'click', '.bb-prev-document', this.previousDocument.bind( this ) );
+			$( document ).on( 'click', '.bb-next-document', this.nextDocument.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request', this.activityDeleted.bind( this ) );
 			$( document ).on( 'click', '#bb-media-model-container .media-privacy>li', this.mediaPrivacyChange.bind( this ) );
 			$( document ).on( 'click', '#bb-media-model-container .bb-media-section span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
@@ -4275,7 +4278,7 @@ window.bp = window.bp || {};
 			self.setupGlobals();
 			self.setDocuments( target );
 			self.setCurrentDocument( id );
-			self.showDocument( target );
+			self.showDocument();
 			self.navigationDocumentCommands();
 			self.getDocumentsActivity();
 			$( '.bb-media-model-wrapper.document' ).show();
@@ -4493,7 +4496,7 @@ window.bp = window.bp || {};
 			for (d = 0; d < self.documents.length; d++) {
 				if (id === self.documents[d].id) {
 					self.current_document = self.documents[d];
-					self.current_index = d;
+					self.current_document_index = d;
 					break;
 				}
 			}
@@ -4539,43 +4542,42 @@ window.bp = window.bp || {};
 			self.navigationCommands();
 		},
 
-		showDocument: function ( target ) {
+		showDocument: function () {
 			var self = this;
 
 			if (typeof self.current_document === 'undefined') {
 				return false;
 			}
-
 			var target_text	   		= self.current_document.target_text;
 			var target_icon_class	= self.current_document.target_icon_class;
-			var document_elements 	= $( target ).closest( '.bb-media-container' ).length ? $( target ).closest( '.bb-media-container' ).find( '.document-theatre' ) : $( target ).closest( '.directory.document' ).find( '.document-theatre' );
-			var id 					= parseInt( self.current_document.activity_id );
-
-			if( !document_elements.length && $( target ).closest( '.buddypress-wrap' ).length ) {
-				document_elements 	= $( target ).closest( '.buddypress-wrap' ).find( '.document-theatre' );
-				target_text 		= target.find( '.document-title' ).text();
-				target_icon_class   = target.closest( '.document-description-wrap' ).find( '.entry-img > i' ).attr( 'class' );
-				id					= parseInt( target.closest( '.activity_update' ).data( 'bp-activity-id' ) );
-			}
+			var document_elements 	= $( document ).find( '.document-theatre' );
+			var extension 			= self.current_document.extension;
 
 			if( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ]) !== -1) {
-				document_elements.find( '.bb-document-section' ).html('<i class="bb-icon-loader animate-spin"></i>');
-
+				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
 				$.ajax( self.current_document.text_preview )
 					.done( function( data ) {
-						document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
-						document_elements.find( '.bb-document-section .document-text' ).attr( 'data-extension', target.attr( 'data-extension' ) );
-						document_elements.find( '.bb-document-section .document-text textarea' ).html( data.replace( 'n','' ) );
+						document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
+						document_elements.find( '.bb-document-section .document-preview' ).html( '' );
+						document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
+						document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
+						document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( data.replace( 'n','' ) );
 						bp.Nouveau.Media.documentCodeMirror();
 					})
 					.fail( function() {
-						document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' ).html('<p><i class="bb-icon-alert-triangle"></i> Something went wrong.');
+						document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
+						document_elements.find( '.bb-document-section .document-preview' ).html( '' );
+						document_elements.find( '.bb-document-section .document-preview' ).html('<p><i class="bb-icon-alert-triangle"></i> Something went wrong.');
 					});
 			} else {
 				if ( self.current_document.preview ) {
-					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"> <img src="' + self.current_document.preview + '" /> </div>' );
+					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"> <img src="' + self.current_document.preview + '" /> </div>' );
 				} else {
-					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p> </div>' );
+					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p> </div>' );
 				}
 			}
 
@@ -4607,23 +4609,6 @@ window.bp = window.bp || {};
 
 			// update navigation.
 			self.navigationDocumentCommands();
-		},
-
-		nextDocument: function (event) {
-			event.preventDefault();
-			var self = this, activity_id;
-			self.resetRemoveActivityCommentsData();
-			if (typeof self.documents[self.current_index + 1] !== 'undefined') {
-				self.current_index = self.current_index + 1;
-				activity_id        = self.current_document.activity_id;
-				self.current_document = self.documents[self.current_index];
-				self.showDocument();
-				if (activity_id != self.current_document.activity_id) {
-					self.getDocumentsActivity();
-				}
-			} else {
-				self.nextDocumentLink.hide();
-			}
 		},
 
 		next: function (event) {
@@ -4660,14 +4645,32 @@ window.bp = window.bp || {};
 			}
 		},
 
+		nextDocument: function (event) {
+			event.preventDefault();
+
+			var self = this, activity_id;
+			self.resetRemoveActivityCommentsData();
+			if (typeof self.documents[self.current_document_index + 1] !== 'undefined') {
+				self.current_document_index = self.current_document_index + 1;
+				activity_id        			= self.current_document.activity_id;
+				self.current_document = self.documents[self.current_document_index];
+				self.showDocument();
+				if (activity_id != self.current_document.activity_id) {
+					self.getDocumentsActivity();
+				}
+			} else {
+				self.nextDocumentLink.hide();
+			}
+		},
+
 		previousDocument: function (event) {
 			event.preventDefault();
 			var self = this, activity_id;
 			self.resetRemoveActivityCommentsData();
-			if (typeof self.documents[self.current_index - 1] !== 'undefined') {
-				self.current_index = self.current_index - 1;
-				activity_id        = self.documents.activity_id;
-				self.current_document = self.documents[self.current_index];
+			if (typeof self.documents[self.current_document_index - 1] !== 'undefined') {
+				self.current_document_index = self.current_document_index - 1;
+				activity_id        			= self.current_document.activity_id;
+				self.current_document = self.documents[self.current_document_index];
 				self.showDocument();
 				if (activity_id != self.current_document.activity_id) {
 					self.getDocumentsActivity();
@@ -4696,13 +4699,13 @@ window.bp = window.bp || {};
 
 		navigationDocumentCommands: function () {
 			var self = this;
-			if (self.current_index == 0 && self.current_index != (self.documents.length - 1)) {
+			if (self.current_document_index == 0 && self.current_document_index != (self.documents.length - 1)) {
 				self.previousDocumentLink.hide();
 				self.nextDocumentLink.show();
-			} else if (self.current_index == 0 && self.current_index == (self.documents.length - 1)) {
+			} else if (self.current_document_index == 0 && self.current_document_index == (self.documents.length - 1)) {
 				self.previousDocumentLink.hide();
 				self.nextDocumentLink.hide();
-			} else if (self.current_index == (self.documents.length - 1)) {
+			} else if (self.current_document_index == (self.documents.length - 1)) {
 				self.previousDocumentLink.show();
 				self.nextDocumentLink.hide();
 			} else {
@@ -4827,6 +4830,30 @@ window.bp = window.bp || {};
 				} else {
 					self.current_index = -1;
 					self.next( event );
+				}
+			}
+			if (self.is_open && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id == data.id) {
+
+				$( document ).find( '[data-bp-list="media"] .bb-open-media-theatre[data-id="' + self.current_document.id + '"]' ).closest( 'li' ).remove();
+				$( document ).find( '[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_document.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
+
+				for (i = 0; i < self.documents.length; i++) {
+					if (self.documents[i].activity_id == data.id) {
+						self.documents.splice( i, 1 );
+						break;
+					}
+				}
+
+				if (self.current_document_index == 0 && self.current_document_index != (self.documents.length)) {
+					self.current_document_index = -1;
+					self.nextDocument( event );
+				} else if (self.current_document_index == 0 && self.current_document_index == (self.documents.length)) {
+					self.closeDocumentTheatre( event );
+				} else if (self.current_document_index == (self.documents.length)) {
+					self.previousDocument( event );
+				} else {
+					self.current_document_index = -1;
+					self.nextDocument( event );
 				}
 			}
 		},

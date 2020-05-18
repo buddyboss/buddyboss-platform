@@ -23,6 +23,7 @@
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="30"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l14 14L1 29" opacity=".7"/></svg>
 				</a>
 
+				<div class="document-preview"></div>
 
 				<div class="bb-dropdown-wrap bb-media-only-privacy">
 					<div class="bb-media-privacy-wrap" style="display: none;">
