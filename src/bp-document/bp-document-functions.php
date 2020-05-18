@@ -291,8 +291,6 @@ function bp_document_add( $args = '' ) {
 			'date_modified' => bp_core_current_time(),  // The GMT time that this document was modified.
 			'error_type'    => 'bool',
 			'file_name'     => '',
-			'caption'       => '',
-			'description'   => '',
 			'extension'     => '',
 		),
 		'document_add'
@@ -317,8 +315,6 @@ function bp_document_add( $args = '' ) {
 	$document->date_modified = $r['date_modified'];
 	$document->error_type    = $r['error_type'];
 	$document->file_name     = $r['file_name'];
-	$document->caption       = $r['caption'];
-	$document->description   = $r['description'];
 	$document->extension     = $r['extension'];
 
 	// groups document always have privacy to `grouponly`.
@@ -399,8 +395,6 @@ function bp_document_add_handler( $documents = array() ) {
 					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
 					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
 					'file_name'     => $file_name,
-					'caption'       => $attachment_data->post_excerpt,
-					'description'   => $attachment_data->post_content,
 					'extension'     => '.' . $file_type['ext'],
 					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 				)
@@ -1660,7 +1654,7 @@ function bp_document_get_visibility_levels() {
  * @return bool|int
  * @since BuddyBoss 1.3.6
  */
-function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0, $title = '', $caption = '', $description = '', $backend = false ) {
+function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0, $title = '', $backend = false ) {
 
 	global $wpdb, $bp;
 
@@ -1672,16 +1666,6 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET file_name = %s, title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $file_name, $title, bp_core_current_time(), $document_id, $attachment_document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
-
-	if ( '' !== $caption ) {
-		$query_caption = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET caption = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $caption, bp_core_current_time(), $document_id, $attachment_document_id );
-		$query_caption = $wpdb->query( $query_caption ); // db call ok; no-cache ok;
-	}
-
-	if ( '' !== $description ) {
-		$query_description = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET description = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $description, bp_core_current_time(), $document_id, $attachment_document_id );
-		$query_description = $wpdb->query( $query_description ); // db call ok; no-cache ok;
-	}
 
 	if ( false === $query ) {
 		return false;
@@ -1717,8 +1701,6 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 			'document_id'            => $document_id,
 			'attachment_document_id' => $attachment_document_id,
 			'title'                  => $title,
-			'caption'                => $caption,
-			'description'            => $description,
 			'backendn'               => $backend,
 		)
 	);

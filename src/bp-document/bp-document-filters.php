@@ -386,8 +386,6 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 					'reply_id'      => $reply_id,
 					'file_name'     => $file_name,
 					'privacy'       => 'forums',
-					'caption'       => $attachment_data->post_excerpt,
-					'description'   => $attachment_data->post_content,
 					'extension'     => '.' . $file_type['ext'],
 					'error_type'    => 'wp_error',
 				)
@@ -496,8 +494,6 @@ function bp_document_attach_document_to_message( &$message ) {
 					'privacy'       => 'message',
 					'file_name'     => $file_name,
 					'thread_id'     => $message->thread_id,
-					'caption'       => $attachment_data->post_excerpt,
-					'description'   => $attachment_data->post_content,
 					'extension'     => '.' . $file_type['ext'],
 				)
 			);
@@ -632,7 +628,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE type = %s AND attachment_id = %d", 'document', $attachment_id ) ); // db call ok; no-cache ok;
 	if ( $document ) {
 		$document_post = get_post( $attachment_id );
-		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, $document_post->post_excerpt, $document_post->post_content, true );
+		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, true );
 	}
 }
 

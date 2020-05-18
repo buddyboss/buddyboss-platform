@@ -57,8 +57,6 @@ class BP_Document_Query extends BP_Recursive_Query {
 		'preview_attachment_id',
 		'date_modified',
 		'file_name',
-		'caption',
-		'description',
 		'extension',
 	);
 
