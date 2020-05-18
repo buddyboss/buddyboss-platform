@@ -1142,4 +1142,22 @@ class BP_Media {
 		return $activity_media_id;
 	}
 
+	/**
+	 * Get media attachment id for the activity.
+	 *
+	 * @param integer $activity_id Activity ID
+	 *
+	 * @return integer|bool
+	 * @since BuddyBoss 1.3.6
+	 */
+	public static function get_activity_attachment_id( $activity_id = 0 ) {
+		global $bp, $wpdb;
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+	}
+
 }
