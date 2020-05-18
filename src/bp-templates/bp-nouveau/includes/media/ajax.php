@@ -752,21 +752,24 @@ function bp_nouveau_ajax_media_update_privacy() {
  * @since BuddyBoss 1.3.5
  */
 function bp_nouveau_ajax_media_description_save() {
-	if ( empty( $_POST['activity_id'] ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please provide activity id to update.', 'buddyboss' )
-		);
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem. Please try again.', 'buddyboss' )
+		),
+	);
 
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_media' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	$activity_id = $_POST['activity_id'];
+	$attachment_id = $_POST['attachment_id'];
 	$description = $_POST['description'];
 
-	$activity = new BP_Activity_Activity( (int) $activity_id );
+	$attachment = get_post( $attachment_id );
 
-	if ( empty( $activity->id ) ) {
+	if ( empty( $attachment ) && ( 'attachment' !== $attachment->post_type ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was an error for updating a description. Please try again.', 'buddyboss' )
@@ -775,18 +778,9 @@ function bp_nouveau_ajax_media_description_save() {
 		wp_send_json_error( $response );
 	}
 
-	bp_activity_update_meta( $activity->id, 'bp_media_description', $description );
-
-	$media_id = BP_Media::get_activity_media_id( (int) $activity_id );
-
-	if ( ! empty( $media_id ) ) {
-		$media = new BP_Media( $media_id );
-		if ( ! empty( $media->attachment_id ) ) {
-			$media_post['ID']           = $media->attachment_id;
-			$media_post['post_content'] = $description;
-			wp_update_post( $media_post );
-		}
-	}
+	$media_post['ID']           = $attachment_id;
+	$media_post['post_content'] = $description;
+	wp_update_post( $media_post );
 
 	$response['description'] = $description;
 	wp_send_json_success( $response );

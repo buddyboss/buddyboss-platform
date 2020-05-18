@@ -265,9 +265,10 @@ function bp_nouveau_ajax_document_get_activity() {
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
 
 	remove_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
-	if ( ! empty( $document_activity ) ) {
-		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+	add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
 
+	if ( ! empty( $document_activity ) ) {
 		$args = array(
 			'include'     => $post_id,
 			'show_hidden' => true,
@@ -289,9 +290,8 @@ function bp_nouveau_ajax_document_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
-	if ( ! empty( $document_activity ) ) {
-		remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
-	}
+	remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
+	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
 
 	wp_send_json_success(

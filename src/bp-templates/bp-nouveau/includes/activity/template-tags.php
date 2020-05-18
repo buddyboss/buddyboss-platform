@@ -1208,38 +1208,59 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$activity_description = bp_activity_get_meta( $activity_id, 'bp_media_description', true );
+	$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+
+	if ( empty( $attachment_id ) ) {
+		return;
+	}
+
+	$content = get_post_field( 'post_content', $attachment_id );
 
 	echo '<div class="activity-media-description">' .
-	     '<div class="bp-media-activity-description">' . $activity_description . '</div>';
+	     '<div class="bp-media-activity-description">' . $content . '</div>';
 
-        if ( bp_activity_user_can_edit() ) {
-            ?>
+	if ( bp_activity_user_can_edit() ) {
+		?>
 
-            <a class="bp-add-media-activity-description <?php echo( ! empty( $activity_description ) ? 'show-edit' : 'show-add' ); ?>"
-               href="#">
-                <span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
-                <span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-            </a>
-            <div class="bp-edit-media-activity-description" style="display: none;">
-                <div class="innerWrap">
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+		   href="#">
+			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+		</a>
+		<div class="bp-edit-media-activity-description" style="display: none;">
+			<div class="innerWrap">
                         <textarea id="add-activity-description"
                                   title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
                                   class="textInput"
                                   name="caption_text"
                                   placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-                                  role="textbox"><?php echo $activity_description; ?></textarea>
-                </div>
-                <div class="in-profile description-new-submit">
-                    <input type="hidden" id="bp-activity-id" value="<?php echo $activity_id; ?>">
-                    <input type="submit" id="bp-activity-description-new-submit" class="button small"
-                           name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-                    <input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
-                </div>
-            </div>
+                                  role="textbox"><?php echo $content; ?></textarea>
+			</div>
+			<div class="in-profile description-new-submit">
+				<?php ?>
+				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small"
+				       name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
+				       value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+			</div>
+		</div>
 
-            <?php
-        }
+		<?php
+	}
 
 	echo '</div>';
+}
+
+/**
+ * Clear activity body content
+ *
+ * @param integer              $content  Activity Content
+ * @param BP_Activity_Activity $activity Activity object.
+ *
+ * @return bool
+ * @since BuddyBoss 1.3.6
+ */
+function bp_nouveau_clear_activity_content_body( $content, $activity ) {
+	return false;
 }

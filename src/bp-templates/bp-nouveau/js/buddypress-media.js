@@ -4824,12 +4824,13 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget ),
 				parent_wrap = target.parents( '.activity-media-description' ),
 				description = parent_wrap.find( '#add-activity-description' ).val(),
-				activity_id = parent_wrap.find( '#bp-activity-id' ).val();
+				attachment_id = parent_wrap.find( '#bp-attachment-id' ).val();
 
 			var data = {
-				'action'	: 'media_description_save',
-				'description'		: description,
-				'activity_id'	: activity_id,
+				'action': 'media_description_save',
+				'description': description,
+				'attachment_id': attachment_id,
+				'_wpnonce'	: BP_Nouveau.nonces.media,
 			};
 
 			$.ajax(
