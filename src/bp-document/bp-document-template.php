@@ -1953,6 +1953,11 @@ function bp_document_parent_activity_id() {
 function bp_get_document_parent_activity_id() {
 	global $document_template;
 
+	$attachment_id = '';
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->attachment_id ) ) {
+		$attachment_id = $document_template->document->attachment_id;
+	}
+
 	/**
 	 * Filters the document parent activity id.
 	 *
@@ -1960,5 +1965,5 @@ function bp_get_document_parent_activity_id() {
 	 *
 	 * @param int $id The document parent activity id.
 	 */
-	return apply_filters( 'bp_get_document_parent_activity_id', get_post_meta( $document_template->document->attachment_id, 'bp_document_parent_activity_id', true ) );
+	return apply_filters( 'bp_get_document_parent_activity_id', get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true ) );
 }
