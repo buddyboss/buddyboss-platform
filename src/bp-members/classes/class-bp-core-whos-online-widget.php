@@ -62,6 +62,13 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		 * @param string $id_base  Root ID for all widgets of this type.
 		 */
 		$title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
+		$exclude_ids = [];
+		if ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) {
+			$exclude_ids 	= bp_get_users_of_removed_member_types();
+			$exclude_ids[] 	= bp_loggedin_user_id();
+		} else {
+			$exclude_ids[] 	= bp_loggedin_user_id();
+		}
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -71,10 +78,10 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
-			'exclude'         => bb_get_exclude_member_ids(),
+			'exclude'         => $exclude_ids,
 		);
 
-		$total_online = 0;
+		$total_online         = 0;
 		if ( function_exists( 'bp_get_total_online_member_count' ) ) {
 			$total_online = bp_get_total_online_member_count();
 		}
@@ -104,6 +111,11 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 					$personal_friend_comma_separated_string = bp_get_friend_ids( bp_loggedin_user_id() );
 					if ( false !== $personal_friend_comma_separated_string ) {
 						$friend_array = explode( ',', $personal_friend_comma_separated_string );
+						foreach ( $friend_array as $key => $id ){
+							if (in_array( $id, $exclude_ids)){
+								unset( $friend_array[$key] );
+							}
+						}
 					}
 					$count = is_array( $friend_array ) ? count( $friend_array ) : 0;
 				}
@@ -150,7 +162,11 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		</div>
 		<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">
 			<?php
-            if ( is_user_logged_in() && bp_has_members( 'user_id=' . bp_loggedin_user_id() . '&per_page=' . $settings['max_members'] . '&max=' . $settings['max_members'] . '&search_terms=' . false . '&populate_extras=' . true ) ) {
+
+			$connections_args = is_array( $members_args ) ? $members_args : [];
+			$connections_args['user_id'] = bp_loggedin_user_id();
+			unset($connections_args['type']);
+            if ( is_user_logged_in() && bp_has_members( $connections_args ) ) {
                 ?>
                 <div class="avatar-block">
 				<?php
@@ -280,14 +296,20 @@ if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
 		global $members_template;
 
 		$total = 0;
-
+		$exclude_ids = [];
+		if ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) {
+			$exclude_ids 	= bp_get_users_of_removed_member_types();
+			$exclude_ids[] 	= bp_loggedin_user_id();
+		} else {
+			$exclude_ids[] 	= bp_loggedin_user_id();
+		}
 		$members_args = array(
 			'user_id'         => 0,
 			'type'            => 'online',
 			'max'             => 9999999,
 			'populate_extras' => false,
 			'search_terms'    => false,
-			'exclude'         => bb_get_exclude_member_ids(),
+			'exclude'         => $exclude_ids,
 		);
 
 		$old_members_template = $members_template;
@@ -314,7 +336,13 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 	$number = (int) $data['boss_whos_online_widget'];
 
 	ob_start();
-
+	$exclude_ids = [];
+	if ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) {
+		$exclude_ids 	= bp_get_users_of_removed_member_types();
+		$exclude_ids[] 	= bp_loggedin_user_id();
+	} else {
+		$exclude_ids[] 	= bp_loggedin_user_id();
+	}
 	// Setup args for querying members.
 	$members_args = array(
 		'user_id'         => 0,
@@ -323,7 +351,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		'max'             => $number,
 		'populate_extras' => true,
 		'search_terms'    => false,
-		'exclude'         => bb_get_exclude_member_ids(),
+		'exclude'         => $exclude_ids,
 	);
 
 	$total_online = 0;

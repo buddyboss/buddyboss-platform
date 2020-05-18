@@ -1725,7 +1725,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				);
 				?>
 					 />
-				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+				<?php _e( 'Hide all members of this type from Members Directory and also exclude from the Connections', 'buddyboss' ); ?>
 			</td>
 		</tr>
 		</tbody>
