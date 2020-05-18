@@ -618,9 +618,10 @@ function bp_nouveau_ajax_media_get_activity() {
 	$media_activity = bp_activity_get_meta( $_POST['id'], 'bp_media_activity', true );
 
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
-	if ( ! empty( $media_activity ) ) {
-		add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
+	add_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
 
+	if ( ! empty( $media_activity ) ) {
 		$args = array(
 			'include'     => $_POST['id'],
 			'show_hidden' => true,
@@ -642,9 +643,8 @@ function bp_nouveau_ajax_media_get_activity() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
-	if ( ! empty( $media_activity ) ) {
-		remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
-	}
+	remove_filter( 'bp_get_activity_content_body', 'bp_nouveau_clear_activity_content_body', 99, 2 );
+	remove_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
 	add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 
 	wp_send_json_success(
