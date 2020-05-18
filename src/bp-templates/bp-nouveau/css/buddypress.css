@@ -13327,6 +13327,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #939597;
 }
 
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom .hide {
+  display: none;
+}
+
 #media-folder-document-data-table .media-folder_items .media-folder_actions {
   display: -webkit-box;
   display: -ms-flexbox;
