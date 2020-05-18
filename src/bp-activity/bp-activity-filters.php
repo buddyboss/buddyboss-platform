@@ -1213,7 +1213,7 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
  * @param $media
  */
 function bp_activity_media_add( $media ) {
-	global $bp_media_upload_count;
+	global $bp_media_upload_count, $bp_new_activity_comment;
 
 	if ( ! empty( $media ) ) {
 		$parent_activity_id = false;
@@ -1221,7 +1221,7 @@ function bp_activity_media_add( $media ) {
 			$parent_activity_id = (int) $_POST['bp_activity_id'];
 		}
 
-		if ( $bp_media_upload_count > 1 ) {
+		if ( $bp_media_upload_count > 1 || true === $bp_new_activity_comment ) {
 
 			$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
 
@@ -1384,7 +1384,7 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
  * @since BuddyBoss 1.2.0
  */
 function bp_activity_document_add( $document ) {
-	global $bp_document_upload_count;
+	global $bp_document_upload_count, $bp_new_activity_comment;
 
 	if ( ! empty( $document ) ) {
 
@@ -1393,7 +1393,7 @@ function bp_activity_document_add( $document ) {
 			$parent_activity_id = (int) $_POST['bp_activity_id'];
 		}
 
-		if ( $bp_document_upload_count > 1 ) {
+		if ( $bp_document_upload_count > 1 || true === $bp_new_activity_comment ) {
 
 			$args = array(
 				'hide_sitewide' => true,
