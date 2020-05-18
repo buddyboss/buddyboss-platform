@@ -13214,9 +13214,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #media-folder-document-data-table .media-folder_items.is-visible .media-folder_actions .media-folder_action__list {
-  opacity: 1;
-  visibility: visible;
-  z-index: 1199;
+  display: block;
+  z-index: 112;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_icon {
@@ -13352,9 +13351,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
   border-radius: 4px;
   width: 198px;
-  z-index: 1;
-  opacity: 0;
-  visibility: hidden;
+  display: none;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list:after {
@@ -13455,6 +13452,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   #media-folder-document-data-table .media-folder_items .media-folder_icon img {
     width: 100%;
   }
+  #media-folder-document-data-table .media-folder_items .media-folder_visibility,
   #media-folder-document-data-table .media-folder_items .media-folder_details,
   #media-folder-document-data-table .media-folder_items .media-folder_group {
     -ms-flex-preferred-size: 100% !important;
@@ -13463,6 +13461,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   }
   #media-folder-document-data-table .media-folder_items .media-folder_modified {
     margin-bottom: 5px;
+    width: 100%;
   }
   #media-folder-document-data-table .media-folder_items .media-folder_actions {
     position: absolute;
@@ -13875,8 +13874,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   border-radius: 4px;
   width: 168px;
   z-index: 1;
-  opacity: 0;
-  visibility: hidden;
+  display: none;
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__list:after {
@@ -13959,9 +13957,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items.is-visible .media-folder_action__list {
-  opacity: 1;
-  visibility: visible;
-  z-index: 11;
+  display: block;
+  z-index: 112;
 }
 
 @media screen and (max-width: 1120px) {

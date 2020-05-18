@@ -1819,9 +1819,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		z-index: 1;
 
 		.media-folder_actions .media-folder_action__list {
-			opacity: 1;
-			visibility: visible;
-			z-index: 1199;
+			display: block;
+			z-index: 112;
 		}
 	}
 
@@ -1963,9 +1962,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
 			border-radius: 4px;
 			width: 198px;
-			z-index: 1;
-			opacity: 0;
-			visibility: hidden;
+			display: none;
 
 			&:after {
 				content: " ";
@@ -2072,6 +2069,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		}
 
+		.media-folder_visibility,
 		.media-folder_details,
 		.media-folder_group {
 			-ms-flex-preferred-size: 100% !important;
@@ -2081,6 +2079,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		.media-folder_modified {
 			margin-bottom: 5px;
+			width: 100%;
 		}
 
 		.media-folder_actions {
@@ -2562,8 +2561,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 				border-radius: 4px;
 				width: 168px;
 				z-index: 1;
-				opacity: 0;
-				visibility: hidden;
+				display: none;
 
 				&:after {
 					content: " ";
@@ -2651,9 +2649,8 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			&.is-visible {
 
 				.media-folder_action__list {
-					opacity: 1;
-					visibility: visible;
-					z-index: 11;
+					display: block;
+					z-index: 112;
 				}
 
 			}
