@@ -1434,6 +1434,7 @@ window.bp = window.bp || {};
 						url				: BP_Nouveau.ajaxurl,
 						timeout			: 3 * 60 * 60 * 1000,
 						acceptedFiles	: BP_Nouveau.media.document_type,
+						createImageThumbnails : false,
 						dictDefaultMessage : BP_Nouveau.media.dropzone_document_message,
 						autoProcessQueue: true,
 						addRemoveLinks	: true,
