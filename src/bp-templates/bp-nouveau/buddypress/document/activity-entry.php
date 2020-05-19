@@ -51,17 +51,13 @@ if ( ! empty( $extension_lists ) ) {
 	}
 }
 
-$class = '';
-if ( $attachment_id && bp_get_document_activity_id() ) {
-	$class = 'bb-open-document-theatre';
-}
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
 	<div class="document-description-wrap">
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
-				class="entry-img <?php echo esc_attr( $class ); ?>"
+				class="entry-img bb-open-document-theatre"
 				data-id="<?php bp_document_id(); ?>"
 				data-attachment-full=""
 				data-privacy="<?php bp_db_document_privacy(); ?>"

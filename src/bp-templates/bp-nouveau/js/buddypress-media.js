@@ -4440,16 +4440,9 @@ window.bp = window.bp || {};
 		},
 
 		setDocuments: function (target) {
-			var document_elements = '', d = 0, self = this;
+			var document_elements = $( '.bb-open-document-theatre' ), d = 0, self = this;
 
-			if ( $( '.bb-open-document-theatre' ).length ) {
-				document_elements = $( '.bb-open-document-theatre' );
-			} else {
-				document_elements = $( '.document-detail-wrap-description-popup' );
-			}
-
-
-				// check if on activity page, load only activity media in theatre.
+			// check if on activity page, load only activity media in theatre.
 			if ($( 'body' ).hasClass( 'activity' )) {
 				document_elements = $( target ).closest( '.bb-activity-media-wrap' ).find( '.bb-open-document-theatre' );
 			}
