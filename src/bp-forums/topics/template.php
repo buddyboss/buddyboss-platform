@@ -379,6 +379,10 @@ function bbp_has_topics( $args = '' ) {
 			} elseif ( bbp_is_topic_tag() ) {
 				$base = bbp_get_topic_tag_link();
 
+				// Page or single post
+			} elseif ( is_page() || is_single() ){
+				$base = get_permalink();
+
 				// Forum archive
 			} elseif ( bbp_is_forum_archive() ) {
 				$base = bbp_get_topics_url();
@@ -387,11 +391,6 @@ function bbp_has_topics( $args = '' ) {
 			} elseif ( bbp_is_topic_archive() ) {
 				$base = bbp_get_topics_url();
 
-				// Page or single post
-			} elseif ( is_page() || is_single() ) {
-				$base = get_permalink();
-
-				// Default
 			} else {
 				$base = get_permalink( (int) $r['post_parent'] );
 			}
@@ -1504,7 +1503,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 		),
 		'get_topic_author_link'
 	);
-	
+
 	// Default return value
 	$author_link = '';
 
@@ -1544,7 +1543,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 		if ( 'name' === $r['type'] || 'both' === $r['type'] ) {
 			$author_links['name'] = bbp_get_topic_author_display_name( $topic_id );
 		}
-		
+
 		// Empty array
 		$links  = array();
 		$sprint = '<span %1$s>%2$s</span>';

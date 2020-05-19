@@ -4597,7 +4597,7 @@ function bp_core_parse_url( $url ) {
 	$parsed_url_data = array();
 
 	// Fetch the oembed code for URL.
-	$embed_code = wp_oembed_get( $url );
+	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
 	if ( ! empty( $embed_code ) ) {
 		$parsed_url_data['title']       = ' ';
 		$parsed_url_data['description'] = $embed_code;
@@ -4680,11 +4680,24 @@ function bp_core_parse_url( $url ) {
 				$title = $description;
 			}
 
-			if ( ! empty( $title ) && ! empty( $description ) && ! empty( $images ) ) {
-				$parsed_url_data['title']       = $title;
+			if ( ! empty( $title ) && '' === trim( $description ) ) {
+				$description = $title;
+			}
+
+			if ( ! empty( $title ) ) {
+				$parsed_url_data['title'] = $title;
+			}
+
+			if ( ! empty( $description ) ) {
 				$parsed_url_data['description'] = $description;
-				$parsed_url_data['images']      = $images;
-				$parsed_url_data['error']       = '';
+			}
+
+			if ( ! empty( $images ) ) {
+				$parsed_url_data['images'] = $images;
+			}
+
+			if ( ! empty( $title ) || ! empty( $description ) || ! empty( $images ) ) {
+				$parsed_url_data['error'] = '';
 			}
 		}
 	}
@@ -4701,4 +4714,62 @@ function bp_core_parse_url( $url ) {
 	 * @param array $parsed_url_data Parse URL data.
 	 */
 	return apply_filters( 'bp_core_parse_url', $parsed_url_data );
+}
+
+/**
+ * Format file size units
+ *
+ * @param int $bytes
+ * @param bool $unit_label
+ * @param string $type
+ *
+ * @return string
+ * @since BuddyBoss 1.3.5
+ *
+ */
+function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
+
+	if ( $bytes > 0 && ! $unit_label ) {
+		if ( 'GB' === $type ) {
+			return $bytes / 1073741824;
+		} elseif ( 'MB' === $type ) {
+			return $bytes / 1048576;
+		} elseif ( 'KB' === $type ) {
+			return $bytes / 1024;
+		} else {
+			return $bytes;
+		}
+	}
+
+	if ( empty( $type ) ) {
+		if ( $bytes >= 1073741824 ) {
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+		} elseif ( $bytes >= 1048576 ) {
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+		} elseif ( $bytes >= 1024 ) {
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+		} elseif ( $bytes > 1 ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( $bytes == 1 ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0' . ' bytes';
+		}
+	} else {
+		if ( 'GB' === $type ) {
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+		} elseif ( 'MB' === $type ) {
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+		} elseif ( 'KB' === $type ) {
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+		} elseif ( 'bytes' === $type ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( 1 === $bytes ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0' . ' bytes';
+		}
+	}
+
+	return $bytes;
 }

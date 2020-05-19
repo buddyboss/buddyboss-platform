@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.3
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,24 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.3.5 =
+* REST API - Added official BuddyBoss REST API
+* Activity - Fixed website link previews not all using the same formatting
+* Activity - Fixed some websites not properly fetching link preview content
+* Text Editor - Fixed text formatting buttons overlapping with media uploader
+* Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
+* WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
+* Compatibility - Fixed deprecated code errors when using PHP 7.4
+* Translations - Updated German (formal) language files
+
+= 1.3.4 =
+* Activity - Fixed certain link previews displaying doubled in activity posts
+* Profiles - Fixed 'Profile Type' filter not working when any Profile Type is hidden
+* Widgets - Improved formatting structure of activities in '(BB) Latest Activities' widget
+* Tools - Added 'Repair Community' tool for running 'Update activity favorites data'
+* Performance - Optimized code when activating plugin on site with 60,000 or more users
+* Translations - Updated German (formal) language files
 
 = 1.3.3 =
 * Text Editor - Fixed content formatting reset issues when switching edit buttons
