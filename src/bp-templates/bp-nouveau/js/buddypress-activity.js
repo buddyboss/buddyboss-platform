@@ -546,6 +546,11 @@ window.bp = window.bp || {};
 			if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
 				window.FB.XFBML.parse();
 			}
+
+			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+			setTimeout( function() {
+				jQuery( window ).scroll();
+			},200);
 		},
 
 		activityPrivacyChange: function( event ) {
