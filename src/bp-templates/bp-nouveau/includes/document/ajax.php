@@ -1174,11 +1174,11 @@ function bp_nouveau_ajax_document_get_folder_view() {
 
 	$first_text = '';
 	if ( 'profile' === $type ) {
-		$first_text = 'Documents';
+		$first_text = esc_html__( ' Documents', 'buddyboss' );
 	} else {
 		$group      = groups_get_group( (int) $id );
 		$group_name = bp_get_group_name( $group );
-		$first_text = $group_name . ' Documents';
+		$first_text = $group_name . esc_html__( ' Documents', 'buddyboss' );
 	}
 
 	wp_send_json_success(

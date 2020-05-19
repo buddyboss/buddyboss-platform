@@ -2459,6 +2459,7 @@ window.bp = window.bp || {};
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
 						},success : function( response ) {
+							BP_Nouveau.media.target_text = response.data.first_span_text;
 							if ( '' === response.data.html ) {
 								$( document ).find( '.open-popup .location-folder-list-wrap' ).hide();
 								$( document ).find( '.open-popup .location-folder-list-wrap-main span.no-folder-exists' ).show();
@@ -2470,6 +2471,8 @@ window.bp = window.bp || {};
 							$( currentTarget ).find( '.location-folder-list-wrap' ).append( response.data.html );
 							if (bp.Nouveau.Media.folderLocationUI) {
 								bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
+								$( currentTarget ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( '' );
+								$( currentTarget ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( BP_Nouveau.media.target_text );
 								$( currentTarget ).find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
 							}
 						}
@@ -2705,10 +2708,13 @@ window.bp = window.bp || {};
 						id		: id,
 						type	: type,
 					}, success: function (response) {
+						BP_Nouveau.media.target_text = response.data.first_span_text;
 						$( '.location-folder-list-wrap .location-folder-list' ).remove();
 						$( '.location-folder-list-wrap' ).append( response.data.html );
 						if (bp.Nouveau.Media.folderLocationUI) {
 							bp.Nouveau.Media.folderLocationUI( '#bp-media-edit-child-folder', BP_Nouveau.media.current_folder );
+							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( '' );
+							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( BP_Nouveau.media.target_text );
 							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + BP_Nouveau.media.current_folder ).trigger( 'click' );
 						}
 					}
