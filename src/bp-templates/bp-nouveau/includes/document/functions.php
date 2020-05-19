@@ -65,12 +65,14 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$folder_id = 0;
 		$type      = 'profile';
 	}
+
+	$exclude = array_merge( $mime_types, $extensions );
 	$document_params = array(
 		'max_upload_size_document'  => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_document'          => bp_is_profile_document_support_enabled(),
 		'group_document'            => bp_is_group_document_support_enabled(),
 		'messages_document'         => bp_is_messages_document_support_enabled(),
-		'document_type'             => implode( ',', array_unique( $mime_types ) ),
+		'document_type'             => implode( ',', array_unique( $exclude ) ),
 		'empty_document_type'       => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
 		'current_folder'            => $folder_id,
 		'current_type'              => $type,
@@ -500,36 +502,36 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		'bb_doc_49' => array(
+			'extension'   => '.vcf',
+			'mime_type'   => 'text/vcard',
+			'description' => 'vCard',
+			'is_default'  => 1,
+			'is_active'   => 1,
+		),
+		'bb_doc_50' => array(
 			'extension'   => '.wav',
 			'mime_type'   => 'audio/x-wav',
 			'description' => 'Waveform Audio',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_50' => array(
+		'bb_doc_51' => array(
 			'extension'   => '.xlam',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_51' => array(
+		'bb_doc_52' => array(
 			'extension'   => '.xls',
 			'mime_type'   => 'application/vnd.ms-excel',
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_52' => array(
-			'extension'   => '.xlsb',
-			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
-			'is_default'  => 1,
-			'is_active'   => 1,
-		),
 		'bb_doc_53' => array(
 			'extension'   => '.xlsb',
-			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
@@ -542,76 +544,83 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		'bb_doc_55' => array(
+			'extension'   => '.xlsb',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
+			'is_default'  => 1,
+			'is_active'   => 1,
+		),
+		'bb_doc_56' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_56' => array(
+		'bb_doc_57' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_57' => array(
+		'bb_doc_58' => array(
 			'extension'   => '.xlsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_58' => array(
+		'bb_doc_59' => array(
 			'extension'   => '.xltm',
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
 			'description' => 'Excel Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_59' => array(
+		'bb_doc_60' => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'applicatadp ion/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_60' => array(
+		'bb_doc_61' => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_61' => array(
+		'bb_doc_62' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'XML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_62' => array(
+		'bb_doc_63' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'text/xml',
 			'description' => 'XML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_63' => array(
+		'bb_doc_64' => array(
 			'extension'   => '.yaml',
 			'mime_type'   => 'text/yaml',
 			'description' => 'YAML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_64' => array(
+		'bb_doc_65' => array(
 			'extension'   => '.zip',
 			'mime_type'   => 'application/zip',
 			'description' => 'Zip',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_65' => array(
+		'bb_doc_66' => array(
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
 			'description' => '7z Archive',
