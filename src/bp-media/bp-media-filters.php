@@ -119,6 +119,13 @@ function bp_media_activity_entry() {
 		$args['privacy'] = array( 'grouponly' );
 	}
 
+	if (
+		bp_is_active( 'forums' )
+		&& in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+	) {
+		$args['privacy'][] = 'forums';
+	}
+
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
 		<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count ); ?> <?php echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ) ) ? esc_attr( 'forums-media-wrap' ) : ''; ?>">
 			<?php
@@ -1230,10 +1237,10 @@ function bp_media_messages_save_group_data( &$message ) {
 		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
 	} else {
 
-		$args = [
+		$args = array(
 			'thread_id' => $message->thread_id,
 			'per_page'  => 99999999999999,
-		];
+		);
 
 		if ( bp_thread_has_messages( $args ) ) {
 			while ( bp_thread_messages() ) :
