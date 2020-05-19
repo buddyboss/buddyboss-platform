@@ -1132,7 +1132,7 @@ function bp_media_settings_callback_extension_document_support() {
 			</td>
 			<td>
 				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" value="" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
-				<a href="<?php echo esc_url( $check_mime_type_link ); ?>" id="" class="button btn-check-mime-type"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
+				<a href="#" id="" class="button btn-check-mime-type"><?php echo esc_html__( 'MIME Checker', 'buddyboss' ); ?></a>
 				<span id="btn-remove-extensions" class="dashicons dashicons-dismiss"></span>
 			</td>
 		</tr>
