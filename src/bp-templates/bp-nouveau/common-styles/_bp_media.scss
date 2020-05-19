@@ -1110,14 +1110,10 @@ ul.bb-albums-list {
 
 		.bb-media-model-inner {
 			height: 100%;
-			-webkit-box-orient: vertical;
-			-webkit-box-direction: normal;
-			-ms-flex-direction: column;
 			flex-direction: column;
 			-webkit-box-orient: vertical;
 			-webkit-box-direction: normal;
-			-ms-flex-flow: column;
-			flex-flow: column;
+			flex-flow: column;/* stylelint-disable-line */
 
 			.bb-media-info-section.document {
 				-webkit-box-flex: 0;
@@ -1141,7 +1137,7 @@ ul.bb-albums-list {
 				padding: 0 10px;
 				word-break: break-word;
 			}
-			
+
 			.document-preview {
 				padding-top: 35px;
 			}
@@ -1168,10 +1164,11 @@ ul.bb-albums-list {
 			.CodeMirror {
 				height: calc(60vh - 40px);
 			}
-	
-			.document-preview h3{
+
+			.document-preview h3 {
 				right: 0;
 			}
+
 		}
 	}
 }

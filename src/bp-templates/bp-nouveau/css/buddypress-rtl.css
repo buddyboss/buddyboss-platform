@@ -2259,7 +2259,8 @@ input.search-query-input {
   vertical-align: top;
   margin-top: 4px;
   display: inline-block;
-  width: 24px;
+  width: 23px;
+  color: rgba(18, 43, 70, 0.4);
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -12494,14 +12495,11 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater .bb-media-model-inner {
     height: 100%;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
     flex-direction: column;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-    -ms-flex-flow: column;
     flex-flow: column;
+    /* stylelint-disable-line */
   }
   #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document {
     -webkit-box-flex: 0;
