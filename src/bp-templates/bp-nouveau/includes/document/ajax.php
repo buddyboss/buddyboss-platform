@@ -98,11 +98,11 @@ add_action(
 				),
 			),
 			array(
-			'document_folder_delete' => array(
+				'document_folder_delete' => array(
 					'function' => 'bp_nouveau_ajax_document_folder_delete',
 					'nopriv'   => true,
-			)
-		)
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -340,7 +340,7 @@ function bp_nouveau_ajax_document_delete_attachment() {
 	wp_send_json_success();
 }
 
-//add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2 );
+// add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2 );
 
 /**
  * Object template results media tabs.
@@ -561,12 +561,12 @@ function bp_nouveau_ajax_document_folder_save() {
 	}
 
 	// save media.
-	$id       = ! empty( $_POST['album_id'] ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
-	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title    = $_POST['title'];
-	$privacy  = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
-	$parent   = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
-	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
+	$id        = ! empty( $_POST['album_id'] ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
+	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+	$title     = $_POST['title'];
+	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
+	$parent    = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
+	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
 
 	if ( $parent > 0 ) {
 		$id = false;
@@ -577,8 +577,8 @@ function bp_nouveau_ajax_document_folder_save() {
 	}
 
 	if ( $parent > 0 ) {
-		$parent_folder  = BP_Document_Folder::get_folder_data( array( $parent ) );
-		$privacy = $parent_folder[0]->privacy;
+		$parent_folder = BP_Document_Folder::get_folder_data( array( $parent ) );
+		$privacy       = $parent_folder[0]->privacy;
 	}
 
 	$folder_id = bp_folder_add(
@@ -598,8 +598,6 @@ function bp_nouveau_ajax_document_folder_save() {
 		);
 		wp_send_json_error( $response );
 	}
-
-
 
 	if ( $group_id > 0 ) {
 		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
@@ -790,10 +788,10 @@ function bp_nouveau_ajax_document_update_file_name() {
 
 		// Get Document Object.
 		$document_object = bp_document_get(
-				array(
-					'folder_id'   => $document_id,
-					'count_total' => true,
-				)
+			array(
+				'folder_id'   => $document_id,
+				'count_total' => true,
+			)
 		);
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
@@ -882,7 +880,7 @@ function bp_nouveau_ajax_document_edit_folder() {
 
 	// save media.
 	$title    = $_POST['title'];
-	$id 	  = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$id       = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
 	if ( $group_id > 0 ) {
@@ -953,7 +951,7 @@ function bp_nouveau_ajax_document_delete() {
 
 	$string = '';
 	if ( '' !== $scope && 'personal' === $scope ) {
-		$string = '&scope='.$scope;
+		$string = '&scope=' . $scope;
 	}
 
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) . $string ) ) :
@@ -1053,30 +1051,30 @@ function bp_nouveau_ajax_document_folder_move() {
 
 	$destination_folder_id = ! empty( $_POST['folderMoveToId'] ) ? (int) filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) : 0;
 	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
-	$group_id	           = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
+	$group_id              = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
 
 	if ( '' === $destination_folder_id ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( $destination_folder_id ===  $folder_id ) {
+	if ( $destination_folder_id === $folder_id ) {
 		$response = array(
-				'feedback' => sprintf(
-						'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-						esc_html__( 'Couldn’t move item. ', 'buddyboss' )
-				),
+			'feedback' => sprintf(
+				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'Couldn’t move item. ', 'buddyboss' )
+			),
 		);
 		wp_send_json_error( $response );
 	}
 
 	$fetch_children = bp_document_get_folder_children( $folder_id );
-	if ( !empty( $fetch_children ) ) {
+	if ( ! empty( $fetch_children ) ) {
 		if ( in_array( $destination_folder_id, $fetch_children, true ) ) {
 			$response = array(
-					'feedback' => sprintf(
-							'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-							esc_html__( 'Couldn’t move item because it\'s parent folder. ', 'buddyboss' )
-					),
+				'feedback' => sprintf(
+					'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'Couldn’t move item because it\'s parent folder. ', 'buddyboss' )
+				),
 			);
 			wp_send_json_error( $response );
 		}
@@ -1174,10 +1172,20 @@ function bp_nouveau_ajax_document_get_folder_view() {
 		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
 	}
 
+	$first_text = '';
+	if ( 'profile' === $type ) {
+		$first_text = 'Documents';
+	} else {
+		$group      = groups_get_group( (int) $id );
+		$group_name = bp_get_group_name( $group );
+		$first_text = $group_name . ' Documents';
+	}
+
 	wp_send_json_success(
 		array(
-			'message' => 'success',
-			'html'    => $ul,
+			'message'         => 'success',
+			'html'            => $ul,
+			'first_span_text' => $first_text,
 		)
 	);
 }
