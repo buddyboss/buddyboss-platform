@@ -38,7 +38,7 @@ add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messag
 add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
 
 // Sync Attachment data.
-add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
+//add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
 
 add_filter( 'bp_get_document_name', 'convert_chars' );
 add_filter( 'bp_get_document_name', 'wptexturize' );

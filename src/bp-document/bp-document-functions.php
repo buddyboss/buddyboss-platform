@@ -1176,7 +1176,7 @@ function bp_document_upload() {
 	$result = array(
 		'id'   => (int) $attachment->ID,
 		'url'  => esc_url( $attachment->guid ),
-		'name' => esc_attr( $name ),
+		'name' => esc_attr( pathinfo( basename ( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
 		'type' => esc_attr( 'document' ),
 	);
 
