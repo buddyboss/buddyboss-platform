@@ -56,7 +56,7 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/account-settings Account Settings
 	 * @apiName        GetBBAccountSettings
-	 * @apiGroup       AccountSettings
+	 * @apiGroup       Account Settings
 	 * @apiDescription Retrieve account settings tabs.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
