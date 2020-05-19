@@ -119,7 +119,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/reply Replies
 	 * @apiName        GetBBPReplies
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Retrieve Replies
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} [page=1] Current page of the collection.
@@ -367,7 +367,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/reply/:id Reply
 	 * @apiName        GetBBPReply
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Retrieve a single reply.
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} id A unique numeric ID for the reply.
@@ -536,7 +536,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/reply Create Reply
 	 * @apiName        CreateBBPReply
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Create a reply.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1100,7 +1100,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/reply/:id Update Reply
 	 * @apiName        UpdateBBPReply
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Update a reply.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1538,7 +1538,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/reply/:id Trash/Delete Reply
 	 * @apiName        DeleteBBPReply
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Trash OR Delete a Reply.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

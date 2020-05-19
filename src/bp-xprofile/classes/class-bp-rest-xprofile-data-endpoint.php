@@ -100,7 +100,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Get xProfile Field Data
 	 * @apiName        GetBBxProfileFieldData
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Field data for the user.
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} field_id The ID of the field the data is from.
@@ -213,7 +213,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Update xProfile Field Data
 	 * @apiName        UpdateBBxProfileData
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Update xProfile field data for the user.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -369,7 +369,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api {DELETE} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Delete xProfile Field Data
 	 * @apiName DeleteBBxProfileData
-	 * @apiGroup ProfileFields
+	 * @apiGroup Profile Fields
 	 * @apiDescription Delete user's xProfile data.
 	 * @apiVersion 1.0.0
 	 * @apiPermission LoggedInUser

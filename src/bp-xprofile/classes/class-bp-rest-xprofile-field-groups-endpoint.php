@@ -141,7 +141,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/groups Get xProfile Groups
 	 * @apiName        GetBBxProfileGroups
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Groups
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} [profile_group_id] ID of the field group that have fields.
@@ -261,7 +261,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/groups/:id Get xProfile Group
 	 * @apiName        GetBBxProfilGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Single xProfile Group
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} id A unique numeric ID for the group of profile fields.
@@ -339,7 +339,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/groups Create xProfile Group
 	 * @apiName        CreateBBxProfileGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Create a Group
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -461,7 +461,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/groups/:id Update xProfile Group
 	 * @apiName        UpdateBBxProfileGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Update a Group
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -589,7 +589,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/groups/:id Delete xProfile Group
 	 * @apiName        DeleteBBxProfileGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Delete xProfile Group.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

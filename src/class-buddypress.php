@@ -712,6 +712,7 @@ class BuddyPress {
 			'BP_REST_Attachments_Group_Cover_Endpoint'     => 'groups',
 			'BP_REST_Messages_Endpoint'                    => 'messages',
 			'BP_REST_Group_Messages_Endpoint'              => 'messages',
+			'BP_REST_Messages_Actions_Endpoint'            => 'messages',
 			'BP_REST_Notifications_Endpoint'               => 'notifications',
 			'BP_REST_Friends_Endpoint'                     => 'friends',
 			'BP_REST_Forums_Endpoint'                      => 'forums',
