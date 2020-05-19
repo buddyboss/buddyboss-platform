@@ -4247,7 +4247,7 @@ window.bp = window.bp || {};
 		checkPressedKeyDocuments: function (e) {
 			e = e || window.event;
 			if ( e.keyCode == 27 ) {
-				$( '.document-theatre' ).hide().find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).html( '' );
+				$( '.document-theatre' ).hide().find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).find('.document-preview').html( '' );
 			}
 		},
 
