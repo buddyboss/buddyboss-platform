@@ -533,55 +533,83 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 		),
 		'bb_doc_54' => array(
+			'extension'   => '.xlsb',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
+			'is_default'  => 1,
+			'is_active'   => 1,
+		),
+		'bb_doc_55' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_55' => array(
+		'bb_doc_56' => array(
+			'extension'   => '.xlsm',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'description' => 'Excel Spreadsheet (Macro Enabled)',
+			'is_default'  => 1,
+			'is_active'   => 1,
+		),
+		'bb_doc_57' => array(
 			'extension'   => '.xlsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_56' => array(
+		'bb_doc_58' => array(
 			'extension'   => '.xltm',
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
 			'description' => 'Excel Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_57' => array(
+		'bb_doc_59' => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'applicatadp ion/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_58' => array(
+		'bb_doc_60' => array(
+			'extension'   => '.xltx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'description' => 'Excel Template',
+			'is_default'  => 1,
+			'is_active'   => 1,
+		),
+		'bb_doc_61' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'XML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_59' => array(
+		'bb_doc_62' => array(
+			'extension'   => '.xml',
+			'mime_type'   => 'text/xml',
+			'description' => 'XML',
+			'is_default'  => 1,
+			'is_active'   => 1,
+		),
+		'bb_doc_63' => array(
 			'extension'   => '.yaml',
 			'mime_type'   => 'text/yaml',
 			'description' => 'YAML',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_60' => array(
+		'bb_doc_64' => array(
 			'extension'   => '.zip',
 			'mime_type'   => 'application/zip',
 			'description' => 'Zip',
 			'is_default'  => 1,
 			'is_active'   => 1,
 		),
-		'bb_doc_61' => array(
+		'bb_doc_65' => array(
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
 			'description' => '7z Archive',

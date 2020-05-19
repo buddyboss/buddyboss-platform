@@ -256,7 +256,7 @@
 				$('form').submit(function () {
 					var error = false;
 					$('body .section-bp_document_settings_extensions table tbody tr td table tbody tr.document-extensions td [type="text"]').each(function() {
-						var value = $(this).val();
+						var value = $.trim( $(this).val() );
 						if ( '' === value ) {
 							$( this ).addClass( 'error' );
 							error = true;
