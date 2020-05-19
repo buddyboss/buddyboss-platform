@@ -38,9 +38,11 @@ function bp_nouveau_document_enqueue_scripts() {
 function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$extensions     = array();
+	$mime_types     = array();
 	$all_extensions = bp_document_extensions_list();
 	foreach ( $all_extensions as $extension ) {
 		if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+			$mime_types[] = $extension['mime_type'];
 			$extensions[] = $extension['extension'];
 		}
 	}
@@ -68,7 +70,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'profile_document'          => bp_is_profile_document_support_enabled(),
 		'group_document'            => bp_is_group_document_support_enabled(),
 		'messages_document'         => bp_is_messages_document_support_enabled(),
-		'document_type'             => implode( ',', $extensions ),
+		'document_type'             => implode( ',', array_unique( $mime_types ) ),
 		'empty_document_type'       => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
 		'current_folder'            => $folder_id,
 		'current_type'              => $type,
@@ -77,8 +79,8 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'          => $group_id,
 		'target_text'               => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title' => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'			=> __( 'File could not be uploaded', 'buddyboss' ),
-		'document_select_error'     => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', $extensions ) . '</div>',
+		'invalid_file_type'			=> __( 'Invalid file type', 'buddyboss' ),
+		'document_select_error'     => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message' => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'     => ( bp_is_document_directory() ) ? 'yes' : 'no'
 	);
