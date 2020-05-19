@@ -13814,6 +13814,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   text-align: right;
 }
 
+body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner .bb-media-actions .media-search-form .nouveau-search-submit {
+  width: auto;
+  padding: 4px;
+  height: auto;
+  z-index: 112;
+}
+
 body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner .bb-single-album-header {
   width: 25%;
   -webkit-flex-basis: 25%;

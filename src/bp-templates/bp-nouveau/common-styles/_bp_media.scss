@@ -2482,6 +2482,13 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		-ms-flex-preferred-size: 75%;
 		flex-basis: 75%;
 		text-align: right;
+
+		.media-search-form .nouveau-search-submit {
+			width: auto;
+			padding: 4px;
+			height: auto;
+			z-index: 112;
+		}
 	}
 
 	.bb-single-album-header {
