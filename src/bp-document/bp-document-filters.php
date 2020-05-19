@@ -26,8 +26,8 @@ add_action( 'bbp_new_reply', 'bp_document_forums_new_post_document_save', 999 );
 add_action( 'bbp_new_topic', 'bp_document_forums_new_post_document_save', 999 );
 add_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
 
-add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 // Messages.
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
