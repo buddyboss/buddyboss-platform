@@ -2644,6 +2644,8 @@ span.dashicons.dashicons-admin-file:before {
   -ms-flex-direction: row;
   flex-direction: row;
   padding: 5px 15px;
+  background-color: #fff;
+  border-radius: 5px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img {
