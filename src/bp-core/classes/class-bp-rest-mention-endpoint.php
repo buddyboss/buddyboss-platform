@@ -57,7 +57,7 @@ class BP_REST_Mention_Endpoint extends WP_REST_Controller {
 	 * @api            {GET} /wp-json/buddyboss/v1/mention Mention Member
 	 * @apiName        GetBBMention
 	 * @apiGroup       Components
-	 * @apiDescription Retrieve member which you want for mention in Activity OR Forum's topic and reply.
+	 * @apiDescription Retrieve member which you want to mention in Activity OR Forum topic and reply.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {String} term Members @name suggestions.

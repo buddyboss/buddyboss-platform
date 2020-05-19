@@ -67,7 +67,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/messages/group Create Group Thread
 	 * @apiName        CreateBBGroupThread
-	 * @apiGroup       Threads
+	 * @apiGroup       Messages
 	 * @apiDescription Create Group thread
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

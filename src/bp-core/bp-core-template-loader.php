@@ -275,10 +275,15 @@ function bp_get_template_stack() {
 	} else {
 		$filter = &$wp_filter[ $tag ];
 
-		if ( ! isset( $merged_filters[ $tag ] ) ) {
+		if ( ( is_array( $filter ) && ! empty( $filter ) ) && ! isset( $merged_filters[ $tag ] ) ) {
 			ksort( $filter );
 			$merged_filters[ $tag ] = true;
 		}
+	}
+
+	// check filter if not array.
+	if ( ! is_array( $filter ) || empty( $filter ) ) {
+		return (array) apply_filters( 'bp_get_template_stack', array() );
 	}
 
 	// Ensure we're always at the beginning of the filter array.

@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Learndash Courses endpoints.
+ * LearnDash Courses endpoints.
  *
  * @since 0.1.0
  */
@@ -55,7 +55,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {GET} /wp-json/buddyboss/v1/learndash/courses Learndash Courses
+	 * @api            {GET} /wp-json/buddyboss/v1/learndash/courses LearnDash Courses
 	 * @apiName        GetBBLearndashCourses
 	 * @apiGroup       Learndash
 	 * @apiDescription Retrieve courses.
