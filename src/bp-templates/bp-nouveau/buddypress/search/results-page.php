@@ -17,7 +17,7 @@ if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 ?>
 <header class="entry-header">
 	<h1 class="entry-title">
-		<?php echo $post_title ?>
+		<?php echo stripslashes( $post_title ); ?>
 	</h1>
 </header>
 
