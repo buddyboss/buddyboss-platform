@@ -1328,6 +1328,12 @@ function bp_document_svg_icon( $extension ) {
 		case 'gzip':
 			$svg = 'bb-icon-zip';
 			break;
+		case 'ace':
+			$svg = 'bb-icon-zip';
+			break;
+		case '7z':
+			$svg = 'bb-icon-zip';
+			break;
 		case 'htm':
 			$svg = 'bb-icon-code';
 			break;
