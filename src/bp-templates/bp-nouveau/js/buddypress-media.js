@@ -2779,7 +2779,6 @@ window.bp = window.bp || {};
 							});
 
 							if ($( this ).hasClass( 'selected' ) && ! $( this ).hasClass( 'disabled' )) {
-								$( this ).removeClass( 'selected' );
 								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '' );
 								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '...' );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-destination' ).val( '' );
@@ -2808,6 +2807,7 @@ window.bp = window.bp || {};
 							$( this ).siblings( 'ul' ).show().siblings( 'span, i' ).hide().parent().siblings().hide();
 							$( this ).siblings( 'ul' ).children( 'li' ).show().children( 'span,i' ).show();
 							$( this ).closest( '.is_active' ).removeClass( 'is_active' );
+							$( targetPopup ).find( 'li.is_active' ).removeClass( 'is_active' );
 							$( this ).parent().addClass( 'is_active' );
 
 							$( targetPopup ).find( '.bb-folder-selected-id' ).val( $( targetPopup ).find( '.location-folder-list li.is_active' ).attr( 'data-id' ) );
@@ -2846,7 +2846,8 @@ window.bp = window.bp || {};
 
 							$( targetPopup ).find( '.location-folder-list li' ).hide();
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' );
-							$( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).addClass( 'is_active' );
+							$( targetPopup ).find( '.location-folder-list li > span.selected' ).removeClass( 'selected' );
+							$( targetPopup ).find( '.location-folder-list li[data-id="' + currentLiID + '"]' ).addClass( 'is_active' ).children('span').addClass( 'selected' );
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).parents( '.has-ul' ).show().children( 'ul' ).show().siblings( 'span,i' ).hide();
 
 							if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).length && !$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul' ).hasClass('no-folder-list') ) {
@@ -2913,7 +2914,9 @@ window.bp = window.bp || {};
 								}
 							});
 
-
+							$( targetPopup ).find( '.bb-folder-selected-id' ).val( currentLiID );
+							$( targetPopup ).find( '.target_folder' ).text( '' );
+							$( targetPopup ).find( '.target_folder' ).text( $( event.currentTarget ).text() );
 						}
 					);
 
