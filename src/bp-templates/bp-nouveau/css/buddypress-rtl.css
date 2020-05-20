@@ -1790,12 +1790,33 @@ input.search-query-input {
   }
 }
 
-@media screen and (max-width: 560px) {
+@media screen and (max-width: 603px) {
   #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 109px;
+    bottom: 110px;
   }
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 109px;
+    bottom: 110px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 110px;
+  }
+  div #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 110px;
+  }
+  .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 56px;
+  }
+  div .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 56px;
+  }
+  #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 144px;
+  }
+  div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
+    bottom: 144px;
   }
 }
 
@@ -15784,10 +15805,10 @@ span.CodeMirror-selectedtext {
     bottom: 65px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
-    bottom: 88px;
+    bottom: 90px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
-    bottom: 88px;
+    bottom: 90px;
   }
 }
 
