@@ -12508,6 +12508,7 @@ ul.bb-albums-list .bb-more-photos strong {
     -ms-flex: none;
     flex: none;
     width: 100%;
+    margin-right: 0;
   }
   #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document li.activity_update {
     min-height: auto;
@@ -13306,11 +13307,19 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   top: 0;
   right: 0;
   padding: 6px 0;
-  left: 377px;
+  left: 0;
   text-align: center;
   border-bottom: 1px solid #ecedee;
   font-size: 16px;
   font-weight: 500;
+}
+
+.bb-document-theater .bb-media-info-section.document {
+  position: relative;
+  z-index: 11;
+  background-color: #fff;
+  border-right: 1px solid #ecedee;
+  margin-right: -1px;
 }
 
 .bb-document-theater .document-text-file-data-hidden {

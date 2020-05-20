@@ -1120,6 +1120,7 @@ ul.bb-albums-list {
 				-ms-flex: none;
 				flex: none;
 				width: 100%;
+				margin-left: 0;
 
 				li.activity_update {
 					min-height: auto;
@@ -1924,13 +1925,21 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			top: 0;
 			left: 0;
 			padding: 6px 0;
-			right: 377px;
+			right: 0;
 			text-align: center;
 			border-bottom: 1px solid #ecedee;
 			font-size: 16px;
 			font-weight: 500;
 		}
 
+	}
+
+	.bb-media-info-section.document {
+		position: relative;
+		z-index: 11;
+		background-color: #fff;
+		border-left: 1px solid #ecedee;
+		margin-left: -1px;
 	}
 
 	.document-text-file-data-hidden {
