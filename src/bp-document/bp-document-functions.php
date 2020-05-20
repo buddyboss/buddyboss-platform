@@ -1630,11 +1630,6 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 			}
 		}
 	}
-
-	if ( false === $query ) {
-		return false;
-	}
-
 	return $document_id;
 }
 
