@@ -4573,7 +4573,7 @@ window.bp = window.bp || {};
 					.fail( function() {
 						document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 						document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-						document_elements.find( '.bb-document-section .document-preview' ).html('<p><i class="bb-icon-alert-triangle"></i> Something went wrong.');
+						document_elements.find( '.bb-document-section .document-preview' ).html('<p style="text-align: center;"><i class="bb-icon-alert-triangle" style="margin-right: 5px;"></i>' + BP_Nouveau.media.document_preview_error );
 					});
 			} else if( $.inArray( self.current_document.extension, [ 'wav', 'mp3' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');

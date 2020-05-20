@@ -84,7 +84,8 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'invalid_file_type'			=> __( 'Invalid file type', 'buddyboss' ),
 		'document_select_error'     => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message' => __( 'Drop files here to upload', 'buddyboss' ),
-		'is_document_directory'     => ( bp_is_document_directory() ) ? 'yes' : 'no'
+		'is_document_directory'     => ( bp_is_document_directory() ) ? 'yes' : 'no',
+		'document_preview_error'    => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' )
 	);
 
 	$old_media = $params['media'];
