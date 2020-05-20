@@ -13,7 +13,7 @@
 
 	<div class="bb-field-wrap">
 		<label for="new_folder_name_input" class="bb-label">Folder Title</label>
-		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>" id="new_folder_name_input">
+		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Folder Title', 'buddyboss' ); ?>">
 	</div>
 	<?php
 	if ( ! bp_is_group() ) :
