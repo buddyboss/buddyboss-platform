@@ -12509,11 +12509,7 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater .bb-media-model-inner {
     height: 100%;
-    flex-direction: column;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-flow: column;
-    /* stylelint-disable-line */
+    display: block;
   }
   #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document {
     -webkit-box-flex: 0;
@@ -12527,11 +12523,17 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater .bb-media-section {
     width: 100%;
-    height: 60vh;
+    height: auto;
+    min-height: 260px;
     max-height: 60vh;
+    background-color: #fff;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section {
-    height: 60vh;
+    max-height: 60vh;
+    height: auto;
+    display: block;
+    text-align: center;
+    padding: 5px 0;
   }
   #buddypress .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > p {
     font-size: 16px;
