@@ -1578,12 +1578,12 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy {
   left: auto;
-  right: 0;
+  right: -20px;
 }
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy:before {
   left: auto;
-  right: 24px;
+  right: 44px;
 }
 
 .gif-media-search {
