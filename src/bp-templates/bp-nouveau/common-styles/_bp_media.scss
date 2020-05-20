@@ -1131,6 +1131,9 @@ ul.bb-albums-list {
 			min-height: 260px;
 			max-height: 60vh;
 			background-color: #fff;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
 
 			.img-section {
 				max-height: 60vh;

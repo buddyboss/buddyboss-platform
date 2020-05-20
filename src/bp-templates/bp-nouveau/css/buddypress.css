@@ -12527,6 +12527,9 @@ ul.bb-albums-list .bb-more-photos strong {
     min-height: 260px;
     max-height: 60vh;
     background-color: #fff;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section {
     max-height: 60vh;
