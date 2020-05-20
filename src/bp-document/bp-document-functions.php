@@ -1610,12 +1610,13 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		$wpdb->query( $query ); // db call ok; no-cache ok;
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s, album_id = %d WHERE id = %d", $destination_privacy, bp_core_current_time(), $folder_id, $document_id );
-	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
+	$document                = new BP_Document( $document_id );
+	$document->folder_id     = $folder_id;
+	$document->date_modified = bp_core_current_time();
+	$document->save();
 
 	// Update document activity privacy.
 	if ( ! $group_id ) {
-		$document = new BP_Document( $document_id );
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 			$post_attachment = $document->attachment_id;
 			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );

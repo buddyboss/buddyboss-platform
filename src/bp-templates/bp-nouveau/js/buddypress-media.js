@@ -412,7 +412,7 @@ window.bp = window.bp || {};
 					success: function (response) {
 						if (response.success) {
 							if ( $( '.document-data-table-head' ).length ) {
-								if ( 0 === currentFolder || '0' === currentFolder || currentFolder === parseInt( BP_Nouveau.media.current_folder ) ) {
+								if (  parseInt( currentFolder ) === parseInt( BP_Nouveau.media.current_folder ) ) {
 									// Prepend the activity if no parent.
 									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
 									jQuery( window ).scroll();
@@ -3378,7 +3378,7 @@ window.bp = window.bp || {};
 						);
 						if (response.success) {
 							self.closeFolderUploader( event );
-							if ( $( '.document-data-table-head' ).length ) {
+							if ( $( '.document-data-table-head' ).length && parseInt( self.album_id ) === parseInt( BP_Nouveau.media.current_folder ) ) {
 								// Prepend the activity if no parent.
 								bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
 								jQuery( window ).scroll();
