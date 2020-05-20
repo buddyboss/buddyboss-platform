@@ -273,6 +273,8 @@ window.bp = window.bp || {};
 					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 					}
+				} else {
+					bp.Nouveau.Activity.postForm.dropzone.removeFile(file);
 				}
 			});
 
@@ -559,11 +561,11 @@ window.bp = window.bp || {};
 				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! el.classList.contains('loading') ) {
 					if ( this.total_count > 0 && this.offset <= this.total_count ) {
 						var self = this,
-						params = {
-							offset: self.offset,
-							fmt: 'json',
-							limit: self.limit
-						};
+							params = {
+								offset: self.offset,
+								fmt: 'json',
+								limit: self.limit
+							};
 
 						self.el.classList.add('loading');
 						var request = null;
@@ -727,7 +729,7 @@ window.bp = window.bp || {};
 
 			this.linkTimeout = setTimeout( function() {
 				this.linkTimeout = null;
-				self.scrapURL( event.target.textContent );
+				self.scrapURL( window.activity_editor.getContent() );
 			}, 500 );
 		},
 
@@ -761,6 +763,8 @@ window.bp = window.bp || {};
 		getURL: function( prefix, urlText ) {
 			var urlString = '';
 			var startIndex = urlText.indexOf( prefix );
+			var responseUrl = '';
+
 			for ( var i = startIndex; i < urlText.length; i ++ ) {
 				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
 					break;
@@ -772,7 +776,20 @@ window.bp = window.bp || {};
 				prefix = 'http://';
 				urlString = prefix + urlString;
 			}
-			return urlString;
+
+			var div = document.createElement('div');
+			div.innerHTML = urlString;
+			var elements = div.getElementsByTagName('*');
+
+			while (elements[0]) {
+				elements[0].parentNode.removeChild(elements[0]);
+			}
+
+			if( div.innerHTML.length > 0 ){
+				responseUrl = div.innerHTML;
+			}
+
+			return responseUrl;
 		},
 
 		loadURLPreview: function (url) {
@@ -870,7 +887,7 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-				window.group_messages_editor = new window.MediumEditor('#whats-new',{
+				window.activity_editor = new window.MediumEditor('#whats-new',{
 					placeholder: {
 						text: '',
 						hideOnClick: true
@@ -1023,7 +1040,7 @@ window.bp = window.bp || {};
 
 		cleanView: function() {
 			_.each( this.views._views[''], function( view ) {
-					view.remove();
+				view.remove();
 			} );
 		}
 	} );
@@ -1356,7 +1373,7 @@ window.bp = window.bp || {};
 		}
 	});
 
-		/**
+	/**
 	 * Now build the buttons!
 	 * @type {[type]}
 	 */
@@ -1405,8 +1422,8 @@ window.bp = window.bp || {};
 				// Tell the active Button to load its content
 				this.collection.trigger( 'display:' + button.get( 'id' ), this );
 
-			// Trigger an even to let Buttons reset
-			// their modifications to the activity model
+				// Trigger an even to let Buttons reset
+				// their modifications to the activity model
 			} else {
 				this.collection.trigger( 'reset:' + button.get( 'id' ), this.model );
 			}
@@ -1647,7 +1664,7 @@ window.bp = window.bp || {};
 
 		postUpdate: function( event ) {
 			var self = this,
-			    meta = {};
+				meta = {};
 
 			if ( event ) {
 				if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
@@ -1660,7 +1677,7 @@ window.bp = window.bp || {};
 			// Set the content and meta
 			_.each( this.$el.serializeArray(), function( pair ) {
 				pair.name = pair.name.replace( '[]', '' );
-				 if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+				if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
 					if ( _.isUndefined( meta[ pair.name ] ) ) {
 						meta[ pair.name ] = pair.value;
 					} else {
@@ -1803,7 +1820,7 @@ window.bp = window.bp || {};
 				if ( ! toPrepend ) {
 					self.views.add( new bp.Views.activityFeedback( { value: response.message, type: 'updated' } ) );
 
-				// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
+					// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 				} else if ( ! $( '#activity-' + response.id  ).length ) {
 
 					// It's the very first activity, let's make sure the container can welcome it!
