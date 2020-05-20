@@ -894,7 +894,9 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 		$data              = array();
 		$data['text']      = $file_data;
 		$data['more_text'] = $more_text;
-		set_transient( 'attachment_text' . $attachment_id, $data );
+		if ( ! empty( $file_data ) ) {
+			set_transient( 'attachment_text' . $attachment_id, $data );
+		}
 	}
 
 	return apply_filters( 'bp_document_get_preview_text_from_attachment', $data, $attachment_id );
