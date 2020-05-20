@@ -1606,8 +1606,9 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		$destination_privacy = $destination_folder[0]->privacy;
 
 		// Update modify date for destination folder.
-		$query = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET date_modified = %s WHERE id = %d", bp_core_current_time(), $folder_id );
-		$wpdb->query( $query ); // db call ok; no-cache ok;
+		$destination_folder_update                 = new BP_Document_Folder( $folder_id );
+		$destination_folder_update->date_modified  = bp_core_current_time();
+		$destination_folder_update->save();
 	}
 
 	$document                = new BP_Document( $document_id );
@@ -1798,13 +1799,17 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		$destination_privacy = $destination_folder[0]->privacy;
 
 		// Update modify date for destination folder.
-		$query_modify_folder = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET date_modified = %s WHERE id = %d", bp_core_current_time(), $destination_folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-		$wpdb->query( $query_modify_folder );
+		$destination_folder_update                 = new BP_Document_Folder( $destination_folder_id );
+		$destination_folder_update->date_modified  = bp_core_current_time();
+		$destination_folder_update->save();
 	}
 
 	// Update main parent folder.
-	$query_update_folder = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s, parent = %d, date_modified = %s WHERE id = %d", $destination_privacy, $destination_folder_id, bp_core_current_time(), $folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-	$query               = $wpdb->query( $query_update_folder );
+	$folder                 = new BP_Document_Folder( $folder_id );
+	$folder->privacy        = $destination_privacy;
+	$folder->parent         = $destination_folder_id;
+	$folder->date_modified  = bp_core_current_time();
+	$folder->save();
 
 	// Get all the documents of main folder.
 	$document_ids = bp_document_get_folder_document_ids( $folder_id );
