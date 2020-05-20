@@ -4388,10 +4388,9 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var self   = this;
 			var target = $( event.currentTarget );
-
-			var media_elements = $( target ).closest( '.document-theatre' );
-			media_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).find('.document-preview').html( '' );
-			media_elements.hide();
+			var document_elements = $( document ).find( '.document-theatre' );
+			document_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).find('.document-preview').html( '' );
+			document_elements.hide();
 			self.is_open = false;
 
 			self.resetRemoveActivityCommentsData();
@@ -4836,6 +4835,7 @@ window.bp = window.bp || {};
 					self.current_index = -1;
 					self.next( event );
 				} else if (self.current_index == 0 && self.current_index == (self.medias.length)) {
+					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_media.activity_id + '"]' ).remove();
 					self.closeTheatre( event );
 				} else if (self.current_index == (self.medias.length)) {
 					self.previous( event );
@@ -4846,8 +4846,8 @@ window.bp = window.bp || {};
 			}
 			if (self.is_open && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id == data.id) {
 
-				$( document ).find( '[data-bp-list="media"] .bb-open-media-theatre[data-id="' + self.current_document.id + '"]' ).closest( 'li' ).remove();
-				$( document ).find( '[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_document.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
+				$( document ).find( '[data-bp-list="document"] .bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( 'div.ac-document-list[data-activity-id="' + self.current_document.activity_id + '"]' ).remove();
+				$( document ).find( '[data-bp-list="activity"] .bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
 
 				for (i = 0; i < self.documents.length; i++) {
 					if (self.documents[i].activity_id == data.id) {
@@ -4860,6 +4860,7 @@ window.bp = window.bp || {};
 					self.current_document_index = -1;
 					self.nextDocument( event );
 				} else if (self.current_document_index == 0 && self.current_document_index == (self.documents.length)) {
+					$( document ).find( '[data-bp-list="activity"] li.activity-item[data-bp-activity-id="' + self.current_document.activity_id + '"]' ).remove();
 					self.closeDocumentTheatre( event );
 				} else if (self.current_document_index == (self.documents.length)) {
 					self.previousDocument( event );
