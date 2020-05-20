@@ -4183,8 +4183,17 @@ window.bp = window.bp || {};
 
 		checkPressedKeyDocuments: function (e) {
 			e = e || window.event;
-			if ( e.keyCode == 27 ) {
-				$( '.document-theatre' ).hide().find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).find('.document-preview').html( '' );
+			var self = this;
+			switch (e.keyCode) {
+				case 27: // escape key.
+					self.closeDocumentTheatre( e );
+					break;
+				case 37: // left arrow key code.
+					self.previousDocument( e );
+					break;
+				case 39: // right arrow key code.
+					self.nextDocument( e );
+					break;
 			}
 		},
 
