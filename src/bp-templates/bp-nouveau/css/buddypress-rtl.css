@@ -13153,13 +13153,15 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   }
   #media-stream .document-data-table-head .data-head-name,
   #media-stream .document-data-table-head .data-head-modified,
-  #media-stream .document-data-table-head .data-head-visibility {
+  #media-stream .document-data-table-head .data-head-visibility,
+  #media-stream .document-data-table-head .data-head-origin {
     padding-left: 7px;
     font-size: 10px;
   }
   #media-stream .document-data-table-head .data-head-name i,
   #media-stream .document-data-table-head .data-head-modified i,
-  #media-stream .document-data-table-head .data-head-visibility i {
+  #media-stream .document-data-table-head .data-head-visibility i,
+  #media-stream .document-data-table-head .data-head-origin i {
     font-size: 6px;
     -webkit-transform: rotate(-180deg) translateY(2px);
     -ms-transform: rotate(-180deg) translateY(2px);
