@@ -13242,6 +13242,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   overflow: visible;
   align-items: flex-end;
   position: static;
+  background-color: #fff;
 }
 
 .bb-document-theater .bb-media-section .document-preview {
@@ -13294,11 +13295,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bb-document-theater .bb-media-section .img-section {
   overflow: auto;
   height: calc(90vh - 40px);
+  background-color: #fff;
 }
 
 .bb-document-theater .bb-media-section .img-section img {
   padding: 20px;
-  background-color: #fff;
 }
 
 .bb-document-theater .bb-media-section .document-text {

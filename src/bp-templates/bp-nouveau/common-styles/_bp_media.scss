@@ -1847,6 +1847,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		overflow: visible;
 		align-items: flex-end;
 		position: static;
+		background-color: #fff;
 
 		.document-preview {
 			width: 100%;
@@ -1899,10 +1900,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		.img-section {
 			overflow: auto;
 			height: calc(90vh - 40px);
+			background-color: #fff;
 
 			img {
 				padding: 20px;
-				background-color: #fff;
 			}
 
 		}
