@@ -47,17 +47,13 @@ class BP_Document_Query extends BP_Recursive_Query {
 		'attachment_id',
 		'user_id',
 		'title',
-		'album_id',
+		'folder_id',
 		'group_id',
 		'activity_id',
 		'privacy',
 		'menu_order',
 		'date_created',
-		'type',
-		'preview_attachment_id',
 		'date_modified',
-		'file_name',
-		'extension',
 	);
 
 	/**
@@ -145,7 +141,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * @return string SQL fragment to append to the main WHERE clause.
 	 * @since BuddyBoss 1.3.6
 	 */
-	public function get_sql_folder( $alias = 'a' ) {
+	public function get_sql_folder( $alias = 'f' ) {
 		if ( ! empty( $alias ) ) {
 			$this->table_alias = sanitize_title( $alias );
 		}

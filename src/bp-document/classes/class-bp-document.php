@@ -71,14 +71,6 @@ class BP_Document {
 	var $folder_id;
 
 	/**
-	 * Activity ID of the document item.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var int
-	 */
-	var $activity_id;
-
-	/**
 	 * Group ID of the document item.
 	 *
 	 * @since BuddyBoss 1.3.6
@@ -87,36 +79,12 @@ class BP_Document {
 	var $group_id;
 
 	/**
-	 * Thread ID of the document item.
+	 * Activity ID of the document item.
 	 *
 	 * @since BuddyBoss 1.3.6
 	 * @var int
 	 */
-	var $thread_id;
-
-	/**
-	 * Forum ID of the document item.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var int
-	 */
-	var $forum_id;
-
-	/**
-	 * Topic ID of the document item.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var int
-	 */
-	var $topic_id;
-
-	/**
-	 * Reply ID of the document item.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var int
-	 */
-	var $reply_id;
+	var $activity_id;
 
 	/**
 	 * Privacy of the document item.
@@ -149,38 +117,6 @@ class BP_Document {
 	 * @var string
 	 */
 	var $date_modified;
-
-	/**
-	 * Upload document file name.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var string
-	 */
-	var $file_name;
-
-	/**
-	 * Upload document description.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var string
-	 */
-	var $description;
-
-	/**
-	 * document type.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var string
-	 */
-	var $type;
-
-	/**
-	 * Upload document extension.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var string
-	 */
-	var $extension;
 
 	/**
 	 * Error holder.
@@ -244,19 +180,12 @@ class BP_Document {
 		$this->attachment_id = (int) $row->attachment_id;
 		$this->user_id       = (int) $row->user_id;
 		$this->title         = $row->title;
-		$this->folder_id     = (int) $row->album_id;
+		$this->folder_id     = (int) $row->folder_id;
 		$this->activity_id   = (int) $row->activity_id;
-		$this->group_id      = (int) $row->group_id;
-		$this->thread_id     = (int) $row->thread_id;
-		$this->forum_id      = (int) $row->forum_id;
-		$this->topic_id      = (int) $row->topic_id;
-		$this->reply_id      = (int) $row->reply_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
 		$this->date_modified = $row->date_modified;
-		$this->file_name     = $row->file_name;
-		$this->extension     = $row->extension;
 	}
 
 	/**
@@ -330,13 +259,14 @@ class BP_Document {
 				'folder_id'      => false,
 				'folder'         => true,
 				'user_directory' => true,
+				'meta_query'     => false,           // Filter by document meta.
 			)
 		);
 
 		// Select conditions.
-		$select_sql = 'SELECT DISTINCT m.id';
+		$select_sql = 'SELECT DISTINCT d.id';
 
-		$from_sql = " FROM {$bp->document->table_name} m";
+		$from_sql = " FROM {$bp->document->table_name} d";
 
 		$join_sql = '';
 
@@ -355,7 +285,7 @@ class BP_Document {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'd.title LIKE %s', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -368,7 +298,7 @@ class BP_Document {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
 				if ( false !== $user_search ) {
 					$user_id                         = $user_search->ID;
-					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.user_id = %d', $user_id );
+					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR d.user_id = %d', $user_id );
 				}
 			}
 		}
@@ -396,18 +326,18 @@ class BP_Document {
 				$r['order_by'] = 'date_created';
 				break;
 		}
-		$order_by = 'm.' . $r['order_by'];
+		$order_by = 'd.' . $r['order_by'];
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
 			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
-			$where_conditions['exclude'] = "m.id NOT IN ({$exclude})";
+			$where_conditions['exclude'] = "d.id NOT IN ({$exclude})";
 		}
 
 		// The specific ids to which you want to limit the query.
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
-			$where_conditions['in'] = "m.id IN ({$in})";
+			$where_conditions['in'] = "d.id IN ({$in})";
 
 			// we want to disable limit query when include document ids.
 			$r['page']     = false;
@@ -415,29 +345,38 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
+			$where_conditions['activity'] = "d.activity_id = {$r['activity_id']}";
 		}
 
 		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-			$where_conditions['folder'] = "m.album_id = {$r['folder_id']}";
+			$where_conditions['folder'] = "d.folder_id = {$r['folder_id']}";
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
-			$where_conditions['folder'] = 'm.album_id = 0';
+			$where_conditions['folder'] = 'd.folder_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = "d.user_id = {$r['user_id']}";
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['user'] = "d.group_id = {$r['group_id']}";
 		}
-
-		$where_conditions['type'] = "m.type = 'document'";
 
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+			$where_conditions['privacy'] = "d.privacy IN ({$privacy})";
+		}
+
+		// Process meta_query into SQL.
+		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
+
+		if ( ! empty( $meta_query_sql['join'] ) ) {
+			$join_sql .= $meta_query_sql['join'];
+		}
+
+		if ( ! empty( $meta_query_sql['where'] ) ) {
+			$where_conditions[] = $meta_query_sql['where'];
 		}
 
 		/**
@@ -488,7 +427,7 @@ class BP_Document {
 		);
 
 		// Query first for document IDs.
-		$document_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
+		$document_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, d.id {$sort}";
 
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
@@ -552,7 +491,7 @@ class BP_Document {
 			 *
 			 * @since BuddyBoss 1.3.6
 			 */
-			$total_documents_sql = apply_filters( 'bp_document_total_documents_sql', "SELECT count(DISTINCT m.id) FROM {$bp->document->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
+			$total_documents_sql = apply_filters( 'bp_document_total_documents_sql', "SELECT count(DISTINCT d.id) FROM {$bp->document->table_name} d {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached              = bp_core_get_incremented_cache( $total_documents_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_documents = $wpdb->get_var( $total_documents_sql );
@@ -723,15 +662,11 @@ class BP_Document {
 				$document->blog_id       = (int) $document->blog_id;
 				$document->user_id       = (int) $document->user_id;
 				$document->attachment_id = (int) $document->attachment_id;
-				$document->folder_id     = (int) $document->album_id;
+				$document->folder_id     = (int) $document->folder_id;
 				$document->activity_id   = (int) $document->activity_id;
 				$document->group_id      = (int) $document->group_id;
-				$document->thread_id     = (int) $document->thread_id;
-				$document->forum_id      = (int) $document->forum_id;
-				$document->topic_id      = (int) $document->topic_id;
-				$document->reply_id      = (int) $document->reply_id;
 				$document->menu_order    = (int) $document->menu_order;
-				$document->parent        = (int) $document->album_id;
+				$document->parent        = (int) $document->folder_id;
 			}
 
 			$group_name = '';
@@ -851,11 +786,11 @@ class BP_Document {
 		);
 
 		// Select conditions.
-		$select_sql_document = 'SELECT DISTINCT m.id';
-		$select_sql_folder   = 'SELECT DISTINCT a.id';
+		$select_sql_document = 'SELECT DISTINCT d.id';
+		$select_sql_folder   = 'SELECT DISTINCT f.id';
 
 		$from_sql_document = " FROM {$bp->document->table_name} m";
-		$from_sql_folder   = " FROM {$bp->document->table_name_folder} a";
+		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f";
 
 		$join_sql_document = '';
 		$join_sql_folder   = '';
@@ -880,23 +815,23 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions_document['user'] = "m.user_id = {$r['user_id']}";
-			$where_conditions_folder['user']   = "a.user_id = {$r['user_id']}";
+			$where_conditions_document['user'] = "d.user_id = {$r['user_id']}";
+			$where_conditions_folder['user']   = "f.user_id = {$r['user_id']}";
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['user'] = "m.group_id = {$r['group_id']}";
-			$where_conditions_folder['user']   = "a.group_id = {$r['group_id']}";
+			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
+			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
 		}
 
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions_document['search_sql'] = $wpdb->prepare( ' ( m.title LIKE %s', $search_terms_like );
-			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'a.title LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] = $wpdb->prepare( ' ( d.title LIKE %s', $search_terms_like );
+			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.file_name LIKE %s', $search_terms_like );
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.extension LIKE %s )', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR d.file_name LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR d.extension LIKE %s )', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -909,8 +844,8 @@ class BP_Document {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
 				if ( false !== $user_search ) {
 					$user_id                                  = $user_search->ID;
-					$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.user_id = %d', $user_id );
-					$where_conditions_folder['search_sql']   .= $wpdb->prepare( ' OR a.user_id = %d', $user_id );
+					$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR d.user_id = %d', $user_id );
+					$where_conditions_folder['search_sql']   .= $wpdb->prepare( ' OR f.user_id = %d', $user_id );
 				}
 			}
 		}
@@ -941,84 +876,65 @@ class BP_Document {
 				$r['order_by'] = 'title';
 				break;
 		}
-		$order_by_document = 'm.' . $r['order_by'];
-		$order_by_folder   = 'a.' . $r['order_by'];
+		$order_by_document = 'd.' . $r['order_by'];
+		$order_by_folder   = 'f.' . $r['order_by'];
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
 			$exclude                              = implode( ',', wp_parse_id_list( $r['exclude'] ) );
-			$where_conditions_document['exclude'] = "m.id NOT IN ({$exclude})";
-			$where_conditions_folder['exclude']   = "a.id NOT IN ({$exclude})";
+			$where_conditions_document['exclude'] = "d.id NOT IN ({$exclude})";
+			$where_conditions_folder['exclude']   = "f.id NOT IN ({$exclude})";
 		}
 
 		// The specific ids to which you want to limit the query.
 		if ( ! empty( $r['in'] ) ) {
 			$in                              = implode( ',', wp_parse_id_list( $r['in'] ) );
-			$where_conditions_document['in'] = "m.id IN ({$in})";
-			$where_conditions_folder['in']   = "a.id IN ({$in})";
-		}
-
-		if ( ! empty( $r['thread_id'] ) ) {
-			$where_conditions_document['thread_id'] = "m.thread_id = {$r['thread_id']}";
-		}
-
-		if ( ! empty( $r['forum_id'] ) ) {
-			$where_conditions_document['forum_id'] = "m.forum_id = {$r['forum_id']}";
-		}
-
-		if ( ! empty( $r['topic_id'] ) ) {
-			$where_conditions_document['topic_id'] = "m.topic_id = {$r['topic_id']}";
-		}
-
-		if ( ! empty( $r['reply_id'] ) ) {
-			$where_conditions_document['reply_id'] = "m.reply_id = {$r['reply_id']}";
+			$where_conditions_document['in'] = "d.id IN ({$in})";
+			$where_conditions_folder['in']   = "f.id IN ({$in})";
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions_document['activity'] = "m.activity_id = {$r['activity_id']}";
+			$where_conditions_document['activity'] = "d.activity_id = {$r['activity_id']}";
 		}
 
 		// existing-document check to query document which has no folders assigned.
 		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-			$where_conditions_document['folder'] = "m.album_id = {$r['folder_id']}";
+			$where_conditions_document['folder'] = "d.folder_id = {$r['folder_id']}";
 		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
-			$where_conditions_document['folder'] = 'm.album_id = 0';
+			$where_conditions_document['folder'] = 'd.folder_id = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions_document['user'] = "m.user_id = {$r['user_id']}";
-			$where_conditions_folder['user']   = "a.user_id = {$r['user_id']}";
+			$where_conditions_document['user'] = "d.user_id = {$r['user_id']}";
+			$where_conditions_folder['user']   = "f.user_id = {$r['user_id']}";
 		}
 
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['user'] = "m.group_id = {$r['group_id']}";
-			$where_conditions_folder['user']   = "a.group_id = {$r['group_id']}";
+			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
+			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['user_directory'] ) && true === $r['user_directory'] ) {
 			if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-				$where_conditions_folder['user_directory'] = "a.parent = {$r['folder_id']}";
+				$where_conditions_folder['user_directory'] = "f.parent = {$r['folder_id']}";
 			} elseif ( ! empty( $r['group_id'] ) && bp_is_group_folders() && 'folder' === bp_action_variable( 0 ) && (int) bp_action_variable( 1 ) > 0 ) {
 				$folder_id                                   = (int) bp_action_variable( 1 );
-				$where_conditions_folder['user_directory']   = "a.parent = {$folder_id}";
-				$where_conditions_document['user_directory'] = "m.album_id = {$folder_id}";
+				$where_conditions_folder['user_directory']   = "f.parent = {$folder_id}";
+				$where_conditions_document['user_directory'] = "d.folder_id = {$folder_id}";
 			} else {
 				if ( false === $r['search_terms'] ) {
-					$where_conditions_document['user_directory'] = 'm.album_id = 0';
-					$where_conditions_folder['user_directory']   = 'a.parent = 0';
+					$where_conditions_document['user_directory'] = 'd.folder_id = 0';
+					$where_conditions_folder['user_directory']   = 'f.parent = 0';
 				}
 			}
 		}
 
 		if ( bp_is_document_directory() && ! bp_is_profile_document_support_enabled() ) {
-			$where_conditions_folder['type']   = "a.type = 'document' AND a.group_id > 0";
-			$where_conditions_document['type'] = "m.type = 'document' AND m.group_id > 0";
+			$where_conditions_folder['type']   = "f.group_id > 0";
+			$where_conditions_document['type'] = "d.group_id > 0";
 		} elseif ( bp_is_document_directory() && ! bp_is_group_document_support_enabled() ) {
-			$where_conditions_folder['type']   = "a.type = 'document' AND a.group_id = 0";
-			$where_conditions_document['type'] = "m.type = 'document' AND m.group_id = 0";
-		} else {
-			$where_conditions_folder['type']   = " a.type = 'document'";
-			$where_conditions_document['type'] = " m.type = 'document'";
+			$where_conditions_folder['type']   = "f.group_id = 0";
+			$where_conditions_document['type'] = "d.group_id = 0";
 		}
 
 		// Add privacy "friends" when in directory page click on "My Documents" tab.
@@ -1028,8 +944,8 @@ class BP_Document {
 
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                              = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions_document['privacy'] = "m.privacy IN ({$privacy})";
-			$where_conditions_folder['privacy']   = "a.privacy IN ({$privacy})";
+			$where_conditions_document['privacy'] = "d.privacy IN ({$privacy})";
+			$where_conditions_folder['privacy']   = "f.privacy IN ({$privacy})";
 		}
 
 		/**
@@ -1056,11 +972,11 @@ class BP_Document {
 
 		// Join the where conditions together.
 		if ( ! empty( $scope_query_document['sql'] ) && ! empty( $scope_query_folder['sql'] ) ) {
-			$where_sql_folder   = 'WHERE a.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
-			$where_sql_document = 'WHERE m.type = \'document\' AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
+			$where_sql_folder   = 'WHERE ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
+			$where_sql_document = 'WHERE ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
 		} else {
-			$where_sql_document = 'WHERE m.type = \'document\' AND ' . join( ' AND ', $where_conditions_document );
-			$where_sql_folder   = 'WHERE a.type = \'document\' AND ' . join( ' AND ', $where_conditions_folder );
+			$where_sql_document = 'WHERE ' . join( ' AND ', $where_conditions_document );
+			$where_sql_folder   = 'WHERE ' . join( ' AND ', $where_conditions_folder );
 		}
 
 		/**
@@ -1084,8 +1000,8 @@ class BP_Document {
 		);
 
 		// Query first for document IDs.
-		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND a.type = 'document' ORDER BY {$order_by_folder} {$sort}";
-		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND m.type = 'document' ORDER BY {$order_by_document} {$sort}";
+		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND ORDER BY {$order_by_folder} {$sort}";
+		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND ORDER BY {$order_by_document} {$sort}";
 
 		/**
 		 * Filters the paged document MySQL statement.
@@ -1670,7 +1586,7 @@ class BP_Document {
 
 		// folder ID.
 		if ( ! empty( $r['folder_id'] ) ) {
-			$where_args[] = $wpdb->prepare( 'album_id = %d', $r['folder_id'] );
+			$where_args[] = $wpdb->prepare( 'folder_id = %d', $r['folder_id'] );
 		}
 
 		// activity ID.
@@ -1826,8 +1742,8 @@ class BP_Document {
 		}
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND album_id = 0" );       // db call ok; no-cache ok;
-		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND folder_id = 0" );       // db call ok; no-cache ok;
+		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND parent = 0" ); // db call ok; no-cache ok;
 		$total_count          = $total_count_folder + $total_count_document;
 
 		return $total_count;
@@ -1844,8 +1760,8 @@ class BP_Document {
 	public static function total_group_document_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id} AND type = 'document' AND album_id = 0" );       // db call ok; no-cache ok;
-		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = {$group_id} AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id} AND folder_id = 0" );       // db call ok; no-cache ok;
+		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = {$group_id} AND parent = 0" ); // db call ok; no-cache ok;
 		$total_count          = $total_count_folder + $total_count_document;
 
 		return $total_count;
@@ -1866,7 +1782,7 @@ class BP_Document {
 			return false;
 		}
 
-		$folder_document_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->document->table_name} m WHERE m.album_id = %d", $folder_id );
+		$folder_document_sql = $wpdb->prepare( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.folder_id = %d", $folder_id );
 
 		$cached = bp_core_get_incremented_cache( $folder_document_sql, 'bp_document' );
 
@@ -1895,7 +1811,7 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->document->table_name} m WHERE m.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
 
 		return $activity_document_id;
 	}
@@ -2140,9 +2056,70 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s, type = %s, preview_attachment_id = %d, file_name = %s, extension = %s, thread_id = %d, forum_id = %d, topic_id = %d, reply_id = %d WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, 'document', $preview_attachment_id, $this->file_name, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id, $this->id );
+			$q = $wpdb->prepare(
+				"UPDATE {$bp->document->table_name} SET 
+						blog_id = %d, 
+						attachment_id = %d, 
+						user_id = %d, 
+						title = %s, 
+						folder_id = %d, 
+						activity_id = %d, 
+						group_id = %d, 
+						privacy = %s, 
+						menu_order = %d, 
+						date_modified = %s, 
+						WHERE 
+						id = %d",
+				$this->blog_id,
+				$this->attachment_id,
+				$this->user_id,
+				$this->title,
+				$this->folder_id,
+				$this->activity_id,
+				$this->group_id,
+				$this->privacy,
+				$this->menu_order,
+				$this->date_modified,
+				$this->id
+			);
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, date_modified, type, preview_attachment_id, file_name, extension, thread_id, forum_id, topic_id, reply_id ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %s, %d, %s, %s, %d, %d, %d, %d )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified, 'document', $preview_attachment_id, $this->file_name, $this->extension, $this->thread_id, $this->forum_id, $this->topic_id, $this->reply_id );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( 
+					blog_id, 
+					attachment_id, 
+					user_id, 
+					title, 
+					folder_id, 
+					activity_id, 
+					group_id, 
+					privacy, 
+					menu_order, 
+					date_created, 
+					date_modified
+					) VALUES ( 
+					%d, 
+					%d, 
+					%d, 
+					%s, 
+					%d, 
+					%d, 
+					%d, 
+					%s, 
+					%d, 
+					%s, 
+					%s
+					)",
+				$this->blog_id,
+				$this->attachment_id,
+				$this->user_id,
+				$this->title,
+				$this->folder_id,
+				$this->activity_id,
+				$this->group_id,
+				$this->privacy,
+				$this->menu_order,
+				$this->date_created,
+				$this->date_modified
+			);
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -2170,6 +2147,46 @@ class BP_Document {
 		do_action_ref_array( 'bp_document_after_save', array( &$this ) );
 
 		return true;
+	}
+
+	/**
+	 * Get the SQL for the 'meta_query' param in BP_Document::get().
+	 *
+	 * We use WP_Meta_Query to do the heavy lifting of parsing the
+	 * meta_query array and creating the necessary SQL clauses. However,
+	 * since BP_Document::get() builds its SQL differently than
+	 * WP_Query, we have to alter the return value (stripping the leading
+	 * AND keyword from the 'where' clause).
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param array $meta_query An array of meta_query filters. See the
+	 *                          documentation for WP_Meta_Query for details.
+	 * @return array $sql_array 'join' and 'where' clauses.
+	 */
+	public static function get_meta_query_sql( $meta_query = array() ) {
+		global $wpdb;
+
+		$sql_array = array(
+			'join'  => '',
+			'where' => '',
+		);
+
+		if ( ! empty( $meta_query ) ) {
+			$document_meta_query = new WP_Meta_Query( $meta_query );
+
+			// WP_Meta_Query expects the table name at
+			// $wpdb->document_meta.
+			$wpdb->documentmeta = buddypress()->document->table_name_meta;
+
+			$meta_sql = $document_meta_query->get_sql( 'activity', 'd', 'id' );
+
+			// Strip the leading AND - BP handles it in get().
+			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );
+			$sql_array['join']  = $meta_sql['join'];
+		}
+
+		return $sql_array;
 	}
 
 }
