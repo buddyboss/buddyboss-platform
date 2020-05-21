@@ -829,9 +829,9 @@ class BP_Document_Folder {
 
 		// If we have an existing ID, update the folder, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET user_id = %d, group_id = %d, title = %s, privacy = %s, type = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, 'document', $this->parent, $this->date_modified, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SETuser_id = %d, group_id = %d, title = %s, privacy = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->parent, $this->date_modified, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( user_id, group_id, title, privacy, date_created, date_modified, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, 'document', $this->parent );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( user_id, group_id, title, privacy, date_created, date_modified, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, $this->parent );
 		}
 
 		$q = $wpdb->query( $q ); // db call ok; no-cache ok;
