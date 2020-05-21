@@ -53,9 +53,11 @@ if ( ! empty( $extension_lists ) ) {
 
 $class_theatre 	= 'bb-open-document-theatre';
 $class_popup 	= 'document-detail-wrap-description-popup';
+$click_text 	= 'Click to view';
 if ( 'forums' === bp_get_db_document_privacy() ) {
 	$class_theatre 	= '';
 	$class_popup	= '';
+	$click_text 	= 'Click to Download';
 }
 
 ?>
@@ -97,7 +99,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
-			<span class="document-helper-text">&ndash; <?php esc_html_e( 'Click to view', 'buddyboss' ); ?></span>
+			<span class="document-helper-text">&ndash; <?php echo _e( $click_text, 'buddyboss' ); ?></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">
