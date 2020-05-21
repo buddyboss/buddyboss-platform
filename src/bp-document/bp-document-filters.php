@@ -627,7 +627,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 	}
 	global $wpdb, $bp;
 	// Check if document is attached to a document.
-	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE type = %s AND attachment_id = %d", 'document', $attachment_id ) ); // db call ok; no-cache ok;
+	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE attachment_id = %d", $attachment_id ) ); // db call ok; no-cache ok;
 	if ( $document ) {
 		$document_post = get_post( $attachment_id );
 		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, true );

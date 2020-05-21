@@ -1689,9 +1689,9 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 	}
 
 	if ( $group_id > 0 ) {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d AND type = '%s' ORDER BY id DESC", $group_id, 'document' );
+		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
 	} else {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ORDER BY id DESC", $user_id, $group_id, 'document' );
+		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	}
 
 	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
@@ -2210,7 +2210,7 @@ function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
 
 	// error_log( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) );
-	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) ) );
+	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
 }
 
 /**
@@ -2503,7 +2503,7 @@ function bp_document_get_folder_attachment_ids( $folder_id ) {
 
 	$table = $bp->document->table_name;
 
-	$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE album_id = %d", $folder_id );
+	$documents_attachment_query = $wpdb->prepare( "SELECT attachment_id FROM {$table} WHERE folder_id = %d", $folder_id );
 	$data                       = $wpdb->get_results( $documents_attachment_query ); // db call ok; no-cache ok;
 
 	return $data;
