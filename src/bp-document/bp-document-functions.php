@@ -2199,7 +2199,6 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 function bp_document_get_folder_document_ids( $folder_id ) {
 	global $wpdb, $bp;
 
-	// error_log( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE album_id = %d", $folder_id ) );
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->document->table_name} WHERE folder_id = %d", $folder_id ) ) );
 }
 
