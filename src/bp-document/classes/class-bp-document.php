@@ -764,26 +764,24 @@ class BP_Document {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args(
-			$args,
-			array(
-				'scope'          => '',              // Scope - Groups, friends etc.
-				'page'           => 1,               // The current page.
-				'per_page'       => 20,              // Document items per page.
-				'max'            => false,           // Max number of items to return.
-				'fields'         => 'all',           // Fields to include.
-				'sort'           => 'DESC',          // ASC or DESC.
-				'order_by'       => 'date_created',  // Column to order by.
-				'exclude'        => false,           // Array of ids to exclude.
-				'in'             => false,           // Array of ids to limit query by (IN).
-				'search_terms'   => false,           // Terms to search by.
-				'privacy'        => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'    => false,           // Whether or not to use count_total.
-				'user_directory' => true,
-				'folder_id'      => true,
-				'meta_query'     => false,
-			)
-		);
+		$r  = wp_parse_args( $args, array(
+				'scope'               => '',              // Scope - Groups, friends etc.
+				'page'                => 1,               // The current page.
+				'per_page'            => 20,              // Document items per page.
+				'max'                 => false,           // Max number of items to return.
+				'fields'              => 'all',           // Fields to include.
+				'sort'                => 'DESC',          // ASC or DESC.
+				'order_by'            => 'date_created',  // Column to order by.
+				'exclude'             => false,           // Array of ids to exclude.
+				'in'                  => false,           // Array of ids to limit query by (IN).
+				'search_terms'        => false,           // Terms to search by.
+				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
+				'count_total'         => false,           // Whether or not to use count_total.
+				'user_directory'      => true,
+				'folder_id'           => true,
+				'meta_query_document' => false,
+				'meta_query_folder'   => false,
+			) );
 
 		// Select conditions.
 		$select_sql_document = 'SELECT DISTINCT d.id';
@@ -827,11 +825,10 @@ class BP_Document {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions_document['search_sql'] = $wpdb->prepare( ' ( d.title LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] = $wpdb->prepare( ' ( d.title LIKE %s )', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR d.file_name LIKE %s', $search_terms_like );
-			$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR d.extension LIKE %s )', $search_terms_like );
+
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -948,12 +945,43 @@ class BP_Document {
 			$where_conditions_folder['privacy']   = "f.privacy IN ({$privacy})";
 		}
 
-		// Process meta_query into SQL.
-		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
 
-		if ( ! empty( $meta_query_sql['join'] ) ) {
-			$join_sql_document .= $meta_query_sql['join'];
-			$join_sql_folder   .= $meta_query_sql['join'];
+//		if ( ! empty( $r['search_terms'] ) ) {
+//
+//			$meta = array(
+//				'relation' => 'OR',
+//				array(
+//					'key'     => 'extension',
+//					'value'   => $r['search_terms'],
+//					'compare' => 'LIKE',
+//				),
+//				array(
+//					'key'     => 'file_name',
+//					'value'   => $r['search_terms'],
+//					'compare' => 'LIKE',
+//				),
+//			);
+//			$r['meta_query_document'] = $meta;
+//		}
+
+		// Process meta_query into SQL.
+		$meta_query_sql_document = self::get_meta_query_sql( $r['meta_query_document'] );
+		$meta_query_sql_folder   = self::get_document_folder_meta_query_sql( $r['meta_query_folder'] );
+
+		if ( ! empty( $meta_query_sql_document['join'] ) ) {
+			$join_sql_document .= $meta_query_sql_document['join'];
+		}
+
+		if ( ! empty( $meta_query_sql_folder['join'] ) ) {
+			$join_sql_folder   .= $meta_query_sql_folder['join'];
+		}
+
+		if ( ! empty( $meta_query_sql_document['where'] ) ) {
+			$where_conditions_document[] = $meta_query_sql_document['where'];
+		}
+
+		if ( ! empty( $meta_query_sql_folder['where'] ) ) {
+			$where_conditions_folder[] = $meta_query_sql_folder['where'];
 		}
 
 		/**
@@ -2085,6 +2113,46 @@ class BP_Document {
 			$wpdb->documentmeta = buddypress()->document->table_name_meta;
 
 			$meta_sql = $document_meta_query->get_sql( 'document', 'd', 'id' );
+
+			// Strip the leading AND - BP handles it in get().
+			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );
+			$sql_array['join']  = $meta_sql['join'];
+		}
+
+		return $sql_array;
+	}
+
+	/**
+	 * Get the SQL for the 'meta_query' param in BP_Document::get().
+	 *
+	 * We use WP_Meta_Query to do the heavy lifting of parsing the
+	 * meta_query array and creating the necessary SQL clauses. However,
+	 * since BP_Document::get() builds its SQL differently than
+	 * WP_Query, we have to alter the return value (stripping the leading
+	 * AND keyword from the 'where' clause).
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param array $meta_query An array of meta_query filters. See the
+	 *                          documentation for WP_Meta_Query for details.
+	 * @return array $sql_array 'join' and 'where' clauses.
+	 */
+	public static function get_document_folder_meta_query_sql( $meta_query = array() ) {
+		global $wpdb;
+
+		$sql_array = array(
+			'join'  => '',
+			'where' => '',
+		);
+
+		if ( ! empty( $meta_query ) ) {
+			$document_meta_query = new WP_Meta_Query( $meta_query );
+
+			// WP_Meta_Query expects the table name at
+			// $wpdb->document_meta.
+			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
+
+			$meta_sql = $document_meta_query->get_sql( 'document_folder', 'f', 'id' );
 
 			// Strip the leading AND - BP handles it in get().
 			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );

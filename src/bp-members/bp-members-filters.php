@@ -248,26 +248,6 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 				'compare' => 'LIKE',
 				'value'   => $filter['search_terms'],
 			),
-			array(
-				'column'  => 'extension',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
-			array(
-				'column'  => 'file_name',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
-			array(
-				'column'  => 'caption',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
-			array(
-				'column'  => 'description',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
 		);
 	}
 

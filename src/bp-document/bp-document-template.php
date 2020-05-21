@@ -204,30 +204,29 @@ function bp_has_document( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'include'        => false,           // Pass an document_id or string of IDs comma-separated.
-			'exclude'        => false,           // Pass an activity_id or string of IDs comma-separated.
-			'sort'           => 'ASC',          // Sort DESC or ASC.
-			'order_by'       => false,           // Order by. Default: title.
-			'page'           => 1,               // Which page to load.
-			'per_page'       => 20,              // Number of items per page.
-			'page_arg'       => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
-			'max'            => false,           // Max number to return.
-			'fields'         => 'all',
-			'count_total'    => false,
+			'include'             => false,         // Pass an document_id or string of IDs comma-separated.
+			'exclude'             => false,         // Pass an activity_id or string of IDs comma-separated.
+			'sort'                => 'ASC',         // Sort DESC or ASC.
+			'order_by'            => false,         // Order by. Default: title.
+			'page'                => 1,             // Which page to load.
+			'per_page'            => 20,            // Number of items per page.
+			'page_arg'            => 'acpage',      // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'                 => false,         // Max number to return.
+			'fields'              => 'all',
+			'count_total'         => false,         // Scope - pre-built document filters for a user (friends/groups).
+			'scope'               => $scope,        // Filtering.
+			'user_id'             => $user_id,      // user_id to filter on.
+			'folder_id'           => $folder_id,    // folder_id to filter on.
+			'group_id'            => $group_id,     // group_id to filter on.
+			'privacy'             => $privacy,      // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'folder'              => true,          // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'user_directory'      => true,          // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'meta_query_document' => false,
+			'meta_query_folder'   => false,
+			'meta_query'          => false,
 
-			// Scope - pre-built document filters for a user (friends/groups).
-			'scope'          => $scope,
-
-			// Filtering.
-			'user_id'        => $user_id,        // user_id to filter on.
-			'folder_id'      => $folder_id,       // folder_id to filter on.
-			'group_id'       => $group_id,       // group_id to filter on.
-			'privacy'        => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-			'folder'         => true,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-			'user_directory' => true,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-
-		// Searching.
-			'search_terms'   => $search_terms_default,
+			// Searching.
+			'search_terms'        => $search_terms_default,
 		),
 		'has_document'
 	);
@@ -247,7 +246,7 @@ function bp_has_document( $args = '' ) {
 
 	if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['orderby'] ) && ! empty( $_POST['extras']['sort'] ) ) {
 		$r['order_by'] = $_POST['extras']['orderby'];
-		$r['sort'] = $_POST['extras']['sort'];
+		$r['sort']     = $_POST['extras']['sort'];
 	}
 
 	if ( ! empty( $_REQUEST['order_by'] ) ) {

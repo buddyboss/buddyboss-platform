@@ -358,9 +358,7 @@ function bp_document_format_size_units( $bytes, $post_string = false, $type = 'b
  */
 function bp_document_get( $args = '' ) {
 
-	$r = bp_parse_args(
-		$args,
-		array(
+	$r = bp_parse_args( $args, array(
 			'max'            => false,        // Maximum number of results to return.
 			'fields'         => 'all',
 			'page'           => 1,            // Page 1 without a per_page will result in no pagination.
@@ -380,32 +378,30 @@ function bp_document_get( $args = '' ) {
 			'count_total'    => false,
 			'user_directory' => true,
 
-			'meta_query'     => false         // Filter by activity meta. See WP_Meta_Query for format
-		),
-		'document_get'
-	);
+			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format
+			'meta_query_folder'   => false          // Filter by activity meta. See WP_Meta_Query for format
+		), 'document_get' );
 
-	$document = BP_Document::documents(
-		array(
-			'page'           => $r['page'],
-			'per_page'       => $r['per_page'],
-			'user_id'        => $r['user_id'],
-			'activity_id'    => $r['activity_id'],
-			'folder_id'      => $r['folder_id'],
-			'group_id'       => $r['group_id'],
-			'meta_query'        => $r['meta_query'],
-			'max'            => $r['max'],
-			'sort'           => $r['sort'],
-			'order_by'       => $r['order_by'],
-			'search_terms'   => $r['search_terms'],
-			'scope'          => $r['scope'],
-			'privacy'        => $r['privacy'],
-			'exclude'        => $r['exclude'],
-			'count_total'    => $r['count_total'],
-			'fields'         => $r['fields'],
-			'user_directory' => $r['user_directory'],
-		)
-	);
+	$document = BP_Document::documents( array(
+			'page'                => $r['page'],
+			'per_page'            => $r['per_page'],
+			'user_id'             => $r['user_id'],
+			'activity_id'         => $r['activity_id'],
+			'folder_id'           => $r['folder_id'],
+			'group_id'            => $r['group_id'],
+			'max'                 => $r['max'],
+			'sort'                => $r['sort'],
+			'order_by'            => $r['order_by'],
+			'search_terms'        => $r['search_terms'],
+			'scope'               => $r['scope'],
+			'privacy'             => $r['privacy'],
+			'exclude'             => $r['exclude'],
+			'count_total'         => $r['count_total'],
+			'fields'              => $r['fields'],
+			'user_directory'      => $r['user_directory'],
+			'meta_query_document' => $r['meta_query_document'],
+			'meta_query_folder'   => $r['meta_query_folder'],
+		) );
 
 	/**
 	 * Filters the requested document item(s).
@@ -445,19 +441,21 @@ function bp_document_get_specific( $args = '' ) {
 			'order_by'     => false,      // Sort ASC or DESC.
 			'folder_id'    => false,      // Sort ASC or DESC.
 			'folder'       => false,
+			'meta_query'   => false,
 		),
 		'document_get_specific'
 	);
 
 	$get_args = array(
-		'in'        => $r['document_ids'],
-		'max'       => $r['max'],
-		'page'      => $r['page'],
-		'per_page'  => $r['per_page'],
-		'sort'      => $r['sort'],
-		'order_by'  => $r['order_by'],
-		'folder_id' => $r['folder_id'],
-		'folder'    => $r['folder'],
+		'in'         => $r['document_ids'],
+		'max'        => $r['max'],
+		'page'       => $r['page'],
+		'per_page'   => $r['per_page'],
+		'sort'       => $r['sort'],
+		'order_by'   => $r['order_by'],
+		'folder_id'  => $r['folder_id'],
+		'folder'     => $r['folder'],
+		'meta_query' => $r['meta_query'],
 	);
 
 	/**

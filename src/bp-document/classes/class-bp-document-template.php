@@ -133,26 +133,30 @@ class BP_Document_Template {
 	public function __construct( $args ) {
 
 		$defaults = array(
-			'page'           => 1,
-			'per_page'       => 20,
-			'page_arg'       => 'acpage',
-			'max'            => false,
-			'fields'         => 'all',
-			'count_total'    => false,
-			'sort'           => false,
-			'order_by'       => false,
-			'include'        => false,
-			'exclude'        => false,
-			'search_terms'   => false,
-			'scope'          => false,
-			'user_id'        => false,
-			'folder_id'      => false,
-			'group_id'       => false,
-			'privacy'        => false,
-			'folder'         => true,
-			'user_directory' => true,
+			'page'                => 1,
+			'per_page'            => 20,
+			'page_arg'            => 'acpage',
+			'max'                 => false,
+			'fields'              => 'all',
+			'count_total'         => false,
+			'sort'                => false,
+			'order_by'            => false,
+			'include'             => false,
+			'exclude'             => false,
+			'search_terms'        => false,
+			'scope'               => false,
+			'user_id'             => false,
+			'folder_id'           => false,
+			'group_id'            => false,
+			'privacy'             => false,
+			'folder'              => true,
+			'user_directory'      => true,
+			'meta_query_document' => false,
+			'meta_query_folder'   => false,
+			'meta_query'          => false
 		);
-		$r        = wp_parse_args( $args, $defaults );
+
+		$r = wp_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
@@ -178,6 +182,7 @@ class BP_Document_Template {
 					'folder_id'      => $folder_id,
 					'folder'         => $folder,
 					'user_directory' => $user_directory,
+					'meta_query'     => $meta_query,
 				)
 			);
 
@@ -185,21 +190,23 @@ class BP_Document_Template {
 		} else {
 			$this->documents = bp_document_get(
 				array(
-					'max'            => $max,
-					'count_total'    => $count_total,
-					'per_page'       => $this->pag_num,
-					'page'           => $this->pag_page,
-					'sort'           => $sort,
-					'order_by'       => $order_by,
-					'search_terms'   => $search_terms,
-					'scope'          => $scope,
-					'user_id'        => $user_id,
-					'folder_id'      => $folder_id,
-					'group_id'       => $group_id,
-					'exclude'        => $exclude,
-					'privacy'        => $privacy,
-					'folder'         => $folder,
-					'user_directory' => $user_directory,
+					'max'                 => $max,
+					'count_total'         => $count_total,
+					'per_page'            => $this->pag_num,
+					'page'                => $this->pag_page,
+					'sort'                => $sort,
+					'order_by'            => $order_by,
+					'search_terms'        => $search_terms,
+					'scope'               => $scope,
+					'user_id'             => $user_id,
+					'folder_id'           => $folder_id,
+					'group_id'            => $group_id,
+					'exclude'             => $exclude,
+					'privacy'             => $privacy,
+					'folder'              => $folder,
+					'user_directory'      => $user_directory,
+					'meta_query_document' => $meta_query_document,
+					'meta_query_folder'   => $meta_query_folder
 				)
 			);
 		}
