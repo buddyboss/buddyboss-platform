@@ -51,13 +51,20 @@ if ( ! empty( $extension_lists ) ) {
 	}
 }
 
+$class_theatre 	= 'bb-open-document-theatre';
+$class_popup 	= 'document-detail-wrap-description-popup';
+if ( 'forums' === bp_get_db_document_privacy() ) {
+	$class_theatre 	= '';
+	$class_popup	= '';
+}
+
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
 	<div class="document-description-wrap">
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
-				class="entry-img bb-open-document-theatre"
+				class="entry-img <?php echo esc_attr( $class_theatre ); ?>"
 				data-id="<?php bp_document_id(); ?>"
 				data-attachment-full=""
 				data-privacy="<?php bp_db_document_privacy(); ?>"
@@ -74,7 +81,7 @@ if ( ! empty( $extension_lists ) ) {
 		</a>
 		<a
 				href="<?php echo esc_url( $download_url ); ?>"
-				class="document-detail-wrap document-detail-wrap-description-popup"
+				class="document-detail-wrap <?php echo esc_attr( $class_popup ); ?>"
 				data-id="<?php bp_document_id(); ?>"
 				data-attachment-full=""
 				data-privacy="<?php bp_db_document_privacy(); ?>"

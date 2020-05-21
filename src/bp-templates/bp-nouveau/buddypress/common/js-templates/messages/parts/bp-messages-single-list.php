@@ -79,9 +79,28 @@
 							<a href="{{data.document[i].url}}" target="_blank" class="document-detail-wrap">
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
+								{{{data.document[i].extension_description}}}
 								<span class="document-helper-text">{{data.document[i].download_text}}</span>
 							</a>
 						</div>
+						<div class="document-action-wrap">
+							<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="{{data.document[i].collapse}}"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+							<a href="{{data.document[i].url}}" class="document-action_download" data-balloon-pos="up" data-balloon="{{data.document[i].download}}">
+								<i class="bb-icon-download"></i>
+							</a>
+
+							<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="{{data.document[i].more_action}}">
+								<i class="bb-icon-menu-dots-v"></i>
+							</a>
+							<div class="document-action_list">
+								<ul>
+									<li class="copy_download_file_url">
+										<a href="{{data.document[i].url}}">{{data.document[i].copy_download_link}}</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						{{{data.document[i].preview}}}
 					</div>
 				<# } #>
 			</div>

@@ -450,25 +450,101 @@ function bp_nouveau_ajax_messages_send_reply() {
 			while ( bp_document() ) {
 				bp_the_document();
 
-				$attachment_id     = bp_get_document_attachment_id();
-				$extension         = bp_document_extension( $attachment_id );
-				$svg_icon          = bp_document_svg_icon( $extension );
-				$svg_icon_download = bp_document_svg_icon( 'download' );
-				$url               = wp_get_attachment_url( $attachment_id );
-				$filename          = basename( get_attached_file( $attachment_id ) );
-				$size              = size_format( filesize( get_attached_file( $attachment_id ) ) );
+				$attachment_id         = bp_get_document_attachment_id();
+				$extension             = bp_document_extension( $attachment_id );
+				$svg_icon              = bp_document_svg_icon( $extension );
+				$svg_icon_download     = bp_document_svg_icon( 'download' );
+				$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
+				$filename              = basename( get_attached_file( $attachment_id ) );
+				$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
+				$extension_description = '';
+				$extension_lists   	   = bp_document_extensions_list();
+
+				if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+					$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+				}
+
+				if ( ! empty( $extension_lists ) ) {
+					$extension_lists = array_column( $extension_lists, 'description', 'extension' );
+					$extension_name  = '.' . $extension;
+					if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
+						$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
+					}
+				}
+
+				$output = '';
+				ob_start();
+
+				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+					?>
+					<div class="document-audio-wrap">
+						<audio controls>
+							<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
+							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
+						</audio>
+					</div>
+					<?php
+				}
+				if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+					$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+					if ( $attachment_url ) {
+						?>
+						<div class="document-preview-wrap">
+							<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
+						</div><!-- .document-preview-wrap -->
+						<?php
+					}
+				}
+				$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
+				if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
+					if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+						$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
+						$file_data = $data['text'];
+						$more_text = $data['more_text']
+						?>
+						<div class="document-text-wrap">
+							<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
+								<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+							</div>
+							<div class="document-expand">
+								<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?></a>
+							</div>
+						</div> <!-- .document-text-wrap -->
+						<?php
+						if ( true === $more_text ) {
+
+							printf(
+								/* translators: %s: download string */
+								'<div class="more_text_view">%s</div>',
+								sprintf(
+									/* translators: %s: download url */
+									wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+									esc_url( $download_url )
+								)
+							);
+						}
+					}
+				}
+
+				$output .= ob_get_clean();
 
 				$reply['document'][] = array(
-					'id'                => bp_get_document_id(),
-					'title'             => bp_get_document_title(),
-					'url'               => $url,
-					'extension'         => $extension,
-					'svg_icon'          => $svg_icon,
-					'svg_icon_download' => $svg_icon_download,
-					'filename'          => $filename,
-					'size'              => $size,
-					'meta'              => $document_template->document->attachment_data->meta,
-					'download_text'     => '- Click to Download',
+					'id'                    => bp_get_document_id(),
+					'title'                 => bp_get_document_title(),
+					'url'                   => $download_url,
+					'extension'             => $extension,
+					'svg_icon'              => $svg_icon,
+					'svg_icon_download'     => $svg_icon_download,
+					'filename'              => $filename,
+					'size'                  => $size,
+					'meta'                  => $document_template->document->attachment_data->meta,
+					'download_text'         => __( '- Click to Download', 'buddyboss' ),
+					'extension_description' => $extension_description,
+					'download'              => __( 'Download', 'buddyboss' ),
+					'collapse'              => __( 'Collapse', 'buddyboss' ),
+					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
+					'more_action'           => __( 'More actions', 'buddyboss' ),
+					'preview'               => $output,
 				);
 			}
 		}
@@ -1900,25 +1976,102 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				while ( bp_document() ) {
 					bp_the_document();
 
-					$attachment_id     = bp_get_document_attachment_id();
-					$extension         = bp_document_extension( $attachment_id );
-					$svg_icon          = bp_document_svg_icon( $extension );
-					$svg_icon_download = bp_document_svg_icon( 'download' );
-					$url               = wp_get_attachment_url( $attachment_id );
-					$filename          = basename( get_attached_file( $attachment_id ) );
-					$size              = size_format( filesize( get_attached_file( $attachment_id ) ) );
+					$attachment_id         = bp_get_document_attachment_id();
+					$extension             = bp_document_extension( $attachment_id );
+					$svg_icon              = bp_document_svg_icon( $extension );
+					$svg_icon_download     = bp_document_svg_icon( 'download' );
+					$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
+					$filename              = basename( get_attached_file( $attachment_id ) );
+					$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
+					$extension_description = '';
+					$url                   = wp_get_attachment_url( $attachment_id );
+					$extension_lists   	   = bp_document_extensions_list();
+
+					if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+						$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+					}
+
+					if ( ! empty( $extension_lists ) ) {
+						$extension_lists = array_column( $extension_lists, 'description', 'extension' );
+						$extension_name  = '.' . $extension;
+						if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
+							$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
+						}
+					}
+
+					$output = '';
+					ob_start();
+
+					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+						?>
+						<div class="document-audio-wrap">
+							<audio controls>
+								<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
+								<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
+							</audio>
+						</div>
+						<?php
+					}
+					if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+						$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+						if ( $attachment_url ) {
+							?>
+							<div class="document-preview-wrap">
+								<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
+							</div><!-- .document-preview-wrap -->
+							<?php
+						}
+					}
+					$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
+					if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
+						if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
+							$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
+							$file_data = $data['text'];
+							$more_text = $data['more_text']
+							?>
+							<div class="document-text-wrap">
+								<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
+									<textarea class="document-text-file-data-hidden" style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+								</div>
+								<div class="document-expand">
+									<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?></a>
+								</div>
+							</div> <!-- .document-text-wrap -->
+							<?php
+							if ( true === $more_text ) {
+
+								printf(
+									/* translators: %s: download string */
+									'<div class="more_text_view">%s</div>',
+									sprintf(
+										/* translators: %s: download url */
+										wp_kses_post( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+										esc_url( $download_url )
+									)
+								);
+							}
+						}
+					}
+
+					$output .= ob_get_clean();
 
 					$thread->messages[ $i ]['document'][] = array(
-						'id'                => bp_get_document_id(),
-						'title'             => bp_get_document_title(),
-						'url'               => $url,
-						'extension'         => $extension,
-						'svg_icon'          => $svg_icon,
-						'svg_icon_download' => $svg_icon_download,
-						'filename'          => $filename,
-						'size'              => $size,
-						'meta'              => $document_template->document->attachment_data->meta,
-						'download_text'     => '- Click to Download',
+						'id'                    => bp_get_document_id(),
+						'title'                 => bp_get_document_title(),
+						'url'                   => $download_url,
+						'extension'             => $extension,
+						'svg_icon'              => $svg_icon,
+						'svg_icon_download'     => $svg_icon_download,
+						'filename'              => $filename,
+						'size'                  => $size,
+						'meta'                  => $document_template->document->attachment_data->meta,
+						'download_text'         => __( '- Click to Download', 'buddyboss' ),
+						'extension_description' => $extension_description,
+						'download'              => __( 'Download', 'buddyboss' ),
+						'collapse'              => __( 'Collapse', 'buddyboss' ),
+						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
+						'more_action'           => __( 'More actions', 'buddyboss' ),
+						'preview'               => $output,
 					);
 				}
 			}

@@ -749,6 +749,10 @@ class BP_Document {
 				$document_privacy = bp_document_get_visibility_levels();
 				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
 					$visibility = esc_html__( 'Connections', 'buddyboss' );
+				} elseif ( 'message' === $document->privacy ) {
+					$visibility = esc_html__( 'Message', 'buddyboss' );
+				} elseif ( 'forums' === $document->privacy ) {
+					$visibility = esc_html__( 'Forums', 'buddyboss' );
 				} else {
 					$visibility = $document_privacy[ $document->privacy ];
 				}
