@@ -7,12 +7,12 @@
  */
 
 global $document_folder_template;
-$album_id = 0;
+$folder_id = 0;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();
-	$album_id         = (int) $action_variables[1];
+	$folder_id         = (int) $action_variables[1];
 } else {
-	$album_id = (int) bp_action_variable( 0 );
+	$folder_id = (int) bp_action_variable( 0 );
 }
 ?>
 

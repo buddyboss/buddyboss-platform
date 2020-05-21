@@ -207,8 +207,8 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$album_id = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
-	if ( ! bp_album_user_can_delete( $album_id ) ) {
+	$folder_id = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+	if ( ! bp_album_user_can_delete( $folder_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'You do not have permission to delete this folder.', 'buddyboss' )
@@ -218,9 +218,9 @@ function bp_nouveau_ajax_document_folder_delete() {
 	}
 
 	// delete album.
-	$album_id = bp_folder_delete( array( 'id' => $album_id ) );
+	$folder_id = bp_folder_delete( array( 'id' => $folder_id ) );
 
-	if ( ! $album_id ) {
+	if ( ! $folder_id ) {
 		wp_send_json_error( $response );
 	}
 
@@ -491,12 +491,12 @@ function bp_nouveau_ajax_document_document_save() {
 
 	if ( isset( $_POST['documents'] ) && ! empty( $_POST['documents'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
 		$documents = $_POST['documents'];
-		$album_id  = (int) $_POST['folder_id'];
+		$folder_id  = (int) $_POST['folder_id'];
 		if ( ! empty( $documents ) && is_array( $documents ) ) {
 			// set folder id for document.
 			foreach ( $documents as $key => $document ) {
 				if ( 0 === (int) $document['folder_id'] ) {
-					$_POST['documents'][ $key ]['folder_id'] = $album_id;
+					$_POST['documents'][ $key ]['folder_id'] = $folder_id;
 				}
 			}
 		}
@@ -887,9 +887,9 @@ function bp_nouveau_ajax_document_edit_folder() {
 		$privacy = 'grouponly';
 	}
 
-	$album_id = bp_document_rename_folder( $id, $title, $privacy );
+	$folder_id = bp_document_rename_folder( $id, $title, $privacy );
 
-	if ( ! $album_id ) {
+	if ( ! $folder_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )

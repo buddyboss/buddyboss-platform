@@ -45,7 +45,7 @@
 						?>
 						<div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
 							<?php
-							if ( bp_has_document( array( 'album_id' => 'existing-media' ) ) ) :
+							if ( bp_has_document( array( 'folder_id' => 'existing-media' ) ) ) :
 								?>
 								<ul class="media-list item-list bp-list bb-photo-list grid existing-media-list">
 									<?php

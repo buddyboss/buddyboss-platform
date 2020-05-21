@@ -7,12 +7,12 @@
  */
 
 global $document_folder_template;
-$album_id = 0;
+$folder_id = 0;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();
-	$album_id         = (int) $action_variables[1];
+	$folder_id         = (int) $action_variables[1];
 } else {
-	$album_id = (int) bp_action_variable( 0 );
+	$folder_id = (int) bp_action_variable( 0 );
 }
 ?>
 <div id="bp-media-edit-child-folder" style="display: none;">
@@ -37,7 +37,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 						endif;
 						?>
 					<footer class="bb-model-footer">
-						<input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $album_id ); ?>">
+						<input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $folder_id ); ?>">
 						<a class="button pull-right" id="bp-media-edit-child-folder-submit" href="#"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
 					</footer>
 				</div>

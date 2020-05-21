@@ -8,12 +8,12 @@
 
 global $document_folder_template;
 if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
-	$album_id = (int) bp_action_variable( 1 );
+	$folder_id = (int) bp_action_variable( 1 );
 } else {
-	$album_id = (int) bp_action_variable( 0 );
+	$folder_id = (int) bp_action_variable( 0 );
 }
-$bradcrumbs = bp_document_folder_bradcrumb( $album_id );
-if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
+$bradcrumbs = bp_document_folder_bradcrumb( $folder_id );
+if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 	while ( bp_folder() ) :
 		bp_the_folder();
 
