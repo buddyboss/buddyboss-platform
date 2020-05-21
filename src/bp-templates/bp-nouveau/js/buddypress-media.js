@@ -260,6 +260,9 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.gif-image-container', this.playVideo.bind( this ) );
 
+			document.addEventListener( 'keyup', this.closePopup.bind( this ) );
+			document.addEventListener( 'keyup', this.submitPopup.bind( this ) );
+
 			// Gifs autoplay.
 			if ( ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -862,6 +865,7 @@ window.bp = window.bp || {};
 			$( '#bb-album-child-title' ).val( '' );
 			$( '#bp-media-create-child-folder' ).hide();
 			$( '#bp-media-create-child-folder' ).removeClass( 'open-popup' );
+			$( '#bp-media-create-child-folder-submit').removeClass( 'loading' );
 
 			$( '#bb-album-title' ).text( '' );
 			$( '#bp-media-create-folder' ).hide();
@@ -4115,6 +4119,52 @@ window.bp = window.bp || {};
 				$( '.bb-activity-media-elem.document-activity' ).closest( '.activity-content' ).addClass( 'documemt-activity' );
 			}
 		},
+
+		/**
+		 * Close popup on ESC.
+		 */
+		closePopup: function( event ) {
+			//Close popup if it's open
+			if( event.keyCode == 27 ) {
+				//Close Move popup
+				$('.bp-media-move-folder.open-popup .ac-folder-close-button:visible, .bp-media-move-folder.open-popup  .close-create-popup-folder:visible,.bp-media-move-file.open-popup .ac-document-close-button:visible, .bp-media-move-file.open-popup .close-create-popup-folder:visible').trigger('click');
+
+				//Close create folder popup
+				$('#bp-media-create-folder #bp-media-create-folder-close:visible, #bp-media-create-child-folder #bp-media-create-folder-close:visible').trigger('click');
+
+				//Close document uploader popup
+				$('#bp-media-uploader #bp-media-uploader-close:visible').trigger('click');
+
+				//Close Edit Folder popup
+				$('#bp-media-edit-child-folder #bp-media-edit-folder-close:visible').trigger('click');
+
+				//Close create media album
+				$('#bp-media-create-album #bp-media-create-album-close:visible').trigger('click');
+			}
+		},
+
+		/**
+		 * Submit popup on ENTER.
+		 */
+		submitPopup: function( event ) {
+			//Close popup if it's open
+			if( event.keyCode == 13 ) {
+				//Close Move popup
+				$('.bp-media-move-folder.open-popup .bp-document-move:not(.is-disabled):visible, .bp-media-move-folder.open-popup  .bp-folder-move:not(.is-disabled):visible,.bp-media-move-file.open-popup .bp-document-move:not(.is-disabled):visible, .bp-media-move-file.open-popup .bp-document-create-popup-folder-submit:visible, .bp-media-move-folder.open-popup .bp-document-create-popup-folder-submit:visible ').trigger('click');
+
+				//Submit create folder popup
+				$('#bp-media-create-folder #bp-media-create-folder-submit:visible, #bp-media-create-child-folder #bp-media-create-child-folder-submit:visible').trigger('click');
+
+				//Submit document uploader popup
+				$('#bp-media-uploader #bp-media-document-submit:visible, #bp-media-uploader #bp-media-submit:visible').trigger('click');
+
+				//Submit Edit Folder popup
+				$('#bp-media-edit-child-folder #bp-media-edit-child-folder-submit:visible').trigger('click');
+
+				//Submit create media album
+				$('#bp-media-create-album #bp-media-create-album-submit:visible').trigger('click');
+			}
+		}
 	};
 
 	/**
