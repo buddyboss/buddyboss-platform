@@ -31,6 +31,14 @@ class BP_Document_Folder {
 	var $id;
 
 	/**
+	 * Blog ID of the folder item.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 * @var int
+	 */
+	var $blog_id;
+
+	/**
 	 * User ID of the folder.
 	 *
 	 * @since BuddyBoss 1.3.6
@@ -45,6 +53,14 @@ class BP_Document_Folder {
 	 * @var int
 	 */
 	var $group_id;
+
+	/**
+	 * Parent ID of the folder.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 * @var int
+	 */
+	public $parent;
 
 	/**
 	 * Title of the folder.
@@ -94,13 +110,7 @@ class BP_Document_Folder {
 	 */
 	public $error_type = 'bool';
 
-	/**
-	 * Parent ID of the folder.
-	 *
-	 * @since BuddyBoss 1.3.6
-	 * @var int
-	 */
-	public $parent;
+
 
 	/**
 	 * Constructor method.
@@ -145,6 +155,7 @@ class BP_Document_Folder {
 
 		$this->id            = (int) $row->id;
 		$this->user_id       = (int) $row->user_id;
+		$this->blog_id       = (int) $row->blog_id;
 		$this->group_id      = (int) $row->group_id;
 		$this->title         = $row->title;
 		$this->privacy       = $row->privacy;
@@ -231,9 +242,9 @@ class BP_Document_Folder {
 		);
 
 		// Select conditions.
-		$select_sql = 'SELECT DISTINCT m.id';
+		$select_sql = 'SELECT DISTINCT f.id';
 
-		$from_sql = " FROM {$bp->document->table_name_folder} m";
+		$from_sql = " FROM {$bp->document->table_name_folder} f";
 
 		$join_sql = '';
 
@@ -243,7 +254,7 @@ class BP_Document_Folder {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
+			$where_conditions['search_sql'] = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -256,7 +267,7 @@ class BP_Document_Folder {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
 				if ( false !== $user_search ) {
 					$user_id                         = $user_search->ID;
-					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.user_id = %d', $user_id );
+					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR f.user_id = %d', $user_id );
 				}
 			}
 		}
@@ -271,7 +282,6 @@ class BP_Document_Folder {
 			case 'id':
 			case 'user_id':
 			case 'group_id':
-			case 'attachment_id':
 			case 'title':
 				break;
 
@@ -279,33 +289,31 @@ class BP_Document_Folder {
 				$r['order_by'] = 'date_created';
 				break;
 		}
-		$order_by = 'm.' . $r['order_by'];
+		$order_by = 'f.' . $r['order_by'];
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
 			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
-			$where_conditions['exclude'] = "m.id NOT IN ({$exclude})";
+			$where_conditions['exclude'] = "f.id NOT IN ({$exclude})";
 		}
 
 		// The specific ids to which you want to limit the query.
 		if ( ! empty( $r['in'] ) ) {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
-			$where_conditions['in'] = "m.id IN ({$in})";
+			$where_conditions['in'] = "f.id IN ({$in})";
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+			$where_conditions['user'] = "f.user_id = {$r['user_id']}";
 		}
 
-		$where_conditions['type'] = "m.type = 'document'";
-
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+			$where_conditions['user'] = "f.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
-			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
+			$where_conditions['privacy'] = "f.privacy IN ({$privacy})";
 		}
 
 		/**
@@ -352,7 +360,7 @@ class BP_Document_Folder {
 		);
 
 		// Query first for folder IDs.
-		$folder_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
+		$folder_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, f.id {$sort}";
 
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
@@ -416,7 +424,7 @@ class BP_Document_Folder {
 			 *
 			 * @since BuddyBoss 1.3.6
 			 */
-			$total_folders_sql = apply_filters( 'bp_document_folder_total_documents_sql', "SELECT count(DISTINCT m.id) FROM {$bp->document->table_name_folder} m {$join_sql} {$where_sql}", $where_sql, $sort );
+			$total_folders_sql = apply_filters( 'bp_document_folder_total_documents_sql', "SELECT count(DISTINCT f.id) FROM {$bp->document->table_name_folder} f {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached            = bp_core_get_incremented_cache( $total_folders_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_folders = $wpdb->get_var( $total_folders_sql ); // db call ok; no-cache ok;
@@ -838,6 +846,46 @@ class BP_Document_Folder {
 		do_action_ref_array( 'bp_document_folder_after_save', array( &$this ) );
 
 		return true;
+	}
+
+	/**
+	 * Get the SQL for the 'meta_query' param in BP_Document::get().
+	 *
+	 * We use WP_Meta_Query to do the heavy lifting of parsing the
+	 * meta_query array and creating the necessary SQL clauses. However,
+	 * since BP_Document::get() builds its SQL differently than
+	 * WP_Query, we have to alter the return value (stripping the leading
+	 * AND keyword from the 'where' clause).
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param array $meta_query An array of meta_query filters. See the
+	 *                          documentation for WP_Meta_Query for details.
+	 * @return array $sql_array 'join' and 'where' clauses.
+	 */
+	public static function get_meta_query_sql( $meta_query = array() ) {
+		global $wpdb;
+
+		$sql_array = array(
+			'join'  => '',
+			'where' => '',
+		);
+
+		if ( ! empty( $meta_query ) ) {
+			$folder_meta_query = new WP_Meta_Query( $meta_query );
+
+			// WP_Meta_Query expects the table name at
+			// $wpdb->document_meta.
+			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
+
+			$meta_sql = $folder_meta_query->get_sql( 'document_folder', 'd', 'id' );
+
+			// Strip the leading AND - BP handles it in get().
+			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );
+			$sql_array['join']  = $meta_sql['join'];
+		}
+
+		return $sql_array;
 	}
 
 }
