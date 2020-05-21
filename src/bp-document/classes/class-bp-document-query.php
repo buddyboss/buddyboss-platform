@@ -95,7 +95,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * @return string SQL fragment to append to the main WHERE clause.
 	 * @since BuddyBoss 1.3.6
 	 */
-	public function get_sql( $alias = 'm' ) {
+	public function get_sql( $alias = 'd' ) {
 		if ( ! empty( $alias ) ) {
 			$this->table_alias = sanitize_title( $alias );
 		}
@@ -118,7 +118,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * @return string SQL fragment to append to the main WHERE clause.
 	 * @since BuddyBoss 1.3.6
 	 */
-	public function get_sql_document( $alias = 'm' ) {
+	public function get_sql_document( $alias = 'd' ) {
 		if ( ! empty( $alias ) ) {
 			$this->table_alias = sanitize_title( $alias );
 		}
