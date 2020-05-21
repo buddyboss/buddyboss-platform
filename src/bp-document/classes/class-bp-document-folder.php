@@ -132,7 +132,7 @@ class BP_Document_Folder {
 
 		if ( false === $row ) {
 			$bp  = buddypress();
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name_folders} WHERE id = %d", $this->id ) ); // db call ok; no-cache ok;
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name_folder} WHERE id = %d", $this->id ) ); // db call ok; no-cache ok;
 
 			wp_cache_set( $this->id, $row, 'bp_document_folder' );
 		}
@@ -233,7 +233,7 @@ class BP_Document_Folder {
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT m.id';
 
-		$from_sql = " FROM {$bp->document->table_name_folders} m";
+		$from_sql = " FROM {$bp->document->table_name_folder} m";
 
 		$join_sql = '';
 
@@ -416,7 +416,7 @@ class BP_Document_Folder {
 			 *
 			 * @since BuddyBoss 1.3.6
 			 */
-			$total_folders_sql = apply_filters( 'bp_document_folder_total_documents_sql', "SELECT count(DISTINCT m.id) FROM {$bp->document->table_name_folders} m {$join_sql} {$where_sql}", $where_sql, $sort );
+			$total_folders_sql = apply_filters( 'bp_document_folder_total_documents_sql', "SELECT count(DISTINCT m.id) FROM {$bp->document->table_name_folder} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached            = bp_core_get_incremented_cache( $total_folders_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_folders = $wpdb->get_var( $total_folders_sql ); // db call ok; no-cache ok;
@@ -465,7 +465,7 @@ class BP_Document_Folder {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from folder table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE id IN ({$uncached_ids_sql})" ); // db call ok; no-cache ok;
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE id IN ({$uncached_ids_sql})" ); // db call ok; no-cache ok;
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
@@ -575,7 +575,7 @@ class BP_Document_Folder {
 	public static function total_group_folder_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folders} WHERE group_id = {$group_id}" ); // db call ok; no-cache ok;
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = {$group_id}" ); // db call ok; no-cache ok;
 
 		return $total_count;
 	}
@@ -642,10 +642,10 @@ class BP_Document_Folder {
 		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
 
 		// Fetch all document folders being deleted so we can perform more actions.
-		$folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} {$where_sql}" ); // db call ok; no-cache ok;
+		$folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} {$where_sql}" ); // db call ok; no-cache ok;
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folders} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folders} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
 			$folders           = array_merge( $folders, $recursive_folders );
 		}
 
@@ -660,7 +660,7 @@ class BP_Document_Folder {
 		do_action_ref_array( 'bp_document_folder_before_delete', array( $folders, $r ) );
 
 		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
-			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folders} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folders} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folder} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folder} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" ); // db call ok; no-cache ok;
 			$folders           = array_merge( $folders, $recursive_folders );
 
 			// Pluck the document folders IDs out of the $folders array.
@@ -670,12 +670,12 @@ class BP_Document_Folder {
 			if ( ! empty( $foldr_ids ) ) {
 				foreach ( $foldr_ids as $folder_id ) {
 					// Attempt to delete document folders from the database.
-					$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folders} where id = {$folder_id}" ); // db call ok; no-cache ok;
+					$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folder} where id = {$folder_id}" ); // db call ok; no-cache ok;
 				}
 			}
 		} else {
 			// Attempt to delete document folders from the database.
-			$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folders} {$where_sql}" ); // db call ok; no-cache ok;
+			$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folder} {$where_sql}" ); // db call ok; no-cache ok;
 		}
 
 		// Bail if nothing was deleted.
@@ -813,9 +813,9 @@ class BP_Document_Folder {
 
 		// If we have an existing ID, update the folder, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET user_id = %d, group_id = %d, title = %s, privacy = %s, type = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, 'document', $this->parent, $this->date_modified, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET user_id = %d, group_id = %d, title = %s, privacy = %s, type = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, 'document', $this->parent, $this->date_modified, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folders} ( user_id, group_id, title, privacy, date_created, date_modified, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, 'document', $this->parent );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( user_id, group_id, title, privacy, date_created, date_modified, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, 'document', $this->parent );
 		}
 
 		$q = $wpdb->query( $q ); // db call ok; no-cache ok;

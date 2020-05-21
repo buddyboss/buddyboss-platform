@@ -855,7 +855,7 @@ class BP_Document {
 		$select_sql_folder   = 'SELECT DISTINCT a.id';
 
 		$from_sql_document = " FROM {$bp->document->table_name} m";
-		$from_sql_folder   = " FROM {$bp->document->table_name_folders} a";
+		$from_sql_folder   = " FROM {$bp->document->table_name_folder} a";
 
 		$join_sql_document = '';
 		$join_sql_folder   = '';
@@ -1398,7 +1398,7 @@ class BP_Document {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from document table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE id IN ({$uncached_ids_sql})" ); // db call ok; no-cache ok;
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folder} WHERE id IN ({$uncached_ids_sql})" ); // db call ok; no-cache ok;
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
@@ -1827,7 +1827,7 @@ class BP_Document {
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
 		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND album_id = 0" );       // db call ok; no-cache ok;
-		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folders} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
 		$total_count          = $total_count_folder + $total_count_document;
 
 		return $total_count;
@@ -1845,7 +1845,7 @@ class BP_Document {
 		global $bp, $wpdb;
 
 		$total_count_document = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id} AND type = 'document' AND album_id = 0" );       // db call ok; no-cache ok;
-		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folders} WHERE group_id = {$group_id} AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
+		$total_count_folder   = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name_folder} WHERE group_id = {$group_id} AND type = 'document' AND parent = 0" ); // db call ok; no-cache ok;
 		$total_count          = $total_count_folder + $total_count_document;
 
 		return $total_count;

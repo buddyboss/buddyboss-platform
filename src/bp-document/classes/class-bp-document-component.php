@@ -168,9 +168,18 @@ class BP_Document_Component extends BP_Component {
 
 		// Global tables for document component.
 		$global_tables = array(
-			'table_name'         => $bp->table_prefix . 'bp_document',
-			'table_name_folders' => $bp->table_prefix . 'bp_document_folders',
+			'table_name'             => $bp->table_prefix . 'bp_document',
+			'table_name_meta'        => $bp->table_prefix . 'bp_document_meta',
+			'table_name_folder'      => $bp->table_prefix . 'bp_document_folder',
+			'table_name_folder_meta' => $bp->table_prefix . 'bp_document_folder_meta',
 		);
+
+		// Metadata tables for groups component.
+		$meta_tables = array(
+			'document'        => $bp->table_prefix . 'bp_document_meta',
+			'document_folder' => $bp->table_prefix . 'bp_document_folder_meta',
+		);
+
 
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
@@ -186,6 +195,7 @@ class BP_Document_Component extends BP_Component {
 				'global_tables'   => $global_tables,
 				'directory_title' => isset( $bp->pages->document->title ) ? $bp->pages->document->title : $default_directory_title,
 				'search_string'   => __( 'Search Documents&hellip;', 'buddyboss' ),
+				'meta_tables'     => $meta_tables,
 			)
 		);
 
@@ -357,7 +367,9 @@ class BP_Document_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp_document',
-				'bp_document_folders',
+				'bp_document_folder',
+				'document_meta',
+				'document_folder_meta',
 			)
 		);
 

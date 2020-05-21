@@ -13,6 +13,244 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/** Meta *********************************************************************/
+
+/**
+ * Delete a meta entry from the DB for an document feed item.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param int    $document_id ID of the document item whose metadata is being deleted.
+ * @param string $meta_key    Optional. The key of the metadata being deleted. If
+ *                            omitted, all metadata associated with the document
+ *                            item will be deleted.
+ * @param string $meta_value  Optional. If present, the metadata will only be
+ *                            deleted if the meta_value matches this parameter.
+ * @param bool   $delete_all  Optional. If true, delete matching metadata entries
+ *                            for all objects, ignoring the specified object_id. Otherwise,
+ *                            only delete matching metadata entries for the specified
+ *                            document item. Default: false.
+ * @return bool True on success, false on failure.
+ */
+function bp_document_delete_meta( $document_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+
+	// Legacy - if no meta_key is passed, delete all for the item.
+	if ( empty( $meta_key ) ) {
+		$all_meta = bp_document_get_meta( $document_id );
+		$keys     = ! empty( $all_meta ) ? array_keys( $all_meta ) : array();
+
+		// With no meta_key, ignore $delete_all.
+		$delete_all = false;
+	} else {
+		$keys = array( $meta_key );
+	}
+
+	$retval = true;
+
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	foreach ( $keys as $key ) {
+		$retval = delete_metadata( 'document', $document_id, $key, $meta_value, $delete_all );
+	}
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Get metadata for a given document item.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int    $document_id ID of the document item whose metadata is being requested.
+ * @param string $meta_key    Optional. If present, only the metadata matching
+ *                            that meta key will be returned. Otherwise, all metadata for the
+ *                            document item will be fetched.
+ * @param bool   $single      Optional. If true, return only the first value of the
+ *                            specified meta_key. This parameter has no effect if meta_key is not
+ *                            specified. Default: true.
+ * @return mixed The meta value(s) being requested.
+ */
+function bp_document_get_meta( $document_id = 0, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'document', $document_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	/**
+	 * Filters the metadata for a specified document item.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param mixed  $retval      The meta values for the document item.
+	 * @param int    $document_id ID of the document item.
+	 * @param string $meta_key    Meta key for the value being requested.
+	 * @param bool   $single      Whether to return one matched meta key row or all.
+	 */
+	return apply_filters( 'bp_document_get_meta', $retval, $document_id, $meta_key, $single );
+}
+
+/**
+ * Update a piece of document meta.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int    $document_id ID of the document item whose metadata is being updated.
+ * @param string $meta_key    Key of the metadata being updated.
+ * @param mixed  $meta_value  Value to be set.
+ * @param mixed  $prev_value  Optional. If specified, only update existing metadata entries
+ *                            with the specified value. Otherwise, update all entries.
+ * @return bool|int Returns false on failure. On successful update of existing
+ *                  metadata, returns true. On successful creation of new metadata,
+ *                  returns the integer ID of the new metadata row.
+ */
+function bp_document_update_meta( $document_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'document', $document_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Add a piece of document metadata.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int    $document_id ID of the document item.
+ * @param string $meta_key    Metadata key.
+ * @param mixed  $meta_value  Metadata value.
+ * @param bool   $unique      Optional. Whether to enforce a single metadata value for the
+ *                            given key. If true, and the object already has a value for
+ *                            the key, no change will be made. Default: false.
+ * @return int|bool The meta ID on successful update, false on failure.
+ */
+function bp_document_add_meta( $document_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'document', $document_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Delete a meta entry from the DB for an document folder feed item.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param int    $folder_id ID of the document folder item whose metadata is being deleted.
+ * @param string $meta_key    Optional. The key of the metadata being deleted. If
+ *                            omitted, all metadata associated with the document
+ *                            item will be deleted.
+ * @param string $meta_value  Optional. If present, the metadata will only be
+ *                            deleted if the meta_value matches this parameter.
+ * @param bool   $delete_all  Optional. If true, delete matching metadata entries
+ *                            for all objects, ignoring the specified object_id. Otherwise,
+ *                            only delete matching metadata entries for the specified
+ *                            document folder item. Default: false.
+ * @return bool True on success, false on failure.
+ */
+function bp_document_folder_delete_meta( $folder_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+
+	// Legacy - if no meta_key is passed, delete all for the item.
+	if ( empty( $meta_key ) ) {
+		$all_meta = bp_document_folder_get_meta( $folder_id );
+		$keys     = ! empty( $all_meta ) ? array_keys( $all_meta ) : array();
+
+		// With no meta_key, ignore $delete_all.
+		$delete_all = false;
+	} else {
+		$keys = array( $meta_key );
+	}
+
+	$retval = true;
+
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	foreach ( $keys as $key ) {
+		$retval = delete_metadata( 'document_folder', $folder_id, $key, $meta_value, $delete_all );
+	}
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Get metadata for a given document folder item.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int    $folder_id ID of the document folder item whose metadata is being requested.
+ * @param string $meta_key    Optional. If present, only the metadata matching
+ *                            that meta key will be returned. Otherwise, all metadata for the
+ *                            document folder item will be fetched.
+ * @param bool   $single      Optional. If true, return only the first value of the
+ *                            specified meta_key. This parameter has no effect if meta_key is not
+ *                            specified. Default: true.
+ * @return mixed The meta value(s) being requested.
+ */
+function bp_document_folder_get_meta( $folder_id = 0, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'document_folder', $folder_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	/**
+	 * Filters the metadata for a specified document folder item.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param mixed  $retval      The meta values for the document folder item.
+	 * @param int    $folder_id ID of the document folder item.
+	 * @param string $meta_key    Meta key for the value being requested.
+	 * @param bool   $single      Whether to return one matched meta key row or all.
+	 */
+	return apply_filters( 'bp_document_folder_get_meta', $retval, $folder_id, $meta_key, $single );
+}
+
+/**
+ * Update a piece of document folder meta.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int    $folder_id ID of the document folder item whose metadata is being updated.
+ * @param string $meta_key    Key of the metadata being updated.
+ * @param mixed  $meta_value  Value to be set.
+ * @param mixed  $prev_value  Optional. If specified, only update existing metadata entries
+ *                            with the specified value. Otherwise, update all entries.
+ * @return bool|int Returns false on failure. On successful update of existing
+ *                  metadata, returns true. On successful creation of new metadata,
+ *                  returns the integer ID of the new metadata row.
+ */
+function bp_document_folder_update_meta( $folder_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'document_folder', $folder_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Add a piece of document folder metadata.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int    $folder_id ID of the document folder item.
+ * @param string $meta_key    Metadata key.
+ * @param mixed  $meta_value  Metadata value.
+ * @param bool   $unique      Optional. Whether to enforce a single metadata value for the
+ *                            given key. If true, and the object already has a value for
+ *                            the key, no change will be made. Default: false.
+ * @return int|bool The meta ID on successful update, false on failure.
+ */
+function bp_document_folder_add_meta( $folder_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'document_folder', $folder_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
 /**
  * Get file document upload max size
  *
@@ -1444,7 +1682,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	global $wpdb, $bp;
 
-	$document_folder_table = $bp->document->table_name_folders;
+	$document_folder_table = $bp->document->table_name_folder;
 
 	if ( 0 === $group_id ) {
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
@@ -1528,7 +1766,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 
 	global $wpdb, $bp;
 
-	$document_folder_table  = $bp->document->table_name_folders;
+	$document_folder_table  = $bp->document->table_name_folder;
 	$documents_folder_query = $wpdb->prepare(
 		"SELECT c.*
     FROM (
@@ -1733,7 +1971,7 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		return false;
 	}
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
 	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
 
@@ -1760,7 +1998,7 @@ function bp_document_update_folder_modified_date( $folder_id = 0 ) {
 		return false;
 	}
 
-	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET date_modified = %s WHERE id = %d", bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
+	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET date_modified = %s WHERE id = %d", bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
 	if ( false === $q ) {
 		return false;
@@ -1834,7 +2072,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	$get_children = bp_document_get_folder_children( $folder_id );
 
 	foreach ( $get_children as $child ) {
-		$query_update_child = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$query_update_child = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s WHERE id = %d", $destination_privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$query              = $wpdb->query( $query_update_child );
 
 		// Get all the documents of particular folder.
@@ -1886,14 +2124,14 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 	}
 
 	if ( 'folder' === $type ) {
-		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$wpdb->query( $q );
 
 		// Get main folder's child folders.
 		$get_children = bp_document_get_folder_children( $document_id );
 		if ( ! empty( $get_children ) ) {
 			foreach ( $get_children as $child ) {
-				$query_child_privacy = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET privacy = %s WHERE id = %d", $privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+				$query_child_privacy = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s WHERE id = %d", $privacy, $child ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 				$wpdb->query( $query_child_privacy );
 
 				// Get current folder's documents.
@@ -2284,7 +2522,7 @@ function bp_document_get_folder_children( $folder_id ) {
 
 	global $bp, $wpdb;
 
-	$table = $bp->document->table_name_folders;
+	$table = $bp->document->table_name_folder;
 
 	// error_log( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) );
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) ) );
@@ -2303,7 +2541,7 @@ function bp_document_get_root_parent_id( $child_id ) {
 
 	global $bp, $wpdb;
 
-	$table     = $bp->document->table_name_folders;
+	$table     = $bp->document->table_name_folder;
 	$parent_id = $wpdb->get_var(
 		$wpdb->prepare(
 			"SELECT f.id
