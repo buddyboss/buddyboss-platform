@@ -790,7 +790,7 @@ class BP_Document {
 		$select_sql_document = 'SELECT DISTINCT d.id';
 		$select_sql_folder   = 'SELECT DISTINCT f.id';
 
-		$from_sql_document = " FROM {$bp->document->table_name} m";
+		$from_sql_document = " FROM {$bp->document->table_name} d";
 		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f";
 
 		$join_sql_document = '';
@@ -1009,8 +1009,8 @@ class BP_Document {
 		);
 
 		// Query first for document IDs.
-		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} AND ORDER BY {$order_by_folder} {$sort}";
-		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} AND ORDER BY {$order_by_document} {$sort}";
+		$document_ids_sql_folder   = "{$select_sql_folder} {$from_sql_folder} {$join_sql_folder} {$where_sql_folder} ORDER BY {$order_by_folder} {$sort}";
+		$document_ids_sql_document = "{$select_sql_document} {$from_sql_document} {$join_sql_document} {$where_sql_document} ORDER BY {$order_by_document} {$sort}";
 
 		/**
 		 * Filters the paged document MySQL statement.
@@ -1916,34 +1916,7 @@ class BP_Document {
 				&$this,
 			)
 		);
-		$this->thread_id     = apply_filters_ref_array(
-			'bp_document_thread_id_before_save',
-			array(
-				$this->thread_id,
-				&$this,
-			)
-		);
-		$this->forum_id      = apply_filters_ref_array(
-			'bp_document_forum_id_before_save',
-			array(
-				$this->forum_id,
-				&$this,
-			)
-		);
-		$this->topic_id      = apply_filters_ref_array(
-			'bp_document_topic_id_before_save',
-			array(
-				$this->topic_id,
-				&$this,
-			)
-		);
-		$this->reply_id      = apply_filters_ref_array(
-			'bp_document_reply_id_before_save',
-			array(
-				$this->reply_id,
-				&$this,
-			)
-		);
+
 		$this->privacy       = apply_filters_ref_array(
 			'bp_document_privacy_before_save',
 			array(
@@ -1969,20 +1942,6 @@ class BP_Document {
 			'bp_document_date_modified_before_save',
 			array(
 				$this->date_modified,
-				&$this,
-			)
-		);
-		$this->file_name     = apply_filters_ref_array(
-			'bp_document_file_name_before_save',
-			array(
-				$this->file_name,
-				&$this,
-			)
-		);
-		$this->extension     = apply_filters_ref_array(
-			'bp_document_extension_before_save',
-			array(
-				$this->extension,
 				&$this,
 			)
 		);

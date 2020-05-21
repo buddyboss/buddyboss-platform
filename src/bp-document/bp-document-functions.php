@@ -1909,8 +1909,10 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	$file_name = $title;
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET file_name = %s, title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $file_name, $title, bp_core_current_time(), $document_id, $attachment_document_id );
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
+
+	bp_document_update_meta( $document_id, 'file_name', $file_name );
 
 	if ( false === $query ) {
 		return false;
@@ -1937,8 +1939,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	$extension              = '.' . $path['extension'];
 	$title                  = basename( $new_file, $extension );
-	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, file_name = %s, extension = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, $new_file_name, $extension, bp_core_current_time(), $document_id, $attachment_document_id );
+	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
 	$rename_file_name_query = $wpdb->query( $rename_file_name_query ); // db call ok; no-cache ok;
+
+	bp_document_update_meta( $document_id, 'file_name', $new_file_name );
+	bp_document_update_meta( $document_id, 'extension', $extension );
 
 	$response = apply_filters(
 		'bp_document_rename_file',
