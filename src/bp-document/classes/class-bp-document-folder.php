@@ -316,6 +316,13 @@ class BP_Document_Folder {
 			$where_conditions['privacy'] = "f.privacy IN ({$privacy})";
 		}
 
+		// Process meta_query into SQL.
+		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
+
+		if ( ! empty( $meta_query_sql['join'] ) ) {
+			$join_sql .= $meta_query_sql['join'];
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the folders get method.
 		 *
@@ -878,7 +885,7 @@ class BP_Document_Folder {
 			// $wpdb->document_meta.
 			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
 
-			$meta_sql = $folder_meta_query->get_sql( 'document_folder', 'd', 'id' );
+			$meta_sql = $folder_meta_query->get_sql( 'document_folder', 'f', 'id' );
 
 			// Strip the leading AND - BP handles it in get().
 			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );
