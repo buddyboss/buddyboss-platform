@@ -2882,10 +2882,10 @@ span.dashicons.dashicons-admin-file:before {
   top: 50%;
   transform: translate(50%, -50%);
   right: 50%;
-  background-color: #122b46;
+  background-color: #122b46 !important;
   color: #fff;
   border-radius: 30px;
-  padding: 5px 10px;
+  padding: 5px 10px !important;
   z-index: 11;
   font-size: 12px;
   opacity: 0;
