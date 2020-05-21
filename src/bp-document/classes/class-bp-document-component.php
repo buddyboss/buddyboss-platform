@@ -168,8 +168,8 @@ class BP_Document_Component extends BP_Component {
 
 		// Global tables for document component.
 		$global_tables = array(
-			'table_name'         => $bp->table_prefix . 'bp_media',
-			'table_name_folders' => $bp->table_prefix . 'bp_media_albums',
+			'table_name'         => $bp->table_prefix . 'bp_document',
+			'table_name_folders' => $bp->table_prefix . 'bp_document_folders',
 		);
 
 		// Fetch the default directory title.

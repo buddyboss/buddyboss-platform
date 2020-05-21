@@ -720,6 +720,77 @@ function bp_core_install_media() {
 	dbDelta( $sql );
 }
 
+function bp_core_install_document() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_folders (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   user_id bigint(20) NOT NULL,
+	   group_id bigint(20) NULL,
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   title text NOT NULL,
+	   privacy varchar(50) NULL DEFAULT 'public',
+	   type varchar(50) NULL DEFAULT 'media',
+	   parent bigint(20) NULL DEFAULT 0,
+	   date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   PRIMARY KEY  (id)
+   ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_folders_meta (
+				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				folder_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				KEY folder_id (folder_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
+
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document (
+		id bigint(20) NOT NULL AUTO_INCREMENT ,
+		blog_id bigint(20) NULL DEFAULT NULL,
+		attachment_id bigint(20) NOT NULL ,
+		user_id bigint(20) NOT NULL,
+		title text,
+		file_name text NOT NULL DEFAULT '',
+		extension text NOT NULL DEFAULT '',
+		album_id bigint(20),
+		group_id bigint(20),
+		activity_id bigint(20) NULL DEFAULT NULL ,
+		privacy varchar(50) NULL DEFAULT 'public',
+		type varchar(50) NULL DEFAULT 'media',
+		preview_attachment_id bigint(20) NULL DEFAULT 0,
+		thread_id bigint(20) NULL DEFAULT 0,
+		forum_id bigint(20) NULL DEFAULT 0,
+		topic_id bigint(20) NULL DEFAULT 0,
+		reply_id bigint(20) NULL DEFAULT 0,
+		menu_order bigint(20) NULL DEFAULT 0 ,
+		date_created datetime DEFAULT '0000-00-00 00:00:00',
+		date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY  (id),
+		KEY attachment_id (attachment_id),
+		KEY user_id (user_id),
+		KEY album_id (album_id),
+		KEY media_author_id (album_id,user_id),
+		KEY activity_id (activity_id)
+	) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_meta (
+				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				document_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				KEY document_id (document_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
+
+	dbDelta( $sql );
+}
+
 /** Search *********************************************************/
 
 /** Signups *******************************************************************/

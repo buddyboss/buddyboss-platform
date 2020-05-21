@@ -1444,7 +1444,7 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 
 	global $wpdb, $bp;
 
-	$document_folder_table = $bp->table_prefix . 'bp_media_albums';
+	$document_folder_table = $bp->document->table_name_folders;
 
 	if ( 0 === $group_id ) {
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
@@ -1528,7 +1528,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 
 	global $wpdb, $bp;
 
-	$document_folder_table  = $bp->table_prefix . 'bp_media_albums';
+	$document_folder_table  = $bp->document->table_name_folders;
 	$documents_folder_query = $wpdb->prepare(
 		"SELECT c.*
     FROM (

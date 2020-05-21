@@ -834,7 +834,7 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 
 	global $wpdb, $bp;
 
-	$document_folder_table = $bp->table_prefix . 'bp_media_albums';
+	$document_folder_table = $bp->document->table_name_folders;
 
 	if ( 0 === $folder_id ) {
 		return;

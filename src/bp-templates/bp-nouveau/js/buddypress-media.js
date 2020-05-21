@@ -4150,7 +4150,8 @@ window.bp = window.bp || {};
 			this.current_document 		= false;
 			this.current_index 			= 0;
 			this.current_document_index = 0;
-			this.is_open 				= false;
+			this.is_open_media 			= false;
+			this.is_open_document 		= false;
 			this.nextLink 				= $('.bb-next-media');
 			this.nextDocumentLink 		= $('.bb-next-document');
 			this.previousDocumentLink 	= $('.bb-prev-document');
@@ -4182,22 +4183,20 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bp-activity-description-new-submit', this.submitMediaActivityDescription.bind( this ) );
 			$( document ).click( this.togglePopupDropdown );
 
-		},
+			document.addEventListener( 'keyup', this.checkPressedKeyDocuments.bind( this ) );
+			document.addEventListener( 'keyup', this.checkPressedKey.bind( this ) );
 
-		documentClick: function (e) {
-			var self = this;
-			if (self.is_open) {
-				var target = e.target;
-				var model  = document.getElementById( 'bb-media-model-container' );
-				if (model != null && ! model.contains( target ) && document.body.contains( target )) {
-					self.closeTheatre( e );
-				}
-			}
+
 		},
 
 		checkPressedKey: function (e) {
 			var self = this;
 			e        = e || window.event;
+
+			if ( ! self.is_open_media ) {
+				return false;
+			}
+
 			switch (e.keyCode) {
 				case 27: // escape key.
 					self.closeTheatre( e );
@@ -4214,6 +4213,10 @@ window.bp = window.bp || {};
 		checkPressedKeyDocuments: function (e) {
 			e = e || window.event;
 			var self = this;
+
+			if ( ! self.is_open_document ) {
+				return false;
+			}
 			switch (e.keyCode) {
 				case 27: // escape key.
 					self.closeDocumentTheatre( e );
@@ -4245,9 +4248,9 @@ window.bp = window.bp || {};
 			self.getActivity();
 
 			$( '.bb-media-model-wrapper.media' ).show();
-			self.is_open = true;
+			self.is_open_media = true;
 
-			document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
+			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
 
 		openDocumentTheatre: function (event) {
@@ -4265,8 +4268,8 @@ window.bp = window.bp || {};
 			self.navigationDocumentCommands();
 			self.getDocumentsActivity();
 			$( '.bb-media-model-wrapper.document' ).show();
-			self.is_open = true;
-			document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
+			self.is_open_document = true;
+			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
 		resetRemoveActivityCommentsData: function() {
@@ -4352,12 +4355,11 @@ window.bp = window.bp || {};
 			var self = this;
 
 			$( '.bb-media-model-wrapper' ).hide();
-			self.is_open = false;
+			self.is_open_media = false;
 
 			self.resetRemoveActivityCommentsData();
 
 			self.current_media = false;
-			document.removeEventListener( 'keyup', self.checkPressedKey.bind( self ) );
 		},
 
 		closeDocumentTheatre: function (event) {
@@ -4366,12 +4368,11 @@ window.bp = window.bp || {};
 			var document_elements = $( document ).find( '.document-theatre' );
 			document_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).find('.document-preview').html( '' );
 			document_elements.hide();
-			self.is_open = false;
+			self.is_open_document = false;
 
 			self.resetRemoveActivityCommentsData();
 
 			self.current_document = false;
-			document.removeEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
 		},
 
 		setMedias: function (target) {
@@ -4794,7 +4795,7 @@ window.bp = window.bp || {};
 
 		activityDeleted: function (event, data) {
 			var self = this, i = 0;
-			if (self.is_open && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_media.activity_id == data.id) {
+			if (self.is_open_media && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_media.activity_id == data.id) {
 
 				$( document ).find( '[data-bp-list="media"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( 'li' ).remove();
 				$( document ).find( '[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
@@ -4819,7 +4820,7 @@ window.bp = window.bp || {};
 					self.next( event );
 				}
 			}
-			if (self.is_open && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id == data.id) {
+			if (self.is_open_document && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_document.activity_id == data.id) {
 
 				$( document ).find( '[data-bp-list="document"] .bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( 'div.ac-document-list[data-activity-id="' + self.current_document.activity_id + '"]' ).remove();
 				$( document ).find( '[data-bp-list="activity"] .bb-open-document-theatre[data-id="' + self.current_document.id + '"]' ).closest( '.bb-activity-media-elem' ).remove();
