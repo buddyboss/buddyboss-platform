@@ -782,6 +782,7 @@ class BP_Document {
 				'folder'         => true,
 				'user_directory' => true,
 				'folder_id'      => true,
+				'meta_query'     => false,
 			)
 		);
 
@@ -946,6 +947,14 @@ class BP_Document {
 			$privacy                              = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions_document['privacy'] = "d.privacy IN ({$privacy})";
 			$where_conditions_folder['privacy']   = "f.privacy IN ({$privacy})";
+		}
+
+		// Process meta_query into SQL.
+		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
+
+		if ( ! empty( $meta_query_sql['join'] ) ) {
+			$join_sql_document .= $meta_query_sql['join'];
+			$join_sql_folder   .= $meta_query_sql['join'];
 		}
 
 		/**
@@ -2057,18 +2066,18 @@ class BP_Document {
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
 			$q = $wpdb->prepare(
-				"UPDATE {$bp->document->table_name} SET 
-						blog_id = %d, 
-						attachment_id = %d, 
-						user_id = %d, 
-						title = %s, 
-						folder_id = %d, 
-						activity_id = %d, 
-						group_id = %d, 
-						privacy = %s, 
-						menu_order = %d, 
-						date_modified = %s, 
-						WHERE 
+				"UPDATE {$bp->document->table_name} SET
+						blog_id = %d,
+						attachment_id = %d,
+						user_id = %d,
+						title = %s,
+						folder_id = %d,
+						activity_id = %d,
+						group_id = %d,
+						privacy = %s,
+						menu_order = %d,
+						date_modified = %s,
+						WHERE
 						id = %d",
 				$this->blog_id,
 				$this->attachment_id,
@@ -2083,29 +2092,29 @@ class BP_Document {
 				$this->id
 			);
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( 
-					blog_id, 
-					attachment_id, 
-					user_id, 
-					title, 
-					folder_id, 
-					activity_id, 
-					group_id, 
-					privacy, 
-					menu_order, 
-					date_created, 
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} (
+					blog_id,
+					attachment_id,
+					user_id,
+					title,
+					folder_id,
+					activity_id,
+					group_id,
+					privacy,
+					menu_order,
+					date_created,
 					date_modified
-					) VALUES ( 
-					%d, 
-					%d, 
-					%d, 
-					%s, 
-					%d, 
-					%d, 
-					%d, 
-					%s, 
-					%d, 
-					%s, 
+					) VALUES (
+					%d,
+					%d,
+					%d,
+					%s,
+					%d,
+					%d,
+					%d,
+					%s,
+					%d,
+					%s,
 					%s
 					)",
 				$this->blog_id,

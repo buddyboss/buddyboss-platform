@@ -238,6 +238,7 @@ class BP_Document_Folder {
 				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly.
 				'count_total'  => false,           // Whether or not to use count_total.
 				'in'           => false,           // Array of ids to limit query by (IN).
+				'meta_query'   => false,           // Filter by foldermeta.
 			)
 		);
 
