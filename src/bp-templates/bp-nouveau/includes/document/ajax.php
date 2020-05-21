@@ -198,7 +198,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['album_id'] ) ) {
+	if ( empty( $_POST['folder_id'] ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide ID of folder to delete.', 'buddyboss' )
@@ -207,7 +207,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$folder_id = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 	if ( ! bp_album_user_can_delete( $folder_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -441,7 +441,7 @@ function bp_nouveau_object_template_results_folders_existing_document_query( $qu
 	$querystring = wp_parse_args( $querystring );
 
 	if ( ! empty( $_POST['caller'] ) && 'bp-existing-document' === $_POST['caller'] ) {
-		$querystring['album_id'] = 0;
+		$querystring['folder_id'] = 0;
 	}
 
 	return http_build_query( $querystring );
@@ -561,7 +561,7 @@ function bp_nouveau_ajax_document_folder_save() {
 	}
 
 	// save media.
-	$id        = ! empty( $_POST['album_id'] ) ? filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT ) : false;
+	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
 	$title     = $_POST['title'];
 	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
