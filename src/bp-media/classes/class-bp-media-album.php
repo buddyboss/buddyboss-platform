@@ -173,9 +173,9 @@ class BP_Media_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s, parent = %d WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'media', 0, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, parent = %d WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 0, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'media', 0 );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, parent ) VALUES ( %d, %d, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 0 );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -314,8 +314,6 @@ class BP_Media_Album {
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
 		}
-
-		$where_conditions['type'] = "m.type = 'media'";
 
 		if ( ! empty( $r['group_id'] ) ) {
 			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
@@ -627,7 +625,7 @@ class BP_Media_Album {
 	public static function total_group_album_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id} AND type = 'media'" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
 
 		return $total_count;
 	}
