@@ -828,12 +828,14 @@ input#send-to-input {
 	padding: 0 20px;
 	height: calc(69vh + 130px);
 
+	#messages-post-document-uploader.open,
 	#messages-post-media-uploader.open {
 		height: calc(100% - 145px);
 		left: 0;
 		margin: 0;
 	}
 
+	#messages-post-document-uploader.open,
 	#messages-post-media-uploader.open {
 		position: absolute;
 		top: 0;
