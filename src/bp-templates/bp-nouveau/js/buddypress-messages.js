@@ -92,39 +92,6 @@ window.bp = window.bp || {};
 				addRemoveLinks	: true,
 				uploadMultiple	: false,
 				maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
-				init: function(){
-					/* jshint ignore:start */
-					this.on('error', function(file){
-						if (!file.accepted){
-							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.document_select_error + '</p></div></div></div></div></transition></div>');
-							this.removeFile(file);
-						}
-					});
-					/* jshint ignore:end */
-				},
-				accept			: function(file, done) {
-					if (file.size == 0) {
-						done( BP_Nouveau.media.empty_document_type );
-					} else {
-						done();
-					}
-				},
-				success			: function( file, response ){
-					if ( response.success ) {
-						return file.previewElement.classList.add( 'dz-success' );
-					} else {
-						var node, _i, _len, _ref, _results;
-						var message = response.data.feedback;
-						file.previewElement.classList.add( 'dz-error' );
-						_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
-						_results = [];
-						for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-							node = _ref[_i];
-							_results.push( node.textContent = message );
-						}
-						return _results;
-					}
-				}
 			};
 
 		},
@@ -863,6 +830,9 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
+						} else {
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.media_select_error + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
 						}
 					}
 				);
@@ -874,6 +844,9 @@ window.bp = window.bp || {};
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
+						} else {
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.media_select_error + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
 						}
 					}
 				);
@@ -994,6 +967,29 @@ window.bp = window.bp || {};
 							response.data.privacy 	 = 'message';
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+							return file.previewElement.classList.add( 'dz-success' );
+						} else {
+							var node, _i, _len, _ref, _results;
+							var message = response.data.feedback;
+							file.previewElement.classList.add( 'dz-error' );
+							_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+							_results = [];
+							for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+								node                            = _ref[_i];
+								_results.push( node.textContent = message );
+							}
+							return _results;
+						}
+					}
+				);
+
+				bp.Nouveau.Messages.dropzone.on(
+					'accept',
+					function( file, done ) {
+						if (file.size == 0) {
+							done( BP_Nouveau.media.empty_document_type );
+						} else {
+							done();
 						}
 					}
 				);
@@ -1005,6 +1001,9 @@ window.bp = window.bp || {};
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
+						} else {
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.document_select_error + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
 						}
 					}
 				);

@@ -99,6 +99,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'dropzone_media_message' => __( 'Drop images here to upload', 'buddyboss' ),
 		'media_select_error'     => __( 'This file not supporting in media', 'buddyboss' ),
 		'empty_media_type'       => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
+		'invalid_media_type'     => __( 'Invalid media type', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
