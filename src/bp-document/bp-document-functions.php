@@ -367,7 +367,6 @@ function bp_document_get( $args = '' ) {
 			'per_page'       => false,        // results per page.
 			'sort'           => 'DESC',       // sort ASC or DESC.
 			'order_by'       => false,        // order by.
-
 			'scope'          => false,
 
 			// want to limit the query.
@@ -375,16 +374,13 @@ function bp_document_get( $args = '' ) {
 			'activity_id'    => false,
 			'folder_id'      => false,
 			'group_id'       => false,
-			'thread_id'      => false,        // Optional: ID of the message thread.
-			'forum_id'       => false,        // Optional: ID of the forum.
-			'topic_id'       => false,        // Optional: ID of the topic.
-			'reply_id'       => false,        // Optional: ID of the reply.
 			'search_terms'   => false,        // Pass search terms as a string.
 			'privacy'        => false,        // privacy of document.
 			'exclude'        => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'    => false,
-			'folder'         => true,
 			'user_directory' => true,
+
+			'meta_query'     => false         // Filter by activity meta. See WP_Meta_Query for format
 		),
 		'document_get'
 	);
@@ -397,10 +393,7 @@ function bp_document_get( $args = '' ) {
 			'activity_id'    => $r['activity_id'],
 			'folder_id'      => $r['folder_id'],
 			'group_id'       => $r['group_id'],
-			'thread_id'      => $r['thread_id'],
-			'forum_id'       => $r['forum_id'],
-			'topic_id'       => $r['topic_id'],
-			'reply_id'       => $r['reply_id'],
+			'meta_query'        => $r['meta_query'],
 			'max'            => $r['max'],
 			'sort'           => $r['sort'],
 			'order_by'       => $r['order_by'],
@@ -410,7 +403,6 @@ function bp_document_get( $args = '' ) {
 			'exclude'        => $r['exclude'],
 			'count_total'    => $r['count_total'],
 			'fields'         => $r['fields'],
-			'folder'         => $r['folder'],
 			'user_directory' => $r['user_directory'],
 		)
 	);
@@ -2423,7 +2415,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 		case 'forums':
 			$args       = array(
 				'user_id'         => $user_id,
-				'forum_id'        => $document->forum_id,
+				'forum_id'        => bp_document_get_meta( $document_id, 'forum_id', true ),
 				'check_ancestors' => false,
 			);
 			$has_access = bbp_user_can_view_forum( $args );
@@ -2439,7 +2431,8 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'message':
-			$has_access = messages_check_thread_access( $document->thread_id, $user_id );
+			$thread_id = bp_document_get_meta( $document_id, 'thread_id', true );
+			$has_access = messages_check_thread_access( $thread_id, $user_id );
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;

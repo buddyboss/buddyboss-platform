@@ -779,7 +779,6 @@ class BP_Document {
 				'search_terms'   => false,           // Terms to search by.
 				'privacy'        => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'count_total'    => false,           // Whether or not to use count_total.
-				'folder'         => true,
 				'user_directory' => true,
 				'folder_id'      => true,
 				'meta_query'     => false,
