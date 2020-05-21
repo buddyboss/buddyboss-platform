@@ -819,6 +819,31 @@ input#send-to-input {
 	.bb-activity-media-elem {
 		min-width: 20%;
 	}
+
+	.bb-activity-media-wrap .bb-activity-media-elem.document-activity {
+
+		.document-action-wrap .document-action_list li {
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		&:last-child {
+
+			.document-action-wrap .document-action_list {
+				top: initial;
+				bottom: 36px;
+		
+				&:after {
+					top: inherit;
+					bottom: -12px;
+					right: -3px;
+					-webkit-transform: rotate(137deg);
+					-ms-transform: rotate(137deg);
+					transform: rotate(137deg);
+				}
+			}
+		}
+	}
 }
 
 .bp-messages-content-wrapper {

@@ -5936,6 +5936,25 @@ input#send-to-input {
   min-width: 20%;
 }
 
+.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity:last-child .document-action-wrap .document-action_list {
+  top: initial;
+  bottom: 36px;
+}
+
+.bp-single-message-content .bb-activity-media-wrap .bb-activity-media-elem.document-activity:last-child .document-action-wrap .document-action_list:after {
+  top: inherit;
+  bottom: -12px;
+  left: -3px;
+  -webkit-transform: rotate(-137deg);
+  -ms-transform: rotate(-137deg);
+  transform: rotate(-137deg);
+}
+
 .bp-messages-content-wrapper {
   position: relative;
   display: flex;
