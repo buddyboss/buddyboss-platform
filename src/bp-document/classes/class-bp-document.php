@@ -2065,70 +2065,9 @@ class BP_Document {
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare(
-				"UPDATE {$bp->document->table_name} SET
-						blog_id = %d,
-						attachment_id = %d,
-						user_id = %d,
-						title = %s,
-						folder_id = %d,
-						activity_id = %d,
-						group_id = %d,
-						privacy = %s,
-						menu_order = %d,
-						date_modified = %s,
-						WHERE
-						id = %d",
-				$this->blog_id,
-				$this->attachment_id,
-				$this->user_id,
-				$this->title,
-				$this->folder_id,
-				$this->activity_id,
-				$this->group_id,
-				$this->privacy,
-				$this->menu_order,
-				$this->date_modified,
-				$this->id
-			);
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, folder_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_modified = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_modified, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} (
-					blog_id,
-					attachment_id,
-					user_id,
-					title,
-					folder_id,
-					activity_id,
-					group_id,
-					privacy,
-					menu_order,
-					date_created,
-					date_modified
-					) VALUES (
-					%d,
-					%d,
-					%d,
-					%s,
-					%d,
-					%d,
-					%d,
-					%s,
-					%d,
-					%s,
-					%s
-					)",
-				$this->blog_id,
-				$this->attachment_id,
-				$this->user_id,
-				$this->title,
-				$this->folder_id,
-				$this->activity_id,
-				$this->group_id,
-				$this->privacy,
-				$this->menu_order,
-				$this->date_created,
-				$this->date_modified
-			);
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, folder_id, activity_id, group_id, privacy, menu_order, date_created, date_modified ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->date_modified );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -2188,7 +2127,7 @@ class BP_Document {
 			// $wpdb->document_meta.
 			$wpdb->documentmeta = buddypress()->document->table_name_meta;
 
-			$meta_sql = $document_meta_query->get_sql( 'activity', 'd', 'id' );
+			$meta_sql = $document_meta_query->get_sql( 'document', 'd', 'id' );
 
 			// Strip the leading AND - BP handles it in get().
 			$sql_array['where'] = preg_replace( '/^\sAND/', '', $meta_sql['where'] );

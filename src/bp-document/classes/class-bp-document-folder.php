@@ -829,7 +829,7 @@ class BP_Document_Folder {
 
 		// If we have an existing ID, update the folder, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SETuser_id = %d, group_id = %d, title = %s, privacy = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->parent, $this->date_modified, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET user_id = %d, group_id = %d, title = %s, privacy = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->parent, $this->date_modified, $this->id );
 		} else {
 			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( user_id, group_id, title, privacy, date_created, date_modified, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, $this->parent );
 		}
@@ -883,8 +883,8 @@ class BP_Document_Folder {
 			$folder_meta_query = new WP_Meta_Query( $meta_query );
 
 			// WP_Meta_Query expects the table name at
-			// $wpdb->document_meta.
-			$wpdb->documentmeta = buddypress()->document->table_name_folder_meta;
+			// $wpdb->document_folder_meta.
+			$wpdb->documentfoldermeta = buddypress()->document->table_name_folder_meta;
 
 			$meta_sql = $folder_meta_query->get_sql( 'document_folder', 'f', 'id' );
 
