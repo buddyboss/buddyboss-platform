@@ -733,10 +733,10 @@ class BP_Document_Folder {
 	protected static function append_user_fullnames( $folders ) {
 
 		if ( bp_is_active( 'xprofile' ) && ! empty( $folders ) ) {
-			$album_user_ids = wp_list_pluck( $folders, 'user_id' );
+			$folder_user_ids = wp_list_pluck( $folders, 'user_id' );
 
-			if ( ! empty( $album_user_ids ) ) {
-				$fullnames = bp_core_get_user_displaynames( $album_user_ids );
+			if ( ! empty( $folder_user_ids ) ) {
+				$fullnames = bp_core_get_user_displaynames( $folder_user_ids );
 				if ( ! empty( $fullnames ) ) {
 					foreach ( (array) $folders as $i => $folder ) {
 						if ( ! empty( $fullnames[ $folder->user_id ] ) ) {

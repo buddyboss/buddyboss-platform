@@ -93,11 +93,11 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$params['media'] = array_merge( $old_media, $document_params );
 
 	if ( bp_is_single_folder() ) {
-		$params['media']['album_id'] = (int) bp_action_variable( 0 );
+		$params['media']['folder_id'] = (int) bp_action_variable( 0 );
 	}
 
 	if ( bp_is_group_single() && bp_is_group_folders() ) {
-		$params['media']['album_id'] = (int) bp_action_variable( 1 );
+		$params['media']['folder_id'] = (int) bp_action_variable( 1 );
 	}
 
 	$document_i18n_strings = array(
