@@ -383,18 +383,20 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 					'title'         => $title,
 					'folder_id'     => $folder_id,
 					'group_id'      => $group_id,
-					'forum_id'      => $forum_id,
-					'topic_id'      => $topic_id,
-					'reply_id'      => $reply_id,
-					'file_name'     => $file_name,
 					'privacy'       => 'forums',
-					'extension'     => '.' . $file_type['ext'],
 					'error_type'    => 'wp_error',
 				)
 			);
 
-			if ( ! is_wp_error( $document_id ) ) {
+			if ( ! is_wp_error( $document_id ) && ! empty( $document_id ) ) {
 				$document_ids[] = $document_id;
+
+				// save document meta.
+				bp_document_update_meta( $document_id, 'forum_id', $forum_id );
+				bp_document_update_meta( $document_id, 'topic_id', $topic_id );
+				bp_document_update_meta( $document_id, 'reply_id', $reply_id );
+				bp_document_update_meta( $document_id, 'file_name', $file_name );
+				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
 
 				// save document is saved in attachment.
 				update_post_meta( $attachment_id, 'bp_document_saved', true );
@@ -494,14 +496,17 @@ function bp_document_attach_document_to_message( &$message ) {
 					'attachment_id' => $attachment_id,
 					'title'         => $title,
 					'privacy'       => 'message',
-					'file_name'     => $file_name,
-					'thread_id'     => $message->thread_id,
-					'extension'     => '.' . $file_type['ext'],
+					'error_type'    => 'wp_error',
 				)
 			);
 
-			if ( $document_id ) {
+			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
 				$document_ids[] = $document_id;
+
+				// save document meta.
+				bp_document_update_meta( $document_id, 'file_name', $file_name );
+				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
+				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
 
 				// save document is saved in attachment.
 				update_post_meta( $attachment_id, 'bp_document_saved', true );

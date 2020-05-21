@@ -518,18 +518,12 @@ function bp_document_add( $args = '' ) {
 			'title'         => '',                      // title of document being added.
 			'folder_id'     => false,                   // Optional: ID of the folder.
 			'group_id'      => false,                   // Optional: ID of the group.
-			'thread_id'     => false,                   // Optional: ID of the message thread.
-			'forum_id'      => false,                   // Optional: ID of the forum.
-			'topic_id'      => false,                   // Optional: ID of the topic.
-			'reply_id'      => false,                   // Optional: ID of the reply.
 			'activity_id'   => false,                   // The ID of activity.
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
 			'menu_order'    => 0,                       // Optional:  Menu order.
 			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
 			'date_modified' => bp_core_current_time(),  // The GMT time that this document was modified.
 			'error_type'    => 'bool',
-			'file_name'     => '',
-			'extension'     => '',
 		),
 		'document_add'
 	);
@@ -542,18 +536,12 @@ function bp_document_add( $args = '' ) {
 	$document->title         = $r['title'];
 	$document->folder_id     = (int) $r['folder_id'];
 	$document->group_id      = (int) $r['group_id'];
-	$document->thread_id     = (int) $r['thread_id'];
-	$document->forum_id      = (int) $r['forum_id'];
-	$document->topic_id      = (int) $r['topic_id'];
-	$document->reply_id      = (int) $r['reply_id'];
 	$document->activity_id   = (int) $r['activity_id'];
 	$document->privacy       = $r['privacy'];
 	$document->menu_order    = $r['menu_order'];
 	$document->date_created  = $r['date_created'];
 	$document->date_modified = $r['date_modified'];
 	$document->error_type    = $r['error_type'];
-	$document->file_name     = $r['file_name'];
-	$document->extension     = $r['extension'];
 
 	// groups document always have privacy to `grouponly`.
 	if ( ! empty( $document->privacy ) && ( in_array( $document->privacy, array( 'forums', 'message' ), true ) ) ) {
@@ -632,11 +620,15 @@ function bp_document_add_handler( $documents = array() ) {
 					'title'         => $document['name'],
 					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
 					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
-					'file_name'     => $file_name,
-					'extension'     => '.' . $file_type['ext'],
 					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
+					'error_type'    => 'wp_error',
 				)
 			);
+
+			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
+				bp_document_update_meta( $document_id, 'file_name', $file_name );
+				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
+			}
 
 			if ( $document_id ) {
 				$document_ids[] = $document_id;
