@@ -1835,6 +1835,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 
 	$document                = new BP_Document( $document_id );
 	$document->folder_id     = $folder_id;
+	$document->group_id      = $group_id;
 	$document->date_modified = bp_core_current_time();
 	$document->save();
 

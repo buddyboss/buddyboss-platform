@@ -1893,7 +1893,6 @@ class BP_Document {
 				&$this,
 			)
 		);
-		$this->type          = apply_filters_ref_array( 'bp_document_type_before_save', array( 'document', &$this ) );
 		$this->folder_id     = apply_filters_ref_array(
 			'bp_document_folder_id_before_save',
 			array(
