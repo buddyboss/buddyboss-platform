@@ -2311,8 +2311,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	.document-data-table-head {
 
 		.data-head-name {
-			-ms-flex-preferred-size: calc(40% - 50px);
-			flex-basis: calc(40% - 50px);
+			-ms-flex-preferred-size: calc(60% - 50px);
+			flex-basis: calc(60% - 50px);
 		}
 
 		.data-head-origin {
@@ -2327,7 +2327,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		.media-folder_items {
 
 			.media-folder_details {
-				width: calc(40% - 100px);
+				width: calc(60% - 100px);
 			}
 
 			.media-folder_group {
@@ -3385,6 +3385,10 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 	border-radius: 4px;
 	border: 1px solid #e7e9ec;
 	margin-top: 20px;
+
+	.bp-feedback {
+		margin: 20px;
+	}
 
 	.document-data-table-head {
 		padding: 10px 20px 8px;

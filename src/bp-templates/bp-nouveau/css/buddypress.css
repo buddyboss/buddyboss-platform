@@ -13701,8 +13701,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #media-stream.document-parent.group-column .document-data-table-head .data-head-name {
-  -ms-flex-preferred-size: calc(40% - 50px);
-  flex-basis: calc(40% - 50px);
+  -ms-flex-preferred-size: calc(60% - 50px);
+  flex-basis: calc(60% - 50px);
 }
 
 #media-stream.document-parent.group-column .document-data-table-head .data-head-origin {
@@ -13711,7 +13711,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #media-stream.document-parent.group-column #media-folder-document-data-table .media-folder_items .media-folder_details {
-  width: calc(40% - 100px);
+  width: calc(60% - 100px);
 }
 
 #media-stream.document-parent.group-column #media-folder-document-data-table .media-folder_items .media-folder_group {
@@ -14673,6 +14673,10 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   border-radius: 4px;
   border: 1px solid #e7e9ec;
   margin-top: 20px;
+}
+
+#media-stream.document-parent .bp-feedback {
+  margin: 20px;
 }
 
 #media-stream.document-parent .document-data-table-head {
