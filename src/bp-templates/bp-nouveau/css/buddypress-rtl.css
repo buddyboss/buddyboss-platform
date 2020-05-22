@@ -3117,7 +3117,7 @@ span.dashicons.dashicons-admin-file:before {
   border-radius: 0 0 4px 4px;
 }
 
-@media screen and (max-width: 375px) {
+@media screen and (max-width: 420px) {
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap {
     padding: 5px 10px;
   }
@@ -3128,6 +3128,13 @@ span.dashicons.dashicons-admin-file:before {
     height: 0;
     width: 0;
     overflow: hidden;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-extension-description {
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-description-wrap .document-detail-wrap .document-helper-text {
     height: auto;

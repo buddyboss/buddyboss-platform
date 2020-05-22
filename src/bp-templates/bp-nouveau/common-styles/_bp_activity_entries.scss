@@ -1426,7 +1426,7 @@ span.dashicons.dashicons-admin-file:before {
 
 }
 
-@media screen and (max-width: 375px) {
+@media screen and (max-width: 420px) {
 
 	.bb-activity-media-wrap .bb-activity-media-elem.document-activity {
 
@@ -1440,6 +1440,14 @@ span.dashicons.dashicons-admin-file:before {
 					height: 0;
 					width: 0;
 					overflow: hidden;
+				}
+
+				.document-extension-description {
+					max-width: calc(100% - 60px);
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					vertical-align: middle;
 				}
 			}
 
