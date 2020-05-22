@@ -1524,38 +1524,62 @@ function bp_document_svg_icon( $extension ) {
 	$svg = '';
 
 	switch ( $extension ) {
+		case '7z':
+			$svg = 'bb-icon-file-7z';
+			break;
+		case 'abw':
+			$svg = 'bb-icon-file-abw';
+			break;
+		case 'ace':
+			$svg = 'bb-icon-file-ace';
+			break;
+		case 'ai':
+			$svg = 'bb-icon-file-ai';
+			break;
+		case 'apk':
+			$svg = 'bb-icon-file-apk';
+			break;
 		case 'css':
-			$svg = 'bb-icon-code';
+			$svg = 'bb-icon-file-css';
 			break;
 		case 'csv':
 			$svg = 'bb-icon-file-csv';
 			break;
 		case 'doc':
-			$svg = 'bb-icon-doc';
+			$svg = 'bb-icon-file-doc';
 			break;
 		case 'docm':
-			$svg = 'bb-icon-doc';
+			$svg = 'bb-icon-file-docm';
 			break;
 		case 'docx':
-			$svg = 'bb-icon-doc';
+			$svg = 'bb-icon-file-docx';
+			break;
+		case 'dotm':
+			$svg = 'bb-icon-file-dotm';
 			break;
 		case 'dotx':
-			$svg = 'bb-icon-doc';
+			$svg = 'bb-icon-file-dotx';
+			break;
+		case 'gif':
+			$svg = 'bb-icon-file-gif';
 			break;
 		case 'gzip':
 			$svg = 'bb-icon-zip';
 			break;
-		case 'ace':
-			$svg = 'bb-icon-zip';
+		case 'hlam':
+			$svg = 'bb-icon-file-hlam';
 			break;
-		case '7z':
-			$svg = 'bb-icon-zip';
+		case 'hlsb':
+			$svg = 'bb-icon-file-hlsb';
+			break;
+		case 'hlsm':
+			$svg = 'bb-icon-file-hlsm';
 			break;
 		case 'htm':
-			$svg = 'bb-icon-code';
+			$svg = 'bb-icon-file-html';
 			break;
 		case 'html':
-			$svg = 'bb-icon-code';
+			$svg = 'bb-icon-file-html';
 			break;
 		case 'ics':
 			$svg = 'bb-icon-file-ics';
@@ -1563,8 +1587,14 @@ function bp_document_svg_icon( $extension ) {
 		case 'ico':
 			$svg = 'bb-icon-file-ico';
 			break;
+		case 'ipa':
+			$svg = 'bb-icon-file-ipa';
+			break;
+		case 'jpg':
+			$svg = 'bb-icon-file-jpg';
+			break;
 		case 'js':
-			$svg = 'bb-icon-code';
+			$svg = 'bb-icon-file-js';
 			break;
 		case 'jar':
 			$svg = 'bb-icon-file-jar';
@@ -1611,14 +1641,26 @@ function bp_document_svg_icon( $extension ) {
 		case 'rtf':
 			$svg = 'bb-icon-file-rtf';
 			break;
+		case 'rss':
+			$svg = 'bb-icon-file-rss';
+			break;
+		case 'sketch':
+			$svg = 'bb-icon-file-sketch';
+			break;
+		case 'svg':
+			$svg = 'bb-icon-file-svg';
+			break;
 		case 'tar':
 			$svg = 'bb-icon-file-tar';
 			break;
 		case 'txt':
 			$svg = 'bb-icon-file-txt';
 			break;
+		case 'vcf':
+			$svg = 'bb-icon-file-vcf';
+			break;
 		case 'wav':
-			$svg = 'bb-icon-mp3';
+			$svg = 'bb-icon-file-wav';
 			break;
 		case 'xls':
 			$svg = 'bb-icon-file-xls';
@@ -1627,13 +1669,19 @@ function bp_document_svg_icon( $extension ) {
 			$svg = 'bb-icon-file-xls';
 			break;
 		case 'xlsx':
-			$svg = 'bb-icon-file-xls';
+			$svg = 'bb-icon-file-xlsx';
 			break;
 		case 'xltm':
-			$svg = 'bb-icon-file-xls';
+			$svg = 'bb-icon-file-xltm';
+			break;
+		case 'xltx':
+			$svg = 'bb-icon-file-xltx';
+			break;
+		case 'yaml':
+			$svg = 'bb-icon-file-yaml';
 			break;
 		case 'zip':
-			$svg = 'bb-icon-zip';
+			$svg = 'bb-icon-file-zip';
 			break;
 		case 'folder':
 			$svg = 'bb-icon-folder-stacked';
