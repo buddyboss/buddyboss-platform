@@ -4542,7 +4542,7 @@ window.bp = window.bp || {};
 			}
 
 			// refresh img.
-			$( '.bb-media-model-wrapper.media .bb-media-section' ).find( 'img' ).attr( 'src', self.current_media.attachment + '?' + new Date().getTime() );
+			$( '.bb-media-model-wrapper.media .bb-media-section' ).find( 'img' ).attr( 'src', self.current_media.attachment );
 
 			// privacy.
 			var media_privacy_wrap = $( '.bb-media-section .bb-media-privacy-wrap' );
