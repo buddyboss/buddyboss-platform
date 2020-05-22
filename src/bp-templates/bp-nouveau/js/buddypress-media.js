@@ -3760,8 +3760,8 @@ window.bp = window.bp || {};
 			var store = bp.Nouveau.getStorage( 'bp-document' ),
 				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
 
-			if ($( '#buddypress .dir-search input[type=search]' ).length) {
-				search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+			if ($( '#buddypress .bp-dir-search-form input[type=search]' ).length) {
+				search_terms = $( '#buddypress .bp-dir-search-form input[type=search]' ).val();
 			}
 
 			this.sort_by 	  = sort;
