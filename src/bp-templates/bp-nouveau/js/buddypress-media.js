@@ -158,17 +158,17 @@ window.bp = window.bp || {};
 
 			// albums.
 			bpNouveau.on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
-			bpNouveau.on( 'click', '#bb-create-folder', this.openCreateFolderModal.bind( this ) );
-			bpNouveau.on( 'click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind( this ) );
-			bpNouveau.on( 'click', '#bp-edit-folder-open', this.openEditFolderChildModal.bind( this ) );
+			$( document ).on( 'click', '#bb-create-folder', this.openCreateFolderModal.bind( this ) );
+			$( document ).on( 'click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind( this ) );
+			$( document ).on( 'click', '#bp-edit-folder-open', this.openEditFolderChildModal.bind( this ) );
 
-			bpNouveau.on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
-			bpNouveau.on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
-			bpNouveau.on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
-			bpNouveau.on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
-			bpNouveau.on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
+			$( document ).on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
 
 			bpNouveau.on( 'click', '#bp-media-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
 
@@ -183,14 +183,14 @@ window.bp = window.bp || {};
 
 			// single album.
 			bpNouveau.on( 'click', '#bp-edit-album-title', this.editAlbumTitle.bind( this ) );
-			bpNouveau.on( 'click', '#bp-edit-folder-title', this.editFolderTitle.bind( this ) );
+			$( document ).on( 'click', '#bp-edit-folder-title', this.editFolderTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
 			bpNouveau.on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
-			bpNouveau.on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
+			$( document ).on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
 			bpNouveau.on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
 			bpNouveau.on( 'change', '#media-stream select#bb-folder-privacy', this.savePrivacy.bind( this ) );
 			bpNouveau.on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
-			bpNouveau.on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
+			$( document ).on( 'click', '#bb-delete-folder', this.deleteFolder.bind( this ) );
 
 			$( document ).on( 'click', 'ul.document-nav li', this.resetPageDocumentDirectory.bind( this ) );
 			$( document ).on( 'click', 'ul.document-nav li a', this.resetPageDocumentDirectory.bind( this ) );
@@ -864,27 +864,24 @@ window.bp = window.bp || {};
 
 		closeChildFolderUploader: function (event) {
 			event.preventDefault();
-			$( '#bb-album-child-title' ).val( '' );
-			$( '#bp-media-create-child-folder' ).hide();
-			$( '#bp-media-create-child-folder' ).removeClass( 'open-popup' );
-			$( '#bp-media-create-child-folder-submit').removeClass( 'loading' );
+			$( document ).find( '.open-popup #bb-album-child-title' ).val( '' );
 
-			$( '#bb-album-title' ).text( '' );
-			$( '#bp-media-create-folder' ).hide();
-			$( '#bp-media-create-folder' ).removeClass( 'open-popup' );
+			$( document ).find( '.open-popup #bp-media-create-child-folder-submit').removeClass( 'loading' );
+			$( document ).find( '#bp-media-create-child-folder' ).removeClass( 'open-popup' );
+			$( document ).find( '#bp-media-create-child-folder' ).hide();
+
+			$( document ).find( '.open-popup #bb-album-title' ).text( '' );
+			$( document ).find( '.open-popup #bp-media-create-folder' ).hide();
+			$( document ).find( '#bp-media-create-folder' ).removeClass( 'open-popup' );
 		},
 
 		closeFolderUploader: function (event) {
 			event.preventDefault();
-
-			$( '#bp-media-create-folder' ).hide();
-			$( '#bb-album-title' ).val( '' );
-
-			var currentPopup = $( event.currentTarget ).closest( '#bp-media-create-folder' );
-
-			currentPopup.find( '#bp-media-create-folder-submit' ).removeClass( 'loading' );
-			currentPopup.find( '#bp-media-document-submit' ).hide();
-
+			$( document ).find( '.open-popup #bb-album-title' ).val( '' );
+			$( document ).find( '.open-popup #bp-media-create-folder-submit' ).removeClass( 'loading' );
+			$( document ).find( '.open-popup #bp-media-document-submit' ).hide();
+			$( document ).find( '#bp-media-create-folder' ).removeClass( 'open-popup' );
+			$( document ).find( '#bp-media-create-folder' ).hide();
 		},
 
 		loadMoreGif: function (e) {
@@ -3414,7 +3411,7 @@ window.bp = window.bp || {};
 						);
 						if (response.success) {
 							self.closeFolderUploader( event );
-							if ( $( '.document-data-table-head' ).length && parseInt( self.album_id ) === parseInt( BP_Nouveau.media.current_folder ) ) {
+							if ( $( '.document-data-table-head' ).length ) {
 								// Prepend the activity if no parent.
 								bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
 								jQuery( window ).scroll();
@@ -3432,14 +3429,15 @@ window.bp = window.bp || {};
 		saveChildFolder: function (event) {
 			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' );
 			event.preventDefault();
-
+			console.log( 'click' );
+			console.log( $.trim( title.val() ) );
 			if ($.trim( title.val() ) === '') {
 				title.addClass( 'error' );
 				return false;
 			} else {
 				title.removeClass( 'error' );
 			}
-
+			console.log( 'After' );
 			target.prop( 'disabled', true ).addClass( 'loading' );
 
 			var data = {
@@ -3462,13 +3460,13 @@ window.bp = window.bp || {};
 					success: function (response) {
 						if (response.success) {
 							self.closeChildFolderUploader( event );
-							if ( $( '.document-data-table-head' ).length ) {
+							//if ( $( '.document-data-table-head' ).length ) {
 									// Prepend the activity if no parent.
-									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
-									jQuery( window ).scroll();
-							} else {
+									//bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+									//jQuery( window ).scroll();
+							//} else {
 								location.reload( true );
-							}
+							//}
 						} else {
 						}
 					}

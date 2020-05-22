@@ -1666,6 +1666,12 @@ class BP_Document {
 		$activity_ids   = wp_parse_id_list( wp_list_pluck( $documents, 'activity_id' ) );
 		$attachment_ids = wp_parse_id_list( wp_list_pluck( $documents, 'attachment_id' ) );
 
+		// Delete meta.
+		if ( ! empty( $document_ids ) ) {
+			// Delete all document meta entries for document items.
+			self::delete_document_meta_entries( wp_list_pluck( $documents, 'id' ) );
+		}
+
 		// Handle accompanying attachments and meta deletion.
 		if ( ! empty( $attachment_ids ) ) {
 
@@ -1730,6 +1736,24 @@ class BP_Document {
 		}
 
 		return $document_ids;
+	}
+
+	/**
+	 * Delete the meta entries associated with a set of document items.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param array $document_ids Document IDs whose meta should be deleted.
+	 * @return bool True on success.
+	 */
+	public static function delete_document_meta_entries( $document_ids = array() ) {
+		$document_ids = wp_parse_id_list( $document_ids );
+
+		foreach ( $document_ids as $document_id ) {
+			bp_document_delete_meta( $document_id );
+		}
+
+		return true;
 	}
 
 	/**

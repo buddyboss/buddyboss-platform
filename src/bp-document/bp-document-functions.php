@@ -1055,20 +1055,14 @@ function bp_folder_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'            => false,
-			// Pass an existing folder ID to update an existing entry.
-			'user_id'       => bp_loggedin_user_id(),
+			'id'            => false, // Pass an existing folder ID to update an existing entry.
+			'user_id'       => bp_loggedin_user_id(),   // User ID.
 			'blog_id'       => get_current_blog_id(),   // Blog ID.
-			// User ID.
 			'group_id'      => false,
-			// attachment id.
-			'title'         => '',
-			// title of folder being added.
-			'privacy'       => 'public',
-			// Optional: privacy of the document e.g. public.
-			'date_created'  => bp_core_current_time(),
-			'date_modified' => bp_core_current_time(),
-			// The GMT time that this document was recorded.
+			'title'         => '',  // title of folder being added.
+			'privacy'       => 'public',    // Optional: privacy of the document e.g. public.
+			'date_created'  => bp_core_current_time(),  // The GMT time that this document was recorded.
+			'date_modified' => bp_core_current_time(),  // The GMT time that this document was updated.
 			'error_type'    => 'bool',
 			'parent'        => 0,
 		),
@@ -1079,6 +1073,7 @@ function bp_folder_add( $args = '' ) {
 	$folder                = new BP_Document_Folder( $r['id'] );
 	$folder->user_id       = (int) $r['user_id'];
 	$folder->group_id      = (int) $r['group_id'];
+	$folder->blog_id       = (int) $r['blog_id'];
 	$folder->title         = $r['title'];
 	$folder->privacy       = $r['privacy'];
 	$folder->date_created  = $r['date_created'];

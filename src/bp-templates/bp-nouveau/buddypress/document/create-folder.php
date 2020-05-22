@@ -19,7 +19,7 @@
 					</header>
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
-						<input id="bb-album-title" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
+						<input id="bb-album-title" value="" type="text" placeholder="<?php esc_html_e( 'Enter Folder Title', 'buddyboss' ); ?>" />
 					</div>
 					<?php
 					if ( ! bp_is_group() ) :

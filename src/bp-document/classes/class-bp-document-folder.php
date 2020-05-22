@@ -110,8 +110,6 @@ class BP_Document_Folder {
 	 */
 	public $error_type = 'bool';
 
-
-
 	/**
 	 * Constructor method.
 	 *
@@ -720,7 +718,30 @@ class BP_Document_Folder {
 			}
 		}
 
+		if ( ! empty( $foldr_ids ) ) {
+			// Delete all folder meta entries for folder items.
+			self::delete_document_folder_meta_entries( wp_list_pluck( $folders, 'id' ) );
+		}
+
 		return $foldr_ids;
+	}
+
+	/**
+	 * Delete the meta entries associated with a set of folder items.
+	 *
+	 * @since BuddyBooss 1.3.6
+	 *
+	 * @param array $folder_ids Folder IDs whose meta should be deleted.
+	 * @return bool True on success.
+	 */
+	public static function delete_document_folder_meta_entries( $folder_ids = array() ) {
+		$folder_ids = wp_parse_id_list( $folder_ids );
+
+		foreach ( $folder_ids as $folder_id ) {
+			bp_document_folder_delete_meta( $folder_id );
+		}
+
+		return true;
 	}
 
 	/**
@@ -764,55 +785,14 @@ class BP_Document_Folder {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_document_id_before_save', array( $this->id, &$this ) );
-		$this->user_id       = apply_filters_ref_array(
-			'bp_document_user_id_before_save',
-			array(
-				$this->user_id,
-				&$this,
-			)
-		);
-		$this->group_id      = apply_filters_ref_array(
-			'bp_document_group_id_before_save',
-			array(
-				$this->group_id,
-				&$this,
-			)
-		);
-		$this->title         = apply_filters_ref_array(
-			'bp_document_title_before_save',
-			array(
-				$this->title,
-				&$this,
-			)
-		);
-		$this->privacy       = apply_filters_ref_array(
-			'bp_document_privacy_before_save',
-			array(
-				$this->privacy,
-				&$this,
-			)
-		);
-		$this->date_created  = apply_filters_ref_array(
-			'bp_document_date_created_before_save',
-			array(
-				$this->date_created,
-				&$this,
-			)
-		);
-		$this->date_modified = apply_filters_ref_array(
-			'bp_document_date_modified_before_save',
-			array(
-				$this->date_modified,
-				&$this,
-			)
-		);
-		$this->parent        = apply_filters_ref_array(
-			'bp_document_parent_before_save',
-			array(
-				$this->parent,
-				&$this,
-			)
-		);
+		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this, ) );
+		$this->blog_id       = apply_filters_ref_array( 'bp_document_blog_id_before_save', array( $this->blog_id, &$this, ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this, ) );
+		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this, ) );
+		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this, ) );
+		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this, ) );
+		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this, ) );
+		$this->parent        = apply_filters_ref_array( 'bp_document_parent_before_save', array( $this->parent, &$this, ) );
 
 		/**
 		 * Fires before the current folder gets saved.
@@ -830,9 +810,9 @@ class BP_Document_Folder {
 
 		// If we have an existing ID, update the folder, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET user_id = %d, group_id = %d, title = %s, privacy = %s, parent = %d, date_modified = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->parent, $this->date_modified, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET blog_id = %d, user_id = %d, group_id = %d, title = %s, privacy = %s, parent = %d, date_modified = %s WHERE id = %d", $this->blog_id, $this->user_id, $this->group_id, $this->title, $this->privacy, $this->parent, $this->date_modified, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( user_id, group_id, title, privacy, date_created, date_modified, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, $this->parent );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name_folder} ( blog_id, user_id, group_id, title, privacy, date_created, date_modified, parent ) VALUES ( %d, %d, %d, %s, %s, %s, %s, %d )", $this->blog_id, $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->date_modified, $this->parent );
 		}
 
 		$q = $wpdb->query( $q ); // db call ok; no-cache ok;
