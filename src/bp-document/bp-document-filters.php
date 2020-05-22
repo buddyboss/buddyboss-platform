@@ -385,6 +385,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 					'group_id'      => $group_id,
 					'privacy'       => 'forums',
 					'error_type'    => 'wp_error',
+					'menu_order'    => $menu_order,
 				)
 			);
 
@@ -485,6 +486,7 @@ function bp_document_attach_document_to_message( &$message ) {
 		foreach ( $document_list as $document_index => $document ) {
 			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
 			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
+			$menu_order	   = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
 
 			$attachment_data = get_post( $document['id'] );
 			$file            = get_attached_file( $document['id'] );
@@ -497,6 +499,7 @@ function bp_document_attach_document_to_message( &$message ) {
 					'title'         => $title,
 					'privacy'       => 'message',
 					'error_type'    => 'wp_error',
+					'menu_order'    => $menu_order,
 				)
 			);
 
