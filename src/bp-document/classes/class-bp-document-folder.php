@@ -154,14 +154,15 @@ class BP_Document_Folder {
 		}
 
 		$this->id            = (int) $row->id;
-		$this->user_id       = (int) $row->user_id;
 		$this->blog_id       = (int) $row->blog_id;
+		$this->user_id       = (int) $row->user_id;
 		$this->group_id      = (int) $row->group_id;
+		$this->parent        = $row->parent;
 		$this->title         = $row->title;
 		$this->privacy       = $row->privacy;
 		$this->date_created  = $row->date_created;
 		$this->date_modified = $row->date_modified;
-		$this->parent        = $row->parent;
+
 	}
 
 	/**

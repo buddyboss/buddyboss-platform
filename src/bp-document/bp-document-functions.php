@@ -611,6 +611,7 @@ function bp_document_add_handler( $documents = array() ) {
 					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
 					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
 					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
+					'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
 					'error_type'    => 'wp_error',
 				)
 			);
@@ -1057,6 +1058,7 @@ function bp_folder_add( $args = '' ) {
 			'id'            => false,
 			// Pass an existing folder ID to update an existing entry.
 			'user_id'       => bp_loggedin_user_id(),
+			'blog_id'       => get_current_blog_id(),   // Blog ID.
 			// User ID.
 			'group_id'      => false,
 			// attachment id.
@@ -1764,9 +1766,8 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 		$folder_id
 	);
 
-	error_log( $documents_folder_query);
-	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
-	$html                   = '';
+	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$html = '';
 
 	if ( ! empty( $data ) ) {
 		$data  = array_reverse( $data );
@@ -2377,7 +2378,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 					$can_view     = true;
 					$can_download = true;
 				} else {
-					$the_group = groups_get_group( absint( $document->group_id ) );
+					$the_group = groups_get_group( (int) $document->group_id );
 					if ( $the_group->id > 0 && $the_group->user_has_access ) {
 						$can_view     = true;
 						$can_download = true;

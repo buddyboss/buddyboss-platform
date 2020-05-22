@@ -181,6 +181,7 @@ class BP_Document {
 		$this->user_id       = (int) $row->user_id;
 		$this->title         = $row->title;
 		$this->folder_id     = (int) $row->folder_id;
+		$this->group_id      = (int) $row->group_id;
 		$this->activity_id   = (int) $row->activity_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
