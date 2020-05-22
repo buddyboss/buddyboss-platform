@@ -647,36 +647,35 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		$group_ids = array( 'groups' => 0 );
 	}
 
-	$retval = array(
-		'relation' => 'OR',
+	$args = array(
+		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'group_id',
-				'compare' => 'IN',
-				'value'   => (array) $group_ids['groups'],
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'grouponly',
-			),
-			array(
-				'column' => 'folder_id',
-				'value'  => 0,
-			),
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
+		),
+		array(
+			'column' => 'folder_id',
+			'value'  => 0,
 		),
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval[] = array(
-			'relation' => 'OR',
-			array(
-				'column'  => 'title',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
 
 	return $retval;
 }
@@ -731,38 +730,35 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
-	$retval = array(
-		'relation' => 'OR',
+	$args = array(
+		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'group_id',
-				'compare' => 'IN',
-				'value'   => (array) $group_ids['groups'],
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'grouponly',
-			),
-			array(
-				'column' => 'parent',
-				'value'  => 0,
-			),
-			( false !== $filter['search_terms'] ) ? array(
-				'column'  => 'title',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			) : array(),
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
+		),
+		array(
+			'column' => 'parent',
+			'value'  => 0,
 		),
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval[] = array(
+		$args[] = array(
 			'column'  => 'title',
 			'compare' => 'LIKE',
 			'value'   => $filter['search_terms'],
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
 
 	return $retval;
 }

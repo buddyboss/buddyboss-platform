@@ -54,6 +54,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 		'menu_order',
 		'date_created',
 		'date_modified',
+		'parent',
 	);
 
 	/**

@@ -128,28 +128,25 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 	}
 	array_push( $friends, bp_loggedin_user_id() );
 
-	$retval = array(
-		'relation' => 'OR',
+	$args = array(
+		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'user_id',
-				'compare' => 'IN',
-				'value'   => (array) $friends,
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'friends',
-			),
-			array(
-				'column' => 'folder_id',
-				'value'  => 0,
-			),
+			'column'  => 'user_id',
+			'compare' => 'IN',
+			'value'   => (array) $friends,
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'friends',
+		),
+		array(
+			'column' => 'folder_id',
+			'value'  => 0,
 		),
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval[] = array(
+		$args[] = array(
 			'relation' => 'OR',
 			array(
 				'column'  => 'title',
@@ -158,6 +155,11 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 			),
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args,
+	);
 
 	return $retval;
 }
@@ -196,33 +198,35 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 	}
 	array_push( $friends, bp_loggedin_user_id() );
 
-	$retval = array(
-		'relation' => 'OR',
+	$args = array(
+		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'user_id',
-				'compare' => 'IN',
-				'value'   => (array) $friends,
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'friends',
-			),
-			array(
-				'column' => 'parent',
-				'value'  => 0,
-			),
+			'column'  => 'user_id',
+			'compare' => 'IN',
+			'value'   => (array) $friends,
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'friends',
+		),
+		array(
+			'column' => 'parent',
+			'value'  => 0,
 		),
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval[] = array(
+		$args[] = array(
 			'column'  => 'title',
 			'compare' => 'LIKE',
 			'value'   => $filter['search_terms'],
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
 
 	return $retval;
 }

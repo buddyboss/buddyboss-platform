@@ -891,7 +891,10 @@ class BP_Document {
 		}
 
 		// existing-document check to query document which has no folders assigned.
-		if ( ! empty( $r['folder_id'] ) ) {
+		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
+			$where_conditions_document['folder'] = "d.folder_id = {$r['folder_id']}";
+			$where_conditions_folder['folder'] = "f.parent = {$r['folder_id']}";
+		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
 			$where_conditions_document['folder'] = "d.folder_id = {$r['folder_id']}";
 			$where_conditions_folder['folder'] = "f.parent = {$r['folder_id']}";
 		} else {
@@ -910,7 +913,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['user_directory'] ) && true === $r['user_directory'] ) {
-			if ( ! empty( $r['folder_id'] ) ) {
+			if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
 				$where_conditions_folder['user_directory'] = "f.parent = {$r['folder_id']}";
 			} elseif ( ! empty( $r['group_id'] ) && bp_is_group_folders() && 'folder' === bp_action_variable( 0 ) && (int) bp_action_variable( 1 ) > 0 ) {
 				$folder_id                                   = (int) bp_action_variable( 1 );

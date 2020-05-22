@@ -224,7 +224,7 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 			: bp_loggedin_user_id();
 	}
 
-	$retval = array(
+	$args = array(
 		'relation' => 'AND',
 		array(
 			'column' => 'user_id',
@@ -241,15 +241,17 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval[] = array(
-			'relation' => 'OR',
-			array(
-				'column'  => 'title',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
 
 	return $retval;
 }
@@ -279,7 +281,7 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 			: bp_loggedin_user_id();
 	}
 
-	$retval = array(
+	$args = array(
 		'relation' => 'AND',
 		array(
 			'column' => 'user_id',
@@ -296,12 +298,17 @@ function bp_members_filter_folder_personal_scope( $retval = array(), $filter = a
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$retval[] = array(
+		$args[] = array(
 			'column'  => 'title',
 			'compare' => 'LIKE',
 			'value'   => $filter['search_terms'],
 		);
 	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
 
 	return $retval;
 }
