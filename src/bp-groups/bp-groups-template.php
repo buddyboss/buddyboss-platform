@@ -4650,9 +4650,6 @@ function bp_get_group_member_section_title() {
 	$user_id               = bp_get_group_member_id();
 	$group_id              = bp_get_current_group_id();
 	$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
-	$group_admin           = groups_get_group_admins( $group_id );
-	$group_mode            = groups_get_group_mods( $group_id );
-	$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
 
 	ob_start();
 
@@ -4665,23 +4662,11 @@ function bp_get_group_member_section_title() {
 
 				<?php
 				if ( groups_is_user_admin( $user_id, $group_id ) ) {
-					if ( isset( $group_admin ) && count( $group_admin ) > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ) );
 				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-					if ( isset( $group_mode ) && count( $group_mode ) > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ) );
 				} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-					if ( isset( $group_member['count'] ) && (int) $group_member['count'] > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ) );
 				}
 				?>
 
