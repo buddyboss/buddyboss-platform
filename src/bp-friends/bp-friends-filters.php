@@ -142,7 +142,7 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 				'value'  => 'friends',
 			),
 			array(
-				'column' => 'album_id',
+				'column' => 'folder_id',
 				'value'  => 0,
 			),
 		),

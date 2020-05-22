@@ -1489,7 +1489,8 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 
 				if ( 1 === $bp_document_upload_count ) {
 					//save media activity id in media
-					$document->activity_id = $activity_id;
+					$document->activity_id  = $activity_id;
+					$document->group_id     = $group_id;
 					$document->save();
 				}
 

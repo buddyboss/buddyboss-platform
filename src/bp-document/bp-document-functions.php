@@ -1763,6 +1763,8 @@ function bp_document_folder_bradcrumb( $folder_id ) {
     ON d._id = c.id",
 		$folder_id
 	);
+
+	error_log( $documents_folder_query);
 	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 	$html                   = '';
 

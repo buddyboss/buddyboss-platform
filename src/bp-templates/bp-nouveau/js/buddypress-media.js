@@ -3232,8 +3232,8 @@ window.bp = window.bp || {};
 					'_wpnonce'	: BP_Nouveau.nonces.media,
 					'documents'	: self.dropzone_media,
 					'content'	: post_content,
-					'folder_id'	: self.album_id,
-					'group_id'	: self.group_id
+					'folder_id'	: self.current_folder,
+					'group_id'	: self.current_group_id
 				};
 
 				$( '#bp-dropzone-content .bp-feedback' ).remove();

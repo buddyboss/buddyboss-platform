@@ -235,7 +235,7 @@ function bp_members_filter_document_personal_scope( $retval = array(), $filter =
 			'value'  => 'onlyme',
 		),
 		array(
-			'column' => 'album_id',
+			'column' => 'folder_id',
 			'value'  => 0,
 		),
 	);

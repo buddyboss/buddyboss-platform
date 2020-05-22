@@ -784,11 +784,15 @@ class BP_Document {
 			) );
 
 		// Select conditions.
-		$select_sql_document = 'SELECT DISTINCT d.id';
-		$select_sql_folder   = 'SELECT DISTINCT f.id';
+		$select_sql_document = 'SELECT DISTINCT d.*';
+		$select_sql_folder   = 'SELECT DISTINCT f.*';
 
 		$from_sql_document = " FROM {$bp->document->table_name} d";
 		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f";
+
+		if ( ! empty( $r['search_terms'] ) ) {
+			$from_sql_document .= ' INNER JOIN ' . $bp->document->table_name_meta . ' ON ( d.id = ' . $bp->document->table_name_meta .'.document_id ) ';
+		}
 
 		$join_sql_document = '';
 		$join_sql_folder   = '';
@@ -812,23 +816,14 @@ class BP_Document {
 			}
 		}
 
-		if ( ! empty( $r['user_id'] ) ) {
-			$where_conditions_document['user'] = "d.user_id = {$r['user_id']}";
-			$where_conditions_folder['user']   = "f.user_id = {$r['user_id']}";
-		}
-
-		if ( ! empty( $r['group_id'] ) ) {
-			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
-			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
-		}
-
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions_document['search_sql'] = $wpdb->prepare( ' ( d.title LIKE %s )', $search_terms_like );
+			$where_conditions_document['search_sql'] = $wpdb->prepare( 'd.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
-
+			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "extension" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "file_name" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -944,25 +939,6 @@ class BP_Document {
 			$where_conditions_document['privacy'] = "d.privacy IN ({$privacy})";
 			$where_conditions_folder['privacy']   = "f.privacy IN ({$privacy})";
 		}
-
-
-//		if ( ! empty( $r['search_terms'] ) ) {
-//
-//			$meta = array(
-//				'relation' => 'OR',
-//				array(
-//					'key'     => 'extension',
-//					'value'   => $r['search_terms'],
-//					'compare' => 'LIKE',
-//				),
-//				array(
-//					'key'     => 'file_name',
-//					'value'   => $r['search_terms'],
-//					'compare' => 'LIKE',
-//				),
-//			);
-//			$r['meta_query_document'] = $meta;
-//		}
 
 		// Process meta_query into SQL.
 		$meta_query_sql_document = self::get_meta_query_sql( $r['meta_query_document'] );

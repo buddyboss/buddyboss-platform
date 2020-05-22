@@ -661,7 +661,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 				'value'  => 'grouponly',
 			),
 			array(
-				'column' => 'album_id',
+				'column' => 'folder_id',
 				'value'  => 0,
 			),
 		),
