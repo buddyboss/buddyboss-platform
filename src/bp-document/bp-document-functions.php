@@ -1611,6 +1611,9 @@ function bp_document_svg_icon( $extension ) {
 		case 'pdf':
 			$svg = 'bb-icon-pdf';
 			break;
+		case 'png':
+			$svg = 'bb-icon-file-png';
+			break;
 		case 'psd':
 			$svg = 'bb-icon-file-psd';
 			break;
@@ -1676,6 +1679,9 @@ function bp_document_svg_icon( $extension ) {
 			break;
 		case 'xltx':
 			$svg = 'bb-icon-file-xltx';
+			break;
+		case 'xlm':
+			$svg = 'bb-icon-file-xlm';
 			break;
 		case 'yaml':
 			$svg = 'bb-icon-file-yaml';

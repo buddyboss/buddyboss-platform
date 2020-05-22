@@ -465,6 +465,8 @@
 .bb-icon-file-gzip:before { content: '\e9c2'; }
 .bb-icon-file-hlam:before { content: '\e9c3'; }
 .bb-icon-file-hlsb:before { content: '\e9c4'; }
+.bb-icon-file-xml:before { content: '\e9c5'; }
+.bb-icon-file-png:before { content: '\e9c6'; }
 .bb-icon-trash-small:before { content: '\eaea'; }
 .bb-icon-rounded-instagram:before { content: '\eaec'; }
 .bb-icon-rounded-facebook:before { content: '\eaed'; }
