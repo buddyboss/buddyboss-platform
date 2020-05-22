@@ -2163,4 +2163,21 @@ class BP_Document {
 		return $sql_array;
 	}
 
+	/**
+	 * Get document attachment id for the activity.
+	 *
+	 * @param integer $activity_id Activity ID
+	 *
+	 * @return integer|bool
+	 * @since BuddyBoss 1.3.6
+	 */
+	public static function get_activity_attachment_id( $activity_id = 0 ) {
+		global $bp, $wpdb;
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		return (int) $wpdb->get_var( "SELECT DISTINCT d.attachment_id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" );
+	}
 }

@@ -1253,6 +1253,66 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 }
 
 /**
+ * Fetch and update the document description.
+ *
+ * @param int $activity_id The current activity ID.
+ *
+ * @since BuddyBoss 1.3.5
+ */
+function bp_nouveau_document_activity_description( $activity_id = 0 ) {
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
+
+	if ( empty( $attachment_id ) ) {
+		return;
+	}
+
+	$content = get_post_field( 'post_content', $attachment_id );
+
+	echo '<div class="activity-media-description">' .
+	     '<div class="bp-media-activity-description">' . $content . '</div>';
+
+	if ( bp_activity_user_can_edit() ) {
+		?>
+
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+		   href="#">
+			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+		</a>
+		<div class="bp-edit-media-activity-description" style="display: none;">
+			<div class="innerWrap">
+                        <textarea id="add-activity-description"
+                                  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+                                  class="textInput"
+                                  name="caption_text"
+                                  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+                                  role="textbox"><?php echo $content; ?></textarea>
+			</div>
+			<div class="in-profile description-new-submit">
+				<?php ?>
+				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small"
+				       name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
+				       value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+			</div>
+		</div>
+
+		<?php
+	}
+
+	echo '</div>';
+}
+
+/**
  * Clear activity body content
  *
  * @param integer              $content  Activity Content
