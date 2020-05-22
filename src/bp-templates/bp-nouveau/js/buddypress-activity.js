@@ -474,6 +474,13 @@ window.bp = window.bp || {};
 			setTimeout( function () {
 				$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope +'_activity' );
 			}, 3000 );
+
+			if (typeof window.instgrm !== 'undefined') {
+				window.instgrm.Embeds.process();
+			}
+			if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
+				window.FB.XFBML.parse();
+			}
 		},
 
 		/**
@@ -729,6 +736,15 @@ window.bp = window.bp || {};
 
 						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
 						jQuery(window).scroll();
+
+						if ( activity_item.hasClass('wp-link-embed') ) {
+							if (typeof window.instgrm !== 'undefined') {
+								window.instgrm.Embeds.process();
+							}
+							if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
+								window.FB.XFBML.parse(document.getElementById('activity-' + item_id));
+							}
+						}
 					}
 				} );
 			}
@@ -1080,8 +1096,6 @@ window.bp = window.bp || {};
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 							}
-						} else {
-							self.dropzone_obj.removeFile(file);
 						}
 					});
 
