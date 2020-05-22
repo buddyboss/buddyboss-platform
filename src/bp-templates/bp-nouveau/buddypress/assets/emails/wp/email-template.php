@@ -277,7 +277,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 							<![endif]-->
 
 							<!-- Email Header : BEGIN -->
-							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px;">
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
 								<tbody>
 									<tr>
 										<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>;" class="center-in-mobile site_title_text_color site_title_text_size">
