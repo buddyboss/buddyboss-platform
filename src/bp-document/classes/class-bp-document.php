@@ -820,10 +820,10 @@ class BP_Document {
 		// Searching.
 		if ( $r['search_terms'] ) {
 			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_conditions_document['search_sql'] = $wpdb->prepare( 'd.title LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] = $wpdb->prepare( '( d.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
-			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' AND ( ' . $bp->document->table_name_meta . '.meta_key = "extension" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s ', $search_terms_like );
+			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "extension" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s ', $search_terms_like );
 			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "file_name" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s )', $search_terms_like );
 
 			/**
