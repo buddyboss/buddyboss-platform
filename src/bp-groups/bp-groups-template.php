@@ -4662,11 +4662,11 @@ function bp_get_group_member_section_title() {
 
 				<?php
 				if ( groups_is_user_admin( $user_id, $group_id ) ) {
-					esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ) );
+					esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
 				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-					esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ) );
+					esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
 				} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-					esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ) );
+					esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
 				}
 				?>
 
