@@ -104,6 +104,8 @@ window.bp = window.bp || {};
 			this.dropzone_obj            = [];
 			this.dropzone_media          = [];
 			this.album_id                = typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+			this.current_folder          = typeof BP_Nouveau.media.current_folder !== 'undefined' ? BP_Nouveau.media.current_folder : false;
+			this.current_group_id        = typeof BP_Nouveau.media.current_group_id !== 'undefined' ? BP_Nouveau.media.current_group_id : false;
 			this.group_id                = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 			this.bbp_is_reply_edit       = typeof window.BP_Forums_Nouveau !== 'undefined' && typeof window.BP_Forums_Nouveau.media.bbp_is_reply_edit !== 'undefined' && window.BP_Forums_Nouveau.media.bbp_is_reply_edit;
 			this.bbp_is_topic_edit       = typeof window.BP_Forums_Nouveau !== 'undefined' && typeof window.BP_Forums_Nouveau.media.bbp_is_topic_edit !== 'undefined' && window.BP_Forums_Nouveau.media.bbp_is_topic_edit;
@@ -3390,8 +3392,8 @@ window.bp = window.bp || {};
 				'_wpnonce'	: BP_Nouveau.nonces.media,
 				'title'		: title.val().trim(),
 				'privacy'	: privacy.val(),
-				'album_id'	: self.album_id,
-				'group_id'	: self.group_id
+				'album_id'	: self.current_folder,
+				'group_id'	: self.current_group_id
 			};
 
 			// remove all feedback erros from the DOM.
@@ -3441,11 +3443,11 @@ window.bp = window.bp || {};
 			target.prop( 'disabled', true ).addClass( 'loading' );
 
 			var data = {
-				'action'	: 'document_folder_save',
+				'action'	: 'document_child_folder_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,
 				'title'		: title.val(),
-				'folder_id'	: self.album_id,
-				'group_id'	: self.group_id,
+				'folder_id'	: self.current_folder,
+				'group_id'	: self.current_group_id,
 			};
 
 			// remove all feedback erros from the DOM.
@@ -3497,7 +3499,7 @@ window.bp = window.bp || {};
 				'title'		: title.val(),
 				'privacy'	: privacy.val(),
 				'id'		: id,
-				'group_id'	: self.group_id,
+				'group_id'	: self.current_group_id,
 			};
 
 			// remove all feedback erros from the DOM.
@@ -3519,7 +3521,7 @@ window.bp = window.bp || {};
 						if (response.success) {
 							window.location.reload( true );
 						} else {
-							if (self.album_id) {
+							if (self.current_folder) {
 								$( '#bp-media-single-album' ).prepend( response.data.feedback );
 							} else {
 								$( '#boss-media-create-album-popup .bb-model-header' ).after( response.data.feedback );

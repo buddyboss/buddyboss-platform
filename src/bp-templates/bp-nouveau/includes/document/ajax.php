@@ -44,6 +44,12 @@ add_action(
 				),
 			),
 			array(
+				'document_child_folder_save' => array(
+					'function' => 'bp_nouveau_ajax_document_child_folder_save',
+					'nopriv'   => true,
+				),
+			),
+			array(
 				'document_move' => array(
 					'function' => 'bp_nouveau_ajax_document_move',
 					'nopriv'   => true,
@@ -588,6 +594,99 @@ function bp_nouveau_ajax_document_folder_save() {
 			'privacy'  => $privacy,
 			'group_id' => $group_id,
 			'parent'   => $parent,
+		)
+	);
+
+	if ( ! $folder_id ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
+	if ( $group_id > 0 ) {
+		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+	} else {
+		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+	}
+
+	$document = '';
+	if ( ! empty( $folder_id ) ) {
+		ob_start();
+		if ( bp_has_folders( array( 'include' => $folder_id ) ) ) {
+			while ( bp_folder() ) {
+				bp_the_folder();
+				bp_get_template_part( 'document/document-entry' );
+			}
+		}
+		$document = ob_get_contents();
+		ob_end_clean();
+	}
+
+	$response = array(
+		'document'  => $document,
+		'tree_view' => $ul,
+		'folder_id' => $folder_id,
+	);
+
+	wp_send_json_success( $response );
+}
+
+function bp_nouveau_ajax_document_child_folder_save() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['title'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please enter title of folder.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// save folder.
+	$id        = 0;
+	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+	$title     = $_POST['title'];
+	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
+	$privacy   = '';
+
+	if ( $folder_id > 0 ) {
+		$parent_folder = BP_Document_Folder::get_folder_data( array( $folder_id ) );
+		$privacy       = $parent_folder[0]->privacy;
+	}
+
+	$folder_id = bp_folder_add(
+		array(
+			'id'       => false,
+			'title'    => $title,
+			'privacy'  => $privacy,
+			'group_id' => $group_id,
+			'parent'   => $folder_id,
 		)
 	);
 
