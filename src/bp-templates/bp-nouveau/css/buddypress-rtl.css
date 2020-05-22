@@ -3124,6 +3124,9 @@ span.dashicons.dashicons-admin-file:before {
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
     padding-right: 10px;
   }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title {
+    font-size: 14px;
+  }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
     height: 0;
     width: 0;
@@ -13685,7 +13688,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     top: 19px;
   }
   #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list {
-    left: -3px;
+    left: 14px;
   }
   #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list:after {
     right: inherit;
@@ -13710,7 +13713,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 @media screen and (max-width: 540px) {
   #media-folder-document-data-table .media-folder_items:last-child .media-folder_action__list {
     bottom: 30px;
-    left: -17px;
+    left: -1px;
   }
 }
 
