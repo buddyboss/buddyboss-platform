@@ -3124,6 +3124,16 @@ span.dashicons.dashicons-admin-file:before {
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
     padding-left: 10px;
   }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-description-wrap .document-detail-wrap .document-helper-text {
+    height: auto;
+    width: auto;
+    overflow: visible;
+  }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text-wrap {
     margin: 0 10px;
   }

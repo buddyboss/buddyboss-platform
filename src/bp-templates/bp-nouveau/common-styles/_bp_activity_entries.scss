@@ -1435,8 +1435,20 @@ span.dashicons.dashicons-admin-file:before {
 
 			.document-detail-wrap {
 				padding-left: 10px;
+
+				.document-helper-text {
+					height: 0;
+					width: 0;
+					overflow: hidden;
+				}
 			}
 
+		}
+
+		&:hover .document-description-wrap .document-detail-wrap .document-helper-text{
+			height: auto;
+			width: auto;
+			overflow: visible;
 		}
 
 		.document-text-wrap {
