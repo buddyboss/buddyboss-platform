@@ -2633,7 +2633,7 @@ span.dashicons.dashicons-admin-file:before {
   border-radius: 5px;
   display: inline-block;
   width: 100%;
-  margin: 3px;
+  margin: 3px 0;
   position: relative;
   padding: 0;
 }
