@@ -13321,6 +13321,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > p {
   font-size: 18px;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 5px;
 }
 
 .bb-document-theater .bb-media-section .img-section {
