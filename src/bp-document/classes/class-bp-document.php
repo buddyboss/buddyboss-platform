@@ -779,7 +779,7 @@ class BP_Document {
 				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'count_total'         => false,           // Whether or not to use count_total.
 				'user_directory'      => true,
-				'folder_id'           => true,
+				'folder_id'           => 0,
 				'meta_query_document' => false,
 				'meta_query_folder'   => false,
 			) );
@@ -823,8 +823,8 @@ class BP_Document {
 			$where_conditions_document['search_sql'] = $wpdb->prepare( 'd.title LIKE %s', $search_terms_like );
 			$where_conditions_folder['search_sql']   = $wpdb->prepare( 'f.title LIKE %s', $search_terms_like );
 
-			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "extension" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s', $search_terms_like );
-			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "file_name" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s', $search_terms_like );
+			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' AND ( ' . $bp->document->table_name_meta . '.meta_key = "extension" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s ', $search_terms_like );
+			$where_conditions_document['search_sql'] .=  $wpdb->prepare( ' OR ' . $bp->document->table_name_meta . '.meta_key = "file_name" AND ' . $bp->document->table_name_meta . '.meta_value LIKE %s )', $search_terms_like );
 
 			/**
 			 * Filters whether or not to include users for search parameters.
@@ -891,10 +891,12 @@ class BP_Document {
 		}
 
 		// existing-document check to query document which has no folders assigned.
-		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
+		if ( ! empty( $r['folder_id'] ) ) {
 			$where_conditions_document['folder'] = "d.folder_id = {$r['folder_id']}";
-		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
+			$where_conditions_folder['folder'] = "f.parent = {$r['folder_id']}";
+		} else {
 			$where_conditions_document['folder'] = 'd.folder_id = 0';
+			$where_conditions_folder['folder'] = 'f.parent = 0';
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
@@ -908,7 +910,7 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['user_directory'] ) && true === $r['user_directory'] ) {
-			if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
+			if ( ! empty( $r['folder_id'] ) ) {
 				$where_conditions_folder['user_directory'] = "f.parent = {$r['folder_id']}";
 			} elseif ( ! empty( $r['group_id'] ) && bp_is_group_folders() && 'folder' === bp_action_variable( 0 ) && (int) bp_action_variable( 1 ) > 0 ) {
 				$folder_id                                   = (int) bp_action_variable( 1 );
