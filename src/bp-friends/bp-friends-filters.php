@@ -128,6 +128,35 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 	}
 	array_push( $friends, bp_loggedin_user_id() );
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$folder_ids = array();
+		if ( $friends ) {
+			foreach ( $friends as $friend ) {
+				$user_root_folder_ids = bp_document_get_user_root_folders( (int) $friend );
+				if ( $user_root_folder_ids ) {
+					foreach ( $user_root_folder_ids as $single_folder ) {
+						$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+						if ( $single_folder_ids ) {
+							array_merge( $folder_ids, $single_folder_ids );
+						}
+						array_push( $folder_ids, $single_folder );
+					}
+				}
+			}
+		}
+		$folder_ids[]   = 0;
+		$folders = array(
+			'column'  => 'folder_id',
+			'compare' => 'IN',
+			'value'   => $folder_ids,
+		);
+	} else {
+		$folders = array(
+			'column' => 'folder_id',
+			'value'  => 0,
+		);
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -139,10 +168,7 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 			'column' => 'privacy',
 			'value'  => 'friends',
 		),
-		array(
-			'column' => 'folder_id',
-			'value'  => 0,
-		),
+		$folders,
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -198,6 +224,35 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 	}
 	array_push( $friends, bp_loggedin_user_id() );
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$folder_ids = array();
+		if ( $friends ) {
+			foreach ( $friends as $friend ) {
+				$user_root_folder_ids = bp_document_get_user_root_folders( (int) $friend );
+				if ( $user_root_folder_ids ) {
+					foreach ( $user_root_folder_ids as $single_folder ) {
+						$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+						if ( $single_folder_ids ) {
+							array_merge( $folder_ids, $single_folder_ids );
+						}
+						array_push( $folder_ids, $single_folder );
+					}
+				}
+			}
+		}
+		$folder_ids[]   = 0;
+		$folders = array(
+			'column'  => 'parent',
+			'compare' => 'IN',
+			'value'   => $folder_ids,
+		);
+	} else {
+		$folders = array(
+			'column' => 'parent',
+			'value'  => 0,
+		);
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -209,10 +264,7 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 			'column' => 'privacy',
 			'value'  => 'friends',
 		),
-		array(
-			'column' => 'parent',
-			'value'  => 0,
-		),
+		$folders,
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {

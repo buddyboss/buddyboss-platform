@@ -2559,14 +2559,37 @@ function bp_document_get_folder_attachment_ids( $folder_id ) {
  * @since BuddyBoss 1.3.6
  */
 function bp_document_get_folder_children( $folder_id ) {
-
 	global $bp, $wpdb;
-
 	$table = $bp->document->table_name_folder;
-
-	// error_log( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) );
 	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$table} WHERE parent IN (@pv)) AS lv FROM {$table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id ) ) );
+}
 
+/**
+ * Return root folder of the given user.
+ *
+ * @param $user_id
+ *
+ * @return array
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_get_user_root_folders( $user_id ) {
+	global $bp, $wpdb;
+	$table = $bp->document->table_name_folder;
+	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d", $user_id ) ) );
+}
+
+/**
+ * Return root folder of the given group.
+ *
+ * @param $group_id
+ *
+ * @return array
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_get_group_root_folders( $group_id ) {
+	global $bp, $wpdb;
+	$table = $bp->document->table_name_folder;
+	return array_map( 'intval', $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$table} WHERE group_id = %d", $group_id ) ) );
 }
 
 /**

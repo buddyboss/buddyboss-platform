@@ -647,6 +647,36 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		$group_ids = array( 'groups' => 0 );
 	}
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$folder_ids  = array();
+		$user_groups = $group_ids['groups'];
+		if ( $user_groups ) {
+			foreach ( $user_groups as $single_group ) {
+				$fetch_folder_ids = bp_document_get_group_root_folders( (int) $single_group );
+				if ( $fetch_folder_ids ) {
+					foreach ( $fetch_folder_ids as $single_folder ) {
+						$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+						if ( $single_folder_ids ) {
+							array_merge( $folder_ids, $single_folder_ids );
+						}
+						array_push( $folder_ids, $single_folder );
+					}
+				}
+			}
+		}
+		$folder_ids[]   = 0;
+		$folders = array(
+			'column'  => 'folder_id',
+			'compare' => 'IN',
+			'value'   => $folder_ids,
+		);
+	} else {
+		$folders = array(
+			'column' => 'folder_id',
+			'value'  => 0,
+		);
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -658,10 +688,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 			'column' => 'privacy',
 			'value'  => 'grouponly',
 		),
-		array(
-			'column' => 'folder_id',
-			'value'  => 0,
-		),
+		$folders,
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
@@ -730,6 +757,36 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$folder_ids  = array();
+		$user_groups = $group_ids['groups'];
+		if ( $user_groups ) {
+			foreach ( $user_groups as $single_group ) {
+				$fetch_folder_ids = bp_document_get_group_root_folders( (int) $single_group );
+				if ( $fetch_folder_ids ) {
+					foreach ( $fetch_folder_ids as $single_folder ) {
+						$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+						if ( $single_folder_ids ) {
+							array_merge( $folder_ids, $single_folder_ids );
+						}
+						array_push( $folder_ids, $single_folder );
+					}
+				}
+			}
+		}
+		$folder_ids[] = 0;
+		$folders = array(
+			'column'  => 'parent',
+			'compare' => 'IN',
+			'value'   => $folder_ids,
+		);
+	} else {
+		$folders = array(
+			'column' => 'parent',
+			'value'  => 0,
+		);
+	}
+
 	$args = array(
 		'relation' => 'AND',
 		array(
@@ -741,10 +798,7 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 			'column' => 'privacy',
 			'value'  => 'grouponly',
 		),
-		array(
-			'column' => 'parent',
-			'value'  => 0,
-		),
+		$folders,
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
