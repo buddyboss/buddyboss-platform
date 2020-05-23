@@ -2449,9 +2449,12 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var currentTarget;
+			/* jshint ignore:start */
 			var currentTargetName = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).find( '.document-title' ).text();
+			/* jshint ignore:end */
 			this.moveToIdPopup    = $( event.currentTarget ).attr( 'id' );
 			this.moveToTypePopup  = $( event.currentTarget ).attr( 'data-type' );
+			var action  = $( event.currentTarget ).attr( 'data-action' );
 
 			// For Activity Feed.
 			currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' .bp-media-move-file';
@@ -2461,7 +2464,7 @@ window.bp = window.bp || {};
 			// Change if this is not from Activity Page.
 			if ($( event.currentTarget ).closest( '.media-folder_items' ).length > 0) {
 				/* jshint ignore:start */
-				var currentTargetName    = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name' ).text();
+				currentTargetName    = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name' ).text();
 				this.currentTargetParent = $( event.currentTarget ).closest( '.media-folder_items' ).attr( 'data-parent-id' );
 				/* jshint ignore:end */
 				if ($( event.currentTarget ).hasClass( 'ac-document-move' )) { // Check if target is file or folder.
@@ -2476,9 +2479,19 @@ window.bp = window.bp || {};
 
 			$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 			$( currentTarget ).find( '.location-folder-list-wrap' ).append( '<ul class="location-folder-list is-loading"><li><i class="bb-icon-loader animate-spin"></i></li></ul>' );
-			$( currentTarget ).find( '.bb-model-header h4 .target_name' ).text( currentTargetName );
+			if ( 'document' === action ) {
+				$( currentTarget ).find( '.bb-model-header h4 .target_name' ).text( BP_Nouveau.media.move_to_file );
+			} else {
+				$( currentTarget ).find( '.bb-model-header h4 .target_name' ).text( BP_Nouveau.media.move_to_folder );
+			}
 			$( currentTarget ).show();
 			$( currentTarget ).addClass( 'open-popup' );
+
+			if ( 'group' === this.moveToTypePopup ) {
+				$( document ).find( '.location-folder-list-wrap h4' ).show();
+			} else {
+				$( document ).find( '.location-folder-list-wrap h4' ).hide();
+			}
 
 			var parentsOpen = this.currentTargetParent;
 			if ( '' !== this.moveToIdPopup ) {
@@ -2491,7 +2504,7 @@ window.bp = window.bp || {};
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
 						},success : function( response ) {
-							BP_Nouveau.media.target_text = response.data.first_span_text;
+							$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).text( response.data.first_span_text );
 							if ( '' === response.data.html ) {
 								$( document ).find( '.open-popup .location-folder-list-wrap' ).hide();
 								$( document ).find( '.open-popup .location-folder-list-wrap-main span.no-folder-exists' ).show();
@@ -2503,8 +2516,6 @@ window.bp = window.bp || {};
 							$( currentTarget ).find( '.location-folder-list-wrap' ).append( response.data.html );
 							if (bp.Nouveau.Media.folderLocationUI) {
 								bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
-								$( currentTarget ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( '' );
-								$( currentTarget ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( BP_Nouveau.media.target_text );
 								$( currentTarget ).find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
 							}
 						}
@@ -2727,8 +2738,10 @@ window.bp = window.bp || {};
 			var id		= 0;
 			if ( 'group' === type ) {
 				id = groupId;
+				$( document ).find( '.location-folder-list-wrap h4' ).show();
 			} else {
 				id = userId;
+				$( document ).find( '.location-folder-list-wrap h4' ).hide();
 			}
 
 			$.ajax(
@@ -2740,13 +2753,11 @@ window.bp = window.bp || {};
 						id		: id,
 						type	: type,
 					}, success: function (response) {
-						BP_Nouveau.media.target_text = response.data.first_span_text;
+						$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).text( response.data.first_span_text );
 						$( '.location-folder-list-wrap .location-folder-list' ).remove();
 						$( '.location-folder-list-wrap' ).append( response.data.html );
 						if (bp.Nouveau.Media.folderLocationUI) {
 							bp.Nouveau.Media.folderLocationUI( '#bp-media-edit-child-folder', BP_Nouveau.media.current_folder );
-							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( '' );
-							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span[data-id="0"]' ).text( BP_Nouveau.media.target_text );
 							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + BP_Nouveau.media.current_folder ).trigger( 'click' );
 						}
 					}
@@ -2809,19 +2820,13 @@ window.bp = window.bp || {};
 							});
 
 							if ($( this ).hasClass( 'selected' ) && ! $( this ).hasClass( 'disabled' )) {
-								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '' );
-								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '...' );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-destination' ).val( '' );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-selected-id' ).val( '0' );
 
 								if ( $( targetPopup ).find( '.location-folder-list li.is_active' ).length ) {
 									$( targetPopup ).find( '.bb-folder-selected-id' ).val( $( targetPopup ).find( '.location-folder-list li.is_active' ).attr( 'data-id' ) );
-									$( targetPopup ).find( '.target_folder' ).text( '' );
-									$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span' ).text() );
 								} else {
 									$( targetPopup ).find( '.bb-folder-selected-id' ).val( '0' );
-									$( targetPopup ).find( '.target_folder' ).text( '' );
-									$( targetPopup ).find( '.target_folder' ).text( BP_Nouveau.media.target_text );
 								}
 
 							} else {
@@ -2829,8 +2834,6 @@ window.bp = window.bp || {};
 								$( this ).addClass( 'selected' );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-destination' ).val( $( this ).text() );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-selected-id' ).val( $( this ).parent().attr( 'data-id' ) );
-								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '' );
-								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( ' ' + $( this ).text() );
 							}
 
 							$( this ).closest( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( this ).siblings( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
@@ -2841,9 +2844,6 @@ window.bp = window.bp || {};
 							$( this ).parent().addClass( 'is_active' );
 
 							$( targetPopup ).find( '.bb-folder-selected-id' ).val( $( targetPopup ).find( '.location-folder-list li.is_active' ).attr( 'data-id' ) );
-							// $( targetPopup ).find( '.target_folder' ).text( '' );
-							// $( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span' ).text() );
-
 							$( targetPopup ).find( '.breadcrumbs-append-ul-li .breadcrumb .item span' ).each(function() {
 								$(this).show();
 							});
@@ -2871,9 +2871,6 @@ window.bp = window.bp || {};
 							var currentLiID = $( event.currentTarget ).attr('data-id');
 							$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
 							$( targetPopup ).find( '.bb-folder-selected-id' ).val( currentLiID );
-							$( targetPopup ).find( '.target_folder' ).text( '' );
-							$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span' ).text() );
-
 							$( targetPopup ).find( '.location-folder-list li' ).hide();
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' );
 							$( targetPopup ).find( '.location-folder-list li > span.selected' ).removeClass( 'selected' );
@@ -2902,8 +2899,6 @@ window.bp = window.bp || {};
 								$( targetPopup ).find( '.location-folder-list' ).children( 'li' ).show().children( 'span,i' ).show();
 								$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( BP_Nouveau.media.target_text );
 								$( targetPopup ).find( '.location-folder-back' ).hide();
-								$( targetPopup ).find( '.target_folder' ).text( '' );
-								$( targetPopup ).find( '.target_folder' ).text( BP_Nouveau.media.target_text );
 							}
 
 							$( event.currentTarget ).nextAll().remove();
@@ -2943,18 +2938,9 @@ window.bp = window.bp || {};
 									}
 								}
 							});
-
 							$( targetPopup ).find( '.bb-folder-selected-id' ).val( currentLiID );
-							$( targetPopup ).find( '.target_folder' ).text( '' );
-							$( targetPopup ).find( '.target_folder' ).text( $( event.currentTarget ).text() );
 						}
 					);
-
-					if ( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).length ) {
-						$( targetPopup ).find( '.target_folder' ).text( '' );
-						$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).text() );
-					}
-
 				}
 
 				$( targetPopup ).find( '.location-folder-list li' ).each(
@@ -2996,24 +2982,16 @@ window.bp = window.bp || {};
 						} else {
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span,i' ).hide().parent().children( 'ul' ).show().children( 'li' ).show();
 						}
-
 					}
-
 					$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
 					$( targetPopup ).find( '.bb-folder-selected-id' ).val( $( targetPopup ).find( '.location-folder-list li.is_active' ).attr( 'data-id' ) );
-					$( targetPopup ).find( '.target_folder' ).text( '' );
-					$( targetPopup ).find( '.target_folder' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span' ).text() );
-
 					$( targetPopup ).find( '.location-folder-list li[data-id="'+ currentMoveItemID +'"]' ).children().hide();
-
 				}
 
 				if ( currentTargetParent === '0' ) {
 					$( targetPopup ).find( '.location-folder-list' ).children( 'li' ).show();
 					$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( BP_Nouveau.media.target_text );
 					$( targetPopup ).find( '.location-folder-back' ).hide();
-					$( targetPopup ).find( '.target_folder' ).text( '' );
-					$( targetPopup ).find( '.target_folder' ).text( BP_Nouveau.media.target_text );
 				}
 
 				//Disable move button if current folder is already a parent

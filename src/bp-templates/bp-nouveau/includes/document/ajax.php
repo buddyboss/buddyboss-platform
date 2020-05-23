@@ -1277,7 +1277,7 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	} else {
 		$group      = groups_get_group( (int) $id );
 		$group_name = bp_get_group_name( $group );
-		$first_text = $group_name . esc_html__( ' Documents', 'buddyboss' );
+		$first_text = $group_name;
 	}
 
 	wp_send_json_success(

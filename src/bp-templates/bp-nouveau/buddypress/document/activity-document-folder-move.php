@@ -14,7 +14,7 @@
 			<div class="modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Move ', 'buddyboss' ); ?> <span class="target_name"></span> <?php esc_html_e( ' to ', 'buddyboss' ); ?><span class="target_folder">...</span></h4>
+						<h4><span class="target_name"></span></h4>
 					</header>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'document/location-move' ); ?>

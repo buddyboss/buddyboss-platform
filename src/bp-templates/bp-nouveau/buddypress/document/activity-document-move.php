@@ -14,7 +14,7 @@
 			<div class="modal-wrapper">
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
-						<h4><?php esc_html_e( 'Move ', 'buddyboss' ); ?> <span class="target_name"></span> <?php esc_html_e( ' to ', 'buddyboss' ); ?><span class="target_folder">...</span></h4>
+						<h4><span class="target_name"></span></h4>
 					</header>
 					<?php
 						$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );

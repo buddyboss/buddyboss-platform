@@ -14378,6 +14378,11 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   cursor: pointer;
 }
 
+.location-folder-list-wrap-main .ac_document_search_folder_list h4,
+.location-folder-list-wrap-main .location-folder-list-wrap h4 {
+  margin: 0 !important;
+}
+
 .location-folder-list-wrap-main .ac_document_search_folder_list.has-error,
 .location-folder-list-wrap-main .location-folder-list-wrap.has-error {
   border-color: #f00;

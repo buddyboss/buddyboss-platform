@@ -23,6 +23,7 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 
 		<input type="hidden" class="bb-folder-destination" value="<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
 		<div class="location-folder-list-wrap">
+			<h4><span class="where-to-move-profile-or-group-document"></span></h4>
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">

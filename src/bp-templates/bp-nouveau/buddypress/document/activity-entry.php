@@ -123,7 +123,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 					if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							?>
-						<li class="move_file"><a href="#" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+						<li class="move_file"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
 							<?php
 						}
 						?>
