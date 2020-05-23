@@ -2646,6 +2646,10 @@ span.dashicons.dashicons-admin-file:before {
   background-color: #fff;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-description-wrap {
+  background-color: transparent;
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text:not(.loaded):after {
   content: "\e838";
   font-family: bb-icons;

@@ -897,6 +897,11 @@ span.dashicons.dashicons-admin-file:before {
 			.document-audio-wrap audio::-webkit-media-controls-panel {
 				background-color: #fff;
 			}
+
+			.document-description-wrap {
+				background-color: transparent;
+			}
+
 		}
 
 		.document-text:not(.loaded):after {
