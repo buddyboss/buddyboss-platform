@@ -57,7 +57,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			if ( $only_totalrow_count ) {
 				$sql .= ' COUNT( DISTINCT d.id ) ';
 			} else {
-				$sql                .= " DISTINCT d.id, 'Documents' as type, d.title LIKE %s AS relevance, d.date_created as entry_date  ";
+				$sql                .= " DISTINCT d.id, 'documents' as type, d.title LIKE %s AS relevance, d.date_created as entry_date  ";
 				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
