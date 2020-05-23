@@ -851,6 +851,18 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			) );
 	}
 
+	if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+		$options['photos'] = __( 'Photos', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) {
+		$options['albums'] = __( 'Albums', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+		$options['documents'] = __( 'Documents', 'buddyboss' );
+	}
+
 	return array_merge( $controls,
 		array(
 			'group_nav_display' => array(
