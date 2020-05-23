@@ -542,7 +542,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'extension_description' => $extension_description,
 					'download'              => __( 'Download', 'buddyboss' ),
 					'collapse'              => __( 'Collapse', 'buddyboss' ),
-					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
+					'copy_download_link'    => __( 'Copy to Clipboard', 'buddyboss' ),
 					'more_action'           => __( 'More actions', 'buddyboss' ),
 					'preview'               => $output,
 				);
@@ -2069,7 +2069,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'extension_description' => $extension_description,
 						'download'              => __( 'Download', 'buddyboss' ),
 						'collapse'              => __( 'Collapse', 'buddyboss' ),
-						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
+						'copy_download_link'    => __( 'Copy to Clipboard', 'buddyboss' ),
 						'more_action'           => __( 'More actions', 'buddyboss' ),
 						'preview'               => $output,
 					);
