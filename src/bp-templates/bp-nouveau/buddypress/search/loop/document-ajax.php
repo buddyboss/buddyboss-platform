@@ -74,7 +74,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 
 ?>
 
-<div class="bp-search-ajax-item bboss_ajax_search_document">
+<div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
 	<a href="">
 		<div class="item">
 			<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php bp_document_id(); ?>">
@@ -166,40 +166,6 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 						?>
 					</div>
 				</div>
-				<?php
-				$show = false;
-				if ( $attachment_id && $can_download_btn ) {
-					$show = true;
-				} elseif ( $can_manage_btn ) {
-					$show = true;
-				}
-				?>
-				<div class="media-folder_actions">
-					<?php
-					if ( $show ) {
-						?>
-						<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
-						<div class="media-folder_action__list">
-							<ul>
-								<?php
-								if ( $can_download_btn ) {
-									?>
-									<li class="download_file">
-										<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
-									</li>
-									<li class="copy_download_file_url">
-										<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy to Clipboard', 'buddyboss' ); ?></a>
-									</li>
-									<?php
-								}
-								?>
-							</ul>
-						</div>
-						<?php
-					}
-					?>
-				</div>
-
 			</div>
 		</div>
 	</a>

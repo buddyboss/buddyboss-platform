@@ -1977,6 +1977,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 }
 
+.search-document-list .media-folder_items,
 #media-folder-document-data-table .media-folder_items {
 	margin: 0;
 	border-bottom: 1px solid #e7e9ec;
@@ -2301,6 +2302,35 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			}
 		}
 	}
+}
+
+//Document Search result ajax and page
+.search-document-list {
+
+	.item {
+		width: 100%;
+	}
+
+	.media-folder_items {
+		width: 100%;
+		padding: 0;
+
+		.media-folder_details {
+			width: calc(60% - 40px);
+		}
+	}
+}
+
+.search-document-list .media-folder_items.ac-folder-list {
+
+	.media-folder_details {
+		width: calc(40% - 100px);
+	}
+
+	.media-folder_group {
+		width: 20%;
+	}
+
 }
 
 .document-type-navs.main-navs {

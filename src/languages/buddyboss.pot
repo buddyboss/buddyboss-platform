@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-23 06:18:41+00:00\n"
+"POT-Creation-Date: 2020-05-23 18:22:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -154,7 +154,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
 #: bp-core/bp-core-cssjs.php:259 bp-search/bp-search-functions.php:376
-#: bp-search/bp-search-settings.php:726
+#: bp-search/bp-search-settings.php:815
 msgid "Activity"
 msgstr ""
 
@@ -692,7 +692,7 @@ msgid "Replied to a status update"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1725
-#: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:761
+#: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:850
 msgid "Activity Comments"
 msgstr ""
 
@@ -1776,7 +1776,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:139
 #: bp-messages/bp-messages-functions.php:249
 #: bp-messages/bp-messages-template.php:2121
-#: bp-search/bp-search-settings.php:805 bp-settings/actions/export.php:35
+#: bp-search/bp-search-settings.php:894 bp-settings/actions/export.php:35
 msgid "%s"
 msgstr ""
 
@@ -2425,7 +2425,7 @@ msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1253
-#: bp-search/bp-search-settings.php:435 bp-search/bp-search-settings.php:449
+#: bp-search/bp-search-settings.php:454 bp-search/bp-search-settings.php:468
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:16
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:22
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:14
@@ -2764,7 +2764,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
 #: bp-media/bp-media-settings.php:541 bp-media/bp-media-settings.php:698
-#: bp-media/bp-media-settings.php:905 bp-search/bp-search-settings.php:420
+#: bp-media/bp-media-settings.php:905 bp-search/bp-search-settings.php:439
 msgid "View Tutorial"
 msgstr ""
 
@@ -2994,7 +2994,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:794
-#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:614
+#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:633
 msgid "Blog Posts"
 msgstr ""
 
@@ -3109,6 +3109,7 @@ msgid "Profile Dashboard"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
+#: bp-document/bp-document-filters.php:61
 #: bp-document/bp-document-functions.php:1827
 #: bp-document/bp-document-functions.php:1830
 #: bp-document/classes/class-bp-document-component.php:69
@@ -3117,7 +3118,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-component.php:313
 #: bp-document/classes/class-bp-document-theme-compat.php:163
 #: bp-groups/classes/class-bp-groups-component.php:803
-#: bp-media/bp-media-settings.php:1207
+#: bp-media/bp-media-settings.php:1207 bp-search/bp-search-settings.php:732
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:22
@@ -3162,7 +3163,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:514
 #: bp-members/classes/class-bp-core-members-widget.php:298
 #: bp-members/classes/class-bp-members-component.php:37
-#: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:465
+#: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:484
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:19
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:974
@@ -3181,7 +3182,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-friends.php:21
 #: bp-core/gdpr/class-bp-friendship-export.php:58
 #: bp-document/classes/class-bp-document.php:687
-#: bp-document/classes/class-bp-document.php:1382
+#: bp-document/classes/class-bp-document.php:1498
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119
 #: bp-friends/bp-friends-notifications.php:261
@@ -3219,7 +3220,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-widget.php:219
 #: bp-media/bp-media-settings.php:134 bp-media/bp-media-settings.php:141
 #: bp-media/bp-media-settings.php:159 bp-media/bp-media-settings.php:166
-#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:691
+#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:710
 #: bp-templates/bp-nouveau/includes/activity/functions.php:285
 #: bp-templates/bp-nouveau/includes/customizer.php:170
 msgid "Groups"
@@ -7340,13 +7341,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8225,6 +8226,10 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
+#: bp-document/bp-document-filters.php:59
+msgid "Document Folders"
+msgstr ""
+
 #: bp-document/bp-document-functions.php:1382
 msgid "Please login in order to upload file document."
 msgstr ""
@@ -8260,7 +8265,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-folder.php:517
 #: bp-document/classes/class-bp-document-privacy.php:58
 #: bp-document/classes/class-bp-document.php:680
-#: bp-document/classes/class-bp-document.php:1375
+#: bp-document/classes/class-bp-document.php:1491
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-privacy.php:59
 msgid "Group Members"
@@ -19883,23 +19888,23 @@ msgstr ""
 msgid "&#65279"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:365
+#: bp-search/bp-search-settings.php:384
 msgid "Enable autocomplete dropdown when typing into search inputs."
 msgstr ""
 
-#: bp-search/bp-search-settings.php:394
+#: bp-search/bp-search-settings.php:413
 msgid "results"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:433
+#: bp-search/bp-search-settings.php:452
 msgid "Search the following BuddyBoss components:"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:447
+#: bp-search/bp-search-settings.php:466
 msgid "Search the following WordPress content and custom post types:"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:548
+#: bp-search/bp-search-settings.php:567
 #: bp-search/classes/class-bp-search-members.php:270
 #: bp-settings/classes/class-bp-settings-component.php:27
 #: bp-settings/classes/class-bp-settings-component.php:144
@@ -19907,8 +19912,12 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:656
+#: bp-search/bp-search-settings.php:675
 msgid "Meta Data"
+msgstr ""
+
+#: bp-search/bp-search-settings.php:754
+msgid "Folders"
 msgstr ""
 
 #: bp-search/classes/class-bp-search-members.php:273
@@ -19919,25 +19928,25 @@ msgstr ""
 msgid "%s Meta"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:336
+#: bp-search/classes/class-bp-search.php:348
 msgid "View all"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:345
+#: bp-search/classes/class-bp-search.php:357
 msgid "Nothing found for '%s'"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:567
+#: bp-search/classes/class-bp-search.php:579
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:583
+#: bp-search/classes/class-bp-search.php:595
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:826
+#: bp-search/classes/class-bp-search.php:838
 msgid "All Results"
 msgstr ""
 
@@ -20622,14 +20631,20 @@ msgid "Following special characters are not supported:<br/> \\ * | / > < ? ` ; :
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:135
+#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:99
+#: bp-templates/bp-nouveau/buddypress/search/loop/document.php:99
 msgid "by "
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:166
+#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:125
+#: bp-templates/bp-nouveau/buddypress/search/loop/document.php:125
 msgid "-"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:183
+#: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:142
+#: bp-templates/bp-nouveau/buddypress/search/loop/document.php:142
 msgid "Based on group privacy"
 msgstr ""
 
@@ -21819,6 +21834,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/document/functions.php:134
 msgid "All Documents"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:157
+msgid "My Group Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:89
