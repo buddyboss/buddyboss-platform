@@ -59,7 +59,7 @@ class BP_REST_XProfile_Search_Form_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/search Get Search Form
 	 * @apiName        GetBBxProfileSearchForm
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Advanced Search Form fields for Members Directory.
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} [form_id] ID of the profile search form.

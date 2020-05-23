@@ -1168,19 +1168,17 @@ window.bp = window.bp || {};
 
 					self.loadedURLs.push( {'url': url, 'response': response} );
 
-				} else {
-					self.options.activity.set(
-						{
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error
-							}
-					);
-				}
-			},
-			activateTinyMce: function() {
+			} else {
+				self.options.activity.set({
+					link_success: false,
+					link_error: true,
+					link_error_msg: response.error
+				});
+			}
+		},
+		activateTinyMce: function() {
 
-				if ( ! _.isUndefined( window.MediumEditor ) ) {
+			if ( !_.isUndefined(window.MediumEditor) ) {
 
 					window.group_messages_editor = new window.MediumEditor(
 						'#whats-new',

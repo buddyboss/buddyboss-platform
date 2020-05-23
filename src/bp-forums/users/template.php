@@ -2087,6 +2087,10 @@ function bbp_current_user_can_access_create_reply_form() {
 		// User can edit this topic
 	} elseif ( bbp_is_reply_edit() ) {
 		$retval = current_user_can( 'edit_reply', bbp_get_reply_id() );
+
+	} elseif ( bbp_is_ajax() && isset( $_POST['action'] ) && 'reply' === $_POST['action'] ) {
+		$retval = true;
+		// Check for ajax reply.
 	}
 
 	// Allow access to be filtered

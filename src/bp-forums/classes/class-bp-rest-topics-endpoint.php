@@ -104,7 +104,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/topics Topics
 	 * @apiName        GetBBPTopics
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Retrieve topics
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} [page=1] Current page of the collection.
@@ -490,7 +490,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/topics/:id Topic
 	 * @apiName        GetBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Retrieve a single topic.
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} id A unique numeric ID for the topic.
@@ -597,7 +597,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics Create Topic
 	 * @apiName        CreateBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Create a topic.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1118,7 +1118,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/topics/:id Update Topic
 	 * @apiName        UpdateBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Update a topic.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1627,7 +1627,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/topics/:id Trash/Delete Topic
 	 * @apiName        DeleteBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Trash OR Delete a topic.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

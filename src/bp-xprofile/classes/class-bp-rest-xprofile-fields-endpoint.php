@@ -120,7 +120,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/fields Get xProfile Fields
 	 * @apiName        GetBBxProfileFields
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Multiple xProfile Fields
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} [profile_group_id] ID of the profile group of fields that have profile fields
@@ -265,7 +265,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/fields/:field_id Get xProfile Field
 	 * @apiName        GetBBxProfileField
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile single Field
 	 * @apiVersion     1.0.0
 	 * @apiParam {Number} id A unique numeric ID for the profile field.
@@ -441,7 +441,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/fields Create xProfile Field
 	 * @apiName        CreateBBxProfileField
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Create xProfile Field.
 	 * @apiVersion     1.0.0
 	 * @apiPermission LoggedInUser
@@ -574,7 +574,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/fields/:field_id Update xProfile Field
 	 * @apiName        UpdateBBxProfileField
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Update xProfile Field.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -716,7 +716,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/fields/:field_id Delete xProfile Field
 	 * @apiName        DeleteBBxProfileField
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Delete xProfile Field.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

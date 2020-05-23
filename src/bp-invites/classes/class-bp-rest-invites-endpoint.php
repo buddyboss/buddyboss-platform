@@ -82,7 +82,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/invites Sent Invites
 	 * @apiName        GetBBInvites
-	 * @apiGroup       EmailInvites
+	 * @apiGroup       Email Invites
 	 * @apiDescription Retrieve Sent Invites.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -184,7 +184,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/invites Send Invites
 	 * @apiName        CreateBBInvites
-	 * @apiGroup       EmailInvites
+	 * @apiGroup       Email Invites
 	 * @apiDescription Create an Invites/Send Invites.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -447,7 +447,7 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/invites/:id Revoke Invite
 	 * @apiName        DeleteBBInvites
-	 * @apiGroup       EmailInvites
+	 * @apiGroup       Email Invites
 	 * @apiDescription Remoke Invites.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

@@ -226,7 +226,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/merge/:id Merge Topic
 	 * @apiName        MergeBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Merge Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -542,7 +542,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/split/:id Split Topic
 	 * @apiName        SplitBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Split Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -985,7 +985,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/action/:id Topic Actions
 	 * @apiName        ActionBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Actions on Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1081,7 +1081,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/dropdown/:id Topic Actions
 	 * @apiName        DropdownBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Siblings of the topic.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
