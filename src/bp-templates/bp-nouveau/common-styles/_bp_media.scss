@@ -2998,6 +2998,17 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		font-weight: 500;
 		margin: 0;
 	}
+
+	@media screen and ( max-width: 520px ) {
+
+		.bb-model-footer a.bp-document-open-create-popup-folder {
+			display: block;
+			float: none;
+			margin: 0 0 15px 0;
+			text-align: left;
+		}
+
+	}
 }
 
 .bp-media-document-uploader .bb-model-header > p {
