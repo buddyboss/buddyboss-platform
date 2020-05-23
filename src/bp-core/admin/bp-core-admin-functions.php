@@ -255,7 +255,9 @@ function bp_core_activation_notice() {
 			$component_id = 'media';
 		}
 		if ( 'documents' === $component_id ) {
-			$component_id = 'document';
+			if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+				$component_id = 'document';
+			}
 		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
