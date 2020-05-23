@@ -50,6 +50,20 @@ add_filter( 'bp_get_folder_title', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_folder_title', 'stripslashes' );
 add_filter( 'bp_get_folder_title', 'convert_chars' );
 
+// Change label for global search.
+add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
+
+function bp_document_search_label_search( $type ) {
+
+	if ( 'folders' === $type ) {
+		$type = __( 'Document Folders', 'buddyboss' );
+	} elseif ( 'documents' === $type ) {
+		$type = __( 'Documents', 'buddyboss' );
+	}
+
+	return $type;
+}
+
 /**
  * Add document theatre template for activity pages
  */

@@ -711,7 +711,7 @@ function bp_get_document_title() {
 
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->title ) ) {
 		$title = $document_template->document->title;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->document->title ) ) {
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->title ) ) {
 		$title = $document_folder_template->folder->title;
 	}
 
