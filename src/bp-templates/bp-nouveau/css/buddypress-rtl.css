@@ -2757,6 +2757,10 @@ span.dashicons.dashicons-admin-file:before {
   border-right-width: 0;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a:hover {
+  color: #461212;
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a:hover i {
   color: #461212;
 }
@@ -13377,7 +13381,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   top: 0;
   right: 0;
   padding: 6px 0;
-  left: 0;
+  left: 375px;
   text-align: center;
   border-bottom: 1px solid #ecedee;
   font-size: 16px;
