@@ -902,6 +902,15 @@ class BP_Document {
 			$where_conditions_folder['folder'] = 'f.parent = 0';
 		}
 
+		// Add privacy "friends" when in directory page click on "My Documents" tab.
+		if ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['user_id'] ) && ! empty( $r['scope'] ) ) {
+			array_push( $r['privacy'], 'friends' );
+		// My Groups Document Tab.
+		} elseif ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && 'group' === $r['scope'] ) {
+			$r['privacy'] = array( 'grouponly' );
+			$r['user_id'] = bp_loggedin_user_id();
+		}
+
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions_document['user'] = "d.user_id = {$r['user_id']}";
 			$where_conditions_folder['user']   = "f.user_id = {$r['user_id']}";
@@ -920,10 +929,10 @@ class BP_Document {
 				$where_conditions_folder['user_directory']   = "f.parent = {$folder_id}";
 				$where_conditions_document['user_directory'] = "d.folder_id = {$folder_id}";
 			} else {
-				if ( false === $r['search_terms'] ) {
-					$where_conditions_document['user_directory'] = 'd.folder_id = 0';
-					$where_conditions_folder['user_directory']   = 'f.parent = 0';
-				}
+//				if ( false === $r['search_terms'] ) {
+//					$where_conditions_document['user_directory'] = 'd.folder_id = 0';
+//					$where_conditions_folder['user_directory']   = 'f.parent = 0';
+//				}
 			}
 		}
 
@@ -933,11 +942,6 @@ class BP_Document {
 		} elseif ( bp_is_document_directory() && ! bp_is_group_document_support_enabled() ) {
 			$where_conditions_folder['type']   = "f.group_id = 0";
 			$where_conditions_document['type'] = "d.group_id = 0";
-		}
-
-		// Add privacy "friends" when in directory page click on "My Documents" tab.
-		if ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['user_id'] ) && ! empty( $r['scope'] ) ) {
-			array_push( $r['privacy'], 'friends' );
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
