@@ -444,7 +444,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			}
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-				echo "<div class='bp-admin-card section-{$section['id']}'>";
+				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				if ( $section['title'] ) {
 					echo "<h2>{$section['title']}</h2>\n";
 				}

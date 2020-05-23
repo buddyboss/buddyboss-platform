@@ -1156,7 +1156,7 @@ function bp_media_settings_callback_extension_link() {
 	printf(
 		'<label>%s</label>',
 		sprintf(
-			__( '<a href="%s" target="_blank">Manage</a> which file extensions are allowed to be uploaded.', 'buddyboss' ),
+			__( '<a href="%s">Manage</a> which file extensions are allowed to be uploaded.', 'buddyboss' ),
 			bp_get_admin_url(
 				add_query_arg(
 					array(
@@ -1193,7 +1193,20 @@ function bp_document_get_settings_sections() {
 		array(
 			'bp_document_settings_extensions' => array(
 				'page'     => 'document',
-				'title'    => __( 'Documents &#8594; File Extensions', 'buddyboss' ),
+				'title'    => sprintf(
+						'<a href="%1$s" rel="nofollow">%2$s</a> %3$s',
+						bp_get_admin_url(
+								add_query_arg(
+										array(
+												'page' => 'bp-settings',
+												'tab'  => 'bp-media#bp_media_settings_documents',
+										),
+										'admin.php'
+								)
+						),
+						__( 'Documents', 'buddyboss' ),
+						__( '&#8594; File Extensions', 'buddyboss' )
+				),
 				'callback' => 'bp_document_settings_callback_extension_section',
 			),
 		)
