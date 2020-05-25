@@ -82,6 +82,14 @@ defined( 'ABSPATH' ) || exit;
 			<li>
 				<?php
 				printf(
+					__( '<a href="%s" target="_blank">REST API</a>', 'buddyboss' ),
+					esc_url( 'https://www.buddyboss.com/resources/api/' )
+				);
+				?>
+			</li>
+			<li>
+				<?php
+				printf(
 					__( '<a href="%s" target="_blank">Github</a>', 'buddyboss' ),
 					esc_url( 'https://github.com/buddyboss/buddyboss-platform/wiki' )
 				);
