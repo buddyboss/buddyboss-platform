@@ -4287,6 +4287,7 @@ window.bp = window.bp || {};
 			self.navigationCommands();
 			self.getActivity();
 
+			$( '.bb-media-model-wrapper.document' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
 
@@ -4307,6 +4308,7 @@ window.bp = window.bp || {};
 			self.showDocument();
 			self.navigationDocumentCommands();
 			self.getDocumentsActivity();
+			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).show();
 			self.is_open_document = true;
 			//document.addEventListener( 'keyup', self.checkPressedKeyDocuments.bind( self ) );
@@ -4774,8 +4776,8 @@ window.bp = window.bp || {};
 						},
 						success: function (response) {
 							if (response.success) {
-								$( '.bb-media-info-section.media .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
-								$( '.bb-media-info-section.media' ).show();
+								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
+								$( '.bb-media-info-section:visible' ).show();
 
 								jQuery( window ).scroll();
 							}
@@ -4820,8 +4822,8 @@ window.bp = window.bp || {};
 						},
 						success: function (response) {
 							if (response.success) {
-								$( '.bb-media-info-section.document .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
-								$( '.bb-media-info-section.document' ).show();
+								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
+								$( '.bb-media-info-section:visible' ).show();
 
 								jQuery( window ).scroll();
 							}
