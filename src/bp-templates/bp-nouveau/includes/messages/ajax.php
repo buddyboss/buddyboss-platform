@@ -459,11 +459,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
 				$extension_description = '';
 				$extension_lists   	   = bp_document_extensions_list();
-
-				if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-					$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
-				}
-
+				$attachment_url 	   = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 				if ( ! empty( $extension_lists ) ) {
 					$extension_lists = array_column( $extension_lists, 'description', 'extension' );
 					$extension_name  = '.' . $extension;

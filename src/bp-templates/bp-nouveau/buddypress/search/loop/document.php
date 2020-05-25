@@ -36,10 +36,7 @@ if ( $attachment_id ) {
 		$move_id   = bp_get_document_user_id();
 		$move_type = 'profile';
 	}
-
-	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
-	}
+	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 } else {
 	$svg_icon         = bp_document_svg_icon( 'folder' );
 	$download_link    = bp_document_folder_download_link( bp_get_document_folder_id() );

@@ -39,9 +39,7 @@ if ( $group_id > 0 ) {
 
 $extension_description = '';
 
-if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-	$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
-}
+$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 
 if ( ! empty( $extension_lists ) ) {
 	$extension_lists = array_column( $extension_lists, 'description', 'extension' );
