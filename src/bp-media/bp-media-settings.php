@@ -22,11 +22,11 @@ function bp_media_get_settings_sections() {
 	$settings = array(
 		'bp_media_settings_photos'    => array(
 			'page'  => 'media',
-			'title' => __( 'Photo Uploading', 'buddyboss' ),
+			'title' => __( 'Photos', 'buddyboss' ),
 		),
 		'bp_media_settings_documents' => array(
 			'page'     => 'doc',
-			'title'    => __( 'Document Uploading', 'buddyboss' ),
+			'title'    => __( 'Documents', 'buddyboss' ),
 			'callback' => 'bp_media_admin_setting_callback_document_section',
 		),
 		'bp_media_settings_emoji'     => array(
