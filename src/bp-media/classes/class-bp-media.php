@@ -779,8 +779,14 @@ class BP_Media {
 		}
 
 		if ( ! empty( $query_args ) ) {
-			// Set relation to OR.
-			$query_args['relation'] = 'OR';
+
+			if ( count( $scopes ) > 1 ) {
+				// Set relation to OR.
+				$query_args['relation'] = 'OR';
+			} else {
+				// Set relation to OR.
+				$query_args['relation'] = 'AND';
+			}
 
 			$query = new BP_Media_Query( $query_args );
 			$sql   = $query->get_sql();
@@ -1087,6 +1093,24 @@ class BP_Media {
 		global $bp, $wpdb;
 
 		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
+
+		return $total_count;
+	}
+
+	/**
+	 * Count total groups media for the given user.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return array|bool|int
+	 * @since BuddyBoss 1.3.6
+	 */
+	public static function total_user_group_media_count( $user_id = 0 ) {
+		global $bp, $wpdb;
+
+		$privacy = "'grouponly'";
+
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy = ({$privacy})" );
 
 		return $total_count;
 	}

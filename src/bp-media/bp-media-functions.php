@@ -730,6 +730,36 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
 }
 
 /**
+ * Get the groups media count of a given user.
+ *
+ * @param int $user_id ID of the user whose media are being counted.
+ *
+ * @return int media count of the user.
+ * @since BuddyBoss .3.6
+ */
+function bp_media_get_user_total_group_media_count( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	}
+
+	$count = wp_cache_get( 'bp_total_group_media_for_user_' . $user_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media::total_user_group_media_count( $user_id );
+		wp_cache_set( 'bp_total_group_media_for_user_' . $user_id, $count, 'bp' );
+	}
+
+	/**
+	 * Filters the total groups media count for a given user.
+	 *
+	 * @param int $count Total media count for a given user.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 */
+	return apply_filters( 'bp_media_get_user_total_group_media_count', (int) $count );
+}
+
+/**
  * Get the media count of a given group.
  *
  * @since BuddyBoss 1.0.0

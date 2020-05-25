@@ -120,6 +120,8 @@ function bp_get_media_root_slug() {
 function bp_has_media( $args = '' ) {
 	global $media_template;
 
+	$args = bp_parse_args( $args );
+
 	/*
 	 * Smart Defaults.
 	 */
@@ -176,9 +178,13 @@ function bp_has_media( $args = '' ) {
 		$user_id  = false;
 	}
 
+	if ( ! empty( $args['scope'] ) && 'groups' === $args['scope'] ) {
+		$privacy = array( 'grouponly' );
+	}
+
 	// The default scope should recognize custom slugs.
 	$scope = array();
-	if ( bp_is_media_directory() ) {
+	if ( bp_is_media_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) ) {
 		if ( bp_is_active( 'friends' ) ) {
 			$scope[] = 'friends';
 		}

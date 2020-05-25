@@ -181,6 +181,17 @@ function bp_nouveau_get_media_directory_nav_items() {
 		);
 	}
 
+	if ( is_user_logged_in() && bp_is_group_media_support_enabled() ) {
+		$nav_items['group'] = array(
+			'component' => 'media',
+			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
+			'li_class'  => array(),
+			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-media/',
+			'text'      => __( 'My Group Photos', 'buddyboss' ),
+			'count'     => bp_media_get_user_total_group_media_count(),
+			'position'  => 15,
+		);
+	}
 
 	/**
 	 * Use this filter to introduce your custom nav items for the media directory.
