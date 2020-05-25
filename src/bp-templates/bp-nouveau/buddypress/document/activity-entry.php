@@ -117,7 +117,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 					if ( $can_download_btn ) {
 						?>
 						<li class="copy_download_file_url">
-							<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy to Clipboard', 'buddyboss' ); ?></a>
+							<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 						</li><?php
 					}
 					if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {

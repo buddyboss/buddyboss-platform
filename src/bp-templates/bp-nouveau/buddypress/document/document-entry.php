@@ -240,7 +240,7 @@ if ( wp_is_mobile() ) {
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
 						</li>
 						<li class="copy_download_file_url">
-							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy to Clipboard', 'buddyboss' ); ?></a>
+							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 						</li>
 						<?php
 					}

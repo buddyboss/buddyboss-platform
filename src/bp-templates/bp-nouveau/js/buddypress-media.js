@@ -3967,6 +3967,10 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			if ($( event.currentTarget ).parent().hasClass( 'copy_download_file_url' )) {
+				return;
+			}
+
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.media-folder_items' ).toggleClass( 'is-visible' ).siblings( '.media-folder_items' ).removeClass( 'is-visible' );
 		},
@@ -3975,15 +3979,15 @@ window.bp = window.bp || {};
 		 * File action Copy to Clipboard
 		 */
 		copyDownloadLink: function (event) {
-
+			event.preventDefault();
 			var currentTarget = event.currentTarget, currentTargetCopy = 'document_copy_link';
 			$( 'body' ).append( '<textarea style="position:absolute;opacity:0;" id="' + currentTargetCopy + '"></textarea>' );
+			$( currentTarget ).text( BP_Nouveau.media.copy_to_clip_board_text );
 			$( '#' + currentTargetCopy ).val( $( currentTarget ).attr( 'href' ) );
 			$( '#' + currentTargetCopy ).select();
 			document.execCommand( 'copy' );
-			$( '#' + currentTargetCopy ).remove();
-
-			event.preventDefault();
+			//$( '#' + currentTargetCopy ).remove();
+			return false;
 		},
 
 		/**
@@ -3992,7 +3996,12 @@ window.bp = window.bp || {};
 		fileActivityActionButton: function (event) {
 			event.preventDefault();
 
+			if ($( event.currentTarget ).parent().hasClass( 'copy_download_file_url' )) {
+				return;
+			}
+
 			$( event.currentTarget ).closest( '.bb-activity-media-elem' ).toggleClass( 'is-visible' ).siblings().removeClass( 'is-visible' ).closest( '.activity-item' ).siblings().find( '.bb-activity-media-elem' ).removeClass( 'is-visible' );
+
 			if (event.currentTarget.tagName.toLowerCase() == 'a' && ! $( event.currentTarget ).hasClass( 'document-action_more' )) {
 				$( event.currentTarget ).closest( '.bb-activity-media-elem' ).removeClass( 'is-visible' );
 			}

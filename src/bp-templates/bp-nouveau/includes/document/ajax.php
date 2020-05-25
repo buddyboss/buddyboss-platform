@@ -1276,15 +1276,14 @@ function bp_nouveau_ajax_document_get_folder_view() {
 		$first_text = esc_html__( ' Documents', 'buddyboss' );
 	} else {
 		$group      = groups_get_group( (int) $id );
-		$group_name = bp_get_group_name( $group );
-		$first_text = $group_name;
+		$first_text = bp_get_group_name( $group );
 	}
 
 	wp_send_json_success(
 		array(
 			'message'         => 'success',
 			'html'            => $ul,
-			'first_span_text' => $first_text,
+			'first_span_text' => stripslashes( $first_text ),
 		)
 	);
 }
