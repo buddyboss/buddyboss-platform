@@ -360,24 +360,29 @@ tr.bp-search-parent-field label {
 	font-weight: 700;
 	color: #333;
 	border-bottom: 1px solid #eaeaea;
-}
 
-.bp-admin-card h2 span {
-	font-weight: 400;
-}
+	span {
+		font-weight: 400;
+	}
 
-.bp-admin-card h2:before {
-	display: inline-block;
-	content: " ";
-	background-size: 18px 18px;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-color: #f6f6f6;
-	height: 38px;
-	width: 38px;
-	border-radius: 50px;
-	vertical-align: middle;
-	margin-right: 15px;
+	a {
+		text-decoration: none;
+	}
+
+	&:before {
+		display: inline-block;
+		content: " ";
+		background-size: 18px 18px;
+		background-repeat: no-repeat;
+		background-position: center;
+		background-color: #f6f6f6;
+		height: 38px;
+		width: 38px;
+		border-radius: 50px;
+		vertical-align: middle;
+		margin-right: 15px;
+	}
+
 }
 
 .bp-admin-card h3 {

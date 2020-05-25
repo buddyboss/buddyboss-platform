@@ -348,6 +348,10 @@ tr.bp-search-parent-field label {
   font-weight: 400;
 }
 
+.bp-admin-card h2 a {
+  text-decoration: none;
+}
+
 .bp-admin-card h2:before {
   display: inline-block;
   content: " ";
