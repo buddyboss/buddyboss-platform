@@ -15,7 +15,7 @@
 		</div>
 	<?php endif; ?>
 	<?php
-	$extensions = bp_document_get_allowed_extension();
+	$extensions = ( function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : '';
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ) :
 		?>
 		<div class="post-elements-buttons-item post-media document-support">
