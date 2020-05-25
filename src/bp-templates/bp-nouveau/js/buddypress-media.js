@@ -2504,7 +2504,7 @@ window.bp = window.bp || {};
 							id: this.moveToIdPopup,
 							type: this.moveToTypePopup,
 						},success : function( response ) {
-							$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).text( response.data.first_span_text );
+							$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 							if ( '' === response.data.html ) {
 								$( document ).find( '.open-popup .location-folder-list-wrap' ).hide();
 								$( document ).find( '.open-popup .location-folder-list-wrap-main span.no-folder-exists' ).show();
@@ -2753,7 +2753,7 @@ window.bp = window.bp || {};
 						id		: id,
 						type	: type,
 					}, success: function (response) {
-						$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).text( response.data.first_span_text );
+						$( document ).find( '.location-folder-list-wrap h4 span.where-to-move-profile-or-group-document' ).html( response.data.first_span_text );
 						$( '.location-folder-list-wrap .location-folder-list' ).remove();
 						$( '.location-folder-list-wrap' ).append( response.data.html );
 						if (bp.Nouveau.Media.folderLocationUI) {
