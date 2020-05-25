@@ -2175,3 +2175,65 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
 
 	return $attachment_media_id;
 }
+
+/**
+ * Get list of privacy based on user and group.
+ *
+ * @param int    $user_id  User ID.
+ * @param int    $group_id Group ID.
+ * @param string $scope    Scope query parameter.
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.3.6
+ */
+function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
+
+	$privacy = array( 'public' );
+
+	if ( is_user_logged_in() ) {
+		// User filtering.
+		$user_id = (
+		empty( $user_id )
+			? ( bp_displayed_user_id() ? bp_displayed_user_id() : false )
+			: $user_id
+		);
+
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$privacy[] = 'friends';
+			}
+		}
+
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
+
+			// get the login user id.
+			$current_user_id = get_current_user_id();
+
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
+				$privacy[] = 'friends';
+			}
+		}
+
+	}
+
+	if (
+		bp_is_group()
+		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
+		|| ( !empty( $scope ) && 'groups' === $scope )
+	) {
+		$privacy = array( 'grouponly' );
+	}
+
+	return apply_filters( 'bp_media_query_privacy', $privacy, $user_id, $group_id, $scope );
+}

@@ -86,48 +86,20 @@ function bp_media_activity_entry() {
 		'sort'     => 'ASC',
 	);
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-			$privacy[] = 'friends';
-		}
-
-		if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
-
-			// get the login user id..
-			$current_user_id = get_current_user_id();
-
-			// check if the login user is friends of the display user.
-			$is_friend = friends_check_friendship( $current_user_id, bp_get_activity_user_id() );
-
-			/**
-			 * check if the login user is friends of the display user
-			 * OR check if the login user and the display user is the same
-			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == bp_get_activity_user_id() ) {
-				$privacy[] = 'friends';
-			}
-		}
-	}
-
-	$args['privacy'] = $privacy;
-
-	if ( 'groups' === bp_get_activity_object_name() ) {
-		$args['privacy'] = array( 'grouponly' );
-	}
-
+	$args['privacy'] = bp_media_query_privacy( bp_get_activity_user_id(), 0, bp_get_activity_object_name() );
+	$is_forum_activity = false;
 	if (
 		bp_is_active( 'forums' )
 		&& in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
 	) {
+		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
-		<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count ); ?> <?php echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ) ) ? esc_attr( 'forums-media-wrap' ) : ''; ?>">
+		<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count );
+			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
+			echo true === $is_forum_activity ? esc_attr( ' forums-media-wrap' ) : ''; ?>">
 			<?php
 			while ( bp_media() ) {
 				bp_the_media();
@@ -162,54 +134,23 @@ function bp_media_activity_append_media( $content, $activity ) {
 			'sort'     => 'ASC',
 		);
 
-		$privacy = array( 'public' );
-		if ( is_user_logged_in() ) {
-			$privacy[] = 'loggedin';
+		$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
 
-			if ( bp_is_my_profile() ) {
-				$privacy[] = 'onlyme';
-				$privacy[] = 'friends';
-			}
-
-			if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
-
-				// get the login user id..
-				$current_user_id = get_current_user_id();
-
-				// check if the login user is friends of the display user..
-				$is_friend = friends_check_friendship( $current_user_id, $activity->user_id );
-
-				/**
-				 * check if the login user is friends of the display user.
-				 * OR check if the login user and the display user is the same
-				 */
-				if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $activity->user_id ) {
-					$privacy[] = 'friends';
-				}
-			}
-		}
-
-		$args['privacy'] = $privacy;
-
-		if ( 'groups' === $activity->component ) {
-			$args['privacy'] = array( 'grouponly' );
+		$is_forum_activity = false;
+		if (
+			bp_is_active( 'forums' )
+			&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		) {
+			$is_forum_activity = true;
+			$args['privacy'][] = 'forums';
 		}
 
 		if ( bp_has_media( $args ) ) {
 			?>
 			<?php ob_start(); ?>
-			<div
-				class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; ?> <?php echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?> <?php
-				echo bp_is_active( 'forums' ) && in_array(
-					bp_get_activity_type(),
-					array(
-						'bbp_forum_create',
-						'bbp_topic_create',
-						'bbp_reply_create',
-					)
-																																															  ) ? 'forums-media-wrap' : '';
-																																																?>
-				">
+			<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count;
+				echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
+				echo true === $is_forum_activity ? ' forums-media-wrap' : ''; ?>">
 				<?php
 				while ( bp_media() ) {
 					bp_the_media();
@@ -246,38 +187,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 	);
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-			$privacy[] = 'friends';
-		}
-
-		if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
-
-			// get the login user id..
-			$current_user_id = get_current_user_id();
-
-			// check if the login user is friends of the display user.
-			$is_friend = friends_check_friendship( $current_user_id, $activity->user_id );
-
-			/**
-			 * check if the login user is friends of the display user
-			 * OR check if the login user and the display user is the same
-			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $activity->user_id ) {
-				$privacy[] = 'friends';
-			}
-		}
-	}
-
-	$args['privacy'] = $privacy;
-
-	if ( 'groups' === $activity->component ) {
-		$args['privacy'] = array( 'grouponly' );
-	}
+	$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
@@ -693,28 +603,6 @@ function bp_media_attach_media_to_message( &$message ) {
 
 		// save media meta for message..
 		bp_messages_update_meta( $message->id, 'bp_media_ids', implode( ',', $media_ids ) );
-	}
-}
-
-/**
- * Attach document to the message object
- *
- * @since BuddyBoss 1.0.0
- * @param $message
- */
-function bp_media_attach_document_to_message( &$message ) {
-
-	if ( bp_is_messages_document_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['document'] ) ) {
-		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
-		$document_ids = bp_document_add_handler( $_POST['document'] );
-
-		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
-		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
-
-		// save media meta for message..
-		bp_messages_update_meta( $message->id, 'bp_document_ids', implode( ',', $document_ids ) );
 	}
 }
 

@@ -1059,20 +1059,7 @@ class BP_Media {
 	public static function total_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$privacy = array( 'public' );
-		if ( is_user_logged_in() ) {
-			$privacy[] = 'loggedin';
-			if ( bp_is_my_profile() ) {
-				$privacy[] = 'friends';
-				$privacy[] = 'onlyme';
-			}
-			if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
-				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-				if ( $is_friend ) {
-					$privacy[] = 'friends';
-				}
-			}
-		}
+		$privacy = bp_media_query_privacy( $user_id );
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
 		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
@@ -1108,9 +1095,10 @@ class BP_Media {
 	public static function total_user_group_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$privacy = "'grouponly'";
+		$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
+		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy = ({$privacy})" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
 
 		return $total_count;
 	}
