@@ -892,19 +892,19 @@ class BP_Document {
 
 		$folder_ids = array();
 		// Search inside child folder in group.
-		if ( $r['search_terms'] && $r['group_id'] && $r['folder_id'] ) {
+		if ( $r['search_terms'] && $r['group_id'] && $r['folder_id'] && ! bp_is_document_directory() ) {
 			$folder_ids     = bp_document_get_folder_children( (int) $r['folder_id'] );
 			$folder_ids[]   = (int) $r['folder_id'];
 		// Search inside root folder in group.
-		} elseif ( $r['search_terms'] && $r['group_id'] && ! $r['folder_id'] ) {
+		} elseif ( $r['search_terms'] && $r['group_id'] && ! $r['folder_id'] && ! bp_is_document_directory() ) {
 			$folder_ids     = bp_document_get_group_root_folders( (int) $r['group_id'] );
 			$folder_ids[]   = 0;
 		// Search inside child folder in user.
-		} elseif ( $r['search_terms'] && $r['user_id'] && $r['folder_id'] ) {
+		} elseif ( $r['search_terms'] && $r['user_id'] && $r['folder_id'] && ! bp_is_document_directory() ) {
 			$folder_ids     = bp_document_get_folder_children( (int) $r['folder_id'] );
 			$folder_ids[]   = (int) $r['folder_id'];
 		// Search inside root folder in user.
-		} elseif ( $r['search_terms'] && $r['user_id'] && ! $r['folder_id'] ) {
+		} elseif ( $r['search_terms'] && $r['user_id'] && ! $r['folder_id'] && ! bp_is_document_directory() ) {
 			$folder_ids     = bp_document_get_user_root_folders( (int) $r['user_id'] );
 			$folder_ids[]   = 0;
 		// My Documents Search.
