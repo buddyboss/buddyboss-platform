@@ -2165,7 +2165,6 @@ class BP_Document {
 					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
 					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
-
 				}
 			}
 		}
@@ -2185,6 +2184,8 @@ class BP_Document {
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
 		}
+
+		bp_document_update_meta( $this->id, 'preview_attachment_id', $preview_attachment_id );
 
 		// Update folder modified date.
 		$folder = (int) $this->folder_id;

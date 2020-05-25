@@ -1690,8 +1690,8 @@ function bp_get_document_preview_attachment_id() {
 	global $document_template;
 
 	$attachment_id = 0;
-	if ( isset( $document_template->document->preview_attachment_id ) ) {
-		$attachment_id = $document_template->document->preview_attachment_id;
+	if ( isset( $document_template->document->attachment_id ) ) {
+		$attachment_id = $document_template->document->attachment_id;
 	}
 
 	/**
@@ -1988,7 +1988,7 @@ function bp_get_document_preview_music_extensions() {
  */
 function bp_get_document_preview_doc_extensions() {
 
-	return apply_filters( 'bp_get_document_preview_doc_extensions', array( 'pdf', 'pptx', 'pps', 'xls', 'xlsx', 'pps', 'ppt', 'pptx', 'doc', 'docx', 'dot', 'rtf', 'wps', 'wpt', 'dotx', 'potx', 'xlsm' ) );
+	return apply_filters( 'bp_get_document_preview_doc_extensions', array( 'pdf', 'jpeg', 'jpg', 'png', 'gif', 'svg' ) );
 }
 
 /**

@@ -959,3 +959,27 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 
 	return apply_filters( 'bp_document_get_preview_text_from_attachment', $data, $attachment_id );
 }
+
+/**
+ * Return the preview url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $preview_attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
+	$attachment_url = '';
+
+	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		if ( 'pdf' ===  $extension ) {
+			$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		}
+		$attachment_url = wp_get_attachment_url( $preview_attachment_id );
+	}
+
+	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+}

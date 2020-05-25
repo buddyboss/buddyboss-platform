@@ -145,15 +145,14 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 		</div>
 		<?php
 	}
-	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
-		if ( $attachment_url ) {
-			?>
-			<div class="document-preview-wrap">
-				<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
-			</div><!-- .document-preview-wrap -->
-			<?php
-		}
+
+	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+	if ( $attachment_url ) {
+		?>
+		<div class="document-preview-wrap">
+			<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
+		</div><!-- .document-preview-wrap -->
+		<?php
 	}
 	$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
 	if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
