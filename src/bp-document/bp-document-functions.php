@@ -2357,7 +2357,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'friends':
-			$is_friend = friends_check_friendship( $folder->user_id, $user_id );
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $folder->user_id, $user_id ) : false;
 			if ( $folder->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;

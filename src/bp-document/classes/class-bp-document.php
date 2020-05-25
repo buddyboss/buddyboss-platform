@@ -1497,7 +1497,7 @@ class BP_Document {
 				if ( 'friends' === $document->privacy && bp_loggedin_user_id() !== (int) $document->user_id ) {
 					$visibility = esc_html__( 'Connections', 'buddyboss' );
 				} else {
-					$visibility = $document_privacy[ $document->privacy ];
+					$visibility = (isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : $document->privacy ;
 				}
 			}
 
