@@ -4230,9 +4230,15 @@ window.bp = window.bp || {};
 					self.closeTheatre( e );
 					break;
 				case 37: // left arrow key code.
+					if (typeof self.medias[self.current_index - 1] === 'undefined') {
+						return false;
+					}
 					self.previous( e );
 					break;
 				case 39: // right arrow key code.
+					if (typeof self.medias[self.current_index + 1] === 'undefined') {
+						return false;
+					}
 					self.next( e );
 					break;
 			}
@@ -4250,9 +4256,15 @@ window.bp = window.bp || {};
 					self.closeDocumentTheatre( e );
 					break;
 				case 37: // left arrow key code.
+					if (typeof self.documents[self.current_document_index - 1] === 'undefined') {
+						return false;
+					}
 					self.previousDocument( e );
 					break;
 				case 39: // right arrow key code.
+					if (typeof self.documents[self.current_document_index + 1] === 'undefined') {
+						return false;
+					}
 					self.nextDocument( e );
 					break;
 			}
