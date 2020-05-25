@@ -365,27 +365,27 @@ window.bp = window.bp || {};
 			tagName: 'div',
 			className: 'activity-document-container',
 			template: bp.template( 'activity-document' ),
-			media : [],
+			document : [],
 
 			initialize: function () {
 
-				this.model.set( 'document', this.media );
+				this.model.set( 'document', this.document );
 
-				document.addEventListener( 'activity_document_toggle', this.toggle_media_uploader.bind( this ) );
-				document.addEventListener( 'activity_document_close', this.destroy.bind( this ) );
+				document.addEventListener( 'activity_document_toggle', this.toggle_document_uploader.bind( this ) );
+				document.addEventListener( 'activity_document_close', this.destroyDocument.bind( this ) );
 			},
 
-			toggle_media_uploader: function() {
+			toggle_document_uploader: function() {
 
 				var self = this;
 				if ( self.$el.find( '#activity-post-document-uploader' ).hasClass( 'open' ) ) {
-					self.destroy();
+					self.destroyDocument();
 				} else {
-					self.open_media_uploader();
+					self.open_document_uploader();
 				}
 			},
 
-			destroy: function() {
+			destroyDocument: function() {
 				var self = this;
 				if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
 					bp.Nouveau.Activity.postForm.dropzone.destroy();
@@ -394,19 +394,19 @@ window.bp = window.bp || {};
 				self.media = [];
 				self.$el.find( '#activity-post-document-uploader' ).removeClass( 'open' ).addClass( 'closed' );
 
-				document.removeEventListener( 'activity_document_toggle', this.toggle_media_uploader.bind( this ) );
-				document.removeEventListener( 'activity_document_close', this.destroy.bind( this ) );
+				document.removeEventListener( 'activity_document_toggle', this.toggle_document_uploader.bind( this ) );
+				document.removeEventListener( 'activity_document_close', this.destroyDocument.bind( this ) );
 
 				$( '#whats-new-attachments' ).addClass( 'empty' );
 			},
 
-			open_media_uploader: function() {
+			open_document_uploader: function() {
 				var self = this;
 
 				if ( self.$el.find( '#activity-post-document-uploader' ).hasClass( 'open' ) ) {
 					return false;
 				}
-				self.destroy();
+				self.destroyDocument();
 
 				var dropzone_options = {
 					url				: BP_Nouveau.ajaxurl,
@@ -450,8 +450,8 @@ window.bp = window.bp || {};
 							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-							self.media.push( response.data );
-							self.model.set( 'document', self.media );
+							self.document.push( response.data );
+							self.model.set( 'document', self.document );
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -495,14 +495,14 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
 					function(file) {
-						if ( self.media.length ) {
-							for ( var i in self.media ) {
-								if ( file.id === self.media[i].id ) {
-									if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
+						if ( self.document.length ) {
+							for ( var i in self.document ) {
+								if ( file.id === self.document[i].id ) {
+									if ( typeof self.document[i].saved !== 'undefined' && ! self.document[i].saved ) {
 										bp.Nouveau.Media.removeAttachment( file.id );
 									}
-									self.media.splice( i, 1 );
-									self.model.set( 'media', self.media );
+									self.document.splice( i, 1 );
+									self.model.set( 'document', self.document );
 								}
 							}
 						}
