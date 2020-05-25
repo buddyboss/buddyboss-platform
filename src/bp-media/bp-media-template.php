@@ -144,42 +144,12 @@ function bp_has_media( $args = '' ) {
 		$album_id = $args['album_id'];
 	}
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-			$privacy[] = 'friends';
-		}
-
-		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
-
-			// get the login user id.
-			$current_user_id = get_current_user_id();
-
-			// check if the login user is friends of the display user.
-			$is_friend = friends_check_friendship( $current_user_id, $user_id );
-
-			/**
-			 * check if the login user is friends of the display user.
-			 * OR check if the login user and the display user is the same
-			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
-				$privacy[] = 'friends';
-			}
-		}
-	}
+	$privacy = bp_media_query_privacy( $user_id, 0, ( isset( $args['scope'] ) ? $args['scope'] : '' ) );
 
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-		$privacy  = array( 'grouponly' );
 		$group_id = bp_get_current_group_id();
 		$user_id  = false;
-	}
-
-	if ( ! empty( $args['scope'] ) && 'groups' === $args['scope'] ) {
-		$privacy = array( 'grouponly' );
 	}
 
 	// The default scope should recognize custom slugs.
