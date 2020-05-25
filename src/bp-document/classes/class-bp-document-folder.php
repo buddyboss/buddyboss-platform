@@ -513,10 +513,8 @@ class BP_Document_Folder {
 				$group      = groups_get_group( $folder->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
-				if ( 'hidden' === $status ) {
+				if ( 'hidden' === $status || 'private' === $status ) {
 					$visibility = esc_html__( 'Group Members', 'buddyboss' );
-				} elseif ( 'private' === $status ) {
-					$visibility = esc_html__( 'All Members', 'buddyboss' );
 				} else {
 					$visibility = ucfirst( $status );
 				}
