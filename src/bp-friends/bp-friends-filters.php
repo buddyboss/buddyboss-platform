@@ -72,7 +72,7 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
-		$friends = array( 0 );
+		return $retval;
 	}
 
 	$retval = array(

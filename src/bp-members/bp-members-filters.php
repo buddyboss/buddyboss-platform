@@ -184,6 +184,11 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			: bp_loggedin_user_id();
 	}
 
+	$privacy = array( 'onlyme' );
+	if ( bp_is_active( 'friends' ) ) {
+		$privacy[] = 'friends';
+	}
+
 	$retval = array(
 		'relation' => 'AND',
 		array(
@@ -191,8 +196,9 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			'value'  => $user_id,
 		),
 		array(
-			'column' => 'privacy',
-			'value'  => 'onlyme',
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN'
 		),
 	);
 
