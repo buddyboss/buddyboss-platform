@@ -33,6 +33,22 @@
 						</div>
 					</div>
 					<footer class="bb-model-footer document-uploader-footer">
+
+						<?php if ( ! bp_is_group() && ! bp_is_single_folder() ) : ?>
+							<div class="bb-dropdown-wrap">
+								<select id="bb-document-privacy">
+									<?php foreach ( bp_document_get_visibility_levels() as $k => $option ) {
+										if ( 'grouponly' === $k ) {
+											continue;
+										}
+										?>
+										<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
+										<?php
+									} ?>
+								</select>
+							</div>
+						<?php endif; ?>
+
 						<a class="button pull-right" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
 					</footer>
 				</div>

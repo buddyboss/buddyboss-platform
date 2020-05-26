@@ -3201,12 +3201,14 @@ window.bp = window.bp || {};
 			if (self.current_tab === 'bp-dropzone-content') {
 
 				var post_content = $( '#bp-media-post-content' ).val();
+				var privacy 	 = $( '#bb-document-privacy' ).val();
 
 				data = {
 					'action'	: 'document_document_save',
 					'_wpnonce'	: BP_Nouveau.nonces.media,
 					'documents'	: self.dropzone_media,
 					'content'	: post_content,
+					'privacy'	: privacy,
 					'folder_id'	: self.current_folder,
 					'group_id'	: self.current_group_id
 				};
