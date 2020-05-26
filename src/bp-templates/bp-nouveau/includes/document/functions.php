@@ -88,7 +88,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'document_preview_error'    => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'            => __( 'Move folder to...', 'buddyboss' ),
 		'move_to_file'              => __( 'Move document to...', 'buddyboss' ),
-		'copy_to_clip_board_text'   => __( 'Copy to Clipboard', 'buddyboss' )
+		'copy_to_clip_board_text'   => __( 'Copied to Clipboard', 'buddyboss' )
 	);
 
 	$old_media = $params['media'];
