@@ -265,7 +265,9 @@ function bp_nouveau_ajax_document_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$post_id = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$author_id 	= filter_input( INPUT_POST, 'author', FILTER_VALIDATE_INT );
 
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
@@ -281,9 +283,20 @@ function bp_nouveau_ajax_document_get_activity() {
 			'privacy'     => array( 'document' ),
 		);
 	} else {
-		$args = array(
-			'include' => $post_id,
-		);
+		if ( $group_id > 0 ) {
+			$args =
+					array(
+						'include'     => $post_id,
+						'object'      => $group_id,
+						'primary_id'  => $group_id,
+						'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
+					);
+		} else {
+			$args =
+					array(
+						'include' => $post_id,
+					);
+		}
 	}
 
 	ob_start();
@@ -884,14 +897,6 @@ function bp_nouveau_ajax_document_update_file_name() {
 		}
 
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
-
-		// Get Document Object.
-		$document_object = bp_document_get(
-			array(
-				'folder_id'   => $document_id,
-				'count_total' => true,
-			)
-		);
 
 		if ( isset( $document['document_id'] ) && $document['document_id'] > 0 ) {
 			wp_send_json_success(

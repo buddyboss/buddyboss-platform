@@ -76,7 +76,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 }
 
 ?>
-<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php bp_document_id(); ?>">
+<div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php bp_document_user_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
 		<a href="<?php echo esc_url( $link ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>"></i>
@@ -91,6 +91,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		   data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
 		   data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
 		   data-activity-id="<?php bp_document_activity_id(); ?>"
+		   data-author="<?php bp_document_user_id(); ?>"
 		   data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
 		   data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
 		   data-album-id="<?php bp_document_folder_id(); ?>"
@@ -108,9 +109,9 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 			<?php
 			if ( $attachment_id ) {
 				?>
-					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ * | / > < ? ` ; : {space}', 'buddyboss' ); ?></small>
+					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \' " \ * | / > < ? ` ; : {space}', 'buddyboss' ); ?></small>
 				<?php } else { ?>
-					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ * | / > < ? ` ; :', 'buddyboss' ); ?></small>
+					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \' " \ * | / > < ? ` ; :', 'buddyboss' ); ?></small>
 				<?php
 }
 

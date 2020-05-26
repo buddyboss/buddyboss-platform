@@ -2668,7 +2668,7 @@ window.bp = window.bp || {};
 							document_type			: documentType,
 							name					: document_name_val
 						},success : function( response ) {
-							document_name.text( response.data.response.title );
+							document_name.html( response.data.response.title );
 							document_edit.removeClass( 'submitting' );
 							document_edit.parent().find( '.animate-spin' ).remove();
 							document_edit.parent().hide().siblings( '.media-folder_name' ).show();
@@ -4504,6 +4504,7 @@ window.bp = window.bp || {};
 							preview				: document_element.data( 'preview' ),
 							text_preview		: document_element.data( 'text-preview' ),
 							target_icon_class	: document_element.data( 'icon-class' ),
+							author				: document_element.data( 'author' ),
 							is_forum			: false
 						};
 
@@ -4835,9 +4836,11 @@ window.bp = window.bp || {};
 						type	: 'POST',
 						url		: BP_Nouveau.ajaxurl,
 						data	: {
-							action	: 'document_get_activity',
-							id		: self.current_document.activity_id,
-							nonce	: BP_Nouveau.nonces.media
+							action		: 'document_get_activity',
+							id			: self.current_document.activity_id,
+							group_id 	: self.current_document.group_id,
+							author		: self.current_document.author,
+							nonce		: BP_Nouveau.nonces.media
 						},
 						success: function (response) {
 							if (response.success) {
