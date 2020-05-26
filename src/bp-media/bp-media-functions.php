@@ -700,24 +700,18 @@ function bp_media_get_media_activity( $activity_id ) {
 }
 
 /**
- * Get the media count of a given user.
+ * Get the media count of a user.
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $user_id ID of the user whose media are being counted.
  * @return int media count of the user.
  */
-function bp_media_get_total_media_count( $user_id = 0 ) {
-	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	}
+function bp_media_get_total_media_count() {
 
-	$count = wp_cache_get( 'bp_total_media_for_user_' . $user_id, 'bp' );
-
-	if ( false === $count ) {
-		$count = BP_Media::total_media_count( $user_id );
-		wp_cache_set( 'bp_total_media_for_user_' . $user_id, $count, 'bp' );
-	}
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	$count = $GLOBALS['media_template']->total_media_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 
 	/**
 	 * Filters the total media count for a given user.
@@ -730,24 +724,33 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
 }
 
 /**
- * Get the groups media count of a given user.
+ * Object template results media personal scope.
  *
- * @param int $user_id ID of the user whose media are being counted.
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_object_template_results_media_personal_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope']    = 'personal';
+	$querystring['page']     = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
+}
+
+/**
+ * Get the groups media count of a given user.
  *
  * @return int media count of the user.
  * @since BuddyBoss .3.6
  */
-function bp_media_get_user_total_group_media_count( $user_id = 0 ) {
-	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	}
+function bp_media_get_user_total_group_media_count() {
 
-	$count = wp_cache_get( 'bp_total_group_media_for_user_' . $user_id, 'bp' );
-
-	if ( false === $count ) {
-		$count = BP_Media::total_user_group_media_count( $user_id );
-		wp_cache_set( 'bp_total_group_media_for_user_' . $user_id, $count, 'bp' );
-	}
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'groups' ) );
+	$count = $GLOBALS['media_template']->total_media_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
 
 	/**
 	 * Filters the total groups media count for a given user.
@@ -757,6 +760,24 @@ function bp_media_get_user_total_group_media_count( $user_id = 0 ) {
 	 * @since BuddyBoss 1.3.6
 	 */
 	return apply_filters( 'bp_media_get_user_total_group_media_count', (int) $count );
+}
+
+/**
+ * Object template results media groups scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_object_template_results_media_groups_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope']    = 'groups';
+	$querystring['page']     = 1;
+	$querystring['per_page'] = '1';
+
+	$privacy = array( 'grouponly' );
+	$querystring['privacy']     = $privacy;
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
 }
 
 /**
@@ -866,7 +887,7 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 	}
 
 	$querystring['page']        = 1;
-	$querystring['per_page']    = '1';
+	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
 	$querystring['count_total'] = true;
 	return http_build_query( $querystring );
@@ -2192,7 +2213,7 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
 	if ( is_user_logged_in() ) {
 		// User filtering.
-		$user_id = (
+		$user_id = (int) (
 		empty( $user_id )
 			? ( bp_displayed_user_id() ? bp_displayed_user_id() : false )
 			: $user_id
@@ -2200,7 +2221,7 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
 		$privacy[] = 'loggedin';
 
-		if ( bp_is_my_profile() ) {
+		if ( bp_is_my_profile() || $user_id === bp_loggedin_user_id() ) {
 			$privacy[] = 'onlyme';
 
 			if ( bp_is_active( 'friends' ) ) {
@@ -2211,7 +2232,7 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
 
 			// get the login user id.
-			$current_user_id = get_current_user_id();
+			$current_user_id = bp_loggedin_user_id();
 
 			// check if the login user is friends of the display user
 			$is_friend = friends_check_friendship( $current_user_id, $user_id );
@@ -2220,11 +2241,10 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 			 * check if the login user is friends of the display user
 			 * OR check if the login user and the display user is the same
 			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
+			if ( $is_friend ) {
 				$privacy[] = 'friends';
 			}
 		}
-
 	}
 
 	if (
