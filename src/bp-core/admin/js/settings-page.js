@@ -57,7 +57,7 @@
 				);
 			}
 
-			// Auto check parent search type
+			// Auto check parent search type.
 			$( '.bp-search-child-field' ).on(
 				'click',
 				'input[type="checkbox"]',
@@ -69,7 +69,7 @@
 				}
 			);
 
-			// Auto uncheck child search types
+			// Auto uncheck child search types.
 			$( '.bp-search-parent-field' ).on(
 				'click',
 				'input[type="checkbox"]',
@@ -232,6 +232,10 @@
 			}
 
 			if ( $( 'body .section-bp_document_settings_extensions' ).length ) {
+
+
+				$( document ).find( '.nav-settings-subsubsub .subsubsub li.bp-media a' ).addClass( 'current' );
+
 				if ($( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox:checked' ).length === $( 'body .section-bp_document_settings_extensions table tbody tr td table tbody tr td input:checkbox' ).length) {
 					$( '#bp_select_extensions' ).prop( 'checked', true );
 				}
@@ -279,16 +283,16 @@
 							var video = $( this ).find( 'video' ).get( 0 ),
 							$button   = $( this ).find( '.gif-play-button' );
 							if ( true === video.paused ) {
-								// Play the video
+								// Play the video.
 								video.play();
 
-								// Update the button text to 'Pause'
+								// Update the button text to 'Pause'.
 								$button.hide();
 							} else {
-								// Pause the video
+								// Pause the video.
 								video.pause();
 
-								// Update the button text to 'Play'
+								// Update the button text to 'Play'.
 								$button.show();
 							}
 						}
@@ -298,7 +302,7 @@
 			// Set Help selected on Help/Documentation Page.
 			if ( $( 'body.buddyboss_page_bp-help' ).length ) {
 
-					// Show sub menu when user click on main menu
+					// Show sub menu when user click on main menu.
 					$( '.bp-help-card-grid' ).on(
 						'click',
 						'span.open',
@@ -309,14 +313,14 @@
 						}
 					);
 
-					// show the closest UI
+					// show the closest UI.
 					$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show().closest( 'li' ).find( '> span.actions .open' ).addClass( 'active' );
 
 					// Show the child sub menu
 					$( '.bp-help-card-grid li.selected' ).find( 'ul:first' ).show();
 					$( '.bp-help-card-grid li.selected' ).find( '> span.actions .open' ).addClass( 'active' );
 
-					// Update LI count via JS
+					// Update LI count via JS.
 					$( '.bp-help-card-grid .sub-menu-count' ).each(
 						function () {
 								$( this ).text( '(' + $( this ).closest( 'li' ).find( 'ul:first li' ).size() + ')' );
