@@ -152,10 +152,10 @@ function bp_nouveau_get_document_directory_nav_items() {
 	if ( is_user_logged_in() && bp_is_group_document_support_enabled() ) {
 		$nav_items['group'] = array(
 			'component' => 'document',
-			'slug'      => 'group', // slug is used because BP_Core_Nav requires it, but it's the scope.
+			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/group-document/',
-			'text'      => __( 'My Group Documents', 'buddyboss' ),
+			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-document/',
+			'text'      => __( 'My Groups', 'buddyboss' ),
 			//'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
