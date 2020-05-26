@@ -2997,6 +2997,10 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 .bp-media-move-file,
 .bp-media-move-folder {
 
+	&.move-folder-popup-group .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .breadcrumb .item {
+		padding: 2px 0 22px;
+	}
+
 	.bb-model-footer {
 		display: inline-block;
 		width: 100%;

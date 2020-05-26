@@ -2489,8 +2489,10 @@ window.bp = window.bp || {};
 
 			if ( 'group' === this.moveToTypePopup ) {
 				$( document ).find( '.location-folder-list-wrap h4' ).show();
+				$( currentTarget ).addClass('move-folder-popup-group');
 			} else {
 				$( document ).find( '.location-folder-list-wrap h4' ).hide();
+				$( '.move-folder-popup-group' ).removeClass('move-folder-popup-group');
 			}
 
 			var parentsOpen = this.currentTargetParent;
