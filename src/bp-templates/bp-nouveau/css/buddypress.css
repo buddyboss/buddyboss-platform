@@ -13346,6 +13346,28 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   padding: 5px;
 }
 
+.bb-document-theater .bb-media-section.bb-media-no-preview .img-section a.download-button {
+  padding: 10px 14px;
+  display: block;
+  font-size: 17px;
+  line-height: 1;
+  color: #7f868f;
+}
+
+.bb-document-theater .bb-media-section.bb-media-no-preview .img-section a.download-button > i {
+  padding-right: 8px;
+  font-size: 17px;
+  display: inline-block;
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+.bb-document-theater .bb-media-section.bb-media-no-preview .img-section a.download-button:hover {
+  background-color: #f5f5f5;
+  color: #5087e5;
+}
+
 .bb-document-theater .bb-media-section .img-section {
   overflow: auto;
   height: calc(90vh - 40px);

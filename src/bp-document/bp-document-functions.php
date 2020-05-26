@@ -358,31 +358,36 @@ function bp_document_format_size_units( $bytes, $post_string = false, $type = 'b
  */
 function bp_document_get( $args = '' ) {
 
-	$r = bp_parse_args( $args, array(
-			'max'            => false,        // Maximum number of results to return.
-			'fields'         => 'all',
-			'page'           => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'       => false,        // results per page.
-			'sort'           => 'DESC',       // sort ASC or DESC.
-			'order_by'       => false,        // order by.
-			'scope'          => false,
+	$r = bp_parse_args(
+		$args,
+		array(
+			'max'                 => false,        // Maximum number of results to return.
+			'fields'              => 'all',
+			'page'                => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'            => false,        // results per page.
+			'sort'                => 'DESC',       // sort ASC or DESC.
+			'order_by'            => false,        // order by.
+			'scope'               => false,
 
 			// want to limit the query.
-			'user_id'        => false,
-			'activity_id'    => false,
-			'folder_id'      => false,
-			'group_id'       => false,
-			'search_terms'   => false,        // Pass search terms as a string.
-			'privacy'        => false,        // privacy of document.
-			'exclude'        => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'    => false,
-			'user_directory' => true,
+			'user_id'             => false,
+			'activity_id'         => false,
+			'folder_id'           => false,
+			'group_id'            => false,
+			'search_terms'        => false,        // Pass search terms as a string.
+			'privacy'             => false,        // privacy of document.
+			'exclude'             => false,        // Comma-separated list of activity IDs to exclude.
+			'count_total'         => false,
+			'user_directory'      => true,
 
 			'meta_query_document' => false,         // Filter by activity meta. See WP_Meta_Query for format
-			'meta_query_folder'   => false          // Filter by activity meta. See WP_Meta_Query for format
-		), 'document_get' );
+			'meta_query_folder'   => false,          // Filter by activity meta. See WP_Meta_Query for format
+		),
+		'document_get'
+	);
 
-	$document = BP_Document::documents( array(
+	$document = BP_Document::documents(
+		array(
 			'page'                => $r['page'],
 			'per_page'            => $r['per_page'],
 			'user_id'             => $r['user_id'],
@@ -401,7 +406,8 @@ function bp_document_get( $args = '' ) {
 			'user_directory'      => $r['user_directory'],
 			'meta_query_document' => $r['meta_query_document'],
 			'meta_query_folder'   => $r['meta_query_folder'],
-		) );
+		)
+	);
 
 	/**
 	 * Filters the requested document item(s).
@@ -1393,7 +1399,7 @@ function bp_document_upload() {
 	$result = array(
 		'id'   => (int) $attachment->ID,
 		'url'  => esc_url( $attachment->guid ),
-		'name' => esc_attr( pathinfo( basename ( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
+		'name' => esc_attr( pathinfo( basename( get_attached_file( (int) $attachment->ID ) ), PATHINFO_FILENAME ) ),
 		'type' => esc_attr( 'document' ),
 	);
 
@@ -1878,8 +1884,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		$destination_privacy = $destination_folder[0]->privacy;
 
 		// Update modify date for destination folder.
-		$destination_folder_update                 = new BP_Document_Folder( $folder_id );
-		$destination_folder_update->date_modified  = bp_core_current_time();
+		$destination_folder_update                = new BP_Document_Folder( $folder_id );
+		$destination_folder_update->date_modified = bp_core_current_time();
 		$destination_folder_update->save();
 	}
 
@@ -1925,6 +1931,94 @@ function bp_document_get_visibility_levels() {
 }
 
 /**
+ * Handles the actual rename process
+ *
+ * @param [type] $post_id
+ * @return void
+ */
+function bp_document_get_file_parts( $post_id ) {
+	preg_match( '~([^/]+)\.([^\.]+)$~', get_attached_file( $post_id ), $file_parts ); // extract current filename and extension
+	return array(
+		'filename'  => $file_parts[1],
+		'extension' => $file_parts[2],
+	);
+}
+
+/**
+ * Returns the attachment URL and sizes URLs, in case of an image
+ *
+ * @param [type] $attachment_id
+ * @return void
+ */
+function bp_document_get_attachment_urls( $attachment_id ) {
+	$urls = array( wp_get_attachment_url( $attachment_id ) );
+	if ( wp_attachment_is_image( $attachment_id ) ) {
+		foreach ( get_intermediate_image_sizes() as $size ) {
+			$image  = wp_get_attachment_image_src( $attachment_id, $size );
+			$urls[] = $image[0];
+		}
+	}
+
+	return array_unique( $urls );
+}
+
+/**
+ * Convert filename to post title
+ *
+ * @param [type] $filename
+ * @return void
+ */
+function bp_document_filename_to_title( $filename ) {
+	// return ucwords( preg_replace('~[^a-zA-Z0-9]~', ' ', $filename) );
+	return $filename;
+}
+
+/**
+ * Unserializes a variable until reaching a non-serialized value
+ *
+ * @param [type] $var
+ * @return void
+ */
+function bp_document_unserialize_deep( $var ) {
+	while ( is_serialized( $var ) ) {
+		$var = @unserialize( $var );
+	}
+
+	return $var;
+}
+
+/**
+ * Replace the media url and fix serialization if necessary
+ *
+ * @param [type] $subj
+ * @param [type] $searches
+ * @param [type] $replaces
+ * @return void
+ */
+function bp_document_replace_media_urls( $subj, &$searches, &$replaces ) {
+	$subj = is_object( $subj ) ? clone $subj : $subj;
+
+	if ( ! is_scalar( $subj ) && is_countable( $subj ) && count( $subj ) ) {
+		foreach ( $subj as &$item ) {
+			$item = bp_document_replace_media_urls( $item, $searches, $replaces );
+		}
+	} else {
+		$subj = is_string( $subj ) ? str_replace( $searches, $replaces, $subj ) : $subj;
+	}
+
+	return $subj;
+}
+
+/**
+ * Get all options
+ *
+ * @return void
+ */
+function bp_document_get_all_options() {
+	return $GLOBALS['wpdb']->get_results( "SELECT option_name as name, option_value as value FROM {$GLOBALS['wpdb']->options}", ARRAY_A );
+}
+
+/**
  * This function will rename the document name.
  *
  * @param int    $document_id
@@ -1942,53 +2036,155 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
-	$file_name = $title;
+	$file_name    = $title;
+	$new_filename = $title;
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
+	// Variables.
+	$post                     = get_post( $attachment_document_id );
+	$file_parts               = bp_document_get_file_parts( $attachment_document_id );
+	$old_filename             = $file_parts['filename'];
+	$new_filename_unsanitized = $new_filename;
+
+	// sanitizing file name (using sanitize_title because sanitize_file_name doesn't remove accents).
+	$new_filename = sanitize_file_name( remove_accents( $new_filename ) );
+
+	$file_abs_path     = get_attached_file( $post->ID );
+	$file_abs_dir      = dirname( $file_abs_path );
+	$new_file_abs_path = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $file_abs_path );
+
+	$file_abs_path     = get_attached_file( $post->ID );
+	$file_abs_dir      = dirname( $file_abs_path );
+	$new_file_abs_path = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $file_abs_path );
+
+	$file_rel_path     = get_post_meta( $post->ID, '_wp_attached_file', 1 );
+	$new_file_rel_path = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $file_rel_path );
+
+	$uploads_path = wp_upload_dir();
+	$uploads_path = $uploads_path['basedir'];
+
+	// attachment miniatures.
+	$searches = bp_document_get_attachment_urls( $attachment_document_id );
+
+	// Validations.
+	if ( ! $post ) {
+		return __( 'Post with ID ' . $attachment_document_id . ' does not exist!', 'buddyboss' );
+	}
+	if ( $post && $post->post_type != 'attachment' ) {
+		return __( 'Post with ID ' . $attachment_document_id . ' is not an attachment!', 'buddyboss' );
+	}
+	if ( ! $new_filename ) {
+		return __( 'The document name is empty!', 'buddyboss' );
+	}
+	if ( $new_filename != sanitize_file_name( remove_accents( $new_filename ) ) ) {
+		return __( 'Bad characters or invalid document name!', 'buddyboss' );
+	}
+	if ( file_exists( $new_file_abs_path ) ) {
+		return __( 'A file with that name already exists in the containing folder!', 'buddyboss' );
+	}
+	if ( ! is_writable( $file_abs_dir ) ) {
+		return __( 'The document containing directory is not writable!', 'buddyboss' );
+	}
+
+	// Change the attachment post.
+//	$post_changes = array();
+//	$post_changes['ID']         = $post->ID;
+//	$post_changes['guid']       = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $post->guid );
+//	$post_changes['post_title'] = ( true ) ? bp_document_filename_to_title( $new_filename_unsanitized ) : $post->post_title;
+//	$post_changes['post_name']  = wp_unique_post_slug( $new_filename, $post->ID, $post->post_status, $post->post_type, $post->post_parent );
+//	wp_update_post( $post_changes );
+//	unset( $post_changes );
+
+
+	$my_post = array(
+		'ID'         => $post->ID,
+		'post_title' => bp_document_filename_to_title( $new_filename_unsanitized ),
+//		'post_name'  => $new_filename,
+		'guid'       => preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $post->guid ),
+	);
+
+	$post_id = wp_update_post( $my_post );
+
+	// Change attachment post metas & rename files.
+	foreach ( get_intermediate_image_sizes() as $size ) {
+		$size_data = image_get_intermediate_size( $attachment_document_id, $size );
+
+		@unlink( $uploads_path . DIRECTORY_SEPARATOR . $size_data['path'] );
+	}
+
+	if ( ! @rename( $file_abs_path, $new_file_abs_path ) ) {
+		return __( 'File renaming error!', 'buddyboss' );
+	}
+
+	update_post_meta( $attachment_document_id, '_wp_attached_file', $new_file_rel_path );
+	wp_update_attachment_metadata( $attachment_document_id, wp_generate_attachment_metadata( $attachment_document_id, $new_file_abs_path ) );
+
+	// Replace the old with the new media link in the content of all posts and metas.
+	$replaces = bp_document_get_attachment_urls( $attachment_document_id );
+
+	$i          = 0;
+	$post_types = get_post_types();
+	unset( $post_types['attachment'] );
+
+	while ( $posts = get_posts(
+		array(
+			'post_type'   => $post_types,
+			'post_status' => 'any',
+			'numberposts' => 100,
+			'offset'      => $i * 100,
+		)
+	) ) {
+		foreach ( $posts as $post ) {
+			// Updating post content if necessary.
+			$new_post                 = array( 'ID' => $post->ID );
+			$new_post['post_content'] = str_replace( '\\', '\\\\', $post->post_content );
+			$new_post['post_content'] = str_replace( $searches, $replaces, $new_post['post_content'] );
+			if ( $new_post['post_content'] != $post->post_content ) {
+				wp_update_post( $new_post );
+			}
+
+			// Updating post metas if necessary.
+			$metas = get_post_meta( $post->ID );
+			foreach ( $metas as $key => $meta ) {
+				$meta[0]  = bp_document_unserialize_deep( $meta[0] );
+				$new_meta = bp_document_replace_media_urls( $meta[0], $searches, $replaces );
+				if ( $new_meta != $meta[0] ) {
+					update_post_meta( $post->ID, $key, $new_meta, $meta[0] );
+				}
+			}
+		}
+
+		$i++;
+	}
+
+	// Updating options if necessary.
+	$options = bp_document_get_all_options();
+	foreach ( $options as $option ) {
+		$option['value'] = bp_document_unserialize_deep( $option['value'] );
+		$new_option      = bp_document_replace_media_urls( $option['value'], $searches, $replaces );
+		if ( $new_option != $option['value'] ) {
+			update_option( $option['name'], $new_option );
+		}
+	}
+
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $new_filename, bp_core_current_time(), $document_id, $attachment_document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
 
-	bp_document_update_meta( $document_id, 'file_name', $file_name );
+	bp_document_update_meta( $document_id, 'file_name', $new_filename );
 
 	if ( false === $query ) {
 		return false;
 	}
-
-	// Do not update title if already updated from backend.
-	if ( false === $backend ) {
-		$post = get_post( $attachment_document_id, ARRAY_A );
-		if ( isset( $title ) ) {
-			$post['post_title'] = $title;
-			wp_update_post( $post );
-		}
-	}
-
-	// Rename filename based on the title.
-	$file          = get_attached_file( $attachment_document_id );
-	$path          = pathinfo( $file );
-	$new_file_name = $file_name;
-	$new_file_name = wp_unique_filename( $path['dirname'], $new_file_name . '.' . $path['extension'] );
-	$new_file      = $path['dirname'] . '/' . $new_file_name;
-
-	rename( $file, $new_file );
-	update_attached_file( $attachment_document_id, $new_file );
-
-	$extension              = '.' . $path['extension'];
-	$title                  = basename( $new_file, $extension );
-	$rename_file_name_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
-	$rename_file_name_query = $wpdb->query( $rename_file_name_query ); // db call ok; no-cache ok;
-
-	bp_document_update_meta( $document_id, 'file_name', $new_file_name );
-	bp_document_update_meta( $document_id, 'extension', $extension );
 
 	$response = apply_filters(
 		'bp_document_rename_file',
 		array(
 			'document_id'            => $document_id,
 			'attachment_document_id' => $attachment_document_id,
-			'title'                  => $title,
-			'backendn'               => $backend,
+			'title'                  => $new_filename,
 		)
 	);
+
+	@unlink( $file_abs_path );
 
 	return $response;
 }
@@ -2072,16 +2268,16 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		$destination_privacy = $destination_folder[0]->privacy;
 
 		// Update modify date for destination folder.
-		$destination_folder_update                 = new BP_Document_Folder( $destination_folder_id );
-		$destination_folder_update->date_modified  = bp_core_current_time();
+		$destination_folder_update                = new BP_Document_Folder( $destination_folder_id );
+		$destination_folder_update->date_modified = bp_core_current_time();
 		$destination_folder_update->save();
 	}
 
 	// Update main parent folder.
-	$folder                 = new BP_Document_Folder( $folder_id );
-	$folder->privacy        = $destination_privacy;
-	$folder->parent         = $destination_folder_id;
-	$folder->date_modified  = bp_core_current_time();
+	$folder                = new BP_Document_Folder( $folder_id );
+	$folder->privacy       = $destination_privacy;
+	$folder->parent        = $destination_folder_id;
+	$folder->date_modified = bp_core_current_time();
 	$folder->save();
 
 	// Get all the documents of main folder.
@@ -2481,7 +2677,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'message':
-			$thread_id = bp_document_get_meta( $document_id, 'thread_id', true );
+			$thread_id  = bp_document_get_meta( $document_id, 'thread_id', true );
 			$has_access = messages_check_thread_access( $thread_id, $user_id );
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;

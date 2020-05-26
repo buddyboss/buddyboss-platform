@@ -2617,13 +2617,14 @@ window.bp = window.bp || {};
 		 */
 		renameDocumentSubmit: function( event ) {
 
-			var document_edit 		   = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name_edit' );
-			var document_name 		   = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > span' );
-			var document_id   		   = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-id' ).attr( 'data-item-id' );
-			var attachment_document_id = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' );
-			var documentType		   = $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' );
-			var document_name_val 	   = document_edit.val().trim(); // trim to remove whitespace around name.
-			var pattern				   = '';
+			var document_edit 		   		= $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name_edit' );
+			var document_name 		   		= $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > span' );
+			var document_name_update_data 	= $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name' );
+			var document_id   		   		= $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-id' ).attr( 'data-item-id' );
+			var attachment_document_id 		= $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-attachment-id' ).attr( 'data-item-id' );
+			var documentType		   		= $( event.currentTarget ).closest( '.media-folder_items' ).find( '.media-folder_name > i.media-document-type' ).attr( 'data-item-id' );
+			var document_name_val 	   		= document_edit.val().trim(); // trim to remove whitespace around name.
+			var pattern				   		= '';
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
 				pattern = /^[-\w^&'@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
@@ -2666,13 +2667,22 @@ window.bp = window.bp || {};
 							document_id				: document_id,
 							attachment_document_id	: attachment_document_id,
 							document_type			: documentType,
-							name					: document_name_val
-						},success : function( response ) {
-							document_name.html( response.data.response.title );
-							document_edit.removeClass( 'submitting' );
-							document_edit.parent().find( '.animate-spin' ).remove();
-							document_edit.parent().hide().siblings( '.media-folder_name' ).show();
-						}
+							name					: document_name_val,
+						},
+						success : function( response ) {
+							if (response.success) {
+								document_name_update_data.attr( 'data-document-title', response.data.response.title + '.' + document_name_update_data.data( 'extension' ) );
+								document_name.html(response.data.response.title);
+								document_edit.removeClass('submitting');
+								document_edit.parent().find('.animate-spin').remove();
+								document_edit.parent().hide().siblings('.media-folder_name').show();
+							} else {
+								document_edit.removeClass('submitting');
+								document_edit.parent().find('.animate-spin').remove();
+								document_edit.parent().hide().siblings('.media-folder_name').show();
+								alert( response.data.feedback );
+							}
+						},
 					}
 				);
 
@@ -4505,6 +4515,7 @@ window.bp = window.bp || {};
 							text_preview		: document_element.data( 'text-preview' ),
 							target_icon_class	: document_element.data( 'icon-class' ),
 							author				: document_element.data( 'author' ),
+							download			: document_element.attr( 'href' ),
 							is_forum			: false
 						};
 
@@ -4596,6 +4607,7 @@ window.bp = window.bp || {};
 			var target_icon_class	= self.current_document.target_icon_class;
 			var document_elements 	= $( document ).find( '.document-theatre' );
 			var extension 			= self.current_document.extension;
+			var download 			= self.current_document.download;
 
 			if( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
@@ -4626,7 +4638,7 @@ window.bp = window.bp || {};
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p> </div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p><a class="download-button" href=" ' + download + ' "><i class="bb-icon-download"></i>' + BP_Nouveau.media.download_button + '</a></div>' );
 				}
 			}
 

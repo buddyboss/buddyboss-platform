@@ -1837,6 +1837,16 @@ class BP_Document {
 		$activity_ids   = wp_parse_id_list( wp_list_pluck( $documents, 'activity_id' ) );
 		$attachment_ids = wp_parse_id_list( wp_list_pluck( $documents, 'attachment_id' ) );
 
+//		if ( ! empty( $document_ids ) ) {
+//			// Loop through attachment ids and attempt to delete.
+//			foreach ( $document_ids as $document ) {
+//				$preview_attachment_id = bp_document_get_meta( $document, 'preview_attachment_id', true );
+//				if ( $preview_attachment_id ) {
+//					wp_delete_attachment( $preview_attachment_id, true );
+//				}
+//			}
+//		}
+
 		// Delete meta.
 		if ( ! empty( $document_ids ) ) {
 			// Delete all document meta entries for document items.

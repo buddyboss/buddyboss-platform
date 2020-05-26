@@ -906,7 +906,14 @@ function bp_nouveau_ajax_document_update_file_name() {
 				)
 			);
 		} else {
-			wp_send_json_error( $response );
+			if ( '' === $document ) {
+				wp_send_json_error( $response );
+			} else {
+				$response = array(
+						'feedback' => $document,
+				);
+				wp_send_json_error( $response );
+			}
 		}
 	} else {
 		if ( 0 === $document_id || '' === $title ) {
