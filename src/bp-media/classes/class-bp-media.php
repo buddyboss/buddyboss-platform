@@ -484,8 +484,6 @@ class BP_Media {
 		 */
 		$media_ids_sql = apply_filters( 'bp_media_paged_activities_sql', $media_ids_sql, $r );
 
-		error_log($media_ids_sql);
-
 		$cache_group = 'bp_media';
 
 		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );

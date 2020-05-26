@@ -724,22 +724,6 @@ function bp_media_get_total_media_count() {
 }
 
 /**
- * Object template results media personal scope.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_object_template_results_media_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope']    = 'personal';
-	$querystring['page']     = 1;
-	$querystring['per_page'] = '1';
-	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	$querystring['count_total'] = true;
-	return http_build_query( $querystring );
-}
-
-/**
  * Get the groups media count of a given user.
  *
  * @return int media count of the user.
@@ -760,24 +744,6 @@ function bp_media_get_user_total_group_media_count() {
 	 * @since BuddyBoss 1.3.6
 	 */
 	return apply_filters( 'bp_media_get_user_total_group_media_count', (int) $count );
-}
-
-/**
- * Object template results media groups scope.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_object_template_results_media_groups_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope']    = 'groups';
-	$querystring['page']     = 1;
-	$querystring['per_page'] = '1';
-
-	$privacy = array( 'grouponly' );
-	$querystring['privacy']     = $privacy;
-	$querystring['count_total'] = true;
-	return http_build_query( $querystring );
 }
 
 /**
@@ -890,6 +856,41 @@ function bp_media_object_results_media_all_scope( $querystring ) {
 	$querystring['per_page']    = 1;
 	$querystring['user_id']     = 0;
 	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
+}
+
+
+/**
+ * Object template results media personal scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_object_template_results_media_personal_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope']       = 'personal';
+	$querystring['page']        = 1;
+	$querystring['per_page']    = '1';
+	$querystring['user_id']     = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['count_total'] = true;
+
+	return http_build_query( $querystring );
+}
+
+/**
+ * Object template results media groups scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_object_template_results_media_groups_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope']       = 'groups';
+	$querystring['page']        = 1;
+	$querystring['per_page']    = 1;
+	$querystring['user_id']     = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['count_total'] = true;
+
 	return http_build_query( $querystring );
 }
 

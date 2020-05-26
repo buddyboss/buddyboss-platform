@@ -129,7 +129,7 @@ function bp_has_media( $args = '' ) {
 	// User filtering.
 	$user_id = bp_displayed_user_id()
 		? bp_displayed_user_id()
-		: ! empty( $args['user_id'] ) ? $args['user_id'] : bp_loggedin_user_id();
+		: false;
 
 	$search_terms_default = false;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'media' );
