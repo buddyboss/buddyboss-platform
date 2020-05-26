@@ -14476,6 +14476,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-folder-list-wrap-main .ac_document_search_folder_list h4,
 .location-folder-list-wrap-main .location-folder-list-wrap h4 {
   margin: 0 !important;
+  font-size: 17px;
+  font-weight: 500;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list.has-error,
