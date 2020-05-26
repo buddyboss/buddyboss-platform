@@ -3986,10 +3986,16 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var currentTarget = event.currentTarget, currentTargetCopy = 'document_copy_link';
 			$( 'body' ).append( '<textarea style="position:absolute;opacity:0;" id="' + currentTargetCopy + '"></textarea>' );
+			var oldText = $( currentTarget ).text();
 			$( currentTarget ).text( BP_Nouveau.media.copy_to_clip_board_text );
 			$( '#' + currentTargetCopy ).val( $( currentTarget ).attr( 'href' ) );
 			$( '#' + currentTargetCopy ).select();
 			document.execCommand( 'copy' );
+
+			setTimeout( function(){
+				$( currentTarget ).text( oldText );
+			}  , 2000 );
+
 			//$( '#' + currentTargetCopy ).remove();
 			return false;
 		},
