@@ -778,7 +778,7 @@ function bp_is_search_groups_enable( $default = 1 ) {
  *
  * @return bool Is documents search enabled or not
  */
-function bp_is_search_documents_enable( $default = 1 ) {
+function bp_is_search_documents_enable( $default = 0) {
 	return (bool) apply_filters( 'bp_is_search_documents_enable', (bool) get_option( 'bp_search_documents', $default ) );
 }
 
@@ -791,7 +791,7 @@ function bp_is_search_documents_enable( $default = 1 ) {
  *
  * @return bool Is documents search enabled or not
  */
-function bp_is_search_folders_enable( $default = 1 ) {
+function bp_is_search_folders_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_search_folders_enable', (bool) get_option( 'bp_search_folders', $default ) );
 }
 
