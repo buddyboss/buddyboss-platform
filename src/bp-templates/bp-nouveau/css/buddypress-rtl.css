@@ -13381,7 +13381,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bb-document-theater .bb-media-section .img-section {
   overflow: auto;
   height: calc(90vh - 30px);
-  background-color: #fff;
+  background-color: #000;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -13394,7 +13394,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 .bb-document-theater .bb-media-section .img-section img {
-  padding: 20px;
+  padding: 20px 0;
 }
 
 .bb-document-theater .bb-media-section .document-text {
