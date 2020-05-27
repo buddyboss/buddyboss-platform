@@ -1089,11 +1089,16 @@ function bp_media_settings_callback_extension_document_support() {
 			$name       = 'bp_document_extensions_support[' . $k . ']';
 			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
 			$class      = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'hide-border' : '';
-			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? true : '';
+			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? true : false;
 			$tr_class   = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'default-extension' : 'extra-extension';
 
-			$document_file_extension = substr(strrchr( $extension['extension'],'.'),1);
-			$document_icon = bp_document_svg_icon( $document_file_extension );
+			if ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) {
+				$document_icon = $extension['icon'];
+			} else {
+				$document_file_extension = substr(strrchr( $extension['extension'],'.'),1);
+				$document_icon = bp_document_svg_icon( $document_file_extension );
+			}
+
 
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
@@ -1106,7 +1111,24 @@ function bp_media_settings_callback_extension_document_support() {
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
 					<i class="<?php echo $document_icon; ?>"></i>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/>
+
+					<?php
+					if ( ! $is_default ) {
+						?>
+						<select class="extension-icon" name="<?php echo esc_attr( $name . '[icon]' ); ?>" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
+							<?php
+							$icons = bp_document_svg_icon_list();
+							foreach ( $icons as $icon ) {
+								?>
+								<option <?php selected( $icon, $extension['icon'] ); ?> value="<?php echo esc_attr( $icon ); ?>"><?php echo esc_attr( $icon ); ?></option>
+								<?php
+							}
+							?>
+						</select>
+						<?php
+					} else {
+						?><input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/><?php
+					}?>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
@@ -1137,7 +1159,7 @@ function bp_media_settings_callback_extension_document_support() {
 				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0"/>
 			</td>
 			<td>
-				<select name="extension-icon" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
+				<select class="extension-icon" name="extension-icon" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
 					<?php
 					$icons = bp_document_svg_icon_list();
 					foreach ( $icons as $icon ) {
