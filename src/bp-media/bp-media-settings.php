@@ -1142,7 +1142,7 @@ function bp_media_settings_callback_extension_document_support() {
 					$icons = bp_document_svg_icon_list();
 					foreach ( $icons as $icon ) {
 						?>
-						<option value="<?php echo esc_attr( $icon ); ?>"><i class="<?php echo esc_attr( $icon ); ?>"></i></option>
+						<option value="<?php echo esc_attr( $icon ); ?>"><?php echo esc_attr( $icon ); ?></option>
 						<?php
 					}
 					?>

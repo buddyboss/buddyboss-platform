@@ -1570,7 +1570,7 @@ function bp_document_svg_icon( $extension ) {
 			$svg = 'bb-icon-file-gif';
 			break;
 		case 'gzip':
-			$svg = 'bb-icon-zip';
+			$svg = 'bb-icon-file-zip';
 			break;
 		case 'hlam':
 			$svg = 'bb-icon-file-hlam';
@@ -1687,7 +1687,7 @@ function bp_document_svg_icon( $extension ) {
 			$svg = 'bb-icon-file-xltx';
 			break;
 		case 'xlm':
-			$svg = 'bb-icon-file-xlm';
+			$svg = 'bb-icon-file-xml';
 			break;
 		case 'yaml':
 			$svg = 'bb-icon-file-yaml';
@@ -1730,7 +1730,7 @@ function bp_document_svg_icon_list() {
 		'bb-icon-file-dotm',
 		'bb-icon-file-dotx',
 		'bb-icon-file-gif',
-		'bb-icon-zip',
+		'bb-icon-file-zip',
 		'bb-icon-file-hlam',
 		'bb-icon-file-hlsb',
 		'bb-icon-file-hlsm',
@@ -1769,12 +1769,9 @@ function bp_document_svg_icon_list() {
 		'bb-icon-file-xlsx',
 		'bb-icon-file-xltm',
 		'bb-icon-file-xltx',
-		'bb-icon-file-xlm',
+		'bb-icon-file-xml',
 		'bb-icon-file-yaml',
-		'bb-icon-file-zip',
-		'bb-icon-folder-stacked',
-		'bb-icon-download',
-		'bb-icon-file',
+		'bb-icon-file-zip'
 	);
 
 	return apply_filters( 'bp_document_svg_icon_list', $icons );

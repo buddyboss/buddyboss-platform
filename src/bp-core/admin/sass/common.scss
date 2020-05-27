@@ -623,13 +623,20 @@ table.extension-listing {
 	thead th {
 		padding: 12px 18px;
 
-		&.ext-head-extension,
-		&.ext-head-icon {
+		&.ext-head-extension {
 			width: 5%;
+		}
+
+		&.ext-head-icon {
+			width: 10%;
 		}
 
 		&.ext-head-desc {
 			width: 12%;
+		}
+
+		&.ext-head-mime {
+			width: 26%;
 		}
 	}
 
@@ -730,6 +737,10 @@ table.extension-listing {
 			width: 100% !important;
 			box-sizing: border-box;
 
+			> i {
+				margin: 10px 0 0 10px;
+			}
+
 			&:before {
 				top: 0;
 				left: 20px !important;
@@ -745,6 +756,84 @@ table.extension-listing {
 			}
 		}
 
+	}
+
+	select[name="extension-icon"] {
+		display: none;
+	}
+
+	.icon-select-main {
+		position: relative;
+
+		.icon-select-button {
+			font-size: 14px;
+			line-height: 2;
+			color: #32373c;
+			border-color: #7e8993;
+			border-width: 1px;
+			box-shadow: none;
+			border-radius: 3px;
+			padding: 3px 24px 0 8px;
+			min-height: 30px;
+			max-width: 25rem;
+			-webkit-appearance: none;
+			background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
+			background-size: 16px 16px;
+			cursor: pointer;
+			vertical-align: middle;
+			max-width: 100%;
+			width: 100%;
+
+			li {
+				list-style: none;
+				margin: 0;
+				white-space: nowrap;
+				max-width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: left;
+			}
+
+			i {
+				font-size: 20px;
+				margin-right: 10px;
+			}
+		}
+
+		.custom-extension-list {
+			position: absolute;
+			left: 0;
+			right: 0;
+			min-width: 200px;
+			background-color: #fff;
+			box-shadow: 0 0 15px 1px rgba(0,0,0,0.1);
+			padding: 10px 0;
+			bottom: 100%;
+			max-height: 60vh;
+			overflow: auto;
+			display: none;
+
+			.custom-extension-list-select {
+				font-size: 0;
+			}
+
+			li {
+				list-style: none;
+				cursor: pointer;
+				font-size: 13px;
+				padding: 5px 10px;
+
+				&:hover {
+					background-color: #f9f9f9;
+				}
+			}
+
+			i {
+				font-size: 25px;
+				margin-right: 10px;
+				vertical-align: middle;
+			}
+		}
 	}
 
 }

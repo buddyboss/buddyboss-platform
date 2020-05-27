@@ -855,6 +855,9 @@
 					var newOption  = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
 					var totalCount = 1;
 					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension document-extensions"> ' + newOption + ' </tr> ' );
+				
+
+					makeIconSelect();
 
 					parent.find( 'tbody tr.extra-extension' ).each(
 						function() {
@@ -873,6 +876,43 @@
 
 				}
 			);
+
+			function makeIconSelect() {
+
+				$('.custom-extension').each( function() {
+
+					if( $( this ).find( '.icon-select-main' ).length === 0 ) {
+						var iconsArray = [];
+						$( this ).find('select[name="extension-icon"] option').each( function(){
+							var iconClass = $(this).val();
+							var text = this.innerText;
+							var item = '<li><i class="'+ iconClass +'"></i>'+ text +'</li>';
+							iconsArray.push(item);
+						});
+
+						$( this ).find('select[name="extension-icon"]').parent().append('<div class="icon-select-main"><button class="icon-select-button"></button><div class="custom-extension-list"> <ul class="custom-extension-list-select">'+ iconsArray +'</ul></div></div>');
+
+						//Set the button value to the first el of the array by default
+						$( this ).find( '.icon-select-main .icon-select-button' ).html(iconsArray[0]);
+
+						//change button icon on click
+						$( this ).find( '.custom-extension-list-select li' ).click( function() {
+							var iconClass = $( this ).find( 'i' ).attr( 'class' );
+							var text = this.innerText;
+							var item = '<li><i class="'+ iconClass +'"></i>'+ text +'</li>';
+							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( item );
+							$( this ).closest( 'td' ).find( '.icon-select-main .custom-extension-list' ).toggle();
+							$( this ).closest( 'td' ).find( 'select[name="extension-icon"] option[value="'+ iconClass +'"]' ).attr( 'selected','selected' );
+						});
+
+						$( this ).find( '.icon-select-main .icon-select-button' ) .click( function() {
+							$( this ).closest( 'td' ).find( '.icon-select-main .custom-extension-list' ).toggle();
+						});
+					}
+
+				});
+
+			}
 
 			$( document ).on(
 				'click',
