@@ -1599,6 +1599,9 @@ function bp_document_svg_icon( $extension ) {
 		case 'jpg':
 			$svg = 'bb-icon-file-jpg';
 			break;
+		case 'jpeg':
+			$svg = 'bb-icon-file-jpg';
+			break;
 		case 'js':
 			$svg = 'bb-icon-file-js';
 			break;
