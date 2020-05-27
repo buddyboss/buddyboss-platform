@@ -4332,6 +4332,11 @@ window.bp = window.bp || {};
 			if (target.closest( '#bp-existing-document-content' ).length) {
 				return false;
 			}
+
+			if( target.closest( '.document.document-theatre' ).length ) {
+				self.closeDocumentTheatre( event );
+			}
+
 			id = target.data( 'id' );
 			self.setupGlobals();
 			self.setDocuments( target );
