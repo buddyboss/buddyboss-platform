@@ -1927,8 +1927,17 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		.img-section {
 			overflow: auto;
-			height: calc(90vh - 40px);
+			height: calc(90vh - 30px);
 			background-color: #fff;
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-align: center;
+			-ms-flex-align: center;
+			align-items: center;
+			-webkit-box-pack: center;
+			-ms-flex-pack: center;
+			justify-content: center;
 
 			img {
 				padding: 20px;

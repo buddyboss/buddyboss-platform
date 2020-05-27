@@ -3008,6 +3008,16 @@ span.dashicons.dashicons-admin-file:before {
   margin: 0 15px 15px;
   border: 1px solid #e7e9ec;
   border-radius: 4px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text-wrap .CodeMirror {
@@ -13370,8 +13380,17 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-section .img-section {
   overflow: auto;
-  height: calc(90vh - 40px);
+  height: calc(90vh - 30px);
   background-color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .bb-document-theater .bb-media-section .img-section img {
