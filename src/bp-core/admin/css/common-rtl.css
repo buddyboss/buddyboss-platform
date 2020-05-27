@@ -601,7 +601,7 @@ table.extension-listing thead th {
   padding: 12px 18px;
 }
 
-table.extension-listing thead th.ext-head-extension {
+table.extension-listing thead th.ext-head-extension, table.extension-listing thead th.ext-head-icon {
   width: 5%;
 }
 
@@ -615,6 +615,10 @@ table.extension-listing thead td.ext-head-enable {
 
 table.extension-listing tbody td {
   padding: 10px;
+}
+
+table.extension-listing tbody td i {
+  font-size: 40px;
 }
 
 table.extension-listing tbody td input.error {

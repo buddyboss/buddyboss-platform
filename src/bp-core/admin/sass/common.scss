@@ -623,7 +623,8 @@ table.extension-listing {
 	thead th {
 		padding: 12px 18px;
 
-		&.ext-head-extension {
+		&.ext-head-extension,
+		&.ext-head-icon {
 			width: 5%;
 		}
 
@@ -638,6 +639,10 @@ table.extension-listing {
 
 	tbody td {
 		padding: 10px;
+
+		i {
+			font-size: 40px;
+		}
 
 		input.error {
 			border: 1px solid #f00;

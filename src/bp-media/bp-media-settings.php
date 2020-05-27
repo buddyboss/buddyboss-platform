@@ -1075,6 +1075,7 @@ function bp_media_settings_callback_extension_document_support() {
 		<thead>
 		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1"></td>
 		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-icon"><?php echo esc_html__( 'Icon', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
 		</thead>
@@ -1090,6 +1091,10 @@ function bp_media_settings_callback_extension_document_support() {
 			$class      = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'hide-border' : '';
 			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? true : '';
 			$tr_class   = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'default-extension' : 'extra-extension';
+
+			$document_file_extension = substr(strrchr( $extension['extension'],'.'),1);
+			$document_icon = bp_document_svg_icon( $document_file_extension );
+
 			?>
 			<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
 				<td>
@@ -1098,6 +1103,10 @@ function bp_media_settings_callback_extension_document_support() {
 				<td data-colname="<?php echo esc_html__( 'Extension', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
 					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo ( isset( $extension['is_default'] ) ) ? esc_attr( $extension['is_default'] ) : ''; ?>"/>
+				</td>
+				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
+					<i class="<?php echo $document_icon; ?>"></i>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
@@ -1128,6 +1137,18 @@ function bp_media_settings_callback_extension_document_support() {
 				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0"/>
 			</td>
 			<td>
+				<select name="extension-icon" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
+					<?php
+					$icons = bp_document_svg_icon_list();
+					foreach ( $icons as $icon ) {
+						?>
+						<option value="<?php echo esc_attr( $icon ); ?>"><i class="<?php echo esc_attr( $icon ); ?>"></i></option>
+						<?php
+					}
+					?>
+				</select>
+			</td>
+			<td>
 				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 			</td>
 			<td>
@@ -1139,11 +1160,8 @@ function bp_media_settings_callback_extension_document_support() {
 		</tbody>
 		<tfoot>
 		<tr>
-			<td colspan="4">
-
+			<td colspan="5">
 				<div id="btn-add-extensions" class="button-primary"><?php echo esc_html__( 'Add Extension', 'buddyboss' ); ?></div>
-
-
 			</td>
 		</tr>
 		</tfoot>

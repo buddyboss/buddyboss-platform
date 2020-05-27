@@ -188,6 +188,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'AbiWord Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_2'  => array(
 			'extension'   => '.abw',
@@ -195,6 +196,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'AbiWord Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_3'  => array(
 			'extension'   => '.ace',
@@ -202,6 +204,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'ACE Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_4'  => array(
 			'extension'   => '.ai',
@@ -209,6 +212,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Illustrator File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_5'  => array(
 			'extension'   => '.ai',
@@ -216,6 +220,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Illustrator File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_6'  => array(
 			'extension'   => '.apk',
@@ -223,6 +228,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Android Package',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_7'  => array(
 			'extension'   => '.apk',
@@ -230,6 +236,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Android Package',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_8'  => array(
 			'extension'   => '.css',
@@ -237,6 +244,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'CSS',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_9'  => array(
 			'extension'   => '.css',
@@ -244,6 +252,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'CSS',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_10'  => array(
 			'extension'   => '.csv',
@@ -251,6 +260,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'CSV',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_11'  => array(
 			'extension'   => '.doc',
@@ -258,6 +268,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Word Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_12'  => array(
 			'extension'   => '.docm',
@@ -265,6 +276,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Word Document (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_13' => array(
 			'extension'   => '.docm',
@@ -272,6 +284,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Word Document (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_14' => array(
 			'extension'   => '.docx',
@@ -279,6 +292,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Word Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_15' => array(
 			'extension'   => '.dotm',
@@ -286,6 +300,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Word Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_16' => array(
 			'extension'   => '.dotx',
@@ -293,6 +308,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Word Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_17' => array(
 			'extension'   => '.eps',
@@ -300,6 +316,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Encapsulated Postscript',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_18' => array(
 			'extension'   => '.eps',
@@ -307,6 +324,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Encapsulated Postscript',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_19' => array(
 			'extension'   => '.gif',
@@ -314,6 +332,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Graphics Interchange Format',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_20' => array(
 			'extension'   => '.gz',
@@ -321,6 +340,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Gzip Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_21' => array(
 			'extension'   => '.gzip',
@@ -328,6 +348,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Gzip Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_22' => array(
 			'extension'   => '.htm',
@@ -335,6 +356,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'HTML',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_23' => array(
 			'extension'   => '.html',
@@ -342,6 +364,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'HTML',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_24' => array(
 			'extension'   => '.ico',
@@ -349,6 +372,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'ICO',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_25' => array(
 			'extension'   => '.ics',
@@ -356,6 +380,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'iCalendar',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_26' => array(
 			'extension'   => '.ipa',
@@ -363,6 +388,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'iOS Package',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_27' => array(
 			'extension'   => '.jar',
@@ -370,6 +396,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'JAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_28' => array(
 			'extension'   => '.jpeg',
@@ -377,6 +404,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Image File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_29' => array(
 			'extension'   => '.jpg',
@@ -384,6 +412,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Image File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_30' => array(
 			'extension'   => '.js',
@@ -391,6 +420,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'JavaScript',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_31' => array(
 			'extension'   => '.js',
@@ -398,6 +428,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'JavaScript',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_32' => array(
 			'extension'   => '.mp3',
@@ -405,6 +436,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'MP3',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_33' => array(
 			'extension'   => '.ods',
@@ -412,6 +444,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'OpenDocument Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_34' => array(
 			'extension'   => '.odt',
@@ -419,6 +452,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'OpenDocument Text',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_35' => array(
 			'extension'   => '.pdf',
@@ -426,13 +460,15 @@ function bp_media_allowed_document_type() {
 			'description' => 'PDF',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_36' => array(
 			'extension'   => '.png',
 			'mime_type'   => 'image/png',
-			'description' => 'Portable Network Graphics',
+			'description' => 'Image File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_37' => array(
 			'extension'   => '.potm',
@@ -440,6 +476,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_38' => array(
 			'extension'   => '.potx',
@@ -447,6 +484,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_39' => array(
 			'extension'   => '.potx',
@@ -454,6 +492,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_40' => array(
 			'extension'   => '.ppsx',
@@ -461,6 +500,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Slideshow',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_41' => array(
 			'extension'   => '.ppsx',
@@ -468,6 +508,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Slideshow',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_42' => array(
 			'extension'   => '.ppt',
@@ -475,6 +516,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Presentation',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_43' => array(
 			'extension'   => '.pptm',
@@ -482,6 +524,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_44' => array(
 			'extension'   => '.pptm',
@@ -489,6 +532,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_45' => array(
 			'extension'   => '.pptm',
@@ -496,6 +540,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_46' => array(
 			'extension'   => '.pptx',
@@ -503,6 +548,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'PowerPoint Presentation',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_47' => array(
 			'extension'   => '.psd',
@@ -510,6 +556,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Photoshop Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_48' => array(
 			'extension'   => '.rar',
@@ -517,6 +564,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'RAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_49' => array(
 			'extension'   => '.rar',
@@ -524,6 +572,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'RAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_50' => array(
 			'extension'   => '.rss',
@@ -531,6 +580,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'RSS',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_51' => array(
 			'extension'   => '.rtf',
@@ -538,6 +588,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Rich Text Format',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_52' => array(
 			'extension'   => '.sketch',
@@ -545,6 +596,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Sketch Document',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_53' => array(
 			'extension'   => '.svg',
@@ -552,6 +604,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'SVG',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_54' => array(
 			'extension'   => '.tar',
@@ -559,6 +612,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'TAR Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_55' => array(
 			'extension'   => '.tiff',
@@ -566,6 +620,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Tagged Image File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_56' => array(
 			'extension'   => '.txt',
@@ -573,6 +628,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Text File',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_57' => array(
 			'extension'   => '.vcf',
@@ -580,6 +636,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'vCard',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_58' => array(
 			'extension'   => '.vcf',
@@ -587,6 +644,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'vCard',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_59' => array(
 			'extension'   => '.wav',
@@ -594,6 +652,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Waveform Audio',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_60' => array(
 			'extension'   => '.xlam',
@@ -601,6 +660,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_61' => array(
 			'extension'   => '.xls',
@@ -608,6 +668,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_62' => array(
 			'extension'   => '.xlsb',
@@ -615,6 +676,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_63' => array(
 			'extension'   => '.xlsb',
@@ -622,6 +684,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_64' => array(
 			'extension'   => '.xlsb',
@@ -629,6 +692,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_65' => array(
 			'extension'   => '.xlsm',
@@ -636,6 +700,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_66' => array(
 			'extension'   => '.xlsm',
@@ -643,6 +708,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_67' => array(
 			'extension'   => '.xlsx',
@@ -650,6 +716,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Spreadsheet',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_68' => array(
 			'extension'   => '.xltm',
@@ -657,6 +724,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Template (Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_69' => array(
 			'extension'   => '.xltx',
@@ -664,6 +732,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_70' => array(
 			'extension'   => '.xltx',
@@ -671,6 +740,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_71' => array(
 			'extension'   => '.xml',
@@ -678,6 +748,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'XML',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_72' => array(
 			'extension'   => '.xml',
@@ -685,6 +756,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'XML',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_73' => array(
 			'extension'   => '.yaml',
@@ -692,6 +764,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'YAML',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_74' => array(
 			'extension'   => '.zip',
@@ -699,6 +772,7 @@ function bp_media_allowed_document_type() {
 			'description' => 'Zip',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 		'bb_doc_75' => array(
 			'extension'   => '.7z',
@@ -706,6 +780,7 @@ function bp_media_allowed_document_type() {
 			'description' => '7z Archive',
 			'is_default'  => 1,
 			'is_active'   => 1,
+			'icon'        => '',
 		),
 	);
 

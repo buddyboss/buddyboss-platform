@@ -1709,6 +1709,78 @@ function bp_document_svg_icon( $extension ) {
 }
 
 /**
+ * Return the icon list.
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_svg_icon_list() {
+
+	$icons = array(
+		'bb-icon-file-7z',
+		'bb-icon-file-abw',
+		'bb-icon-file-ace',
+		'bb-icon-file-ai',
+		'bb-icon-file-apk',
+		'bb-icon-file-css',
+		'bb-icon-file-csv',
+		'bb-icon-file-doc',
+		'bb-icon-file-docm',
+		'bb-icon-file-docx',
+		'bb-icon-file-dotm',
+		'bb-icon-file-dotx',
+		'bb-icon-file-gif',
+		'bb-icon-zip',
+		'bb-icon-file-hlam',
+		'bb-icon-file-hlsb',
+		'bb-icon-file-hlsm',
+		'bb-icon-file-html',
+		'bb-icon-file-html',
+		'bb-icon-file-ics',
+		'bb-icon-file-ico',
+		'bb-icon-file-ipa',
+		'bb-icon-file-jpg',
+		'bb-icon-file-js',
+		'bb-icon-file-jar',
+		'bb-icon-mp3',
+		'bb-icon-file-ods',
+		'bb-icon-file-odt',
+		'bb-icon-pdf',
+		'bb-icon-file-png',
+		'bb-icon-file-psd',
+		'bb-icon-file-pptm',
+		'bb-icon-file-pptx',
+		'bb-icon-file-pps',
+		'bb-icon-file-ppsx',
+		'bb-icon-file-ppt',
+		'bb-icon-file-pptm',
+		'bb-icon-file-pptx',
+		'bb-icon-file-rar',
+		'bb-icon-file-rtf',
+		'bb-icon-file-rss',
+		'bb-icon-file-sketch',
+		'bb-icon-file-svg',
+		'bb-icon-file-tar',
+		'bb-icon-file-txt',
+		'bb-icon-file-vcf',
+		'bb-icon-file-wav',
+		'bb-icon-file-xls',
+		'bb-icon-file-xls',
+		'bb-icon-file-xlsx',
+		'bb-icon-file-xltm',
+		'bb-icon-file-xltx',
+		'bb-icon-file-xlm',
+		'bb-icon-file-yaml',
+		'bb-icon-file-zip',
+		'bb-icon-folder-stacked',
+		'bb-icon-download',
+		'bb-icon-file',
+	);
+
+	return apply_filters( 'bp_document_svg_icon_list', $icons );
+}
+
+/**
  * Return the breadcrumbs.
  *
  * @param int $user_id
