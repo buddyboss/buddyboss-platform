@@ -112,22 +112,22 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 				<i class="bb-icon-menu-dots-v"></i>
 			</a>
 			<div class="document-action_list">
-				<ul>
+				<ul class="conflict-activity-ul-li-comment">
 					<?php
 					if ( $can_download_btn ) {
 						?>
-						<li class="copy_download_file_url">
+						<li class="copy_download_file_url document-action-class">
 							<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 						</li><?php
 					}
 					if ( bp_loggedin_user_id() === bp_get_document_user_id() ) {
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							?>
-						<li class="move_file"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+						<li class="move_file document-action-class"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
 							<?php
 						}
 						?>
-						<li class="delete_file"><a class="document-file-delete" data-item-activity-id="<?php bp_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+						<li class="delete_file document-action-class"><a class="document-file-delete" data-item-activity-id="<?php echo ( bp_get_activity_comment_id() ) ? bp_get_activity_comment_id() : bp_get_activity_id(); ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						<?php
 					}
 				?>

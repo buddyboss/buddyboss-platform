@@ -391,7 +391,7 @@ window.bp = window.bp || {};
 					bp.Nouveau.Activity.postForm.dropzone.destroy();
 					self.$el.find( '#activity-post-document-uploader' ).html( '' );
 				}
-				self.media = [];
+				self.document = [];
 				self.$el.find( '#activity-post-document-uploader' ).removeClass( 'open' ).addClass( 'closed' );
 
 				document.removeEventListener( 'activity_document_toggle', this.toggle_document_uploader.bind( this ) );
