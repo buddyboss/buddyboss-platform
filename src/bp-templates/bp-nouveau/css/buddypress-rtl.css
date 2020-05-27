@@ -13249,7 +13249,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   animation: spin 3s infinite linear;
 }
 
-.activity.activity_update .activity-comments .document-detail-wrap .document-extension-description {
+.activity-item.activity_update .activity-comments .document-detail-wrap .document-extension-description {
   max-width: calc(100% - 55px);
   vertical-align: middle;
   overflow: hidden;
@@ -13257,19 +13257,19 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   white-space: nowrap;
 }
 
-.activity.activity_update .activity-comments .document-helper-text {
+.activity-item.activity_update .activity-comments .document-helper-text {
   height: 0;
   overflow: hidden;
   width: 0;
 }
 
-.activity.activity_update .activity-comments .bb-activity-media-elem.document-activity:hover .document-helper-text {
+.activity-item.activity_update .activity-comments .bb-activity-media-elem.document-activity:hover .document-helper-text {
   height: auto;
   overflow: initial;
   width: auto;
 }
 
-.activity.activity_update .activity-comments .bb-activity-media-elem.document-activity .document-helper-text {
+.activity-item.activity_update .activity-comments .bb-activity-media-elem.document-activity .document-helper-text {
   max-width: calc(100% - 55px);
   vertical-align: middle;
   overflow: hidden;
@@ -13277,7 +13277,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   white-space: nowrap;
 }
 
-.activity.activity_update .activity-comments .acomment-content {
+.activity-item.activity_update .activity-comments .acomment-content {
   overflow: initial;
 }
 
