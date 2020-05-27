@@ -624,11 +624,11 @@ table.extension-listing {
 		padding: 12px 18px;
 
 		&.ext-head-extension {
-			width: 5%;
+			width: 10%;
 		}
 
 		&.ext-head-icon {
-			width: 10%;
+			width: 15%;
 		}
 
 		&.ext-head-desc {
@@ -649,6 +649,7 @@ table.extension-listing {
 
 		i {
 			font-size: 40px;
+			vertical-align: middle;
 		}
 
 		input.error {
@@ -671,7 +672,7 @@ table.extension-listing {
 		}
 
 		input.extension-mime[type="text"] {
-			width: 70%;
+			width: 60%;
 		}
 
 		#btn-remove-extensions {
@@ -702,6 +703,19 @@ table.extension-listing {
 		tr {
 			display: block;
 			width: 100%;
+
+			&.extra-extension {
+
+				input[type="text"] {
+					margin-top: 15px;
+					margin-left: 10px;
+					width: calc(100% - 10px);
+			   }
+
+			   .icon-select-main {
+					margin-left: 10px;
+				}
+			}		
 		}
 
 		tr.custom-extension {
@@ -738,7 +752,7 @@ table.extension-listing {
 			box-sizing: border-box;
 
 			> i {
-				margin: 10px 0 0 10px;
+				margin: 10px 0 10px 10px;
 			}
 
 			&:before {
@@ -754,16 +768,24 @@ table.extension-listing {
 			.extension-mime {
 				margin-bottom: 15px;
 			}
+
+			.btn-check-mime-type {
+				margin-left: 10px;
+			}
 		}
 
 	}
 
-	select[name="extension-icon"] {
+	select.extension-icon {
 		display: none;
 	}
 
 	.icon-select-main {
 		position: relative;
+		display: inline-block;
+		vertical-align: middle;
+		width: calc(100% - 50px);
+		margin-left: 10px;
 
 		.icon-select-button {
 			font-size: 14px;
@@ -773,7 +795,7 @@ table.extension-listing {
 			border-width: 1px;
 			box-shadow: none;
 			border-radius: 3px;
-			padding: 3px 24px 0 8px;
+			padding: 3px 24px 3px 8px;
 			min-height: 30px;
 			max-width: 25rem;
 			-webkit-appearance: none;

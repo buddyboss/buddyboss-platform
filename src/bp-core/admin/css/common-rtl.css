@@ -602,11 +602,11 @@ table.extension-listing thead th {
 }
 
 table.extension-listing thead th.ext-head-extension {
-  width: 5%;
+  width: 10%;
 }
 
 table.extension-listing thead th.ext-head-icon {
-  width: 10%;
+  width: 15%;
 }
 
 table.extension-listing thead th.ext-head-desc {
@@ -627,6 +627,7 @@ table.extension-listing tbody td {
 
 table.extension-listing tbody td i {
   font-size: 40px;
+  vertical-align: middle;
 }
 
 table.extension-listing tbody td input.error {
@@ -649,7 +650,7 @@ table.extension-listing tbody td input[type="text"] {
 }
 
 table.extension-listing tbody td input.extension-mime[type="text"] {
-  width: 70%;
+  width: 60%;
 }
 
 table.extension-listing tbody td #btn-remove-extensions {
@@ -676,6 +677,18 @@ table.extension-listing tfoot td #btn-check-mime-type {
   table.extension-listing tr {
     display: block;
     width: 100%;
+  }
+  table.extension-listing tbody.extra-extension input[type="text"],
+  table.extension-listing thead.extra-extension input[type="text"],
+  table.extension-listing tr.extra-extension input[type="text"] {
+    margin-top: 15px;
+    margin-right: 10px;
+    width: calc(100% - 10px);
+  }
+  table.extension-listing tbody.extra-extension .icon-select-main,
+  table.extension-listing thead.extra-extension .icon-select-main,
+  table.extension-listing tr.extra-extension .icon-select-main {
+    margin-right: 10px;
   }
   table.extension-listing tr.custom-extension {
     background-color: #fff;
@@ -704,7 +717,7 @@ table.extension-listing tfoot td #btn-check-mime-type {
     box-sizing: border-box;
   }
   table.extension-listing td > i {
-    margin: 10px 10px 0 0;
+    margin: 10px 10px 10px 0;
   }
   table.extension-listing td:before {
     top: 0;
@@ -717,14 +730,21 @@ table.extension-listing tfoot td #btn-check-mime-type {
   table.extension-listing td .extension-mime {
     margin-bottom: 15px;
   }
+  table.extension-listing td .btn-check-mime-type {
+    margin-right: 10px;
+  }
 }
 
-table.extension-listing select[name="extension-icon"] {
+table.extension-listing select.extension-icon {
   display: none;
 }
 
 table.extension-listing .icon-select-main {
   position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(100% - 50px);
+  margin-right: 10px;
 }
 
 table.extension-listing .icon-select-main .icon-select-button {
@@ -735,7 +755,7 @@ table.extension-listing .icon-select-main .icon-select-button {
   border-width: 1px;
   box-shadow: none;
   border-radius: 3px;
-  padding: 3px 8px 0 24px;
+  padding: 3px 8px 3px 24px;
   min-height: 30px;
   max-width: 25rem;
   -webkit-appearance: none;
