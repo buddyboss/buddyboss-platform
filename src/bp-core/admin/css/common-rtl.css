@@ -610,11 +610,7 @@ table.extension-listing thead th.ext-head-icon {
 }
 
 table.extension-listing thead th.ext-head-desc {
-  width: 12%;
-}
-
-table.extension-listing thead th.ext-head-mime {
-  width: 26%;
+  width: 15%;
 }
 
 table.extension-listing thead td.ext-head-enable {
@@ -626,7 +622,7 @@ table.extension-listing tbody td {
 }
 
 table.extension-listing tbody td i.bb-icon {
-  font-size: 30px;
+  font-size: 33px;
   color: #999;
   margin-right: 8px;
   vertical-align: middle;
@@ -651,16 +647,16 @@ table.extension-listing tbody td input[type="text"] {
   width: 100%;
 }
 
-table.extension-listing tbody td input.extension-mime[type="text"] {
-  width: 60%;
-}
-
 table.extension-listing tbody td #btn-remove-extensions {
   cursor: pointer;
   color: #a00;
   font-size: 18px;
   vertical-align: middle;
   margin-right: 6px;
+}
+
+table.extension-listing tbody tr.custom-extension td input.extension-mime[type="text"] {
+  width: 60%;
 }
 
 table.extension-listing tfoot td #btn-add-extensions,

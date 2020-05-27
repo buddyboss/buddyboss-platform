@@ -632,11 +632,7 @@ table.extension-listing {
 		}
 
 		&.ext-head-desc {
-			width: 12%;
-		}
-
-		&.ext-head-mime {
-			width: 26%;
+			width: 15%;
 		}
 	}
 
@@ -648,7 +644,7 @@ table.extension-listing {
 		padding: 10px;
 
 		i.bb-icon {
-			font-size: 30px;
+			font-size: 33px;
 			color: #999;
 			margin-left: 8px;
 			vertical-align: middle;
@@ -673,10 +669,6 @@ table.extension-listing {
 			width: 100%;
 		}
 
-		input.extension-mime[type="text"] {
-			width: 60%;
-		}
-
 		#btn-remove-extensions {
 			cursor: pointer;
 			color: #a00;
@@ -684,6 +676,10 @@ table.extension-listing {
 			vertical-align: middle;
 			margin-left: 6px;
 		}
+	}
+
+	tbody tr.custom-extension td input.extension-mime[type="text"] {
+		width: 60%;
 	}
 
 	tfoot td {
