@@ -1957,6 +1957,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 			img {
 				padding: 20px 0;
+				max-height: calc(90vh - 30px);
 			}
 
 		}

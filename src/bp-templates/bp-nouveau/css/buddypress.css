@@ -13411,6 +13411,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-section .img-section img {
   padding: 20px 0;
+  max-height: calc(90vh - 30px);
 }
 
 .bb-document-theater .bb-media-section .document-text {
