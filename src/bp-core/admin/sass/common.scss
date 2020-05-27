@@ -624,11 +624,11 @@ table.extension-listing {
 		padding: 12px 18px;
 
 		&.ext-head-extension {
-			width: 10%;
+			width: 2em;
 		}
 
 		&.ext-head-icon {
-			width: 15%;
+			width: 1.5em;
 		}
 
 		&.ext-head-desc {
@@ -647,8 +647,10 @@ table.extension-listing {
 	tbody td {
 		padding: 10px;
 
-		i {
-			font-size: 40px;
+		i.bb-icon {
+			font-size: 30px;
+			color: #999;
+			margin-left: 8px;
 			vertical-align: middle;
 		}
 
@@ -710,12 +712,12 @@ table.extension-listing {
 					margin-top: 15px;
 					margin-left: 10px;
 					width: calc(100% - 10px);
-			   }
+				}
 
-			   .icon-select-main {
+				.icon-select-main {
 					margin-left: 10px;
 				}
-			}		
+			}
 		}
 
 		tr.custom-extension {
@@ -797,7 +799,6 @@ table.extension-listing {
 			border-radius: 3px;
 			padding: 3px 24px 3px 8px;
 			min-height: 30px;
-			max-width: 25rem;
 			-webkit-appearance: none;
 			background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
 			background-size: 16px 16px;
@@ -828,7 +829,7 @@ table.extension-listing {
 			right: 0;
 			min-width: 200px;
 			background-color: #fff;
-			box-shadow: 0 0 15px 1px rgba(0,0,0,0.1);
+			box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.1);
 			padding: 10px 0;
 			bottom: 100%;
 			max-height: 60vh;

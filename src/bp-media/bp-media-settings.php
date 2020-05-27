@@ -1110,7 +1110,7 @@ function bp_media_settings_callback_extension_document_support() {
 					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo ( isset( $extension['is_default'] ) ) ? esc_attr( $extension['is_default'] ) : ''; ?>"/>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
-					<i class="<?php echo $document_icon; ?>"></i>
+					<i class="bb-icon <?php echo $document_icon; ?>"></i>
 
 					<?php
 					if ( ! $is_default ) {
