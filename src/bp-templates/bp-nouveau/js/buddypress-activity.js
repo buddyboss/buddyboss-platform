@@ -418,8 +418,8 @@ window.bp = window.bp || {};
 
 			comments.each(
 				function( c, comment ) {
-						comment_parents = $( comment ).children( 'ul' );
-						comment_items   = $( comment_parents ).find( 'li' );
+						comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
+						comment_items   = $( comment_parents ).find( 'li' ).not( '.document-action-class' );
 
 					if ( ! comment_items.length ) {
 						return;
@@ -1114,6 +1114,17 @@ window.bp = window.bp || {};
 									activity_comments.parent().addClass( 'comments-loaded' );
 									activity_state.addClass( 'has-comments' );
 									// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+
+									var tool_box_comment = activity_comments.find( '.ac-reply-content' );
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+									}
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+									}
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
+									}
 									jQuery( window ).scroll();
 								}
 							);
