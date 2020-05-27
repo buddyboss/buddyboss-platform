@@ -10,7 +10,7 @@ global $document_template;
 
 $attachment_id     = bp_get_document_attachment_id();
 $extension         = bp_document_extension( $attachment_id );
-$svg_icon          = bp_document_svg_icon( $extension );
+$svg_icon          = bp_document_svg_icon( $extension, $attachment_id );
 $svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );

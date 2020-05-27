@@ -947,12 +947,12 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 			return $buttons;
 		}
 
-		// It's the first comment of the loop, so build the Group and sort it
+		// It's the first comment of the loop, so build the Group and sort it.
 		if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
 			$sort = true;
 			bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
 
-		// It's not the first comment, the order is set, we simply need to update the Buttons Group
+		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
 		} else {
 			$sort = false;
 			bp_nouveau()->activity->comment_buttons->update( $buttons_group );

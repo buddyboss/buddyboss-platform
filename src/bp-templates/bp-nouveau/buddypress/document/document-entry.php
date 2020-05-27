@@ -20,7 +20,7 @@ $document_id         = bp_get_document_id();
 $filename            = basename( get_attached_file( $attachment_id ) );
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
-	$svg_icon            = bp_document_svg_icon( $extension );
+	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
 	$download_link       = bp_document_download_link( $attachment_id, $document_id );
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$move_class          = 'ac-document-move';

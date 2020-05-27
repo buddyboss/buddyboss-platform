@@ -452,7 +452,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 				$attachment_id         = bp_get_document_attachment_id();
 				$extension             = bp_document_extension( $attachment_id );
-				$svg_icon              = bp_document_svg_icon( $extension );
+				$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
 				$svg_icon_download     = bp_document_svg_icon( 'download' );
 				$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
 				$filename              = basename( get_attached_file( $attachment_id ) );
@@ -1972,7 +1972,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					$attachment_id         = bp_get_document_attachment_id();
 					$extension             = bp_document_extension( $attachment_id );
-					$svg_icon              = bp_document_svg_icon( $extension );
+					$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
 					$svg_icon_download     = bp_document_svg_icon( 'download' );
 					$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
 					$filename              = basename( get_attached_file( $attachment_id ) );
