@@ -13381,7 +13381,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bb-document-theater .bb-media-section .img-section {
   overflow: auto;
   height: calc(90vh - 30px);
-  background-color: #000;
+  background-color: #fff;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -13391,6 +13391,22 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+}
+
+.bb-document-theater .bb-media-section .img-section .img-block-wrap {
+  height: calc(90vh - 30px);
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #000;
+  overflow: auto;
 }
 
 .bb-document-theater .bb-media-section .img-section img {
