@@ -2473,7 +2473,7 @@ window.bp = window.bp || {};
 			}
 
 			$( currentTarget ).find( '.bp-document-move' ).attr( 'id',$( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
-			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );			
+			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
 
 			// Change if this is not from Activity Page.
 			if ($( event.currentTarget ).closest( '.media-folder_items' ).length > 0) {
@@ -3274,8 +3274,20 @@ window.bp = window.bp || {};
 
 								// Reload the page if no document and adding first time.
 								if ( $( '.document-data-table-head' ).length ) {
-									// Prepend the activity.
-									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+									if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
+										var store = bp.Nouveau.getStorage( 'bp-document' );
+										var scope = store.scope;
+										if ( 'groups' === scope ) {
+											$( document ).find( 'li#document-personal a' ).trigger( 'click' );
+											$( document ).find( 'li#document-personal' ).trigger( 'click' );
+										} else {
+											// Prepend the activity.
+											bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+										}
+									} else {
+										// Prepend the activity.
+										bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+									}
 								} else {
 									location.reload( true );
 								}
@@ -3434,9 +3446,22 @@ window.bp = window.bp || {};
 						if (response.success) {
 							self.closeFolderUploader( event );
 							if ( $( '.document-data-table-head' ).length ) {
-								// Prepend the activity if no parent.
-								bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
-								jQuery( window ).scroll();
+								if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
+									var store = bp.Nouveau.getStorage( 'bp-document' );
+									var scope = store.scope;
+									if ( 'groups' === scope ) {
+										$( document ).find( 'li#document-personal a' ).trigger( 'click' );
+										$( document ).find( 'li#document-personal' ).trigger( 'click' );
+									} else {
+										// Prepend the activity if no parent.
+										bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+										jQuery( window ).scroll();
+									}
+								} else {
+									// Prepend the activity if no parent.
+									bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+									jQuery( window ).scroll();
+								}
 							} else {
 								location.reload( true );
 							}
