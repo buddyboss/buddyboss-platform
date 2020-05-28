@@ -1582,7 +1582,9 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		) );
 		if ( $result_array && isset( $result_array[0] ) && ! empty( $result_array[0] ) ) {
 			$icon = $existing_list[ $result_array[0] ]['icon'];
-			return apply_filters( 'bp_document_svg_icon', $icon, $extension );
+			if ( '' !== $icon ) {
+				return apply_filters( 'bp_document_svg_icon', $icon, $extension );
+			}
 		}
 	}
 
