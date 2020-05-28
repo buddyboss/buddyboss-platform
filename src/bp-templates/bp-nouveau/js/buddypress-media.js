@@ -2459,9 +2459,14 @@ window.bp = window.bp || {};
 			var action  = $( event.currentTarget ).attr( 'data-action' );
 
 			// For Activity Feed.
-			currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' .bp-media-move-file';
+			if( $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest('li.comment-item').length ) {
+				currentTarget = '#' + $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bp-media-move-file';
+			} else {
+				currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bp-media-move-file';
+			}
+
 			$( currentTarget ).find( '.bp-document-move' ).attr( 'id',$( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
-			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
+			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );			
 
 			// Change if this is not from Activity Page.
 			if ($( event.currentTarget ).closest( '.media-folder_items' ).length > 0) {
