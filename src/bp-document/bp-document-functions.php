@@ -1738,6 +1738,9 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		case 'xls':
 			$svg = 'bb-icon-file-xls';
 			break;
+		case 'xlsb':
+			$svg = 'bb-icon-file-xls';
+			break;
 		case 'xlsm':
 			$svg = 'bb-icon-file-xls';
 			break;

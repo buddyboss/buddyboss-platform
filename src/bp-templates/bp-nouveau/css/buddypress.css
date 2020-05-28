@@ -13131,6 +13131,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   font-size: 14px;
 }
 
+.dz-preview.dz-image-preview .dz-image {
+  height: 120px;
+}
+
+.dz-preview.dz-image-preview .dz-image img {
+  max-width: 120px;
+  height: 100%;
+  object-fit: contain;
+}
+
 #media-stream .document-data-table-head {
   display: -webkit-box;
   display: -ms-flexbox;
