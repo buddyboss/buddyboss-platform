@@ -413,10 +413,17 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var getParentFolderId = parseInt( $( document ).find( '.open-popup .bb-folder-selected-id' ).val() );
+			var getCreateIn 	  = $( document ).find( '.open-popup .bb-folder-create-from' ).val();
 			if ( getParentFolderId > 0 ) {
 				$( document ).find( '.open-popup .privacy-field-wrap-hide-show' ).hide();
 			} else {
 				$( document ).find( '.open-popup .privacy-field-wrap-hide-show' ).show();
+			}
+
+			if ( 'group' === getCreateIn ) {
+				$( document ).find( '.popup-on-fly-create-folder .privacy-field-wrap-hide-show').hide();
+			} else {
+				$( document ).find( '.popup-on-fly-create-folder .privacy-field-wrap-hide-show').show();
 			}
 
 			$( '.modal-container .bb-model-footer' ).hide();
@@ -2503,6 +2510,8 @@ window.bp = window.bp || {};
 			}
 
 			var parentsOpen = this.currentTargetParent;
+			var getFrom 	= this.moveToTypePopup;
+
 			if ( '' !== this.moveToIdPopup ) {
 				$.ajax(
 					{
@@ -2520,6 +2529,13 @@ window.bp = window.bp || {};
 							} else {
 								$( document ).find( '.open-popup .location-folder-list-wrap-main span.no-folder-exists' ).hide();
 								$( document ).find( '.open-popup .location-folder-list-wrap' ).show();
+							}
+							if ( 'group' === getFrom ) {
+								$( document ).find( '.popup-on-fly-create-folder .privacy-field-wrap-hide-show').hide();
+								$( document ).find( '.open-popup .bb-folder-create-from' ).val( 'group' );
+							} else {
+								$( document ).find( '.popup-on-fly-create-folder .privacy-field-wrap-hide-show').show();
+								$( document ).find( '.open-popup .bb-folder-create-from' ).val( 'profile' );
 							}
 							$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 							$( currentTarget ).find( '.location-folder-list-wrap' ).append( response.data.html );
@@ -2778,6 +2794,13 @@ window.bp = window.bp || {};
 						if (bp.Nouveau.Media.folderLocationUI) {
 							bp.Nouveau.Media.folderLocationUI( '#bp-media-edit-child-folder', BP_Nouveau.media.current_folder );
 							$( event.currentTarget ).closest( '#bp-media-single-folder' ).find( 'ul.location-folder-list span#' + BP_Nouveau.media.current_folder ).trigger( 'click' );
+						}
+						if ( 'group' === type ) {
+							$( document ).find( '.popup-on-fly-create-folder .privacy-field-wrap-hide-show').hide();
+							$( document ).find( '.open-popup .bb-folder-create-from' ).val( 'group' );
+						} else {
+							$( document ).find( '.popup-on-fly-create-folder .privacy-field-wrap-hide-show').show();
+							$( document ).find( '.open-popup .bb-folder-create-from' ).val( 'profile' );
 						}
 					}
 				}

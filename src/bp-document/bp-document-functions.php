@@ -2012,6 +2012,13 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		return false;
 	}
 
+	if ( ! $group_id ) {
+		$get_document = new BP_Document( $document_id );
+		if ( $get_document->group_id > 0 ) {
+			$group_id = $get_document->group_id;
+		}
+	}
+
 	$destination_privacy = 'loggedin';
 	if ( $group_id > 0 ) {
 		$destination_privacy = 'grouponly';
@@ -2384,6 +2391,7 @@ function bp_document_update_folder_modified_date( $folder_id = 0 ) {
  *
  * @param $folder_id
  * @param $destination_folder_id
+ * @param $group_id
  *
  * @return bool
  * @since BuddyBoss 1.3.6
@@ -2394,6 +2402,13 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 
 	if ( '' === $folder_id || '' === $destination_folder_id ) {
 		return false;
+	}
+
+	if ( ! $group_id ) {
+		$get_folder = new BP_Document_Folder( $folder_id );
+		if ( $get_folder->group_id > 0 ) {
+			$group_id = $get_folder->group_id;
+		}
 	}
 
 	$destination_privacy = 'loggedin';
