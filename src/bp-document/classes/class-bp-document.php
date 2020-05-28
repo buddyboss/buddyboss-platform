@@ -673,13 +673,17 @@ class BP_Document {
 			$group_name = '';
 			$visibility = '';
 			if ( $document->group_id > 0 ) {
-				$group      = groups_get_group( $document->group_id );
-				$group_name = bp_get_group_name( $group );
-				$status     = bp_get_group_status( $group );
-				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				if ( bp_is_active( 'groups' ) ) {
+					$group      = groups_get_group( $document->group_id );
+					$group_name = bp_get_group_name( $group );
+					$status     = bp_get_group_status( $group );
+					if ( 'hidden' === $status || 'private' === $status ) {
+						$visibility = esc_html__( 'Group Members', 'buddyboss' );
+					} else {
+						$visibility = ucfirst( $status );
+					}
 				} else {
-					$visibility = ucfirst( $status );
+					$visibility = '';
 				}
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
@@ -690,7 +694,7 @@ class BP_Document {
 				} elseif ( 'forums' === $document->privacy ) {
 					$visibility = esc_html__( 'Forums', 'buddyboss' );
 				} else {
-					$visibility = $document_privacy[ $document->privacy ];
+					$visibility = ( isset( $document_privacy[ $document->privacy ] ) ) ? $document_privacy[ $document->privacy ] : '';
 				}
 			}
 

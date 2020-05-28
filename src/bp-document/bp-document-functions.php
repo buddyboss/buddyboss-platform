@@ -2797,7 +2797,8 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'friends':
-			$is_friend = friends_check_friendship( $document->user_id, $user_id );
+
+			$is_friend = ( bp_is_active( 'friends') ) ? friends_check_friendship( $document->user_id, $user_id ) : false ;
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
