@@ -2629,7 +2629,7 @@ window.bp = window.bp || {};
 			var pattern				   		= '';
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
-				pattern = /^[-\w^&'@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
+				pattern = /^[-\w^&@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
 			} else if ( $( event.currentTarget ).closest( '.ac-folder-list' ).length ) {
 				pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
 			}
