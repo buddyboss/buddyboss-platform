@@ -312,13 +312,13 @@ window.bp = window.bp || {};
 
 			this.currentTargetParent = hiddenValue;
 
-			var currentFolder = this.currentTargetParent;
-			var groupId       = 0;
-			var title         = $( event.currentTarget ).closest( '.modal-container' ).find( '.popup-on-fly-create-folder-title' ).val();
-			var titleSelector  = $( event.currentTarget ).closest( '.modal-container' ).find( '.popup-on-fly-create-folder-title' );
-			var privacy       = '';
-			var privacySelector  = '';
-			var newParent	  = 0;
+			var currentFolder 		= this.currentTargetParent;
+			var groupId       		= 0;
+			var title         		= $.trim( $( event.currentTarget ).closest( '.modal-container' ).find( '.popup-on-fly-create-folder-title' ).val() );
+			var titleSelector  		= $( event.currentTarget ).closest( '.modal-container' ).find( '.popup-on-fly-create-folder-title' );
+			var privacy       		= '';
+			var privacySelector  	= '';
+			var newParent	  		= 0;
 			if ( 'group' === this.moveToTypePopup ) {
 				privacy = 'grouponly';
 				groupId = this.moveToIdPopup;
@@ -2756,12 +2756,16 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			$( '#bp-media-create-folder' ).show();
 			$( '#bp-media-create-folder' ).addClass( 'open-popup' );
+			$( document ).find( '.open-popup #boss-media-create-album-popup #bb-album-title').show();
+			$( document ).find( '.open-popup #boss-media-create-album-popup #bb-album-title').removeClass( 'error' );
 		},
 
 		openCreateFolderChildModal: function (event) {
 			event.preventDefault();
 			$( '#bp-media-create-child-folder' ).show();
 			$( '#bp-media-create-child-folder' ).addClass( 'open-popup' );
+			$( document ).find( '.open-popup #boss-media-create-album-popup #bb-album-child-title').show();
+			$( document ).find( '.open-popup #boss-media-create-album-popup #bb-album-child-title').removeClass( 'error' );
 		},
 
 		openEditFolderChildModal: function (event) {
