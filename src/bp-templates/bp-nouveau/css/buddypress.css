@@ -12589,6 +12589,7 @@ ul.bb-albums-list .bb-more-photos strong {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    border-radius: 4px 0 0 8px;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section {
     max-height: 60vh;
@@ -13302,6 +13303,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   align-items: flex-end;
   position: static;
   background-color: #fff;
+  border-radius: 4px 0 0 5px;
 }
 
 .bb-document-theater .bb-media-section .document-preview {
@@ -13328,6 +13330,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .bb-document-theater .bb-media-section.bb-media-no-preview {
   background-color: #fff;
   align-items: center;
+  border-radius: 4px 0 0 4px;
 }
 
 .bb-document-theater .bb-media-section.bb-media-no-preview .bb-icon-loader {
@@ -13391,6 +13394,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+  border-radius: 0 0 0 4px;
 }
 
 .bb-document-theater .bb-media-section .img-section .img-block-wrap {
@@ -13444,6 +13448,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-bottom: 1px solid #ecedee;
   font-size: 16px;
   font-weight: 500;
+  border-radius: 4px 0 0 0;
 }
 
 .bb-document-theater .bb-media-info-section.document {
@@ -13452,6 +13457,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   background-color: #fff;
   border-left: 1px solid #ecedee;
   margin-left: -1px;
+  border-radius: 0 4px 4px 0;
+  overflow: hidden;
 }
 
 .bb-document-theater .document-text-file-data-hidden {

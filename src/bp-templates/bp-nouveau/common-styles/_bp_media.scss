@@ -1134,6 +1134,7 @@ ul.bb-albums-list {
 			-webkit-box-align: center;
 			-ms-flex-align: center;
 			align-items: center;
+			border-radius: 4px 0 0 8px;
 
 			.img-section {
 				max-height: 60vh;
@@ -1848,6 +1849,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		align-items: flex-end;
 		position: static;
 		background-color: #fff;
+		border-radius: 4px 0 0 5px;
 
 		.document-preview {
 			width: 100%;
@@ -1873,6 +1875,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		&.bb-media-no-preview {
 			background-color: #fff;
 			align-items: center;
+			border-radius: 4px 0 0 4px;
 
 			.bb-icon-loader {
 				font-size: 20px;
@@ -1938,6 +1941,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			-webkit-box-pack: center;
 			-ms-flex-pack: center;
 			justify-content: center;
+			border-radius: 0 0 0 4px;
 
 			.img-block-wrap {
 				height: calc(90vh - 30px);
@@ -1992,6 +1996,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			border-bottom: 1px solid #ecedee;
 			font-size: 16px;
 			font-weight: 500;
+			border-radius: 4px 0 0 0;
 		}
 
 	}
@@ -2002,6 +2007,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		background-color: #fff;
 		border-left: 1px solid #ecedee;
 		margin-left: -1px;
+		border-radius: 0 4px 4px 0;
+		overflow: hidden;
 	}
 
 	.document-text-file-data-hidden {
