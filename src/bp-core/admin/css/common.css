@@ -606,7 +606,7 @@ table.extension-listing thead th.ext-head-extension {
 }
 
 table.extension-listing thead th.ext-head-icon {
-  width: 1.5em;
+  width: 2em;
 }
 
 table.extension-listing thead th.ext-head-desc {
@@ -655,7 +655,7 @@ table.extension-listing tbody td #btn-remove-extensions {
   margin-left: 6px;
 }
 
-table.extension-listing tbody tr.custom-extension td input.extension-mime[type="text"] {
+table.extension-listing tbody tr td input.extension-mime[type="text"] {
   width: 60%;
 }
 
@@ -709,26 +709,26 @@ table.extension-listing tfoot td #btn-check-mime-type {
     width: 100% !important;
     padding: 10px 0 0 10px !important;
   }
-  table.extension-listing td {
+  table.extension-listing tbody td {
     padding-left: 10px !important;
     width: 100% !important;
     box-sizing: border-box;
   }
-  table.extension-listing td > i {
-    margin: 10px 0 10px 10px;
+  table.extension-listing tbody td > i {
+    margin: 15px 0 10px 10px;
   }
-  table.extension-listing td:before {
+  table.extension-listing tbody td:before {
     top: 0;
     left: 20px !important;
     font-weight: 600;
   }
-  table.extension-listing td:first-child {
+  table.extension-listing tbody td:first-child {
     padding-left: 20px !important;
   }
-  table.extension-listing td .extension-mime {
+  table.extension-listing tbody td .extension-mime {
     margin-bottom: 15px;
   }
-  table.extension-listing td .btn-check-mime-type {
+  table.extension-listing tbody td .btn-check-mime-type {
     margin-left: 10px;
   }
 }
@@ -749,12 +749,11 @@ table.extension-listing .icon-select-main .icon-select-button {
   font-size: 14px;
   line-height: 2;
   color: #32373c;
-  border-color: #7e8993;
+  border: 1px solid #7e8993;
   border-width: 1px;
   box-shadow: none;
   border-radius: 3px;
   padding: 3px 24px 3px 8px;
-  min-height: 30px;
   -webkit-appearance: none;
   background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
   background-size: 16px 16px;
@@ -762,6 +761,8 @@ table.extension-listing .icon-select-main .icon-select-button {
   vertical-align: middle;
   max-width: 100%;
   width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
 }
 
 table.extension-listing .icon-select-main .icon-select-button li {
@@ -777,6 +778,7 @@ table.extension-listing .icon-select-main .icon-select-button li {
 table.extension-listing .icon-select-main .icon-select-button i {
   font-size: 20px;
   margin-right: 10px;
+  vertical-align: middle;
 }
 
 table.extension-listing .icon-select-main .custom-extension-list {

@@ -891,26 +891,11 @@
 							iconsArray.push(item);
 						});
 
-						$( this ).closest('td').find('select.extension-icon').parent().append('<div class="icon-select-main"><button class="icon-select-button"></button><div class="custom-extension-list"> <ul class="custom-extension-list-select">'+ iconsArray +'</ul></div></div>');
+						$( this ).closest('td').find('select.extension-icon').parent().append('<div class="icon-select-main"><span class="icon-select-button"></span><div class="custom-extension-list"> <ul class="custom-extension-list-select">'+ iconsArray +'</ul></div></div>');
 
 						//Set the button value to the first el of the array by default
 						var currentSelectedIcon = $( this ).closest('td').find( '.extension-icon' ).val();
-						$( this ).closest('td').find( '.icon-select-main .icon-select-button' ).html('<li><i class="'+ currentSelectedIcon +'"></i>'+ currentSelectedIcon +'</li>');
-						
-
-						//change button icon on click
-						$( this ).closest('td').find( '.custom-extension-list-select li' ).click( function() {
-							var iconClass = $( this ).find( 'i' ).attr( 'class' );
-							var text = this.innerText;
-							var item = '<li><i class="'+ iconClass +'"></i>'+ text +'</li>';
-							$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( item );
-							$( this ).closest( 'td' ).find( '.icon-select-main .custom-extension-list' ).toggle();
-							$( this ).closest( 'td' ).find( 'select.extension-icon option[value="'+ iconClass +'"]' ).attr( 'selected','selected' );
-						});
-
-						$( this ).closest('td').find( '.icon-select-main .icon-select-button' ) .click( function() {
-							$( this ).closest( 'td' ).find( '.icon-select-main .custom-extension-list' ).toggle();
-						});
+						$( this ).closest('td').find( '.icon-select-main .icon-select-button' ).html('<li><i class="'+ currentSelectedIcon +'"></i>'+ currentSelectedIcon +'</li>');						
 					}
 
 				});
@@ -918,6 +903,22 @@
 			}
 
 			makeIconSelect();
+
+			$( document ).on( 'click', '.custom-extension-list-select li', function() {
+				var iconClass = $( this ).find( 'i' ).attr( 'class' );
+				var text = this.innerText;
+				var item = '<li><i class="'+ iconClass +'"></i>'+ text +'</li>';
+				$( this ).closest( 'td' ).find( '.icon-select-main .icon-select-button' ).html( item );
+				$( this ).closest( 'td' ).find( '.icon-select-main .custom-extension-list' ).toggle();
+				$( this ).closest( 'td' ).find( 'select.extension-icon option[value="'+ iconClass +'"]' ).attr( 'selected','selected' );
+				if( $(this).closest( '.icon-select-main' ).siblings( '.bb-icon' ).length ) {
+					$(this).closest( '.icon-select-main' ).siblings( '.bb-icon' ).attr( 'class', 'bb-icon ' + iconClass );
+				}
+			});
+
+			$( document ).on( 'click', '.icon-select-main .icon-select-button', function() {
+				$( this ).siblings( '.custom-extension-list' ).toggle();
+			});
 
 			$( document ).on(
 				'click',

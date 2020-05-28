@@ -628,7 +628,7 @@ table.extension-listing {
 		}
 
 		&.ext-head-icon {
-			width: 1.5em;
+			width: 2em;
 		}
 
 		&.ext-head-desc {
@@ -678,7 +678,7 @@ table.extension-listing {
 		}
 	}
 
-	tbody tr.custom-extension td input.extension-mime[type="text"] {
+	tbody tr td input.extension-mime[type="text"] {
 		width: 60%;
 	}
 
@@ -744,31 +744,34 @@ table.extension-listing {
 			padding: 10px 0 0 10px !important;
 		}
 
-		td {
-			padding-left: 10px !important;
-			width: 100% !important;
-			box-sizing: border-box;
+		tbody{
 
-			> i {
-				margin: 10px 0 10px 10px;
-			}
+			td {
+				padding-left: 10px !important;
+				width: 100% !important;
+				box-sizing: border-box;
 
-			&:before {
-				top: 0;
-				left: 20px !important;
-				font-weight: 600;
-			}
+				> i {
+					margin: 15px 0 10px 10px;
+				}
 
-			&:first-child {
-				padding-left: 20px !important;
-			}
+				&:before {
+					top: 0;
+					left: 20px !important;
+					font-weight: 600;
+				}
 
-			.extension-mime {
-				margin-bottom: 15px;
-			}
+				&:first-child {
+					padding-left: 20px !important;
+				}
 
-			.btn-check-mime-type {
-				margin-left: 10px;
+				.extension-mime {
+					margin-bottom: 15px;
+				}
+
+				.btn-check-mime-type {
+					margin-left: 10px;
+				}
 			}
 		}
 
@@ -789,12 +792,11 @@ table.extension-listing {
 			font-size: 14px;
 			line-height: 2;
 			color: #32373c;
-			border-color: #7e8993;
+			border: 1px solid #7e8993;
 			border-width: 1px;
 			box-shadow: none;
 			border-radius: 3px;
 			padding: 3px 24px 3px 8px;
-			min-height: 30px;
 			-webkit-appearance: none;
 			background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
 			background-size: 16px 16px;
@@ -802,6 +804,8 @@ table.extension-listing {
 			vertical-align: middle;
 			max-width: 100%;
 			width: 100%;
+			display: inline-block;
+			box-sizing: border-box;
 
 			li {
 				list-style: none;
@@ -816,6 +820,7 @@ table.extension-listing {
 			i {
 				font-size: 20px;
 				margin-right: 10px;
+				vertical-align: middle;
 			}
 		}
 
