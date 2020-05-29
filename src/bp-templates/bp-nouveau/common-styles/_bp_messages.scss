@@ -605,6 +605,10 @@ input#send-to-input {
 	margin-top: $marg-lrg;
 	padding: 20px;
 
+	#whats-new-messages-attachments {
+		margin-top: 10px;
+	}
+
 	#whats-new-messages-toolbar {
 		-webkit-box-pack: start;
 		-ms-flex-pack: start;

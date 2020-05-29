@@ -5754,6 +5754,10 @@ input#send-to-input {
   padding: 20px;
 }
 
+.bp-messages-content #bp-message-content #whats-new-messages-attachments {
+  margin-top: 10px;
+}
+
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
