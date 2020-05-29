@@ -4560,7 +4560,7 @@ window.bp = window.bp || {};
 			var document_elements = $( '.bb-open-document-theatre' ), d = 0, self = this;
 
 			// check if on activity page, load only activity media in theatre.
-			if ($( 'body' ).hasClass( 'activity' )) {
+			if ( $( 'body' ).hasClass( 'activity' ) && $( target ).closest('.search-document-list').length === 0 ) {
 				document_elements = $( target ).closest( '.bb-activity-media-wrap' ).find( '.bb-open-document-theatre' );
 			}
 
