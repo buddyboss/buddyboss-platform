@@ -721,6 +721,25 @@ class BP_Document_Folder {
 			self::delete_document_folder_meta_entries( wp_list_pluck( $folders, 'id' ) );
 		}
 
+		// delete all child folders.
+		if ( ! empty( $foldr_ids ) ) {
+
+			foreach ( $foldr_ids as $folder_id ) {
+
+				// Get child folders.
+				$get_children = bp_document_get_folder_children( $folder_id );
+				if ( $get_children ) {
+					foreach ( $get_children as $child ) {
+						// Delete all documents of folder.
+						bp_document_delete( array( 'folder_id' => $child ) );
+
+						// Delete Child folder.
+						bp_folder_delete( array( 'id' => $child ) );
+					}
+				}
+			}
+		}
+
 		return $foldr_ids;
 	}
 

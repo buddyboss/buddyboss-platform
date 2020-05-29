@@ -223,7 +223,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// delete album.
+	// delete folder.
 	$folder_id = bp_folder_delete( array( 'id' => $folder_id ) );
 
 	if ( ! $folder_id ) {
