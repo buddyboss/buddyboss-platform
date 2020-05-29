@@ -501,7 +501,9 @@ window.bp = window.bp || {};
 			if ( ! _.isUndefined( resp.total_unread_messages ) ) {
 				var msg = $('.bb-icon-inbox-small');
 				$(msg).parent().children('.count').remove();
-				$(msg).parent().append( '<span class="count"> ' + resp.total_unread_messages + ' </span>' );
+				if( resp.total_unread_messages > 0 ) {
+					$(msg).parent().append( '<span class="count"> ' + resp.total_unread_messages + ' </span>' );
+				}
 			}
 
 			return resp.messages;
