@@ -2258,7 +2258,6 @@ function bp_activity_post_update( $args = '' ) {
 			'user_id'       => bp_loggedin_user_id(),
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
-			'component'     => buddypress()->activity->id,
 			'privacy'       => 'public',
 			'error_type'    => 'bool',
 		)
@@ -2300,7 +2299,7 @@ function bp_activity_post_update( $args = '' ) {
 			'user_id'       => $r['user_id'],
 			'content'       => $add_content,
 			'primary_link'  => $add_primary_link,
-			'component'     => $r['component'],
+			'component'     => buddypress()->activity->id,
 			'type'          => $r['type'],
 			'hide_sitewide' => $r['hide_sitewide'],
 			'privacy'       => $r['privacy'],

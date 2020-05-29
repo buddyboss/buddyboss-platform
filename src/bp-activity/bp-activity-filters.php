@@ -1224,9 +1224,11 @@ function bp_activity_media_add( $media ) {
 		if ( $bp_media_upload_count > 1 || true === $bp_new_activity_comment ) {
 
 			$args = array( 'hide_sitewide' => true, 'privacy' => 'media' );
-			if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['item_id']    = $document->group_id;
-				$args['component']  = buddypress()->groups->id;
+			if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
+				$args['group_id'] = $media->group_id;
+				$activity_id = groups_post_update( $args );
+			} else {
+				$activity_id = bp_activity_post_update( $args );
 			}
 
 			$activity_id = bp_activity_post_update( $args );
@@ -1407,11 +1409,11 @@ function bp_activity_document_add( $document ) {
 			);
 
 			if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['item_id']    = $document->group_id;
-				$args['component']  = buddypress()->groups->id;
+				$args['group_id'] = $document->group_id;
+				$activity_id = groups_post_update( $args );
+			} else {
+				$activity_id = bp_activity_post_update( $args );
 			}
-
-			$activity_id = bp_activity_post_update( $args );
 
 			if ( $activity_id ) {
 
