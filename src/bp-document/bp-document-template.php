@@ -1420,8 +1420,8 @@ function bp_get_folder_id() {
 	$id = 0;
 	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->folder_id ) ) {
 		$id = $document_template->document->folder_id;
-	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->folder_id ) ) {
-		$id = $document_folder_template->folder->folder_id;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
+		$id = $document_folder_template->folder->id;
 	}
 
 	/**
