@@ -1749,6 +1749,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$thread->per_page                = $thread_template->thread->messages_perpage;
 	$thread->messages_count          = $thread_template->thread->total_messages;
 	$thread->next_messages_timestamp = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
+	$thread->total_unread_messages   = bp_get_total_unread_messages_count();
 
 	return $thread;
 }
