@@ -21,6 +21,9 @@ add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_acti
 add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
 add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_privacy', 2 );
 
+// Search.
+add_action( 'bp_search_after_result', 'bp_document_add_theatre_template', 99999 );
+
 // Forums.
 add_action( 'bbp_template_after_single_topic', 'bp_document_add_theatre_template' );
 add_action( 'bbp_new_reply', 'bp_document_forums_new_post_document_save', 999 );
