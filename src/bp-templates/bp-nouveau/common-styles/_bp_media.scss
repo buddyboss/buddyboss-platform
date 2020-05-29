@@ -594,6 +594,12 @@ a.theater-command {
 		opacity: 1;
 		visibility: visible;
 	}
+
+	[dir=rtl] & {
+		left: auto;
+		right: 0;
+		justify-content: center
+	}
 }
 
 a.theater-command.bb-next-media {
@@ -601,6 +607,13 @@ a.theater-command.bb-next-media {
 	right: 0;
 	width: 80%;
 	justify-content: flex-end;
+	
+	[dir=rtl] & {
+		right: auto;
+		left: 0;
+		width: 20%;
+		justify-content: center;
+	}
 }
 
 .bb-media-section {
@@ -1872,6 +1885,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				left: -45px;
 				width: 45px;
 				padding: 0;
+
+				[dir=rtl] & {
+					left: auto;
+					right: -45px;
+				}
 			}
 
 			&.bb-next-document {
@@ -1879,6 +1897,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				right: -45px;
 				width: 45px;
 				padding: 0;
+
+				[dir=rtl] & {
+					left: -45px;
+					right: auto;
+				}
 			}
 		}
 
@@ -2819,6 +2842,11 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 					margin-left: 6px;
 					color: inherit;
 					font-weight: 400;
+					float: right;
+
+					[dir=rtl] & {
+						content: "\f341";
+					}
 				}
 
 				&:last-child {
@@ -3234,6 +3262,12 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 				vertical-align: middle;
 				display: inline-block;
 				line-height: 1;
+
+				[dir=rtl] & {
+					content: "\e8ab";
+					float: left;
+					margin-top: 4px;
+				}
 			}
 
 			span {
@@ -3333,6 +3367,11 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 						color: #939597;
 						margin-right: 12px;
 						font-size: 16px;
+
+						[dir=rtl] & {
+							float: left;
+							margin-left: 0;
+						}
 					}
 
 					&:hover {
@@ -3360,6 +3399,15 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 					height: auto;
 					width: auto;
 					transition: all ease 0.3s;
+
+					[dir=rtl] & {
+						right: initial;
+						left: 5px;
+
+						&:before {
+							content: '\e8ab';
+						}
+					}
 				}
 
 				ul {
