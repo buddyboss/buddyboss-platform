@@ -375,8 +375,8 @@
 .bb-icon-my-connections:before { content: '\e95e'; }
 .bb-icon-only-me:before { content: '\e95f'; }
 .bb-icon-public:before { content: '\e960'; }
-.bb-icon-text-format:before { content: '\e961'; }
-.bb-icon-code-format:before { content: '\e962'; }
+.bb-icon-text-format:before { content: '\e9c8'; }
+.bb-icon-code-format:before { content: '\e9c7'; }
 .bb-icon-edit-thin:before { content: '\e965'; }
 .bb-icon-all-results:before { content: '\e966'; }
 .bb-icon-activity-comment:before { content: '\e967'; }
@@ -431,9 +431,9 @@
 .bb-icon-file-txt:before { content: '\e9a0'; }
 .bb-icon-file-xls:before { content: '\e9a1'; }
 .bb-icon-link-tilt:before { content: '\e9a2'; }
-.bb-icon-paragraph-bullet:before { content: '\e9a3'; }
-.bb-icon-paragraph-numbers:before { content: '\e9a4'; }
-.bb-icon-quotes:before { content: '\e9a5'; }
+.bb-icon-paragraph-bullet:before { content: '\e9c9'; }
+.bb-icon-paragraph-numbers:before { content: '\e9ca'; }
+.bb-icon-quotes:before { content: '\e9cb'; }
 .bb-icon-file-7z:before { content: '\e9a6'; }
 .bb-icon-file-hlsm:before { content: '\e9a7'; }
 .bb-icon-file-htm:before { content: '\e9a8'; }

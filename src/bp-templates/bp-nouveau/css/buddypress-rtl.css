@@ -2196,44 +2196,38 @@ input.search-query-input {
 
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
+  font-size: 18px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-italic b:before {
   content: "\e949";
+  font-size: 18px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
-  content: "\e9a3";
-  font-size: 14px;
+  content: "\e9c9";
   vertical-align: middle;
   display: inline-block;
-  margin-top: 3px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
-  content: "\e9a4";
-  font-size: 15px;
+  content: "\e9ca";
   vertical-align: middle;
   display: inline-block;
-  margin-top: 2px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-quote b:before {
-  content: "\e9a5";
-  font-size: 13px;
-  margin-top: 3px;
+  content: "\e9cb";
   display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
   content: "\e816";
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-pre b:before {
-  content: "\e962";
-  font-size: 16px;
-  margin-top: 2px;
+  content: "\e9c7";
   display: inline-block;
 }
 
@@ -2276,12 +2270,10 @@ input.search-query-input {
 .ac-reply-toolbar .bb-icon-text-format:before,
 #whats-new-toolbar .bb-icon-text-format:before,
 #whats-new-messages-toolbar .bb-icon-text-format:before {
-  font-size: 15px;
-  vertical-align: top;
-  margin-top: 4px;
   display: inline-block;
   width: 23px;
   color: rgba(18, 43, 70, 0.4);
+  font-size: 26px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
