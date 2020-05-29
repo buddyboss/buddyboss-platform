@@ -770,23 +770,23 @@ class BP_Document {
 
 		$bp = buddypress();
 		$r  = wp_parse_args( $args, array(
-				'scope'               => '',              // Scope - Groups, friends etc.
-				'page'                => 1,               // The current page.
-				'per_page'            => 20,              // Document items per page.
-				'max'                 => false,           // Max number of items to return.
-				'fields'              => 'all',           // Fields to include.
-				'sort'                => 'DESC',          // ASC or DESC.
-				'order_by'            => 'date_created',  // Column to order by.
-				'exclude'             => false,           // Array of ids to exclude.
-				'in'                  => false,           // Array of ids to limit query by (IN).
-				'search_terms'        => false,           // Terms to search by.
-				'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'         => false,           // Whether or not to use count_total.
-				'user_directory'      => true,
-				'folder_id'           => 0,
-				'meta_query_document' => false,
-				'meta_query_folder'   => false,
-			) );
+			'scope'               => '',              // Scope - Groups, friends etc.
+			'page'                => 1,               // The current page.
+			'per_page'            => 20,              // Document items per page.
+			'max'                 => false,           // Max number of items to return.
+			'fields'              => 'all',           // Fields to include.
+			'sort'                => 'DESC',          // ASC or DESC.
+			'order_by'            => 'date_created',  // Column to order by.
+			'exclude'             => false,           // Array of ids to exclude.
+			'in'                  => false,           // Array of ids to limit query by (IN).
+			'search_terms'        => false,           // Terms to search by.
+			'privacy'             => false,           // public, loggedin, onlyme, friends, grouponly, message.
+			'count_total'         => false,           // Whether or not to use count_total.
+			'user_directory'      => true,
+			'folder_id'           => 0,
+			'meta_query_document' => false,
+			'meta_query_folder'   => false,
+		) );
 
 		// Select conditions.
 		$select_sql_document = 'SELECT DISTINCT d.*';
@@ -1037,7 +1037,11 @@ class BP_Document {
 			if ( $r['search_terms'] ) {
 				$folder_id_in                        = implode( ',', $folder_ids );
 				$where_conditions_document['folder'] = "d.folder_id IN ($folder_id_in)";
-				$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in)";
+				if ( $r['search_terms'] && ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && is_array( $r['scope'] ) ) {
+					$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in) AND f.user_id = ". bp_loggedin_user_id();
+				} else {
+					$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in)";
+				}
 			} else {
 				$where_conditions_document['folder'] = 'd.folder_id = 0';
 				$where_conditions_folder['folder']   = 'f.parent = 0';
@@ -1092,7 +1096,7 @@ class BP_Document {
 				$folder_id = (int) bp_action_variable( 1 );
 				$folder_ids = bp_document_get_folder_children( $folder_id );
 				if ( $r['search_terms'] ) {
-					$folder_id_in                        = implode( ',', $folder_ids );
+					$folder_id_in                                = implode( ',', $folder_ids );
 					$where_conditions_folder['user_directory']   = "f.parent IN ($folder_id_in)";
 					$where_conditions_document['user_directory'] = "d.folder_id IN ($folder_id_in)";
 				} else {
@@ -1206,6 +1210,8 @@ class BP_Document {
 
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
 		$cached_document = bp_core_get_incremented_cache( $document_ids_sql_document, $cache_group );
+
+		error_log( $document_ids_sql_folder );
 
 		if ( false === $cached_folder ) {
 			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok;

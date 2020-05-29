@@ -613,6 +613,43 @@ function bp_get_document_blog_id() {
  *
  * @since BuddyBoss 1.3.6
  */
+function bp_document_folder_user_id() {
+	echo bp_get_document_folder_user_id();
+}
+
+/**
+ * Return the document user ID.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return int The document user ID.
+ */
+function bp_get_document_folder_user_id() {
+	global $document_folder_template;
+
+	$user_id = 0;
+
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->user_id ) ) {
+		$user_id = $document_folder_template->folder->user_id;
+	}
+
+	/**
+	 * Filters the document ID being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param int $id The document user ID.
+	 */
+	return apply_filters( 'bp_get_document_folder_user_id', $user_id );
+}
+
+/**
+ * Output the document user ID.
+ *
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_user_id() {
 	echo bp_get_document_user_id();
 }
@@ -1409,6 +1446,33 @@ function bp_folder_id() {
  *
  * @since BuddyBoss 1.3.6
  *
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ *
+ * @return int The folder folder ID.
+ */
+function bp_get_folder_folder_id() {
+	global $document_folder_template;
+
+	$id = 0;
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->id ) ) {
+		$id = $document_folder_template->folder->id;
+	}
+
+	/**
+	 * Filters the folder ID being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param int $id The folder folder ID.
+	 */
+	return apply_filters( 'bp_get_folder_folder_id', (int) $id );
+}
+
+/**
+ * Return the folder ID.
+ *
+ * @since BuddyBoss 1.3.6
+ *
  * @global object $document_template {@link BP_Document_Template}
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1469,6 +1533,33 @@ function bp_get_folder_title() {
 	 * @param int $id The document folder title.
 	 */
 	return apply_filters( 'bp_get_folder_title', $title );
+}
+
+/**
+ * Return the folder title.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document folder title.
+ */
+function bp_get_folder_folder_title() {
+	global $document_folder_template;
+
+	$title = '';
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->title ) ) {
+		$title = $document_folder_template->folder->title;
+	}
+
+	/**
+	 * Filters the folder title being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param int $id The document folder title.
+	 */
+	return apply_filters( 'bp_get_folder_folder_title', $title );
 }
 
 /**
@@ -1537,6 +1628,29 @@ function bp_get_folder_link() {
 	 * @param int $id The document folder description.
 	 */
 	return apply_filters( 'bp_get_folder_link', $url );
+}
+
+function bp_get_folder_folder_link() {
+	global $document_folder_template;
+
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) && $document_folder_template->folder->group_id > 0 ) {
+		$group      = groups_get_group( $document_folder_template->folder->group_id );
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_folder_id() );
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->user_id ) ) {
+		$url = trailingslashit( bp_core_get_user_domain( $document_folder_template->folder->user_id ) . 'document/folders/' . bp_get_folder_folder_id() );
+	} else {
+		$url = trailingslashit( bp_core_get_user_domain( $document_template->document->user_id ) . 'document/folders/' . bp_get_folder_id() );
+	}
+
+	/**
+	 * Filters the folder description being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param int $id The document folder description.
+	 */
+	return apply_filters( 'bp_get_folder_folder_link', $url );
 }
 
 /**
@@ -1669,6 +1783,42 @@ function bp_get_document_author() {
 }
 
 /**
+ * Output the document name.
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_folder_author() {
+	echo bp_get_folder_author();
+}
+
+/**
+ * Return the document name.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ *
+ * @return int The document name.
+ */
+function bp_get_folder_author() {
+	global $document_folder_template;
+
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->user_id ) ) {
+		$author = bp_core_get_user_displayname( $document_folder_template->folder->user_id );
+	}
+
+	/**
+	 * Filters the document name being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param int $id The document name.
+	 */
+	return apply_filters( 'bp_get_folder_author', $author );
+}
+
+/**
  * Output the document preview attachment id.
  *
  * @since BuddyBoss 1.3.6
@@ -1702,6 +1852,43 @@ function bp_get_document_preview_attachment_id() {
 	 * @param int $id The document preview attachment id.
 	 */
 	return apply_filters( 'bp_get_document_preview_attachment_id', $attachment_id );
+}
+
+/**
+ * Output the document group ID.
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_folder_group_id() {
+	echo bp_get_folder_group_id();
+}
+
+/**
+ * Return the document group ID.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Document_Folder_Template}
+ *
+ * @return int The document group ID.
+ */
+function bp_get_folder_group_id() {
+	global $document_folder_template;
+
+	$db_group_id = 0;
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->group_id ) ) {
+		$db_group_id = $document_folder_template->folder->group_id;
+	}
+
+	/**
+	 * Filters the document group ID being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param int $id The document group ID.
+	 */
+	return apply_filters( 'bp_get_folder_group_id', (int) $db_group_id );
 }
 
 /**
@@ -1819,6 +2006,46 @@ function bp_get_document_date_modified() {
  *
  * @since BuddyBoss 1.3.6
  */
+function bp_document_folder_date() {
+	echo bp_get_document_folder_date();
+}
+
+/**
+ * Return the document date created.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Folder_Template}
+ *
+ * @return string The document date created.
+ */
+function bp_get_document_folder_date() {
+	global $document_folder_template;
+
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->date_modified ) && (int) strtotime( $document_folder_template->folder->date_modified ) > 0 ) {
+		$date = $document_folder_template->folder->date_modified;
+	} elseif ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->date_created ) && (int) strtotime( $document_folder_template->folder->date_created ) > 0 ) {
+		$date = $document_folder_template->folder->date_created;
+	}
+
+	$date = date_i18n( bp_get_option( 'date_format' ), strtotime( $date ) );
+
+	/**
+	 * Filters the document date modified being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param string The date modified.
+	 */
+	return apply_filters( 'bp_get_document_folder_date', $date );
+}
+
+/**
+ * Output the document date modified.
+ *
+ * @since BuddyBoss 1.3.6
+ */
 function bp_document_date() {
 	echo bp_get_document_date();
 }
@@ -1856,6 +2083,43 @@ function bp_get_document_date() {
 	 * @param string The date modified.
 	 */
 	return apply_filters( 'bp_get_document_date', $date );
+}
+
+/**
+ * Output the document date modified.
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_folder_privacy() {
+	echo bp_get_document_folder_privacy();
+}
+
+/**
+ * Return the document privacy.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ * @global object $document_folder_template {@link BP_Folder_Template}
+ *
+ * @return string The document privacy.
+ */
+function bp_get_document_folder_privacy() {
+	global $document_folder_template;
+
+	$db_document_privacy = '';
+	if ( isset( $document_folder_template ) && isset( $document_folder_template->folder ) && isset( $document_folder_template->folder->visibility ) ) {
+		$db_document_privacy = $document_folder_template->folder->visibility;
+	}
+
+	/**
+	 * Filters the document privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param string The privacy.
+	 */
+	return apply_filters( 'bp_get_document_folder_privacy', $db_document_privacy, $document_folder_template );
 }
 
 /**

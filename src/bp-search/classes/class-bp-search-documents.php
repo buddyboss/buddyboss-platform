@@ -310,7 +310,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 		}
 	}
 
-	// End class Bp_Search_Documents
+	// End class Bp_Search_Documents.
 
 endif;
 

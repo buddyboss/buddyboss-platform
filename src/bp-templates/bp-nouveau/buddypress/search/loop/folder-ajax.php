@@ -1,6 +1,6 @@
 <?php
 
-$folder_link      = bp_get_folder_link();
+$folder_link      = bp_get_folder_folder_link();
 ?>
 
 <div class="bp-search-ajax-item bboss_ajax_search_document search-document-list">
@@ -15,14 +15,14 @@ $folder_link      = bp_get_folder_link();
 
 			<div class="media-folder_details">
 				<a class="media-folder_name " href="<?php echo esc_url( $folder_link ); ?>">
-					<span><?php echo bp_get_folder_title(); ?></span>
+					<span><?php echo bp_get_folder_folder_title(); ?></span>
 				</a>
 			</div>
 
 			<div class="media-folder_modified">
 				<div class="media-folder_details__bottom">
-					<span class="media-folder_date"><?php bp_document_date(); ?></span>
-					<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo trailingslashit(bp_core_get_user_domain( bp_get_document_user_id() ) . bp_get_document_slug() ) ; ?>"><?php bp_document_author(); ?></a></span>
+					<span class="media-folder_date"><?php bp_document_folder_date(); ?></span>
+					<span class="media-folder_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?><a href="<?php echo trailingslashit(bp_core_get_user_domain( bp_get_document_folder_user_id() ) . bp_get_document_slug() ) ; ?>"><?php bp_folder_author(); ?></a></span>
 				</div>
 			</div>
 
@@ -65,24 +65,24 @@ $folder_link      = bp_get_folder_link();
 				<div class="media-folder_details__bottom">
 					<?php
 					if ( bp_is_active( 'groups' ) ) {
-						$group_id = bp_get_document_group_id();
+						$group_id = bp_get_folder_group_id();
 						if ( $group_id > 0 ) {
 							?>
 							<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php bp_document_privacy(); ?>
+									<?php bp_document_folder_privacy(); ?>
 								</span>
 							<?php
 						} else {
 							?>
-							<span id="privacy-<?php echo esc_attr( bp_get_document_id() ); ?>">
-									<?php bp_document_privacy(); ?>
+							<span id="privacy-<?php echo esc_attr( bp_get_folder_folder_id() ); ?>">
+									<?php bp_document_folder_privacy(); ?>
 								</span>
 							<?php
 						}
 					} else {
 						?>
 						<span>
-								<?php bp_document_privacy(); ?>
+								<?php bp_document_folder_privacy(); ?>
 							</span>
 						<?php
 					}
