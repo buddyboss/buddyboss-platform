@@ -678,7 +678,7 @@ table.extension-listing {
 		}
 	}
 
-	tbody tr.custom-extension td input.extension-mime[type="text"] {
+	tbody tr td input.extension-mime[type="text"] {
 		width: 60%;
 	}
 
@@ -786,7 +786,6 @@ table.extension-listing {
 		display: inline-block;
 		vertical-align: middle;
 		width: calc(100% - 50px);
-		margin-left: 10px;
 
 		.icon-select-button {
 			font-size: 14px;

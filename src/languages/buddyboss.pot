@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-05-28 15:05:18+00:00\n"
+"POT-Creation-Date: 2020-05-29 07:42:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1209,7 +1209,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-document/classes/class-bp-document.php:691
+#: bp-document/classes/class-bp-document.php:695
 #: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1711
 #: bp-forums/admin.php:45 bp-forums/admin.php:46 bp-forums/admin.php:231
 #: bp-forums/admin.php:274 bp-forums/classes/class-bbpress.php:451
@@ -3109,8 +3109,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
 #: bp-document/bp-document-filters.php:61
-#: bp-document/bp-document-functions.php:1969
-#: bp-document/bp-document-functions.php:1972
+#: bp-document/bp-document-functions.php:1934
+#: bp-document/bp-document-functions.php:1937
 #: bp-document/classes/class-bp-document-component.php:69
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -3181,8 +3181,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:75
 #: bp-core/admin/settings/bp-admin-setting-friends.php:21
 #: bp-core/gdpr/class-bp-friendship-export.php:58
-#: bp-document/classes/class-bp-document.php:687
-#: bp-document/classes/class-bp-document.php:1548
+#: bp-document/classes/class-bp-document.php:691
+#: bp-document/classes/class-bp-document.php:1552
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119
 #: bp-friends/bp-friends-notifications.php:261
@@ -3585,6 +3585,7 @@ msgid "Custom Post Types"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-document.php:22
+#: bp-document/bp-document-functions.php:1805
 msgid "Document"
 msgstr ""
 
@@ -7342,13 +7343,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8245,27 +8246,43 @@ msgstr ""
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1976
+#: bp-document/bp-document-functions.php:1789
+msgid "Default"
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1793
+msgid "Archive"
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1797
+msgid "Audio"
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1801
+msgid "Code"
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1941
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2219
+#: bp-document/bp-document-functions.php:2184
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2222
+#: bp-document/bp-document-functions.php:2187
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2225
+#: bp-document/bp-document-functions.php:2190
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2228
+#: bp-document/bp-document-functions.php:2193
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2258
+#: bp-document/bp-document-functions.php:2223
 msgid "File renaming error!"
 msgstr ""
 
@@ -8285,8 +8302,8 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-folder.php:517
 #: bp-document/classes/class-bp-document-privacy.php:58
-#: bp-document/classes/class-bp-document.php:680
-#: bp-document/classes/class-bp-document.php:1541
+#: bp-document/classes/class-bp-document.php:681
+#: bp-document/classes/class-bp-document.php:1545
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-privacy.php:59
 msgid "Group Members"
@@ -8305,7 +8322,7 @@ msgstr ""
 msgid "There is no document."
 msgstr ""
 
-#: bp-document/classes/class-bp-document.php:689
+#: bp-document/classes/class-bp-document.php:693
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
 #: bp-messages/bp-messages-template.php:1455
 msgid "Message"

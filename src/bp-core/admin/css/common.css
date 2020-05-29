@@ -655,7 +655,7 @@ table.extension-listing tbody td #btn-remove-extensions {
   margin-left: 6px;
 }
 
-table.extension-listing tbody tr.custom-extension td input.extension-mime[type="text"] {
+table.extension-listing tbody tr td input.extension-mime[type="text"] {
   width: 60%;
 }
 
@@ -742,7 +742,6 @@ table.extension-listing .icon-select-main {
   display: inline-block;
   vertical-align: middle;
   width: calc(100% - 50px);
-  margin-left: 10px;
 }
 
 table.extension-listing .icon-select-main .icon-select-button {

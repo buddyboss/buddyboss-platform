@@ -1786,11 +1786,23 @@ function bp_document_svg_icon_list() {
 	$icons = array(
 		'default_1' => array(
 			'icon' => 'bb-icon-file',
-			'title' =>  __( 'File', 'buddyboss' )
+			'title' =>  __( 'Default', 'buddyboss' )
 		),
 		'default_2' => array(
-			'icon' => 'bb-icon-download',
-			'title' => __( 'Download', 'buddyboss' )
+			'icon' => 'bb-icon-file-zip',
+			'title' => __( 'Archive', 'buddyboss' )
+		),
+		'default_3' => array(
+			'icon' => 'bb-icon-mp3',
+			'title' => __( 'Audio', 'buddyboss' )
+		),
+		'default_4' => array(
+			'icon' => 'bb-icon-file-css',
+			'title' => __( 'Code', 'buddyboss' )
+		),
+		'default_5' => array(
+			'icon' => 'bb-icon-file-doc',
+			'title' => __( 'Document', 'buddyboss' )
 		)
 	);
 
