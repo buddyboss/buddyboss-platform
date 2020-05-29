@@ -3622,7 +3622,8 @@ window.bp = window.bp || {};
 
 		deleteFolder: function (event) {
 			event.preventDefault();
-			if ( ! this.album_id) {
+
+			if ( ! BP_Nouveau.media.current_folder ) {
 				return false;
 			}
 
@@ -3635,8 +3636,8 @@ window.bp = window.bp || {};
 			var data = {
 				'action': 'document_folder_delete',
 				'_wpnonce': BP_Nouveau.nonces.media,
-				'album_id': this.album_id,
-				'group_id': this.group_id
+				'folder_id': BP_Nouveau.media.current_folder,
+				'group_id': BP_Nouveau.media.current_group_id
 			};
 
 			$.ajax(
