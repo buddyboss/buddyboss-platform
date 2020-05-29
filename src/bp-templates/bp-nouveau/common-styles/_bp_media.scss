@@ -2172,6 +2172,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 			a {
 				color: #939597;
+
+				&:hover {
+					color: $text-link-hover;
+				}
 			}
 		}
 
@@ -2382,7 +2386,25 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		padding: 0;
 
 		.media-folder_details {
-			width: calc(60% - 40px);
+			width: calc(46% - 100px);
+		}
+
+		.media-folder_group {
+			width: 20%;
+
+			a {
+				color: #4d5c6d;
+
+				&:hover {
+					color: $text-link-hover;
+				}
+			}
+
+			.media-folder_status {
+				display: block;
+				font-size: 13px;
+				color: #939597;
+			}
 		}
 	}
 }
@@ -2432,6 +2454,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 				a {
 					color: #4d5c6d;
+
+					&:hover {
+						color: $text-link-hover;
+					}
 				}
 			}
 

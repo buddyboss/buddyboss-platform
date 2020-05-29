@@ -13637,6 +13637,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #939597;
 }
 
+.search-document-list .media-folder_items .media-folder_details__bottom .media-folder_author a:hover,
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom .media-folder_author a:hover {
+  color: #5087e5;
+}
+
 .search-document-list .media-folder_items .media-folder_details__bottom .hide,
 #media-folder-document-data-table .media-folder_items .media-folder_details__bottom .hide {
   display: none;
@@ -13853,7 +13858,25 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 .search-document-list .media-folder_items .media-folder_details {
-  width: calc(60% - 40px);
+  width: calc(46% - 100px);
+}
+
+.search-document-list .media-folder_items .media-folder_group {
+  width: 20%;
+}
+
+.search-document-list .media-folder_items .media-folder_group a {
+  color: #4d5c6d;
+}
+
+.search-document-list .media-folder_items .media-folder_group a:hover {
+  color: #5087e5;
+}
+
+.search-document-list .media-folder_items .media-folder_group .media-folder_status {
+  display: block;
+  font-size: 13px;
+  color: #939597;
 }
 
 .search-document-list .media-folder_items.ac-folder-list .media-folder_details {
@@ -13888,6 +13911,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 #media-stream.document-parent.group-column #media-folder-document-data-table .media-folder_items .media-folder_group a {
   color: #4d5c6d;
+}
+
+#media-stream.document-parent.group-column #media-folder-document-data-table .media-folder_items .media-folder_group a:hover {
+  color: #5087e5;
 }
 
 #media-stream.document-parent.group-column #media-folder-document-data-table .media-folder_items .media-folder_status {
