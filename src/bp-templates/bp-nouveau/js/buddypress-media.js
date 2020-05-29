@@ -4707,7 +4707,7 @@ window.bp = window.bp || {};
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p><a class="download-button" href=" ' + download + ' "><i class="bb-icon-download"></i>' + BP_Nouveau.media.download_button + '</a></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div>' );
 				}
 			}
 

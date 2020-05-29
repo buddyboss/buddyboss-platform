@@ -13316,6 +13316,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   overflow: visible;
 }
 
+.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .avatar {
+  border-radius: 50%;
+}
+
 .bb-document-theater .bb-media-section {
   height: 90vh;
   overflow: visible;
@@ -13386,27 +13390,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   white-space: nowrap;
   text-overflow: ellipsis;
   padding: 5px;
+  margin-bottom: 0;
 }
 
 .bb-document-theater .bb-media-section.bb-media-no-preview .img-section a.download-button {
-  padding: 10px 14px;
   display: block;
-  font-size: 17px;
   line-height: 1;
-  color: #7f868f;
-}
-
-.bb-document-theater .bb-media-section.bb-media-no-preview .img-section a.download-button > i {
-  padding-left: 8px;
-  font-size: 17px;
-  display: inline-block;
-  margin-left: 10px;
-  width: 20px;
-  text-align: center;
-}
-
-.bb-document-theater .bb-media-section.bb-media-no-preview .img-section a.download-button:hover {
-  background-color: #f5f5f5;
   color: #5087e5;
 }
 
