@@ -279,7 +279,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						// Filter by default will be false.
 						$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
 						if ( true === $bp_search_group_or_type_title ) {
-							// add group/type title in first one
+							// add group/type title in first one.
 							if ( ! $first_html_changed ) {
 								// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
 								$label              = apply_filters( 'bp_search_label_search_type', $type );
@@ -825,14 +825,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 		public function print_tabs() {
 
-			// No tabs if 0 results
+			// No tabs if 0 results.
 			if ( $this->search_results['all']['total_match_count'] < 1 ) {
 				// return;
 			}
 
 			$search_url = $this->search_page_search_url();
 
-			// first print the 'all results' tab
+			// first print the 'all results' tab.
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			// this filter can be used to change display of 'all' to 'Everything' etc..
 			$all_label = __( 'All Results', 'buddyboss' );
@@ -845,7 +845,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$tab_url = $search_url;
 			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
 
-			// then other tabs
+			// then other tabs.
 			$search_items = bp_search_items();
 			foreach ( $this->searchable_items as $item ) {
 				$class = $item == $this->search_args['search_subset'] ? 'active current' : '';
@@ -856,7 +856,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$label = apply_filters( 'bp_search_label_search_type', $label );
 
 				if ( empty( $this->search_results[ $item ]['total_match_count'] ) ) {
-					continue; // skip tab
+					continue; // skip tab.
 				}
 
 				if ( $this->search_args['count_total'] ) {
@@ -908,7 +908,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		}
 	}
 
-	// End class Bp_Search_Helper
+	// End class Bp_Search_Helper.
 
 endif;
 

@@ -57,7 +57,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 					</div>
 				</div>
 				<?php
-				if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
+				if ( bp_is_active( 'groups' ) ) {
 					?>
 					<div class="media-folder_group">
 						<div class="media-folder_details__bottom">

@@ -27,7 +27,7 @@ $folder_link      = bp_get_folder_link();
 			</div>
 
 			<?php
-			if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
+			if ( bp_is_active( 'groups' ) ) {
 				?>
 				<div class="media-folder_group">
 					<div class="media-folder_details__bottom">
