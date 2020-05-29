@@ -1120,7 +1120,7 @@ function bp_media_settings_callback_extension_document_support() {
 							$icons = bp_document_svg_icon_list();
 							foreach ( $icons as $icon ) {
 								?>
-								<option <?php selected( $icon, $extension['icon'] ); ?> value="<?php echo esc_attr( $icon ); ?>"><?php echo esc_attr( $icon ); ?></option>
+								<option <?php selected( $icon['icon'], $extension['icon'] ); ?> value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
 								<?php
 							}
 							?>
@@ -1164,7 +1164,7 @@ function bp_media_settings_callback_extension_document_support() {
 					$icons = bp_document_svg_icon_list();
 					foreach ( $icons as $icon ) {
 						?>
-						<option value="<?php echo esc_attr( $icon ); ?>"><?php echo esc_attr( $icon ); ?></option>
+						<option value="<?php echo esc_attr( $icon['icon'] ); ?>"><?php echo esc_attr( $icon['title'] ); ?></option>
 						<?php
 					}
 					?>
