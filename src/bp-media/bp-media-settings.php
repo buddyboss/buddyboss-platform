@@ -1090,7 +1090,7 @@ function bp_media_settings_callback_extension_document_support() {
 			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
 			$class      = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'hide-border' : '';
 			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? true : false;
-			$tr_class   = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'default-extension' : 'extra-extension';
+			$tr_class   = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'default-extension' : 'extra-extension custom-extension';
 
 			if ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) {
 				$document_icon = $extension['icon'];
