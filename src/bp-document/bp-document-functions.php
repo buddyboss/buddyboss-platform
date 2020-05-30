@@ -1732,6 +1732,12 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		case 'tar':
 			$svg = 'bb-icon-file-tar';
 			break;
+		case 'tif':
+			$svg = 'bb-icon-file-jpg';
+			break;
+		case 'tiff':
+			$svg = 'bb-icon-file-jpg';
+			break;
 		case 'txt':
 			$svg = 'bb-icon-file-txt';
 			break;
