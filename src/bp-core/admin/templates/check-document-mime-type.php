@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
         <h2><?php esc_html_e( 'What is a MIME type?', 'buddyboss' ); ?></h2>
         <p><?php esc_html_e( 'A MIME type is a way of identifying files on the Internet according to their nature and format. Your server needs this information to determine what kind of file has been uploaded, otherwise it will reject the file.', 'buddyboss' ); ?></p>
         <h2><?php esc_html_e( 'Upload a file to check its MIME type', 'buddyboss' ); ?></h2>
-        <p><?php esc_html_e( 'We\'ve made it easy to figure out your file\'s MIME type. Upload any sample file below and click "Get MIME Type" and we will display the MIME type for that file. So if you wanted to check the MIME type for the .zip extension, you would need to upload any random Zip file. Once you determine the correct MIME Type, click to enter that MIME type into the table cell.', 'buddyboss' ); ?></p>
+        <p><?php esc_html_e( 'We\'ve made it easy to figure out your file\'s MIME type. Upload any sample file below and click "Get MIME Type" and we will display the MIME type for that file. For example, if you wanted to check the MIME type for the .zip extension, you would need to upload any random ZIP file. Once we have determined the correct MIME Type, click to enter that MIME type into the table cell.', 'buddyboss' ); ?></p>
         <form id="document-upload-check-mime-type" action="" method="post">
 	        <?php esc_html_e( 'Choose a file to upload:', 'buddyboss' ); ?>
 			<label for="bp-document-file-input" class="screen-reader-text"><?php esc_html_e( 'Add file to check MIME Type', 'buddyboss' ); ?></label>
