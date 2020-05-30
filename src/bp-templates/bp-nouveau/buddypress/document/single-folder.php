@@ -47,7 +47,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
-										<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
+										<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
@@ -56,7 +56,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
 										</a>
-										<a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
+										<a href="#" id="bb-create-folder-child" class="bb-create-folder-stacked button small outline">
 											<i class="bb-icon-folder-stacked"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
