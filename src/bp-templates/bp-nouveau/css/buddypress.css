@@ -12613,6 +12613,9 @@ ul.bb-albums-list .bb-more-photos strong {
     text-align: center;
     padding: 5px 0;
   }
+  #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap {
+    height: auto;
+  }
   #buddypress .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > p {
     font-size: 16px;
     padding: 0 10px;

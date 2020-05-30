@@ -1155,6 +1155,10 @@ ul.bb-albums-list {
 				display: block;
 				text-align: center;
 				padding: 5px 0;
+
+				.img-block-wrap {
+					height: auto;
+				}
 			}
 
 			&.bb-media-no-preview .img-section > p {
