@@ -1812,13 +1812,33 @@ function bp_document_svg_icon_list() {
 			'title' => __( 'Audio', 'buddyboss' )
 		),
 		'default_4' => array(
-			'icon' => 'bb-icon-file-css',
+			'icon' => 'bb-icon-file-html',
 			'title' => __( 'Code', 'buddyboss' )
 		),
 		'default_5' => array(
-			'icon' => 'bb-icon-file-doc',
-			'title' => __( 'Document', 'buddyboss' )
-		)
+			'icon' => 'bb-icon-file-psd',
+			'title' => __( 'Design', 'buddyboss' )
+		),
+		'default_6' => array(
+			'icon' => 'bb-icon-file-png',
+			'title' => __( 'Image', 'buddyboss' )
+		),
+		'default_7' => array(
+			'icon' => 'bb-icon-file-pptx',
+			'title' => __( 'Presentation', 'buddyboss' )
+		),
+		'default_8' => array(
+			'icon' => 'bb-icon-file-xlsx',
+			'title' => __( 'Spreadsheet', 'buddyboss' )
+		),
+		'default_9' => array(
+			'icon' => 'bb-icon-file-txt',
+			'title' => __( 'Text', 'buddyboss' )
+		),
+		'default_10' => array(
+			'icon' => 'bb-icon-file-wav',
+			'title' => __( 'Video', 'buddyboss' )
+		),
 	);
 
 	return apply_filters( 'bp_document_svg_icon_list', $icons );
