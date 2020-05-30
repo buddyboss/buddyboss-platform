@@ -595,10 +595,10 @@ a.theater-command {
 		visibility: visible;
 	}
 
-	[dir=rtl] & {
+	[dir="rtl"] & {
 		left: auto;
 		right: 0;
-		justify-content: center
+		justify-content: center;
 	}
 }
 
@@ -607,8 +607,8 @@ a.theater-command.bb-next-media {
 	right: 0;
 	width: 80%;
 	justify-content: flex-end;
-	
-	[dir=rtl] & {
+
+	[dir="rtl"] & {
 		right: auto;
 		left: 0;
 		width: 20%;
@@ -1894,7 +1894,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				width: 45px;
 				padding: 0;
 
-				[dir=rtl] & {
+				[dir="rtl"] & {
 					left: auto;
 					right: -45px;
 				}
@@ -1906,7 +1906,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				width: 45px;
 				padding: 0;
 
-				[dir=rtl] & {
+				[dir="rtl"] & {
 					left: -45px;
 					right: auto;
 				}
@@ -2836,7 +2836,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 					font-weight: 400;
 					float: right;
 
-					[dir=rtl] & {
+					[dir="rtl"] & {
 						content: "\f341";
 					}
 				}
@@ -3255,7 +3255,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 				display: inline-block;
 				line-height: 1;
 
-				[dir=rtl] & {
+				[dir="rtl"] & {
 					content: "\e8ab";
 					float: left;
 					margin-top: 4px;
@@ -3360,7 +3360,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 						margin-right: 12px;
 						font-size: 16px;
 
-						[dir=rtl] & {
+						[dir="rtl"] & {
 							float: left;
 							margin-left: 0;
 						}
@@ -3392,12 +3392,12 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 					width: auto;
 					transition: all ease 0.3s;
 
-					[dir=rtl] & {
+					[dir="rtl"] & {
 						right: initial;
 						left: 5px;
 
 						&:before {
-							content: '\e8ab';
+							content: "\e8ab";
 						}
 					}
 				}
