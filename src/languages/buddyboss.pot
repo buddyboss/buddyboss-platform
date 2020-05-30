@@ -22659,7 +22659,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:539
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2064
-msgid "Copy to Clipboard"
+msgid "Copy Download Link"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:604

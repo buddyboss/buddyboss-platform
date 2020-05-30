@@ -4054,7 +4054,7 @@ window.bp = window.bp || {};
 		},
 
 		/**
-		 * File action Copy to Clipboard
+		 * File action Copy Download Link
 		 */
 		copyDownloadLink: function (event) {
 			event.preventDefault();
