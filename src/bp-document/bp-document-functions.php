@@ -1627,10 +1627,16 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		case 'dotx':
 			$svg = 'bb-icon-file-dotx';
 			break;
+		case 'eps':
+			$svg = 'bb-icon-file-svg';
+			break;
 		case 'gif':
 			$svg = 'bb-icon-file-gif';
 			break;
-		case 'gzip':
+		case 'gz':
+			$svg = 'bb-icon-file-zip';
+			break;
+			case 'gzip':
 			$svg = 'bb-icon-file-zip';
 			break;
 		case 'hlam':
@@ -1735,6 +1741,9 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		case 'wav':
 			$svg = 'bb-icon-file-wav';
 			break;
+		case 'xlam':
+			$svg = 'bb-icon-file-xls';
+			break;
 		case 'xls':
 			$svg = 'bb-icon-file-xls';
 			break;
@@ -1753,7 +1762,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		case 'xltx':
 			$svg = 'bb-icon-file-xltx';
 			break;
-		case 'xlm':
+		case 'xml':
 			$svg = 'bb-icon-file-xml';
 			break;
 		case 'yaml':
