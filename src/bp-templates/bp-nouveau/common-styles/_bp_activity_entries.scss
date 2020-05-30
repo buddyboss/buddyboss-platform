@@ -466,8 +466,9 @@
 	}
 
 	.medium-editor-action-quote b:before {
-		content: "\e9cb";
+		content: "\e961";
 		display: inline-block;
+		font-size: 19px;
 	}
 
 	.medium-editor-action-anchor b:before {
@@ -499,10 +500,14 @@
 	}
 
 	#forums-document-button,
-	#activity-document-button,
 	#messages-document-button {
 		float: left;
 		margin-top: -4px;
+	}
+
+	#activity-document-button {
+		float: left;
+		margin-top: -6px;
 	}
 
 	.bb-icon-attach {
@@ -521,6 +526,7 @@
 		width: 23px;
 		color: rgba(18, 43, 70, 0.4);
 		font-size: 26px;
+		margin-top: 1px;
 	}
 
 	.emojionearea .emojionearea-button:before {

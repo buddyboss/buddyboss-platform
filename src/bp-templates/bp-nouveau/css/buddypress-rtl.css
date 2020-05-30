@@ -2217,8 +2217,9 @@ input.search-query-input {
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-quote b:before {
-  content: "\e9cb";
+  content: "\e961";
   display: inline-block;
+  font-size: 19px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
@@ -2246,16 +2247,20 @@ input.search-query-input {
 }
 
 .ac-reply-toolbar #forums-document-button,
-.ac-reply-toolbar #activity-document-button,
 .ac-reply-toolbar #messages-document-button,
 #whats-new-toolbar #forums-document-button,
-#whats-new-toolbar #activity-document-button,
 #whats-new-toolbar #messages-document-button,
 #whats-new-messages-toolbar #forums-document-button,
-#whats-new-messages-toolbar #activity-document-button,
 #whats-new-messages-toolbar #messages-document-button {
   float: right;
   margin-top: -4px;
+}
+
+.ac-reply-toolbar #activity-document-button,
+#whats-new-toolbar #activity-document-button,
+#whats-new-messages-toolbar #activity-document-button {
+  float: right;
+  margin-top: -6px;
 }
 
 .ac-reply-toolbar .bb-icon-attach:before,
@@ -2274,6 +2279,7 @@ input.search-query-input {
   width: 23px;
   color: rgba(18, 43, 70, 0.4);
   font-size: 26px;
+  margin-top: 1px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
