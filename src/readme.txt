@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed 'Send Message' button on group messages not translatable
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
 * Forums - Fixed issues when using many levels of threaded replies
+* Forums - Fixed empty Forums page displaying with Private Network enabled
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 
 = 1.3.5 =
