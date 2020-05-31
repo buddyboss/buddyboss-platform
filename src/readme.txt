@@ -65,6 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed empty Forums page displaying with Private Network enabled
 * Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Emails - Fixed email not sending after site admin changes a user's password
+* LearnDash - Fixed Hidden social groups not appearing in backend for LD groups
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 
 = 1.3.5 =
