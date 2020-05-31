@@ -140,31 +140,6 @@
 
 	<?php endif; ?>
 
-	<?php if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) : ?>
-
-		<fieldset class="radio group-document">
-			<legend><?php esc_html_e( 'Group Documents', 'buddyboss' ); ?></legend>
-
-			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage documents?', 'buddyboss' ); ?></p>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-document-status" id="group-document-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_document_status_setting( 'members' ); ?> />
-				<label for="group-document-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-document-status" id="group-document-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_document_status_setting( 'mods' ); ?> />
-				<label for="group-document-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
-			</div>
-
-			<div class="bp-radio-wrap">
-				<input type="radio" name="group-document-status" id="group-document-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_document_status_setting( 'admins' ); ?> />
-				<label for="group-document-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
-			</div>
-		</fieldset>
-
-	<?php endif; ?>
-
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
 
 		<fieldset class="radio group-albums">
@@ -185,6 +160,31 @@
 			<div class="bp-radio-wrap">
 				<input type="radio" name="group-album-status" id="group-albums-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_albums_status_setting( 'admins' ); ?> />
 				<label for="group-albums-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
+			</div>
+		</fieldset>
+
+	<?php endif; ?>
+
+	<?php if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) : ?>
+
+		<fieldset class="radio group-document">
+			<legend><?php esc_html_e( 'Group Documents', 'buddyboss' ); ?></legend>
+
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage documents?', 'buddyboss' ); ?></p>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-document-status" id="group-document-status-members" class="bs-styled-radio" value="members"<?php bp_group_show_document_status_setting( 'members' ); ?> />
+				<label for="group-document-status-members"><?php esc_html_e( 'All group members', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-document-status" id="group-document-status-mods" class="bs-styled-radio" value="mods"<?php bp_group_show_document_status_setting( 'mods' ); ?> />
+				<label for="group-document-status-mods"><?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			</div>
+
+			<div class="bp-radio-wrap">
+				<input type="radio" name="group-document-status" id="group-document-status-admins" class="bs-styled-radio" value="admins"<?php bp_group_show_document_status_setting( 'admins' ); ?> />
+				<label for="group-document-status-admins"><?php esc_html_e( 'Organizers only', 'buddyboss' ); ?></label>
 			</div>
 		</fieldset>
 
