@@ -38,7 +38,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 				</span>
 			</div>
 			<?php
-			if ( bp_is_document_directory() && bp_is_active( 'groups' ) ) {
+			if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
 				?>
 				<div class="data-head data-head-origin <?php echo $activeGroupClass; ?>" data-target="group">
 				<span>
