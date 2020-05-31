@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.6 =
+* Groups - Improved performance for groups with many thousands of members
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API
