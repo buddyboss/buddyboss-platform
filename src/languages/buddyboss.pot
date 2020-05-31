@@ -16594,7 +16594,7 @@ msgid "No groups found!"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/no-results.php:3
-msgid "Sorry, there were no results founds."
+msgid "Sorry, there were no results found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/results-page.php:9
