@@ -624,15 +624,15 @@ table.extension-listing {
 		padding: 12px 18px;
 
 		&.ext-head-extension {
-			width: 2em;
-		}
-
-		&.ext-head-icon {
-			width: 2em;
+			width: 2.5em;
 		}
 
 		&.ext-head-desc {
-			width: 15%;
+			width: 16%;
+		}
+
+		&.ext-head-icon {
+			width: 14%;
 		}
 	}
 
@@ -679,7 +679,7 @@ table.extension-listing {
 	}
 
 	tbody tr.custom-extension td input.extension-mime[type="text"] {
-		width: 60%;
+		width: 50%;
 	}
 
 	tfoot td {
@@ -815,6 +815,7 @@ table.extension-listing {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				text-align: left;
+				color: #555;
 			}
 
 			i {

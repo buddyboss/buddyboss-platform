@@ -1075,8 +1075,8 @@ function bp_media_settings_callback_extension_document_support() {
 		<thead>
 		<td class="ext-head ext-head-enable check-column"><input id="bp_select_extensions" type="checkbox" value="1"></td>
 		<th class="ext-head ext-head-extension"><?php echo esc_html__( 'Extension', 'buddyboss' ); ?></th>
-		<th class="ext-head ext-head-icon"><?php echo esc_html__( 'Icon', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-desc"><?php echo esc_html__( 'Description', 'buddyboss' ); ?></th>
+		<th class="ext-head ext-head-icon"><?php echo esc_html__( 'Icon', 'buddyboss' ); ?></th>
 		<th class="ext-head ext-head-mime"><?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?></th>
 		</thead>
 		<tbody>
@@ -1109,6 +1109,9 @@ function bp_media_settings_callback_extension_document_support() {
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
 					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo ( isset( $extension['is_default'] ) ) ? esc_attr( $extension['is_default'] ) : ''; ?>"/>
 				</td>
+				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
+					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
+				</td>
 				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
 					<i class="bb-icon <?php echo $document_icon; ?>"></i>
 
@@ -1129,9 +1132,6 @@ function bp_media_settings_callback_extension_document_support() {
 					} else {
 						?><input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[icon]' ); ?>" id="<?php echo esc_attr( $name ) . 'icon'; ?>" type="hidden" value="<?php echo ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) ? esc_attr( $extension['icon'] ) : $document_icon; ?>"/><?php
 					}?>
-				</td>
-				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
-					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'MIME Type', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?> extension-mime" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>
@@ -1159,6 +1159,9 @@ function bp_media_settings_callback_extension_document_support() {
 				<input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0"/>
 			</td>
 			<td>
+				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
+			</td>
+			<td>
 				<select class="extension-icon" name="extension-icon" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
 					<?php
 					$icons = bp_document_svg_icon_list();
@@ -1169,9 +1172,6 @@ function bp_media_settings_callback_extension_document_support() {
 					}
 					?>
 				</select>
-			</td>
-			<td>
-				<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 			</td>
 			<td>
 				<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" value="" class="extension-mime" placeholder="<?php echo esc_html__( 'MIME type', 'buddyboss' ); ?>"/>

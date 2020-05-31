@@ -602,15 +602,15 @@ table.extension-listing thead th {
 }
 
 table.extension-listing thead th.ext-head-extension {
-  width: 2em;
-}
-
-table.extension-listing thead th.ext-head-icon {
-  width: 2em;
+  width: 2.5em;
 }
 
 table.extension-listing thead th.ext-head-desc {
-  width: 15%;
+  width: 16%;
+}
+
+table.extension-listing thead th.ext-head-icon {
+  width: 14%;
 }
 
 table.extension-listing thead td.ext-head-enable {
@@ -656,7 +656,7 @@ table.extension-listing tbody td #btn-remove-extensions {
 }
 
 table.extension-listing tbody tr.custom-extension td input.extension-mime[type="text"] {
-  width: 60%;
+  width: 50%;
 }
 
 table.extension-listing tfoot td #btn-add-extensions,
@@ -773,6 +773,7 @@ table.extension-listing .icon-select-main .icon-select-button li {
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+  color: #555;
 }
 
 table.extension-listing .icon-select-main .icon-select-button i {
