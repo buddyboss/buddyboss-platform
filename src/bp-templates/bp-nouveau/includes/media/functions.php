@@ -99,7 +99,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'dropzone_media_message'       => __( 'Drop images here to upload', 'buddyboss' ),
 		'media_select_error'           => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
 		'empty_media_type'             => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
-		'invalid_media_type'           => __( 'ERROR...', 'buddyboss' ),
+		'invalid_media_type'           => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
 	);
