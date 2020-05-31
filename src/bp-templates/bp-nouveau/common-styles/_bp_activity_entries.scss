@@ -963,9 +963,13 @@ span.dashicons.dashicons-admin-file:before {
 				.document-description,
 				.document-extension-description,
 				.document-helper-text {
-					display: inline-block;
+					float: left;
 					color: #939597;
 					font-size: 13px;
+				}
+
+				.document-description {
+					margin-right: 8px;
 				}
 
 				.document-extension-description {
