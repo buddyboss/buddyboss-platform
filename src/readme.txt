@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profile - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Groups - Improved performance for groups with many thousands of members
 * Groups - Fixed 'Send Message' button on group messages not translatable
+* MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API
