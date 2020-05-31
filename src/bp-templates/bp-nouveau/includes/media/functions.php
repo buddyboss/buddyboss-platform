@@ -97,9 +97,9 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_album'            => bp_is_group_albums_support_enabled(),
 		'messages_media'         => bp_is_messages_media_support_enabled(),
 		'dropzone_media_message' => __( 'Drop images here to upload', 'buddyboss' ),
-		'media_select_error'     => __( 'This file not supporting in media', 'buddyboss' ),
+		'media_select_error'     => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
 		'empty_media_type'       => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
-		'invalid_media_type'     => __( 'Invalid media type', 'buddyboss' ),
+		'invalid_media_type'     => __( 'Invalid file type', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
