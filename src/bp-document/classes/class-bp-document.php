@@ -1211,8 +1211,6 @@ class BP_Document {
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
 		$cached_document = bp_core_get_incremented_cache( $document_ids_sql_document, $cache_group );
 
-		error_log( $document_ids_sql_folder );
-
 		if ( false === $cached_folder ) {
 			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $document_ids_sql_folder, $cache_group, $document_ids_folder );

@@ -68,29 +68,37 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$exclude = array_merge( $mime_types, $extensions );
 	$document_params = array(
-		'max_upload_size_document'  => bp_document_file_upload_max_size( false, 'MB' ),
-		'profile_document'          => bp_is_profile_document_support_enabled(),
-		'group_document'            => bp_is_group_document_support_enabled(),
-		'messages_document'         => bp_is_messages_document_support_enabled(),
-		'document_type'             => implode( ',', array_unique( $exclude ) ),
-		'empty_document_type'       => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
-		'current_folder'            => $folder_id,
-		'current_type'              => $type,
-		'move_to_id_popup'          => $move_to_id_popup,
-		'current_user_id'           => $user_id,
-		'current_group_id'          => $group_id,
-		'target_text'               => __( 'Documents', 'buddyboss' ),
-		'create_folder_error_title' => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'         => __( 'Invalid file type', 'buddyboss' ),
-		'document_select_error'     => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'dropzone_document_message' => __( 'Drop files here to upload', 'buddyboss' ),
-		'is_document_directory'     => ( bp_is_document_directory() ) ? 'yes' : 'no',
-		'document_preview_error'    => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
-		'move_to_folder'            => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'              => __( 'Move document to...', 'buddyboss' ),
-		'copy_to_clip_board_text'   => __( 'Copied to Clipboard', 'buddyboss' ),
-		'download_button'           => __( 'Download', 'buddyboss' )
+		'max_upload_size_document'        => bp_document_file_upload_max_size( false, 'MB' ),
+		'profile_document'                => bp_is_profile_document_support_enabled(),
+		'group_document'                  => bp_is_group_document_support_enabled(),
+		'messages_document'               => bp_is_messages_document_support_enabled(),
+		'document_type'                   => implode( ',', array_unique( $exclude ) ),
+		'empty_document_type'             => __( 'Empty documents will not be uploaded.', 'buddyboss' ),
+		'current_folder'                  => $folder_id,
+		'current_type'                    => $type,
+		'move_to_id_popup'                => $move_to_id_popup,
+		'current_user_id'                 => $user_id,
+		'current_group_id'                => $group_id,
+		'target_text'                     => __( 'Documents', 'buddyboss' ),
+		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
+		'invalid_file_type'               => __( 'ERROR...', 'buddyboss' ),
+		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
+		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
+		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
+		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
+		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
+		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
+		'download_button'                 => __( 'Download', 'buddyboss' ),
+		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
+		'document_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
 	);
+
+	$document_options = array(
+		'dictInvalidFileType' => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+	);
+
+	$params['document'] = $document_options;
 
 	$old_media = $params['media'];
 

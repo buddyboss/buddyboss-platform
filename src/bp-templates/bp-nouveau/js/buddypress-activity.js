@@ -1473,15 +1473,16 @@ window.bp = window.bp || {};
 				if ( dropzone_container.hasClass( 'closed' ) ) {
 
 					var dropzone_options = {
-						url				: BP_Nouveau.ajaxurl,
-						timeout			: 3 * 60 * 60 * 1000,
-						acceptedFiles	: BP_Nouveau.media.document_type,
-						createImageThumbnails : false,
-						dictDefaultMessage : BP_Nouveau.media.dropzone_document_message,
-						autoProcessQueue: true,
-						addRemoveLinks	: true,
-						uploadMultiple	: false,
-						maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						url						: BP_Nouveau.ajaxurl,
+						timeout					: 3 * 60 * 60 * 1000,
+						acceptedFiles			: BP_Nouveau.media.document_type,
+						createImageThumbnails 	: false,
+						dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
+						autoProcessQueue		: true,
+						addRemoveLinks			: true,
+						uploadMultiple			: false,
+						maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
 					};
 
 					// init dropzone.
