@@ -12,7 +12,7 @@
 		<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
 			<div class="modal-wrapper bb-large">
 				<div class="modal-container">
-					<header class="bb-model-header bg-white">
+					<header class="bb-model-header">
 						<a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php esc_html_e( 'Upload', 'buddyboss' ); ?></a>
 						<?php
 						if ( bp_is_single_album() ) :
