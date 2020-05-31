@@ -2685,7 +2685,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img > i {
   font-size: 30px;
   color: #9ca8b4;
-  margin-top: 5px;
+  margin-top: 3px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
@@ -2738,7 +2738,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap {
   position: absolute;
   right: 15px;
-  top: 20px;
+  top: 21px;
   opacity: 0;
   visibility: hidden;
   z-index: 111;
@@ -14516,6 +14516,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .bp-media-move-file .bb-model-header p,
 .bp-media-move-folder .bb-model-header p {
+  font-size: 17px;
   font-weight: 500;
   margin: 0;
 }
