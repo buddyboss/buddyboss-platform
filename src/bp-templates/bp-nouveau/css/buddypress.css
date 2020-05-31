@@ -11775,17 +11775,14 @@ body.login .login-popup .mfp-close:hover {
   padding: 20px 30px 30px;
   background-color: #fff;
   border-radius: 4px;
-  box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.08);
+  border: 1px solid #d2d4d6;
+  box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
   transition: all 0.3s ease;
 }
 
 .modal-container.has-folderlocationUI {
   max-height: 90vh;
   overflow: auto;
-}
-
-.bb-model-wrap .modal-container {
-  border: 1px solid #d2d4d6;
 }
 
 .bbm-model-wrap input,
