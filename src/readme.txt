@@ -58,12 +58,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.6 =
-* Profile - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Groups - Improved performance for groups with many thousands of members
 * Groups - Fixed 'Send Message' button on group messages not translatable
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
 * Forums - Fixed issues when using many levels of threaded replies
 * Forums - Fixed empty Forums page displaying with Private Network enabled
+* Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 
 = 1.3.5 =
