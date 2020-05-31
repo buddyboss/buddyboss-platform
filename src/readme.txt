@@ -64,6 +64,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issues when using many levels of threaded replies
 * Forums - Fixed empty Forums page displaying with Private Network enabled
 * Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
+* Emails - Fixed email not sending after site admin changes a user's password
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 
 = 1.3.5 =
