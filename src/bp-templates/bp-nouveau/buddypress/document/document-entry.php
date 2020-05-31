@@ -136,10 +136,11 @@ if ( wp_is_mobile() ) {
 			?>
 		</div>
 	</div>
-	<?php
-	if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
-		?>
+	
 		<div class="media-folder_group">
+		<?php
+			if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
+		?>
 			<div class="media-folder_details__bottom">
 				<?php
 				$group_id = bp_get_document_group_id();
@@ -166,10 +167,11 @@ if ( wp_is_mobile() ) {
 				}
 				?>
 			</div>
-		</div>
 		<?php
-	}
-	?>
+			}
+		?>
+		</div>
+		
 	<div class="media-folder_visibility">
 		<div class="media-folder_details__bottom">
 

@@ -36,19 +36,20 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 					<?php esc_html_e( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
-			</div>
+			</div>			
+			<div class="data-head data-head-origin <?php echo $activeGroupClass; ?>" data-target="group">
 			<?php
-			if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
-				?>
-				<div class="data-head data-head-origin <?php echo $activeGroupClass; ?>" data-target="group">
-				<span>
-					<?php esc_html_e( 'Group', 'buddyboss' ); ?>
-					<i class="bb-icon-triangle-fill"></i>
-				</span>
-				</div>
-				<?php
-			}
+				if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
+					?>
+					<span>
+						<?php esc_html_e( 'Group', 'buddyboss' ); ?>
+						<i class="bb-icon-triangle-fill"></i>
+					</span>
+			<?php
+				}
 			?>
+				</div>
+				
 			<div class="data-head data-head-visibility <?php echo $activePrivacyClass; ?>" data-target="visibility">
 				<span>
 					<?php esc_html_e( 'Visibility', 'buddyboss' ); ?>
