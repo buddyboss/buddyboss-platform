@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.6 =
 * Groups - Improved performance for groups with many thousands of members
+* Groups - Fixed 'Send Message' button on group messages not translatable
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API
