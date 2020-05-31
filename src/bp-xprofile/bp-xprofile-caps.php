@@ -37,24 +37,7 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 			}
 
 			// Visibility on the fullname field is not editable.
-			/*if ( 1 == $field_id ) {
-				$caps[] = 'do_not_allow';
-				break;
-			}*/
-
-			// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-			$current_value = bp_get_option( 'bp-display-name-format' );
-
-			// If First Name selected then do not change visibility setting.
-			if ( 'first_name' === $current_value && $field_id === bp_xprofile_firstname_field_id() ) {
-				$caps[] = 'do_not_allow';
-				break;
-				// If First Name & Last Name selected then do not change first name and last name visibility setting.
-			} elseif ( 'first_last_name' === $current_value && ( $field_id === bp_xprofile_firstname_field_id() || $field_id === bp_xprofile_lastname_field_id() ) ) {
-				$caps[] = 'do_not_allow';
-				break;
-				// If Nick Name selected then do not change visibility setting.
-			} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_nickname_field_id() ) {
+			if ( 1 == $field_id ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}
