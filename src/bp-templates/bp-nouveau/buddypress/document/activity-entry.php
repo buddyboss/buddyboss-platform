@@ -99,7 +99,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
-			<span class="document-helper-text">&ndash; <?php echo _e( $click_text, 'buddyboss' ); ?></span>
+			<span class="document-helper-text"> <span> — </span> <span class="document-helper-text-inner"><?php echo _e( $click_text, 'buddyboss' ); ?></span></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">

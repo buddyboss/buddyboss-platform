@@ -80,7 +80,7 @@
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
 								{{{data.document[i].extension_description}}}
-								<span class="document-helper-text">{{data.document[i].download_text}}</span>
+								<span class="document-helper-text"> <span> — </span> <span class="document-helper-text-inner">{{data.document[i].download_text}}</span></span>
 							</a>
 						</div>
 						<div class="document-action-wrap">

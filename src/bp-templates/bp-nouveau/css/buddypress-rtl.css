@@ -2717,7 +2717,11 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
-  margin-left: 8px;
+  margin-left: 6px;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-inner {
+  margin-right: 3px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-extension-description {
