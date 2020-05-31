@@ -4211,6 +4211,11 @@ window.bp = window.bp || {};
 
 				//Close create media album
 				$('#bp-media-create-album #bp-media-create-album-close:visible').trigger('click');
+
+				$('.media-folder_visibility select#bb-folder-privacy:not(.hide)').each( function(){
+					$( this ).attr( 'data-mouseup','false' ).addClass( 'hide' ).siblings( 'span' ).show().text( $( this ).find( 'option:selected' ).text() );
+				});
+				
 			}
 		},
 
