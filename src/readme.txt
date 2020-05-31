@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.6 =
+* Profile - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Groups - Improved performance for groups with many thousands of members
 * Groups - Fixed 'Send Message' button on group messages not translatable
 
