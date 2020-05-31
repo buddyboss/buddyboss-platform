@@ -102,6 +102,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'invalid_media_type'           => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
+		'dictFileTooBig'               => __( "File is too big: {{filesize}} MB. Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
