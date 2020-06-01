@@ -59,11 +59,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.3.6 =
 * Groups - Improved performance for groups with many thousands of members
-* Groups - Fixed 'Send Message' button on group messages not translatable
+* Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
 * Forums - Fixed issues when using many levels of threaded replies
 * Forums - Fixed empty Forums page displaying with Private Network enabled
 * Forums - Fixed HTML elements displaying when pasting content as subscriber
+* Forums - Merged in security patches from bbPress 2.6.5
 * Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Network Search - Fixed results title when using apostrophe or blank entry
 * Emails - Fixed email not sending for site admin changing a user's password
