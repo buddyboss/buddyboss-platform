@@ -632,7 +632,7 @@ table.extension-listing {
 		}
 
 		&.ext-head-icon {
-			width: 14%;
+			width: 4em;
 		}
 	}
 
@@ -785,7 +785,7 @@ table.extension-listing {
 		position: relative;
 		display: inline-block;
 		vertical-align: middle;
-		width: calc(100% - 50px);
+		width: 100%;
 
 		.icon-select-button {
 			font-size: 14px;
