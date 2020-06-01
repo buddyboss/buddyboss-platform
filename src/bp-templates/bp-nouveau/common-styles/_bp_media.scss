@@ -2168,6 +2168,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		line-height: 1.3;
 		color: #4d5c6d;
 
+		#bb-folder-privacy {
+			max-width: 100%;
+		}
+
 		.media-folder_date {
 			display: inline-block;
 			vertical-align: middle;

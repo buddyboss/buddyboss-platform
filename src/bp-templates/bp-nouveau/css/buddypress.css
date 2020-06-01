@@ -13648,6 +13648,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #4d5c6d;
 }
 
+.search-document-list .media-folder_items .media-folder_details__bottom #bb-folder-privacy,
+#media-folder-document-data-table .media-folder_items .media-folder_details__bottom #bb-folder-privacy {
+  max-width: 100%;
+}
+
 .search-document-list .media-folder_items .media-folder_details__bottom .media-folder_date,
 #media-folder-document-data-table .media-folder_items .media-folder_details__bottom .media-folder_date {
   display: inline-block;
