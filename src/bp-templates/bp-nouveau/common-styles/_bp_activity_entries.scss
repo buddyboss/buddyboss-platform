@@ -446,7 +446,7 @@
 	.medium-editor-action-bold b:before {
 		content: "\e94a";
 		font-size: 18px;
-		font-weight: bold;
+		font-weight: 600;
 	}
 
 	.medium-editor-action-italic b:before {
@@ -625,7 +625,7 @@
 	zoom: 1;
 	margin: 0 -3px;
 
-	& + .bb-activity-media-wrap {
+	+ .bb-activity-media-wrap {
 		margin-top: 10px;
 	}
 

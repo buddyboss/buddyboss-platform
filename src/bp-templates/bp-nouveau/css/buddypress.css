@@ -2197,7 +2197,7 @@ input.search-query-input {
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-italic b:before {
@@ -13454,7 +13454,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  background-color: #000;
+  background-color: #f5f5f5;
   overflow: auto;
 }
 
