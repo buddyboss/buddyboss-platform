@@ -1669,7 +1669,7 @@ window.bp = window.bp || {};
 
 			toggleGifSelector: function( e ) {
 				e.preventDefault();
-				this.closeURLInput();
+				//this.closeURLInput();
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
 				if ( this.$gifPickerEl.is( ':empty' ) ) {
@@ -1693,7 +1693,7 @@ window.bp = window.bp || {};
 
 			toggleMediaSelector: function( e ) {
 				e.preventDefault();
-				this.closeURLInput();
+				//this.closeURLInput();
 				this.closeGifSelector();
 				this.closeDocumentSelector();
 				var event = new Event( 'activity_media_toggle' );
@@ -1702,7 +1702,7 @@ window.bp = window.bp || {};
 
 			toggleDocumentSelector: function( e ) {
 				e.preventDefault();
-				this.closeURLInput();
+				//this.closeURLInput();
 				this.closeGifSelector();
 				this.closeMediaSelector();
 				var event = new Event( 'activity_document_toggle' );
