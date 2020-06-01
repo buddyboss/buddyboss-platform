@@ -238,6 +238,11 @@ function bp_media_get_settings_fields() {
 		'callback' => 'bp_media_settings_callback_extension_link',
 	);
 
+	$fields['bp_media_settings_documents']['bp_document_uploading_tutorial'] = array(
+			'title'    => __( '&#160;', 'buddyboss' ),
+			'callback' => 'bp_document_uploading_tutorial',
+	);
+
 	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = array(
 		'title'    => __( '&#160;', 'buddyboss' ),
 		'callback' => 'bp_photo_uploading_tutorial',
@@ -523,6 +528,33 @@ function bp_is_forums_media_support_enabled( $default = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_photo_uploading_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62827,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
+ * Link to Document Uploading tutorial
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_uploading_tutorial() {
 	?>
 
 	<p>
