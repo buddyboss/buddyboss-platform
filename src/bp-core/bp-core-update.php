@@ -218,6 +218,7 @@ function bp_version_updater() {
 		bp_update_option( 'bp-active-components', $default_components );
 		bp_core_add_page_mappings( $default_components, 'delete' );
 		bp_core_install_emails();
+		bp_core_install_invitations();
 
 		// Upgrades.
 	} else {
@@ -288,6 +289,15 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 14901 ) {
 			bp_update_to_1_2_9();
+		}
+
+		if ( $raw_db_version < 15200 ) {
+			bp_update_to_1_3_0();
+		}
+
+		// Version 1.3.5
+		if ( $raw_db_version < 15601 ) {
+			bb_update_to_1_3_5();
 		}
 	}
 
@@ -582,7 +592,6 @@ function bp_update_to_3_1_1() {
 	bp_core_install_media();
 }
 
-
 /**
  * 1.2.3 update routine.
  *
@@ -803,7 +812,7 @@ function bp_add_activation_redirect() {
  */
 function bp_platform_plugin_updater() {
 	if ( class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater( 'http://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
+		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
 	}
 }
 
@@ -958,4 +967,23 @@ function bp_core_fix_media_activities() {
  */
 function bp_update_to_1_2_9() {
 	bp_core_install_group_message_email();
+}
+
+function bp_update_to_1_3_0() {
+	bp_core_install_private_messaging();
+}
+
+/**
+ * 1.3.5 update routine.
+ *
+ * - Create the invitations table.
+ * - Migrate requests and invitations to the new table.
+ *
+ */
+function bb_update_to_1_3_5() {
+	bp_core_install_invitations();
+
+	if ( bp_is_active( 'groups' ) ) {
+		bp_groups_migrate_invitations();
+	}
 }

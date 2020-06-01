@@ -273,8 +273,6 @@ window.bp = window.bp || {};
 					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 					}
-				} else {
-					bp.Nouveau.Activity.postForm.dropzone.removeFile(file);
 				}
 			});
 
@@ -667,6 +665,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
+			this.on( 'ready', this.activateTinyMce, this );
 			this.options.activity.on( 'change:content', this.resetContent, this );
 			this.linkTimeout = null;
 
@@ -866,6 +865,35 @@ window.bp = window.bp || {};
 					link_error_msg: response.error
 				});
 			}
+		},
+		activateTinyMce: function() {
+
+			if ( !_.isUndefined(window.MediumEditor) ) {
+
+				window.group_messages_editor = new window.MediumEditor('#whats-new',{
+					placeholder: {
+						text: '',
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-content'),
+						static: true,
+						updateOnEmptySelection: true
+					}
+				});
+
+				// check for mentions in the url, if set any then focus to editor
+				var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
+
+				// Check for mention
+				if ( ! _.isNull( mention ) ) {
+					$('#message_content').focus();
+				}
+
+			} else if ( typeof tinymce !== 'undefined' ) {
+				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'whats-new' ); // jshint ignore:line
+			}
 		}
 	} );
 
@@ -1025,10 +1053,23 @@ window.bp = window.bp || {};
 	bp.Views.FormContent = bp.View.extend( {
 		tagName  : 'div',
 		id       : 'whats-new-content',
+		events: {
+			'click .medium-editor-toolbar-actions': 'focusEditor',
+			'click .medium-editor-toolbar li.close-btn': 'hideToolbarSelector',
+		},
 
 		initialize: function() {
 			this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 			this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
+		},
+		hideToolbarSelector: function ( e ) {
+			e.preventDefault();
+			var medium_editor = $( e.currentTarget ).closest( '#whats-new-form' ).find( '.medium-editor-toolbar' );
+			medium_editor.removeClass( 'active' );
+		},
+
+		focusEditor: function ( e ) {
+			$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
 		}
 	} );
 
@@ -1165,6 +1206,7 @@ window.bp = window.bp || {};
 						$('#whats-new-toolbar .post-emoji').show();
 					}
 				}
+				$('.medium-editor-toolbar').removeClass('active medium-editor-toolbar-active');
 			}
 		}
 	} );
@@ -1177,7 +1219,8 @@ window.bp = window.bp || {};
 			'click #activity-link-preview-button': 'toggleURLInput',
 			'click #activity-gif-button': 'toggleGifSelector',
 			'click #activity-media-button': 'toggleMediaSelector',
-			'click .post-elements-buttons-item': 'activeButton'
+			'click .post-elements-buttons-item': 'activeButton',
+			'click .show-toolbar': 'toggleToolbarSelector'
 		},
 
 		initialize: function() {
@@ -1264,6 +1307,18 @@ window.bp = window.bp || {};
 		activeButton: function (event) {
 			this.$el.find('.post-elements-buttons-item').removeClass('active');
 			event.currentTarget.classList.add('active');
+		},
+
+		toggleToolbarSelector: function( e ) {
+			e.preventDefault();
+			var medium_editor = $(e.currentTarget).closest('#whats-new-form').find('.medium-editor-toolbar');
+			$(e.currentTarget).find('.toolbar-button').toggleClass('active');
+			if( $(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+				$(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+			} else {
+				$(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+			}
+			medium_editor.toggleClass('active');
 		}
 	} );
 
@@ -1565,6 +1620,13 @@ window.bp = window.bp || {};
 			// Reset the model
 			this.model.clear();
 			this.model.set( this.resetModel.attributes );
+			$('.medium-editor-toolbar').removeClass('active medium-editor-toolbar-active');
+			$('#show-toolbar-button').removeClass('active');
+			$('medium-editor-action').removeClass('medium-editor-button-active');
+			$('.medium-editor-toolbar-actions').show();
+			$('.medium-editor-toolbar-form').removeClass('medium-editor-toolbar-form-active');
+			$('#show-toolbar-button').parent('.show-toolbar').attr('data-bp-tooltip',$('#show-toolbar-button').parent('.show-toolbar').attr('data-bp-tooltip-show'));
+
 		},
 
 		cleanFeedback: function() {
@@ -1613,6 +1675,11 @@ window.bp = window.bp || {};
 
 			// Post content
 			var $whatsNew = this.$el.find('#whats-new');
+
+			var atwho_query = $whatsNew.find( 'span.atwho-query' );
+			for( var i = 0; i < atwho_query.length; i++ ) {
+				$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+			}
 
 			// Transform emoji image into emoji unicode
 			$whatsNew.find('img.emojioneemoji').replaceWith(function () {

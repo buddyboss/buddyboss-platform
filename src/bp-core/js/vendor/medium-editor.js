@@ -920,6 +920,10 @@ MediumEditor.extensions = {};
             var blockContainer = Util.getTopBlockContainer(MediumEditor.selection.getSelectionStart(doc)),
                 childNodes;
 
+                if ( tagName === 'pre' ) {
+                    doc.execCommand('outdent', false, tagName);
+                }
+
             // Special handling for blockquote
             if (tagName === 'blockquote') {
                 if (blockContainer) {
@@ -6706,6 +6710,28 @@ MediumEditor.extensions = {};
 
             // when cursor is at the end of <blockquote>,
             // then pressing enter key should create <p> tag, not <blockquote>
+            p = this.options.ownerDocument.createElement('p');
+            p.innerHTML = '<br>';
+            node.parentElement.insertBefore(p, node.nextSibling);
+
+            // move the cursor into the new paragraph
+            MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
+
+            event.preventDefault();
+        } else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
+                (MediumEditor.util.getClosestTag(node, 'pre') !== false) &&
+                MediumEditor.selection.getCaretOffsets(node).left === 0) {
+
+            // when cursor is at the begining of the element and the element is <pre>
+            // then pressing backspace key should change the <pre> to a <p> tag
+            event.preventDefault();
+            MediumEditor.util.execFormatBlock(this.options.ownerDocument, 'p');
+        }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.ENTER) &&
+                (MediumEditor.util.getClosestTag(node, 'pre') !== false) &&
+                MediumEditor.selection.getCaretOffsets(node).right === 0) {
+
+            // when cursor is at the end of <pre>,
+            // then pressing enter key should create <p> tag, not <pre>
             p = this.options.ownerDocument.createElement('p');
             p.innerHTML = '<br>';
             node.parentElement.insertBefore(p, node.nextSibling);

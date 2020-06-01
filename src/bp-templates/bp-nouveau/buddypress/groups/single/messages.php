@@ -67,6 +67,7 @@ $group_members = groups_get_group_members( $args );
 			<div class="bb-groups-messages-right-top">
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php _e( 'New Group Message', 'buddyboss' ); ?></h2>
+                    <a class="group-messages-compose" href="javascript:void(0);"><?php _e( 'New Group Message', 'buddyboss' ); ?></a>
 					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="dashicons dashicons-plus-alt"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-select-members-wrap">
@@ -106,7 +107,14 @@ $group_members = groups_get_group_members( $args );
 								<input name="bp_group_messages_gif" id="bp_group_messages_gif" type="hidden" value=""/>
 							<?php endif; ?>
 						</div>
-						<div id="whats-new-toolbar">
+						<div id="whats-new-toolbar" class="<?php if ( !bp_is_active( 'media' ) ){ echo 'media-off'; } ?>">
+							<?php if ( bp_is_active( 'media' ) ) : ?>
+								<div class="post-elements-buttons-item show-toolbar"  data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php _e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php _e( 'Hide formatting', 'buddyboss' ); ?>">
+									<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
+										<span class="dashicons dashicons-editor-textcolor"></span>
+									</a>
+								</div>
+							<?php endif; ?>
 							<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) : ?>
 								<div class="post-elements-buttons-item post-media">
 									<a href="#" id="bp-group-messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
@@ -161,7 +169,7 @@ $group_members = groups_get_group_members( $args );
 								if ( empty( $group_members['members'] ) ) {
 									$disabled = 'disabled';
 								} ?>
-								<input <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" value="Send Message" id="send_group_message_button" class="small">
+								<input <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" value="<?php _e( 'Send Message', 'buddyboss' ); ?>" id="send_group_message_button" class="small">
 							</div>
 						</div>
 					</div>
