@@ -787,7 +787,7 @@ table.extension-listing .icon-select-main .custom-extension-list {
   position: absolute;
   right: 0;
   left: 0;
-  min-width: 200px;
+  min-width: 160px;
   background-color: #fff;
   border: 1px solid #ccd0d4;
   border-radius: 3px;
