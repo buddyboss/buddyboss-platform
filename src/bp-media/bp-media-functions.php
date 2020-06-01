@@ -367,7 +367,7 @@ function bp_media_get_specific( $args = '' ) {
 			'per_page'  => false,      // Results per page.
 			'sort'      => 'DESC',     // Sort ASC or DESC.
 			'order_by'  => false,     // Sort ASC or DESC.
-			'privacy'   => array( 'public' ),     // privacy to filter.
+			'privacy'   => false,     // privacy to filter.
 		),
 		'media_get_specific'
 	);
