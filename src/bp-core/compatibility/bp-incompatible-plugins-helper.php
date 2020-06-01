@@ -78,40 +78,36 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Add fix for wpml redirect issue
-		 *
 		 * @since BuddyBoss 1.2.3
 		 *
 		 * @param array $q
+		 *
+		 * @return array
 		 */
 		function bp_core_fix_wpml_redirection( $q ) {
-
-			if ( ! defined( 'DOING_AJAX' ) && ! bp_is_blog_page() && (bool) $q->get( 'page_id' ) === false && (bool) $q->get( 'pagename' ) === true ) {
+			if (
+				! defined( 'DOING_AJAX' )
+				&& ! bp_is_blog_page()
+				&& (bool) $q->get( 'page_id' ) === false
+				&& (bool) $q->get( 'pagename' ) === true
+			) {
 				$bp_current_component = bp_current_component();
-				$bp_current_action    = bp_current_action();
 				$bp_pages             = bp_core_get_directory_pages();
-				if ( $bp_current_component == 'photos' && $bp_current_action == 'my-media' ) {
-					if ( isset( $bp_pages->media->id ) ) {
-						$q->set( 'page_id', $bp_pages->media->id );
-					}
-				} elseif ( $bp_current_component == 'forums' && $bp_current_action == 'discussions' ) {
-					if ( isset( $bp_pages->members->id ) ) {
-						$q->set( 'page_id', $bp_pages->members->id );
-					}
-				} elseif ( $bp_current_component == 'groups' && $bp_current_action == 'photos' ) {
-					if ( isset( $bp_pages->media->id ) ) {
-						$q->set( 'page_id', $bp_pages->media->id );
-					}
+
+				if ( 'photos' === $bp_current_component && isset( $bp_pages->media->id ) ) {
+					$q->set( 'page_id', $bp_pages->media->id );
+				} elseif ( 'forums' === $bp_current_component && isset( $bp_pages->members->id ) ) {
+					$q->set( 'page_id', $bp_pages->members->id );
+				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
+					$q->set( 'page_id', $bp_pages->groups->id );
 				} else {
-					$page_id = apply_filters( 'bpml_redirection_page_id',
-						null,
-						$bp_current_component,
-						$bp_current_action,
-						$bp_pages );
+					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
 					if ( $page_id ) {
 						$q->set( 'page_id', $page_id );
 					}
 				}
 			}
+
 			return $q;
 		}
 
