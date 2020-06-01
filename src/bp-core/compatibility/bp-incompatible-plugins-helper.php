@@ -77,8 +77,8 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
 
 		/**
-		 * Add fix for wpml redirect issue
-		 * @since BuddyBoss 1.2.3
+		 * Add fix for WPML redirect issue
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param array $q
 		 *
