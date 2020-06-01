@@ -77,23 +77,38 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
 
 		/**
-		 * Add fix for wpml redirect issue
-		 *
-		 * @since BuddyBoss 1.2.3
+		 * Add fix for WPML redirect issue
+		 * @since BuddyBoss 1.3.6
 		 *
 		 * @param array $q
+		 *
+		 * @return array
 		 */
 		function bp_core_fix_wpml_redirection( $q ) {
+			if (
+				! defined( 'DOING_AJAX' )
+				&& ! bp_is_blog_page()
+				&& (bool) $q->get( 'page_id' ) === false
+				&& (bool) $q->get( 'pagename' ) === true
+			) {
+				$bp_current_component = bp_current_component();
+				$bp_pages             = bp_core_get_directory_pages();
 
-			if ( ! bp_is_my_profile() || ! bp_current_component() ) {
-				return $q;
-			}
-
-			if ( in_array( bp_current_component(), array( 'forums', 'photos', 'groups' ) ) ) {
-				if ( isset( bp_core_get_directory_pages()->members->id ) ) {
-					$q->set( 'page_id', bp_core_get_directory_pages()->members->id );
+				if ( 'photos' === $bp_current_component && isset( $bp_pages->media->id ) ) {
+					$q->set( 'page_id', $bp_pages->media->id );
+				} elseif ( 'forums' === $bp_current_component && isset( $bp_pages->members->id ) ) {
+					$q->set( 'page_id', $bp_pages->members->id );
+				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
+					$q->set( 'page_id', $bp_pages->groups->id );
+				} else {
+					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
+					if ( $page_id ) {
+						$q->set( 'page_id', $page_id );
+					}
 				}
 			}
+
+			return $q;
 		}
 
 		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
