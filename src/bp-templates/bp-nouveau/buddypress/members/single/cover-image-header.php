@@ -30,16 +30,20 @@
 		<div id="item-header-content">
 			<h2 class="user-nicename"><?php echo bp_core_get_user_displayname( bp_displayed_user_id() ); ?></h2>
 
-			<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_nouveau_member_has_meta() ) : ?>
+			<?php
+			$nickname_field_id = bp_xprofile_nickname_field_id();
+			$hidden_fields     = bp_xprofile_get_hidden_fields_for_user();
+
+			if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_nouveau_member_has_meta() ) : ?>
 				<div class="item-meta">
 					<?php
 					if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
 						echo bp_get_user_member_type( bp_displayed_user_id() );
-					} elseif ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) { ?>
+					} elseif ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && ! in_array( $nickname_field_id, $hidden_fields ) ) { ?>
 						<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span><?php
 					} ?>
 
-					<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) ) : ?>
+					<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) && ! in_array( $nickname_field_id, $hidden_fields ) ) : ?>
 						<span class="separator">&bull;</span>
 					<?php endif; ?>
 
@@ -48,7 +52,7 @@
 					<?php if ( bp_nouveau_member_has_meta() ) : ?>
 						<?php bp_nouveau_member_meta(); ?>
 					<?php endif; ?>
-				</div>	
+				</div>
 			<?php endif; ?>
 
 			<?php echo bp_get_user_social_networks_urls(); ?>

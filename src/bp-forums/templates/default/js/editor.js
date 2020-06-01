@@ -60,7 +60,12 @@ jQuery( document ).ready(
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
-								cleanReplacements: [],
+								cleanReplacements: [
+									[new RegExp(/<div>/gi), '<p>'],
+									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+								],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
@@ -96,7 +101,12 @@ jQuery( document ).ready(
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
-								cleanReplacements: [],
+								cleanReplacements: [
+									[new RegExp(/<div>/gi), '<p>'],
+									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+								],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []

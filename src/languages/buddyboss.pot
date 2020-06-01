@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-01 08:07:59+00:00\n"
+"POT-Creation-Date: 2020-06-01 09:36:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3999,10 +3999,14 @@ msgid "<a href=\"%s\" target=\"_blank\">Code Reference</a>"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:85
+msgid "<a href=\"%s\" target=\"_blank\">REST API</a>"
+msgstr ""
+
+#: bp-core/admin/templates/about-buddyboss.php:93
 msgid "<a href=\"%s\" target=\"_blank\">Github</a>"
 msgstr ""
 
-#: bp-core/admin/templates/about-buddyboss.php:100
+#: bp-core/admin/templates/about-buddyboss.php:108
 msgid "Built by <a href=\"%s\">BuddyBoss</a>."
 msgstr ""
 
@@ -5970,57 +5974,57 @@ msgstr ""
 msgid "To reset your password <a href=\"%s\">Click here</a>."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:910 bp-core/bp-core-wp-emails.php:960
+#: bp-core/bp-core-wp-emails.php:912 bp-core/bp-core-wp-emails.php:964
 #. translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME,
 #. SITEURL: those are placeholders.
 msgid "Hi ###USERNAME###,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:911
+#: bp-core/bp-core-wp-emails.php:913
 msgid "This notice confirms that your password was changed on ###SITENAME###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:912
+#: bp-core/bp-core-wp-emails.php:914
 msgid ""
 "If you did not change your password, please contact the Site Administrator "
 "at <br />###ADMIN_EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:913 bp-core/bp-core-wp-emails.php:963
-#: bp-core/bp-core-wp-emails.php:1018 bp-core/bp-core-wp-emails.php:1181
-#: bp-core/bp-core-wp-emails.php:1407
+#: bp-core/bp-core-wp-emails.php:915 bp-core/bp-core-wp-emails.php:967
+#: bp-core/bp-core-wp-emails.php:1022 bp-core/bp-core-wp-emails.php:1185
+#: bp-core/bp-core-wp-emails.php:1411
 msgid "This email has been sent to ###EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:914 bp-core/bp-core-wp-emails.php:964
-#: bp-core/bp-core-wp-emails.php:1019 bp-core/bp-core-wp-emails.php:1182
+#: bp-core/bp-core-wp-emails.php:916 bp-core/bp-core-wp-emails.php:968
+#: bp-core/bp-core-wp-emails.php:1023 bp-core/bp-core-wp-emails.php:1186
 msgid "Regards, <br />All at ###SITENAME### <br />###SITEURL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:919
+#: bp-core/bp-core-wp-emails.php:921
 #. translators: User password change notification email subject. 1: Site name
 msgid "[%s] Notice of Password Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:961
+#: bp-core/bp-core-wp-emails.php:965
 msgid ""
 "This notice confirms that your email address on ###SITENAME### was changed "
 "to ###NEW_EMAIL###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:962
+#: bp-core/bp-core-wp-emails.php:966
 msgid ""
 "If you did not change your email, please contact the Site Administrator at "
 "<br/>###ADMIN_EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:969
+#: bp-core/bp-core-wp-emails.php:973
 #. translators: User email change notification email subject. 1: Site name
 msgid "[%s] Notice of Email Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1014 bp-core/bp-core-wp-emails.php:1177
-#: bp-core/bp-core-wp-emails.php:1403
+#: bp-core/bp-core-wp-emails.php:1018 bp-core/bp-core-wp-emails.php:1181
+#: bp-core/bp-core-wp-emails.php:1407
 #. translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME,
 #. SITEURL: those are placeholders.
 #. translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL:
@@ -6030,26 +6034,26 @@ msgstr ""
 msgid "Howdy ###USERNAME###,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1015
+#: bp-core/bp-core-wp-emails.php:1019
 msgid "You recently requested to have the email address on your account changed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1016 bp-core/bp-core-wp-emails.php:1179
+#: bp-core/bp-core-wp-emails.php:1020 bp-core/bp-core-wp-emails.php:1183
 msgid ""
 "If this is correct, please <a href=\"###ADMIN_URL###\">click here</a> to "
 "change it."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1017 bp-core/bp-core-wp-emails.php:1134
-#: bp-core/bp-core-wp-emails.php:1180 bp-core/bp-core-wp-emails.php:1406
+#: bp-core/bp-core-wp-emails.php:1021 bp-core/bp-core-wp-emails.php:1138
+#: bp-core/bp-core-wp-emails.php:1184 bp-core/bp-core-wp-emails.php:1410
 msgid ""
 "You can safely ignore and delete this email if you do not want to take this "
 "action."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1066 bp-core/bp-core-wp-emails.php:1077
-#: bp-core/bp-core-wp-emails.php:1083 bp-core/bp-core-wp-emails.php:1131
-#: bp-core/bp-core-wp-emails.php:1539
+#: bp-core/bp-core-wp-emails.php:1070 bp-core/bp-core-wp-emails.php:1081
+#: bp-core/bp-core-wp-emails.php:1087 bp-core/bp-core-wp-emails.php:1135
+#: bp-core/bp-core-wp-emails.php:1543
 #. translators: Do not translate SITENAME, SITEURL; those are placeholders.
 #. translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those
 #. are placeholders.
@@ -6058,176 +6062,176 @@ msgstr ""
 msgid "Howdy,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1067
+#: bp-core/bp-core-wp-emails.php:1071
 msgid "A user data privacy request has been confirmed on ###SITENAME###:"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1068
+#: bp-core/bp-core-wp-emails.php:1072
 msgid "User: ###USER_EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1069
+#: bp-core/bp-core-wp-emails.php:1073
 msgid "Request: ###DESCRIPTION###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1070
+#: bp-core/bp-core-wp-emails.php:1074
 msgid "You can view and manage these data privacy requests here:"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1071
+#: bp-core/bp-core-wp-emails.php:1075
 msgid "###MANAGE_URL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1072 bp-core/bp-core-wp-emails.php:1080
-#: bp-core/bp-core-wp-emails.php:1087 bp-core/bp-core-wp-emails.php:1135
+#: bp-core/bp-core-wp-emails.php:1076 bp-core/bp-core-wp-emails.php:1084
+#: bp-core/bp-core-wp-emails.php:1091 bp-core/bp-core-wp-emails.php:1139
 msgid ""
 "Regards, <br />All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /><a "
 "href=\"###SITEURL###\">###SITEURL###</a>"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1078 bp-core/bp-core-wp-emails.php:1084
+#: bp-core/bp-core-wp-emails.php:1082 bp-core/bp-core-wp-emails.php:1088
 msgid ""
 "Your request to erase your personal data on ###SITENAME### has been "
 "completed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1079 bp-core/bp-core-wp-emails.php:1085
+#: bp-core/bp-core-wp-emails.php:1083 bp-core/bp-core-wp-emails.php:1089
 msgid ""
 "If you have any follow-up questions or concerns, please contact the site "
 "administrator."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1086
+#: bp-core/bp-core-wp-emails.php:1090
 msgid ""
 "For more information, you can also read our privacy policy: "
 "###PRIVACY_POLICY_URL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1132
+#: bp-core/bp-core-wp-emails.php:1136
 msgid ""
 "A request has been made to perform the following action on your account: "
 "<br />###DESCRIPTION###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1133
+#: bp-core/bp-core-wp-emails.php:1137
 msgid ""
 "To confirm this, please click on the following link: <br /><a "
 "href=\"###CONFIRM_URL###\">###CONFIRM_URL###</a>"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1178
+#: bp-core/bp-core-wp-emails.php:1182
 msgid ""
 "You recently requested to have the administration email address on your "
 "site changed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1274
+#: bp-core/bp-core-wp-emails.php:1278
 #. translators: New site notification email.
 msgid "New Site: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1275
+#: bp-core/bp-core-wp-emails.php:1279
 msgid "URL: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1276
+#: bp-core/bp-core-wp-emails.php:1280
 msgid "Remote IP address: %s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1277
+#: bp-core/bp-core-wp-emails.php:1281
 msgid "Disable these notifications:%s"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1330
+#: bp-core/bp-core-wp-emails.php:1334
 #. translators: Do not translate USERNAME, SITE_NAME, BLOG_URL, PASSWORD: those
 #. are placeholders.
 msgid "Howdy USERNAME,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1331
+#: bp-core/bp-core-wp-emails.php:1335
 msgid "Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1332
+#: bp-core/bp-core-wp-emails.php:1336
 msgid "You can log in to the administrator account with the following information:"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1333
+#: bp-core/bp-core-wp-emails.php:1337
 msgid "Username: USERNAME"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1334
+#: bp-core/bp-core-wp-emails.php:1338
 msgid "Password: PASSWORD"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1335
+#: bp-core/bp-core-wp-emails.php:1339
 msgid "Log in here: BLOG_URLwp-login.php"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1336
+#: bp-core/bp-core-wp-emails.php:1340
 msgid "We hope you enjoy your new site. Thanks! <br />--The Team @ SITE_NAME"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1404
+#: bp-core/bp-core-wp-emails.php:1408
 msgid ""
 "You recently requested to have the network admin email address on your "
 "network changed."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1405
+#: bp-core/bp-core-wp-emails.php:1409
 msgid ""
 "If this is correct, please click on the following link to change it: <br "
 "/>###ADMIN_URL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1408 bp-core/bp-core-wp-emails.php:1450
-#: bp-core/bp-core-wp-emails.php:1499
+#: bp-core/bp-core-wp-emails.php:1412 bp-core/bp-core-wp-emails.php:1454
+#: bp-core/bp-core-wp-emails.php:1503
 msgid "Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1446 bp-core/bp-core-wp-emails.php:1495
+#: bp-core/bp-core-wp-emails.php:1450 bp-core/bp-core-wp-emails.php:1499
 #. translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those
 #. are placeholders.
 msgid "Hi,"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1447
+#: bp-core/bp-core-wp-emails.php:1451
 msgid ""
 "This notice confirms that the network admin email address was changed on "
 "###SITENAME###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1448
+#: bp-core/bp-core-wp-emails.php:1452
 msgid "The new network admin email address is ###NEW_EMAIL###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1449 bp-core/bp-core-wp-emails.php:1498
+#: bp-core/bp-core-wp-emails.php:1453 bp-core/bp-core-wp-emails.php:1502
 msgid "This email has been sent to ###OLD_EMAIL###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1455
+#: bp-core/bp-core-wp-emails.php:1459
 #. translators: Network admin email change notification email subject. %s:
 #. Network title
 msgid "[%s] Notice of Network Admin Email Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1496
+#: bp-core/bp-core-wp-emails.php:1500
 msgid ""
 "This notice confirms that the admin email address was changed on "
 "###SITENAME###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1497
+#: bp-core/bp-core-wp-emails.php:1501
 msgid "The new admin email address is ###NEW_EMAIL###."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1504
+#: bp-core/bp-core-wp-emails.php:1508
 #. translators: Site admin email change notification email subject. %s: Site
 #. title
 msgid "[%s] Notice of Admin Email Change"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1540
+#: bp-core/bp-core-wp-emails.php:1544
 msgid ""
 "Your request for an export of personal data has been completed. You may "
 "download your personal data by clicking on the link below. For privacy and "
@@ -6235,11 +6239,11 @@ msgid ""
 "please download it before then."
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1541
+#: bp-core/bp-core-wp-emails.php:1545
 msgid "###LINK###"
 msgstr ""
 
-#: bp-core/bp-core-wp-emails.php:1542
+#: bp-core/bp-core-wp-emails.php:1546
 msgid ""
 "Regards, <br /> All at <a href=\"###SITEURL###\">###SITENAME###</a> <br /> "
 "<a href=\"###SITEURL###\">###SITEURL###</a>"
@@ -21544,14 +21548,18 @@ msgid "No groups found!"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/no-results.php:3
-msgid "Sorry, there were no results founds."
+msgid "Sorry, there were no results found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/results-page.php:9
+#: bp-templates/bp-nouveau/buddypress/search/results-page.php:11
+msgid "No results found"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/search/results-page.php:13
 msgid "Showing results for '%s'"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/search/results-page.php:10
+#: bp-templates/bp-nouveau/buddypress/search/results-page.php:15
 msgid "No results for '%s'"
 msgstr ""
 
@@ -23063,7 +23071,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:757
 #: bp-xprofile/bp-xprofile-filters.php:862
-#: bp-xprofile/bp-xprofile-filters.php:967
+#: bp-xprofile/bp-xprofile-filters.php:975
 #: bp-xprofile/classes/class-bp-rest-xprofile-update-endpoint.php:484
 #: bp-xprofile/screens/edit.php:136
 #. translators: Field name
@@ -23100,7 +23108,7 @@ msgstr ""
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:978
+#: bp-xprofile/bp-xprofile-filters.php:986
 msgid "Please enter valid %s profile url."
 msgstr ""
 
