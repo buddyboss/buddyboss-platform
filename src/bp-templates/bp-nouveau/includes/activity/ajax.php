@@ -764,19 +764,16 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		$activity->save();
 
 		if ( bp_is_active( 'media' ) ) {
-			// Update privacy for the documents which are uploaded in root of the documents.
-			$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
-			if ( ! empty( $document_ids ) ) {
-				$document_ids = explode( ',', $document_ids );
-				if ( ! empty( $document_ids ) ) {
-					foreach ( $document_ids as $id ) {
-						$document = new BP_Document( $id );
-						if ( empty( $document->folder_id ) ) {
-							$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $activity->privacy, $id );
-							$wpdb->query( $q );
-						}
-					}
-				}
+
+			if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+				// Update privacy for the documents which are uploaded in root of the documents.
+				bp_document_update_activity_privacy( $activity->id, $activity->privacy );
+			}
+
+
+			if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+				// Update privacy for the media which are uploaded in the activity.
+				bp_media_update_activity_privacy( $activity->id, $activity->privacy );
 			}
 		}
 

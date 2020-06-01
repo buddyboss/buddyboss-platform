@@ -2971,3 +2971,34 @@ WHERE f.parent = 0",
 
 	return $parent_id;
 }
+
+/**
+ * Update activity document privacy based on activity.
+ *
+ * @param int    $activity_id Activity ID.
+ * @param string $privacy     Privacy
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
+	global $wpdb, $bp;
+
+	if ( empty( $activity_id ) || empty( $privacy ) ) {
+		return;
+	}
+
+	// Update privacy for the documents which are uploaded in root of the documents.
+	$document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+	if ( ! empty( $document_ids ) ) {
+		$document_ids = explode( ',', $document_ids );
+		if ( ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $id ) {
+				$document = new BP_Document( $id );
+				if ( empty( $document->folder_id ) ) {
+					$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s WHERE id = %d", $privacy, $id );
+					$wpdb->query( $q );
+				}
+			}
+		}
+	}
+}

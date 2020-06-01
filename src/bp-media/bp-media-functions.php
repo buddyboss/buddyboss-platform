@@ -2258,3 +2258,34 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
 	return apply_filters( 'bp_media_query_privacy', $privacy, $user_id, $group_id, $scope );
 }
+
+/**
+ * Update activity media privacy based on activity.
+ *
+ * @param int    $activity_id Activity ID.
+ * @param string $privacy     Privacy
+ *
+ * @since BuddyBoss 1.3.6
+ */
+function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
+	global $wpdb, $bp;
+
+	if ( empty( $activity_id ) || empty( $privacy ) ) {
+		return;
+	}
+
+	// Update privacy for the media which are uploaded in activity.
+	$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	if ( ! empty( $media_ids ) ) {
+		$media_ids = explode( ',', $media_ids );
+		if ( ! empty( $media_ids ) ) {
+			foreach ( $media_ids as $id ) {
+				$media = new BP_Media( $id );
+				if ( ! empty( $media->id ) ) {
+					$media->privacy = $privacy;
+					$media->save();
+				}
+			}
+		}
+	}
+}
