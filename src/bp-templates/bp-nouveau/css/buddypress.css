@@ -13442,7 +13442,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 .bb-document-theater .bb-media-section .img-section img {
-  padding: 20px 0;
+  padding: 20px;
   max-height: calc(90vh - 30px);
 }
 
@@ -13470,13 +13470,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   position: absolute;
   top: 0;
   left: 0;
-  padding: 6px 0;
+  padding: 6px;
   right: 375px;
   text-align: center;
   border-bottom: 1px solid #ecedee;
   font-size: 16px;
   font-weight: 500;
   border-radius: 4px 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bb-document-theater .bb-media-info-section.document {
