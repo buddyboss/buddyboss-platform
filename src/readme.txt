@@ -70,6 +70,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Emails - Fixed email not sending for site admin changing a user's password
 * LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
+* WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API
