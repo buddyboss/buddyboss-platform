@@ -232,16 +232,10 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			settings_fields( $this->tab_name );
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
-			printf(
-				'<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="%s" />
-			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
-			);
-
 			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
 			?>
-			<p>
+			<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
 				<a class="button" href="<?php echo bp_get_admin_url(
 					add_query_arg(
 						array(
@@ -253,6 +247,13 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 			</p>
 			<?php
+			} else {
+				printf(
+						'<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="%s" />
+			</p>',
+						esc_attr__( 'Save Settings', 'buddyboss' )
+				);
 			}
 		}
 
