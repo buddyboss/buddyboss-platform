@@ -610,7 +610,7 @@ table.extension-listing thead th.ext-head-desc {
 }
 
 table.extension-listing thead th.ext-head-icon {
-  width: 14%;
+  width: 4em;
 }
 
 table.extension-listing thead td.ext-head-enable {
@@ -741,7 +741,7 @@ table.extension-listing .icon-select-main {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  width: calc(100% - 50px);
+  width: 100%;
 }
 
 table.extension-listing .icon-select-main .icon-select-button {
