@@ -902,7 +902,8 @@
 
 						//Set the button value to the first el of the array by default
 						var currentSelectedIcon = $( this ).closest('td').find( '.extension-icon' ).val();
-						$( this ).closest('td').find( '.icon-select-main .icon-select-button' ).html('<li><i class="'+ currentSelectedIcon +'"></i><span>'+ currentSelectedIcon +'</span></li>');
+						var currentSelectedIconText = $( this ).closest('td').find( '.extension-icon option:selected' ).text();
+						$( this ).closest('td').find( '.icon-select-main .icon-select-button' ).html('<li><i class="'+ currentSelectedIcon +'"></i><span>'+ currentSelectedIconText +'</span></li>');
 					}
 
 				});
@@ -933,18 +934,28 @@
 				function() {
 
 					var parent = $( this ).closest( 'table.extension-listing' );
-
+					console.log ( parseInt( $( '.extension-listing tr.extra-extension' ).length ) );
 					$( this ).closest( 'tr' ).remove();
-
+					console.log ( parseInt( $( '.extension-listing tr.extra-extension' ).length ) );
 					var totalCount = parseInt( $( '.extension-listing tr.extra-extension' ).length );
+					totalCount = 1;
 					parent.find( 'tbody tr.extra-extension' ).each(
 						function() {
+							console.log ( totalCount );
 								$( this ).find( 'input.extension-check' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
+								$( this ).find( 'input.extension-check' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
 								$( this ).find( 'input.extension-name' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
+								$( this ).find( 'input.extension-name' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][name]' );
 								$( this ).find( 'input.extension-hidden' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
+								$( this ).find( 'input.extension-hidden' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
 								$( this ).find( 'input.extension-extension' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
+								$( this ).find( 'input.extension-extension' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
 								$( this ).find( 'input.extension-mime' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
+								$( this ).find( 'input.extension-mime' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
 								$( this ).find( 'input.extension-desc' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'input.extension-desc' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+								$( this ).find( 'select.extension-icon' ).attr( 'name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
+								$( this ).find( 'select.extension-icon' ).attr( 'data-name', 'bp_document_extensions_support[' + totalCount + '][icon]' );
 								totalCount = totalCount + 1;
 						}
 					);
