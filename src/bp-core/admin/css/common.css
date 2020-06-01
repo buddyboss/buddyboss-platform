@@ -812,10 +812,6 @@ table.extension-listing .icon-select-main .custom-extension-list li {
   margin: 0;
 }
 
-table.extension-listing .icon-select-main .custom-extension-list li:hover {
-  background-color: #f9f9f9;
-}
-
 table.extension-listing .icon-select-main .custom-extension-list li:first-child {
   border-bottom: 1px solid #eee;
   padding-top: 10px;
@@ -828,6 +824,14 @@ table.extension-listing .icon-select-main .custom-extension-list li:nth-child(2)
 
 table.extension-listing .icon-select-main .custom-extension-list li:last-child {
   padding-bottom: 10px;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li:hover {
+  background-color: #f9f9f9;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li span {
+  vertical-align: middle;
 }
 
 table.extension-listing .icon-select-main .custom-extension-list i {
