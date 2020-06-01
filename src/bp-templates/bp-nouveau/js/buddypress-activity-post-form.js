@@ -2361,7 +2361,7 @@ window.bp = window.bp || {};
 										window.instgrm.Embeds.process();
 									}
 									if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
-										window.FB.XFBML.parse( document.getElementById( 'activity-' + response.id ) );
+										window.FB.XFBML.parse( $( document ).find( '#activity-' + response.id ).get(0) );
 									}
 								}
 							}
