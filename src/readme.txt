@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
 * Forums - Fixed issues when using many levels of threaded replies
 * Forums - Fixed empty Forums page displaying with Private Network enabled
+* Forums - Fixed HTML elements displaying when pasting content as subscriber
 * Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Network Search - Fixed results title when using apostrophe or blank entry
 * Emails - Fixed email not sending for site admin changing a user's password
