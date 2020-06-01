@@ -12168,9 +12168,9 @@ a.bb-close-model {
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description {
   width: 100%;
-  resize: none;
   margin-bottom: 10px;
   line-height: 1.5;
+  overflow: auto;
   min-height: 75px;
 }
 

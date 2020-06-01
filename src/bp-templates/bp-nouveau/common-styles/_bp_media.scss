@@ -673,10 +673,10 @@ a.bb-close-model {
 
 			#add-activity-description {
 				width: 100%;
-				resize: none;
 				margin-bottom: 10px;
 				line-height: 1.5;
-    			min-height: 75px;
+				overflow: auto;
+				min-height: 75px;
 
 				&:focus {
 
