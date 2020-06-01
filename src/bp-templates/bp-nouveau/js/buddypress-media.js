@@ -3052,7 +3052,14 @@ window.bp = window.bp || {};
 				//Disable move button if current folder is already a parent
 				setTimeout( function() {
 
-					if( currentTargetParent === $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr( 'data-id' ) && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' )) ) {
+					var fileID = 0;
+
+					if( $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).hasClass('hidden') ) {
+						fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).prev().attr('id');
+					} else {
+						fileID = $( targetPopup ).find( '.breadcrumbs-append-ul-li .item > span:last-child' ).attr('id');
+					}
+					if( currentTargetParent ===  fileID && ( $( targetPopup ).hasClass( 'bp-media-move-file' ) || $( targetPopup ).hasClass( 'bp-media-move-folder' )) ) {
 						$( targetPopup ).find( '.bp-document-move' ).addClass('is-disabled');
 						$( targetPopup ).find( '.bp-folder-move' ).addClass('is-disabled');
 					} else {
