@@ -1121,7 +1121,7 @@ function bp_media_settings_callback_extension_document_support() {
 			$name       = 'bp_document_extensions_support[' . $k . ']';
 			$edit       = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'readonly="readonly"' : '';
 			$class      = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'hide-border' : '';
-			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? true : false;
+			$is_default = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 1 : 0;
 			$tr_class   = ( isset( $extension['is_default'] ) && (int) $extension['is_default'] ) ? 'default-extension' : 'extra-extension custom-extension';
 
 			if ( isset( $extension['icon'] ) && '' !== $extension['icon'] ) {
@@ -1139,7 +1139,7 @@ function bp_media_settings_callback_extension_document_support() {
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Extension', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>" placeholder="<?php echo esc_html__( '.extension', 'buddyboss' ); ?>"/>
-					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo ( isset( $extension['is_default'] ) ) ? esc_attr( $extension['is_default'] ) : ''; ?>"/>
+					<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[is_default]' ); ?>" id="<?php echo esc_attr( $name ) . 'is_default'; ?>" type="hidden" value="<?php echo $is_default; ?>"/>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Description', 'buddyboss' ); ?>">
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
