@@ -1113,9 +1113,11 @@ function bp_media_settings_callback_extension_document_support() {
 					<input class="<?php echo esc_attr( $class ); ?>" <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" placeholder="<?php echo esc_html__( 'description', 'buddyboss' ); ?>"/>
 				</td>
 				<td data-colname="<?php echo esc_html__( 'Icon', 'buddyboss' ); ?>">
-					<i class="bb-icon <?php echo $document_icon; ?>"></i>
-
 					<?php
+					if ( $is_default ) { ?>
+						<i class="bb-icon <?php echo $document_icon; ?>"></i>
+						<?php
+					}
 					if ( ! $is_default ) {
 						?>
 						<select class="extension-icon" name="<?php echo esc_attr( $name . '[icon]' ); ?>" data-name="<?php echo esc_attr( $name . '[icon]' ); ?>">
