@@ -9,6 +9,15 @@
 	position: relative;
 }
 
+.fb-post.fb_iframe_widget {
+	margin: 0 -3px;
+
+	& + .bb-activity-media-wrap {
+		margin-top: 15px;
+	}
+
+}
+
 .act-grid-1-1 {
 	flex: 0 0 100%;
 	max-width: 100%;

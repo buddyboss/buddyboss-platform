@@ -2381,6 +2381,11 @@ input.search-query-input {
   position: relative;
   overflow: auto;
   zoom: 1;
+  margin: 0 -3px;
+}
+
+.activity-link-preview-container + .bb-activity-media-wrap {
+  margin-top: 10px;
 }
 
 .activity-video-preview .activity-link-preview-container {
@@ -11534,6 +11539,14 @@ body.login .login-popup .mfp-close:hover {
   margin: 0 -3px;
   align-items: flex-start;
   position: relative;
+}
+
+.fb-post.fb_iframe_widget {
+  margin: 0 -3px;
+}
+
+.fb-post.fb_iframe_widget + .bb-activity-media-wrap {
+  margin-top: 15px;
 }
 
 .act-grid-1-1 {

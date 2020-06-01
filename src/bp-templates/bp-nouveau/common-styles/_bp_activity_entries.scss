@@ -622,6 +622,11 @@
 	position: relative;
 	overflow: auto;
 	zoom: 1;
+	margin: 0 -3px;
+
+	& + .bb-activity-media-wrap {
+		margin-top: 10px;
+	}
 
 	.activity-video-preview & {
 		border: 0;
