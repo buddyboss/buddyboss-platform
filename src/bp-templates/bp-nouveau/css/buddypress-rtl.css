@@ -12170,6 +12170,8 @@ a.bb-close-model {
   width: 100%;
   resize: none;
   margin-bottom: 10px;
+  line-height: 1.5;
+  min-height: 75px;
 }
 
 .bb-media-info-section .activity-media-description .bp-edit-media-activity-description #add-activity-description:focus {
