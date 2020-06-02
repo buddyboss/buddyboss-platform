@@ -4440,6 +4440,14 @@ window.bp = window.bp || {};
 			self.showDocument();
 			self.navigationDocumentCommands();
 			self.getDocumentsActivity();
+
+			//Stop audio if it is playing before opening theater
+			if( $.inArray( self.current_document.extension, [ 'wav', 'mp3', 'ogg' ]) !== -1 ) {
+				if( $( event.currentTarget ).closest( '.bb-activity-media-elem.document-activity' ).length &&  $( event.currentTarget ).closest( '.bb-activity-media-elem.document-activity' ).find( '.document-audio-wrap' ).length ) {
+					$( event.currentTarget ).closest( '.bb-activity-media-elem.document-activity' ).find( '.document-audio-wrap audio' )[0].pause();
+				}
+			}
+
 			$( '.bb-media-model-wrapper.media' ).hide();
 			$( '.bb-media-model-wrapper.document' ).show();
 			self.is_open_document = true;
@@ -4730,7 +4738,7 @@ window.bp = window.bp || {};
 						document_elements.find( '.bb-document-section .document-preview' ).html( '' );
 						document_elements.find( '.bb-document-section .document-preview' ).html('<p style="text-align: center;"><i class="bb-icon-alert-triangle" style="margin-right: 5px;"></i>' + BP_Nouveau.media.document_preview_error );
 					});
-			} else if( $.inArray( self.current_document.extension, [ 'wav', 'mp3' ]) !== -1) {
+			} else if( $.inArray( self.current_document.extension, [ 'wav', 'mp3', 'ogg' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 				document_elements.find( '.bb-document-section .document-preview' ).html( '' );

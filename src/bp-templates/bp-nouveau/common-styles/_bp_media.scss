@@ -2008,6 +2008,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		.document-audio {
 			display: flex;
 			height: 100%;
+			width: 100%;
 			padding: 0 15px;
 			align-items: center;
 			justify-content: center;
@@ -2015,6 +2016,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 			audio {
 				outline: 0;
+				min-width: 80%;
 			}
 		}
 
