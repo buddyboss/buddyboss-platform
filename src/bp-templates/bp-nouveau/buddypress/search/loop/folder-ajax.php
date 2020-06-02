@@ -51,7 +51,7 @@ $folder_link      = bp_get_folder_folder_link();
 							<?php
 						} else {
 							?>
-							<span class="media-folder_group"><?php esc_html_e( '-', 'buddyboss' ); ?></span>
+							<span class="media-folder_group"> </span>
 							<?php
 						}
 						?>

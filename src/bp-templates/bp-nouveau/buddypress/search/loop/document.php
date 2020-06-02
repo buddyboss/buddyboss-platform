@@ -77,7 +77,7 @@ $link = ( $attachment_id ) ? $download_link : '';
 								<?php
 							} else {
 								?>
-								<span class="media-folder_group"><?php esc_html_e( '-', 'buddyboss' ); ?></span>
+								<span class="media-folder_group"> </span>
 								<?php
 							}
 							?>

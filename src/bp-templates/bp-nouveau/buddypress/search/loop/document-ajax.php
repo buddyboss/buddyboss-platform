@@ -75,7 +75,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 								<?php
 							} else {
 								?>
-								<span class="media-folder_group"><?php esc_html_e( '-', 'buddyboss' ); ?></span>
+								<span class="media-folder_group"> </span>
 								<?php
 							}
 							?>
