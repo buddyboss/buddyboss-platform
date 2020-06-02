@@ -92,6 +92,9 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'download_button'                 => __( 'Download', 'buddyboss' ),
 		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'document_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
+		'sidebar_download_text'           => __( 'Download', 'buddyboss' ),
+		'sidebar_view_text'               => __( 'View', 'buddyboss' ),
+		'create_folder'                   => __( 'Create Folder', 'buddyboss' ),
 	);
 
 	$document_options = array(

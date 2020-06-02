@@ -437,7 +437,7 @@ window.bp = window.bp || {};
 			$( '.location-folder-list-wrap-main' ).hide();
 			$( '.create-popup-folder-wrap' ).show();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().hide();
-			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).append('<p> Create Folder</p>');
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).append('<p>' + BP_Nouveau.media.create_folder + '</p>');
 			$( '.modal-container #bb-folder-privacy' ).addClass( 'new-folder-create-privacy' );
 			$( document ).find( '.open-popup .error' ).hide();
 		},
