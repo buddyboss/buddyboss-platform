@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-02 03:15:49+00:00\n"
+"POT-Creation-Date: 2020-06-02 06:52:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -954,7 +954,7 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:787
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:15
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:130
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:134
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:269
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
@@ -978,7 +978,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-pages.php:312
 #: bp-core/admin/bp-core-admin-pages.php:346
 #: bp-core/deprecated/buddyboss/1.0.php:75
-#: bp-document/bp-document-filters.php:231 bp-forums/admin/replies.php:783
+#: bp-document/bp-document-filters.php:245 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
 #: bp-groups/classes/class-bp-groups-list-table.php:576
 #: bp-invites/bp-invites-admin.php:273
@@ -7353,13 +7353,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8242,8 +8242,8 @@ msgstr ""
 msgid "Document Folders"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:243
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:107
+#: bp-document/bp-document-filters.php:257
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:111
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:240
 #: bp-templates/bp-nouveau/includes/document/functions.php:92
 #: bp-templates/bp-nouveau/includes/document/functions.php:95
@@ -12733,7 +12733,7 @@ msgstr ""
 #: bp-forums/replies/template.php:2300
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:27
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:126
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:130
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:266
 msgid "Move"
 msgstr ""
@@ -20658,32 +20658,33 @@ msgstr ""
 msgid "Click to Download"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:106
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:110
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:538
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2063
 msgid "Collapse"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:111
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:115
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:233
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:540
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2065
 msgid "More actions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:120
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:124
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:243
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:539
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2064
 msgid "Copy Download Link"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:143
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:147
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:479
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2004
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:169
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:173
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:504
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2029
 msgid "Click to expand"
