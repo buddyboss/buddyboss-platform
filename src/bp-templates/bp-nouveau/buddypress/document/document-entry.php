@@ -136,7 +136,7 @@ if ( wp_is_mobile() ) {
 			?>
 		</div>
 	</div>
-	
+
 		<div class="media-folder_group">
 		<?php
 			if ( bp_is_document_directory() && bp_is_active( 'groups' ) && isset( $_POST ) && isset( $_POST['scope'] ) && 'personal' !== $_POST['scope'] ) {
@@ -171,7 +171,7 @@ if ( wp_is_mobile() ) {
 			}
 		?>
 		</div>
-		
+
 	<div class="media-folder_visibility">
 		<div class="media-folder_details__bottom">
 
@@ -230,7 +230,7 @@ if ( wp_is_mobile() ) {
 			<?php
 				if ( $show ) {
 			?>
-			<a href="#" class="media-folder_action__anchor" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>"> <i class="bb-icon-menu-dots-v"></i> </a>
+			<a href="#" class="media-folder_action__anchor"> <i class="bb-icon-menu-dots-v"></i> </a>
 			<div class="media-folder_action__list">
 				<ul>
 					<?php
