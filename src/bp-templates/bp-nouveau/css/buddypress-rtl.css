@@ -13347,6 +13347,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   border-radius: 50%;
 }
 
+.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-preview-wrap {
+  display: none;
+}
+
 .bb-document-theater .bb-media-section {
   height: 90vh;
   overflow: visible;

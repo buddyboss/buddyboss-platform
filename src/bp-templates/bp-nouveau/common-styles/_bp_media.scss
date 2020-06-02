@@ -1871,8 +1871,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	.bb-media-model-inner {
 		overflow: visible;
 
-		.bb-media-info-section.document .avatar {
-			border-radius: 50%;
+		.bb-media-info-section.document {
+
+			.avatar {
+				border-radius: 50%;
+			}
+
+			.activity-comments li .acomment-content .document-preview-wrap{
+				display: none;
+			}
+
 		}
 	}
 
