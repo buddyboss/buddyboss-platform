@@ -1648,6 +1648,26 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		float: right;
 	}
 
+	.document-uploader-footer {
+
+		.bb-dropdown-wrap {
+			float: left;
+			margin-bottom: 0;
+		}
+
+		#bp-media-document-submit {
+			float: right;
+		}
+
+		@media screen and ( max-width: 420px ) {
+
+			.bb-dropdown-wrap {
+				margin-bottom: 10px;
+			}
+
+		}
+	}
+
 }
 
 #media-folder-document-data-table td.svg-document-icon {

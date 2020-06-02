@@ -13145,6 +13145,21 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   float: right;
 }
 
+#buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
+  float: left;
+  margin-bottom: 0;
+}
+
+#buddypress .bp-media-document-uploader .document-uploader-footer #bp-media-document-submit {
+  float: right;
+}
+
+@media screen and (max-width: 420px) {
+  #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
+    margin-bottom: 10px;
+  }
+}
+
 #media-folder-document-data-table td.svg-document-icon {
   padding-right: 0;
 }
