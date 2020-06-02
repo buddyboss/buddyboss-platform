@@ -1836,7 +1836,7 @@ function bp_document_svg_icon_list() {
 			'title' => __( 'Text', 'buddyboss' )
 		),
 		'default_10' => array(
-			'icon' => 'bb-icon-file-wav',
+			'icon' => 'bb-icon-file-video',
 			'title' => __( 'Video', 'buddyboss' )
 		),
 	);

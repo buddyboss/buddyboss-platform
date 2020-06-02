@@ -1200,7 +1200,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 56px;
+  bottom: 57px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -2206,10 +2206,13 @@ input.search-query-input {
   transform: none;
 }
 
+.medium-editor-toolbar-actions .medium-editor-action-bold b {
+  margin-top: 1px;
+}
+
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
   font-size: 18px;
-  font-weight: 600;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-italic b:before {
