@@ -97,7 +97,7 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 6px;
-		left: 38px;
+		left: 41px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
@@ -118,7 +118,7 @@
 			height: 40px;
 
 			div & {
-				bottom: 10px;
+				bottom: 11px;
 			}
 		}
 
@@ -129,6 +129,10 @@
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
 			height: auto;
+
+			button.medium-editor-button-first {
+				padding-right: 6px;
+			}
 
 			button {
 				box-shadow: none;
@@ -172,7 +176,7 @@
 		.medium-editor-toolbar {
 			top: inherit;
 			bottom: 56px;
-			left: 38px;
+			left: 41px;
 			visibility: hidden;
 			z-index: 99;
 			background-color: #fff;
@@ -190,12 +194,16 @@
 				height: 44px;
 
 				div & {
-					bottom: 56px;
+					bottom: 57px;
 				}
 			}
 
 			.medium-editor-toolbar-actions {
 				background-color: transparent;
+
+				button.medium-editor-button-first {
+					padding-right: 6px;
+				}
 
 				button {
 					box-shadow: none;

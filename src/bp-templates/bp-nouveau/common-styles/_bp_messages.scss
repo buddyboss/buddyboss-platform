@@ -641,6 +641,10 @@ input#send-to-input {
 			height: auto;
 			padding: 0 10px 0 0;
 
+			button.medium-editor-button-first {
+				padding-right: 6px;
+			}
+
 			button {
 				box-shadow: none;
 				padding: 10px 10px 10px 0;

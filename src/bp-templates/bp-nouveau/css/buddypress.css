@@ -1103,7 +1103,7 @@ a.layout-grid-view {
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
   top: inherit;
   bottom: 6px;
-  left: 38px;
+  left: 41px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1128,7 +1128,7 @@ a.layout-grid-view {
 
 div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  bottom: 10px;
+  bottom: 11px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
@@ -1140,6 +1140,11 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
   height: auto;
+}
+
+.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first,
+.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+  padding-right: 6px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button,
@@ -1180,7 +1185,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
   bottom: 56px;
-  left: 38px;
+  left: 41px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1200,11 +1205,15 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 56px;
+  bottom: 57px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
   background-color: transparent;
+}
+
+.activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+  padding-right: 6px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
@@ -2288,9 +2297,9 @@ input.search-query-input {
 #whats-new-toolbar .bb-icon-text-format:before,
 #whats-new-messages-toolbar .bb-icon-text-format:before {
   display: inline-block;
-  width: 23px;
+  width: 28px;
   color: rgba(18, 43, 70, 0.4);
-  font-size: 26px;
+  font-size: 28px;
   margin-top: 1px;
 }
 
@@ -5825,6 +5834,10 @@ input#send-to-input {
   background-color: transparent;
   height: auto;
   padding: 0 10px 0 0;
+}
+
+.bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button.medium-editor-button-first {
+  padding-right: 6px;
 }
 
 .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-actions button {
