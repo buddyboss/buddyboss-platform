@@ -2633,6 +2633,7 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity {
+  background-color: #fff;
   border: 1px solid #e7e9ec;
   border-radius: 5px;
   display: inline-block;
