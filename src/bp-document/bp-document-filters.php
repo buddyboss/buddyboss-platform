@@ -263,6 +263,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$_POST['bp_activity_update'] = true;
 	$_POST['bp_activity_id']     = $activity_id;
 
+	remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 	remove_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	remove_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
@@ -270,6 +271,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	$document_ids = bp_document_add_handler();
 
+	add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
 	add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
