@@ -168,6 +168,13 @@ function bp_document_activity_comment_entry( $comment_id ) {
 			'sort'     => 'ASC',
 		)
 	) ) {
+
+		if ( isset( $_POST ) && isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
+			add_filter( 'bp_document_activity_theater_class', 'bp_document_activity_remove_theater_class_in_comment' );
+			add_filter( 'bp_document_activity_theater_description_class', 'bp_document_activity_remove_theater_description_class_in_comment' );
+			add_filter( 'bp_document_activity_click_to_view_text', 'bp_document_change_popup_view_text_in_comment' );
+			add_filter( 'bp_document_activity_click_to_download_text', 'bp_document_change_popup_download_text_in_comment' );
+		}
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
@@ -179,7 +186,61 @@ function bp_document_activity_comment_entry( $comment_id ) {
 			?>
 		</div>
 		<?php
+		if ( isset( $_POST ) && isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
+			remove_filter( 'bp_document_activity_theater_class', 'bp_document_activity_remove_theater_class_in_comment' );
+			remove_filter( 'bp_document_activity_theater_description_class', 'bp_document_activity_remove_theater_description_class_in_comment' );
+			remove_filter( 'bp_document_activity_click_to_view_text', 'bp_document_change_popup_view_text_in_comment' );
+			remove_filter( 'bp_document_activity_click_to_download_text', 'bp_document_change_popup_download_text_in_comment' );
+		}
 	}
+}
+
+/**
+ * Remove the theatre class in popup activity comment document.
+ *
+ * @param $class
+ *
+ * @return string
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_activity_remove_theater_class_in_comment( $class ) {
+	return '';
+}
+
+/**
+ * Remove the theatre class in popup activity comment document.
+ *
+ * @param $class
+ *
+ * @return string
+ * @@since BuddyBoss 1.3.6
+ */
+function bp_document_activity_remove_theater_description_class_in_comment( $class ) {
+	return '';
+}
+
+/**
+ * Change the text in activity comment document view.
+ *
+ * @param $text
+ *
+ * @return string|void
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_change_popup_view_text_in_comment( $text ) {
+	return __( 'View', 'buddyboss' );
+}
+
+/**
+ * Change the text in activity comment document view.
+ *
+ * @param $text
+ *
+ * @return string|void
+ * @since BuddyBoss 1.3.6
+ */
+function bp_document_change_popup_download_text_in_comment( $text ) {
+	return __( 'Download', 'buddyboss' );
 }
 
 /**

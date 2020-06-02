@@ -49,13 +49,13 @@ if ( ! empty( $extension_lists ) ) {
 	}
 }
 
-$class_theatre 	= 'bb-open-document-theatre';
-$class_popup 	= 'document-detail-wrap-description-popup';
-$click_text 	= 'Click to view';
+$class_theatre 	= apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
+$class_popup 	= apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
+$click_text 	= apply_filters( 'bp_document_activity_click_to_view_text', __( 'Click to view', 'buddyboss' ) );
 if ( 'forums' === bp_get_db_document_privacy() ) {
 	$class_theatre 	= '';
 	$class_popup	= '';
-	$click_text 	= 'Click to Download';
+	$click_text 	= apply_filters( 'bp_document_activity_click_to_download_text', __( 'Click to Download', 'buddyboss' ) );
 }
 
 ?>

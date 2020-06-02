@@ -222,7 +222,6 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
-			error_log( $sql );
 			return apply_filters(
 				'bp_search_folders_sql',
 				$sql,
