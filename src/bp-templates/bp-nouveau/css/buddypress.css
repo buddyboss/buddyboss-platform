@@ -1288,7 +1288,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-  bottom: -25px;
+  bottom: 55px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -1797,6 +1797,9 @@ input.search-query-input {
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
     bottom: 110px;
   }
+  .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 109px;
+  }
 }
 
 @media screen and (max-width: 560px) {
@@ -1805,6 +1808,15 @@ input.search-query-input {
   }
   div #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
     bottom: 110px;
+  }
+  .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 109px;
+  }
+  .groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 55px;
+  }
+  .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+    bottom: 143px;
   }
   .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
     bottom: 56px;

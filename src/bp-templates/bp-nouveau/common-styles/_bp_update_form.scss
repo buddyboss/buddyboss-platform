@@ -276,7 +276,7 @@
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-	bottom: -25px;
+	bottom: 55px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -827,6 +827,10 @@ input.search-query-input {
 		}
 
 	}
+
+	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 109px;
+	}
 }
 
 @media screen and (max-width: 560px) {
@@ -847,6 +851,18 @@ input.search-query-input {
 			}
 
 		}
+	}
+
+	.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 109px;
+	}
+
+	.groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 55px;
+	}
+
+	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 143px;
 	}
 
 	.bp_group #buddypress .activity-update-form .focus-in {
