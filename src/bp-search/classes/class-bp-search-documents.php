@@ -212,13 +212,22 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
+			$privacy = array( 'public' );
+			if( is_user_logged_in() ) {
+				$privacy[] = 'loggedin';
+				$privacy[] = 'onlyme';
+				if ( bp_is_active( 'friends' ) ) {
+					$privacy[] = 'friends';
+				}
+			}
+
 			$sql .= " FROM
 						{$bp->document->table_name} d, {$bp->document->table_name_meta} dm
 						WHERE
 							( d.id = dm.document_id )
 							AND
                   (
-									   ( d.title LIKE %s OR dm.meta_key = 'extension' AND dm.meta_value LIKE %s OR dm.meta_key = 'file_name' AND dm.meta_value LIKE %s ) AND d.folder_id IN ( " . implode( ',', $folder_ids ) . " ) AND d.privacy IN ( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' )
+									   ( d.title LIKE %s OR dm.meta_key = 'extension' AND dm.meta_value LIKE %s OR dm.meta_key = 'file_name' AND dm.meta_value LIKE %s ) AND d.folder_id IN ( " . implode( ',', $folder_ids ) . " ) AND d.privacy IN ( '" . implode( "','", $privacy ) . "' )
 							    ) ";
 
 			if ( bp_is_active( 'friends' ) || bp_is_active( 'groups' ) ) {
