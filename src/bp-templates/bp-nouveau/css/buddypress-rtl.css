@@ -1200,7 +1200,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 57px;
+  bottom: 56px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -2204,10 +2204,6 @@ input.search-query-input {
   line-height: 1;
   display: block;
   transform: none;
-}
-
-.medium-editor-toolbar-actions .medium-editor-action-bold b {
-  margin-top: 1px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {

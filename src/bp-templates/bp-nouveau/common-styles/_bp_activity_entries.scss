@@ -443,13 +443,9 @@
 		}
 	}
 
-	.medium-editor-action-bold b {
-		margin-top: 1px;
-
-		&:before {
-			content: "\e94a";
-			font-size: 18px;
-		}
+	.medium-editor-action-bold b:before {
+		content: "\e94a";
+		font-size: 18px;
 	}
 
 	.medium-editor-action-italic b:before {
