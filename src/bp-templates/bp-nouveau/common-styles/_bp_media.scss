@@ -1901,8 +1901,14 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 				.document-preview-wrap,
 				.document-text-wrap,
-				.document-audio-wrap {
+				.document-audio-wrap,
+				.more_text_view,
+				.document-helper-text-click {
 					display: none;
+				}
+
+				.document-helper-text-inner {
+					text-transform: capitalize;
 				}
 
 			}

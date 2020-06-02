@@ -169,13 +169,6 @@ function bp_document_activity_comment_entry( $comment_id ) {
 		)
 	) ) {
 
-		if ( isset( $_POST ) && isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
-			//add_filter( 'bp_document_music_preview', 'bp_document_music_preview_remove_in_comment' );
-			//add_filter( 'bp_document_text_preview', 'bp_document_text_preview_remove_in_comment' );
-			//add_filter( 'bp_document_image_preview', 'bp_document_image_preview_remove_in_comment' );
-			add_filter( 'bp_document_activity_click_to_view_text', 'bp_document_change_popup_view_text_in_comment' );
-			add_filter( 'bp_document_activity_click_to_download_text', 'bp_document_change_popup_download_text_in_comment' );
-		}
 		?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
@@ -187,13 +180,6 @@ function bp_document_activity_comment_entry( $comment_id ) {
 			?>
 		</div>
 		<?php
-		if ( isset( $_POST ) && isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
-			//remove_filter( 'bp_document_music_preview', 'bp_document_music_preview_remove_in_comment' );
-			//remove_filter( 'bp_document_text_preview', 'bp_document_text_preview_remove_in_comment' );
-			//remove_filter( 'bp_document_image_preview', 'bp_document_image_preview_remove_in_comment' );
-			remove_filter( 'bp_document_activity_click_to_view_text', 'bp_document_change_popup_view_text_in_comment' );
-			remove_filter( 'bp_document_activity_click_to_download_text', 'bp_document_change_popup_download_text_in_comment' );
-		}
 	}
 }
 

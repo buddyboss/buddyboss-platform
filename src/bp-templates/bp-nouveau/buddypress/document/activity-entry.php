@@ -51,11 +51,11 @@ if ( ! empty( $extension_lists ) ) {
 
 $class_theatre 	= apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
 $class_popup 	= apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
-$click_text 	= apply_filters( 'bp_document_activity_click_to_view_text', __( 'Click to view', 'buddyboss' ) );
+$click_text 	= apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
 if ( 'forums' === bp_get_db_document_privacy() ) {
 	$class_theatre 	= '';
 	$class_popup	= '';
-	$click_text 	= apply_filters( 'bp_document_activity_click_to_download_text', __( 'Click to Download', 'buddyboss' ) );
+	$click_text 	= apply_filters( 'bp_document_activity_click_to_download_text', __( ' Download', 'buddyboss' ) );
 }
 
 $bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
@@ -103,7 +103,7 @@ $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
 			<?php echo $extension_description; ?>
-			<span class="document-helper-text"> <span> — </span> <span class="document-helper-text-inner"><?php echo _e( $click_text, 'buddyboss' ); ?></span></span>
+			<span class="document-helper-text"> <span> — </span><span class="document-helper-text-click"><?php echo __( 'Click to', 'buddyboss' ) ?></span><span class="document-helper-text-inner"><?php echo _e( $click_text, 'buddyboss' ); ?></span></span>
 		</a>
 	</div>
 	<div class="document-action-wrap">

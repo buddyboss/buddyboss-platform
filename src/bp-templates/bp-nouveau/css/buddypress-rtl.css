@@ -2741,7 +2741,7 @@ span.dashicons.dashicons-admin-file:before {
   margin-left: 6px;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-inner {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text-click {
   margin-right: 3px;
 }
 
@@ -13380,8 +13380,14 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-preview-wrap,
 .bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-text-wrap,
-.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-audio-wrap {
+.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-audio-wrap,
+.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .more_text_view,
+.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-helper-text-click {
   display: none;
+}
+
+.bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-comments li .acomment-content .document-helper-text-inner {
+  text-transform: capitalize;
 }
 
 .bb-document-theater .bb-media-section {
