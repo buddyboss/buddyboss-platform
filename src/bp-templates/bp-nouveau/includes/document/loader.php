@@ -2,7 +2,7 @@
 /**
  * BP Nouveau Document
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.6
  * @version 1.0.0
  * @package BuddyBoss\Core
  */
@@ -11,15 +11,15 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Media Loader class
+ * Document Loader class
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.6
  */
 class BP_Nouveau_Document {
 	/**
 	 * Constructor
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	public function __construct() {
 		$this->setup_globals();
@@ -31,7 +31,7 @@ class BP_Nouveau_Document {
 	/**
 	 * Globals
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	protected function setup_globals() {
 		$this->dir = trailingslashit( dirname( __FILE__ ) );
@@ -40,7 +40,7 @@ class BP_Nouveau_Document {
 	/**
 	 * Include needed files
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	protected function includes() {
 		require $this->dir . 'functions.php';
@@ -66,7 +66,7 @@ class BP_Nouveau_Document {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI.
@@ -76,7 +76,7 @@ class BP_Nouveau_Document {
 	/**
 	 * Register add_filter() hooks
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.3.6
 	 */
 	protected function setup_filters() {
 
@@ -89,7 +89,7 @@ class BP_Nouveau_Document {
  * Launch the Media loader class.
  *
  * @param null $bp_nouveau
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.6
  */
 function bp_nouveau_document( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {
