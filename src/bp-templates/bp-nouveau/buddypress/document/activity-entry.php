@@ -58,6 +58,10 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 	$click_text 	= apply_filters( 'bp_document_activity_click_to_download_text', __( 'Click to Download', 'buddyboss' ) );
 }
 
+$bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
+$bp_document_text_preview  = apply_filters( 'bp_document_text_preview', true );
+$bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
+
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
@@ -135,7 +139,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 			</div>
 	</div>
 	<?php
-	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && $bp_document_music_preview ) {
 		?>
 		<div class="document-audio-wrap">
 			<audio controls>
@@ -147,7 +151,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 	}
 
 	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
-	if ( $attachment_url ) {
+	if ( $attachment_url && $bp_document_image_preview ) {
 		?>
 		<div class="document-preview-wrap">
 			<img src="<?php echo esc_url( $attachment_url ); ?>" alt="" />
@@ -155,7 +159,7 @@ if ( 'forums' === bp_get_db_document_privacy() ) {
 		<?php
 	}
 	$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
-	if ( $sizes && filesize( $sizes ) / 1e+6 < 2 ) {
+	if ( $sizes && filesize( $sizes ) / 1e+6 < 2 && $bp_document_text_preview ) {
 		if ( in_array( $extension, bp_get_document_preview_code_extensions(), true ) ) {
 			$data      = bp_document_get_preview_text_from_attachment( $attachment_id );
 			$file_data = $data['text'];
