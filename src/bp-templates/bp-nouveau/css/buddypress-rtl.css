@@ -2622,13 +2622,16 @@ span.dashicons.dashicons-admin-file:before {
   overflow: visible;
 }
 
+.activity-media-description {
+  margin-bottom: 10px;
+}
+
 .activity-media-description .bp-add-media-activity-description.show-edit .add {
   display: none;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-edit .edit {
   display: block;
-  margin-bottom: 10px;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-add .add {
