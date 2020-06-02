@@ -227,7 +227,17 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 							( d.id = dm.document_id )
 							AND
                   (
-									   ( d.title LIKE %s OR dm.meta_key = 'extension' AND dm.meta_value LIKE %s OR dm.meta_key = 'file_name' AND dm.meta_value LIKE %s ) AND d.folder_id IN ( " . implode( ',', $folder_ids ) . " ) AND d.privacy IN ( '" . implode( "','", $privacy ) . "' )
+									   ( 
+									   d.title LIKE %s 
+									   OR dm.meta_key = 'extension' 
+									   AND dm.meta_value LIKE %s 
+									   OR dm.meta_key = 'file_name' 
+									   AND dm.meta_value LIKE %s 
+									   ) AND 
+									   ( 
+											( d.folder_id IN ( " . implode( ',', $folder_ids ) . " ) AND d.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
+			                                ( isset( $group_ids['groups'] ) && ! empty( $group_ids['groups'] ) ? ' OR ( d.group_id IN ( \'' . implode( "','", $group_ids['groups'] ) . '\' ) AND d.privacy IN (\'grouponly\') )' : '' ) .
+			                            ")
 							    ) ";
 
 			if ( bp_is_active( 'friends' ) || bp_is_active( 'groups' ) ) {
