@@ -13967,7 +13967,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 .search-document-list .media-folder_items .media-folder_details {
-  width: calc(46% - 100px);
+  width: calc(40% - 100px);
 }
 
 .search-document-list .media-folder_items .media-folder_group {
