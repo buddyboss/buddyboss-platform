@@ -1897,10 +1897,15 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				border-radius: 50%;
 			}
 
-			.activity-comments li .acomment-content .document-preview-wrap{
-				display: none;
-			}
+			.activity-comments li .acomment-content {
 
+				.document-preview-wrap,
+				.document-text-wrap,
+				.document-audio-wrap {
+					display: none;
+				}
+
+			}
 		}
 	}
 
