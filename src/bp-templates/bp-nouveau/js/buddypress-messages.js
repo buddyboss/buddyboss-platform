@@ -2621,6 +2621,9 @@ window.bp = window.bp || {};
 					}
 				);
 
+				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+				jQuery( window ).scroll();
+
 			},
 
 			messages_scrolled: function( event ) {
@@ -2668,6 +2671,9 @@ window.bp = window.bp || {};
 				}
 
 				this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
+
+				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+				jQuery( window ).scroll();
 			},
 
 			addEditor: function() {
