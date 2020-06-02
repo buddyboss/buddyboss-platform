@@ -13578,7 +13578,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .search-document-list .media-folder_items.is-visible .media-folder_actions .media-folder_action__list,
 #media-folder-document-data-table .media-folder_items.is-visible .media-folder_actions .media-folder_action__list {
   display: block;
-  z-index: 112;
+  z-index: 1122;
 }
 
 .search-document-list .media-folder_items .media-folder_icon,
