@@ -170,8 +170,8 @@ function bp_document_activity_comment_entry( $comment_id ) {
 	) ) {
 
 		if ( isset( $_POST ) && isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
-			add_filter( 'bp_document_activity_theater_class', 'bp_document_activity_remove_theater_class_in_comment' );
-			add_filter( 'bp_document_activity_theater_description_class', 'bp_document_activity_remove_theater_description_class_in_comment' );
+			//add_filter( 'bp_document_activity_theater_class', 'bp_document_activity_remove_theater_class_in_comment' );
+			//add_filter( 'bp_document_activity_theater_description_class', 'bp_document_activity_remove_theater_description_class_in_comment' );
 			add_filter( 'bp_document_activity_click_to_view_text', 'bp_document_change_popup_view_text_in_comment' );
 			add_filter( 'bp_document_activity_click_to_download_text', 'bp_document_change_popup_download_text_in_comment' );
 		}
@@ -187,8 +187,8 @@ function bp_document_activity_comment_entry( $comment_id ) {
 		</div>
 		<?php
 		if ( isset( $_POST ) && isset( $_POST['action'] ) && 'document_get_activity' === $_POST['action'] ) {
-			remove_filter( 'bp_document_activity_theater_class', 'bp_document_activity_remove_theater_class_in_comment' );
-			remove_filter( 'bp_document_activity_theater_description_class', 'bp_document_activity_remove_theater_description_class_in_comment' );
+			//remove_filter( 'bp_document_activity_theater_class', 'bp_document_activity_remove_theater_class_in_comment' );
+			//remove_filter( 'bp_document_activity_theater_description_class', 'bp_document_activity_remove_theater_description_class_in_comment' );
 			remove_filter( 'bp_document_activity_click_to_view_text', 'bp_document_change_popup_view_text_in_comment' );
 			remove_filter( 'bp_document_activity_click_to_download_text', 'bp_document_change_popup_download_text_in_comment' );
 		}
