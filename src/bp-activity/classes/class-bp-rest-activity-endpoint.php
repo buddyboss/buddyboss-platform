@@ -631,6 +631,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
+		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+			// Update privacy for the documents which are uploaded in root of the documents.
+			bp_document_update_activity_privacy( $activity->id, $activity->privacy );
+		}
+
+
+		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+			// Update privacy for the media which are uploaded in the activity.
+			bp_media_update_activity_privacy( $activity->id, $activity->privacy );
+		}
+
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $activity, $request )
 		);
@@ -996,6 +1007,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Set up activity oEmbed cache.
 			bp_activity_embed();
 
+			// removed combined gif data with content.
+			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
+				remove_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+			}
+
 			$rendered = apply_filters_ref_array(
 				'bp_get_activity_content_body',
 				array(
@@ -1003,6 +1019,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&$activity,
 				)
 			);
+
+			// removed combined gif data with content.
+			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
+				add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+			}
 
 			// Restore the `activities_template` global.
 			$GLOBALS['activities_template'] = $activities_template;
@@ -1797,9 +1818,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// check activity toolbar options if one of them is set, activity can be empty.
-		if ( bp_is_active( 'media' ) && empty( $request['bp_media_ids'] ) ) {
-			$toolbar_option = true;
-		} elseif ( bp_is_active( 'media' ) && empty( $request['media_gif'] ) ) {
+		if (
+			bp_is_active( 'media' )
+			&& empty( $request['bp_media_ids'] )
+			&& (
+				! empty( $request['media_gif'] )
+				&& (
+					empty( $request['media_gif']['url'] )
+					|| empty( $request['media_gif']['mp4'] )
+				)
+			)
+		) {
 			$toolbar_option = true;
 		}
 

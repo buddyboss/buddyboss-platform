@@ -4645,6 +4645,35 @@ define({ "api": [
     "groupTitle": "Media"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/media/",
+    "title": "Delete Photos",
+    "name": "DeleteBBPhotos",
+    "group": "Media",
+    "description": "<p>Delete Multiple Photos.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "media_ids",
+            "description": "<p>A unique numeric IDs for the media photo.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/media/albums/:id",
     "title": "Get Album",
