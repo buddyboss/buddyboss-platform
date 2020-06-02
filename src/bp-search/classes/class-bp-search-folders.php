@@ -182,12 +182,21 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			}
 			$user_folder_ids[] = 0;
 
+			$privacy = array( 'public' );
+			if( is_user_logged_in() ) {
+				$privacy[] = 'loggedin';
+				$privacy[] = 'onlyme';
+				if ( bp_is_active( 'friends' ) ) {
+					$privacy[] = 'friends';
+				}
+			}
+
 			$sql                .= " FROM
 						{$bp->document->table_name_folder} f
 					WHERE
 						(
   f.title LIKE %s AND f.parent IN ( " . implode( ', ', $folder_ids ) . " )
-    AND f.privacy IN ( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ) AND f.user_id = " . bp_loggedin_user_id() . " )
+    AND f.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND f.user_id = " . bp_loggedin_user_id() . " )
 				";
 
 			if ( bp_is_active( 'friends' ) || bp_is_active( 'groups' ) ) {
