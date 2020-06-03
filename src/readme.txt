@@ -61,12 +61,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
 * Documents - Added central Documents page for showing all site documents
 * Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
-* Documents - Added functionality to move and organized documents into Folders
-* Documents - Added options for customizable document File Extensions
-* Media - Added enhanced privacy controls for uploaded photos and documents
+* Documents - Added functionality to move and organized Documents into Folders
+* Documents - Added settings page for customizable Document File Extensions
+* Media - Added enhanced privacy controls for uploaded Photos and Documents
 * Media - Added functionality to enter 'Description' in Photo and Document popups
 * Media - Comments in single Photo and Document popups now sync with activity comments
-* Activity - Added privacy options for user-created activity posts
+* Activity - Added enhanced privacy controls for user-created activity posts
 * Groups - Improved performance for groups with many thousands of members
 * Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
