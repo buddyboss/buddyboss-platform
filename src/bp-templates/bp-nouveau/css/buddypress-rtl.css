@@ -12237,6 +12237,67 @@ a.bb-close-model {
   color: #000;
 }
 
+.bb-media-info-section .activity-comments {
+  clear: both;
+  margin: 0;
+  overflow: visible;
+  position: relative;
+  width: auto;
+}
+
+.bb-media-info-section .activity-comments > ul {
+  background: #FBFBFC;
+  margin: 0 -15px;
+  padding: 15px 15px 0;
+  border-top: 1px solid #EEF0F3;
+  border-radius: 0 0 4px 4px;
+  clear: both;
+  list-style: none;
+}
+
+.bb-media-info-section .activity-comments ul li {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 15px;
+}
+
+.bb-media-info-section .activity-comments div.acomment-avatar {
+  margin: 0 0 0 15px;
+  width: auto;
+  text-align: right;
+}
+
+.bb-media-info-section .activity-comments .acomment-meta {
+  font-size: 13px;
+  overflow: hidden;
+}
+
+.bb-media-info-section .activity-comments .acomment-content {
+  border-right: 0;
+  margin: 0 51px 0 0;
+  padding: 0;
+}
+
+.bb-media-info-section .activity-comments .acomment-content .bb-activity-media-wrap {
+  margin: 15px 0;
+}
+
+.bb-media-info-section .activity-comments .action {
+  line-height: 1;
+  margin-right: 51px;
+}
+
+.bb-media-info-section .activity-comments form {
+  margin: 0;
+  padding: 0;
+  padding-top: 15px;
+  padding-bottom: 0;
+  background: #FBFBFC;
+  margin: 0 -15px;
+  margin-left: 0;
+  padding: 15px 15px;
+}
+
 .bb-media-info-header {
   font-size: 14px;
   color: #939597;
