@@ -351,6 +351,9 @@ window.bp = window.bp || {};
 				// Reset the document title.
 				$( document ).prop( 'title', this.heartbeat_data.document_title );
 
+				// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+				jQuery( window ).scroll();
+
 				// Load more activities.
 			} else if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
 				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
