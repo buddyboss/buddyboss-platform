@@ -746,7 +746,7 @@ class BP_Document_Folder {
 	/**
 	 * Delete the meta entries associated with a set of folder items.
 	 *
-	 * @since BuddyBooss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @param array $folder_ids Folder IDs whose meta should be deleted.
 	 * @return bool True on success.

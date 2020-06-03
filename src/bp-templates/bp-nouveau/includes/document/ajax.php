@@ -944,7 +944,7 @@ function bp_nouveau_ajax_document_update_file_name() {
 /**
  * Rename folder.
  *
- * @since BuddyBoss1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_edit_folder() {
 	$response = array(
