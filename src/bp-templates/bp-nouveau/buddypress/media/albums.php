@@ -11,7 +11,7 @@
     <div class="bb-media-actions-wrap album-actions-wrap">
 		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss' ); ?></h2>
         <div class="bb-media-actions">
-            <a href="#" id="bb-create-album" class="bb-create-album button small outline">+ <?php _e( 'Create Album', 'buddyboss' ); ?></a>
+            <a href="#" id="bb-create-album" class="bb-create-album button small outline"><i class="bb-icon-plus"></i> <?php _e( 'Create Album', 'buddyboss' ); ?></a>
         </div>
     </div>
 

@@ -36,7 +36,7 @@ function bp_profile_search_redirect_admin_screens() {
 
 		// redirect to edit that form
 		if ( $main_form ) {
-			wp_redirect( admin_url( 'post.php?post=' . $main_form . '&action=edit' ) );
+			wp_safe_redirect( admin_url( 'post.php?post=' . $main_form . '&action=edit' ) );
 			die();
 		}
 	}

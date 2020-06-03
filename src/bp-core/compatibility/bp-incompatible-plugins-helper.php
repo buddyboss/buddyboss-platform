@@ -100,6 +100,8 @@ function bp_helper_plugins_loaded_callback() {
 					$q->set( 'page_id', $bp_pages->members->id );
 				} elseif ( 'groups' === $bp_current_component && isset( $bp_pages->groups->id ) ) {
 					$q->set( 'page_id', $bp_pages->groups->id );
+				} elseif ( 'documents' === $bp_current_component && isset( $bp_pages->document->id ) ) {
+					$q->set( 'page_id', $bp_pages->document->id );
 				} else {
 					$page_id = apply_filters( 'bpml_redirection_page_id', null, $bp_current_component, $bp_pages );
 					if ( $page_id ) {

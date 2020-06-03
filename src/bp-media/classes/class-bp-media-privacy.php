@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Handles media privacy information.
  *
  * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss 1.2.3 No longer used by internal code and not recommended.
  */
 
 class BP_Media_Privacy {
@@ -48,9 +49,9 @@ class BP_Media_Privacy {
 	function get_visibility_options( $is_group = false ) {
 
 		$options = array(
-			'public'   => __( 'Everyone', 'buddyboss' ),
-			'loggedin' => __( 'Logged In Users', 'buddyboss' ),
+			'public'   => __( 'Public', 'buddyboss' ),
 			'onlyme'   => __( 'Only Me', 'buddyboss' ),
+			'loggedin' => __( 'All Members', 'buddyboss' ),
 			'friends'  => __( 'My Connections', 'buddyboss' ),
 		);
 
