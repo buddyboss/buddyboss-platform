@@ -52,67 +52,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			global $wpdb, $bp;
 			$query_placeholder = array();
 
-			$sql = ' SELECT ';
-
-			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT f.id ) ';
-			} else {
-				$sql                .= " DISTINCT f.id, 'folders' as type, f.title LIKE %s AS relevance, f.date_created as entry_date  ";
-				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			}
-
-			$privacy = array( 'public', 'loggedin', 'onlyme' );
-
-			if ( bp_is_active( 'friends' ) ) {
-				array_push( $privacy, 'friends' );
-			}
-			if ( bp_is_active( 'groups' ) ) {
-				array_push( $privacy, 'grouponly' );
-			}
-
-			$user_root_folder_ids = bp_document_get_user_root_folders( bp_loggedin_user_id() );
-			$folder_ids           = array();
-			if ( $user_root_folder_ids ) {
-				foreach ( $user_root_folder_ids as $single_folder ) {
-					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-					if ( $single_folder_ids ) {
-						array_merge( $folder_ids, $single_folder_ids );
-					}
-					array_push( $folder_ids, $single_folder );
-				}
-			}
-
-			$folder_ids[] = 0;
-
-			if ( bp_is_active( 'friends' ) ) {
-
-				// Determine friends of user.
-				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
-				if ( empty( $friends ) ) {
-					$friends = array( 0 );
-				}
-				array_push( $friends, bp_loggedin_user_id() );
-
-				$friend_folder_ids = array();
-				if ( $friends ) {
-					foreach ( $friends as $friend ) {
-						$user_root_folder_ids = bp_document_get_user_root_folders( (int) $friend );
-						if ( $user_root_folder_ids ) {
-							foreach ( $user_root_folder_ids as $single_folder ) {
-								$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-								if ( $single_folder_ids ) {
-									array_merge( $friend_folder_ids, $single_folder_ids );
-								}
-								array_push( $friend_folder_ids, $single_folder );
-							}
-						}
-					}
-				}
-
-				$friend_folder_ids[] = 0;
-
-			}
-
+			$user_groups = array();
 			if ( bp_is_active( 'groups' ) ) {
 
 				// Fetch public groups.
@@ -129,107 +69,53 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 					$public_groups = array();
 				}
 
-				// Determine groups of user.
 				$groups = groups_get_user_groups( bp_loggedin_user_id() );
 				if ( ! empty( $groups['groups'] ) ) {
-					$groups = $groups['groups'];
+					$user_groups = $groups['groups'];
 				} else {
-					$groups = array();
+					$user_groups = array();
 				}
 
-				$group_ids = false;
-				if ( ! empty( $groups ) && ! empty( $public_groups ) ) {
-					$group_ids = array( 'groups' => array_unique( array_merge( $groups, $public_groups ) ) );
-				} elseif ( empty( $groups ) && ! empty( $public_groups ) ) {
-					$group_ids = array( 'groups' => $public_groups );
-				} elseif ( ! empty( $groups ) && empty( $public_groups ) ) {
-					$group_ids = array( 'groups' => $groups );
-				}
-
-				if ( empty( $group_ids ) ) {
-					$group_ids = array( 'groups' => 0 );
-				}
-
-				$group_folder_ids = array();
-				$user_groups      = $group_ids['groups'];
-				if ( $user_groups ) {
-					foreach ( $user_groups as $single_group ) {
-						$fetch_folder_ids = bp_document_get_group_root_folders( (int) $single_group );
-						if ( $fetch_folder_ids ) {
-							foreach ( $fetch_folder_ids as $single_folder ) {
-								$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-								if ( $single_folder_ids ) {
-									array_merge( $group_folder_ids, $single_folder_ids );
-								}
-								array_push( $group_folder_ids, $single_folder );
-							}
-						}
-					}
-				}
-				$group_folder_ids[] = 0;
+				$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
 			}
 
-			$user_root_folder_ids = bp_document_get_user_root_folders( bp_loggedin_user_id() );
-			$user_folder_ids      = array();
-			if ( $user_root_folder_ids ) {
-				foreach ( $user_root_folder_ids as $single_folder ) {
-					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-					if ( $single_folder_ids ) {
-						array_merge( $user_folder_ids, $single_folder_ids );
-					}
-					array_push( $user_folder_ids, $single_folder );
+			$friends = array();
+			if ( bp_is_active( 'friends' ) ) {
+
+				// Determine friends of user.
+				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+				if ( empty( $friends ) ) {
+					$friends = array( 0 );
 				}
+				array_push( $friends, bp_loggedin_user_id() );
 			}
-			$user_folder_ids[] = 0;
+
+			$sql = ' SELECT ';
+
+			if ( $only_totalrow_count ) {
+				$sql .= ' COUNT( DISTINCT f.id ) ';
+			} else {
+				$sql                .= $wpdb->prepare(" DISTINCT f.id, 'folders' as type, f.title LIKE %s AS relevance, f.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+			}
 
 			$privacy = array( 'public' );
 			if( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
-				$privacy[] = 'onlyme';
-				if ( bp_is_active( 'friends' ) ) {
-					$privacy[] = 'friends';
-				}
 			}
 
-			$sql                .= " FROM
-						{$bp->document->table_name_folder} f
-					WHERE
-						(
-  f.title LIKE %s AND f.parent IN ( " . implode( ', ', $folder_ids ) . " )
-    AND f.privacy IN ( '" . implode( "','", $privacy ) . "' ) AND f.user_id = " . bp_loggedin_user_id() . " )
-				";
-
-			if ( bp_is_active( 'friends' ) || bp_is_active( 'groups' ) ) {
-				$sql .= ' OR (
-							            ( ';
-			}
-
-			if ( bp_is_active( 'friends' ) ) {
-				$sql .= ' ( (
-								                        f.user_id IN ( ' . implode( ',', $friends ) . " ) AND f.privacy = 'friends' AND f.parent IN ( " . implode( ',', $friend_folder_ids ) . '
-								                    ) AND ( f.title LIKE %s )
-								                  )
-								                ) ';
-			}
-
-			if ( bp_is_active( 'groups' ) ) {
-				$sql .= ' OR
-								                (
-								                    (
-								                        f.group_id IN ( ' . implode( ',', $group_ids['groups'] ) . " ) AND f.privacy = 'grouponly' AND f.parent IN ( " . implode( ',', $group_folder_ids ) . ' ) AND f.title LIKE %s
-								                    )
-								                ) ';
-			}
-
-			if ( bp_is_active( 'friends' ) || bp_is_active( 'groups' ) ) {
-				$sql .= ' )
-		                 )';
-			}
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
-
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			$sql .=  $wpdb->prepare(
+				" FROM {$bp->document->table_name_folder} f WHERE
+				(
+                    f.title LIKE %s AND 
+                    ( 
+                        f.privacy IN ( '" . implode( "','", $privacy ) . "' ) " .
+				        ( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
+				        ( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
+				        ( is_user_logged_in() ? " OR ( f.user_id = '" . bp_loggedin_user_id() . "' AND f.privacy = 'onlyme' )" : '' ) .
+					")
+				)",
+				'%' . $wpdb->esc_like( $search_term ) . '%'
+			);
 
 			return apply_filters(
 				'bp_search_folders_sql',
