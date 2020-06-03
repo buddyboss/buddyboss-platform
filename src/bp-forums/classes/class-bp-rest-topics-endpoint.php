@@ -1855,7 +1855,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'total_reply_count'     => ( bbp_show_lead_topic() ? bbp_get_topic_reply_count( $topic->ID ) : bbp_get_topic_post_count( $topic->ID ) ),
 			'last_reply_id'         => bbp_get_topic_last_reply_id( $topic->ID ),
 			'last_active_author'    => bbp_get_topic_last_active_id( $topic->ID ),
-			'last_active_time'      => bbp_get_topic_last_active_time( $topic->ID ),
+			'last_active_time'      => $this->forum_endpoint->bbp_rest_get_topic_last_active_time( $topic->ID ),
 			'is_closed'             => bbp_is_topic_closed( $topic->ID ),
 			'voice_count'           => (int) get_post_meta( $topic->ID, '_bbp_voice_count', true ),
 			'forum_id'              => (int) bbp_get_topic_forum_id( $topic->ID ),
@@ -2409,6 +2409,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 				'embeddable' => true,
 			),
 		);
+
+		$form_id = (int) bbp_get_topic_forum_id( $post->ID );
+
+		if ( ! empty( $form_id ) ) {
+			$form_base     = sprintf( '/%s/%s/', $this->forum_endpoint->namespace, $this->forum_endpoint->rest_base );
+			$links['forum'] = array(
+				'href'       => rest_url( $form_base . $form_id ),
+				'embeddable' => true,
+			);
+		}
 
 		/**
 		 * Filter links prepared for the REST response.

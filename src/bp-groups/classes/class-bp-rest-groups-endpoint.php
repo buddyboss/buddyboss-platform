@@ -83,6 +83,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::DELETABLE ),
 				),
 				'schema' => array( $this, 'get_item_schema' ),
 			)
@@ -578,6 +579,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the Group.
+	 * @apiParam {boolean} delete_group_forum Delete the Group forum if exist.
 	 */
 	public function delete_item( $request ) {
 		// Setting context.
@@ -586,6 +588,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		// Get the group before it's deleted.
 		$group    = $this->get_group_object( $request );
 		$previous = $this->prepare_item_for_response( $group, $request );
+
+		// Delete group forum.
+		if ( isset( $request['delete_group_forum'] ) && true === $request['delete_group_forum'] ) {
+			$forum_ids = bbp_get_group_forum_ids( $group->id );
+			foreach ( $forum_ids as $forum_id ) {
+				wp_delete_post( $forum_id, true );
+			}
+		}
 
 		if ( ! groups_delete_group( $group->id ) ) {
 			return new WP_Error(
@@ -989,7 +999,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @return bool
 	 * @since 0.1.0
 	 */
-	protected function can_user_delete_or_update( $group ) {
+	public function can_user_delete_or_update( $group ) {
 		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $group->creator_id );
 	}
 
@@ -1077,7 +1087,24 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				unset( $args['slug'] );
 			}
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
-			$key = 'delete_item';
+			$key  = 'delete_item';
+			$args = array(
+				'id' => array(
+					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+					'type'        => 'integer',
+					'required'    => true,
+				),
+			);
+
+			if ( bp_is_active( 'forums' ) ) {
+				$args['delete_group_forum'] = array(
+					'description'       => __( 'Delete the Group forum if exist.', 'buddyboss' ),
+					'type'              => 'boolean',
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+					'validate_callback' => 'rest_validate_request_arg',
+				);
+			}
 		}
 
 		/**

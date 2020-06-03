@@ -1146,7 +1146,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					&& function_exists( 'groups_get_requests' )
 				) {
 					$group     = groups_get_group( $notification->item_id );
-					$is_member = BP_Groups_Member::check_is_member( $notification->item_id, $notification->secondary_item_id );
+					$is_member = groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
 						$data['status'] = __( 'Accepted', 'buddyboss' );
 					} else {
@@ -1181,7 +1181,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			case 'group_invite':
 				if ( bp_is_active( 'groups' ) && function_exists( 'groups_get_invites' ) ) {
 					$group     = groups_get_group( $notification->item_id );
-					$is_member = BP_Groups_Member::check_is_member( $notification->user_id, $notification->item_id );
+					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
 						$data['status'] = __( 'Accepted', 'buddyboss' );
 					} else {
@@ -1268,7 +1268,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 					&& function_exists( 'groups_get_requests' )
 				) {
 					$group     = groups_get_group( $notification->item_id );
-					$is_member = BP_Groups_Member::check_is_member( $notification->item_id, $notification->secondary_item_id );
+					$is_member = groups_is_user_member( $notification->secondary_item_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
 						$url = trailingslashit( bp_get_group_permalink( $group ) . 'members' );
 					} else {
@@ -1289,7 +1289,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 			case 'group_invite':
 				if ( bp_is_active( 'groups' ) && function_exists( 'groups_get_invites' ) ) {
 					$group     = groups_get_group( $notification->item_id );
-					$is_member = BP_Groups_Member::check_is_member( $notification->user_id, $notification->item_id );
+					$is_member = groups_is_user_member( $notification->user_id, $notification->item_id );
 					if ( ! empty( $is_member ) ) {
 						$url = bp_get_group_permalink( $group );
 					} else {

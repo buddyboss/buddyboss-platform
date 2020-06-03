@@ -61,6 +61,21 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_items' ),
+					'permission_callback' => array( $this, 'delete_items_permissions_check' ),
+					'args'                => array(
+						'media_ids' => array(
+							'description' => __( 'A unique numeric IDs for the media.', 'buddyboss' ),
+							'type'        => 'array',
+							'items'       => array(
+								'type' => 'integer',
+							),
+							'required'    => true,
+						),
+					),
+				),
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
@@ -635,6 +650,140 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_media_update_item_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Delete multiple medias.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api            {DELETE} /wp-json/buddyboss/v1/media/ Delete Photos
+	 * @apiName        DeleteBBPhotos
+	 * @apiGroup       Media
+	 * @apiDescription Delete Multiple Photos.
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 * @apiParam {Array} media_ids A unique numeric IDs for the media photo.
+	 */
+	public function delete_items( $request ) {
+
+		$media_ids = $request['media_ids'];
+
+		if ( ! empty( $media_ids ) ) {
+			$media_ids = array_unique( $media_ids );
+			$media_ids = array_filter( $media_ids );
+		}
+
+		if ( empty( $media_ids ) ) {
+			return new WP_Error(
+				'bp_rest_media_invalid_ids',
+				__( 'Invalid media IDs.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		$medias = $this->assemble_response_data( array( 'media_ids' => $media_ids ) );
+
+		if ( empty( $medias['medias'] ) ) {
+			return new WP_Error(
+				'bp_rest_media_ids',
+				__( 'Invalid media IDs.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		$previous = array();
+		foreach ( $medias['medias'] as $media ) {
+			$previous[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $media, $request )
+			);
+		}
+
+		$status = array();
+
+		foreach ( $media_ids as $id ) {
+			if ( ! bp_media_user_can_delete( $id ) ) {
+				$status[ $id ] = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, you are not allowed to delete this media.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			} else {
+				$status[ $id ] = bp_media_delete( array( 'id' => $id ), true );
+			}
+		}
+
+		// Build the response.
+		$response = new WP_REST_Response();
+		$response->set_data(
+			array(
+				'deleted'  => $status,
+				'previous' => $previous,
+			)
+		);
+
+		/**
+		 * Fires after medias is deleted via the REST API.
+		 *
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bp_rest_media_delete_items', $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to for the user.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool
+	 * @since 0.1.0
+	 */
+	public function delete_items_permissions_check( $request ) {
+		$retval = true;
+
+		if ( ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you need to be logged in to delete this media.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && empty( $request['media_ids'] ) ) {
+			$retval = new WP_Error(
+				'bp_rest_media_invalid_ids',
+				__( 'Invalid media IDs.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		/**
+		 * Filter the members `delete_items` permissions check.
+		 *
+		 * @param bool            $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_media_delete_items_permissions_check', $retval, $request );
 	}
 
 	/**
@@ -1444,8 +1593,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'activity',      // Id of the BuddyPress component the REST field is about.
 			'media_gif', // Used into the REST response/request.
 			array(
+				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
 				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
-				'schema'          => array(),
+				'schema'          => array(
+					'description' => 'Topic Gifs.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
 			)
 		);
 
@@ -1651,6 +1805,40 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$value->bp_media_ids = $retval;
 		return $value;
+	}
+
+	/**
+	 * The function to use to get gif data of the activity REST Field.
+	 *
+	 * @param BP_Activity_Activity $activity  Activity Array.
+	 * @param string               $attribute The REST Field key used into the REST response.
+	 *
+	 * @return string            The value of the REST Field to include into the REST response.
+	 */
+	protected function bp_gif_data_get_rest_field_callback( $activity, $attribute ) {
+		$activity_id = $activity['id'];
+
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+
+		if ( empty( $gif_data ) ) {
+			return;
+		}
+
+		$preview_url   = wp_get_attachment_url( $gif_data['still'] );
+		$video_url     = wp_get_attachment_url( $gif_data['mp4'] );
+		$rendered_data = ( function_exists( 'bp_media_activity_embed_gif_content' ) ? bp_media_activity_embed_gif_content( $activity_id ) : '' );
+
+		$retval = array(
+			'preview_url' => $preview_url,
+			'video_url'   => $video_url,
+			'rendered'    => preg_replace( '/[\r\n]*[\t]+/', '', $rendered_data ),
+		);
+
+		return $retval;
 	}
 
 	/**

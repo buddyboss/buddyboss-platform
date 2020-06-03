@@ -708,6 +708,7 @@ class BuddyPress {
 			'BP_REST_Group_Membership_Endpoint'            => 'groups',
 			'BP_REST_Group_Invites_Endpoint'               => 'groups',
 			'BP_REST_Group_Membership_Request_Endpoint'    => 'groups',
+			'BP_REST_Group_Settings_Endpoint'              => 'groups',
 			'BP_REST_Groups_Types_Endpoint'                => 'groups',
 			'BP_REST_Attachments_Group_Avatar_Endpoint'    => 'groups',
 			'BP_REST_Attachments_Group_Cover_Endpoint'     => 'groups',

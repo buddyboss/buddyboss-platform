@@ -618,8 +618,8 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 			$args = array(
 				'fields' => array(
 					'description' => __( 'Fields array with name and email_id to create an invites.', 'buddyboss' ),
-					'type'        => 'object',
-					'items'       => array( 'type' => 'array' ),
+					'type'        => 'array',
+					'items'       => array( 'type' => 'object' ),
 					'required'    => true,
 					'properties'  => array(
 						'name'     => array(
