@@ -136,15 +136,17 @@ function bp_has_document( $args = '' ) {
 	}
 
 	// folder filtering.
+	$folder_id = 0;
 	if ( ! isset( $args['folder_id'] ) && empty( $args['include'] ) ) {
 		$folder_id = bp_is_single_folder() ? (int) bp_action_variable( 0 ) : false;
 		if ( bp_is_group_single() && bp_is_group_folders() ) {
 			$folder_id = (int) bp_action_variable( 1 );
 		}
-	} else {
+	} elseif( !empty( $args['folder_id'] ) ) {
 		$folder_id = $args['folder_id'];
 	}
 
+	$privacy = array();
 	if ( bp_is_profile_document_support_enabled() && empty( $args['include'] ) ) {
 		$privacy = array( 'public' );
 		if ( is_user_logged_in() ) {
