@@ -25,7 +25,7 @@ $document_id = bp_get_document_id();
 
 $class = ''; // used.
 if ( $attachment_id && bp_get_document_activity_id() ) {
-	$class = 'bb-open-document-theatre'; // used.
+	$class = ''; // used.
 }
 $link = ( $attachment_id ) ? $download_link : '';
 
