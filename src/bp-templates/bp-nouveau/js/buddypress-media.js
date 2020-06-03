@@ -4504,7 +4504,11 @@ window.bp = window.bp || {};
 					if ( activity_comments.length ) {
 						activity_comments.html(html);
 						activity_comments.attr('class', classes);
+						//Reset document text preview
+						activity_comments.find('.document-text.loaded').removeClass('loaded').find('.CodeMirror').remove();
+						jQuery( window ).scroll();
 					}
+					
 				}
 				activity_state = activity.find('.activity-state');
 				if (activity_state.length) {
