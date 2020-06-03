@@ -793,7 +793,7 @@ window.bp = window.bp || {};
 
 								// Count child comments if there are some.
 								$.each(
-									activity_comment_li.find( 'li' ),
+									activity_comment_li.find( 'li.comment-item' ),
 									function() {
 										deleted_comments_count += 1;
 									}
