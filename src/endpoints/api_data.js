@@ -3095,6 +3095,13 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "boolean",
+            "optional": false,
+            "field": "delete_group_forum",
+            "description": "<p>Delete the Group forum if exist.</p>"
           }
         ]
       }
@@ -3872,6 +3879,30 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/groups/:id/settings",
+    "title": "Group Settings",
+    "name": "GetBBGroupsSettings",
+    "group": "Groups",
+    "description": "<p>Retrieve groups settings.</p>",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/groups/types",
     "title": "Groups Types",
     "name": "GetBBGroupsTypes",
@@ -4083,6 +4114,42 @@ define({ "api": [
       }
     },
     "filename": "src/bp-groups/classes/class-bp-rest-group-membership-request-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/groups/:id/settings",
+    "title": "Update Group Settings",
+    "name": "UpdateBBGroupsSettings",
+    "group": "Groups",
+    "description": "<p>Update Group settings.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "fields",
+            "description": "<p>The list of fields to update with name and value of the field.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
     "groupTitle": "Groups"
   },
   {

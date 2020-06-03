@@ -1509,12 +1509,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'raw'      => array(
 							'description' => __( 'Content for the activity, as it exists in the database.', 'buddyboss' ),
 							'type'        => 'string',
-							'context'     => array( 'edit' ),
+							'context'     => array( 'embed', 'edit' ),
 						),
 						'rendered' => array(
 							'description' => __( 'HTML content for the activity, transformed for display.', 'buddyboss' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
 						),
 					),
@@ -1608,7 +1608,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties = array();
 
 			$avatar_properties['full'] = array(
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
 				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
@@ -1616,7 +1616,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 
 			$avatar_properties['thumb'] = array(
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
 				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
@@ -1624,7 +1624,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 
 			$schema['properties']['user_avatar'] = array(
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'embed', 'view', 'edit' ),
 				'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss' ),
 				'type'        => 'object',
 				'readonly'    => true,

@@ -1120,6 +1120,7 @@ class BP_Groups_Component extends BP_Component {
 			'BP_REST_Groups_Endpoint',
 			'BP_REST_Groups_Details_Endpoint',
 			'BP_REST_Group_Membership_Endpoint',
+			'BP_REST_Group_Settings_Endpoint',
 			'BP_REST_Group_Invites_Endpoint',
 			'BP_REST_Group_Membership_Request_Endpoint',
 			'BP_REST_Groups_Types_Endpoint',
