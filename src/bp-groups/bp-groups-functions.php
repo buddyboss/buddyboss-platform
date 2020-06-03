@@ -1626,6 +1626,7 @@ function groups_post_update( $args = '' ) {
 			'content'    => false,
 			'user_id'    => bp_loggedin_user_id(),
 			'group_id'   => 0,
+			'privacy'    => 'public',
 			'error_type' => 'bool',
 		),
 		'groups_post_update'
@@ -1679,6 +1680,7 @@ function groups_post_update( $args = '' ) {
 			'content'    => $content_filtered,
 			'type'       => 'activity_update',
 			'item_id'    => $group_id,
+			'privacy'    => $privacy,
 			'error_type' => $error_type,
 		)
 	);
