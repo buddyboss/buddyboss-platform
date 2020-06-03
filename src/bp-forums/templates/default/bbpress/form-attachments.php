@@ -23,30 +23,53 @@
 				<img src="" alt="">
 			</div>
 			<div class="gif-image-remove gif-image-overlay">
-				<span class="dashicons dashicons-no"></span>
+				<i class="bb-icon-close"></i>
 			</div>
 		</div>
 		<input name="bbp_media_gif" id="bbp_media_gif" type="hidden" value=""/>
 	<?php endif; ?>
 
+	<?php if ( bp_is_active( 'media' ) && bp_is_forums_document_support_enabled() ) : ?>
+		<div class="dropzone closed" id="forums-post-document-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_document_uploader_' ) ); ?>"></div>
+		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
+	<?php endif; ?>
+
 </div>
 
-<div id="whats-new-toolbar" class="<?php if ( !bp_is_active( 'media' ) ){ echo 'media-off'; } ?>">
+<div id="whats-new-toolbar" class="
+<?php
+if ( ! bp_is_active( 'media' ) ) {
+	echo 'media-off'; }
+?>
+">
 
-	
+
 
 	<?php if ( bp_is_active( 'media' ) ) : ?>
-		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php _e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php _e('Show formatting', 'buddyboss'); ?>">
+		<div class="post-elements-buttons-item show-toolbar" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>" data-bp-tooltip-hide="<?php esc_html_e( 'Hide formatting', 'buddyboss' ); ?>" data-bp-tooltip-show="<?php esc_html_e( 'Show formatting', 'buddyboss' ); ?>">
 			<a href="#" id="show-toolbar-button" class="toolbar-button bp-tooltip">
-				<span class="dashicons dashicons-editor-textcolor"></span>
+				<span class="bb-icon bb-icon-text-format"></span>
 			</a>
 		</div>
 	<?php endif; ?>
 
-	<?php if ( bp_is_active( 'media' )  && bp_is_forums_media_support_enabled() ) : ?>
-		<div class="post-elements-buttons-item post-media">
-			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
-				<span class="dashicons dashicons-admin-media"></span>
+	<?php if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() ) : ?>
+		<div class="post-elements-buttons-item post-media media-support">
+			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
+				<i class="bb-icon bb-icon-camera-small"></i>
+			</a>
+		</div>
+
+	<?php endif; ?>
+
+	<?php
+	$extensions = bp_document_get_allowed_extension();
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_is_forums_document_support_enabled() ) :
+		?>
+
+		<div class="post-elements-buttons-item post-media document-support">
+			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
+				<i class="bb-icon bb-icon-attach"></i>
 			</a>
 		</div>
 
@@ -55,13 +78,13 @@
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ) : ?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
-				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Post a GIF', 'buddyboss' ); ?>">
-					<span class="dashicons dashicons-smiley"></span>
+				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Post a GIF', 'buddyboss' ); ?>">
+					<i class="bb-icon bb-icon-gif"></i>
 				</a>
 				<div class="gif-media-search-dropdown">
 					<div class="gif-search-content">
 						<div class="gif-search-query">
-							<input type="search" placeholder="<?php _e( 'Search GIFs', 'buddyboss' ); ?>" class="search-query-input" />
+							<input type="search" placeholder="<?php esc_html_e( 'Search GIFs', 'buddyboss' ); ?>" class="search-query-input" />
 							<span class="search-icon"></span>
 						</div>
 						<div class="gif-search-results" id="gif-search-results">
@@ -75,7 +98,7 @@
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_emoji_support_enabled() ) : ?>
-		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
+		<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 	<?php endif; ?>
 
 </div>

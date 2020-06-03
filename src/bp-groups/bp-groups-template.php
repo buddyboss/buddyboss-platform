@@ -2639,6 +2639,25 @@ function bp_group_show_media_status_setting( $setting, $group = false ) {
 }
 
 /**
+ * Output the 'checked' value, if needed, for a given document_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_document_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$document_status = bp_group_get_document_status( $group_id );
+
+	if ( $setting === $document_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
  * Get the media status of a group.
  *
  * This function can be used either in or out of the loop.
@@ -2687,6 +2706,57 @@ function bp_group_get_media_status( $group_id = false ) {
 	 * @param int    $group_id      ID of the group whose status is being checked.
 	 */
 	return apply_filters( 'bp_group_get_media_status', $media_status, $group_id );
+}
+
+/**
+ * Get the media status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_document_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$document_status = groups_get_groupmeta( $group_id, 'document_status' );
+
+	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
+	if ( ! $document_status ) {
+		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $media_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_document_status', $document_status, $group_id );
 }
 
 /**

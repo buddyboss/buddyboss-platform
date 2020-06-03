@@ -483,6 +483,7 @@ function bp_core_get_packaged_component_ids() {
 		'xprofile',
 		'friends',
 		'media',
+		'document',
 		'messages',
 		'settings',
 		'notifications',
@@ -506,7 +507,7 @@ function bp_core_get_packaged_component_ids() {
 function bp_core_get_directory_page_ids( $status = 'active' ) {
 	$page_ids = bp_get_option( 'bp-pages', array() );
 
-	// Loop through pages
+	// Loop through pages.
 	foreach ( $page_ids as $component_name => $page_id ) {
 
 		// Ensure that empty indexes are unset. Should only matter in edge cases.
@@ -515,7 +516,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// Trashed pages should never appear in results.
-		if ( 'trash' == get_post_status( $page_id ) ) {
+		if ( 'trash' === get_post_status( $page_id ) ) {
 			unset( $page_ids[ $component_name ] );
 		}
 
@@ -705,7 +706,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy
+	// check for privacy page if already exists in WP settings > privacy.
 	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
 	$static_pages   = array( 'terms' );
 
@@ -715,7 +716,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		$pages_to_create['privacy'] = $page_titles['privacy'];
 	}
 
-	// Create terms and privacy pages
+	// Create terms and privacy pages.
 	foreach ( $static_pages as $slug ) {
 		if ( ! isset( $pages[ $slug ] ) ) {
 			$pages_to_create[ $slug ] = $page_titles[ $slug ];
@@ -734,13 +735,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 
 	// Create the pages.
 	foreach ( $pages_to_create as $component_name => $page_name ) {
-		$exists = get_page_by_path( $component_name );
+		$exists     = get_page_by_path( $component_name );
 		$page_exist = post_exists( $page_name, '', '', 'page' );
 
 		// If page already exists, use it.
 		if ( ! empty( $exists ) ) {
 			$pages[ $component_name ] = $exists->ID;
-		} else if ( ! empty( $page_exist ) ) {
+		} elseif ( ! empty( $page_exist ) ) {
 			$pages[ $component_name ] = $page_exist;
 		} else {
 			$pages[ $component_name ] = wp_insert_post(
@@ -779,6 +780,7 @@ function bp_core_get_directory_page_default_titles() {
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
+		'document'        => __( 'Documents', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
 		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
@@ -1375,8 +1377,8 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 /**
  * Return the Default date format
  *
- * @param bool $date
- * @param bool $time
+ * @param bool   $date
+ * @param bool   $time
  * @param string $symbol
  *
  * @return mixed
@@ -2347,7 +2349,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages'  ),
+			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
 
@@ -2579,6 +2581,20 @@ function bp_core_get_components( $type = 'all' ) {
 				)
 			),
 			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'document'      => array(
+			'title'       => __( 'Document Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages'      => array(
@@ -3371,7 +3387,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
 		 * }
 		 * @since BuddyPress 2.5.0
-		 *
 		 */
 		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
 		if ( ! class_exists( $delivery_class ) ) {
@@ -3391,7 +3406,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			 * @param BP_Email $email The email we tried to send.
 			 *
 			 * @since BuddyPress 2.5.0
-			 *
 			 */
 			do_action( 'bp_send_email_failure', $status, $email );
 
@@ -3404,7 +3418,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			 * @param BP_Email $email The email sent.
 			 *
 			 * @since BuddyPress 2.5.0
-			 *
 			 */
 			do_action( 'bp_send_email_success', $status, $email );
 		}
@@ -3888,9 +3901,9 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$group_message_email = array(
 		'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
 		'unsubscribe' => array(
-		'meta_key' => 'notification_group_messages_new_message',
-		'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
-	),
+			'meta_key' => 'notification_group_messages_new_message',
+			'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+		),
 	);
 
 	$types = array(
@@ -4386,7 +4399,7 @@ function bp_ajax_get_suggestions() {
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
-	} else if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
+	} elseif ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
 		$args['only_friends'] = true;
 	}
 
@@ -4411,7 +4424,7 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *
  * @since BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Content
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.
@@ -4507,6 +4520,20 @@ function bp_unique_id( $prefix = '' ) {
 	return $prefix . (string) ++$id_counter;
 }
 
+function bp_array_flatten( $array ) {
+	if ( ! is_array( $array ) ) {
+		return false;
+	}
+	$result = array();
+	foreach ( $array as $key => $value ) {
+		if ( is_array( $value ) ) {
+			$result = array_merge( $result, bp_array_flatten( $value ) );
+		} else {
+			$result[ $key ] = $value;
+		}
+	}
+	return $result;
+}
 /**
  * Get Group avatar.
  *

@@ -615,7 +615,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="load-more">
 			<div class="center">
-				<i class="dashicons dashicons-update animate-spin"></i>
+				<i class="bb-icons bb-icon-loader animate-spin"></i>
 			</div>
 		</li>
 		<?php
@@ -925,7 +925,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="dashicons dashicons-update animate-spin"></i>
+					<i class="bb-icon-loader animate-spin"></i>
 				</div>
 			</li>
 			<?php
@@ -1014,6 +1014,14 @@ function bp_nouveau_ajax_groups_send_message() {
 
 	if ( isset( $_POST['media'] ) && '' !== $_POST['media'] ) {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST['media'] ), true );
+	}
+
+	if ( isset( $_POST['document'] ) && '' !== $_POST['document'] ) {
+		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
+	}
+
+	if ( '' === $_POST['content'] && ( ! empty( $_POST['document'] ) || !empty( $_POST['media'] ) ) ) {
+		$_POST['content'] = '&nbsp;';
 	}
 
 	// Get Members list if "All Group Members" selected.

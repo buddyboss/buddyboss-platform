@@ -347,7 +347,11 @@ module.exports = function (grunt) {
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: ['**/*.scss', '!**/vendors/**/*.scss']
+				src: [
+						'**/*.scss',
+						'!**/vendors/**/*.scss',
+						'!bp-templates/bp-nouveau/common-styles/_codemirror.scss'
+					]
 			}
 		},
 		cssmin: {

@@ -2511,7 +2511,7 @@ function bp_stop_live_spammer() {
 		$login_url = apply_filters( 'bp_live_spammer_redirect', add_query_arg( $args, wp_login_url() ) );
 
 		// Redirect user to login page.
-		wp_redirect( $login_url );
+		wp_safe_redirect( $login_url );
 		die();
 	}
 }

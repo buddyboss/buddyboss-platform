@@ -500,12 +500,10 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get(
-				array(
+			$album->media = bp_media_get( array(
 					'album_id'    => $album->id,
 					'count_total' => true,
-				)
-			);
+				) );
 
 			$albums[] = $album;
 		}
@@ -540,6 +538,7 @@ class BP_Media_Album {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $id       ID to check.
+	 * @param string $type     type to check.
 	 * @return int|bool Album ID if found; false if not.
 	 */
 	public static function album_exists( $id ) {
@@ -548,7 +547,7 @@ class BP_Media_Album {
 		}
 
 		$args = array(
-			'in' => $id,
+			'in'   => $id,
 		);
 
 		$albums = self::get( $args );

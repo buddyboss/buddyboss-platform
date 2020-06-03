@@ -184,7 +184,78 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			: bp_loggedin_user_id();
 	}
 
+	$privacy = array( 'onlyme' );
+	if ( bp_is_active( 'friends' ) ) {
+		$privacy[] = 'friends';
+	}
+
 	$retval = array(
+		'relation' => 'AND',
+		array(
+			'column' => 'user_id',
+			'value'  => $user_id,
+		),
+		array(
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN'
+		),
+	);
+
+	return $retval;
+}
+add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );
+
+/**
+ * Set up media arguments for use with the 'personal' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_members_filter_document_personal_scope( $retval = array(), $filter = array() ) {
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		return $retval;
+	}
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = (int) $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$user_root_folder_ids   = bp_document_get_user_root_folders( $user_id );
+		$folder_ids             = array();
+		if ( $user_root_folder_ids ) {
+			foreach ( $user_root_folder_ids as $single_folder ) {
+				$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+				if ( $single_folder_ids ) {
+					array_merge( $folder_ids, $single_folder_ids );
+				}
+				array_push( $folder_ids, $single_folder );
+			}
+		}
+		$folder_ids[] = 0;
+		$folders = array(
+			'column'  => 'folder_id',
+			'compare' => 'IN',
+			'value'   => $folder_ids,
+		);
+	} else {
+		$folders = array(
+			'column' => 'folder_id',
+			'value'  => 0,
+		);
+	}
+
+	$args = array(
 		'relation' => 'AND',
 		array(
 			'column' => 'user_id',
@@ -194,8 +265,101 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			'column' => 'privacy',
 			'value'  => 'onlyme',
 		),
+		$folders,
+	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
 	);
 
 	return $retval;
 }
-add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );
+add_filter( 'bp_document_set_document_personal_scope_args', 'bp_members_filter_document_personal_scope', 10, 2 );
+
+/**
+ * Set up media arguments for use with the 'personal' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_members_filter_folder_personal_scope( $retval = array(), $filter = array() ) {
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		return $retval;
+	}
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = (int) $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$user_root_folder_ids   = bp_document_get_user_root_folders( $user_id );
+		$folder_ids             = array();
+		if ( $user_root_folder_ids ) {
+			foreach ( $user_root_folder_ids as $single_folder ) {
+				$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+				if ( $single_folder_ids ) {
+					array_merge( $folder_ids, $single_folder_ids );
+				}
+				array_push( $folder_ids, $single_folder );
+			}
+		}
+		$folder_ids[] = 0;
+		$folders = array(
+			'column'  => 'parent',
+			'compare' => 'IN',
+			'value'   => $folder_ids,
+		);
+	} else {
+		$folders = array(
+			'column' => 'parent',
+			'value'  => 0,
+		);
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column' => 'user_id',
+			'value'  => $user_id,
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'onlyme',
+		),
+		$folders,
+	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
+
+	return $retval;
+}
+add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_folder_personal_scope', 10, 2 );

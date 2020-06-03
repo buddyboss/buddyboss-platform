@@ -182,6 +182,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'bp_enqueue_scripts', array( $this, 'register_scripts' ), 2 ); // Register theme JS
 		remove_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
+		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
 		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), 99999 );
@@ -370,6 +371,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
 			),
+			'bp-nouveau-icons' => array(
+				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+			)
 		) );
 
 		if ( $styles ) {
@@ -458,6 +462,22 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'dependencies' => array(),
 			'footer'       => true,
 		);
+
+		if ( bp_is_active( 'media' ) ) {
+
+			$scripts['bp-nouveau-codemirror'] = array(
+				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
+				'dependencies' => array(),
+				'footer'       => true,
+			);
+
+			$scripts['bp-nouveau-codemirror-css'] = array(
+				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/css%s.js',
+				'dependencies' => array(),
+				'footer'       => true,
+			);
+
+		}
 
 		foreach ( $scripts as $handle => $script ) {
 			if ( ! isset( $script['file'] ) ) {
@@ -605,6 +625,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 		}
 
+//		if ( bp_is_active( 'media' ) ) {
+//			$supported_objects = array_merge( $supported_objects, array( 'document' ) );
+//		}
+
 		// Add components & nonces
 		$params['objects'] = $supported_objects;
 		$params['nonces']  = $object_nonces;
@@ -739,6 +763,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
 		} elseif ( bp_is_media_directory() ) {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
+		} elseif ( bp_is_document_directory() ) {
+			$nav_items = bp_nouveau_get_document_directory_nav_items();
 		}
 
 		if ( empty( $nav_items ) ) {
