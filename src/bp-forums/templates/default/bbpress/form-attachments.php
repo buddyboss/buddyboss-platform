@@ -63,7 +63,7 @@ if ( ! bp_is_active( 'media' ) ) {
 	<?php endif; ?>
 
 	<?php
-	$extensions = bp_document_get_allowed_extension();
+	$extensions = bp_is_active( 'media' ) ?  bp_document_get_allowed_extension() : false;
 	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_is_forums_document_support_enabled() ) :
 		?>
 
