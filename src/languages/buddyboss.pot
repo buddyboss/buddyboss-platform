@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-02 11:48:47+00:00\n"
+"POT-Creation-Date: 2020-06-03 04:07:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -400,7 +400,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:847
 #: bp-activity/classes/class-bp-activity-list-table.php:671
-#: bp-forums/common/template.php:2389 bp-forums/forums/template.php:54
+#: bp-forums/common/template.php:2404 bp-forums/forums/template.php:54
 #: bp-forums/replies/template.php:54 bp-forums/replies/template.php:1982
 #: bp-forums/topics/template.php:54 bp-forums/topics/template.php:2575
 #: bp-groups/classes/class-bp-groups-list-table.php:570
@@ -1955,7 +1955,7 @@ msgstr ""
 #: bp-core/bp-core-cssjs.php:265 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
-#: bp-forums/common/template.php:2508 bp-forums/search/template.php:228
+#: bp-forums/common/template.php:2523 bp-forums/search/template.php:228
 #: bp-forums/templates/default/bbpress/form-search.php:16
 #: bp-groups/bp-groups-template.php:6222
 #: bp-members/bp-members-template.php:1260
@@ -4174,7 +4174,7 @@ msgstr ""
 #: bp-core/bp-core-adminbar.php:219 bp-core/bp-core-functions.php:2727
 #: bp-core/classes/class-bp-core-login-widget.php:84
 #: bp-core/deprecated/buddypress/1.5.php:325
-#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2686
+#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2701
 #: bp-members/bp-members-template.php:1353
 msgid "Log Out"
 msgstr ""
@@ -4740,7 +4740,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2545
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:345
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:360
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -7181,19 +7181,19 @@ msgstr ""
 msgid "There was a problem cropping your %s photo."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:305
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:320
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:346
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:361
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:349
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:364
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:350
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:365
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
@@ -7353,13 +7353,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -7476,7 +7476,7 @@ msgstr ""
 msgid "Blog Authors"
 msgstr ""
 
-#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2823
+#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2838
 msgid "Edit %s's Profile"
 msgstr ""
 
@@ -11464,7 +11464,7 @@ msgid "Sorry, you need to be logged in to perform the action on the topic."
 msgstr ""
 
 #: bp-forums/classes/class-bp-rest-topics-actions-endpoint.php:1116
-#: bp-forums/common/template.php:1556
+#: bp-forums/common/template.php:1571
 msgid "No discussions available"
 msgstr ""
 
@@ -11883,7 +11883,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
 msgstr ""
 
-#: bp-forums/common/functions.php:1975
+#: bp-forums/common/functions.php:1975 bp-forums/common/template.php:1134
 msgid ""
 "Conditional query tags do not work before the query is run. Before then, "
 "they always return false."
@@ -11926,86 +11926,86 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: bp-forums/common/template.php:1561
+#: bp-forums/common/template.php:1576
 msgid "No forums available"
 msgstr ""
 
-#: bp-forums/common/template.php:1566
+#: bp-forums/common/template.php:1581
 msgid "None available"
 msgstr ""
 
-#: bp-forums/common/template.php:2311
+#: bp-forums/common/template.php:2326
 msgid "Home"
 msgstr ""
 
-#: bp-forums/common/template.php:2381
+#: bp-forums/common/template.php:2396
 msgid "(Edit)"
 msgstr ""
 
-#: bp-forums/common/template.php:2385 bp-forums/common/template.php:2504
-#: bp-forums/common/template.php:2776 bp-forums/core/theme-compat.php:768
+#: bp-forums/common/template.php:2400 bp-forums/common/template.php:2519
+#: bp-forums/common/template.php:2791 bp-forums/core/theme-compat.php:768
 #: bp-forums/templates/default/extras/taxonomy-topic-tag-edit.php:16
 #: bp-forums/templates/default/extras/taxonomy-topic-tag.php:16
 msgid "Discussion Tag: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2408
+#: bp-forums/common/template.php:2423
 msgid "&lsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2408
+#: bp-forums/common/template.php:2423
 msgid "&rsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2740
+#: bp-forums/common/template.php:2755
 msgid "Forum Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2745
+#: bp-forums/common/template.php:2760
 msgid "Discussion Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2750
+#: bp-forums/common/template.php:2765
 msgid "Reply Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2755
+#: bp-forums/common/template.php:2770
 msgid "Discussion Tag Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2762
+#: bp-forums/common/template.php:2777
 msgid "Forum: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2767
+#: bp-forums/common/template.php:2782
 msgid "Discussion: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2794
+#: bp-forums/common/template.php:2809
 msgid "%s Discussions"
 msgstr ""
 
-#: bp-forums/common/template.php:2798
+#: bp-forums/common/template.php:2813
 msgid "%s Replies"
 msgstr ""
 
-#: bp-forums/common/template.php:2802
+#: bp-forums/common/template.php:2817
 msgid "%s Saved"
 msgstr ""
 
-#: bp-forums/common/template.php:2806
+#: bp-forums/common/template.php:2821
 msgid "%s Subscriptions"
 msgstr ""
 
-#: bp-forums/common/template.php:2810
+#: bp-forums/common/template.php:2825
 msgid "%s Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2818
+#: bp-forums/common/template.php:2833
 msgid "Edit Your Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2831
+#: bp-forums/common/template.php:2846
 msgid "View: %s"
 msgstr ""
 
@@ -12784,13 +12784,13 @@ msgstr[1] ""
 msgid "Search Results for '%s'"
 msgstr ""
 
-#: bp-forums/search/template.php:409
+#: bp-forums/search/template.php:444
 msgid "Viewing %1$s result"
 msgid_plural "Viewing %1$s results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/search/template.php:413
+#: bp-forums/search/template.php:448
 msgid "Viewing %2$s of %4$s results"
 msgid_plural "Viewing %2$s - %3$s of %4$s results"
 msgstr[0] ""
@@ -14775,6 +14775,10 @@ msgstr ""
 
 #: bp-groups/bp-groups-adminbar.php:72
 msgid "%s Group"
+msgstr ""
+
+#: bp-groups/bp-groups-adminbar.php:80
+msgid "Edit Group Discussion"
 msgstr ""
 
 #: bp-groups/bp-groups-functions.php:186
@@ -24221,22 +24225,22 @@ msgctxt "Start ribbon"
 msgid "Start %s "
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:148
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:163
 msgctxt "ui"
 msgid "Membership"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:166
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:181
 msgctxt "ui"
 msgid "Info"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:176
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:191
 msgctxt "ui"
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:186
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:201
 msgctxt "ui"
 msgid "Payments"
 msgstr ""
@@ -24246,12 +24250,12 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-forums/common/template.php:2785
+#: bp-forums/common/template.php:2800
 msgctxt "User viewing his/her own profile"
 msgid "Your"
 msgstr ""
 
-#: bp-forums/common/template.php:2789
+#: bp-forums/common/template.php:2804
 msgctxt "User viewing another users profile"
 msgid "%s's"
 msgstr ""

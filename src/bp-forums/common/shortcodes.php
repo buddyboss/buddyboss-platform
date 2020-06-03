@@ -704,17 +704,22 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				$attr['search'] = trim( $attr['search'] );
 			}
 
-			// Set passed attribute to $search_terms for clarity.
-			$search_terms = empty( $attr['search'] ) ? bbp_get_search_terms() : $attr['search'];
+			// Set passed attribute to $search_terms for clarity
+			$search_terms = empty( $attr['search'] )
+				? bbp_get_search_terms()
+				: $attr['search'];
+
+			// Get the rewrite ID (one time, to avoid repeated calls)
+			$rewrite_id = bbp_get_search_rewrite_id();
 
 			// Unset globals.
 			$this->unset_globals();
 
-			// Set terms for query.
-			set_query_var( bbp_get_search_rewrite_id(), $search_terms );
+			// Set terms for query
+			set_query_var( $rewrite_id, $search_terms );
 
-			// Start output buffer.
-			$this->start( bbp_get_search_rewrite_id() );
+			// Start output buffer
+			$this->start( $rewrite_id );
 
 			// Output template.
 			bbp_get_template_part( 'content', 'search' );
