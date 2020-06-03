@@ -454,6 +454,8 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'item_id'    => $item->id,
 		'object'     => 'group',
 		'type'       => 'thumb',
+		'width'      => 100,
+		'height'     => 100,
 		'html'       => false
 	) );
 
@@ -847,6 +849,18 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			array(
 				'members' => __( 'Members', 'buddyboss' ),
 			) );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+		$options['photos'] = __( 'Photos', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) {
+		$options['albums'] = __( 'Albums', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+		$options['documents'] = __( 'Documents', 'buddyboss' );
 	}
 
 	return array_merge( $controls,

@@ -107,19 +107,16 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 				true
 			);
 
-			wp_localize_script(
-				'bp-admin',
-				'BP_ADMIN',
-				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'tools'    => array(
+			wp_localize_script( 'bp-admin', 'BP_ADMIN', array(
+					'ajax_url'        => admin_url( 'admin-ajax.php' ),
+					'select_document' => esc_js( __( 'Please upload a file to check the MIME Type.', 'buddyboss' ) ),
+					'tools'           => array(
 						'default_data' => array(
 							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
 							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
 						),
 					),
-				)
-			);
+				) );
 		}
 
 		/**
@@ -235,12 +232,29 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			settings_fields( $this->tab_name );
 			$this->bp_custom_do_settings_sections( $this->tab_name );
 
-			printf(
-				'<p class="submit">
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] && 'bp-settings' === $_GET['page'] ) {
+			?>
+			<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
+				<a class="button" href="<?php echo bp_get_admin_url(
+					add_query_arg(
+						array(
+							'page'    => 'bp-help',
+							'article' => 62793,
+						),
+						'admin.php'
+					)
+				); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			</p>
+			<?php
+			} else {
+				printf(
+						'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
-			);
+						esc_attr__( 'Save Settings', 'buddyboss' )
+				);
+			}
 		}
 
 		/**
@@ -447,7 +461,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 			}
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-				echo "<div class='bp-admin-card section-{$section['id']}'>";
+				echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 				if ( $section['title'] ) {
 					echo "<h2>{$section['title']}</h2>\n";
 				}

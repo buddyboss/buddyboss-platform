@@ -66,6 +66,48 @@ function bp_nouveau_after_activity_directory_content() {
 }
 
 /**
+ * Before Single Activity content legacy do_action hooks wrapper
+ *
+ * @since BuddyBoss 1.2.2
+ */
+function bp_nouveau_before_single_activity_content() {
+	/**
+	 * Fires at the begining of the templates BP injected content.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_before_single_activity' );
+
+	/**
+	 * Fires before the single activity display content.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_before_single_activity_content' );
+}
+
+/**
+ * After Single Activity content legacy do_action hooks wrapper
+ *
+ * @since BuddyBoss 1.2.2
+ */
+function bp_nouveau_after_single_activity_content() {
+	/**
+	 * Fires after the single activity display content.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_after_single_activity_content' );
+
+	/**
+	 * Fires after the single activity listing.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_after_single_activity' );
+}
+
+/**
  * Enqueue needed scripts for the Activity Post Form
  *
  * @since BuddyPress 3.0.0
@@ -226,7 +268,7 @@ function bp_nouveau_activity_state() {
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
         <a href="javascript:void(0);" class="activity-state-likes">
-            <span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users; ?>"><?php echo $like_text ?: ''; ?></span>
+            <span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo ( $favorited_users ) ? $favorited_users : ''; ?>"><?php echo $like_text ?: ''; ?></span>
         </a>
         <span class="ac-state-separator">&middot;</span>
 		<a href="#" class="activity-state-comments">
@@ -905,12 +947,12 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 			return $buttons;
 		}
 
-		// It's the first comment of the loop, so build the Group and sort it
+		// It's the first comment of the loop, so build the Group and sort it.
 		if ( ! isset( bp_nouveau()->activity->comment_buttons ) || ! is_a( bp_nouveau()->activity->comment_buttons, 'BP_Buttons_Group' ) ) {
 			$sort = true;
 			bp_nouveau()->activity->comment_buttons = new BP_Buttons_Group( $buttons_group );
 
-		// It's not the first comment, the order is set, we simply need to update the Buttons Group
+		// It's not the first comment, the order is set, we simply need to update the Buttons Group.
 		} else {
 			$sort = false;
 			bp_nouveau()->activity->comment_buttons->update( $buttons_group );
@@ -955,3 +997,330 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 
 		return $return;
 	}
+
+/**
+ * Output the privacy option inside an Activity Loop.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ */
+function bp_nouveau_activity_privacy() {
+	if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
+			return;
+		}
+
+		$privacy                   = bp_get_activity_privacy();
+		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
+		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
+		$parent_activity_id        = false;
+		$parent_activity_permalink = false;
+		$group_id                  = false;
+		$album_id                  = false;
+		$album_url                 = '';
+		$folder_id                 = false;
+		$folder_url                = '';
+
+		// Get media privacy to show.
+		if ( bp_is_active( 'media' ) ) {
+			if ( $media_activity ) {
+				$media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
+				$media    = new BP_Media( $media_id );
+
+				if ( ! empty( $media ) ) {
+					$privacy  = $media->privacy;
+					$group_id = $media->group_id;
+					$album_id = $media->album_id;
+
+					if ( ! empty( $album_id ) ) {
+						$album     = new BP_Media_Album( $album_id );
+						$privacy   = $album->privacy;
+						$album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+					} else {
+						$parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
+						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+					}
+				}
+			}
+
+			if ( $document_activity ) {
+				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
+				$document    = new BP_Document( $document_id );
+				if ( ! empty( $document ) ) {
+					$privacy   = $document->privacy;
+					$group_id  = $document->group_id;
+					$folder_id = $document->folder_id;
+
+					if ( ! empty( $folder_id ) ) {
+						$folder_id = bp_document_get_root_parent_id( $folder_id );
+						$folder    = new BP_Document_Folder( $folder_id );
+						$privacy   = $folder->privacy;
+						$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+					} else {
+						$parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
+						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+					}
+				}
+			}
+
+			$activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
+			if ( ! empty( $activity_album_id ) ) {
+				$album_id       = $activity_album_id;
+				$album          = new BP_Media_Album( $album_id );
+				$privacy        = $album->privacy;
+				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+				$media_activity = true;
+			} else {
+				$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+				if ( ! empty( $media_ids ) ) {
+					$media_ids = explode( ',', $media_ids );
+					$media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
+					$media     = new BP_Media( $media_id );
+
+					if ( ! empty( $media->album_id ) ) {
+						$album_id       = $media->album_id;
+						$album          = new BP_Media_Album( $album_id );
+						$privacy        = $album->privacy;
+						$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						$media_activity = true;
+						bp_activity_update_meta( bp_get_activity_id(), 'bp_media_album_activity', $album_id );
+					}
+				}
+			}
+
+			$activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
+			if ( ! empty( $activity_folder_id ) ) {
+				$folder_id         = $activity_folder_id;
+				$folder_id         = bp_document_get_root_parent_id( $folder_id );
+				$folder            = new BP_Document_Folder( $folder_id );
+				$privacy           = $folder->privacy;
+				$folder_url         = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+				$document_activity = true;
+			} else {
+				$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+				if ( ! empty( $document_ids ) ) {
+					$document_ids = explode( ',', $document_ids );
+					$document_id  = ! empty( $document_ids ) ? $document_ids[0] : false;
+					$document     = new BP_Document( $document_id );
+
+					if ( ! empty( $document->folder_id ) ) {
+						$folder_id         = $document->folder_id;
+						$folder_id         = bp_document_get_root_parent_id( $folder_id );
+						$folder            = new BP_Document_Folder( $folder_id );
+						$privacy           = $folder->privacy;
+						$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+						$document_activity = true;
+						bp_activity_update_meta( bp_get_activity_id(), 'bp_document_folder_activity', $folder_id );
+					}
+				}
+			}
+		}
+
+		if ( $media_activity && empty( $group_id ) && $parent_activity_id ) {
+			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+		}
+
+		if ( $document_activity && empty( $group_id ) && $parent_activity_id ) {
+			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+
+			if ( ! empty( $parent_activity->id ) ) {
+				$group_id = $parent_activity->item_id;
+			}
+		}
+
+		if ( ! empty( $group_id ) ) {
+			return;
+		}
+
+		$privacy_items = bp_activity_get_visibility_levels();
+
+		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
+			?>
+			<div class="bb-media-privacy-wrap">
+			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+			<ul class="activity-privacy">
+				<?php if ( $album_id && ! empty( $album_url ) ) : ?>
+					<li class="bb-edit-privacy" data-value="<?php echo $album_url; ?>" >
+						<a href="<?php echo $album_url; ?>" data-value="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
+				<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+					<li class="bb-edit-privacy" data-value="<?php echo $parent_activity_permalink; ?>" >
+						<a href="<?php echo $parent_activity_permalink; ?>" data-value="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+					</li>
+				<?php endif; ?>
+			</ul>
+			</div><?php
+		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
+			?>
+			<div class="bb-media-privacy-wrap">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<ul class="activity-privacy">
+					<?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
+						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy">
+							<a data-value="<?php echo $folder_url; ?>" href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
+					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy">
+							<a data-value="<?php echo $parent_activity_permalink; ?>" href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+						</li>
+					<?php endif; ?>
+				</ul>
+			</div><?php
+		} else {
+			?>
+			<div class="bb-media-privacy-wrap">
+			<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+			<?php
+			$class = 'activity-privacy';
+			if ( $media_activity ) {
+				$class = 'media-privacy';
+			} elseif ( $document_activity ) {
+				$class = 'document-privacy';
+			}
+			?>
+			<ul class="<?php echo esc_attr( $class ); ?>">
+				<?php foreach ( $privacy_items as $item_key => $privacy_item ) {
+					?>
+					<li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php
+				} ?>
+			</ul>
+			</div><?php
+		}
+	}
+}
+
+/**
+ * Fetch and update the media description.
+ *
+ * @param int $activity_id The current activity ID.
+ *
+ * @since BuddyBoss 1.3.5
+ */
+function bp_nouveau_activity_description( $activity_id = 0 ) {
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+
+	if ( empty( $attachment_id ) ) {
+		return;
+	}
+
+	$content = get_post_field( 'post_content', $attachment_id );
+
+	echo '<div class="activity-media-description">' .
+	     '<div class="bp-media-activity-description">' . $content . '</div>';
+
+	if ( bp_activity_user_can_edit() ) {
+		?>
+
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+		   href="#">
+			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+		</a>
+		<div class="bp-edit-media-activity-description" style="display: none;">
+			<div class="innerWrap">
+                        <textarea id="add-activity-description"
+                                  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+                                  class="textInput"
+                                  name="caption_text"
+                                  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+                                  role="textbox"><?php echo $content; ?></textarea>
+			</div>
+			<div class="in-profile description-new-submit">
+				<?php ?>
+				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small"
+				       name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
+				       value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+			</div>
+		</div>
+
+		<?php
+	}
+
+	echo '</div>';
+}
+
+/**
+ * Fetch and update the document description.
+ *
+ * @param int $activity_id The current activity ID.
+ *
+ * @since BuddyBoss 1.3.5
+ */
+function bp_nouveau_document_activity_description( $activity_id = 0 ) {
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
+
+	if ( empty( $attachment_id ) ) {
+		return;
+	}
+
+	$content = get_post_field( 'post_content', $attachment_id );
+
+	echo '<div class="activity-media-description">' .
+	     '<div class="bp-media-activity-description">' . $content . '</div>';
+
+	if ( bp_activity_user_can_edit() ) {
+		?>
+
+		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+		   href="#">
+			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+		</a>
+		<div class="bp-edit-media-activity-description" style="display: none;">
+			<div class="innerWrap">
+                        <textarea id="add-activity-description"
+                                  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+                                  class="textInput"
+                                  name="caption_text"
+                                  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+                                  role="textbox"><?php echo $content; ?></textarea>
+			</div>
+			<div class="in-profile description-new-submit">
+				<?php ?>
+				<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+				<input type="submit" id="bp-activity-description-new-submit" class="button small"
+				       name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+				<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
+				       value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+			</div>
+		</div>
+
+		<?php
+	}
+
+	echo '</div>';
+}
+
+/**
+ * Clear activity body content
+ *
+ * @param integer              $content  Activity Content
+ * @param BP_Activity_Activity $activity Activity object.
+ *
+ * @return bool
+ * @since BuddyBoss 1.3.6
+ */
+function bp_nouveau_clear_activity_content_body( $content, $activity ) {
+	return false;
+}

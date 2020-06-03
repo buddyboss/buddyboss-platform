@@ -251,6 +251,14 @@ function bp_core_activation_notice() {
 
 	// Only components with 'has_directory' require a WP page to function.
 	foreach ( array_keys( $bp->loaded_components ) as $component_id ) {
+		if ( 'photos' === $component_id ) {
+			$component_id = 'media';
+		}
+		if ( 'documents' === $component_id ) {
+			if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+				$component_id = 'document';
+			}
+		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
 				'id'   => $component_id,
@@ -516,9 +524,9 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
 		$tab_class  = $is_current ? $active_class : $idle_class;
 		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+			$tabs_html .= '<li class="' . $tab_data['slug'] . ' "><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li class="' . $tab_data['slug'] . ' "><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
 		}
 
 		$i = $i + 1;
@@ -1311,8 +1319,8 @@ function bp_admin_email_add_codex_notice() {
 			bp_get_admin_url(
 				add_query_arg(
 					array(
-						'page' 		=> 'bp-help',
-						'article' 	=> 62844,
+						'page'    => 'bp-help',
+						'article' => 62844,
 					),
 					'admin.php'
 				)
@@ -1535,7 +1543,7 @@ function bp_core_admin_user_manage_spammers() {
 
 		$redirect = add_query_arg( array( 'updated' => 'marked-' . $status ), $redirect );
 
-		wp_redirect( $redirect );
+		wp_safe_redirect( $redirect );
 	}
 
 	// Display feedback.
@@ -2979,3 +2987,22 @@ function bp_block_category( $categories = array(), $post = null ) {
 	);
 }
 add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+
+function bp_document_ajax_check_file_mime_type() {
+	$response = array();
+	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && ! empty( $_FILES ) ) {
+		$files = $_FILES;
+		foreach ( $files as $input => $info_arr ) {
+
+			$finfo            = finfo_open( FILEINFO_MIME_TYPE );
+			$real_mime        = finfo_file( $finfo, $info_arr['tmp_name'] );
+			$info_arr['type'] = $real_mime;
+			foreach ( $info_arr as $key => $value_arr ) {
+				$response[ $key ] = $value_arr;
+			}
+		}
+	}
+	wp_send_json_success( $response );
+}
+
+add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_file_mime_type' );

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,32 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.3.6 =
+* Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
+* Documents - Added central Documents page for showing all site documents
+* Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
+* Documents - Added functionality to move and organized Documents into Folders
+* Documents - Added settings page for customizable Document File Extensions
+* Media - Added enhanced privacy controls for uploaded Photos and Documents
+* Media - Added functionality to enter 'Description' in Photo and Document popups
+* Media - Comments in single Photo and Document popups now sync with activity comments
+* Activity - Added enhanced privacy controls for user-created activity posts
+* Groups - Improved performance for groups with many thousands of members
+* Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
+* Forums - Fixed pagination when using shortcode [bbp-topic-index]
+* Forums - Fixed issues when using many levels of threaded replies
+* Forums - Fixed empty Forums page displaying with Private Network enabled
+* Forums - Fixed HTML elements displaying when pasting content as subscriber
+* Forums - Merged in security patches from bbPress 2.6.5
+* Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
+* Network Search - Fixed results title when using apostrophe or blank entry
+* Emails - Fixed email not sending for site admin changing a user's password
+* Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
+* Icons - Added new font icons to represent all common file types
+* LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
+* MemberPress - Fixed JavaScript conflicts with Stripe credit card field
+* WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
 
 = 1.3.5 =
 * REST API - Added official BuddyBoss REST API

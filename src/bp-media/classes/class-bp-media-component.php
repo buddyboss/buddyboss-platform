@@ -50,6 +50,16 @@ class BP_Media_Component extends BP_Component {
 	public $forbidden_names;
 
 	/**
+	 * The acceptable visibility levels for media.
+	 *
+	 * @see bp_media_get_visibility_levels()
+	 *
+	 * @since BuddyBoss 1.2.3
+	 * @var array
+	 */
+	public $visibility_levels = array();
+
+	/**
 	 * Start the media component creation process.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -148,6 +158,18 @@ class BP_Media_Component extends BP_Component {
 			define( 'BP_MEDIA_SLUG', $this->id );
 		}
 
+		// Register the visibility levels. See bp_media_get_visibility_levels() to filter.
+		$this->visibility_levels = array(
+			'public'   => __( 'Public', 'buddyboss' ),
+			'loggedin' => __( 'All Members', 'buddyboss' ),
+		);
+
+		if ( bp_is_active( 'friends' ) ) {
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		}
+
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
+
 		// Global tables for media component.
 		$global_tables = array(
 			'table_name'        => $bp->table_prefix . 'bp_media',
@@ -155,8 +177,8 @@ class BP_Media_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[ $this->id ];
+		$default_directory_titles         = bp_core_get_directory_page_default_titles();
+		$default_directory_title          = $default_directory_titles[ $this->id ];
 
 		// All globals for media component.
 		// Note that global_tables is included in this array.
@@ -165,8 +187,7 @@ class BP_Media_Component extends BP_Component {
 				'slug'                                    => 'photos',
 				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
 				'has_directory'                           => true,
-				// 'notification_callback' => 'bp_media_format_notifications',
-										  'global_tables' => $global_tables,
+				'global_tables'                           => $global_tables,
 				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
 				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
 			)
@@ -181,10 +202,11 @@ class BP_Media_Component extends BP_Component {
 			$bp->is_single_item  = true;
 			$this->current_album = albums_get_album( $album_id );
 
-			// Set current_album to 0 to prevent debug errors.
+		// Set current_album to 0 to prevent debug errors.
 		} else {
 			$this->current_album = 0;
 		}
+
 
 	}
 
