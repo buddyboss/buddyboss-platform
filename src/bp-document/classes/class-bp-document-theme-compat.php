@@ -3,7 +3,7 @@
  * BuddyBoss Document Theme Compatibility.
  *
  * @package BuddyBoss\Document
- * @since   BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.4.0
  */
 
 // Exit if accessed directly.
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  * This class sets up the necessary theme compatibility actions to safely output
  * document template parts to the_title and the_content areas of a theme.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 class BP_Document_Theme_Compat {
 
 	/**
 	 * Set up the document component theme compatibility.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function __construct() {
 		add_action( 'bp_setup_theme_compat', array( $this, 'is_document' ) );
@@ -30,7 +30,7 @@ class BP_Document_Theme_Compat {
 	/**
 	 * Set up the theme compatibility hooks, if we're looking at an document page.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function is_document() {
 
@@ -62,7 +62,7 @@ class BP_Document_Theme_Compat {
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 *
 	 * @return array $templates Array of custom templates to look for.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function directory_template_hierarchy( $templates ) {
 
@@ -71,7 +71,7 @@ class BP_Document_Theme_Compat {
 		 *
 		 * @param array $index -directory Array holding template names to be merged into template list.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$new_templates = apply_filters(
 			'bp_template_hierarchy_document_directory',
@@ -90,7 +90,7 @@ class BP_Document_Theme_Compat {
 	/**
 	 * Update the global $post with directory data.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function directory_dummy_post() {
 		bp_theme_compat_reset_post(
@@ -111,7 +111,7 @@ class BP_Document_Theme_Compat {
 	/**
 	 * Filter the_content with the groups index template part.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function directory_content() {
 		return bp_buffer_template_part( 'document/index', null, false );
@@ -126,7 +126,7 @@ class BP_Document_Theme_Compat {
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 *
 	 * @return array $templates Array of custom templates to look for.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function single_template_hierarchy( $templates ) {
 
@@ -135,7 +135,7 @@ class BP_Document_Theme_Compat {
 		 *
 		 * @param array $index Array holding template names to be merged into template list.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$new_templates = apply_filters(
 			'bp_template_hierarchy_document_single_item',
@@ -154,7 +154,7 @@ class BP_Document_Theme_Compat {
 	/**
 	 * Update the global $post with the displayed user's data.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function single_dummy_post() {
 		bp_theme_compat_reset_post(
@@ -175,7 +175,7 @@ class BP_Document_Theme_Compat {
 	/**
 	 * Filter the_content with the members' document permalink template part.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function single_dummy_content() {
 		return bp_buffer_template_part( 'document/single/home', null, false );

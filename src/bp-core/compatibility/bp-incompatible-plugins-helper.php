@@ -78,7 +78,7 @@ function bp_helper_plugins_loaded_callback() {
 
 		/**
 		 * Add fix for WPML redirect issue
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 *
 		 * @param array $q
 		 *

@@ -3,7 +3,7 @@
  * BuddyBoss Document Classes
  *
  * @package BuddyBoss\Document
- * @since   BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.4.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an document,
  * static methods for querying document.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 class BP_Document {
 
@@ -25,7 +25,7 @@ class BP_Document {
 	/**
 	 * ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $id;
@@ -33,7 +33,7 @@ class BP_Document {
 	/**
 	 * Blog ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $blog_id;
@@ -41,7 +41,7 @@ class BP_Document {
 	/**
 	 * Attachment ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $attachment_id;
@@ -49,7 +49,7 @@ class BP_Document {
 	/**
 	 * User ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $user_id;
@@ -57,7 +57,7 @@ class BP_Document {
 	/**
 	 * Title of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $title;
@@ -65,7 +65,7 @@ class BP_Document {
 	/**
 	 * Folder ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $folder_id;
@@ -73,7 +73,7 @@ class BP_Document {
 	/**
 	 * Group ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $group_id;
@@ -81,7 +81,7 @@ class BP_Document {
 	/**
 	 * Activity ID of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $activity_id;
@@ -89,7 +89,7 @@ class BP_Document {
 	/**
 	 * Privacy of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $privacy;
@@ -97,7 +97,7 @@ class BP_Document {
 	/**
 	 * Menu order of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $menu_order;
@@ -105,7 +105,7 @@ class BP_Document {
 	/**
 	 * Upload date of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $date_created;
@@ -113,7 +113,7 @@ class BP_Document {
 	/**
 	 * Update date of the document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $date_modified;
@@ -121,7 +121,7 @@ class BP_Document {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var WP_Error
 	 */
 	public $errors;
@@ -129,7 +129,7 @@ class BP_Document {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $error_type = 'bool';
@@ -139,7 +139,7 @@ class BP_Document {
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	function __construct( $id = false ) {
 		// Instantiate errors object.
@@ -154,7 +154,7 @@ class BP_Document {
 	/**
 	 * Populate the object with data about the specific document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function populate() {
 
@@ -194,7 +194,7 @@ class BP_Document {
 	 *
 	 * @param $dir
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function bp_document_remove_temp_directory( $dir ) {
 		if ( is_dir( $dir ) ) {
@@ -235,7 +235,7 @@ class BP_Document {
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located documents
 	 *               - 'documents' is an array of the located documents
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get( $args = array() ) {
 
@@ -293,7 +293,7 @@ class BP_Document {
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			if ( apply_filters( 'bp_document_get_include_user_search', false ) ) {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
@@ -389,7 +389,7 @@ class BP_Document {
 		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$where_conditions = apply_filters( 'bp_document_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
@@ -413,7 +413,7 @@ class BP_Document {
 		 * @param string $from_sql   Current FROM MySQL statement.
 		 * @param string $where_sql  Current WHERE MySQL statement.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$join_sql = apply_filters( 'bp_document_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
@@ -442,7 +442,7 @@ class BP_Document {
 		 * @param string $document_ids_sql MySQL statement used to query for Document IDs.
 		 * @param array  $r                Array of arguments passed into method.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$document_ids_sql = apply_filters( 'bp_document_paged_activities_sql', $document_ids_sql, $r );
 
@@ -490,7 +490,7 @@ class BP_Document {
 			 * @param string $where_sql MySQL WHERE statement portion.
 			 * @param string $sort      Sort direction for query.
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			$total_documents_sql = apply_filters( 'bp_document_total_documents_sql', "SELECT count(DISTINCT d.id) FROM {$bp->document->table_name} d {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached              = bp_core_get_incremented_cache( $total_documents_sql, $cache_group );
@@ -526,7 +526,7 @@ class BP_Document {
 	 *                       but merged with defaults.
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_scope_query_sql( $scope = false, $r = array() ) {
 
@@ -580,7 +580,7 @@ class BP_Document {
 			 *
 			 * @param array $r        Current activity arguments passed in BP_Document::get().
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			$scope_args = apply_filters( "bp_document_set_{$scope}_scope_args", array(), $r );
 
@@ -623,7 +623,7 @@ class BP_Document {
 	 * @param array $document_ids Array of document IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected static function get_document_data( $document_ids = array() ) {
 		global $wpdb;
@@ -745,7 +745,7 @@ class BP_Document {
 	 * @param array $documents Array of document.
 	 *
 	 * @return array $documents Array of document.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected static function prefetch_object_data( $documents ) {
 
@@ -754,7 +754,7 @@ class BP_Document {
 		 *
 		 * @param array $documents Array of document.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		return apply_filters( 'bp_document_prefetch_object_data', $documents );
 	}
@@ -832,7 +832,7 @@ class BP_Document {
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			if ( apply_filters( 'bp_document_get_include_user_search', false ) ) {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
@@ -1149,7 +1149,7 @@ class BP_Document {
 		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
 		$where_conditions_folder   = apply_filters( 'bp_document_get_where_conditions_folder', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
@@ -1180,7 +1180,7 @@ class BP_Document {
 		 * @param string $from_sql   Current FROM MySQL statement.
 		 * @param string $where_sql  Current WHERE MySQL statement.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$join_sql_folder   = apply_filters( 'bp_document_get_join_sql_folder', $join_sql_folder, $r, $select_sql_folder, $from_sql_folder, $where_sql_folder );
 		$join_sql_document = apply_filters( 'bp_document_get_join_sql_document', $join_sql_document, $r, $select_sql_document, $from_sql_document, $where_sql_document );
@@ -1201,7 +1201,7 @@ class BP_Document {
 		 * @param string $document_ids_sql MySQL statement used to query for Document IDs.
 		 * @param array  $r                Array of arguments passed into method.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$document_ids_sql_folder   = apply_filters( 'bp_document_paged_activities_sql_folder', $document_ids_sql_folder, $r );
 		$document_ids_sql_document = apply_filters( 'bp_document_paged_activities_sql_document', $document_ids_sql_document, $r );
@@ -1285,7 +1285,7 @@ class BP_Document {
 	 *                       but merged with defaults.
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_scope_document_query_sql( $scope = false, $r = array() ) {
 
@@ -1339,7 +1339,7 @@ class BP_Document {
 			 *
 			 * @param array $r        Current activity arguments passed in BP_Document::get().
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			$scope_args = apply_filters( "bp_document_set_document_{$scope}_scope_args", array(), $r );
 
@@ -1387,7 +1387,7 @@ class BP_Document {
 	 *                       but merged with defaults.
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_scope_folder_query_sql( $scope = false, $r = array() ) {
 
@@ -1441,7 +1441,7 @@ class BP_Document {
 			 *
 			 * @param array $r        Current activity arguments passed in BP_Document::get().
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			$scope_args = apply_filters( "bp_document_set_folder_{$scope}_scope_args", array(), $r );
 
@@ -1484,7 +1484,7 @@ class BP_Document {
 	 * @param array $folder_ids Array of document IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected static function get_folder_data( $folder_ids = array() ) {
 		global $wpdb;
@@ -1597,7 +1597,7 @@ class BP_Document {
 	 *
 	 * @return array|mixed
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function array_msort( $array, $cols ) {
 
@@ -1648,7 +1648,7 @@ class BP_Document {
 	 * @param     $column
 	 * @param int $direction
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function array_sort_by_column( $array, $column, $direction = SORT_DESC ) {
 
@@ -1677,7 +1677,7 @@ class BP_Document {
 	 *
 	 * @return string|false
 	 * @see   BP_Document::get_filter_sql()
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
 		global $wpdb;
@@ -1726,7 +1726,7 @@ class BP_Document {
 	 * @param bool  $from Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted document IDs on success, false on failure.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function delete( $args = array(), $from = false ) {
 		global $wpdb;
@@ -1818,7 +1818,7 @@ class BP_Document {
 		 * @param array $documents Array of document.
 		 * @param array $r         Array of parsed arguments.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_before_delete', array( $documents, $r ) );
 
@@ -1836,7 +1836,7 @@ class BP_Document {
 		 * @param array $documents Array of document.
 		 * @param array $r         Array of parsed arguments.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_after_delete', array( $documents, $r ) );
 
@@ -1930,7 +1930,7 @@ class BP_Document {
 	/**
 	 * Delete the meta entries associated with a set of document items.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @param array $document_ids Document IDs whose meta should be deleted.
 	 * @return bool True on success.
@@ -1951,7 +1951,7 @@ class BP_Document {
 	 * @param int $user_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function total_document_count( $user_id = 0 ) {
 		global $bp, $wpdb;
@@ -1981,7 +1981,7 @@ class BP_Document {
 	 * @param int $group_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function total_group_document_count( $group_id = 0 ) {
 		global $bp, $wpdb;
@@ -1999,7 +1999,7 @@ class BP_Document {
 	 * @param bool $folder_id
 	 *
 	 * @return array|bool
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_folder_document_ids( $folder_id = false ) {
 		global $bp, $wpdb;
@@ -2048,7 +2048,7 @@ class BP_Document {
 	 * @param array $documents Documents array.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected static function append_user_fullnames( $documents ) {
 
@@ -2074,7 +2074,7 @@ class BP_Document {
 	 * Save the document item to the database.
 	 *
 	 * @return WP_Error|bool True on success.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function save() {
 
@@ -2168,7 +2168,7 @@ class BP_Document {
 		 *
 		 * @param BP_Document $this Current instance of the document item being saved. Passed by reference.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_before_save', array( &$this ) );
 
@@ -2266,7 +2266,7 @@ class BP_Document {
 		 *
 		 * @param BP_Document $this Current instance of document item being saved. Passed by reference.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_after_save', array( &$this ) );
 
@@ -2359,7 +2359,7 @@ class BP_Document {
 	 * @param integer $activity_id Activity ID
 	 *
 	 * @return integer|bool
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_activity_attachment_id( $activity_id = 0 ) {
 		global $bp, $wpdb;

@@ -1012,7 +1012,7 @@ function bbp_force_comment_status( $open, $post_id = 0 ) {
  * In this function, we remove these links when on a bbPress page. This also
  * prevents additional, unnecessary queries from running.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  * @since 2.6.0 bbPress (r7071)
  */
 function bbp_remove_adjacent_posts() {

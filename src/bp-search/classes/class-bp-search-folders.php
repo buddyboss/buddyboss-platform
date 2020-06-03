@@ -3,7 +3,7 @@
  * @todo add description
  *
  * @package BuddyBoss\Search
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 
 // Exit if accessed directly.
@@ -21,7 +21,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 *
 		 * @return object Bp_Search_Folders
 		 */
@@ -41,7 +41,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 		/**
 		 * A dummy constructor to prevent this class from being loaded more than once.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		private function __construct() {
 			/* Do nothing here */

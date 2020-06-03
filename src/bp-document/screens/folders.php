@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss\Document\Screens
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 
 /**
  * Load an individual folder screen.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @return false|null False on failure.
  */
@@ -40,14 +40,14 @@ function document_screen_single_folder() {
 	/**
 	 * Fires right before the loading of the single folder view screen template file.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	do_action( 'document_screen_single_folder' );
 
 	/**
 	 * Filters the template to load for the Single Folder view screen.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @param string $template Path to the folder template to load.
 	 */

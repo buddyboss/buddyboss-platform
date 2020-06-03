@@ -118,7 +118,7 @@ function bp_document_activity_entry() {
  * @param $activity
  *
  * @return string
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_append_document( $content, $activity ) {
 
@@ -155,7 +155,7 @@ function bp_document_activity_append_document( $content, $activity ) {
  *
  * @param $comment_id
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_comment_entry( $comment_id ) {
 
@@ -189,7 +189,7 @@ function bp_document_activity_comment_entry( $comment_id ) {
  * @param $display
  *
  * @return string
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_music_preview_remove_in_comment( $display ) {
 	return false;
@@ -201,7 +201,7 @@ function bp_document_music_preview_remove_in_comment( $display ) {
  * @param $display
  *
  * @return string
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_text_preview_remove_in_comment( $display ) {
 	return false;
@@ -213,7 +213,7 @@ function bp_document_text_preview_remove_in_comment( $display ) {
  * @param $display
  *
  * @return string
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_image_preview_remove_in_comment( $display ) {
 	return false;
@@ -225,7 +225,7 @@ function bp_document_image_preview_remove_in_comment( $display ) {
  * @param $text
  *
  * @return string|void
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_change_popup_view_text_in_comment( $text ) {
 	return __( 'View', 'buddyboss' );
@@ -237,7 +237,7 @@ function bp_document_change_popup_view_text_in_comment( $text ) {
  * @param $text
  *
  * @return string|void
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_change_popup_download_text_in_comment( $text ) {
 	return __( 'Download', 'buddyboss' );
@@ -251,7 +251,7 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  * @param $activity_id
  *
  * @return bool
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 
@@ -289,7 +289,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
  * @param $group_id
  * @param $activity_id
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_groups_activity_update_document_meta( $content, $user_id, $group_id, $activity_id ) {
 	bp_document_update_activity_document_meta( $content, $user_id, $activity_id );
@@ -302,7 +302,7 @@ function bp_document_groups_activity_update_document_meta( $content, $user_id, $
  * @param $r
  * @param $activity
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_comments_update_document_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
@@ -315,7 +315,7 @@ function bp_document_activity_comments_update_document_meta( $comment_id, $r, $a
  *
  * @param $activities
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_delete_activity_document( $activities ) {
 	if ( ! empty( $activities ) ) {
@@ -345,7 +345,7 @@ function bp_document_delete_activity_document( $activities ) {
  *
  * @param $folder
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_update_document_privacy( &$folder ) {
 
@@ -388,7 +388,7 @@ function bp_document_update_document_privacy( &$folder ) {
  *
  * @param $post_id
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_forums_new_post_document_save( $post_id ) {
 
@@ -511,7 +511,7 @@ function bp_document_forums_new_post_document_save( $post_id ) {
  * @param $id
  *
  * @return string
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_forums_embed_attachments( $content, $id ) {
 
@@ -552,7 +552,7 @@ function bp_document_forums_embed_attachments( $content, $id ) {
  *
  * @param $message
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_attach_document_to_message( &$message ) {
 
@@ -613,7 +613,7 @@ function bp_document_attach_document_to_message( &$message ) {
  * @param $thread_id
  * @param $message_ids
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_messages_delete_attached_document( $thread_id, $message_ids ) {
 
@@ -639,7 +639,7 @@ function bp_document_messages_delete_attached_document( $thread_id, $message_ids
  * @param $thread_id
  * @param $message_ids
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_user_messages_delete_attached_document( $thread_id, $message_ids, $user_id, $update_message_ids ) {
 
@@ -666,7 +666,7 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  *
  * @return bool
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_delete_attachment_document( $attachment_id ) {
 	global $wpdb;
@@ -685,7 +685,7 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 /**
  * Check if user have a access to download the file. If not redirect to homepage.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
@@ -708,7 +708,7 @@ function bp_document_download_url_file() {
  *
  * @param $attachment_id
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_sync_document_data( $attachment_id ) {
 	if ( ! is_admin() || wp_doing_ajax() ) {
@@ -728,7 +728,7 @@ function bp_document_sync_document_data( $attachment_id ) {
  *
  * @param $activity Activity object.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_activity_update_document_privacy( $activity ) {
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );

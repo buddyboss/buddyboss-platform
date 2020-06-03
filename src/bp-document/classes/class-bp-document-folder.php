@@ -3,7 +3,7 @@
  * BuddyBoss Document Classes
  *
  * @package BuddyBoss\Document
- * @since   BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.4.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an document folders,
  * static methods for querying document folder.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 class BP_Document_Folder {
 
@@ -25,7 +25,7 @@ class BP_Document_Folder {
 	/**
 	 * ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $id;
@@ -33,7 +33,7 @@ class BP_Document_Folder {
 	/**
 	 * Blog ID of the folder item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $blog_id;
@@ -41,7 +41,7 @@ class BP_Document_Folder {
 	/**
 	 * User ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $user_id;
@@ -49,7 +49,7 @@ class BP_Document_Folder {
 	/**
 	 * Group ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	var $group_id;
@@ -57,7 +57,7 @@ class BP_Document_Folder {
 	/**
 	 * Parent ID of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	public $parent;
@@ -65,7 +65,7 @@ class BP_Document_Folder {
 	/**
 	 * Title of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $title;
@@ -73,7 +73,7 @@ class BP_Document_Folder {
 	/**
 	 * Privacy of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $privacy;
@@ -81,7 +81,7 @@ class BP_Document_Folder {
 	/**
 	 * Upload date of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $date_created;
@@ -89,7 +89,7 @@ class BP_Document_Folder {
 	/**
 	 * Update date of the folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	var $date_modified;
@@ -97,7 +97,7 @@ class BP_Document_Folder {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var WP_Error
 	 */
 	public $errors;
@@ -105,7 +105,7 @@ class BP_Document_Folder {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $error_type = 'bool';
@@ -115,7 +115,7 @@ class BP_Document_Folder {
 	 *
 	 * @param int|bool $id Optional. The ID of a specific document folder.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	function __construct( $id = false ) {
 		// Instantiate errors object.
@@ -130,7 +130,7 @@ class BP_Document_Folder {
 	/**
 	 * Populate the object with data about the specific folder item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function populate() {
 
@@ -169,7 +169,7 @@ class BP_Document_Folder {
 	 * @param string $id ID to check.
 	 *
 	 * @return int|bool Folder ID if found; false if not.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function folder_exists( $id ) {
 		if ( empty( $id ) ) {
@@ -214,7 +214,7 @@ class BP_Document_Folder {
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located documents
 	 *               - 'folders' is an array of the located documents
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get( $args = array() ) {
 
@@ -261,7 +261,7 @@ class BP_Document_Folder {
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			if ( apply_filters( 'bp_document_folder_get_include_user_search', false ) ) {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
@@ -332,7 +332,7 @@ class BP_Document_Folder {
 		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$where_conditions = apply_filters( 'bp_document_folder_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
@@ -352,7 +352,7 @@ class BP_Document_Folder {
 		 * @param string $from_sql   Current FROM MySQL statement.
 		 * @param string $where_sql  Current WHERE MySQL statement.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$join_sql = apply_filters( 'bp_document_folder_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
@@ -381,7 +381,7 @@ class BP_Document_Folder {
 		 * @param string $folder_ids_sql MySQL statement used to query for Document IDs.
 		 * @param array  $r              Array of arguments passed into method.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		$folder_ids_sql = apply_filters( 'bp_document_folder_paged_activities_sql', $folder_ids_sql, $r );
 
@@ -429,7 +429,7 @@ class BP_Document_Folder {
 			 * @param string $where_sql MySQL WHERE statement portion.
 			 * @param string $sort      Sort direction for query.
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			$total_folders_sql = apply_filters( 'bp_document_folder_total_documents_sql', "SELECT count(DISTINCT f.id) FROM {$bp->document->table_name_folder} f {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached            = bp_core_get_incremented_cache( $total_folders_sql, $cache_group );
@@ -458,7 +458,7 @@ class BP_Document_Folder {
 	 * @param array $folder_ids Array of document IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_folder_data( $folder_ids = array() ) {
 		global $wpdb;
@@ -563,7 +563,7 @@ class BP_Document_Folder {
 	 * @param array $folders Array of document folders.
 	 *
 	 * @return array $folders Array of document folders.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected static function prefetch_object_data( $folders ) {
 
@@ -572,7 +572,7 @@ class BP_Document_Folder {
 		 *
 		 * @param array $documents Array of document folders.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		return apply_filters( 'bp_document_folder_prefetch_object_data', $folders );
 	}
@@ -583,7 +583,7 @@ class BP_Document_Folder {
 	 * @param int $group_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function total_group_folder_count( $group_id = 0 ) {
 		global $bp, $wpdb;
@@ -607,7 +607,7 @@ class BP_Document_Folder {
 	 *                    }
 	 *
 	 * @return array|bool An array of deleted document IDs on success, false on failure.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function delete( $args = array() ) {
 		global $wpdb;
@@ -668,7 +668,7 @@ class BP_Document_Folder {
 		 * @param array $folders Array of document folders.
 		 * @param array $r       Array of parsed arguments.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_folder_before_delete', array( $folders, $r ) );
 
@@ -702,7 +702,7 @@ class BP_Document_Folder {
 		 * @param array $folders Array of document folders.
 		 * @param array $r       Array of parsed arguments.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_folder_after_delete', array( $folders, $r ) );
 
@@ -767,7 +767,7 @@ class BP_Document_Folder {
 	 * @param array $folders Folders array.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected static function append_user_fullnames( $folders ) {
 
@@ -793,7 +793,7 @@ class BP_Document_Folder {
 	 * Save the document folder to the database.
 	 *
 	 * @return WP_Error|bool True on success.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function save() {
 
@@ -817,7 +817,7 @@ class BP_Document_Folder {
 		 *
 		 * @param BP_Document $this Current instance of the folder being saved. Passed by reference.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_folder_before_save', array( &$this ) );
 
@@ -847,7 +847,7 @@ class BP_Document_Folder {
 		 *
 		 * @param BP_Document $this Current instance of folder being saved. Passed by reference.
 		 *
-		 * @since BuddyBoss 1.3.6
+		 * @since BuddyBoss 1.4.0
 		 */
 		do_action_ref_array( 'bp_document_folder_after_save', array( &$this ) );
 

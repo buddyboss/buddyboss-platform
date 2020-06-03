@@ -1319,7 +1319,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
  * @param BP_Activity_Activity $activity Activity object.
  *
  * @return bool
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_clear_activity_content_body( $content, $activity ) {
 	return false;

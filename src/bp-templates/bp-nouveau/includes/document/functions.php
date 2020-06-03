@@ -2,7 +2,7 @@
 /**
  * Document functions
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Enqueue the media scripts
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_document_enqueue_scripts() {
 
@@ -30,7 +30,7 @@ function bp_nouveau_document_enqueue_scripts() {
 /**
  * Localize the strings needed for the messages UI
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @param  array $params Associative array containing the JS Strings needed by scripts.
  * @return array         The same array with specific strings for the messages UI if needed.
@@ -132,7 +132,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 /**
  * Get the nav items for the Media directory
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @return array An associative array of nav items.
  */
@@ -176,7 +176,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 	/**
 	 * Use this filter to introduce your custom nav items for the media directory.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
@@ -980,7 +980,7 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
  * @param bool  $parent_folder
  *
  * @return string
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_create_folder_recursive( $array, $parent_folder ) {
 
@@ -1021,7 +1021,7 @@ function bp_document_create_folder_recursive( $array, $parent_folder ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 
@@ -1056,7 +1056,7 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
 	$attachment_url = '';

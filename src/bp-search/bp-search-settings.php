@@ -715,7 +715,7 @@ function bp_search_settings_callback_groups() {
 /**
  * Allow Post Type search setting field
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @uses checked() To display the checked attribute
  */
@@ -737,7 +737,7 @@ function bp_search_settings_callback_documents() {
 /**
  * Allow Post Type search setting field
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @uses checked() To display the checked attribute
  */
@@ -772,7 +772,7 @@ function bp_is_search_groups_enable( $default = 1 ) {
 /**
  * Checks if document search is enabled.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @param $default integer
  *
@@ -785,7 +785,7 @@ function bp_is_search_documents_enable( $default = 0) {
 /**
  * Checks if folder search is enabled.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @param $default integer
  *

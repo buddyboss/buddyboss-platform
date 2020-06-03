@@ -2,7 +2,7 @@
 /**
  * Document Ajax functions
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
 
@@ -127,7 +127,7 @@ add_action(
 /**
  * Upload a document via a POST request.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_upload() {
 	$response = array(
@@ -176,7 +176,7 @@ function bp_nouveau_ajax_document_upload() {
 /**
  * Delete folder.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_folder_delete() {
 	$response = array(
@@ -249,7 +249,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 /**
  * Get activity for the document.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_get_activity() {
 	$response = array(
@@ -323,7 +323,7 @@ function bp_nouveau_ajax_document_get_activity() {
 /**
  * Delete attachment with its files
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_delete_attachment() {
 	$response = array(
@@ -367,7 +367,7 @@ function bp_nouveau_ajax_document_delete_attachment() {
  * @param $results
  * @param $object
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @return mixed
  */
@@ -396,7 +396,7 @@ function bp_nouveau_object_template_results_document_tabs( $results, $object ) {
  *
  * @param $querystring
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  *
  * @return string
  */
@@ -426,7 +426,7 @@ function bp_nouveau_object_template_results_document_all_scope( $querystring ) {
 /**
  * Object template results media personal scope.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_object_template_results_document_personal_scope( $querystring ) {
 
@@ -471,7 +471,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_folders_e
 /**
  * Save media
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_document_save() {
 	$response = array(
@@ -542,7 +542,7 @@ function bp_nouveau_ajax_document_document_save() {
 /**
  * Save folder
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_folder_save() {
 	$response = array(
@@ -742,7 +742,7 @@ function bp_nouveau_ajax_document_child_folder_save() {
 /**
  * Ajax document move.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_move() {
 
@@ -870,7 +870,7 @@ function bp_nouveau_ajax_document_move() {
 /**
  * Update the document name.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_update_file_name() {
 
@@ -1018,7 +1018,7 @@ function bp_nouveau_ajax_document_edit_folder() {
 /**
  * Ajax delete the document.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_delete() {
 
@@ -1144,7 +1144,7 @@ function bp_nouveau_ajax_document_delete() {
 /**
  * Move folder to another folder.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_nouveau_ajax_document_folder_move() {
 

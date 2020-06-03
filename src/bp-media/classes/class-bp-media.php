@@ -1090,7 +1090,7 @@ class BP_Media {
 	 * @param int $user_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function total_user_group_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
@@ -1158,7 +1158,7 @@ class BP_Media {
 	 * @param integer $activity_id Activity ID
 	 *
 	 * @return integer|bool
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public static function get_activity_attachment_id( $activity_id = 0 ) {
 		global $bp, $wpdb;

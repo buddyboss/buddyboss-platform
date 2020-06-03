@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Document Uploader
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
 

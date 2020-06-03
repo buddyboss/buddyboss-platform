@@ -3,7 +3,7 @@
  * BuddyBoss Document Component Class.
  *
  * @package BuddyBoss\Document\Loader
- * @since   BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.4.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Document component.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 class BP_Document_Component extends BP_Component {
 
 	/**
 	 * The folder being currently accessed.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var BP_Document_Folder
 	 */
 	public $current_folder;
@@ -27,7 +27,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Default document extension.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @todo  Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Default document extension.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $default_extension;
@@ -44,7 +44,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Illegal document names/slugs.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var array
 	 */
 	public $forbidden_names;
@@ -53,7 +53,7 @@ class BP_Document_Component extends BP_Component {
 	 * The acceptable visibility levels for document.
 	 *
 	 * @see   bp_document_get_visibility_levels()
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var array
 	 */
 	public $visibility_levels = array();
@@ -61,7 +61,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Start the document component creation process.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -82,7 +82,7 @@ class BP_Document_Component extends BP_Component {
 	 * @param array $includes See BP_Component::includes() for a description.
 	 *
 	 * @see   BP_Component::includes() for a description of arguments.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
@@ -100,7 +100,7 @@ class BP_Document_Component extends BP_Component {
 	 * Late includes method.
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -140,7 +140,7 @@ class BP_Document_Component extends BP_Component {
 	 * @param array $args See BP_Component::setup_globals() for a description.
 	 *
 	 * @see   BP_Component::setup_globals() for a description of arguments.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function setup_globals( $args = array() ) {
 		$bp = buddypress();
@@ -216,7 +216,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the actions.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function setup_actions() {
 
@@ -236,7 +236,7 @@ class BP_Document_Component extends BP_Component {
 	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
 	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @see   BP_Component::setup_nav() for a description of arguments.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
@@ -296,7 +296,7 @@ class BP_Document_Component extends BP_Component {
 	 *
 	 * @see   BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *        parameter array.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 
@@ -331,7 +331,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function setup_title() {
 
@@ -359,7 +359,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function setup_cache_groups() {
 

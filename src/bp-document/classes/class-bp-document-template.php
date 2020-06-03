@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
  * The main document template loop class.
  * Responsible for loading a group of document into a loop for display.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 class BP_Document_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	public $current_document = - 1;
@@ -27,7 +27,7 @@ class BP_Document_Template {
 	/**
 	 * The document count.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	public $document_count;
@@ -35,7 +35,7 @@ class BP_Document_Template {
 	/**
 	 * The total document count.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	public $total_document_count;
@@ -43,7 +43,7 @@ class BP_Document_Template {
 	/**
 	 * Array of document located by the query.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var array
 	 */
 	public $documents;
@@ -51,7 +51,7 @@ class BP_Document_Template {
 	/**
 	 * The document object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var object
 	 */
 	public $document;
@@ -59,7 +59,7 @@ class BP_Document_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -67,7 +67,7 @@ class BP_Document_Template {
 	/**
 	 * URL parameter key for document pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -75,7 +75,7 @@ class BP_Document_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -83,7 +83,7 @@ class BP_Document_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -91,7 +91,7 @@ class BP_Document_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -99,7 +99,7 @@ class BP_Document_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $full_name;
@@ -128,7 +128,7 @@ class BP_Document_Template {
 	 * }
 	 * @see   BP_Document::get() for a description of the argument
 	 *        structure, as well as default values.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function __construct( $args ) {
 
@@ -256,7 +256,7 @@ class BP_Document_Template {
 	 *
 	 * @return bool True if there are items in the loop, otherwise false.
 	 * @see   bp_has_document()
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	function has_document() {
 		if ( $this->document_count ) {
@@ -275,7 +275,7 @@ class BP_Document_Template {
 	 * @return bool True if there are more document items to show,
 	 *              otherwise false.
 	 * @see   bp_document()
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function user_documents() {
 		if ( ( $this->current_document + 1 ) < $this->document_count ) {
@@ -301,7 +301,7 @@ class BP_Document_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function rewind_documents() {
 		$this->current_document = - 1;
@@ -316,7 +316,7 @@ class BP_Document_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current document item.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @see   bp_the_document()
 	 */
 	public function the_document() {
@@ -334,7 +334,7 @@ class BP_Document_Template {
 			/**
 			 * Fires if the current document item is the first in the activity loop.
 			 *
-			 * @since BuddyBoss 1.3.6
+			 * @since BuddyBoss 1.4.0
 			 */
 			do_action( 'document_loop_start' );
 		}
@@ -344,7 +344,7 @@ class BP_Document_Template {
 	 * Set up the next document item and iterate index.
 	 *
 	 * @return object The next document item to iterate over.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function next_document() {
 		$this->current_document ++;

@@ -552,7 +552,7 @@ function bp_photo_uploading_tutorial() {
 /**
  * Link to Document Uploading tutorial
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_document_uploading_tutorial() {
 	?>

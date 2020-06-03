@@ -741,7 +741,7 @@ function bp_media_get_user_total_group_media_count() {
 	 *
 	 * @param int $count Total media count for a given user.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	return apply_filters( 'bp_media_get_user_total_group_media_count', (int) $count );
 }
@@ -2206,7 +2206,7 @@ function bp_get_attachment_media_id( $attachment_id = 0 ) {
  * @param string $scope    Scope query parameter.
  *
  * @return mixed|void
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 
@@ -2265,7 +2265,7 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
  * @param int    $activity_id Activity ID.
  * @param string $privacy     Privacy
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
 	global $wpdb, $bp;

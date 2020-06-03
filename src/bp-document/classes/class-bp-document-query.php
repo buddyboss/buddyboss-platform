@@ -3,7 +3,7 @@
  * BuddyBoss Document Query Classes
  *
  * @package BuddyBoss\Document
- * @since   BuddyBoss 1.3.6
+ * @since   BuddyBoss 1.4.0
  */
 
 // Exit if accessed directly.
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  * This is notably used in {@link BP_Document::get()} with the
  * 'filter_query' parameter.
  *
- * @since BuddyBoss 1.3.6
+ * @since BuddyBoss 1.4.0
  */
 class BP_Document_Query extends BP_Recursive_Query {
 	/**
 	 * Array of document queries.
 	 * See {@see BP_Document_Query::__construct()} for information on query arguments.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var array
 	 */
 	public $queries = array();
@@ -29,7 +29,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	/**
 	 * Table alias.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var string
 	 */
 	public $table_alias = '';
@@ -38,7 +38,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * Supported DB columns.
 	 * See the 'wp_bp_document' DB table schema.
 	 *
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 * @var array
 	 */
 	public $db_columns = array(
@@ -77,7 +77,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 *         }
 	 *     }
 	 * }
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function __construct( $query = array() ) {
 		if ( ! is_array( $query ) ) {
@@ -94,7 +94,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 *                      Default: 'a'. BP_Document::get() uses 'a', so we default to that.
 	 *
 	 * @return string SQL fragment to append to the main WHERE clause.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function get_sql( $alias = 'd' ) {
 		if ( ! empty( $alias ) ) {
@@ -117,7 +117,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 *                      Default: 'a'. BP_Document::get() uses 'a', so we default to that.
 	 *
 	 * @return string SQL fragment to append to the main WHERE clause.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function get_sql_document( $alias = 'd' ) {
 		if ( ! empty( $alias ) ) {
@@ -140,7 +140,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 *                      Default: 'a'. BP_Document::get() uses 'a', so we default to that.
 	 *
 	 * @return string SQL fragment to append to the main WHERE clause.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function get_sql_folder( $alias = 'f' ) {
 		if ( ! empty( $alias ) ) {
@@ -166,7 +166,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * @type array  $where        Array of subclauses for the WHERE statement.
 	 * @type array  $join         Empty array. Not used.
 	 * }
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected function get_sql_for_clause( $clause, $parent_query ) {
 		global $wpdb;
@@ -288,7 +288,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * @param string $column The user-supplied column name.
 	 *
 	 * @return string A validated column name value.
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	public function validate_column( $column = '' ) {
 		if ( in_array( $column, $this->db_columns ) ) {
@@ -304,7 +304,7 @@ class BP_Document_Query extends BP_Recursive_Query {
 	 * @param array $query Clause to check.
 	 *
 	 * @return bool
-	 * @since BuddyBoss 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	protected function is_first_order_clause( $query ) {
 		return isset( $query['column'] ) || isset( $query['value'] );
