@@ -21,7 +21,7 @@
                         <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 
                         <a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
-							<span class="dashicons dashicons-no-alt"></span>
+							<span class="bb-icon bb-icon-close"></span>
 						</a>
                     </header>
 

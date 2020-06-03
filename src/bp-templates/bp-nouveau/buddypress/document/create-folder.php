@@ -15,7 +15,7 @@
 				<div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></h4>
-						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
+						<a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
 					</header>
 					<div class="bb-field-wrap">
 						<label for="bb-album-title" class="bb-label"><?php esc_html_e( 'Title', 'buddyboss' ); ?></label>
