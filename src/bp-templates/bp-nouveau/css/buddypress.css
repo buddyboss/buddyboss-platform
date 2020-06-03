@@ -2357,6 +2357,18 @@ input.search-query-input {
   pointer-events: none;
 }
 
+#whats-new-toolbar .bb-icon-text-format:before,
+#whats-new-messages-toolbar .bb-icon-text-format:before {
+  margin-top: 0;
+}
+
+#whats-new-toolbar #forums-document-button,
+#whats-new-toolbar #messages-document-button,
+#whats-new-messages-toolbar #forums-document-button,
+#whats-new-messages-toolbar #messages-document-button {
+  margin-top: -5px;
+}
+
 .bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
   vertical-align: top;
   margin-top: 3px;

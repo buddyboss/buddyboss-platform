@@ -568,6 +568,20 @@
 	}
 }
 
+#whats-new-toolbar,
+#whats-new-messages-toolbar {
+
+	.bb-icon-text-format:before {
+		margin-top: 0;
+	}
+	
+	#forums-document-button,
+	#messages-document-button {
+		margin-top: -5px;
+	}
+
+}
+
 .bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
 	vertical-align: top;
 	margin-top: 3px;
