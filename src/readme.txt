@@ -58,6 +58,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.3.6 =
+* Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
+* Documents - Added central Documents page for showing all site documents
+* Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
+* Documents - Added functionality to move and organized documents into Folders
+* Documents - Added options for customizable document File Extensions
+* Media - Added enhanced privacy controls for uploaded photos and documents
+* Media - Added functionality to enter 'Description' in Photo and Document popups
+* Media - Comments in single Photo and Document popups now sync with activity comments
+* Activity - Added privacy options for user-created activity posts
 * Groups - Improved performance for groups with many thousands of members
 * Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
@@ -68,6 +77,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
 * Network Search - Fixed results title when using apostrophe or blank entry
 * Emails - Fixed email not sending for site admin changing a user's password
+* Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
+* Icons - Added new font icons to represent all of the common file types
 * LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 * WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
