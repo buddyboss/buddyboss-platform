@@ -50,7 +50,8 @@ function bp_nouveau_media_enqueue_scripts() {
 	     bp_is_group_document() ||
 	     bp_is_group_folders() ||
 	     bp_is_group_messages() ||
-	     bp_is_messages_component()
+	     bp_is_messages_component() ||
+	     ( bp_is_active( 'search' ) && bp_is_search_documents_enable() )
 	) {
 
 		$gif = false;
@@ -74,7 +75,6 @@ function bp_nouveau_media_enqueue_scripts() {
 			wp_enqueue_script( 'bp-exif' );
 		}
 	}
-
 
 }
 

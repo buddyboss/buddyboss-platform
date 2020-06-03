@@ -23,6 +23,7 @@ add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_priv
 
 // Search.
 add_action( 'bp_search_after_result', 'bp_document_add_theatre_template', 99999 );
+add_action( 'wp_footer', 'bp_document_add_theatre_in_footer', 99999 );
 
 // Forums.
 add_action( 'bbp_template_after_single_topic', 'bp_document_add_theatre_template' );
@@ -72,6 +73,14 @@ function bp_document_search_label_search( $type ) {
  * Add document theatre template for activity pages
  */
 function bp_document_add_theatre_template() {
+	bp_get_template_part( 'document/theatre' );
+}
+
+function bp_document_add_theatre_in_footer() {
+
+	if ( ( isset( $_REQUEST ) && isset( $_REQUEST['bp_search'] ) && '1' === $_REQUEST['bp_search'] ) || bp_is_activity_component() || bp_is_group_activity() || bp_is_media_component() || bp_is_document_component() || bp_is_media_directory() || bp_is_document_directory() || bp_is_group_media() || bp_is_group_document() || bp_is_group_albums() || bp_is_group_folders() ) { // media popup overlay needs activity scripts
+		return;
+	}
 	bp_get_template_part( 'document/theatre' );
 }
 

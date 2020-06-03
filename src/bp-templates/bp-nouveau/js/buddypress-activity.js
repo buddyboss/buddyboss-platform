@@ -124,6 +124,16 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
 
+			// Start for the Footer Popup.
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-privacy>li',  bp.Nouveau, this.activityPrivacyChange.bind( this ) );
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-list span.privacy',  bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-list .activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-list .ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-list .ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );
+			$( document ).on( 'click', 'body > .document-theatre #bb-media-model-container .activity-list .ac-reply-gif-button', this.openGifPicker.bind( this ) );
+			// End for the Footer Popup.
+
 			// forums.
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-document-button', this.openCommentsDocumentUploader.bind( this ) );

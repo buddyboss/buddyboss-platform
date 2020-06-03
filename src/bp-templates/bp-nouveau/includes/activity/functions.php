@@ -43,7 +43,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() ) { // media popup overlay needs activity scripts
+	if ( ( bp_is_active( 'search' ) && ! bp_is_search_documents_enable() ) && ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_document_component() && ! bp_is_media_directory() && ! bp_is_document_directory() && ! bp_is_group_media() && ! bp_is_group_document() && ! bp_is_group_albums() && ! bp_is_group_folders() ) { // media popup overlay needs activity scripts
 		return;
 	}
 
