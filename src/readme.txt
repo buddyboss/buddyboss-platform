@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.6
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
-= 1.3.6 =
+= 1.4.0 =
 * Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
 * Documents - Added central Documents page for showing all site documents
 * Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
