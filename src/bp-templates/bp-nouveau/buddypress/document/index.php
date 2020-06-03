@@ -22,7 +22,7 @@
 	/**
 	 * Fires before the display of the members list tabs.
 	 *
-	 * @since BuddyPress 1.3.6
+	 * @since BuddyBoss 1.4.0
 	 */
 	do_action( 'bp_before_directory_document_tabs' );
 	?>
