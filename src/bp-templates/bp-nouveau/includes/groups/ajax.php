@@ -925,7 +925,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="dashicons dashicons-update animate-spin"></i>
+					<i class="bb-icon-loader animate-spin"></i>
 				</div>
 			</li>
 			<?php

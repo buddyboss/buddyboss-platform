@@ -4891,7 +4891,7 @@ window.bp = window.bp || {};
 		getActivity: function () {
 			var self = this;
 
-			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			if (typeof BP_Nouveau.activity !== 'undefined' &&
 				self.current_media &&
@@ -4937,7 +4937,7 @@ window.bp = window.bp || {};
 		getDocumentsActivity: function () {
 			var self = this;
 
-			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="dashicons dashicons-update animate-spin"></i>' );
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
 
 			if (typeof BP_Nouveau.activity !== 'undefined' &&
 				self.current_document &&

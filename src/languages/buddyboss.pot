@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.3.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-03 04:07:50+00:00\n"
+"POT-Creation-Date: 2020-06-03 06:10:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1021,8 +1021,8 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-activity.php:375
 #: bp-activity/classes/class-bp-activity-template.php:143
 #: bp-groups/bp-groups-functions.php:253 bp-groups/bp-groups-functions.php:754
-#: bp-groups/bp-groups-functions.php:2004
-#: bp-groups/bp-groups-functions.php:2348
+#: bp-groups/bp-groups-functions.php:2006
+#: bp-groups/bp-groups-functions.php:2350
 #: bp-groups/classes/class-bp-groups-group-members-template.php:99
 #: bp-groups/classes/class-bp-groups-group.php:1079
 #: bp-groups/classes/class-bp-groups-invite-template.php:84
@@ -2694,8 +2694,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:60
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
-#: bp-groups/bp-groups-admin.php:2536 bp-groups/bp-groups-functions.php:3389
-#: bp-groups/bp-groups-functions.php:3392
+#: bp-groups/bp-groups-admin.php:2536 bp-groups/bp-groups-functions.php:3391
+#: bp-groups/bp-groups-functions.php:3394
 msgid "Group Types"
 msgstr ""
 
@@ -3160,9 +3160,9 @@ msgstr ""
 #: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:740
 #: bp-core/classes/class-bp-email-tokens.php:394 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1396 bp-groups/bp-groups-admin.php:2052
-#: bp-groups/bp-groups-functions.php:3899
-#: bp-groups/bp-groups-functions.php:3918
-#: bp-groups/bp-groups-functions.php:3935 bp-groups/bp-groups-template.php:5418
+#: bp-groups/bp-groups-functions.php:3901
+#: bp-groups/bp-groups-functions.php:3920
+#: bp-groups/bp-groups-functions.php:3937 bp-groups/bp-groups-template.php:5418
 #: bp-groups/classes/class-bp-groups-component.php:635
 #: bp-groups/classes/class-bp-groups-component.php:917
 #: bp-groups/classes/class-bp-groups-list-table.php:439
@@ -4724,7 +4724,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2531
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
-#: bp-groups/bp-groups-functions.php:3391
+#: bp-groups/bp-groups-functions.php:3393
 #: bp-groups/bp-groups-notifications.php:1229
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-theme-compat.php:183
@@ -4740,7 +4740,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2545
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:360
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:362
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -7181,19 +7181,19 @@ msgstr ""
 msgid "There was a problem cropping your %s photo."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:320
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:322
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:361
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:363
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:364
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:366
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:365
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:367
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
@@ -7289,34 +7289,34 @@ msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:232
 #: bp-core/deprecated/buddyboss/1.1.8.php:237
-#: bp-groups/bp-groups-functions.php:3388
-#: bp-groups/bp-groups-functions.php:3393
+#: bp-groups/bp-groups-functions.php:3390
+#: bp-groups/bp-groups-functions.php:3395
 msgid "New Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:234
-#: bp-groups/bp-groups-functions.php:3390
+#: bp-groups/bp-groups-functions.php:3392
 msgid "Edit Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:238
-#: bp-groups/bp-groups-functions.php:3394
+#: bp-groups/bp-groups-functions.php:3396
 msgid "No Group Types found"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:239
-#: bp-groups/bp-groups-functions.php:3395
+#: bp-groups/bp-groups-functions.php:3397
 msgid "No Group Types found in trash"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:240
-#: bp-groups/bp-groups-functions.php:3396
+#: bp-groups/bp-groups-functions.php:3398
 msgid "Search Group Types"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
 #: bp-groups/bp-groups-admin.php:1951 bp-groups/bp-groups-admin.php:2264
-#: bp-groups/bp-groups-functions.php:3397
+#: bp-groups/bp-groups-functions.php:3399
 #: bp-groups/classes/class-bp-groups-list-table.php:744
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:244
 msgid "Group Type"
@@ -7353,13 +7353,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -11891,9 +11891,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:43 bp-groups/bp-groups-admin.php:1451
 #: bp-groups/bp-groups-functions.php:1286
-#: bp-groups/bp-groups-functions.php:3901
-#: bp-groups/bp-groups-functions.php:3920
-#: bp-groups/bp-groups-functions.php:3937
+#: bp-groups/bp-groups-functions.php:3903
+#: bp-groups/bp-groups-functions.php:3922
+#: bp-groups/bp-groups-functions.php:3939
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:343
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:359
 #. translators: user role
@@ -11902,9 +11902,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2440
 #: bp-groups/bp-groups-admin.php:1452 bp-groups/bp-groups-functions.php:1294
-#: bp-groups/bp-groups-functions.php:3903
-#: bp-groups/bp-groups-functions.php:3922
-#: bp-groups/bp-groups-functions.php:3939
+#: bp-groups/bp-groups-functions.php:3905
+#: bp-groups/bp-groups-functions.php:3924
+#: bp-groups/bp-groups-functions.php:3941
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:344
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:360
 #. translators: user role
@@ -12646,9 +12646,9 @@ msgstr ""
 
 #: bp-forums/replies/functions.php:2406 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1453 bp-groups/bp-groups-functions.php:1302
-#: bp-groups/bp-groups-functions.php:3905
-#: bp-groups/bp-groups-functions.php:3924
-#: bp-groups/bp-groups-functions.php:3941
+#: bp-groups/bp-groups-functions.php:3907
+#: bp-groups/bp-groups-functions.php:3926
+#: bp-groups/bp-groups-functions.php:3943
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:345
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:361
 #: bp-members/bp-members-functions.php:3826
@@ -14299,7 +14299,7 @@ msgstr ""
 msgid "%1$s joined the group %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1654
+#: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1655
 #: cli/components/activity.php:763
 msgid "%1$s posted an update in the group %2$s"
 msgstr ""
@@ -14510,9 +14510,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1206 bp-groups/bp-groups-admin.php:1227
 #: bp-groups/bp-groups-admin.php:1239 bp-groups/bp-groups-admin.php:1251
 #: bp-groups/bp-groups-admin.php:1263 bp-groups/bp-groups-admin.php:1390
-#: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3895
-#: bp-groups/bp-groups-functions.php:3914
-#: bp-groups/bp-groups-functions.php:3931
+#: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3897
+#: bp-groups/bp-groups-functions.php:3916
+#: bp-groups/bp-groups-functions.php:3933
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:512
 msgid "Organizers"
 msgstr ""
@@ -14583,9 +14583,9 @@ msgid "Enter a comma-separated list of user logins."
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1393 bp-groups/bp-groups-admin.php:2024
-#: bp-groups/bp-groups-functions.php:3897
-#: bp-groups/bp-groups-functions.php:3916
-#: bp-groups/bp-groups-functions.php:3933
+#: bp-groups/bp-groups-functions.php:3899
+#: bp-groups/bp-groups-functions.php:3918
+#: bp-groups/bp-groups-functions.php:3935
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:513
 msgid "Moderators"
 msgstr ""
@@ -14790,19 +14790,19 @@ msgstr ""
 msgid "You successfully left the group."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:2439
-#: bp-groups/bp-groups-functions.php:2472
-#: bp-groups/bp-groups-functions.php:2509
+#: bp-groups/bp-groups-functions.php:2441
+#: bp-groups/bp-groups-functions.php:2474
+#: bp-groups/bp-groups-functions.php:2511
 msgid ""
 "Argument `membership_id` passed to %1$s  is deprecated. See the inline "
 "documentation at %2$s for more details."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:2861
+#: bp-groups/bp-groups-functions.php:2863
 msgid "Group type already exists."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:2892
+#: bp-groups/bp-groups-functions.php:2894
 msgid "You may not register a group type with this name."
 msgstr ""
 
@@ -24225,22 +24225,22 @@ msgctxt "Start ribbon"
 msgid "Start %s "
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:163
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:165
 msgctxt "ui"
 msgid "Membership"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:181
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:183
 msgctxt "ui"
 msgid "Info"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:191
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:193
 msgctxt "ui"
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:201
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:203
 msgctxt "ui"
 msgid "Payments"
 msgstr ""
