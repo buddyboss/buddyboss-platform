@@ -2979,6 +2979,11 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 112;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_more[data-balloon]:before,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_more[data-balloon]:after {
+  display: none;
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap,
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_list {
   opacity: 1;
