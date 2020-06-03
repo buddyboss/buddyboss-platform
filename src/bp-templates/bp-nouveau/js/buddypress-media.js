@@ -239,11 +239,6 @@ window.bp = window.bp || {};
 			mediaStream.on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			mediaStream.on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
-			// Start for the Footer Popup.
-			$( document ).on( 'click', '.document-theatre .ac-document-move, .document-theatre .ac-folder-move', this.openDocumentMove.bind( this ) );
-			$( document ).on( 'click', '.document-theatre .ac-document-close-button, .document-theatre .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
-			// End for the Footer Popup.
-
 			// document delete.
 			$( document ).on( 'click', '.document-file-delete', this.deleteDocument.bind( this ) );
 
@@ -4513,7 +4508,7 @@ window.bp = window.bp || {};
 						activity_comments.find('.document-text.loaded').removeClass('loaded').find('.CodeMirror').remove();
 						jQuery( window ).scroll();
 					}
-					
+
 				}
 				activity_state = activity.find('.activity-state');
 				if (activity_state.length) {
