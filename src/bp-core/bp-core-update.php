@@ -307,7 +307,7 @@ function bp_version_updater() {
 
 		// Version 1.3.6
 		if ( $raw_db_version < 15800 ) {
-			bp_update_to_1_3_6();
+			bp_update_to_1_4_0();
 		}
 	}
 
@@ -613,7 +613,7 @@ function bp_update_to_1_2_4() {
 	bp_core_install_media();
 }
 
-function bp_update_to_1_3_6() {
+function bp_update_to_1_4_0() {
 	bp_core_install_document();
 }
 

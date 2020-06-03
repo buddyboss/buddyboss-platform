@@ -1132,7 +1132,7 @@ function is_bbpress() {
 		_doing_it_wrong(
 			__FUNCTION__,
 			esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss' ),
-			'1.3.6'
+			'1.4.0'
 		);
 
 		return $retval;
