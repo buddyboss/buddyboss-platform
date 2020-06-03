@@ -1409,7 +1409,7 @@ add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
 if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	function buddyboss_platform_plugin_update_notice() {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
-		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
 			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
