@@ -27,7 +27,7 @@ $class = ''; // used.
 if ( $attachment_id && bp_get_document_activity_id() ) {
 	$class = ''; // used.
 }
-$link = ( $attachment_id ) ? $download_link : '';
+$link = bp_get_document_link( bp_get_document_id() );
 
 ?>
 

@@ -21,7 +21,7 @@ if ( $attachment_id ) {
 	$document_title 	 = bp_get_document_title();
 	$attachment_url 	 = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 }
-$link  = ( $attachment_id ) ? $download_link : '';
+$link = bp_get_document_link( bp_get_document_id() );
 $class = '';
 if ( $attachment_id && bp_get_document_activity_id() ) {
 	$class = '';

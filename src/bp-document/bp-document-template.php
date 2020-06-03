@@ -2271,3 +2271,39 @@ function bp_get_document_preview_code_extensions() {
 
 	return apply_filters( 'bp_get_document_preview_code_extensions', array( 'css', 'txt', 'html', 'htm', 'js', 'csv' ) );
 }
+
+/**
+ * Return the document link.
+ *
+ * @since BuddyBoss 1.3.6
+ *
+ * @param int $document_id Document ID.
+ *
+ * @return mixed|void
+ */
+function bp_get_document_link( $document_id ) {
+	$document = new BP_Document( $document_id );
+
+	if ( isset( $document ) && isset( $document->group_id ) && $document->group_id > 0 ) {
+		$group      = groups_get_group( $document->group_id );
+		$group_link = bp_get_group_permalink( $group );
+		if ( $document->folder_id > 0 ) {
+			$url = trailingslashit( $group_link . 'documents/folders/' . $document->folder_id );
+		} else {
+			$url = trailingslashit( $group_link . 'documents/' );
+		}
+	} elseif ( isset( $document ) && isset( $document->folder_id ) && $document->folder_id > 0 ) {
+		$url = trailingslashit( bp_core_get_user_domain( $document->user_id ) . 'document/folders/' . $document->folder_id );
+	} else {
+		$url = trailingslashit( bp_core_get_user_domain( $document->user_id ) . 'documents/' );
+	}
+
+	/**
+	 * Filters the document link
+	 * @since BuddyBoss 1.3.6
+	 *
+	 * @param string $url         The document folder description.
+	 * @param int    $document_id The document id.
+	 */
+	return apply_filters( 'bp_get_document_link', $url, $document_id );
+}
