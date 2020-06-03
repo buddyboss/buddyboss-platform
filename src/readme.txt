@@ -78,7 +78,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Network Search - Fixed results title when using apostrophe or blank entry
 * Emails - Fixed email not sending for site admin changing a user's password
 * Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
-* Icons - Added new font icons to represent all of the common file types
+* Icons - Added new font icons to represent all common file types
 * LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
 * MemberPress - Fixed JavaScript conflicts with Stripe credit card field
 * WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
