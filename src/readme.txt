@@ -67,6 +67,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Media - Added functionality to enter 'Description' in Photo and Document popups
 * Media - Comments in single Photo and Document popups now sync with activity comments
 * Activity - Added enhanced privacy controls for user-created activity posts
+* REST API - New endpoints added for Activity privacy changes
 * Groups - Improved performance for groups with many thousands of members
 * Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
 * Forums - Fixed pagination when using shortcode [bbp-topic-index]
