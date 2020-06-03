@@ -171,7 +171,7 @@ class BP_Document_Template {
 
 			$this->documents = bp_document_get_specific(
 				array(
-					'document_ids'   => explode( ',', $include ),
+					'document_ids'   => ( ! is_array( $include ) ? explode( ',', $include ) : $include ),
 					'max'            => $max,
 					'count_total'    => $count_total,
 					'page'           => $this->pag_page,

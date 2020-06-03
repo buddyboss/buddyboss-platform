@@ -120,6 +120,8 @@ function bp_get_document_root_slug() {
 function bp_has_document( $args = '' ) {
 	global $document_template;
 
+	$args = bp_parse_args( $args );
+
 	/*
 	 * Smart Defaults.
 	 */
@@ -134,7 +136,7 @@ function bp_has_document( $args = '' ) {
 	}
 
 	// folder filtering.
-	if ( ! isset( $args['folder_id'] ) ) {
+	if ( ! isset( $args['folder_id'] ) && empty( $args['include'] ) ) {
 		$folder_id = bp_is_single_folder() ? (int) bp_action_variable( 0 ) : false;
 		if ( bp_is_group_single() && bp_is_group_folders() ) {
 			$folder_id = (int) bp_action_variable( 1 );
@@ -143,7 +145,7 @@ function bp_has_document( $args = '' ) {
 		$folder_id = $args['folder_id'];
 	}
 
-	if ( bp_is_profile_document_support_enabled() ) {
+	if ( bp_is_profile_document_support_enabled() && empty( $args['include'] ) ) {
 		$privacy = array( 'public' );
 		if ( is_user_logged_in() ) {
 			$privacy[] = 'loggedin';
@@ -172,8 +174,9 @@ function bp_has_document( $args = '' ) {
 		}
 	}
 
+
 	$group_id = false;
-	if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) && bp_is_group() ) {
+	if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) && bp_is_group() && empty( $args['include'] ) ) {
 		$privacy  = array( 'grouponly' );
 		$group_id = bp_get_current_group_id();
 		$user_id  = false;
