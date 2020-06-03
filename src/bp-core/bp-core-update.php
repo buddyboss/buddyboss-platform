@@ -305,7 +305,7 @@ function bp_version_updater() {
 			bb_update_to_1_3_5();
 		}
 
-		// Version 1.3.6
+		// Version 1.4.0
 		if ( $raw_db_version < 15800 ) {
 			bp_update_to_1_4_0();
 		}
