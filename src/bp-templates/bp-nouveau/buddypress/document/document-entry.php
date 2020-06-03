@@ -223,6 +223,8 @@ if ( wp_is_mobile() ) {
 	$show = false;
 	if ( $attachment_id && $can_download_btn ) {
 		$show = true;
+	} elseif ( $can_download_btn ) {
+		$show = true;
 	} elseif ( $can_manage_btn ) {
 		$show = true;
 	} ?>
