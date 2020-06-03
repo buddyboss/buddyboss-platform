@@ -12246,10 +12246,10 @@ a.bb-close-model {
 }
 
 .bb-media-info-section .activity-comments > ul {
-  background: #FBFBFC;
+  background: #fbfbfc;
   margin: 0 -15px;
   padding: 15px 15px 0;
-  border-top: 1px solid #EEF0F3;
+  border-top: 1px solid #eef0f3;
   border-radius: 0 0 4px 4px;
   clear: both;
   list-style: none;
@@ -12288,14 +12288,14 @@ a.bb-close-model {
 }
 
 .bb-media-info-section .activity-comments form {
-  margin: 0;
-  padding: 0;
-  padding-top: 15px;
-  padding-bottom: 0;
-  background: #FBFBFC;
+  background: #fbfbfc;
   margin: 0 -15px;
   margin-left: 0;
-  padding: 15px 15px;
+  padding: 15px 15px 0;
+}
+
+.bb-media-info-section .activity-comments .dropzone .dz-complete .dz-remove:after {
+  top: -1px;
 }
 
 .bb-media-info-header {
@@ -13280,6 +13280,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   max-width: 120px;
   height: 100%;
   object-fit: contain;
+}
+
+.activity_update .activity-comments .dropzone .dz-complete .dz-remove:after {
+  top: -1px;
 }
 
 #media-stream .document-data-table-head {

@@ -768,6 +768,10 @@ a.bb-close-model {
 			margin-right: 0;
 			padding: 15px 15px 0;
 		}
+
+		.dropzone .dz-complete .dz-remove:after {
+			top: -1px;
+		}
 	}
 }
 
@@ -1766,6 +1770,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		height: 100%;
 		object-fit: contain;
 	}
+}
+
+.activity_update .activity-comments .dropzone .dz-complete .dz-remove:after {
+	top: -1px;
 }
 
 #media-stream .document-data-table-head {
