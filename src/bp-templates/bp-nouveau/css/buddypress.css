@@ -1128,7 +1128,7 @@ a.layout-grid-view {
 
 div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  bottom: 11px;
+  bottom: 9px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
@@ -1205,7 +1205,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 57px;
+  bottom: 55px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1801,10 +1801,10 @@ input.search-query-input {
 
 @media screen and (max-width: 603px) {
   #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 110px;
+    bottom: 109px;
   }
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 110px;
+    bottom: 109px;
   }
   .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 109px;
@@ -1813,10 +1813,10 @@ input.search-query-input {
 
 @media screen and (max-width: 560px) {
   #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 110px;
+    bottom: 109px;
   }
   div #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 110px;
+    bottom: 109px;
   }
   .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 109px;
@@ -1834,10 +1834,10 @@ input.search-query-input {
     bottom: 56px;
   }
   #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 144px;
+    bottom: 143px;
   }
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 144px;
+    bottom: 143px;
   }
 }
 
@@ -2296,11 +2296,7 @@ input.search-query-input {
 .ac-reply-toolbar .bb-icon-text-format:before,
 #whats-new-toolbar .bb-icon-text-format:before,
 #whats-new-messages-toolbar .bb-icon-text-format:before {
-  display: inline-block;
-  width: 28px;
   color: rgba(18, 43, 70, 0.4);
-  font-size: 28px;
-  margin-top: 1px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -2355,11 +2351,6 @@ input.search-query-input {
 #whats-new-toolbar .post-elements-buttons-item.no-click,
 #whats-new-messages-toolbar .post-elements-buttons-item.no-click {
   pointer-events: none;
-}
-
-#whats-new-toolbar .bb-icon-text-format:before,
-#whats-new-messages-toolbar .bb-icon-text-format:before {
-  margin-top: 0;
 }
 
 #whats-new-toolbar #forums-document-button,
@@ -5843,7 +5834,7 @@ input#send-to-input {
   border-radius: 0;
   z-index: 112;
   visibility: visible;
-  bottom: -5px;
+  bottom: -6px;
   height: 40px;
 }
 
@@ -16267,7 +16258,7 @@ span.CodeMirror-selectedtext {
     bottom: 65px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
-    bottom: 90px;
+    bottom: 88px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
     bottom: 90px;
@@ -16671,7 +16662,7 @@ span.icons:before {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 40px;
+  bottom: 39px;
   height: 40px;
   right: -20px;
 }

@@ -522,11 +522,7 @@
 	}
 
 	.bb-icon-text-format:before {
-		display: inline-block;
-		width: 28px;
 		color: rgba(18, 43, 70, 0.4);
-		font-size: 28px;
-		margin-top: 1px;
 	}
 
 	.emojionearea .emojionearea-button:before {
@@ -570,10 +566,6 @@
 
 #whats-new-toolbar,
 #whats-new-messages-toolbar {
-
-	.bb-icon-text-format:before {
-		margin-top: 0;
-	}
 	
 	#forums-document-button,
 	#messages-document-button {

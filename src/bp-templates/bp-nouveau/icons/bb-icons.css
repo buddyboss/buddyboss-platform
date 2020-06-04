@@ -369,7 +369,7 @@
 .bb-icon-doc:before { content: '\e958'; }
 .bb-icon-folder-stacked:before { content: '\e959'; }
 .bb-icon-code:before { content: '\e95a'; }
-.bb-icon-mp3:before { content: '\e95b'; }
+.bb-icon-file-mp3:before { content: '\e95b'; }
 .bb-icon-sort:before { content: '\e95c'; }
 .bb-icon-all-members:before { content: '\e95d'; }
 .bb-icon-my-connections:before { content: '\e95e'; }
@@ -408,7 +408,7 @@
 .bb-icon-tools:before { content: '\e983'; }
 .bb-icon-triangle-fill:before { content: '\e984'; }
 .bb-icon-watch-alarm:before { content: '\e985'; }
-.bb-icon-pdf:before { content: '\e986'; }
+.bb-icon-file-pdf:before { content: '\e986'; }
 .bb-icon-zip:before { content: '\e987'; }
 .bb-icon-file:before { content: '\e98e'; }
 .bb-icon-file-csv:before { content: '\e98f'; }
