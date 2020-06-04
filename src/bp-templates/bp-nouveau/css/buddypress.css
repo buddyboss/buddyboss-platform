@@ -1103,7 +1103,7 @@ a.layout-grid-view {
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
   top: inherit;
   bottom: 6px;
-  left: 41px;
+  left: 38px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1185,7 +1185,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
   bottom: 56px;
-  left: 41px;
+  left: 37px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -2267,32 +2267,6 @@ input.search-query-input {
   height: auto;
 }
 
-.ac-reply-toolbar #forums-document-button,
-.ac-reply-toolbar #messages-document-button,
-#whats-new-toolbar #forums-document-button,
-#whats-new-toolbar #messages-document-button,
-#whats-new-messages-toolbar #forums-document-button,
-#whats-new-messages-toolbar #messages-document-button {
-  float: left;
-  margin-top: -4px;
-}
-
-.ac-reply-toolbar #activity-document-button,
-#whats-new-toolbar #activity-document-button,
-#whats-new-messages-toolbar #activity-document-button {
-  float: left;
-  margin-top: -6px;
-}
-
-.ac-reply-toolbar .bb-icon-attach:before,
-#whats-new-toolbar .bb-icon-attach:before,
-#whats-new-messages-toolbar .bb-icon-attach:before {
-  font-size: 18px;
-  width: 24px;
-  display: inline-block;
-  text-align: center;
-}
-
 .ac-reply-toolbar .bb-icon-text-format:before,
 #whats-new-toolbar .bb-icon-text-format:before,
 #whats-new-messages-toolbar .bb-icon-text-format:before {
@@ -2386,6 +2360,10 @@ input.search-query-input {
 .ac-reply-toolbar .bb-icon-attach {
   float: left;
   margin-top: -3px;
+}
+
+.emojionearea .emojionearea-button {
+  margin-top: -1px;
 }
 
 .activity-url-scrapper-loading {

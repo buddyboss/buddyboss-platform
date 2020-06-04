@@ -368,7 +368,7 @@
 .bb-icon-graduation-cap:before { content: '\e957'; }
 .bb-icon-doc:before { content: '\e958'; }
 .bb-icon-folder-stacked:before { content: '\e959'; }
-.bb-icon-code:before { content: '\e95a'; }
+.bb-icon-file-code:before { content: '\e95a'; }
 .bb-icon-file-mp3:before { content: '\e95b'; }
 .bb-icon-sort:before { content: '\e95c'; }
 .bb-icon-all-members:before { content: '\e95d'; }
