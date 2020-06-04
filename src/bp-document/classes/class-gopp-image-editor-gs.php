@@ -13,7 +13,7 @@ if ( ! defined( 'GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION' ) ) {
 /**
  * GOPP Image Editor Class for producing JPEG from PDF using Ghostscript.
  *
- * @since 4.x
+ * @since BuddyBoss 1.4.0
  * @package GS Only PDF Preview
  * @subpackage Image_Editor
  * @uses WP_Image_Editor Extends class
@@ -34,7 +34,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @access protected
 	 * @var int
 	 */
-	protected $resolution = null;
+	protected $resolution         = null;
 	protected $default_resolution = 128;
 
 	/**
@@ -43,7 +43,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * @access protected
 	 * @var int
 	 */
-	protected $page = null;
+	protected $page         = null;
 	protected $default_page = 1;
 
 	/**
@@ -68,7 +68,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * Checks to see if current environment supports Ghostscript and whether we're compatible with args if any.
 	 * In particular if given 'path' argument then checks filename (but not its existence or magic bytes).
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access public
@@ -112,7 +112,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Checks to see if editor supports the mime-type specified.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access public
@@ -127,7 +127,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Checks validity and existence of file and sets mime type and calls `set_resolution` and `set_page` and `set_quality` (firing filters).
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access protected
 	 *
 	 * @return true|WP_Error True if loaded; WP_Error on failure.
@@ -138,7 +138,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 		}
 
 		list( $filename, $extension, $mime_type ) = $this->get_output_format( $this->file );
-		$this->mime_type = $mime_type;
+		$this->mime_type                          = $mime_type;
 
 		// Allow chance for gopp_editor_set_resolution filter to fire by calling set_resolution() with null arg (mimicking set_quality() behavior).
 		if ( is_wp_error( $result = $this->set_resolution() ) ) {
@@ -156,7 +156,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Creates JPEG preview from PDF.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param string $destfilename
@@ -181,7 +181,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 			return new WP_Error( 'image_save_error', __( 'No Ghostscript.', 'buddyboss' ) );
 		}
 		$return_var = -1;
-		$output = array();
+		$output     = array();
 		exec( $cmd, $output, $return_var );
 
 		if ( 0 !== $return_var ) {
@@ -195,12 +195,12 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 		}
 
 		// Transmogrify into the JPEG file.
-		$this->file = $filename;
+		$this->file      = $filename;
 		$this->mime_type = $mime_type;
 		$this->update_size( $size[0], $size[1] );
 
 		// Set correct file permissions
-		$stat = stat( dirname( $filename ) );
+		$stat  = stat( dirname( $filename ) );
 		$perms = $stat['mode'] & 0000666; // Same permissions as parent folder, strip off the executable bits.
 		@ chmod( $filename, $perms );
 
@@ -217,7 +217,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Checks that file is local, doesn't have a funny name and is a PDF.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -266,7 +266,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Returns the path of the Ghostscript executable.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -279,7 +279,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 			 * Returning a valid path will short-circuit determining the path of the Ghostscript executable.
 			 * Useful if your Ghostscript installation is in a non-standard location.
 			 *
-			 * @since 4.x
+			 * @since BuddyBoss 1.4.0
 			 *
 			 * @param string $gs_cmd_path The path to the Ghostscript executable. Default null.
 			 * @param bool   $is_win      True if running on Windows.
@@ -313,7 +313,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Tests whether a purported Ghostscript executable works.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -324,7 +324,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	protected static function test_gs_cmd( $cmd ) {
 		// Note if exec() has been disabled by means not reflected in function_exists() it may barf here and throw warnings so initial vars.
 		$return_var = -1;
-		$output = array();
+		$output     = array();
 		exec( self::escapeshellarg( $cmd ) . ' -dBATCH -dNOPAUSE -dNOPROMPT -dSAFER -v 2>&1', $output, $return_var );
 
 		return 0 === $return_var && is_array( $output ) && ! empty( $output[0] ) && is_string( $output[0] ) && false !== stripos( $output[0], 'ghostscript' );
@@ -333,7 +333,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Returns the *nix path of the Ghostscript executable.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -353,7 +353,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Tries to determine the Windows path of the Ghostscript executable.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -365,25 +365,25 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 
 		// Try using REG QUERY to access the registry.
 		// Do one test query first to see if it works.
-		$cmd = 'REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE 2>&1';
+		$cmd        = 'REG QUERY HKEY_LOCAL_MACHINE\\SOFTWARE 2>&1';
 		$return_var = -1;
-		$output = array();
+		$output     = array();
 		exec( $cmd, $output, $return_var );
 		if ( 0 === $return_var && is_array( $output ) ) {
 			// Might work.
 			$products = array(
-				"GPL Ghostscript",
-				"GNU Ghostscript",
-				"AFPL Ghostscript",
-				"Aladdin Ghostscript",
+				'GPL Ghostscript',
+				'GNU Ghostscript',
+				'AFPL Ghostscript',
+				'Aladdin Ghostscript',
 			);
 			foreach ( $products as $product ) {
-				$cmd = sprintf( 'REG QUERY "HKEY_LOCAL_MACHINE\\SOFTWARE\\%s" /S 2>&1', $product );
+				$cmd    = sprintf( 'REG QUERY "HKEY_LOCAL_MACHINE\\SOFTWARE\\%s" /S 2>&1', $product );
 				$output = array();
 				exec( $cmd, $output, $return_var );
 				if ( 0 === $return_var && is_array( $output ) ) {
 					// Find latest version.
-					$best_match = '';
+					$best_match  = '';
 					$highest_ver = 0;
 					foreach ( $output as $out ) {
 						$out = trim( $out );
@@ -392,7 +392,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 							if ( $highest_ver < $ver ) {
 								$possible_path = $matches[1] . '\\gs' . $matches[2] . '\\bin\\gswin' . $matches[3] . 'c.exe';
 								if ( self::test_gs_cmd( $possible_path ) ) {
-									$best_match = $possible_path;
+									$best_match  = $possible_path;
 									$highest_ver = $ver;
 								}
 							}
@@ -434,17 +434,17 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 				$gs_dir = glob( $program_dir . '\\gs\\gs*', GLOB_NOESCAPE );
 				if ( $gs_dir ) {
 					// Find latest version.
-					$best_match = '';
+					$best_match  = '';
 					$highest_ver = 0;
 					foreach ( $gs_dir as $gs_entry ) {
 						if ( preg_match( '/[0-9]+\.[0-9]+$/', $gs_entry, $matches ) ) {
 							$ver = (float) $matches[0];
 							if ( $highest_ver < $ver ) {
 								if ( @ is_executable( $gs_entry . '\\bin\\gswin64c.exe' ) && self::test_gs_cmd( $gs_entry . '\\bin\\gswin64c.exe' ) ) {
-									$best_match = $gs_entry . '\\bin\\gswin64c.exe';
+									$best_match  = $gs_entry . '\\bin\\gswin64c.exe';
 									$highest_ver = $ver;
 								} elseif ( @ is_executable( $gs_entry . '\\bin\\gswin32c.exe' ) && self::test_gs_cmd( $gs_entry . '\\bin\\gswin32c.exe' ) ) {
-									$best_match = $gs_entry . '\\bin\\gswin32c.exe';
+									$best_match  = $gs_entry . '\\bin\\gswin32c.exe';
 									$highest_ver = $ver;
 								}
 							}
@@ -472,7 +472,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Returns (shell-escaped) shell command with passed-in arguments tagged on, and stderr redirected to stdout.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -490,7 +490,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Returns the arguments for the main Ghostscript invocation.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access protected
 	 *
 	 * @param string $filename File name of output JPEG.
@@ -527,7 +527,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * The initial non-varying arguments for the main invocation of Ghostscript.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access protected
 	 *
 	 * @return string
@@ -541,7 +541,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * It's too tiresome to have to deal with PHP's setlocale()
 	 * to avoid UTF-8 mangling so just do escaping ourselves.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access protected
@@ -579,7 +579,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Deletes transient and clears caching statics.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 *
 	 * @static
 	 * @access public
@@ -595,7 +595,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Gets the resolution to use for the preview.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @return int $resolution Resolution of preview (DPI).
@@ -611,7 +611,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Sets the resolution to use for the preview.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param int $resolution Resolution to use for preview.
@@ -628,7 +628,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 			 *
 			 * set_resolution() has priority over the filter.
 			 *
-			 * @since 4.x
+			 * @since BuddyBoss 1.4.0
 			 *
 			 * @param int    $resolution Resolution (DPI) of the PDF preview thumbnail.
 			 * @param string $filename   The PDF file name.
@@ -650,7 +650,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Gets the page to render for the preview.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @return int $page The page to render.
@@ -666,7 +666,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Sets the page to render for the preview.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param int $page Page number to render.
@@ -683,7 +683,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 			 *
 			 * set_page() has priority over the filter.
 			 *
-			 * @since 4.x
+			 * @since BuddyBoss 1.4.0
 			 *
 			 * @param int    $page     The page to render.
 			 * @param string $filename The PDF file name.
@@ -709,7 +709,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	 * If one of the two is set to null, the resize will
 	 * maintain aspect ratio according to the provided dimension.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param  int|null $max_w Image width.
@@ -724,7 +724,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Resize multiple images from a single source. Unsupported.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param array $sizes {
@@ -745,15 +745,15 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Crops Image. Unsupported.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
-	 * @param int $src_x The start x position to crop from.
-	 * @param int $src_y The start y position to crop from.
-	 * @param int $src_w The width to crop.
-	 * @param int $src_h The height to crop.
-	 * @param int $dst_w Optional. The destination width.
-	 * @param int $dst_h Optional. The destination height.
+	 * @param int  $src_x The start x position to crop from.
+	 * @param int  $src_y The start y position to crop from.
+	 * @param int  $src_w The width to crop.
+	 * @param int  $src_h The height to crop.
+	 * @param int  $dst_w Optional. The destination width.
+	 * @param int  $dst_h Optional. The destination height.
 	 * @param bool $src_abs Optional. If the source crop points are absolute.
 	 * @return WP_Error
 	 */
@@ -764,7 +764,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Rotates current image counter-clockwise by $angle. Unsupported.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param float $angle
@@ -777,7 +777,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Flips current image. Unsupported.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param bool $horz Flip along Horizontal Axis
@@ -791,7 +791,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Streams current image to browser. Unsupported.
 	 *
-	 * @since 4.x
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @param string $mime_type
@@ -804,7 +804,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 	/**
 	 * Gets dimensions of image.
 	 *
-	 * @since 3.5.0
+	 * @since BuddyBoss 1.4.0
 	 * @access public
 	 *
 	 * @return array {'width'=>int, 'height'=>int}
@@ -814,11 +814,11 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 		if ( null === $this->size && $this->mime_type ) {
 			$this->update_size( 0, 0 );
 			// Do a temporary full preview to get size of image.
-			$dirname = untrailingslashit( get_temp_dir() );
+			$dirname  = untrailingslashit( get_temp_dir() );
 			$filename = $dirname . '/' . wp_unique_filename( $dirname, 'gopp_size.jpg' );
 			if ( $cmd = self::gs_cmd( $this->get_gs_args( $filename ) ) ) {
 				$return_var = -1;
-				$output = array();
+				$output     = array();
 				exec( $cmd, $output, $return_var );
 				if ( 0 === $return_var && ( $size = @ getimagesize( $filename ) ) ) {
 					$this->update_size( $size[0], $size[1] );
