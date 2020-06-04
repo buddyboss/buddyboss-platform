@@ -31,7 +31,7 @@
 				bottom: 65px;
 
 				&.active {
-					bottom: 88px;
+					bottom: 91px;
 				}
 			}
 		}
@@ -881,14 +881,6 @@ span.icons:before {
 @media screen and (max-width: 560px) {
 
 	#group-messages-container #whats-new-toolbar .medium-editor-toolbar {
-
-		.medium-editor-toolbar-actions {
-			padding: 0 6px;
-
-			button {
-				padding: 10px 0;
-			}
-		}
 
 		.medium-editor-toolbar-form .medium-editor-toolbar-input {
 			max-width: calc(100% - 90px);

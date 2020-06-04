@@ -1813,13 +1813,13 @@ input.search-query-input {
 
 @media screen and (max-width: 560px) {
   #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 109px;
+    bottom: 112px;
   }
   div #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 109px;
+    bottom: 112px;
   }
   .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-    bottom: 109px;
+    bottom: 111px;
   }
   .groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 58px;
@@ -1828,16 +1828,16 @@ input.search-query-input {
     bottom: 143px;
   }
   .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 56px;
+    bottom: 58px;
   }
   div .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 56px;
+    bottom: 58px;
   }
   #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 143px;
+    bottom: 146px;
   }
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 143px;
+    bottom: 146px;
   }
 }
 
@@ -16200,7 +16200,7 @@ span.CodeMirror-selectedtext {
     bottom: 65px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
-    bottom: 88px;
+    bottom: 91px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
     bottom: 90px;
@@ -16998,12 +16998,6 @@ span.icons:before {
 }
 
 @media screen and (max-width: 560px) {
-  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
-    padding: 0 6px;
-  }
-  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
-    padding: 10px 0;
-  }
   #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
     max-width: calc(100% - 90px);
     width: auto;
