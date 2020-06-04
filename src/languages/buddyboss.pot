@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-04 22:50:14+00:00\n"
+"POT-Creation-Date: 2020-06-04 22:58:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8390,57 +8390,57 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:170
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:170
 msgid "Unsupported MIME type."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:174
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:174
 msgid "Unsupported destination."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:181
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:181
 msgid "No Ghostscript."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:189
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:189
 msgid "Image Editor Save Failed"
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:194
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:194
 msgid "Could not read image size."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:232
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:232
 msgid "Loading from URL not supported."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:237
-#: bp-document/classes/class-gopp-image-editor-gs.php:243
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:237
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:243
 msgid "Unsupported file name."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:253
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:253
 msgid "File doesn&#8217;t exist?"
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:260
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:260
 msgid "File is not a PDF."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:647
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:647
 msgid "Attempted to set PDF preview resolution to an invalid value."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:702
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:702
 msgid "Attempted to set PDF preview page to an invalid value."
 msgstr ""
 
-#: bp-document/classes/class-gopp-image-editor-gs.php:721
-#: bp-document/classes/class-gopp-image-editor-gs.php:742
-#: bp-document/classes/class-gopp-image-editor-gs.php:761
-#: bp-document/classes/class-gopp-image-editor-gs.php:774
-#: bp-document/classes/class-gopp-image-editor-gs.php:788
-#: bp-document/classes/class-gopp-image-editor-gs.php:801
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:721
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:742
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:761
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:774
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:788
+#: bp-document/classes/class-bp-gopp-image-editor-gs.php:801
 msgid "Unsupported operation."
 msgstr ""
 

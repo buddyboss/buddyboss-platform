@@ -1,13 +1,13 @@
 <?php
 /**
- * GOPP Ghostscript Image Editor
+ * BP GOPP Ghostscript Image Editor
  *
  * @package GS Only PDF Preview
  * @subpackage Image_Editor
  */
 
-if ( ! defined( 'GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION' ) ) {
-	define( 'GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION', DAY_IN_SECONDS );
+if ( ! defined( 'BP_GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION' ) ) {
+	define( 'BP_GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION', DAY_IN_SECONDS );
 }
 
 /**
@@ -18,7 +18,7 @@ if ( ! defined( 'GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION' ) ) {
  * @subpackage Image_Editor
  * @uses WP_Image_Editor Extends class
  */
-class GOPP_Image_Editor_GS extends WP_Image_Editor {
+class BP_GOPP_Image_Editor_GS extends WP_Image_Editor {
 
 	/**
 	 * Override the default quality to lessen file size.
@@ -301,7 +301,7 @@ class GOPP_Image_Editor_GS extends WP_Image_Editor {
 					}
 				}
 				if ( self::$gs_cmd_path ) {
-					set_transient( 'gopp_image_gs_cmd_path', self::$gs_cmd_path, GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION );
+					set_transient( 'gopp_image_gs_cmd_path', self::$gs_cmd_path, BP_GOPP_IMAGE_EDITOR_GS_TRANSIENT_EXPIRATION );
 				} elseif ( $transient ) {
 					delete_transient( 'gopp_image_gs_cmd_path' );
 				}
