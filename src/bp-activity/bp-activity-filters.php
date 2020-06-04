@@ -1277,8 +1277,6 @@ function bp_activity_media_add( $media ) {
 				$activity_id = bp_activity_post_update( $args );
 			}
 
-			$activity_id = bp_activity_post_update( $args );
-
 			if ( $activity_id ) {
 
 				//save media activity id in media
