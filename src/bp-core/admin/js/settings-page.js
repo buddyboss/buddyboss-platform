@@ -34,12 +34,10 @@
 				}
 			);
 
-			var bpPages = $( 'body.buddypress.buddyboss_page_bp-pages .bp-admin-card' ).length;
-			if ( bpPages > 1 ) {
-				$( '.create-background-page' ).click(
-					function () {
+			var bpPages = $( document ).find( '.buddyboss_page_bp-pages .section-bp_pages' ).length;
+			if ( bpPages ) {
+				$(document).on('click','.create-background-page',function() {
 						var dataPage = $( this ).attr( 'data-name' );
-
 						$.ajax(
 							{
 								'url' : BP_ADMIN.ajax_url,
