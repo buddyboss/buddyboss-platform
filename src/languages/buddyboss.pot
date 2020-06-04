@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-04 20:58:05+00:00\n"
+"POT-Creation-Date: 2020-06-04 22:44:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1213,7 +1213,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-document/classes/class-bp-document.php:695
+#: bp-document/classes/class-bp-document.php:727
 #: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1711
 #: bp-forums/admin.php:45 bp-forums/admin.php:46 bp-forums/admin.php:231
 #: bp-forums/admin.php:274 bp-forums/classes/class-bbpress.php:451
@@ -3195,8 +3195,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:75
 #: bp-core/admin/settings/bp-admin-setting-friends.php:21
 #: bp-core/gdpr/class-bp-friendship-export.php:58
-#: bp-document/classes/class-bp-document.php:691
-#: bp-document/classes/class-bp-document.php:1556
+#: bp-document/classes/class-bp-document.php:723
+#: bp-document/classes/class-bp-document.php:1588
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119
 #: bp-friends/bp-friends-notifications.php:261
@@ -8364,8 +8364,8 @@ msgstr ""
 
 #: bp-document/classes/class-bp-document-folder.php:517
 #: bp-document/classes/class-bp-document-privacy.php:58
-#: bp-document/classes/class-bp-document.php:681
-#: bp-document/classes/class-bp-document.php:1549
+#: bp-document/classes/class-bp-document.php:713
+#: bp-document/classes/class-bp-document.php:1581
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-privacy.php:59
 msgid "Group Members"
@@ -8384,10 +8384,64 @@ msgstr ""
 msgid "There is no document."
 msgstr ""
 
-#: bp-document/classes/class-bp-document.php:693
+#: bp-document/classes/class-bp-document.php:725
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
 #: bp-messages/bp-messages-template.php:1455
 msgid "Message"
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:170
+msgid "Unsupported MIME type."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:174
+msgid "Unsupported destination."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:181
+msgid "No Ghostscript."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:189
+msgid "Image Editor Save Failed"
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:194
+msgid "Could not read image size."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:232
+msgid "Loading from URL not supported."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:237
+#: bp-document/classes/class-gopp-image-editor-gs.php:243
+msgid "Unsupported file name."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:253
+msgid "File doesn&#8217;t exist?"
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:260
+msgid "File is not a PDF."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:647
+msgid "Attempted to set PDF preview resolution to an invalid value."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:702
+msgid "Attempted to set PDF preview page to an invalid value."
+msgstr ""
+
+#: bp-document/classes/class-gopp-image-editor-gs.php:721
+#: bp-document/classes/class-gopp-image-editor-gs.php:742
+#: bp-document/classes/class-gopp-image-editor-gs.php:761
+#: bp-document/classes/class-gopp-image-editor-gs.php:774
+#: bp-document/classes/class-gopp-image-editor-gs.php:788
+#: bp-document/classes/class-gopp-image-editor-gs.php:801
+msgid "Unsupported operation."
 msgstr ""
 
 #: bp-document/screens/folders.php:28 bp-groups/screens/single/folders.php:22
