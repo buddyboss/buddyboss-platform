@@ -114,11 +114,11 @@
 			z-index: 112;
 			opacity: 1;
 			visibility: visible;
-			bottom: 10px;
+			bottom: 12px;
 			height: 40px;
 
 			div & {
-				bottom: 13px;
+				bottom: 12px;
 			}
 		}
 
@@ -194,7 +194,7 @@
 				height: 44px;
 
 				div & {
-					bottom: 59px;
+					bottom: 58px;
 				}
 			}
 
@@ -284,7 +284,7 @@
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-	bottom: 59px;
+	bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -866,7 +866,7 @@ input.search-query-input {
 	}
 
 	.groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 59px;
+		bottom: 58px;
 	}
 
 	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {

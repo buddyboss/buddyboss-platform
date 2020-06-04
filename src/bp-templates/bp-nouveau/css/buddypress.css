@@ -1122,13 +1122,13 @@ a.layout-grid-view {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 10px;
+  bottom: 12px;
   height: 40px;
 }
 
 div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  bottom: 13px;
+  bottom: 12px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
@@ -1205,7 +1205,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 59px;
+  bottom: 58px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1297,7 +1297,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-  bottom: 59px;
+  bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -1822,7 +1822,7 @@ input.search-query-input {
     bottom: 109px;
   }
   .groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-    bottom: 59px;
+    bottom: 58px;
   }
   .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 143px;
@@ -2253,7 +2253,7 @@ input.search-query-input {
 #whats-new-messages-toolbar .bb-icon {
   color: rgba(18, 43, 70, 0.5);
   transition: all linear 0.2s;
-  font-size: 26px;
+  font-size: 24px;
   width: auto;
   height: auto;
 }
@@ -2312,18 +2312,6 @@ input.search-query-input {
   pointer-events: none;
 }
 
-#whats-new-toolbar #forums-document-button,
-#whats-new-toolbar #messages-document-button,
-#whats-new-messages-toolbar #forums-document-button,
-#whats-new-messages-toolbar #messages-document-button {
-  margin-top: -5px;
-}
-
-.bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
-  vertical-align: top;
-  margin-top: 3px;
-}
-
 .active #activity-media-button .bb-icon,
 .active #activity-link-preview-button .bb-icon,
 .active #activity-document-button .bb-icon,
@@ -2340,11 +2328,6 @@ input.search-query-input {
 .ac-reply-document-button.active .bb-icon,
 .ac-reply-gif-button.active .bb-icon {
   color: #122b46;
-}
-
-.ac-reply-toolbar .bb-icon-attach {
-  float: left;
-  margin-top: -3px;
 }
 
 .activity-url-scrapper-loading {
@@ -16621,7 +16604,7 @@ span.icons:before {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 43px;
+  bottom: 42px;
   height: 40px;
   right: -20px;
 }

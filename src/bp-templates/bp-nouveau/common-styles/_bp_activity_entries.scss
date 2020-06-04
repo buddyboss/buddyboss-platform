@@ -485,7 +485,7 @@
 	.bb-icon {
 		color: rgba(18, 43, 70, 0.5);
 		transition: all linear 0.2s;
-		font-size: 26px;
+		font-size: 24px;
 		width: auto;
 		height: auto;
 	}
@@ -529,21 +529,6 @@
 	}
 }
 
-#whats-new-toolbar,
-#whats-new-messages-toolbar {
-	
-	#forums-document-button,
-	#messages-document-button {
-		margin-top: -5px;
-	}
-
-}
-
-.bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
-	vertical-align: top;
-	margin-top: 3px;
-}
-
 .active #activity-media-button,
 .active #activity-link-preview-button,
 .active #activity-document-button,
@@ -566,14 +551,6 @@
 
 }
 
-.ac-reply-toolbar {
-
-	.bb-icon-attach {
-		float: left;
-		margin-top: -3px;
-	}
-
-}
 
 // link previews
 .activity-url-scrapper-loading {
