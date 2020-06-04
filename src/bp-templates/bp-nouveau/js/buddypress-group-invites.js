@@ -144,7 +144,7 @@ window.bp = window.bp || {};
 					feedbackSelectorLeftClass.addClass( 'loading' );
 					feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_invites.loading);
 
-					page = page + 1;
+					//page = page + 1;
 					var data = {
 						'action'       : 'groups_get_group_potential_invites',
 						'nonce'        : BP_Nouveau.nonces.groups,
@@ -161,13 +161,15 @@ window.bp = window.bp || {};
 						success: function (response) {
 							isWorking = 0;
 							if ( response.success ) {
-								memberInvitedList.html('');
-								memberInvitedList.html( response.data.html );
+								//memberInvitedList.html('');
+								memberInvitedList.find(".load-more").remove();
+								memberInvitedList.append( response.data.html );
 								subNavFilterLast.html('');
 								subNavFilterLast.html( response.data.pagination );
 								feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 								feedbackInviteColumn.addClass( 'info' );
 								feedbackInvitePTag.html( response.data.feedback );
+								page = page + 1;
 							} else {
 								memberInvitedList.html('');
 								feedbackInviteColumn.attr( 'class', 'bp-feedback' );
