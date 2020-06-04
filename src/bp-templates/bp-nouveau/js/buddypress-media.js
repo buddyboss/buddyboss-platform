@@ -400,6 +400,10 @@ window.bp = window.bp || {};
 				}
 			);
 			this.currentTargetParent = newParent;
+			targetPopup.find( '.location-folder-list li.is_active' ).show().children( 'span, i' ).show().siblings( 'ul' ).hide()
+			targetPopup.find( '.location-folder-list li.is_active' ).siblings( 'li' ).show().children( 'span, i' ).show().siblings( 'ul' ).hide();
+			targetPopup.find( '.location-folder-list li span.selected' ).removeClass( 'selected' );
+			targetPopup.find( '.location-folder-list li.is_active' ).children( 'span' ).addClass( 'selected' );
 		},
 
 		closeCreateFolderInPopup: function( event ) {

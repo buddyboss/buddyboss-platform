@@ -1676,7 +1676,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 			$svg = 'bb-icon-file-jar';
 			break;
 		case 'mp3':
-			$svg = 'bb-icon-mp3';
+			$svg = 'bb-icon-file-mp3';
 			break;
 		case 'ods':
 			$svg = 'bb-icon-file-ods';
@@ -1685,7 +1685,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 			$svg = 'bb-icon-file-odt';
 			break;
 		case 'pdf':
-			$svg = 'bb-icon-pdf';
+			$svg = 'bb-icon-file-pdf';
 			break;
 		case 'png':
 			$svg = 'bb-icon-file-png';
@@ -1808,7 +1808,7 @@ function bp_document_svg_icon_list() {
 			'title' => __( 'Archive', 'buddyboss' )
 		),
 		'default_3' => array(
-			'icon' => 'bb-icon-mp3',
+			'icon' => 'bb-icon-file-mp3',
 			'title' => __( 'Audio', 'buddyboss' )
 		),
 		'default_4' => array(

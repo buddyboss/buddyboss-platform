@@ -1103,7 +1103,7 @@ a.layout-grid-view {
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
   top: inherit;
   bottom: 6px;
-  right: 41px;
+  right: 39px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1122,13 +1122,13 @@ a.layout-grid-view {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 10px;
+  bottom: 12px;
   height: 40px;
 }
 
 div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  bottom: 11px;
+  bottom: 12px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
@@ -1185,7 +1185,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
   bottom: 56px;
-  right: 41px;
+  right: 39px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1205,7 +1205,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 57px;
+  bottom: 58px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1297,7 +1297,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-  bottom: 55px;
+  bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -1801,10 +1801,10 @@ input.search-query-input {
 
 @media screen and (max-width: 603px) {
   #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 110px;
+    bottom: 109px;
   }
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 110px;
+    bottom: 109px;
   }
   .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 109px;
@@ -1813,31 +1813,31 @@ input.search-query-input {
 
 @media screen and (max-width: 560px) {
   #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 110px;
+    bottom: 112px;
   }
   div #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 110px;
+    bottom: 112px;
   }
   .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-    bottom: 109px;
+    bottom: 111px;
   }
   .groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-    bottom: 55px;
+    bottom: 58px;
   }
   .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 143px;
   }
   .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 56px;
+    bottom: 58px;
   }
   div .bp_group #buddypress .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 56px;
+    bottom: 58px;
   }
   #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 144px;
+    bottom: 146px;
   }
   div #buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar.active {
-    bottom: 144px;
+    bottom: 146px;
   }
 }
 
@@ -2213,44 +2213,35 @@ input.search-query-input {
   line-height: 1;
   display: block;
   transform: none;
+  font-size: 24px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
-  font-size: 18px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-italic b:before {
   content: "\e949";
-  font-size: 18px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
   content: "\e9c9";
-  vertical-align: middle;
-  display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
   content: "\e9ca";
-  vertical-align: middle;
-  display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\e961";
-  display: inline-block;
-  font-size: 19px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
-  content: "\e816";
-  font-size: 19px;
+  content: "\e9a2";
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-pre b:before {
   content: "\e9c7";
-  display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-close b:before {
@@ -2265,42 +2256,6 @@ input.search-query-input {
   font-size: 24px;
   width: auto;
   height: auto;
-}
-
-.ac-reply-toolbar #forums-document-button,
-.ac-reply-toolbar #messages-document-button,
-#whats-new-toolbar #forums-document-button,
-#whats-new-toolbar #messages-document-button,
-#whats-new-messages-toolbar #forums-document-button,
-#whats-new-messages-toolbar #messages-document-button {
-  float: right;
-  margin-top: -4px;
-}
-
-.ac-reply-toolbar #activity-document-button,
-#whats-new-toolbar #activity-document-button,
-#whats-new-messages-toolbar #activity-document-button {
-  float: right;
-  margin-top: -6px;
-}
-
-.ac-reply-toolbar .bb-icon-attach:before,
-#whats-new-toolbar .bb-icon-attach:before,
-#whats-new-messages-toolbar .bb-icon-attach:before {
-  font-size: 18px;
-  width: 24px;
-  display: inline-block;
-  text-align: center;
-}
-
-.ac-reply-toolbar .bb-icon-text-format:before,
-#whats-new-toolbar .bb-icon-text-format:before,
-#whats-new-messages-toolbar .bb-icon-text-format:before {
-  display: inline-block;
-  width: 28px;
-  color: rgba(18, 43, 70, 0.4);
-  font-size: 28px;
-  margin-top: 1px;
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -2357,23 +2312,6 @@ input.search-query-input {
   pointer-events: none;
 }
 
-#whats-new-toolbar .bb-icon-text-format:before,
-#whats-new-messages-toolbar .bb-icon-text-format:before {
-  margin-top: 0;
-}
-
-#whats-new-toolbar #forums-document-button,
-#whats-new-toolbar #messages-document-button,
-#whats-new-messages-toolbar #forums-document-button,
-#whats-new-messages-toolbar #messages-document-button {
-  margin-top: -5px;
-}
-
-.bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
-  vertical-align: top;
-  margin-top: 3px;
-}
-
 .active #activity-media-button .bb-icon,
 .active #activity-link-preview-button .bb-icon,
 .active #activity-document-button .bb-icon,
@@ -2390,11 +2328,6 @@ input.search-query-input {
 .ac-reply-document-button.active .bb-icon,
 .ac-reply-gif-button.active .bb-icon {
   color: #122b46;
-}
-
-.ac-reply-toolbar .bb-icon-attach {
-  float: right;
-  margin-top: -3px;
 }
 
 .activity-url-scrapper-loading {
@@ -5843,7 +5776,7 @@ input#send-to-input {
   border-radius: 0;
   z-index: 112;
   visibility: visible;
-  bottom: -5px;
+  bottom: -3px;
   height: 40px;
 }
 
@@ -16267,7 +16200,7 @@ span.CodeMirror-selectedtext {
     bottom: 65px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar div.medium-editor-toolbar.active {
-    bottom: 90px;
+    bottom: 91px;
   }
   #group-messages-container .bb-groups-messages-right #whats-new-toolbar.media-off .medium-editor-toolbar {
     bottom: 90px;
@@ -16671,7 +16604,7 @@ span.icons:before {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 40px;
+  bottom: 42px;
   height: 40px;
   left: -20px;
 }
@@ -17065,12 +16998,6 @@ span.icons:before {
 }
 
 @media screen and (max-width: 560px) {
-  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions {
-    padding: 0 6px;
-  }
-  #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-actions button {
-    padding: 10px 0;
-  }
   #group-messages-container #whats-new-toolbar .medium-editor-toolbar .medium-editor-toolbar-form .medium-editor-toolbar-input {
     max-width: calc(100% - 90px);
     width: auto;

@@ -440,45 +440,36 @@
 			line-height: 1;
 			display: block;
 			transform: none;
+			font-size: 24px;
 		}
 	}
 
 	.medium-editor-action-bold b:before {
 		content: "\e94a";
-		font-size: 18px;
 	}
 
 	.medium-editor-action-italic b:before {
 		content: "\e949";
-		font-size: 18px;
 	}
 
 	.medium-editor-action-unorderedlist b:before {
 		content: "\e9c9";
-		vertical-align: middle;
-		display: inline-block;
 	}
 
 	.medium-editor-action-orderedlist b:before {
 		content: "\e9ca";
-		vertical-align: middle;
-		display: inline-block;
 	}
 
 	.medium-editor-action-quote b:before {
 		content: "\e961";
-		display: inline-block;
-		font-size: 19px;
 	}
 
 	.medium-editor-action-anchor b:before {
-		content: "\e816";
-		font-size: 19px;
+		content: "\e9a2";
 	}
 
 	.medium-editor-action-pre b:before {
 		content: "\e9c7";
-		display: inline-block;
 	}
 
 	.medium-editor-action-close b:before {
@@ -497,36 +488,6 @@
 		font-size: 24px;
 		width: auto;
 		height: auto;
-	}
-
-	#forums-document-button,
-	#messages-document-button {
-		float: left;
-		margin-top: -4px;
-	}
-
-	#activity-document-button {
-		float: left;
-		margin-top: -6px;
-	}
-
-	.bb-icon-attach {
-
-		&:before {
-			font-size: 18px;
-			width: 24px;
-			display: inline-block;
-			text-align: center;
-		}
-
-	}
-
-	.bb-icon-text-format:before {
-		display: inline-block;
-		width: 28px;
-		color: rgba(18, 43, 70, 0.4);
-		font-size: 28px;
-		margin-top: 1px;
 	}
 
 	.emojionearea .emojionearea-button:before {
@@ -568,25 +529,6 @@
 	}
 }
 
-#whats-new-toolbar,
-#whats-new-messages-toolbar {
-
-	.bb-icon-text-format:before {
-		margin-top: 0;
-	}
-	
-	#forums-document-button,
-	#messages-document-button {
-		margin-top: -5px;
-	}
-
-}
-
-.bb-groups-messages-right-bottom #whats-new-toolbar .bb-icon-attach:before {
-	vertical-align: top;
-	margin-top: 3px;
-}
-
 .active #activity-media-button,
 .active #activity-link-preview-button,
 .active #activity-document-button,
@@ -609,14 +551,6 @@
 
 }
 
-.ac-reply-toolbar {
-
-	.bb-icon-attach {
-		float: left;
-		margin-top: -3px;
-	}
-
-}
 
 // link previews
 .activity-url-scrapper-loading {
