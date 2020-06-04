@@ -47,7 +47,9 @@
 									'page' : dataPage
 								},
 								'success' : function( response ) {
-									window.location.href = response.data.url;
+									if ( response.success ) {
+										window.location.href = response.data.url;
+									}
 								}
 							}
 						);
