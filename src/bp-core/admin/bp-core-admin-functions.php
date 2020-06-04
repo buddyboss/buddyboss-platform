@@ -2456,7 +2456,7 @@ add_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_create_background_page() {
-	if ( ! current_user_can( 'install_plugins' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error();
 	}
 
