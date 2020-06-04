@@ -226,7 +226,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		/**
 		 * Output the form html on the setting page (not including tab and page title)
 		 *
-		 * @since BuddyBoss 1.0.0
+		 * @since BuddyBoss 1.4.0
 		 */
 		public function form_html() {
 			settings_fields( $this->tab_name );
@@ -240,7 +240,7 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 					add_query_arg(
 						array(
 							'page'    => 'bp-help',
-							'article' => 62793,
+							'article' => 87474,
 						),
 						'admin.php'
 					)
