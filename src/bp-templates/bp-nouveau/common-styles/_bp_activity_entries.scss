@@ -483,7 +483,7 @@
 #whats-new-messages-toolbar {
 
 	.bb-icon {
-		color: rgba(18, 43, 70, 0.5);
+		color: rgba(18, 43, 70, 0.4);
 		transition: all linear 0.2s;
 		font-size: 24px;
 		width: auto;
@@ -493,7 +493,7 @@
 	.emojionearea .emojionearea-button:before {
 		content: "\E821";
 		color: rgba(18, 43, 70, 0.4);
-		font: normal 400 normal 26px/1 bb-icons;
+		font: normal 400 normal 24px/1 bb-icons;
 		speak: none;
 		display: inline-block;
 		text-decoration: inherit;
