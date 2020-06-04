@@ -754,28 +754,12 @@ function bp_nouveau_ajax_activity_update_privacy() {
 		wp_send_json_error();
 	}
 
-	global $wpdb, $bp;
-
 	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
 
 		$activity->privacy = $_POST['privacy'];
 		$activity->save();
-
-		if ( bp_is_active( 'media' ) ) {
-
-			if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
-				// Update privacy for the documents which are uploaded in root of the documents.
-				bp_document_update_activity_privacy( $activity->id, $activity->privacy );
-			}
-
-
-			if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
-				// Update privacy for the media which are uploaded in the activity.
-				bp_media_update_activity_privacy( $activity->id, $activity->privacy );
-			}
-		}
 
 		wp_send_json_success( array() );
 	} else {

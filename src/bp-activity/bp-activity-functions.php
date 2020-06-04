@@ -2968,6 +2968,13 @@ function bp_activity_new_comment( $args = '' ) {
 		}
 	}
 
+	// update comment privacy with parent one.
+	if ( ! empty( $activity->privacy ) ) {
+		$privacy = $activity->privacy;
+	} else {
+		$privacy = 'public';
+	}
+
 	// Check to see if the parent activity is hidden, and if so, hide this comment publicly.
 	$is_hidden = $activity->hide_sitewide ? 1 : 0;
 
@@ -2994,6 +3001,7 @@ function bp_activity_new_comment( $args = '' ) {
 			'item_id'           => $activity_id,
 			'secondary_item_id' => $r['parent_id'],
 			'hide_sitewide'     => $is_hidden,
+			'privacy'           => $privacy,
 			'error_type'        => $r['error_type'],
 		)
 	);

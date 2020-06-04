@@ -126,6 +126,7 @@ add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2, 1 
 
 // Activity link preview
 add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
+add_action( 'bp_activity_after_save', 'bp_activity_update_comment_privacy', 3 );
 
 // Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
@@ -263,6 +264,51 @@ function bp_activity_save_link_data( $activity ) {
 	}
 
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
+}
+
+/**
+ * Update activity comment privacy with parent activity privacy update.
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @param BP_Activity_Activity $activity Activity object
+ */
+function bp_activity_update_comment_privacy( $activity ) {
+	$activity_comments = bp_activity_get_specific(
+		array(
+			'activity_ids'     => array( $activity->id ),
+			'display_comments' => true,
+		)
+	);
+
+	if ( ! empty( $activity_comments ) && !empty( $activity_comments['activities'] ) && isset( $activity_comments['activities'][0]->children )) {
+		$children = $activity_comments['activities'][0]->children;
+		if ( ! empty( $children ) ) {
+			foreach ( $children as $comment ) {
+				bp_activity_comment_privacy_update( $comment, $activity->privacy );
+			}
+		}
+	}
+}
+
+/**
+ * Recursive function to update privacy of comment with nested level.
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @param BP_Activity_Activity $comment Activity comment object
+ * @param string $privacy Parent Activity privacy
+ */
+function bp_activity_comment_privacy_update( $comment, $privacy ) {
+	$comment_activity = new BP_Activity_Activity( $comment->id );
+	$comment_activity->privacy = $privacy;
+	$comment_activity->save();
+
+	if ( !empty( $comment->children ) ) {
+		foreach ( $comment->children as $child_comment ) {
+			bp_activity_comment_privacy_update( $child_comment, $privacy );
+		}
+	}
 }
 
 /**

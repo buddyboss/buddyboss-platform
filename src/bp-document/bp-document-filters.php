@@ -263,6 +263,16 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$_POST['bp_activity_update'] = true;
 	$_POST['bp_activity_id']     = $activity_id;
 
+	// Update activity comment attached document privacy with parent one.
+	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+		$parent_activity = new BP_Activity_Activity( $activity_id );
+		if ( $parent_activity->component === 'groups' ) {
+			$_POST['privacy'] = 'grouponly';
+		} elseif ( ! empty( $parent_activity->privacy ) ) {
+			$_POST['privacy'] = $parent_activity->privacy;
+		}
+	}
+
 	remove_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	remove_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
