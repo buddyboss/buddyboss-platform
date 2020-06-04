@@ -1103,7 +1103,7 @@ a.layout-grid-view {
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar {
   top: inherit;
   bottom: 6px;
-  left: 38px;
+  left: 39px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1128,7 +1128,7 @@ a.layout-grid-view {
 
 div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  bottom: 9px;
+  bottom: 13px;
 }
 
 .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.medium-editor-toolbar-active,
@@ -1185,7 +1185,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 .activity-update-form #whats-new-content .medium-editor-toolbar {
   top: inherit;
   bottom: 56px;
-  left: 37px;
+  left: 39px;
   visibility: hidden;
   z-index: 99;
   background-color: #fff;
@@ -1205,7 +1205,7 @@ div .bbp-reply-form #whats-new-toolbar .medium-editor-toolbar.active, div
 }
 
 div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
-  bottom: 55px;
+  bottom: 59px;
 }
 
 .activity-update-form #whats-new-content .medium-editor-toolbar .medium-editor-toolbar-actions {
@@ -1297,7 +1297,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-  bottom: 55px;
+  bottom: 59px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -1822,7 +1822,7 @@ input.search-query-input {
     bottom: 109px;
   }
   .groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-    bottom: 55px;
+    bottom: 59px;
   }
   .buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
     bottom: 143px;
@@ -2213,44 +2213,35 @@ input.search-query-input {
   line-height: 1;
   display: block;
   transform: none;
+  font-size: 24px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
-  font-size: 18px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-italic b:before {
   content: "\e949";
-  font-size: 18px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
   content: "\e9c9";
-  vertical-align: middle;
-  display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
   content: "\e9ca";
-  vertical-align: middle;
-  display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\e961";
-  display: inline-block;
-  font-size: 19px;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
-  content: "\e816";
-  font-size: 19px;
+  content: "\e9a2";
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-pre b:before {
   content: "\e9c7";
-  display: inline-block;
 }
 
 .medium-editor-toolbar-actions .medium-editor-action-close b:before {
@@ -2260,17 +2251,11 @@ input.search-query-input {
 .ac-reply-toolbar .bb-icon,
 #whats-new-toolbar .bb-icon,
 #whats-new-messages-toolbar .bb-icon {
-  color: rgba(18, 43, 70, 0.4);
+  color: rgba(18, 43, 70, 0.5);
   transition: all linear 0.2s;
-  font-size: 24px;
+  font-size: 26px;
   width: auto;
   height: auto;
-}
-
-.ac-reply-toolbar .bb-icon-text-format:before,
-#whats-new-toolbar .bb-icon-text-format:before,
-#whats-new-messages-toolbar .bb-icon-text-format:before {
-  color: rgba(18, 43, 70, 0.4);
 }
 
 .ac-reply-toolbar .emojionearea .emojionearea-button:before,
@@ -2278,7 +2263,7 @@ input.search-query-input {
 #whats-new-messages-toolbar .emojionearea .emojionearea-button:before {
   content: "\E821";
   color: rgba(18, 43, 70, 0.4);
-  font: normal 400 normal 24px/1 bb-icons;
+  font: normal 400 normal 26px/1 bb-icons;
   speak: none;
   display: inline-block;
   text-decoration: inherit;
@@ -2360,10 +2345,6 @@ input.search-query-input {
 .ac-reply-toolbar .bb-icon-attach {
   float: left;
   margin-top: -3px;
-}
-
-.emojionearea .emojionearea-button {
-  margin-top: -1px;
 }
 
 .activity-url-scrapper-loading {
@@ -5812,7 +5793,7 @@ input#send-to-input {
   border-radius: 0;
   z-index: 112;
   visibility: visible;
-  bottom: -6px;
+  bottom: -3px;
   height: 40px;
 }
 
@@ -16640,7 +16621,7 @@ span.icons:before {
   z-index: 112;
   opacity: 1;
   visibility: visible;
-  bottom: 39px;
+  bottom: 43px;
   height: 40px;
   right: -20px;
 }

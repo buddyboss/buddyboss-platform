@@ -440,45 +440,36 @@
 			line-height: 1;
 			display: block;
 			transform: none;
+			font-size: 24px;
 		}
 	}
 
 	.medium-editor-action-bold b:before {
 		content: "\e94a";
-		font-size: 18px;
 	}
 
 	.medium-editor-action-italic b:before {
 		content: "\e949";
-		font-size: 18px;
 	}
 
 	.medium-editor-action-unorderedlist b:before {
 		content: "\e9c9";
-		vertical-align: middle;
-		display: inline-block;
 	}
 
 	.medium-editor-action-orderedlist b:before {
 		content: "\e9ca";
-		vertical-align: middle;
-		display: inline-block;
 	}
 
 	.medium-editor-action-quote b:before {
 		content: "\e961";
-		display: inline-block;
-		font-size: 19px;
 	}
 
 	.medium-editor-action-anchor b:before {
-		content: "\e816";
-		font-size: 19px;
+		content: "\e9a2";
 	}
 
 	.medium-editor-action-pre b:before {
 		content: "\e9c7";
-		display: inline-block;
 	}
 
 	.medium-editor-action-close b:before {
@@ -492,21 +483,17 @@
 #whats-new-messages-toolbar {
 
 	.bb-icon {
-		color: rgba(18, 43, 70, 0.4);
+		color: rgba(18, 43, 70, 0.5);
 		transition: all linear 0.2s;
-		font-size: 24px;
+		font-size: 26px;
 		width: auto;
 		height: auto;
-	}
-
-	.bb-icon-text-format:before {
-		color: rgba(18, 43, 70, 0.4);
 	}
 
 	.emojionearea .emojionearea-button:before {
 		content: "\E821";
 		color: rgba(18, 43, 70, 0.4);
-		font: normal 400 normal 24px/1 bb-icons;
+		font: normal 400 normal 26px/1 bb-icons;
 		speak: none;
 		display: inline-block;
 		text-decoration: inherit;
@@ -586,10 +573,6 @@
 		margin-top: -3px;
 	}
 
-}
-
-.emojionearea .emojionearea-button {
-	margin-top: -1px;
 }
 
 // link previews
