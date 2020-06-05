@@ -747,7 +747,7 @@ function bp_media_allowed_document_type() {
 		),
 		'bb_doc_70' => array(
 			'extension'   => '.xltx',
-			'mime_type'   => 'applicatadp ion/vnd.openxmlformats-officedocument.spreadsheetml.template',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
