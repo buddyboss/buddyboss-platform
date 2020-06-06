@@ -854,16 +854,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
 		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
 
-		header( 'Expires: 0' );
-		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-		header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-		header( 'Pragma: no-cache' );
-		header( "Content-type: {$content_type}" );
-		header( "Content-Disposition:attachment; filename={$file_new_name}" );
-		header( 'Content-Type: application/force-download' );
-
-		readfile( "{$file_url}" );
-		exit();
+		bp_document_download_file_force( $the_file, $file_name );
 	} else {
 
 		// Get folder object.
@@ -1070,11 +1061,45 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		if ( 'pdf' ===  $extension ) {
-			$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		}
+		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
 		$attachment_url = wp_get_attachment_url( $preview_attachment_id );
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+}
+
+function bp_document_scaled_image_path( $attachment_id ) {
+	$is_image = wp_attachment_is_image( $attachment_id );
+	$img_url  = get_attached_file( $attachment_id );
+	$meta             = wp_get_attachment_metadata( $attachment_id );
+	$img_url_basename = wp_basename( $img_url );
+	if ( ! $is_image ) {
+		if ( ! empty( $meta['sizes']['full'] ) ) {
+			$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+		}
+	}
+
+	return $img_url;
+}
+
+function bp_document_chmod_r($path) {
+	$dir = new DirectoryIterator($path);
+	foreach ($dir as $item) {
+		chmod($item->getPathname(), 0777);
+		if ($item->isDir() && !$item->isDot()) {
+			bp_document_chmod_r($item->getPathname());
+		}
+	}
+}
+
+function bp_document_mirror_text( $attachment_id ) {
+	$words 				 = 8000;
+	$more 				 = '...';
+	$text       		 = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
+	$mirror_text		 = '';
+	if ( $text ) {
+		$mirror_text = strlen($text) > $words ? substr($text,0,$words).'...' : $text;
+	}
+
+	return $mirror_text;
 }

@@ -4634,6 +4634,7 @@ window.bp = window.bp || {};
 							target_text			: document_element.data( 'document-title' ),
 							preview				: document_element.data( 'preview' ),
 							text_preview		: document_element.data( 'text-preview' ),
+							mirror_text			: document_element.data( 'mirror-text' ),
 							target_icon_class	: document_element.data( 'icon-class' ),
 							author				: document_element.data( 'author' ),
 							download			: document_element.attr( 'href' ),
@@ -4729,23 +4730,19 @@ window.bp = window.bp || {};
 			var document_elements 	= $( document ).find( '.document-theatre' );
 			var extension 			= self.current_document.extension;
 			var download 			= self.current_document.download;
-
+			var mirror_text_display = self.current_document.mirror_text;
+			console.log( mirror_text_display );
 			if( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
-				$.ajax( self.current_document.text_preview )
-					.done( function( data ) {
-						document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
-						document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-						document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
-						document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
-						document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( data.replace( 'n','' ) );
-						bp.Nouveau.Media.documentCodeMirror();
-					})
-					.fail( function() {
-						document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
-						document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-						document_elements.find( '.bb-document-section .document-preview' ).html('<p style="text-align: center;"><i class="bb-icon-alert-triangle" style="margin-right: 5px;"></i>' + BP_Nouveau.media.document_preview_error );
-					});
+				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '' );
+				document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="document-text"><textarea class="document-text-file-data-hidden"></textarea></div>' );
+				document_elements.find( '.bb-document-section .document-preview .document-text' ).attr( 'data-extension', extension );
+				document_elements.find( '.bb-document-section .document-preview .document-text textarea' ).html( mirror_text_display.replace( 'n','' ) );
+
+				setTimeout( function(){
+					bp.Nouveau.Media.documentCodeMirror();
+				}  , 1000 );
 			} else if( $.inArray( self.current_document.extension, [ 'wav', 'mp3', 'ogg' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
 				document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );

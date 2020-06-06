@@ -17,7 +17,8 @@ $move_id             = '';
 $move_type           = '';
 $folder_link         = '';
 $document_id         = bp_get_document_id();
-$filename            = basename( get_attached_file( $attachment_id ) );
+$filename             = basename( get_attached_file( $attachment_id ) );
+$mirror_text		 = '';
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
@@ -31,9 +32,10 @@ if ( $attachment_id ) {
 	$can_manage_btn      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$group_id            = bp_get_document_group_id();
-	// $document_title      = basename( get_attached_file( $attachment_id ) );
-	$document_title = bp_get_document_title();
-	$data_action = 'document';
+	// $document_title   = basename( get_attached_file( $attachment_id ) );
+	$document_title      = bp_get_document_title();
+	$data_action 		 = 'document';
+	$mirror_text		 = bp_document_mirror_text( $attachment_id );
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -97,6 +99,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		   data-album-id="<?php bp_document_folder_id(); ?>"
 		   data-group-id="<?php bp_document_group_id(); ?>"
 		   data-document-title="<?php echo esc_html( $filename ); ?>"
+		   data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
 		   data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 <!--			<span>--><?php // echo esc_html( $document_title ); ?><!--</span>-->
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>

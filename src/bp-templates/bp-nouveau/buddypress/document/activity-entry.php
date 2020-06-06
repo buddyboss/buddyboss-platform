@@ -23,9 +23,10 @@ $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : 
 $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
 $attachment_url	   = '';
-
+$mirror_text	   = '';
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
+	$mirror_text		 = bp_document_mirror_text( $attachment_id );
 }
 
 $group_id = bp_get_document_group_id();
@@ -81,6 +82,7 @@ $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
 				data-album-id="<?php bp_document_folder_id(); ?>"
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"
+				data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
 				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<i class="<?php echo esc_attr( $svg_icon ); ?>" ></i>
 		</a>
@@ -99,6 +101,7 @@ $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
 				data-album-id="<?php bp_document_folder_id(); ?>"
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"
+				data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
 				data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 			<span class="document-title"><?php echo esc_html( $filename ); ?></span>
 			<span class="document-description"><?php echo esc_html( $size ); ?></span>
