@@ -4466,7 +4466,7 @@ msgid "Remove file"
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:287
-msgid "You can not upload any more files."
+msgid "You cannot upload more than 10 files at a time."
 msgstr ""
 
 #: bp-core/bp-core-cssjs.php:916
