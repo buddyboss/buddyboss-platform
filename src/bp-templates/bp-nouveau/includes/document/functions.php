@@ -1068,6 +1068,12 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
 }
 
+/**
+ * Return absolute path of the document file.
+ *
+ * @param $path
+ * @since BuddyBoss 1.4.1
+ */
 function bp_document_scaled_image_path( $attachment_id ) {
 	$is_image = wp_attachment_is_image( $attachment_id );
 	$img_url  = get_attached_file( $attachment_id );
@@ -1082,6 +1088,12 @@ function bp_document_scaled_image_path( $attachment_id ) {
 	return $img_url;
 }
 
+/**
+ * Give recursive file permission.
+ *
+ * @param $path
+ * @since BuddyBoss 1.4.1
+ */
 function bp_document_chmod_r($path) {
 	$dir = new DirectoryIterator($path);
 	foreach ($dir as $item) {
@@ -1092,6 +1104,14 @@ function bp_document_chmod_r($path) {
 	}
 }
 
+/**
+ * Return the preview text for the document files.
+ *
+ * @param $attachment_id
+ *
+ * @return false|mixed|string
+ * @since BuddyBoss 1.4.1
+ */
 function bp_document_mirror_text( $attachment_id ) {
 	$words 				 = 8000;
 	$more 				 = '...';

@@ -124,10 +124,6 @@ add_action(
 	12
 );
 
-
-
-
-
 /**
  * Upload a document via a POST request.
  *

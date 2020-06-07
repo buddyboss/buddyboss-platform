@@ -762,6 +762,7 @@ function bp_document_activity_update_document_privacy( $activity ) {
  *
  * @param string $rewrite rewrite rules.
  * @return string
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_protect_download_rewite_rules( $rewrite ) {
 	if ( ! is_multisite() ) {
@@ -829,6 +830,7 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  *
  * @param array $response JS version of a attachment post object.
  * @return array
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_prepare_attachment_for_js( $response ) {
 
@@ -848,7 +850,7 @@ add_filter( 'wp_prepare_attachment_for_js', 'bp_document_prepare_attachment_for_
 /**
  * Wrapper for set_time_limit to see if it is enabled.
  *
- * @since 2.6.0
+ * @since BuddyBoss 1.4.1
  * @param int $limit Time limit.
  */
 function bp_document_set_time_limit( $limit = 0 ) {
@@ -859,6 +861,8 @@ function bp_document_set_time_limit( $limit = 0 ) {
 
 /**
  * Check and set certain server config variables to ensure downloads work as intended.
+ *
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_check_server_config() {
 	bp_document_set_time_limit( 0 );
@@ -873,6 +877,8 @@ function bp_document_check_server_config() {
  * Clean all output buffers.
  *
  * Can prevent errors, for example: transfer closed with 3 bytes remaining to read.
+ *
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_clean_buffers() {
 	if ( ob_get_level() ) {
@@ -890,6 +896,7 @@ function bp_document_clean_buffers() {
  *
  * @param  mixed $return Value to return. Previously hooked into a filter.
  * @return mixed
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_set_nocache_constants( $return = true ) {
 	bp_document_maybe_define_constant( 'DONOTCACHEPAGE', true );
@@ -901,7 +908,7 @@ function bp_document_set_nocache_constants( $return = true ) {
 /**
  * Define a constant if it is not already defined.
  *
- * @since 3.0.0
+ * @since BuddyBoss 1.4.1
  * @param string $name  Constant name.
  * @param mixed  $value Value.
  */
@@ -914,7 +921,7 @@ function bp_document_maybe_define_constant( $name, $value ) {
 /**
  * Wrapper for nocache_headers which also disables page caching.
  *
- * @since 3.2.4
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_nocache_headers() {
 	bp_document_set_nocache_constants();
@@ -926,6 +933,7 @@ function bp_document_nocache_headers() {
  *
  * @param  string $file_path File path.
  * @return string
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_get_download_content_type( $file_path ) {
 	$file_extension = strtolower( substr( strrchr( $file_path, '.' ), 1 ) );
@@ -948,6 +956,7 @@ function bp_document_get_download_content_type( $file_path ) {
  * @param string $file_path      File path.
  * @param string $filename       File name.
  * @param array  $download_range Array containing info about range download request (see {@see get_download_range} for structure).
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_download_headers( $file_path, $filename, $download_range = array() ) {
 	bp_document_check_server_config();
@@ -990,6 +999,7 @@ function bp_document_download_headers( $file_path, $filename, $download_range = 
  *
  * @param string $file_path File path.
  * @param string $filename  File name.
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_download_file_force( $file_path, $filename ) {
 	$parsed_file_path  = bp_document_parse_file_path( $file_path );
@@ -1016,6 +1026,7 @@ function bp_document_download_file_force( $file_path, $filename ) {
  * @param string  $message Error message.
  * @param string  $title   Error title.
  * @param integer $status  Error status.
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_download_error( $message, $title = '', $status = 404 ) {
 	if ( ! strstr( $message, '<a ' ) ) {
@@ -1029,6 +1040,7 @@ function bp_document_download_error( $message, $title = '', $status = 404 ) {
  *
  * @param string $file_path File path.
  * @param string $filename  File name.
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_download_file_redirect( $file_path, $filename = '' ) {
 	header( 'Location: ' . $file_path );
@@ -1040,6 +1052,7 @@ function bp_document_download_file_redirect( $file_path, $filename = '' ) {
  *
  * @param  string $file_path File path.
  * @return array
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_parse_file_path( $file_path ) {
 	$wp_uploads     = wp_upload_dir();
@@ -1106,6 +1119,7 @@ function bp_document_parse_file_path( $file_path ) {
  *     @type bool $is_range_valid   Whether the requested range is a valid and supported range.
  *     @type bool $is_range_request Whether the request is a range request.
  * }
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_get_download_range( $file_size ) {
 	$start          = 0;
@@ -1178,6 +1192,7 @@ function bp_document_get_download_range( $file_size ) {
  * @param  int    $start  Byte offset/position of the beginning from which to read from the file.
  * @param  int    $length Length of the chunk to be read from the file in bytes, 0 means full file.
  * @return bool Success or fail
+ * @since BuddyBoss 1.4.1
  */
 function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 	if ( ! defined( 'BP_DOCUMENT_CHUNK_SIZE' ) ) {
