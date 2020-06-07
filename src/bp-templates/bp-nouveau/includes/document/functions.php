@@ -1099,6 +1099,11 @@ function bp_document_mirror_text( $attachment_id ) {
 	$mirror_text		 = '';
 	if ( $text ) {
 		$mirror_text = strlen($text) > $words ? substr($text,0,$words).'...' : $text;
+	} else {
+		$image_data = file_get_contents( get_attached_file( $attachment_id ) );
+		$words 				 = 10000;
+		$mirror_text = strlen($image_data) > $words ? substr($image_data,0,$words).'...' : $image_data;
+		update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
 	}
 
 	return $mirror_text;
