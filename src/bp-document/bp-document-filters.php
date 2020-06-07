@@ -788,7 +788,7 @@ function bp_document_check_download_folder_protection() {
 
 		$file_content    = 'deny from all
 
-		# BEGIN BuddyBoss code execution protection
+# BEGIN BuddyBoss code execution protection
 <IfModule mod_php5.c>
 php_flag engine 0
 </IfModule>
