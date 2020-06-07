@@ -284,7 +284,7 @@ function bp_core_register_common_scripts() {
 			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss' ),
 			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss' ),
 			'dictRemoveFile'               => __( "Remove file", 'buddyboss' ),
-			'dictMaxFilesExceeded'         => __( "You can not upload any more files.", 'buddyboss' ),
+			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss' ),
 		)
 	);
 }
