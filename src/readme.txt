@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.1 =
+* Forums - Fixed attached images getting removed after editing forum replies
 
 = 1.4.0 =
 * Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
