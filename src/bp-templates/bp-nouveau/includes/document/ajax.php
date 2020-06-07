@@ -152,8 +152,12 @@ function bp_nouveau_ajax_document_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
+	add_filter( 'upload_dir', 'bp_document_upload_dir' );
+
 	// Upload file.
 	$result = bp_document_upload();
+
+	remove_filter( 'upload_dir', 'bp_document_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 

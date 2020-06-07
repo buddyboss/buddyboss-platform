@@ -217,7 +217,7 @@ function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) 
 		}
 	}
 
-	return bp_media_format_size_units( $max_size, $post_string, $type );
+	return apply_filters( 'bp_media_file_upload_max_size', bp_media_format_size_units( $max_size, $post_string, $type ) );
 }
 
 /**
