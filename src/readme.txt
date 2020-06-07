@@ -59,8 +59,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.4.1 =
 * Forums - Fixed attached images getting removed after editing forum replies
+* Media - Set maximum amount of files uploaded per batch at 10 files
 * Security - Preventing executable file uploads from running in browser
-* Security - Moving file uploads into 'uploads/bb_documents' with .htaccess protection
+* Security - New file uploads go into 'uploads/bb_documents' with .htaccess protection
 
 = 1.4.0 =
 * Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
