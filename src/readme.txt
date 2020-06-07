@@ -60,7 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.4.1 =
 * Forums - Fixed attached images getting removed after editing forum replies
 * Security - Preventing executable file uploads from running in browser
-* Security - Moving file uploads into 'bb_documents' folder with .htaccess protection
+* Security - Moving file uploads into 'uploads/bb_documents' with .htaccess protection
 
 = 1.4.0 =
 * Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
