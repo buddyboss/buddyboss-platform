@@ -1227,9 +1227,3 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 
 	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
 }
-
-
-//add_action( 'init', 'copy_file_karo', 999);
-//function copy_file_karo() {
-//	copy( '/Applications/MAMP/htdocs/platform/wp-content/uploads/bb_documents/2020/06/2020-Pay-Schedule-1-pdf.jpg', '/Applications/MAMP/htdocs/platform/wp-content/uploads/preview-image-folder-chetan/2020-Pay-Schedule-1-pdf.jpg');
-//}

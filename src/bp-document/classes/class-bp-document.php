@@ -2244,7 +2244,7 @@ class BP_Document {
 
 					// Create temp folder.
 					$upload_dir = $upload_dir . '/preview-image-folder-' . time();
-
+					$preview_folder = $upload_dir;
 					// If folder not exists then create.
 					if ( ! is_dir( $upload_dir ) ) {
 
@@ -2306,7 +2306,7 @@ class BP_Document {
 
 						// Create temp folder.
 						$upload_dir = $upload_dir . '/preview-image-folder-' . time();
-
+						$preview_folder = $upload_dir;
 						// If folder not exists then create.
 						if ( ! is_dir( $upload_dir ) ) {
 
@@ -2366,7 +2366,7 @@ class BP_Document {
 
 					// Create temp folder.
 					$upload_dir = $upload_dir . '/preview-image-folder-' . time();
-
+					$preview_folder = $upload_dir;
 					// If folder not exists then create.
 					if ( ! is_dir( $upload_dir ) ) {
 
@@ -2390,8 +2390,9 @@ class BP_Document {
 					bp_document_chmod_r( $preview_folder );
 
 					$image_data = file_get_contents( $firstFile );
-
-					update_post_meta( $attachment_id, 'document_preview_mirror_text', $image_data );
+					$words 				 = 10000;
+					$mirror_text = strlen($image_data) > $words ? substr($image_data,0,$words).'...' : $image_data;
+					update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
 					BP_Document::bp_document_remove_temp_directory( $preview_folder );
 				}
 			}

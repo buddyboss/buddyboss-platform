@@ -292,7 +292,7 @@ function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes'
 		}
 	}
 
-	return bp_document_format_size_units( $max_size, $post_string, $type );
+	return apply_filters( 'bp_document_file_upload_max_size', bp_document_format_size_units( $max_size, $post_string, $type ) );
 }
 
 /**
@@ -1509,8 +1509,8 @@ function bp_document_extension( $attachment_id ) {
 	$extension = trim( $file_type['ext'] );
 
 	if ( '' === $extension ) {
-		$file      = pathinfo( $file_url );
-		$extension = $file['extension'];
+		$file       = pathinfo( $file_url );
+		$extension = ( isset( $file['extension'] ) ) ? $file['extension'] : '';
 	}
 
 	return $extension;
@@ -3001,4 +3001,37 @@ function bp_document_update_activity_privacy( $activity_id = 0, $privacy = '' ) 
 			}
 		}
 	}
+}
+
+function bp_document_upload_dir( $pathdata ) {
+	if ( isset( $_POST['action'] ) && 'document_document_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
+
+		if ( empty( $pathdata['subdir'] ) ) {
+			$pathdata['path']   = $pathdata['path'] . '/bb_documents';
+			$pathdata['url']    = $pathdata['url'] . '/bb_documents';
+			$pathdata['subdir'] = '/bb_documents';
+		} else {
+			$new_subdir = '/bb_documents' . $pathdata['subdir'];
+
+			$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
+		}
+	}
+	return $pathdata;
+}
+
+function bp_document_upload_dir_script( $pathdata ) {
+	if ( empty( $pathdata['subdir'] ) ) {
+		$pathdata['path']   = $pathdata['path'] . '/bb_documents';
+		$pathdata['url']    = $pathdata['url'] . '/bb_documents';
+		$pathdata['subdir'] = '/bb_documents';
+	} else {
+		$new_subdir = '/bb_documents' . $pathdata['subdir'];
+
+		$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
+	}
+	return $pathdata;
 }
