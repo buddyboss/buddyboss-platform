@@ -2798,7 +2798,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 
 		case 'friends':
 
-			$is_friend = ( bp_is_active( 'friends') ) ? friends_check_friendship( $document->user_id, $user_id ) : false ;
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $document->user_id, $user_id ) : false;
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -2831,7 +2831,15 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 		case 'message':
 			$thread_id  = bp_document_get_meta( $document_id, 'thread_id', true );
 			$has_access = messages_check_thread_access( $thread_id, $user_id );
-			if ( $document->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( ! $thread_id ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
