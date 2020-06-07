@@ -68,7 +68,6 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$exclude = array_merge( $mime_types, $extensions );
 	$document_params = array(
-		'max_upload_size_document'        => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_document'                => bp_is_profile_document_support_enabled(),
 		'group_document'                  => bp_is_group_document_support_enabled(),
 		'messages_document'               => bp_is_messages_document_support_enabled(),
@@ -81,13 +80,13 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'                => $group_id,
 		'target_text'                     => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_file_type'                => __( 'Unable to upload the file', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
 		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
+		'move_to_file'                     => __( 'Move document to...', 'buddyboss' ),
 		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
 		'download_button'                 => __( 'Download', 'buddyboss' ),
 		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
