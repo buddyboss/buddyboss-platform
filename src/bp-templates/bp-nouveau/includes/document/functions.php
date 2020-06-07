@@ -68,7 +68,6 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$exclude = array_merge( $mime_types, $extensions );
 	$document_params = array(
-		'max_upload_size_document'        => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_document'                => bp_is_profile_document_support_enabled(),
 		'group_document'                  => bp_is_group_document_support_enabled(),
 		'messages_document'               => bp_is_messages_document_support_enabled(),
@@ -81,13 +80,13 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'                => $group_id,
 		'target_text'                     => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_file_type'                => __( 'Unable to upload the file', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
 		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
+		'move_to_file'                     => __( 'Move document to...', 'buddyboss' ),
 		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
 		'download_button'                 => __( 'Download', 'buddyboss' ),
 		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
@@ -99,6 +98,8 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$document_options = array(
 		'dictInvalidFileType' => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'max_upload_size'     => bp_document_file_upload_max_size( false, 'MB' ),
+		'maxFiles'            => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
 	);
 
 	$params['document'] = $document_options;
@@ -854,16 +855,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
 		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
 
-		header( 'Expires: 0' );
-		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-		header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-		header( 'Pragma: no-cache' );
-		header( "Content-type: {$content_type}" );
-		header( "Content-Disposition:attachment; filename={$file_new_name}" );
-		header( 'Content-Type: application/force-download' );
-
-		readfile( "{$file_url}" );
-		exit();
+		bp_document_download_file_force( $the_file, $file_name );
 	} else {
 
 		// Get folder object.
@@ -1070,11 +1062,70 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		if ( 'pdf' ===  $extension ) {
-			$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		}
+		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
 		$attachment_url = wp_get_attachment_url( $preview_attachment_id );
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+}
+
+/**
+ * Return absolute path of the document file.
+ *
+ * @param $path
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_scaled_image_path( $attachment_id ) {
+	$is_image = wp_attachment_is_image( $attachment_id );
+	$img_url  = get_attached_file( $attachment_id );
+	$meta             = wp_get_attachment_metadata( $attachment_id );
+	$img_url_basename = wp_basename( $img_url );
+	if ( ! $is_image ) {
+		if ( ! empty( $meta['sizes']['full'] ) ) {
+			$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+		}
+	}
+
+	return $img_url;
+}
+
+/**
+ * Give recursive file permission.
+ *
+ * @param $path
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_chmod_r($path) {
+	$dir = new DirectoryIterator($path);
+	foreach ($dir as $item) {
+		chmod($item->getPathname(), 0777);
+		if ($item->isDir() && !$item->isDot()) {
+			bp_document_chmod_r($item->getPathname());
+		}
+	}
+}
+
+/**
+ * Return the preview text for the document files.
+ *
+ * @param $attachment_id
+ *
+ * @return false|mixed|string
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_mirror_text( $attachment_id ) {
+	$words 				 = 8000;
+	$more 				 = '...';
+	$text       		 = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
+	$mirror_text		 = '';
+	if ( $text ) {
+		$mirror_text = strlen($text) > $words ? substr($text,0,$words).'...' : $text;
+	} else {
+		$image_data = file_get_contents( get_attached_file( $attachment_id ) );
+		$words 				 = 10000;
+		$mirror_text = strlen($image_data) > $words ? substr($image_data,0,$words).'...' : $image_data;
+		update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+	}
+
+	return $mirror_text;
 }
