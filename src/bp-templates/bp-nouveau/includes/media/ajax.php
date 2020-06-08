@@ -638,6 +638,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	} else {
 		$args = array(
 			'include' => $_POST['id'],
+			'privacy' => false,
 		);
 	}
 

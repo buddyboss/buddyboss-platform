@@ -293,12 +293,14 @@ function bp_nouveau_ajax_document_get_activity() {
 						'include'     => $post_id,
 						'object'      => $group_id,
 						'primary_id'  => $group_id,
+						'privacy'     => false,
 						'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
 					);
 		} else {
 			$args =
 					array(
 						'include' => $post_id,
+						'privacy' => false,
 					);
 		}
 	}
