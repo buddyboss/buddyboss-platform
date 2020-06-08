@@ -486,7 +486,9 @@ window.bp = window.bp || {};
 							} else {
 								target.find('option[value="'+ target.attr('data-privacy') +'"]').attr('selected','selected');
 								target.siblings('span' ).text( target.find('option[value="'+ target.attr('data-privacy') +'"]').text() );
-								alert( response.data.feedback );
+								/* jshint ignore:start */
+								alert( response.data.feedback.replace("&#039;", "'") );
+								/* jshint ignore:end */
 							}
 						}
 					}
@@ -2721,7 +2723,9 @@ window.bp = window.bp || {};
 								document_edit.removeClass('submitting');
 								document_edit.parent().find('.animate-spin').remove();
 								document_edit.parent().hide().siblings('.media-folder_name').show();
-								alert( response.data.feedback );
+								/* jshint ignore:start */
+								alert( response.data.feedback.replace("&#039;", "'") );
+								/* jshint ignore:end */
 							}
 						},
 					}
