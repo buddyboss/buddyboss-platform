@@ -484,7 +484,7 @@ function bp_nouveau_ajax_media_album_save() {
 	if ( ! array_key_exists( $privacy, bp_media_get_visibility_levels() ) && ! empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Invalid privacy to update.', 'buddyboss' )
+			esc_html__( 'Invalid privacy status.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}

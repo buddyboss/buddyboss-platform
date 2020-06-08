@@ -1385,7 +1385,7 @@ function bp_nouveau_ajax_document_save_privacy() {
 	}
 
 	if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
-		$response['feedback'] = esc_html__( 'Invalid privacy to update.', 'buddyboss' );
+		$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
