@@ -3421,7 +3421,7 @@ window.bp = window.bp || {};
 			}
 
 			// remove all feedback erros from the DOM.
-			$( '.bb-single-album-header .bp-feedback' ).remove();
+			$( '#bp-media-single-album .bp-feedback' ).remove();
 			$( '#boss-media-create-album-popup .bp-feedback' ).remove();
 
 			$.ajax(

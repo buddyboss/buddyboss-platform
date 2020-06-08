@@ -1382,6 +1382,11 @@ function bp_nouveau_ajax_document_save_privacy() {
 		}
 	}
 
+	if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
+		$response['feedback'] = esc_html__( 'Invalid privacy to update.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );
 
