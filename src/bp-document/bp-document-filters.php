@@ -846,7 +846,7 @@ function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) 
 
 	return $response;
 }
-//add_filter( 'wp_prepare_attachment_for_js', 'bp_document_prepare_attachment_for_js', 999, 3 );
+add_filter( 'wp_prepare_attachment_for_js', 'bp_document_prepare_attachment_for_js', 999, 3 );
 
 /**
  * Wrapper for set_time_limit to see if it is enabled.
