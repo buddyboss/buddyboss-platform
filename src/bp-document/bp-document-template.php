@@ -818,6 +818,56 @@ function bp_document_user_can_delete( $document = false ) {
 }
 
 /**
+ * Determine if the current user can edit an document item.
+ *
+ * @since BuddyBoss 1.4.2
+ *
+ * @param int|BP_Document $document BP_Document object or ID of the document.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_document_user_can_edit( $document = false ) {
+
+	// Assume the user cannot edit the document item.
+	$can_edit = false;
+
+	if ( empty( $document ) ) {
+		return $can_edit;
+	}
+
+	if ( ! is_object( $document ) ) {
+		$document = new BP_Document( $document );
+	}
+
+	if ( empty( $document ) ) {
+		return $can_edit;
+	}
+
+	// Only logged in users can edit document.
+	if ( is_user_logged_in() ) {
+
+		// Community moderators can always edit document (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+		}
+
+		// Users are allowed to edit their own document.
+		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
+			$can_edit = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an document item.
+	 *
+	 * @since BuddyBoss 1.4.2
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $document   Current document item object.
+	 */
+	return (bool) apply_filters( 'bp_document_user_can_edit', $can_edit, $document );
+}
+
+/**
  * Output the document folder ID.
  *
  * @since BuddyBoss 1.4.0
@@ -1710,6 +1760,60 @@ function bp_folder_user_can_delete( $folder = false ) {
 	 * @param object $folder   Current folder item object.
 	 */
 	return (bool) apply_filters( 'bp_folder_user_can_delete', $can_delete, $folder );
+}
+
+/**
+ * Determine if the current user can edit an folder item.
+ *
+ * @since BuddyBoss 1.4.2
+ *
+ * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the folder.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_folder_user_can_edit( $folder = false ) {
+
+	// Assume the user cannot edit the folder item.
+	$can_edit = false;
+
+	if ( empty( $folder ) ) {
+		return $can_edit;
+	}
+
+	if ( ! is_object( $folder ) ) {
+		$folder = new BP_Document_Folder( $folder );
+	}
+
+	if ( empty( $folder ) ) {
+		return $can_edit;
+	}
+
+	// Only logged in users can edit folder.
+	if ( is_user_logged_in() ) {
+
+		// Groups documents have their own access.
+		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
+			$can_edit = true;
+
+			// Users are allowed to edit their own folder.
+		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
+			$can_edit = true;
+		}
+
+		// Community moderators can always edit folder (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an folder item.
+	 *
+	 * @since BuddyBoss 1.4.2
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $folder   Current folder item object.
+	 */
+	return (bool) apply_filters( 'bp_folder_user_can_delete', $can_edit, $folder );
 }
 
 /**
