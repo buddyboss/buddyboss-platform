@@ -827,20 +827,26 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  * @return array
  * @since BuddyBoss 1.4.1
  */
-function bp_document_prepare_attachment_for_js( $response ) {
+function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) {
 
 	if ( isset( $response['url'] ) && strstr( $response['url'], 'bb_documents/' ) ) {
-		$response['full']['url'] = $response['url'];
+
+		$image 	= get_post_meta( $attachment->ID, 'document_preview_attachment_id', true );
+		$url	= $response['url'];
+		if ( $image ) {
+			$url = wp_get_attachment_url( $image );
+		}
+		$response['full']['url'] = $url;
 		if ( isset( $response['sizes'] ) ) {
 			foreach ( $response['sizes'] as $size => $value ) {
-				$response['sizes'][ $size ]['url'] = $response['url'];
+				$response['sizes'][ $size ]['url'] = $url;
 			}
 		}
 	}
 
 	return $response;
 }
-add_filter( 'wp_prepare_attachment_for_js', 'bp_document_prepare_attachment_for_js' );
+//add_filter( 'wp_prepare_attachment_for_js', 'bp_document_prepare_attachment_for_js', 999, 3 );
 
 /**
  * Wrapper for set_time_limit to see if it is enabled.
