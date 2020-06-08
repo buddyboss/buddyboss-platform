@@ -725,6 +725,10 @@ window.bp = window.bp || {};
 								$( document ).removeClass( 'open-popup' );
 							}
 							target.closest( '.bp-media-move-file' ).find( '.ac-document-close-button' ).trigger( 'click' );
+						} else {
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace("&#039;", "'") );
+							/* jshint ignore:end */
 						}
 					}
 				}
@@ -3523,6 +3527,9 @@ window.bp = window.bp || {};
 								location.reload( true );
 							}
 						} else {
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace("&#039;", "'") );
+							/* jshint ignore:end */
 						}
 					}
 				}
@@ -3569,6 +3576,9 @@ window.bp = window.bp || {};
 								location.reload( true );
 							//}
 						} else {
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace("&#039;", "'") );
+							/* jshint ignore:end */
 						}
 					}
 				}
