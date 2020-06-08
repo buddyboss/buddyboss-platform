@@ -1360,10 +1360,7 @@ function bp_nouveau_ajax_document_save_privacy() {
 	global $wpdb, $bp;
 
 	if ( ! is_user_logged_in() ) {
-		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'Please login to edit a privacy.', 'buddyboss' )
-		);
+		$response['feedback'] = esc_html__( 'Please login to edit a privacy.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
