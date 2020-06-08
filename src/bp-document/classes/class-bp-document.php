@@ -834,7 +834,7 @@ class BP_Document {
 		$where_conditions_document = array();
 		$where_conditions_folder   = array();
 
-		$where_conditions_document_search = '';
+		$where_conditions_document_search = array();
 
 		if ( ! empty( $r['scope'] ) ) {
 			$scope_query_document = self::get_scope_document_query_sql( $r['scope'], $r );
