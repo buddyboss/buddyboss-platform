@@ -783,11 +783,16 @@ add_filter( 'mod_rewrite_rules', 'bp_document_protect_download_rewite_rules' );
 function bp_document_check_download_folder_protection() {
 
 	$upload_dir     = wp_get_upload_dir();
-	$downloads_path = $upload_dir['basedir'] . '/bb_documents';
-	$file_path      	= $downloads_path . '/.htaccess';
-	if ( false === ( $value = get_transient( 'bp_document_transient_htaccess' ) ) || ! file_exists( $file_path ) ) {
-
-		$file_content    = 'deny from all
+	$files = array(
+			array(
+					'base'    => $upload_dir['basedir'] . '/bb_documents',
+					'file'    => 'index.html',
+					'content' => '',
+			),
+			array(
+					'base'    => $upload_dir['basedir'] . '/bb_documents',
+					'file'    => '.htaccess',
+					'content' => 'deny from all
 
 # BEGIN BuddyBoss code execution protection
 <IfModule mod_php5.c>
@@ -799,28 +804,18 @@ php_flag engine 0
 
 AddHandler cgi-script .php .phtml .php3 .pl .py .jsp .asp .htm .shtml .sh .cgi
 Options -ExecCGI
-# END BuddyBoss code execution protection';
-		$create         = false;
+# END BuddyBoss code execution protection',
+			),
+	);
 
-		if ( wp_mkdir_p( $downloads_path ) && ! file_exists( $file_path ) ) {
-			$create = true;
-		} else {
-			$current_content = @file_get_contents( $file_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-
-			if ( $current_content !== $file_content ) {
-				unlink( $file_path );
-				$create = true;
-			}
-		}
-
-		if ( $create ) {
-			$file_handle = @fopen( $file_path, 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	foreach ( $files as $file ) {
+		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
 			if ( $file_handle ) {
-				fwrite( $file_handle, $file_content ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
-				fclose( $file_handle );                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 			}
 		}
-		set_transient( 'bp_document_transient_htaccess', 'yes' );
 	}
 }
 add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
