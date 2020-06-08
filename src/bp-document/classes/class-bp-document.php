@@ -924,6 +924,7 @@ class BP_Document {
 		}
 
 		$folder_ids = array();
+
 		// Search inside child folder in group.
 		if ( $r['search_terms'] && $r['group_id'] && $r['folder_id'] && ! bp_is_document_directory() ) {
 			$folder_ids     = bp_document_get_folder_children( (int) $r['folder_id'] );
@@ -1091,13 +1092,67 @@ class BP_Document {
 			}
 		// All Document Tab on search.
 		} elseif ( $r['search_terms'] && ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && is_array( $r['scope'] ) ) {
+
+			$user_id = ( ! empty( $r['user_id'] ) ? $r['user_id'] : bp_loggedin_user_id() );
+			$search_terms_like                       = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+
+			$search_privacy = $wpdb->prepare( '( d.title LIKE %s', $search_terms_like );
+			$search_privacy .=  $wpdb->prepare( ' OR dm.meta_key = "extension" AND dm.meta_value LIKE %s ', $search_terms_like );
+			$search_privacy .=  $wpdb->prepare( ' OR dm.meta_key = "file_name" AND dm.meta_value LIKE %s )', $search_terms_like );
+
+			/* friends privacy with logged-in user. */
+			$friends = array();
 			if ( bp_is_active( 'friends' ) ) {
-				array_push( $r['privacy'], 'friends' );
+				// Determine friends of user.
+				$friends = friends_get_friend_user_ids( $user_id );
+				if ( empty( $friends ) ) {
+					$friends = array( 0 );
+				}
+				array_push( $friends, $user_id );
 			}
-			array_push( $r['privacy'], 'onlyme' );
+
+			if ( ! empty( $friends ) ) {
+				$where_conditions_document_search['friends'] = "OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' AND " . $search_privacy . ")";
+			}
+			/* --friends privacy with logged-in user. */
+
+			if ( ! empty( $user_id ) ) {
+				$where_conditions_document_search['user'] = "OR ( d.user_id = '" . $user_id . "' AND d.privacy = 'onlyme' AND " . $search_privacy . ")";
+			}
+
 			if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() && $r['scope'] !== 'personal' ) {
-				array_push( $r['privacy'], 'grouponly' );
+				$user_groups = array();
+				if ( bp_is_active( 'groups' ) ) {
+
+					// Fetch public groups.
+					$public_groups = groups_get_groups(
+						array(
+							'fields'   => 'ids',
+							'status'   => 'public',
+							'per_page' => - 1,
+						)
+					);
+					if ( ! empty( $public_groups['groups'] ) ) {
+						$public_groups = $public_groups['groups'];
+					} else {
+						$public_groups = array();
+					}
+
+					$groups = groups_get_user_groups( $user_id );
+					if ( ! empty( $groups['groups'] ) ) {
+						$user_groups = $groups['groups'];
+					} else {
+						$user_groups = array();
+					}
+
+					$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
+				}
+
+				if ( ! empty( $user_groups ) ) {
+					$where_conditions_document_search['groups'] = "OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' AND " . $search_privacy . ")";
+				}
 			}
+
 		// My Groups Document Tab.
 		} elseif ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && 'groups' === $r['scope'] ) {
 			$r['privacy'] = array( 'grouponly' );
@@ -1183,7 +1238,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
+		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $where_conditions_document_search, $r, $select_sql_document, $from_sql_document, $join_sql_document );
 		$where_conditions_folder   = apply_filters( 'bp_document_get_where_conditions_folder', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
 
 		if ( empty( $where_conditions_document ) ) {
@@ -1197,7 +1252,11 @@ class BP_Document {
 		// Join the where conditions together.
 		if ( ! empty( $scope_query_document['sql'] ) && ! empty( $scope_query_folder['sql'] ) ) {
 			$where_sql_folder   = 'WHERE ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
-			$where_sql_document = 'AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
+			if ( ! empty( $where_conditions_document_search ) ) {
+				$where_sql_document = 'AND ( ' . join( ' AND ', $where_conditions_document ) . join( ' ', $where_conditions_document_search ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
+			} else {
+				$where_sql_document = 'AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
+			}
 		} else {
 			$where_sql_folder   = 'WHERE ' . join( ' AND ', $where_conditions_folder );
 			$where_sql_document = 'AND ' . join( ' AND ', $where_conditions_document );
