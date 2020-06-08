@@ -484,6 +484,8 @@ window.bp = window.bp || {};
 							if (response.success) {
 								$( document ).find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
 							} else {
+								target.find('option[value="'+ target.attr('data-privacy') +'"]').attr('selected','selected');
+								target.siblings('span' ).text( target.find('option[value="'+ target.attr('data-privacy') +'"]').text() );
 								alert( response.data.feedback );
 							}
 						}
@@ -2614,6 +2616,8 @@ window.bp = window.bp || {};
 
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).val( $( event.currentTarget ).attr( 'data-privacy') );
+
+			current_privacy.find( '.media-folder_details__bottom #bb-folder-privacy' ).attr( 'data-privacy', $( event.currentTarget ).attr( 'data-privacy') );
 
 
 			this.privacySelectorSelect = current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' );
