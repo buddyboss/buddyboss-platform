@@ -205,24 +205,29 @@ function bp_has_activities( $args = '' ) {
 		? bp_displayed_user_id()
 		: false;
 
+	// The default scope should recognize custom slugs.
+	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
+		? $bp->loaded_components[ bp_current_action() ]
+		: bp_current_action();
+
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 
 		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
+			if ( empty( $scope ) || $scope === 'all' || $scope === 'just-me' ) {
+				$privacy[] = 'onlyme';
+			}
 			$privacy[] = 'friends';
 		}
 
-		if ( ! in_array( 'friends', $privacy ) ) {
-			if ( bp_is_active( 'friends' ) && ! bp_is_group() && ! bp_is_activity_directory() ) {
-				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-				if ( $is_friend ) {
-					$privacy[] = 'friends';
-				}
-			} else if ( bp_is_active( 'friends' ) && bp_is_activity_directory() ) {
+		if ( bp_is_active( 'friends' ) && ! bp_is_group() && ! bp_is_activity_directory() ) {
+			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
+			if ( $is_friend ) {
 				$privacy[] = 'friends';
 			}
+		} else if ( bp_is_active( 'friends' ) && bp_is_activity_directory() ) {
+			$privacy[] = 'friends';
 		}
 	}
 
@@ -236,11 +241,6 @@ function bp_has_activities( $args = '' ) {
 		$primary_id  = false;
 		$show_hidden = false;
 	}
-
-	// The default scope should recognize custom slugs.
-	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
-		? $bp->loaded_components[ bp_current_action() ]
-		: bp_current_action();
 
 	// Support for permalinks on single item pages: /groups/my-group/activity/124/.
 	$include = bp_is_current_action( bp_get_activity_slug() )
