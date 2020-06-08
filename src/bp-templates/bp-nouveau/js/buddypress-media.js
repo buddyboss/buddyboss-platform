@@ -483,6 +483,8 @@ window.bp = window.bp || {};
 						success: function (response) {
 							if (response.success) {
 								$( document ).find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
+							} else {
+								alert( response.data.feedback );
 							}
 						}
 					}

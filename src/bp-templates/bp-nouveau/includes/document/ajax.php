@@ -960,10 +960,7 @@ function bp_nouveau_ajax_document_update_file_name() {
 
 		$has_access = bp_document_user_can_edit( $document_id );
 		if ( ! $has_access ) {
-			$response['feedback'] = sprintf(
-					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'You don\'t have a permission to rename the document', 'buddyboss' )
-			);
+			$response['feedback'] =  esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 
@@ -1416,13 +1413,13 @@ function bp_nouveau_ajax_document_save_privacy() {
 	if ( 'folder' === $type ) {
 		$has_access = bp_folder_user_can_edit( $id );
 		if ( ! $has_access ) {
-			$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' ) );
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 	} else {
 		$has_access = bp_document_user_can_edit( $id );
 		if ( ! $has_access ) {
-			$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' ) );
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 	}
