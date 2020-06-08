@@ -4755,7 +4755,7 @@ window.bp = window.bp || {};
 				if ( self.current_document.preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /> </div></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div></div>' );
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );

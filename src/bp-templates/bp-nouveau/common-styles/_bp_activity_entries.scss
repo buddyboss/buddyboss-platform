@@ -1272,6 +1272,7 @@ span.dashicons.dashicons-admin-file:before {
 
 			.CodeMirror {/* stylelint-disable-line */
 				height: auto;
+				border-radius: 4px;
 			}
 
 		}
@@ -1335,10 +1336,14 @@ span.dashicons.dashicons-admin-file:before {
 	.document-text-wrap {
 		border: 1px solid #e7e9ec;
 		border-width: 1px;
-		border-radius: 4px 4px 0 0;
+		border-radius: 4px;
 		margin: 0 15px 15px;
 		position: relative;
 		text-align: center;
+
+		.document-text {
+			border-radius: 3px;
+		}
 
 		&.is_large {
 
@@ -1399,10 +1404,12 @@ span.dashicons.dashicons-admin-file:before {
 		padding: 7px 15px;
 		background-color: #e7e9ec;
 		word-break: break-word;
-		margin: -15px 15px 15px;
+		margin: -18px 15px 15px;
 		border: 1px solid #e7e9ec;
 		border-width: 0 1px 1px;
 		border-radius: 0 0 4px 4px;
+		position: relative;
+		z-index: 112;
 	}
 
 }
