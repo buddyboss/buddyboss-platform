@@ -58,9 +58,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.2 =
-* Documents - Fixed some private files displaying to all users in main Documents search
-* Documents - Fixed private single activity post being accessible by direct permalink URL
-* Documents - Fixed photo and PDF file preview images showing as blank in Media Library
+* Documents - Added 'Download' link to Image and PDF file preview popups
+* Documents - Fixed search results for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed timeline of followers for content set to 'Only Me' and 'My Connections'
+* Documents - Newly added Image and PDF protected files display an icon in Media Library
 * Security - Added index.html into 'uploads/bb_documents' for enhanced file protection
 * WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
 * WC Vendors - Fixed products displayed in activity feed not showing featured image
