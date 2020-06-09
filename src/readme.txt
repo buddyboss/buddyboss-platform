@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.2 =
+* WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
+* WC Vendors - Fixed products displayed in activity feed not showing featured image
 
 = 1.4.1 =
 * Forums - Fixed attached images getting removed after editing forum replies
