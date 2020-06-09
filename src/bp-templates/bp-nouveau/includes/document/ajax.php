@@ -517,7 +517,7 @@ function bp_nouveau_ajax_document_document_save() {
 	if ( ! is_user_logged_in() ) {
 		$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'Please login to create a document.', 'buddyboss' )
+				esc_html__( 'Please login to upload a document.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
