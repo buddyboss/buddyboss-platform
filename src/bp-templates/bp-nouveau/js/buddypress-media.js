@@ -483,6 +483,12 @@ window.bp = window.bp || {};
 						success: function (response) {
 							if (response.success) {
 								$( document ).find( '#div-listing-' + itemId + ' li#' + itemId + ' a' ).attr( 'data-privacy', value );
+							} else {
+								target.find('option[value="'+ target.attr('data-privacy') +'"]').attr('selected','selected');
+								target.siblings('span' ).text( target.find('option[value="'+ target.attr('data-privacy') +'"]').text() );
+								/* jshint ignore:start */
+								alert( response.data.feedback.replace("&#039;", "'") );
+								/* jshint ignore:end */
 							}
 						}
 					}
@@ -719,6 +725,10 @@ window.bp = window.bp || {};
 								$( document ).removeClass( 'open-popup' );
 							}
 							target.closest( '.bp-media-move-file' ).find( '.ac-document-close-button' ).trigger( 'click' );
+						} else {
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace("&#039;", "'") );
+							/* jshint ignore:end */
 						}
 					}
 				}
@@ -2613,6 +2623,8 @@ window.bp = window.bp || {};
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).removeClass( 'hide' );
 			current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' ).val( $( event.currentTarget ).attr( 'data-privacy') );
 
+			current_privacy.find( '.media-folder_details__bottom #bb-folder-privacy' ).attr( 'data-privacy', $( event.currentTarget ).attr( 'data-privacy') );
+
 
 			this.privacySelectorSelect = current_privacy.find( '.media-folder_details__bottom span' ).hide().siblings( 'select' );
 			this.privacySelectorSpan = current_privacy.find( '.media-folder_details__bottom span' );
@@ -2715,7 +2727,9 @@ window.bp = window.bp || {};
 								document_edit.removeClass('submitting');
 								document_edit.parent().find('.animate-spin').remove();
 								document_edit.parent().hide().siblings('.media-folder_name').show();
-								alert( response.data.feedback );
+								/* jshint ignore:start */
+								alert( response.data.feedback.replace("&#039;", "'") );
+								/* jshint ignore:end */
 							}
 						},
 					}
@@ -3407,7 +3421,7 @@ window.bp = window.bp || {};
 			}
 
 			// remove all feedback erros from the DOM.
-			$( '.bb-single-album-header .bp-feedback' ).remove();
+			$( '#bp-media-single-album .bp-feedback' ).remove();
 			$( '#boss-media-create-album-popup .bp-feedback' ).remove();
 
 			$.ajax(
@@ -3513,6 +3527,9 @@ window.bp = window.bp || {};
 								location.reload( true );
 							}
 						} else {
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace("&#039;", "'") );
+							/* jshint ignore:end */
 						}
 					}
 				}
@@ -3559,6 +3576,9 @@ window.bp = window.bp || {};
 								location.reload( true );
 							//}
 						} else {
+							/* jshint ignore:start */
+							alert( response.data.feedback.replace("&#039;", "'") );
+							/* jshint ignore:end */
 						}
 					}
 				}
@@ -4755,7 +4775,7 @@ window.bp = window.bp || {};
 				if ( self.current_document.preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /> </div></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div></div>' );
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );

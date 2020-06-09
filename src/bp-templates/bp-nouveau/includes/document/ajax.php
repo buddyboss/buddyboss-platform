@@ -284,22 +284,24 @@ function bp_nouveau_ajax_document_get_activity() {
 		$args = array(
 			'include'     => $post_id,
 			'show_hidden' => true,
-			'privacy'     => array( 'document' ),
+			'scope'       => 'document',
 		);
 	} else {
 		if ( $group_id > 0 ) {
-			$args =
-					array(
-						'include'     => $post_id,
-						'object'      => $group_id,
-						'primary_id'  => $group_id,
-						'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
-					);
+			$args = array(
+				'include'     => $post_id,
+				'object'      => buddypress()->groups->id,
+				'primary_id'  => $group_id,
+				'privacy'     => false,
+				'scope'       => false,
+				'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
+			);
 		} else {
-			$args =
-					array(
-						'include' => $post_id,
-					);
+			$args = array(
+				'include' => $post_id,
+				'privacy' => false,
+				'scope'   => false,
+			);
 		}
 	}
 
@@ -512,6 +514,14 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'Please login to upload a document.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	if ( isset( $_POST['documents'] ) && ! empty( $_POST['documents'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
 		$documents = $_POST['documents'];
 		$folder_id  = (int) $_POST['folder_id'];
@@ -550,10 +560,7 @@ function bp_nouveau_ajax_document_document_save() {
  */
 function bp_nouveau_ajax_document_folder_save() {
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 	);
 
 	// Bail if not a POST action.
@@ -575,11 +582,13 @@ function bp_nouveau_ajax_document_folder_save() {
 	}
 
 	if ( empty( $_POST['title'] ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please enter title of folder.', 'buddyboss' )
-		);
+		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -604,6 +613,14 @@ function bp_nouveau_ajax_document_folder_save() {
 		$privacy       = $parent_folder[0]->privacy;
 	}
 
+	if ( $parent > 0 ) {
+		$has_access = bp_folder_user_can_edit( $parent );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
 	$folder_id = bp_folder_add(
 		array(
 			'id'       => $id,
@@ -615,10 +632,7 @@ function bp_nouveau_ajax_document_folder_save() {
 	);
 
 	if ( ! $folder_id ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
-		);
+		$response['feedback'] = esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -652,10 +666,7 @@ function bp_nouveau_ajax_document_folder_save() {
 
 function bp_nouveau_ajax_document_child_folder_save() {
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 	);
 
 	// Bail if not a POST action.
@@ -677,11 +688,13 @@ function bp_nouveau_ajax_document_child_folder_save() {
 	}
 
 	if ( empty( $_POST['title'] ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please enter title of folder.', 'buddyboss' )
-		);
+		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -697,6 +710,14 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		$privacy       = $parent_folder[0]->privacy;
 	}
 
+	if ( $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
 	$folder_id = bp_folder_add(
 		array(
 			'id'       => false,
@@ -708,10 +729,7 @@ function bp_nouveau_ajax_document_child_folder_save() {
 	);
 
 	if ( ! $folder_id ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
-		);
+		$response['feedback'] = esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -751,10 +769,7 @@ function bp_nouveau_ajax_document_child_folder_save() {
 function bp_nouveau_ajax_document_move() {
 
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 	);
 
 	// Bail if not a POST action.
@@ -781,6 +796,18 @@ function bp_nouveau_ajax_document_move() {
 	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
 	if ( 0 === $document_id ) {
+		wp_send_json_error( $response );
+	}
+
+	$has_access = bp_document_user_can_edit( $document_id );
+	if ( ! $has_access ) {
+		$response['feedback'] = esc_html__( 'You don\'t have a permission to move the document.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
+	$has_access = bp_folder_user_can_edit( $folder_id );
+	if ( ! $has_access ) {
+		$response['feedback'] = esc_html__( 'You don\'t have a permission to move the document.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -879,10 +906,7 @@ function bp_nouveau_ajax_document_move() {
 function bp_nouveau_ajax_document_update_file_name() {
 
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
 	);
 
 	// Bail if not a POST action.
@@ -897,6 +921,12 @@ function bp_nouveau_ajax_document_update_file_name() {
 
 	if ( 'document' === $type ) {
 		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
+			wp_send_json_error( $response );
+		}
+
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			$response['feedback'] =  esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 
@@ -921,6 +951,12 @@ function bp_nouveau_ajax_document_update_file_name() {
 		}
 	} else {
 		if ( 0 === $document_id || '' === $title ) {
+			wp_send_json_error( $response );
+		}
+
+		$has_access = bp_folder_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to rename the folder', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 
@@ -985,6 +1021,20 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
+	// save media.
+	$title    = $_POST['title'];
+	$id       = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
+	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+
+	$has_access = bp_folder_user_can_edit( $id );
+	if ( ! $has_access ) {
+		$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You don\'t have a permission to rename the folder', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	if ( ! empty( $_POST['privacy'] ) ) {
 		$privacy = $_POST['privacy'];
 	} else {
@@ -992,11 +1042,6 @@ function bp_nouveau_ajax_document_edit_folder() {
 		$folder    = new BP_Document_Folder( $folder_id );
 		$privacy   = $folder->privacy;
 	}
-
-	// save media.
-	$title    = $_POST['title'];
-	$id       = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
 	if ( $group_id > 0 ) {
 		$privacy = 'grouponly';
@@ -1168,6 +1213,15 @@ function bp_nouveau_ajax_document_folder_move() {
 	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
 	$group_id              = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
 
+	$has_access = bp_folder_user_can_edit( $folder_id );
+	if ( ! $has_access ) {
+		$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'You don\'t have a permission to move the folder.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	if ( '' === $destination_folder_id ) {
 		wp_send_json_error( $response );
 	}
@@ -1307,9 +1361,33 @@ function bp_nouveau_ajax_document_get_folder_view() {
 function bp_nouveau_ajax_document_save_privacy() {
 	global $wpdb, $bp;
 
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = esc_html__( 'Please login to edit a privacy.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	$id      = filter_input( INPUT_POST, 'itemId', FILTER_VALIDATE_INT );
 	$type    = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$privacy = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
+
+	if ( 'folder' === $type ) {
+		$has_access = bp_folder_user_can_edit( $id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	} else {
+		$has_access = bp_document_user_can_edit( $id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
+	if ( ! array_key_exists( $privacy, bp_document_get_visibility_levels() ) ) {
+		$response['feedback'] = esc_html__( 'Invalid privacy status.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
 
 	// Update document privacy with nested level.
 	bp_document_update_privacy( $id, $privacy, $type );

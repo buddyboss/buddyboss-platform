@@ -591,6 +591,10 @@ function bp_document_add_handler( $documents = array() ) {
 	global $bp_document_upload_count;
 	$document_ids = array();
 
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
 	if ( empty( $documents ) && ! empty( $_POST['document'] ) ) {
 		$documents = $_POST['document'];
 	}
@@ -2012,6 +2016,16 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		return false;
 	}
 
+	$has_access = bp_document_user_can_edit( $document_id );
+	if ( ! $has_access ) {
+		return false;
+	}
+
+	$has_access = bp_folder_user_can_edit( $folder_id );
+	if ( ! $has_access ) {
+		return false;
+	}
+
 	if ( ! $group_id ) {
 		$get_document = new BP_Document( $document_id );
 		if ( $get_document->group_id > 0 ) {
@@ -2176,6 +2190,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	global $wpdb, $bp;
 
 	if ( 0 === $document_id && '' === $title ) {
+		return false;
+	}
+
+	$has_access = bp_document_user_can_edit( $document_id );
+	if ( ! $has_access ) {
 		return false;
 	}
 
@@ -2350,6 +2369,11 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		return false;
 	}
 
+	$has_access = bp_folder_user_can_edit( $folder_id );
+	if ( ! $has_access ) {
+		return false;
+	}
+
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
 	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
@@ -2401,6 +2425,11 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 	global $wpdb, $bp;
 
 	if ( '' === $folder_id || '' === $destination_folder_id ) {
+		return false;
+	}
+
+	$has_access = bp_folder_user_can_edit( $folder_id );
+	if ( ! $has_access ) {
 		return false;
 	}
 
@@ -2510,7 +2539,17 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		return false;
 	}
 
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
 	if ( 'folder' === $type ) {
+
+		$has_access = bp_folder_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+
 		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$wpdb->query( $q );
 
@@ -2567,6 +2606,12 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 	} else {
+
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+
 		$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );
 		$wpdb->query( $document_query );
 
@@ -3033,6 +3078,30 @@ function bp_document_upload_dir( $pathdata ) {
 			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
 			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
 		}
+	}
+	return $pathdata;
+}
+
+/**
+ * Set bb_documents folder for the document upload directory.
+ *
+ * @param $pathdata
+ *
+ * @return mixed
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_upload_dir_script( $pathdata ) {
+
+	if ( empty( $pathdata['subdir'] ) ) {
+		$pathdata['path']   = $pathdata['path'] . '/bb_documents';
+		$pathdata['url']    = $pathdata['url'] . '/bb_documents';
+		$pathdata['subdir'] = '/bb_documents';
+	} else {
+		$new_subdir = '/bb_documents' . $pathdata['subdir'];
+
+		$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
 	}
 	return $pathdata;
 }

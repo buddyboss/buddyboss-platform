@@ -193,6 +193,8 @@ function bp_get_activity_directory_permalink() {
 function bp_has_activities( $args = '' ) {
 	global $activities_template;
 
+	$args = bp_parse_args( $args );
+
 	// Get BuddyPress.
 	$bp = buddypress();
 
@@ -205,42 +207,26 @@ function bp_has_activities( $args = '' ) {
 		? bp_displayed_user_id()
 		: false;
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-			$privacy[] = 'friends';
-		}
-
-		if ( ! in_array( 'friends', $privacy ) ) {
-			if ( bp_is_active( 'friends' ) && ! bp_is_group() && ! bp_is_activity_directory() ) {
-				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-				if ( $is_friend ) {
-					$privacy[] = 'friends';
-				}
-			} else if ( bp_is_active( 'friends' ) && bp_is_activity_directory() ) {
-				$privacy[] = 'friends';
-			}
-		}
-	}
+	// The default scope should recognize custom slugs.
+	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
+			? $bp->loaded_components[ bp_current_action() ]
+			: (
+			( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
+					? bp_current_action()
+					: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+			);
 
 	// Group filtering.
 	if ( bp_is_group() ) {
-		$object      = $bp->groups->id;
-		$primary_id  = bp_get_current_group_id();
-		$show_hidden = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
+		$object          = $bp->groups->id;
+		$args['privacy'] = array( 'public' );
+		$primary_id      = bp_get_current_group_id();
+		$show_hidden     = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
 	} else {
 		$object      = false;
 		$primary_id  = false;
 		$show_hidden = false;
 	}
-
-	// The default scope should recognize custom slugs.
-	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
-		? $bp->loaded_components[ bp_current_action() ]
-		: bp_current_action();
 
 	// Support for permalinks on single item pages: /groups/my-group/activity/124/.
 	$include = bp_is_current_action( bp_get_activity_slug() )
@@ -287,7 +273,7 @@ function bp_has_activities( $args = '' ) {
 			'secondary_id'      => false,        // Secondary object ID to filter on e.g. a post_id.
 			'offset'            => false,        // Return only items >= this ID.
 			'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
-			'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, media.
+			'privacy'           => false,        // privacy to filter on - public, onlyme, loggedin, friends, media.
 
 			'meta_query'        => false,        // Filter on activity meta. See WP_Meta_Query for format.
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.

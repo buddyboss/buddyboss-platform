@@ -1062,8 +1062,16 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		$attachment_url = wp_get_attachment_url( $preview_attachment_id );
+		$get_preview            = $preview_attachment_id;
+		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		if ( ! $preview_attachment_id ) {
+			$preview_attachment_id = $get_preview;
+		}
+		$document_id        = 'forbidden_' . $document_id;
+		$attachment_id      = 'forbidden_' . $preview_attachment_id;
+		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) ) {
+			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
@@ -1121,10 +1129,12 @@ function bp_document_mirror_text( $attachment_id ) {
 	if ( $text ) {
 		$mirror_text = strlen($text) > $words ? substr($text,0,$words).'...' : $text;
 	} else {
-		$image_data = file_get_contents( get_attached_file( $attachment_id ) );
-		$words 				 = 10000;
-		$mirror_text = strlen($image_data) > $words ? substr($image_data,0,$words).'...' : $image_data;
-		update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+		if ( file_exists( get_attached_file( $attachment_id ) ) ) {
+			$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
+			$words       = 10000;
+			$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
+			update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+		}
 	}
 
 	return $mirror_text;

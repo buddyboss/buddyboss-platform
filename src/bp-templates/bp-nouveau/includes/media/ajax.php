@@ -481,6 +481,14 @@ function bp_nouveau_ajax_media_album_save() {
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
+	if ( ! array_key_exists( $privacy, bp_media_get_visibility_levels() ) && ! empty( $id ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Invalid privacy status.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
 	$album_id = bp_album_add(
 		array(
 			'id'       => $id,
@@ -625,11 +633,13 @@ function bp_nouveau_ajax_media_get_activity() {
 		$args = array(
 			'include'     => $_POST['id'],
 			'show_hidden' => true,
-			'privacy'     => array( 'media' ),
+			'scope'       => 'media',
 		);
 	} else {
 		$args = array(
 			'include' => $_POST['id'],
+			'privacy' => false,
+			'scope'   => false,
 		);
 	}
 

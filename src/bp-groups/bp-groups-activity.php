@@ -320,6 +320,10 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		$groups = array( 'groups' => 0 );
 	}
 
+	if ( empty( $groups ) || empty( $groups['groups'] ) ) {
+		return $retval;
+	}
+
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
 	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
@@ -342,9 +346,13 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'compare' => 'IN',
 				'value'   => (array) $groups['groups'],
 			),
+			array(
+				'column'  => 'privacy',
+				'compare' => '=',
+				'value'   => 'public',
+			),
 		),
 		$show_hidden,
-
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),

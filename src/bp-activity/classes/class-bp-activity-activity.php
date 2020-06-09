@@ -534,9 +534,11 @@ class BP_Activity_Activity {
 		}
 
 		// The filter activities by their privacy
-		if ( ! empty( $r['privacy'] ) && empty( $r['in'] ) ) {
+		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "a.privacy IN ({$privacy})";
+		} else if( ! bp_loggedin_user_id() ) {
+			$where_conditions['privacy'] = "a.privacy = 'public'";
 		}
 
 		// Process meta_query into SQL.

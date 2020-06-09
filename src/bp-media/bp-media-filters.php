@@ -1198,3 +1198,31 @@ function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
 	}
 
 }
+
+/**
+ * Set up activity arguments for use with the 'media' scope.
+ *
+ * @since BuddyBoss 1.4.2
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array $retval
+ */
+function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) {
+
+	$retval = array(
+		'relation' => 'AND',
+		array(
+				'column'  => 'privacy',
+				'value'   => array( 'media' ),
+				'compare' => 'IN',
+		),
+		array(
+				'column' => 'hide_sitewide',
+				'value'  => 1,
+		),
+	);
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_media_scope_args', 'bp_activity_filter_media_scope', 10, 2 );
