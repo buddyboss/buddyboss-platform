@@ -282,7 +282,7 @@ function bp_nouveau_ajax_document_get_activity() {
 
 	if ( ! empty( $document_activity ) ) {
 		$args = array(
-			'include'     => $_POST['id'],
+			'include'     => $post_id,
 			'show_hidden' => true,
 			'scope'       => 'document',
 		);
@@ -290,7 +290,7 @@ function bp_nouveau_ajax_document_get_activity() {
 		if ( $group_id > 0 ) {
 			$args = array(
 				'include'     => $post_id,
-				'object'      => $group_id,
+				'object'      => buddypress()->groups->id,
 				'primary_id'  => $group_id,
 				'privacy'     => false,
 				'scope'       => false,
