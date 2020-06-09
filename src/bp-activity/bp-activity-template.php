@@ -213,9 +213,19 @@ function bp_has_activities( $args = '' ) {
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-
 		if ( bp_is_my_profile() ) {
-			if ( empty( $scope ) || $scope === 'all' || $scope === 'just-me' ) {
+			if ( bp_is_activity_tabs_active() ) {
+				if ( empty( $scope ) ) {
+					$privacy[] = 'onlyme';
+				} elseif ( $scope === 'all' || $scope === 'just-me' ) {
+					$privacy[] = 'onlyme';
+				} else {
+					$scope = explode( ',', $scope );
+					if ( is_array( $scope ) && ! empty( $scope ) && ( ! in_array( 'following', $scope ) && ! in_array( 'friends', $scope ) ) ) {
+						$privacy[] = 'onlyme';
+					}
+				}
+			} else {
 				$privacy[] = 'onlyme';
 			}
 			$privacy[] = 'friends';
