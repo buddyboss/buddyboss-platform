@@ -76,7 +76,7 @@
 							<a href="{{data.document[i].url}}" target="_blank" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
 								<i class="{{data.document[i].svg_icon}}" ></i>
 							</a>
-							<a href="{{data.document[i].url}}" target="_blank" class="document-detail-wrap">
+							<a href="{{data.document[i].url}}" class="document-detail-wrap">
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
 								{{{data.document[i].extension_description}}}
