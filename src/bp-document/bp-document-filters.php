@@ -1243,3 +1243,30 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
 
 	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
 }
+
+/**
+ * Set up activity arguments for use with the 'document' scope.
+ *
+ * @since BuddyBoss 1.4.2
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array $retval
+ */
+function bp_activity_filter_document_scope( $retval = array(), $filter = array() ) {
+	$retval = array(
+			'relation' => 'AND',
+			array(
+					'column'  => 'privacy',
+					'value'   => array( 'document' ),
+					'compare' => 'IN',
+			),
+			array(
+					'column' => 'hide_sitewide',
+					'value'  => 1,
+			),
+	);
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_document_scope_args', 'bp_activity_filter_document_scope', 10, 2 );

@@ -408,6 +408,8 @@ function bp_nouveau_ajax_new_activity_comment() {
 		wp_send_json_error( $response );
 	}
 
+	$activity = new BP_Activity_Activity( $comment_id );
+
 	// Load the new activity item into the $activities_template global.
 	bp_has_activities(
 		array(
@@ -415,6 +417,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'hide_spam'        => false,
 			'show_hidden'      => true,
 			'include'          => $comment_id,
+			'scope'            => $activity->privacy . ',just-me',
 		)
 	);
 

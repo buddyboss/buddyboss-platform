@@ -2084,6 +2084,7 @@ function bp_activity_get_specific( $args = '' ) {
 			'privacy'           => false,      // privacy of activity.
 			'sort'              => 'DESC',     // Sort ASC or DESC
 			'spam'              => 'ham_only', // Retrieve items marked as spam.
+			'scope'             => false, // Retrieve items marked as spam.
 			'update_meta_cache' => true,
 		),
 		'activity_get_specific'
@@ -2099,6 +2100,7 @@ function bp_activity_get_specific( $args = '' ) {
 		'privacy'           => $r['privacy'],
 		'sort'              => $r['sort'],
 		'spam'              => $r['spam'],
+		'scope'             => $r['scope'],
 		'update_meta_cache' => $r['update_meta_cache'],
 	);
 

@@ -701,20 +701,13 @@ function bp_activity_newest_class( $classes = '' ) {
  */
 function bp_activity_display_all_types_on_just_me( $args ) {
 
-	if ( bp_is_activity_tabs_active() ) {
+	if ( empty( $args['scope'] ) || 'all' !== $args['scope'] || ! bp_loggedin_user_id() ) {
 		return $args;
 	}
 
-	if ( ! isset( $args['scope'] ) ) {
-		return $args;
-	}
-
-	if ( ! $args['scope'] ) {
-		return $args;
-	}
-
-	// fallback
-	if ( 'just-me' !== $args['scope'] ) {
+	if ( bp_is_user() && 'all' === $args['scope'] && empty( bp_current_action() ) ) {
+		$scope = array( 'just-me' );
+		$args['scope'] = implode( ',', $scope );
 		return $args;
 	}
 
@@ -722,13 +715,16 @@ function bp_activity_display_all_types_on_just_me( $args ) {
 	if ( bp_activity_do_mentions() ) {
 		$scope[] = 'mentions';
 	}
-	if ( bp_is_active( 'friends' ) && bp_is_my_profile() ) {
+
+	if ( bp_is_active( 'friends' ) ) {
 		$scope[] = 'friends';
 	}
-	if ( bp_is_active( 'groups' ) && bp_is_my_profile() ) {
+
+	if ( bp_is_active( 'groups' ) ) {
 		$scope[] = 'groups';
 	}
-	if ( bp_is_activity_follow_active() && bp_is_my_profile() ) {
+
+	if ( bp_is_activity_follow_active() ) {
 		$scope[] = 'following';
 	}
 
@@ -918,17 +914,34 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		);
 	}
 
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		if ( bp_is_active( 'friends' ) ) {
+			$privacy[] = 'friends';
+		}
+
+		if ( $user_id === bp_loggedin_user_id() ) {
+			$privacy[] = 'onlyme';
+		}
+	}
+
 	$retval = array(
 		'relation' => 'AND',
 		array(
 			'column' => 'user_id',
 			'value'  => $user_id,
 		),
+		array(
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN',
+		),
 		$show_hidden,
 
 		// Overrides.
 		'override' => array(
-			'display_comments' => bp_show_streamed_activity_comment() ? 'stream' : 'threaded',
+			//'display_comments' => bp_show_streamed_activity_comment() ? 'stream' : 'threaded',
 			'filter'           => array( 'user_id' => 0 ),
 			'show_hidden'      => true,
 		),
@@ -984,7 +997,6 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 
 		// Overrides.
 		'override' => array(
-			'display_comments' => true,
 			'filter'           => array( 'user_id' => 0 ),
 			'show_hidden'      => true,
 		),
@@ -1020,13 +1032,97 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 			: bp_loggedin_user_id();
 	}
 
-	// Should we show all items regardless of sitewide visibility?
-	$show_hidden = array();
-	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
-		$show_hidden = array(
-			'column' => 'hide_sitewide',
-			'value'  => 0,
+	$privacy = array( 'public' );
+	$friends = array();
+	$user_groups  = array();
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_active( 'friends' ) && $user_id ) {
+			// Determine friends of user.
+			$friends = friends_get_friend_user_ids( $user_id );
+		}
+
+		if ( bp_is_active( 'groups' ) ) {
+
+			// Fetch public groups.
+			$public_groups = groups_get_groups(
+				array(
+					'fields'   => 'ids',
+					'status'   => 'public',
+					'per_page' => - 1,
+				)
+			);
+			if ( ! empty( $public_groups['groups'] ) ) {
+				$public_groups = $public_groups['groups'];
+			} else {
+				$public_groups = array();
+			}
+
+			$groups = groups_get_user_groups( $user_id );
+			if ( ! empty( $groups['groups'] ) ) {
+				$user_groups = $groups['groups'];
+			} else {
+				$user_groups = array();
+			}
+
+			$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
+		}
+	}
+
+	$privacy_scope = array();
+	if ( ! empty( $friends ) ) {
+		$privacy_scope[] = array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'user_id',
+				'compare' => 'IN',
+				'value'   => (array) $friends,
+			),
+			array(
+				'column'  => 'privacy',
+				'compare' => '=',
+				'value'   => 'friends',
+			),
 		);
+	}
+
+	if ( ! empty( $user_groups ) ) {
+		$privacy_scope[] = array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'item_id',
+				'compare' => 'IN',
+				'value'   => $user_groups,
+			),
+			array(
+				'column' => 'component',
+				'value'  => buddypress()->groups->id,
+			),
+			array(
+				'column'  => 'privacy',
+				'compare' => '=',
+				'value'   => 'public',
+			),
+		);
+	}
+
+	$privacy_scope[] = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy,
+		),
+		array(
+			'column'  => 'component',
+			'compare' => '!=',
+			'value'   => 'groups',
+		),
+	);
+
+	if ( ! empty( $privacy_scope ) && count( $privacy_scope ) > 1 ) {
+		$privacy_scope['relation'] = 'OR';
 	}
 
 	$retval = array(
@@ -1038,14 +1134,13 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 			// Start search at @ symbol and stop search at closing tag delimiter.
 			'value'   => '@' . bp_activity_get_user_mentionname( $user_id ) . '<',
 		),
-		$show_hidden,
-
 		// Overrides.
 		'override' => array(
-			'display_comments' => bp_show_streamed_activity_comment() ? 'stream' : 'threaded',
+			//'display_comments' => bp_show_streamed_activity_comment() ? 'stream' : 'threaded',
 			'filter'           => array( 'user_id' => 0 ),
 			'show_hidden'      => true,
 		),
+		$privacy_scope
 	);
 
 	return $retval;
@@ -1123,17 +1218,54 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 			'user_id' => $user_id,
 		)
 	);
+
 	if ( empty( $following_ids ) ) {
-		$following_ids = array( 0 );
+		return $retval;
 	}
 
-	$retval = array(
+	$privacy = array( 'public', 'loggedin' );
+	$friends_follow = array();
+	if ( bp_is_active( 'friends' ) && $user_id ) {
+		// Determine friends of user.
+		$friends = friends_get_friend_user_ids( $user_id );
+		if ( ! empty( $friends ) ) {
+			$friends_follow[] = array(
+				'relation' => 'AND',
+				array(
+					'column'  => 'user_id',
+					'compare' => 'IN',
+					'value'   => (array) $friends,
+				),
+				array(
+					'column'  => 'privacy',
+					'compare' => '=',
+					'value'   => 'friends',
+				),
+			);
+		}
+	}
+
+	$friends_follow[] = array(
 		'relation' => 'AND',
 		array(
 			'column'  => 'user_id',
 			'compare' => 'IN',
 			'value'   => (array) $following_ids,
 		),
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => (array) $privacy,
+		),
+	);
+
+	if ( ! empty( $friends_follow ) && count( $friends_follow ) > 1 ) {
+		$friends_follow['relation'] = 'OR';
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		$friends_follow,
 
 		// we should only be able to view sitewide activity content for those the user
 		// is following.

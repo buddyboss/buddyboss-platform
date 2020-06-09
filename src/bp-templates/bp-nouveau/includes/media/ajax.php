@@ -633,12 +633,13 @@ function bp_nouveau_ajax_media_get_activity() {
 		$args = array(
 			'include'     => $_POST['id'],
 			'show_hidden' => true,
-			'privacy'     => array( 'media' ),
+			'scope'       => 'media',
 		);
 	} else {
 		$args = array(
 			'include' => $_POST['id'],
 			'privacy' => false,
+			'scope'   => false,
 		);
 	}
 

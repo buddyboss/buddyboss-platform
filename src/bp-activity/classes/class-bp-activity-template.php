@@ -211,6 +211,7 @@ class BP_Activity_Template {
 					'privacy'           => $privacy,
 					'show_hidden'       => $show_hidden,
 					'spam'              => $spam,
+					'scope'             => $scope,
 					'update_meta_cache' => $update_meta_cache,
 				)
 			);
