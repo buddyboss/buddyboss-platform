@@ -317,7 +317,20 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	// Determine groups of user.
 	$groups = groups_get_user_groups( $user_id );
 	if ( empty( $groups['groups'] ) ) {
+		$groups = array( 'groups' => 0 );
+	}
+
+	if ( empty( $groups ) || empty( $groups['groups'] ) ) {
 		return $retval;
+	}
+
+	// Should we show all items regardless of sitewide visibility?
+	$show_hidden = array();
+	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
+		$show_hidden = array(
+			'column' => 'hide_sitewide',
+			'value'  => 0,
+		);
 	}
 
 	$retval = array(
@@ -339,6 +352,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'value'   => 'public',
 			),
 		),
+		$show_hidden,
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),

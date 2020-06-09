@@ -537,6 +537,8 @@ class BP_Activity_Activity {
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "a.privacy IN ({$privacy})";
+		} else if( ! bp_loggedin_user_id() ) {
+			$where_conditions['privacy'] = "a.privacy = 'public'";
 		}
 
 		// Process meta_query into SQL.
@@ -680,6 +682,8 @@ class BP_Activity_Activity {
 		} else {
 			// Query first for activity IDs.
 			$activity_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, a.id {$sort}";
+
+			error_log( $activity_ids_sql );
 
 			if ( ! empty( $per_page ) && ! empty( $page ) ) {
 				// We query for $per_page + 1 items in order to
