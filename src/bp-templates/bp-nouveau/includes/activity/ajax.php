@@ -417,7 +417,8 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'hide_spam'        => false,
 			'show_hidden'      => true,
 			'include'          => $comment_id,
-			'scope'            => $activity->privacy . ',just-me',
+			'privacy'          => (array) $activity->privacy,
+			'scope'            => false,
 		)
 	);
 
