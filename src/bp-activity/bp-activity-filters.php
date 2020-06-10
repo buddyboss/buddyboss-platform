@@ -113,7 +113,7 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
-// add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
+add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 
 /* Actions *******************************************************************/
 
@@ -1376,7 +1376,7 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	if ( ! empty( $activities->activities ) ) {
 		foreach ( $activities->activities as $key => $activity ) {
 
-			if ( 'friends' == $activity->privacy ) {
+			if ( 'friends' == $activity->privacy && $activity->user_id !== bp_loggedin_user_id() ) {
 
 				$remove_from_stream = false;
 				$is_friend          = friends_check_friendship( bp_loggedin_user_id(), $activity->user_id );
