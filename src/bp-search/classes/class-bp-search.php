@@ -471,6 +471,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 				$sql_queries = array();
 
+				if ( empty( $this->searchable_items ) && ! is_array( $this->searchable_items ) ) {
+					return;
+				}
+
 				foreach ( $this->searchable_items as $search_type ) {
 					if ( ! isset( $this->search_helpers[ $search_type ] ) ) {
 						continue;
@@ -847,6 +851,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 			// then other tabs.
 			$search_items = bp_search_items();
+
+			if ( empty( $this->searchable_items ) && ! is_array( $this->searchable_items ) ) {
+				return;
+			}
+
 			foreach ( $this->searchable_items as $item ) {
 				$class = $item == $this->search_args['search_subset'] ? 'active current' : '';
 				// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
