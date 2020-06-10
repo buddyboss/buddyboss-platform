@@ -297,6 +297,11 @@ window.bp = window.bp || {};
 				this.editGifPreview();
 			}
 
+			// Open edit folder popup if user redirected from activity edit folder privacy
+			if( window.location.hash == '#openEditFolder' && $('#bp-media-edit-child-folder').length ) {
+				$('#bp-media-edit-child-folder').show();
+			}
+
 		},
 
 		resetPageDocumentDirectory: function( event ) {
