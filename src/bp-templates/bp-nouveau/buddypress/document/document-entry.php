@@ -257,9 +257,28 @@ if ( wp_is_mobile() ) {
 							&& 0 === $group_id
 							&& 0 === bp_get_document_parent_id()
 						) {
+							$url = '#';
+							$child_activity = '';
+							$text = esc_html__( 'Edit Privacy', 'buddyboss' );
+							$class = 'ac-document-privacy';
+							$li_class = '';
+							if ( 'document' === $document_type ) {
+								$child_activity = get_post_meta( $attachment_id, 'bp_document_activity_id', true );
+								if ( $child_activity ) {
+									$parent_activity_id        = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+									$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+									if ( $parent_activity_permalink ) {
+										$text 		= esc_html__( 'Edit Post Privacy', 'buddyboss' );
+										$url		= $parent_activity_permalink;
+										$class		= '';
+										$li_class 	= 'redirect-activity-privacy-change';
+									}
+
+								}
+							}
 							?>
-							<li class="privacy_file" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
-								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
+							<li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
+								<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
 							</li>
 							<?php
 						}

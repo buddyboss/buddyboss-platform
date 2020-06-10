@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-10 00:54:29+00:00\n"
+"POT-Creation-Date: 2020-06-10 06:05:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -955,7 +955,7 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:15
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:137
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:274
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:293
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -8270,11 +8270,11 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1017
+#: bp-document/bp-document-filters.php:1012
 msgid "File not found"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1034
+#: bp-document/bp-document-filters.php:1029
 msgid "Go to document"
 msgstr ""
 
@@ -12814,7 +12814,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:27
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:133
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:271
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:290
 msgid "Move"
 msgstr ""
 
@@ -13267,7 +13267,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:268
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:287
 msgid "Rename"
 msgstr ""
 
@@ -20299,17 +20299,17 @@ msgstr ""
 msgid "Nothing found for '%s'"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:579
+#: bp-search/classes/class-bp-search.php:583
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:595
+#: bp-search/classes/class-bp-search.php:599
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:838
+#: bp-search/classes/class-bp-search.php:842
 msgid "All Results"
 msgstr ""
 
@@ -21015,6 +21015,12 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:262
 msgid "Edit Privacy"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:271
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1152
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1167
+msgid "Edit Post Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:36
@@ -21918,11 +21924,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1149
 msgid "Edit Album Privacy"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1152
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1167
-msgid "Edit Post Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1164

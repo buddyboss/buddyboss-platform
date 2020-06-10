@@ -4104,6 +4104,9 @@ window.bp = window.bp || {};
 			if ($( event.currentTarget ).parent().hasClass( 'copy_download_file_url' )) {
 				return;
 			}
+			if ($( event.currentTarget ).parent().hasClass( 'redirect-activity-privacy-change' )) {
+				return;
+			}
 
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.media-folder_items' ).toggleClass( 'is-visible' ).siblings( '.media-folder_items' ).removeClass( 'is-visible' );
