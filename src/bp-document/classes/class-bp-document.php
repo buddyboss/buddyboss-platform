@@ -2567,8 +2567,8 @@ class BP_Document {
 						}
 					}
 					if ( $meta ) {
-						$upload_dir = wp_upload_dir();
-
+						$upload_dir     = wp_upload_dir();
+						$preview_folder = '';
 						$output_file     = wp_get_attachment_image_url( $id, 'full' );
 						$output_file_src = bp_document_scaled_image_path( $id );
 
