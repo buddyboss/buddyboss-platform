@@ -25,7 +25,7 @@ if ( isset( $explode_arr ) && !empty( $explode_arr ) && isset( $explode_arr[1] )
 	$id1                = (int) $explode_arr1[1];
 	$document_privacy   = bp_document_user_can_manage_document( $id1, bp_loggedin_user_id() );
 	$can_view           = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
-	if ( $can_view ) {
+	if ( $can_view && wp_attachment_is_image( $id ) ) {
 		$type = get_post_mime_type( $id );
 		$output_file_src = bp_document_scaled_image_path( $id );
 		header("Content-Type: $type");
