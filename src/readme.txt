@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Documents - Added 'Download' link to Image and PDF file preview popups
 * Documents - Fixed search results for content set to 'Only Me' and 'My Connections'
 * Documents - Fixed timeline of followers for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed content set to 'Only Me' being hidden from my sitewide activity feed
 * Documents - Newly added Image and PDF protected files display an icon in Media Library
 * Security - Added index.html into 'uploads/bb_documents' for enhanced file protection
 * WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
