@@ -2702,11 +2702,16 @@ window.bp = window.bp || {};
 						}
 					);
 					content = bp.Nouveau.Messages.mediumEditor.getContent();
+					content = content.replace(/&nbsp;/g,'').trim();
 					jQuery( '#message_content' ).addClass( 'loading' );
 				}
 
 				// check message content empty.
 				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+					errors.push( 'message_content' );
+				}
+
+				if(jQuery(content).text().trim() == "") {
 					errors.push( 'message_content' );
 				}
 
