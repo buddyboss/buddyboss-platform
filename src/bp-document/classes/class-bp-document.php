@@ -2630,6 +2630,7 @@ class BP_Document {
 							update_post_meta( $id, 'document_preview_generated', 'yes' );
 							update_post_meta( $id, 'document_preview_attachment_id', $preview_attachment_id );
 							bp_document_update_meta( $document_id, 'preview_attachment_id', $preview_attachment_id );
+							BP_Document::bp_document_remove_temp_directory( $preview_folder );
 							remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 						}
 					}
