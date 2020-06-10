@@ -150,9 +150,6 @@ class BP_Document {
 		// Instantiate errors object.
 		$this->errors = new WP_Error();
 
-		// Add always in case of front-end use.
-		add_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
-
 		if ( ! empty( $id ) ) {
 			$this->id = (int) $id;
 			$this->populate();
@@ -2487,7 +2484,9 @@ class BP_Document {
 		bp_document_update_meta( $this->id, 'preview_attachment_id', $preview_attachment_id );
 
 		if ( ! $pdf_preview ) {
+			add_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
 			self::bp_document_pdf_previews( array( $attachment_id ), true, $this->id );
+			remove_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
 		}
 
 		// Update folder modified date.
@@ -2527,6 +2526,7 @@ class BP_Document {
 		$cnt                    = $num_updates = $num_fails = $time = 0;
 		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
 		if ( $ids && ! $preview_attachment_id ) {
+			add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 			$time = microtime( true );
 			$cnt = count( $ids );
 			self::bp_document_set_time_limit( max( $cnt * self::$per_pdf_secs, self::$min_time_limit ) );
@@ -2573,7 +2573,6 @@ class BP_Document {
 						$output_file_src = bp_document_scaled_image_path( $id );
 
 						if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
-							add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 							$upload_dir = $upload_dir['basedir'];
 
 							// Create temp folder.
@@ -2631,11 +2630,11 @@ class BP_Document {
 							update_post_meta( $id, 'document_preview_attachment_id', $preview_attachment_id );
 							bp_document_update_meta( $document_id, 'preview_attachment_id', $preview_attachment_id );
 							BP_Document::bp_document_remove_temp_directory( $preview_folder );
-							remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 						}
 					}
 				}
 			}
+			remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 			$time = round( microtime( true ) - $time, self::$timing_dec_places );
 		}
 		return array( $cnt, $num_updates, $num_fails, $time );
