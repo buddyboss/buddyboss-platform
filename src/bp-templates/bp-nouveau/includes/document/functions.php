@@ -97,9 +97,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	);
 
 	$document_options = array(
-		'dictInvalidFileType' => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'max_upload_size'     => bp_document_file_upload_max_size( false, 'MB' ),
-		'maxFiles'            => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'max_upload_size'           => bp_document_file_upload_max_size( false, 'MB' ),
+		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
 
 	$params['document'] = $document_options;
@@ -1138,4 +1139,29 @@ function bp_document_mirror_text( $attachment_id ) {
 	}
 
 	return $mirror_text;
+}
+
+/**
+ * Return the audio url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $preview_attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.0
+ */
+function bp_document_get_preview_audio_url( $document_id, $extension, $attachment_id ) {
+	$attachment_url = '';
+
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+		$document_id        = 'forbidden_' . $document_id;
+		$attachment_id      = 'forbidden_' . $attachment_id;
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) ) {
+			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
+	}
+
+	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
 }
