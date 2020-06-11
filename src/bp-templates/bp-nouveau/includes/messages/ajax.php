@@ -472,11 +472,10 @@ function bp_nouveau_ajax_messages_send_reply() {
 				ob_start();
 
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 					?>
 					<div class="document-audio-wrap">
 						<audio controls>
-							<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+							<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
 							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 						</audio>
 					</div>
@@ -1998,11 +1997,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					ob_start();
 
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 						?>
 						<div class="document-audio-wrap">
 							<audio controls>
-								<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+								<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
 								<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 							</audio>
 						</div>

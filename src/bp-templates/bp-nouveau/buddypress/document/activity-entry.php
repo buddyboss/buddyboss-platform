@@ -63,10 +63,6 @@ $bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
 $bp_document_text_preview  = apply_filters( 'bp_document_text_preview', true );
 $bp_document_image_preview = apply_filters( 'bp_document_image_preview', true );
 
-$audio_url = '';
-if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) && $bp_document_music_preview ) {
-	$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
-}
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php bp_document_id(); ?> <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" >
@@ -83,7 +79,6 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 				data-author="<?php bp_document_user_id(); ?>"
 				data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
 				data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
-				data-mp3-preview="<?php echo $audio_url ? esc_url( $audio_url ) : ''; ?>"
 				data-album-id="<?php bp_document_folder_id(); ?>"
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"
@@ -103,7 +98,6 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 				data-author="<?php bp_document_user_id(); ?>"
 				data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
 				data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
-				data-mp3-preview="<?php echo $audio_url ? esc_url( $audio_url ) : ''; ?>"
 				data-album-id="<?php bp_document_folder_id(); ?>"
 				data-group-id="<?php bp_document_group_id(); ?>"
 				data-document-title="<?php echo esc_html( $filename ); ?>"
@@ -152,7 +146,7 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 		?>
 		<div class="document-audio-wrap">
 			<audio controls>
-				<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+				<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
 				<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 			</audio>
 		</div>
