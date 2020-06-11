@@ -320,10 +320,6 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		$groups = array( 'groups' => 0 );
 	}
 
-	if ( empty( $groups ) || empty( $groups['groups'] ) ) {
-		return $retval;
-	}
-
 	$groups = $groups['groups'];
 
 	// Should we show all items regardless of sitewide visibility?
