@@ -329,7 +329,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 15200;
+		$this->db_version = 15800;
 
 		/** Loading */
 
@@ -554,6 +554,7 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
+		require $this->plugin_dir . 'bp-core/bp-core-rest-api.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -575,10 +576,10 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddypress/3.0.php';
 
 			// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php' );
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -615,6 +616,7 @@ class BuddyPress {
 			'forums',
 			'search',
 			'media',
+			'document',
 			'gdpr',
 			'invites',
 		);
@@ -646,6 +648,8 @@ class BuddyPress {
 			'BP_Walker_Category_Checklist'    => 'core',
 			'BP_Walker_Nav_Menu_Checklist'    => 'core',
 			'BP_Walker_Nav_Menu'              => 'core',
+			'BP_Invitation_Manager'           => 'core',
+			'BP_Invitation'                   => 'core',
 			'BP_Core_Gdpr'                    => 'gdpr',
 			'BP_Activity_Export'              => 'gdpr',
 			'BP_Export'                       => 'gdpr',
@@ -672,6 +676,55 @@ class BuddyPress {
 			'BP_Registration_Theme_Compat'    => 'members',
 			'BP_Signup'                       => 'members',
 			'BP_BuddyBoss_Platform_Updater'   => 'core',
+
+			// BuddyBoss Platform Rest API classes.
+			'BP_REST_Components_Endpoint'                  => 'core',
+			'BP_REST_Attachments'                          => 'core',
+			'BP_REST_Settings_Endpoint'                    => 'core',
+			'BP_REST_Mention_Endpoint'                     => 'core',
+			'BP_REST_Members_Endpoint'                     => 'members',
+			'BP_REST_Members_Actions_Endpoint'             => 'members',
+			'BP_REST_Members_Details_Endpoint'             => 'members',
+			'BP_REST_Attachments_Member_Avatar_Endpoint'   => 'members',
+			'BP_REST_Attachments_Member_Cover_Endpoint'    => 'members',
+			'BP_REST_Signup_Endpoint'                      => 'members',
+			'BP_REST_Media_Endpoint'                       => 'media',
+			'BP_REST_Media_Albums_Endpoint'                => 'media',
+			'BP_REST_Activity_Endpoint'                    => 'activity',
+			'BP_REST_Activity_Comment_Endpoint'            => 'activity',
+			'BP_REST_Activity_Details_Endpoint'            => 'activity',
+			'BP_REST_Activity_Link_Preview_Endpoint'       => 'activity',
+			'BP_REST_Blogs_Endpoint'                       => 'blogs',
+			'BP_REST_Attachments_Blog_Avatar_Endpoint'     => 'blogs',
+			'BP_REST_XProfile_Fields_Endpoint'             => 'xprofile',
+			'BP_REST_XProfile_Field_Groups_Endpoint'       => 'xprofile',
+			'BP_REST_XProfile_Data_Endpoint'               => 'xprofile',
+			'BP_REST_XProfile_Update_Endpoint'             => 'xprofile',
+			'BP_REST_XProfile_Repeater_Endpoint'           => 'xprofile',
+			'BP_REST_XProfile_Search_Form_Fields_Endpoint' => 'xprofile',
+			'BP_REST_XProfile_Types_Endpoint'              => 'xprofile',
+			'BP_REST_Groups_Endpoint'                      => 'groups',
+			'BP_REST_Groups_Details_Endpoint'              => 'groups',
+			'BP_REST_Group_Membership_Endpoint'            => 'groups',
+			'BP_REST_Group_Invites_Endpoint'               => 'groups',
+			'BP_REST_Group_Membership_Request_Endpoint'    => 'groups',
+			'BP_REST_Group_Settings_Endpoint'              => 'groups',
+			'BP_REST_Groups_Types_Endpoint'                => 'groups',
+			'BP_REST_Attachments_Group_Avatar_Endpoint'    => 'groups',
+			'BP_REST_Attachments_Group_Cover_Endpoint'     => 'groups',
+			'BP_REST_Messages_Endpoint'                    => 'messages',
+			'BP_REST_Group_Messages_Endpoint'              => 'messages',
+			'BP_REST_Messages_Actions_Endpoint'            => 'messages',
+			'BP_REST_Notifications_Endpoint'               => 'notifications',
+			'BP_REST_Friends_Endpoint'                     => 'friends',
+			'BP_REST_Forums_Endpoint'                      => 'forums',
+			'BP_REST_Topics_Endpoint'                      => 'forums',
+			'BP_REST_Topics_Actions_Endpoint'              => 'forums',
+			'BP_REST_Reply_Endpoint'                       => 'forums',
+			'BP_REST_Reply_Actions_Endpoint'               => 'forums',
+			'BP_REST_Invites_Endpoint'                     => 'invites',
+			'BP_REST_Account_Settings_Endpoint'            => 'settings',
+			'BP_REST_Account_Settings_Options_Endpoint'    => 'settings',
 		);
 
 		$component = null;
@@ -691,7 +744,9 @@ class BuddyPress {
 
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
-		if ( 'gdpr' === $component ) {
+		if ( 'bp-rest-attachments' === $class ) {
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-attachments.php";
+		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} else {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";

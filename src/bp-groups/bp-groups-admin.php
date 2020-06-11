@@ -285,7 +285,7 @@ function bp_groups_admin_load() {
 
 		// If the group doesn't exist, just redirect back to the index.
 		if ( empty( $group->slug ) ) {
-			wp_redirect( $redirect_to );
+			wp_safe_redirect( $redirect_to );
 			exit;
 		}
 
@@ -364,6 +364,16 @@ function bp_groups_admin_load() {
 		$media_status         = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
 
 		/**
+		 * Filters the allowed media status values for the group.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of allowed media statuses.
+		 */
+		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
+		$document_status         = in_array( $_POST['group-document-status'], (array) $allowed_document_status ) ? $_POST['group-document-status'] : 'members';
+
+		/**
 		 * Filters the allowed album status values for the group.
 		 *
 		 * @since BuddyBoss 1.0.0
@@ -373,7 +383,17 @@ function bp_groups_admin_load() {
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
 		$album_status         = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
-		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $album_status, $message_status ) ) {
+		/**
+		 * Filters the allowed album status values for the group.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of allowed album statuses.
+		 */
+		$allowed_message_status = apply_filters( 'groups_allowed_group_message_status', array( 'members', 'mods', 'admins' ) );
+		$message_status         = in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'members';
+
+		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $document_status, $album_status, $message_status ) ) {
 			$error = $group_id;
 		}
 
@@ -531,12 +551,12 @@ function bp_groups_admin_load() {
 		 *
 		 * @param string $redirect_to URL to redirect user to.
 		 */
-		wp_redirect( apply_filters( 'bp_group_admin_edit_redirect', $redirect_to ) );
+		wp_safe_redirect( apply_filters( 'bp_group_admin_edit_redirect', $redirect_to ) );
 		exit;
 
 		// If a referrer and a nonce is supplied, but no action, redirect back.
 	} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
-		wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
+		wp_safe_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
 		exit;
 	}
 }
@@ -693,8 +713,7 @@ function bp_groups_admin_edit() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -716,8 +735,7 @@ function bp_groups_admin_edit() {
 								'page'   => 'bp-groups',
 								'create' => 'create-from-admin',
 								'action' => 'edit',
-							),
-							admin_url( 'admin.php' )
+							), bp_get_admin_url( 'admin.php' )
 						)
 					);
 					?>
@@ -949,8 +967,7 @@ function bp_process_create_group_admin() {
 				'page'   => 'bp-groups',
 				'gid'    => $new_group_id,
 				'action' => 'edit',
-			),
-			admin_url( 'admin.php' )
+			), bp_get_admin_url( 'admin.php' )
 		)
 	);
 	exit();
@@ -1093,8 +1110,7 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1121,8 +1137,7 @@ function bp_groups_admin_index() {
 							'page'   => 'bp-groups',
 							'create' => 'create-from-admin',
 							'action' => 'edit',
-						),
-						admin_url( 'admin.php' )
+						), bp_get_admin_url( 'admin.php' )
 					)
 				);
 				?>
@@ -1168,6 +1183,8 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	$activity_feed_status = bp_group_get_activity_feed_status( $item->id );
 	$media_status         = bp_group_get_media_status( $item->id );
 	$album_status         = bp_group_get_album_status( $item->id );
+	$document_status      = bp_group_get_document_status( $item->id );
+	$message_status       = bp_group_get_message_status( $item->id );
 	?>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
@@ -1203,7 +1220,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
 			<fieldset>
-				<legend><?php _e( 'Who can manage media in this group?', 'buddyboss' ); ?></legend>
+				<legend><?php _e( 'Who can manage photos in this group?', 'buddyboss' ); ?></legend>
 
 				<label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
 				<label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
@@ -1220,6 +1237,30 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 				<label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
 				<label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
 				<label for="bp-group-album-status-admins"><input type="radio" name="group-album-status" id="bp-group-album-status-admins" value="admins" <?php checked( $album_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) : ?>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-document-status">
+			<fieldset>
+				<legend><?php _e( 'Who can manage documents in this group?', 'buddyboss' ); ?></legend>
+
+				<label for="bp-group-document-status-members"><input type="radio" name="group-document-status" id="bp-group-document-status-members" value="members" <?php checked( $document_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-document-status-mods"><input type="radio" name="group-document-status" id="bp-group-document-status-mods" value="mods" <?php checked( $document_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-document-status-admins"><input type="radio" name="group-document-status" id="bp-group-document-status-admins" value="admins" <?php checked( $document_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( bp_is_active( 'messages' ) && bp_disable_group_messages() ) : ?>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-message-status">
+			<fieldset>
+				<legend><?php _e( 'Who can manage group messages in this group?', 'buddyboss' ); ?></legend>
+
+				<label for="bp-group-message-status-members"><input type="radio" name="group-message-status" id="bp-group-message-status-members" value="members" <?php checked( $message_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-message-status-mods"><input type="radio" name="group-message-status" id="bp-group-message-status-mods" value="mods" <?php checked( $message_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-message-status-admins"><input type="radio" name="group-message-status" id="bp-group-message-status-admins" value="admins" <?php checked( $message_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
 			</fieldset>
 		</div>
 	<?php endif; ?>
@@ -1783,7 +1824,7 @@ function bp_groups_admin_process_group_type_bulk_changes( $doaction ) {
 		$redirect = add_query_arg( array( 'updated' => 'group-type-change-success' ), wp_get_referer() );
 	}
 
-	wp_redirect( $redirect );
+	wp_safe_redirect( $redirect );
 	exit();
 }
 add_action( 'bp_groups_admin_load', 'bp_groups_admin_process_group_type_bulk_changes' );
@@ -2267,7 +2308,7 @@ function bp_group_type_show_data( $column, $post_id ) {
 
 		case 'total_groups':
 			$group_key      = bp_group_get_group_type_key( $post_id );
-			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
+			$group_type_url = bp_get_admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
 			printf(
 				__( '<a href="%1$s">%2$s</a>', 'buddyboss' ),
 				esc_url( $group_type_url ),

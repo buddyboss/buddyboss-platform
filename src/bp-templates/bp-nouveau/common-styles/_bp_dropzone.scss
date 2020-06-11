@@ -257,6 +257,7 @@
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
 	opacity: 1;
 	pointer-events: auto;
+	line-height: 1.35;
 }
 
 .dropzone .dz-preview .dz-error-message {
@@ -272,13 +273,13 @@
 	-o-transition: opacity 0.3s ease;
 	transition: opacity 0.3s ease;
 	border-radius: 8px;
-	font-size: 13px;
 	top: 130px;
 	left: -10px;
 	width: 140px;
 	background: #be2626;
 	background: linear-gradient(to bottom, #be2626, #a92222);
-	padding: 0.5em 1.2em;
+	padding: 7px 10px;
+	font-size: 12px;
 	color: #fff;
 	word-wrap: break-word;
 }

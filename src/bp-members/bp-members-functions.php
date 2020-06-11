@@ -535,7 +535,8 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		}
 	}
 
-	if ( empty( $full_name ) && empty( get_userdata( $user_id ) ) ) {
+	$user_data = get_userdata( $user_id );
+	if ( empty( $full_name ) && empty( $user_data ) ) {
 		$full_name = __( 'Deleted User', 'buddyboss' );
 	}
 
@@ -2510,7 +2511,7 @@ function bp_stop_live_spammer() {
 		$login_url = apply_filters( 'bp_live_spammer_redirect', add_query_arg( $args, wp_login_url() ) );
 
 		// Redirect user to login page.
-		wp_redirect( $login_url );
+		wp_safe_redirect( $login_url );
 		die();
 	}
 }
@@ -4123,7 +4124,7 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 					$membership = new BP_Groups_Member( $user_id, $group_id );
 					if ( ! isset( $membership->id ) ) {
 						// add as member
-						groups_accept_invite( $user_id, $group_id );
+						groups_join_group( $group_id, $user_id );
 					}
 
 				endwhile;

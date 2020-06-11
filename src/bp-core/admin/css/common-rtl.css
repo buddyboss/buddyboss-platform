@@ -19,6 +19,7 @@ TABLE OF CONTENTS:
 	2.4 Tooltips
 	2.5 Settings - Tabs
 	2.6 Settings - Cards
+	2.7 Document Extensions
 3.0 Content
 	3.1 Users List
 	3.2 Activity List
@@ -347,6 +348,10 @@ tr.bp-search-parent-field label {
   font-weight: 400;
 }
 
+.bp-admin-card h2 a {
+  text-decoration: none;
+}
+
 .bp-admin-card h2:before {
   display: inline-block;
   content: " ";
@@ -364,6 +369,23 @@ tr.bp-search-parent-field label {
 .bp-admin-card h3 {
   font-size: 19px;
   font-weight: 600;
+}
+
+.bp-admin-card p.alert {
+  padding: 10px 12px;
+  background: #f3f5f6;
+  border-radius: 3px;
+  border: 1px solid #ccd0d4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.bp-admin-card p.alert code a {
+  text-decoration: none;
+  color: #444;
+}
+
+.bp-admin-card p.alert code a:hover {
+  color: #0073aa;
 }
 
 /* Settings */
@@ -464,8 +486,16 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
 }
 
+.bp-admin-card.section-bp_media_settings_documents h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/folder-open.svg);
+}
+
+.bp-admin-card.section-bp_document_settings_extensions h2:before {
+  display: none;
+}
+
 .bp-admin-card.section-bp_media_settings_emoji h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/smile.svg);
+  background-image: url(../../images/admin/icons/fontawesome/solid/laugh.svg);
 }
 
 .bp-admin-card.section-bp_media_settings_gifs h2:before {
@@ -548,6 +578,285 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 }
 
 /*
+ * 2.7 Document Extensions
+ */
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
+  display: none;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
+  display: table-cell;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing > td {
+  padding: 0;
+}
+
+.section-bp_document_settings_extensions + .submit > a {
+  margin-right: 5px;
+}
+
+table.extension-listing {
+  border-radius: 4px;
+  margin: 9px 0 12px;
+}
+
+table.extension-listing thead th {
+  padding: 12px 18px;
+}
+
+table.extension-listing thead th.ext-head-extension {
+  width: 2.5em;
+}
+
+table.extension-listing thead th.ext-head-desc {
+  width: 16%;
+}
+
+table.extension-listing thead th.ext-head-icon {
+  width: 4em;
+}
+
+table.extension-listing thead td.ext-head-enable {
+  width: 1.2em;
+}
+
+table.extension-listing tbody td {
+  padding: 10px;
+}
+
+table.extension-listing tbody td i.bb-icon {
+  font-size: 33px;
+  color: #999;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+table.extension-listing tbody td input.error {
+  border: 1px solid #f00;
+}
+
+table.extension-listing tbody td input.hide-border {
+  border: none;
+  background-color: transparent;
+  color: #555;
+  margin: 0;
+}
+
+table.extension-listing tbody td input.hide-border:focus {
+  background-color: #eee;
+}
+
+table.extension-listing tbody td input[type="text"] {
+  width: 100%;
+}
+
+table.extension-listing tbody td #btn-remove-extensions {
+  cursor: pointer;
+  color: #a00;
+  font-size: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+table.extension-listing tbody tr.custom-extension td input.extension-mime[type="text"] {
+  width: 50%;
+}
+
+table.extension-listing tfoot td #btn-add-extensions,
+table.extension-listing tfoot td #btn-check-mime-type {
+  cursor: pointer;
+  float: left;
+  margin-right: 8px;
+}
+
+@media screen and (max-width: 782px) {
+  table.extension-listing {
+    display: block;
+  }
+  table.extension-listing tbody,
+  table.extension-listing thead,
+  table.extension-listing tr {
+    display: block;
+    width: 100%;
+  }
+  table.extension-listing tbody.extra-extension input[type="text"],
+  table.extension-listing thead.extra-extension input[type="text"],
+  table.extension-listing tr.extra-extension input[type="text"] {
+    margin-top: 15px;
+    margin-right: 10px;
+    width: calc(100% - 10px);
+  }
+  table.extension-listing tbody.extra-extension .icon-select-main,
+  table.extension-listing thead.extra-extension .icon-select-main,
+  table.extension-listing tr.extra-extension .icon-select-main {
+    margin-right: 10px;
+  }
+  table.extension-listing tr.custom-extension {
+    background-color: #fff;
+  }
+  table.extension-listing tr.custom-extension td {
+    padding-right: 20px !important;
+  }
+  table.extension-listing tfoot {
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+  }
+  table.extension-listing tfoot td #btn-add-extensions {
+    margin: 10px 0 15px;
+  }
+  table.extension-listing thead .ext-head:not(.ext-head-enable) {
+    display: none !important;
+  }
+  table.extension-listing .ext-head.ext-head-enable {
+    width: 100% !important;
+    padding: 10px 10px 0 0 !important;
+  }
+  table.extension-listing tbody td {
+    padding-right: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  table.extension-listing tbody td > i {
+    margin: 15px 10px 10px 0;
+  }
+  table.extension-listing tbody td:before {
+    top: 0;
+    right: 20px !important;
+    font-weight: 600;
+  }
+  table.extension-listing tbody td:first-child {
+    padding-right: 20px !important;
+  }
+  table.extension-listing tbody td .extension-mime {
+    margin-bottom: 15px;
+  }
+  table.extension-listing tbody td .btn-check-mime-type {
+    margin-right: 10px;
+  }
+}
+
+table.extension-listing select.extension-icon {
+  display: none;
+}
+
+table.extension-listing .icon-select-main {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+}
+
+table.extension-listing .icon-select-main .icon-select-button {
+  font-size: 14px;
+  line-height: 2;
+  color: #32373c;
+  border: 1px solid #7e8993;
+  border-width: 1px;
+  box-shadow: none;
+  border-radius: 3px;
+  padding: 3px 8px 3px 24px;
+  -webkit-appearance: none;
+  background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat left 5px top 55%;
+  background-size: 16px 16px;
+  cursor: pointer;
+  vertical-align: middle;
+  max-width: 100%;
+  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+table.extension-listing .icon-select-main .icon-select-button li {
+  list-style: none;
+  margin: 0;
+  line-height: 20px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  color: #555;
+}
+
+table.extension-listing .icon-select-main .icon-select-button i {
+  font-size: 22px;
+  color: #888;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list {
+  position: absolute;
+  right: 0;
+  left: 0;
+  min-width: 160px;
+  background-color: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  box-shadow: 0 2px 12px 1px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  bottom: 100%;
+  max-height: 60vh;
+  overflow: auto;
+  display: none;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list ul.custom-extension-list-select {
+  font-size: 0;
+  color: #888;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li {
+  list-style: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 12px;
+  margin: 0;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li:first-child {
+  border-bottom: 1px solid #eee;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li:nth-child(2) {
+  padding-top: 10px;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li:last-child {
+  padding-bottom: 10px;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li:hover {
+  background-color: #f9f9f9;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list li span {
+  vertical-align: middle;
+}
+
+table.extension-listing .icon-select-main .custom-extension-list i {
+  font-size: 28px;
+  margin-left: 10px;
+  vertical-align: middle;
+  color: #888;
+}
+
+@media screen and (max-width: 1023px) {
+  #bp-hello-container.bp-hello-mime {
+    bottom: 0;
+  }
+  #bp-hello-container.bp-hello-mime .bp-hello-header {
+    height: auto;
+    max-height: initial;
+    min-height: 58px;
+  }
+}
+
+/*
  * 3.0 Content
  */
 /*
@@ -627,7 +936,7 @@ body.users_page_bp-signups td.count_sent {
   margin-top: -44px;
 }
 
-.activity-attached-gif-container .gif-play-button span.dashicons {
+.activity-attached-gif-container .gif-play-button .bb-icon-play-thin {
   font-size: 80px;
   width: 80px;
   height: 80px;

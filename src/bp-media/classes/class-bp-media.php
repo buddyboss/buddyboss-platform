@@ -389,7 +389,7 @@ class BP_Media {
 			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
 
-			// we want to disable limit query when include media ids
+			// we want to disable limit query when include media ids.
 			$r['page']     = false;
 			$r['per_page'] = false;
 		}
@@ -398,7 +398,7 @@ class BP_Media {
 			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
 
-		// existing-media check to query media which has no albums assigned
+		// existing-media check to query media which has no albums assigned.
 		if ( ! empty( $r['album_id'] ) && 'existing-media' != $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
 		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' == $r['album_id'] ) {
@@ -487,6 +487,7 @@ class BP_Media {
 		$cache_group = 'bp_media';
 
 		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );
+
 		if ( false === $cached ) {
 			$media_ids = $wpdb->get_col( $media_ids_sql );
 			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids );
@@ -778,8 +779,14 @@ class BP_Media {
 		}
 
 		if ( ! empty( $query_args ) ) {
-			// Set relation to OR.
-			$query_args['relation'] = 'OR';
+
+			if ( count( $scopes ) > 1 ) {
+				// Set relation to OR.
+				$query_args['relation'] = 'OR';
+			} else {
+				// Set relation to OR.
+				$query_args['relation'] = 'AND';
+			}
 
 			$query = new BP_Media_Query( $query_args );
 			$sql   = $query->get_sql();
@@ -1052,16 +1059,7 @@ class BP_Media {
 	public static function total_media_count( $user_id = 0 ) {
 		global $bp, $wpdb;
 
-		$privacy = array( 'public' );
-		if ( is_user_logged_in() ) {
-			$privacy[] = 'loggedin';
-			if ( bp_is_active( 'friends' ) ) {
-				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-				if ( $is_friend ) {
-					$privacy[] = 'friends';
-				}
-			}
-		}
+		$privacy = bp_media_query_privacy( $user_id );
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
 		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
@@ -1082,6 +1080,25 @@ class BP_Media {
 		global $bp, $wpdb;
 
 		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
+
+		return $total_count;
+	}
+
+	/**
+	 * Count total groups media for the given user.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return array|bool|int
+	 * @since BuddyBoss 1.4.0
+	 */
+	public static function total_user_group_media_count( $user_id = 0 ) {
+		global $bp, $wpdb;
+
+		$privacy = bp_media_query_privacy( $user_id, 0, 'groups' );
+		$privacy = "'" . implode( "', '", $privacy ) . "'";
+
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
 
 		return $total_count;
 	}
@@ -1133,6 +1150,24 @@ class BP_Media {
 		$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
 
 		return $activity_media_id;
+	}
+
+	/**
+	 * Get media attachment id for the activity.
+	 *
+	 * @param integer $activity_id Activity ID
+	 *
+	 * @return integer|bool
+	 * @since BuddyBoss 1.4.0
+	 */
+	public static function get_activity_attachment_id( $activity_id = 0 ) {
+		global $bp, $wpdb;
+
+		if ( empty( $activity_id ) ) {
+			return false;
+		}
+
+		return (int) $wpdb->get_var( "SELECT DISTINCT m.attachment_id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
 	}
 
 }

@@ -265,7 +265,7 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
-		$friends = array( 0 );
+		return $retval;
 	}
 
 	$retval = array(
@@ -274,6 +274,11 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 			'column'  => 'user_id',
 			'compare' => 'IN',
 			'value'   => (array) $friends,
+		),
+		array(
+			'column'  => 'privacy',
+			'compare' => '!=',
+			'value'   => 'onlyme'
 		),
 
 		// We should only be able to view sitewide activity content for friends.
@@ -285,7 +290,6 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),
-			'show_hidden' => true,
 		),
 	);
 
