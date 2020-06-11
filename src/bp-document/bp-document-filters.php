@@ -747,12 +747,12 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		$document_ids = explode( ',', $document_ids );
 
 		foreach ( $document_ids as $document_id ) {
-			$document          = new BP_Document( $document_id );
+			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( 'forums' !== $document->privacy ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
 				$document->privacy = $activity->privacy;
+				$document->save();
 			}
-			$document->save();
 		}
 	}
 }
