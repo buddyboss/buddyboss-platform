@@ -4098,11 +4098,6 @@ function bp_groups_prime_mentions_results() {
 		return;
 	}
 
-	// Bail out if the site has a ton of users.
-	if ( bp_is_large_install() ) {
-		return;
-	}
-
 	// Bail if single group page.
 	if ( ! bp_is_group() ) {
 		return;
