@@ -344,7 +344,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 				'value'  => 0,
 			);
 		}
-	} else {
+	} else if ( ! is_user_logged_in() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
