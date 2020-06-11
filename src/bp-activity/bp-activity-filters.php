@@ -1081,11 +1081,23 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		$show_hidden,
 	);
 
+	if ( empty( $friends_filter ) ) {
+		$retval['override'] = array(
+			'filter'      => array( 'user_id' => 0 ),
+			'show_hidden' => true,
+		);
+	}
+
 	if ( ! empty( $friends_filter ) ) {
 		$retval = array(
 			'relation' => 'OR',
 			$retval,
-			$friends_filter
+			$friends_filter,
+			// Overrides.
+			'override' => array(
+				'filter'           => array( 'user_id' => 0 ),
+				'show_hidden'      => true,
+			),
 		);
 	}
 
