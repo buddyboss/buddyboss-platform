@@ -272,9 +272,13 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		$friends = array( 0 );
 	}
 
-	if ( ! bp_is_user() ) {
-		array_push( $friends, bp_loggedin_user_id() );
-		$friends = array_unique( $friends );
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( ! empty( $friends ) ) {
+			$privacy[] = 'friends';
+		}
 	}
 
 	$retval = array(
@@ -286,8 +290,8 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		),
 		array(
 			'column'  => 'privacy',
-			'compare' => '!=',
-			'value'   => 'onlyme'
+			'compare' => 'IN',
+			'value'   => $privacy
 		),
 
 		// We should only be able to view sitewide activity content for friends.

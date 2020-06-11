@@ -324,9 +324,27 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		return $retval;
 	}
 
+	$groups = $groups['groups'];
+
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
+	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+
+		// Determine groups of user.
+		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+			$groups_intersected = array_intersect( $groups, $logged_in_user_groups['groups'] );
+
+			if ( ! empty( $groups_intersected ) ) {
+				$groups = array_unique( array_merge( $groups, $groups_intersected ) );
+			}
+		} else {
+			$show_hidden = array(
+				'column' => 'hide_sitewide',
+				'value'  => 0,
+			);
+		}
+	} else {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -344,7 +362,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			array(
 				'column'  => 'item_id',
 				'compare' => 'IN',
-				'value'   => (array) $groups['groups'],
+				'value'   => (array) $groups,
 			),
 			array(
 				'column'  => 'privacy',

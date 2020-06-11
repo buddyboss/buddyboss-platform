@@ -917,8 +917,18 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) && $user_id === bp_loggedin_user_id() ) {
-			$privacy[] = 'friends';
+		if ( bp_is_active( 'friends' ) ) {
+
+			// Determine friends of user.
+			$friends = friends_get_friend_user_ids( $user_id );
+
+			if ( bp_is_my_profile() || bp_is_activity_directory() ) {
+				$friends[] = bp_loggedin_user_id();
+			}
+
+			if ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) {
+				$privacy[] = 'friends';
+			}
 		}
 
 		if ( $user_id === bp_loggedin_user_id() ) {
@@ -1019,6 +1029,43 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		);
 	}
 
+
+	$friends_filter = array();
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_active( 'friends' ) ) {
+			// Determine friends of user.
+			$friends = friends_get_friend_user_ids( $user_id );
+			if ( empty( $friends ) ) {
+				$friends = array( 0 );
+			}
+
+			if ( ! empty( $friends ) ) {
+				$friends_filter = array(
+					'relation' => 'AND',
+					array(
+						'column'  => 'user_id',
+						'compare' => 'IN',
+						'value'   => (array) $friends,
+					),
+					array(
+						'column'  => 'privacy',
+						'compare' => '=',
+						'value'   => 'friends',
+					),
+					array(
+						'column'  => 'id',
+						'compare' => 'IN',
+						'value'   => (array) $favs,
+					),
+					$show_hidden
+				);
+			}
+		}
+	}
+
 	$retval = array(
 		'relation' => 'AND',
 		array(
@@ -1026,14 +1073,21 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			'compare' => 'IN',
 			'value'   => (array) $favs,
 		),
-		$show_hidden,
-
-		// Overrides.
-		'override' => array(
-			'filter'           => array( 'user_id' => 0 ),
-			'show_hidden'      => true,
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy
 		),
+		$show_hidden,
 	);
+
+	if ( ! empty( $friends_filter ) ) {
+		$retval = array(
+			'relation' => 'OR',
+			$retval,
+			$friends_filter
+		);
+	}
 
 	return $retval;
 }
@@ -1275,7 +1329,7 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 	}
 
 	$friends_follow = array();
-	if ( bp_is_active( 'friends' ) && $user_id ) {
+	if ( bp_is_active( 'friends' ) && $user_id === bp_loggedin_user_id() ) {
 		// Determine friends of user.
 		$friends = friends_get_friend_user_ids( $user_id );
 		if ( ! empty( $friends ) ) {
