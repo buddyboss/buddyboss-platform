@@ -110,7 +110,7 @@ add_filter( 'bp_get_total_favorite_count_for_user', 'bp_core_number_format' );
 add_filter( 'bp_get_total_mention_count_for_user', 'bp_core_number_format' );
 
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
-add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
+//add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
@@ -917,7 +917,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bp_is_active( 'friends' ) && $user_id === bp_loggedin_user_id() ) {
 			$privacy[] = 'friends';
 		}
 
@@ -950,6 +950,39 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	return $retval;
 }
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_activity_filter_just_me_scope', 10, 2 );
+
+/**
+ * Set up activity arguments for use with the 'public' scope.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array $retval
+ */
+function bp_activity_filter_public_scope( $retval = array(), $filter = array() ) {
+
+	$privacy = array( 'public' );
+	if ( bp_loggedin_user_id() ) {
+		$privacy[] = 'loggedin';
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN',
+		),
+		array(
+			'column' => 'hide_sitewide',
+			'value'  => 0,
+		)
+	);
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scope', 10, 2 );
 
 /**
  * Set up activity arguments for use with the 'favorites' scope.
@@ -1236,7 +1269,10 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 		$following_ids = array( 0 );
 	}
 
-	$privacy = array( 'public', 'loggedin' );
+	$privacy = array( 'public' );
+	if ( bp_loggedin_user_id() ) {
+		$privacy[] = 'loggedin';
+	}
 
 	$friends_follow = array();
 	if ( bp_is_active( 'friends' ) && $user_id ) {

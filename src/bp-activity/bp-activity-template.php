@@ -211,10 +211,12 @@ function bp_has_activities( $args = '' ) {
 	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
 			? $bp->loaded_components[ bp_current_action() ]
 			: (
-			( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
-					? bp_current_action()
-					: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+				( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
+				? bp_current_action()
+				: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
 			);
+
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {

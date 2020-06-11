@@ -262,10 +262,19 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 			: bp_loggedin_user_id();
 	}
 
+	if ( bp_is_single_activity() ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
-		return $retval;
+		$friends = array( 0 );
+	}
+
+	if ( ! bp_is_user() ) {
+		array_push( $friends, bp_loggedin_user_id() );
+		$friends = array_unique( $friends );
 	}
 
 	$retval = array(
