@@ -2980,14 +2980,12 @@ window.bp = window.bp || {};
 									},100);
 							} else {
 
-								$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' ).closest( '.has-ul' ).addClass( 'is_active' );
-
-								if( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul.no-folder-list' ).length ){
-									setTimeout( function(){
-										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show();
-									},10);
-								} else {
+								if( $( targetPopup ).find( '.location-folder-list li.is_active' ).hasClass( 'has-ul' ).length ){
 									$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span,i' ).hide().parent().children( 'ul' ).show().children( 'li' ).show();
+								} else {
+									setTimeout( function(){
+										$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show().parent().siblings('li').show().children('span,i').show();
+									},10);
 								}
 
 							}
@@ -3074,14 +3072,12 @@ window.bp = window.bp || {};
 							},100);
 					} else {
 
-						$( targetPopup ).find( '.location-folder-list li.is_active' ).removeClass( 'is_active' ).closest( '.has-ul' ).addClass( 'is_active' );
-
-						if( $( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'ul.no-folder-list' ).length ){
-							setTimeout( function(){
-								$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show();
-							},10);
-						} else {
+						if( $( targetPopup ).find( '.location-folder-list li.is_active' ).hasClass( 'has-ul' ).length ){
 							$( targetPopup ).find( '.location-folder-list li.is_active' ).children( 'span,i' ).hide().parent().children( 'ul' ).show().children( 'li' ).show();
+						} else {
+							setTimeout( function(){
+								$( targetPopup ).find( '.location-folder-list li.is_active' ).show().children('span').show().parent().siblings('li').show().children('span,i').show();
+							},10);
 						}
 					}
 					$( targetPopup ).find( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( targetPopup ).find( '.location-folder-list li.is_active' ).closest( '.has-ul' ).children( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
