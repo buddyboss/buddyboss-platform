@@ -133,8 +133,16 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 						<li class="move_file document-action-class"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
 							<?php
 						}
+						$id = 0;
+						if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
+							$id = bp_get_activity_comment_id();
+						} else {
+							if ( bp_is_active( 'activity' ) ) {
+								$id = bp_get_activity_id();
+							}
+						}
 						?>
-						<li class="delete_file document-action-class"><a class="document-file-delete" data-item-activity-id="<?php echo ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) ? bp_get_activity_comment_id() : ( bp_is_active( 'activity' ) ) ? bp_get_activity_id() : ''; ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
+						<li class="delete_file document-action-class"><a class="document-file-delete" data-item-activity-id="<?php echo $id; ?>" data-item-from="activity" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( 'document' ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 						<?php
 					}
 				?>
