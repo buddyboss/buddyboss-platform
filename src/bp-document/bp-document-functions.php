@@ -2016,14 +2016,18 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		return false;
 	}
 
-	$has_access = bp_document_user_can_edit( $document_id );
-	if ( ! $has_access ) {
-		return false;
+	if ( (int) $document_id > 0 ) {
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			return false;
+		}
 	}
 
-	$has_access = bp_folder_user_can_edit( $folder_id );
-	if ( ! $has_access ) {
-		return false;
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			return false;
+		}
 	}
 
 	if ( ! $group_id ) {
@@ -2193,9 +2197,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
-	$has_access = bp_document_user_can_edit( $document_id );
-	if ( ! $has_access ) {
-		return false;
+	if ( (int) $document_id > 0 ) {
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			return false;
+		}
 	}
 
 	$file_name    = $title;
@@ -2369,9 +2375,11 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		return false;
 	}
 
-	$has_access = bp_folder_user_can_edit( $folder_id );
-	if ( ! $has_access ) {
-		return false;
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			return false;
+		}
 	}
 
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
@@ -2428,14 +2436,18 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		return false;
 	}
 
-	$has_access = bp_folder_user_can_edit( $folder_id );
-	if ( ! $has_access ) {
-		return false;
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			return false;
+		}
 	}
 
-	$has_destination_access = bp_folder_user_can_edit( $destination_folder_id );
-	if ( ! $has_destination_access ) {
-		return false;
+	if ( (int) $destination_folder_id > 0 ) {
+		$has_destination_access = bp_folder_user_can_edit( $destination_folder_id );
+		if ( ! $has_destination_access ) {
+			return false;
+		}
 	}
 
 	if ( ! $group_id ) {
@@ -2550,9 +2562,11 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 
 	if ( 'folder' === $type ) {
 
-		$has_access = bp_folder_user_can_edit( $document_id );
-		if ( ! $has_access ) {
-			return false;
+		if ( (int) $document_id > 0 ) {
+			$has_access = bp_folder_user_can_edit( $document_id );
+			if ( ! $has_access ) {
+				return false;
+			}
 		}
 
 		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
@@ -2612,9 +2626,11 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		}
 	} else {
 
-		$has_access = bp_document_user_can_edit( $document_id );
-		if ( ! $has_access ) {
-			return false;
+		if ( (int) $document_id > 0 ) {
+			$has_access = bp_document_user_can_edit( $document_id );
+			if ( ! $has_access ) {
+				return false;
+			}
 		}
 
 		$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );
