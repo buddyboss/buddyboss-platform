@@ -843,8 +843,6 @@ function bp_friends_prime_mentions_results() {
 		$results[] = $result;
 	}
 
-	error_log(print_r($results,1));
-
 	wp_localize_script(
 		'bp-mentions',
 		'BP_Suggestions',
