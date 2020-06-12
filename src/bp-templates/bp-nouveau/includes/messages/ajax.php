@@ -455,17 +455,25 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
 				$svg_icon_download     = bp_document_svg_icon( 'download' );
 				$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
-				$filename              = basename( get_attached_file( $attachment_id ) );
+				$filename               = basename( get_attached_file( $attachment_id ) );
 				$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
 				$extension_description = '';
-				$extension_lists   	   = bp_document_extensions_list();
-				$attachment_url 	   = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+				$extension_lists       = bp_document_extensions_list();
+				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
+				$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+				$mirror_text		   = bp_document_mirror_text( $attachment_id );
+				$audio_url			   = '';
+
 				if ( ! empty( $extension_lists ) ) {
 					$extension_lists = array_column( $extension_lists, 'description', 'extension' );
 					$extension_name  = '.' . $extension;
 					if ( ! empty( $extension_lists ) && ! empty( $extension ) && array_key_exists( $extension_name, $extension_lists ) ) {
 						$extension_description = '<span class="document-extension-description">' . esc_html( $extension_lists[ $extension_name ] ) . '</span>';
 					}
+				}
+
+				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 				}
 
 				$output = '';
@@ -524,22 +532,29 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$output .= ob_get_clean();
 
 				$reply['document'][] = array(
-					'id'                    => bp_get_document_id(),
-					'title'                 => bp_get_document_title(),
-					'url'                   => $download_url,
-					'extension'             => $extension,
-					'svg_icon'              => $svg_icon,
-					'svg_icon_download'     => $svg_icon_download,
-					'filename'              => $filename,
-					'size'                  => $size,
-					'meta'                  => $document_template->document->attachment_data->meta,
-					'download_text'         => __( 'Click to Download', 'buddyboss' ),
-					'extension_description' => $extension_description,
-					'download'              => __( 'Download', 'buddyboss' ),
-					'collapse'              => __( 'Collapse', 'buddyboss' ),
-					'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
-					'more_action'           => __( 'More actions', 'buddyboss' ),
-					'preview'               => $output,
+						'id'                    => bp_get_document_id(),
+						'title'                 => bp_get_document_title(),
+						'url'                   => $download_url,
+						'extension'             => $extension,
+						'svg_icon'              => $svg_icon,
+						'svg_icon_download'     => $svg_icon_download,
+						'filename'               => $filename,
+						'size'                  => $size,
+						'meta'                  => $document_template->document->attachment_data->meta,
+						'download_text'         => __( 'Click to Download', 'buddyboss' ),
+						'extension_description' => $extension_description,
+						'download'              => __( 'Download', 'buddyboss' ),
+						'collapse'              => __( 'Collapse', 'buddyboss' ),
+						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
+						'more_action'           => __( 'More actions', 'buddyboss' ),
+						'privacy'               => bp_get_db_document_privacy(),
+						'author'                => bp_get_document_user_id,
+						'preview'               => $output,
+						'msg_preview'           => $attachment_url,
+						'text_preview'          => $text_attachment_url ? esc_url( $text_attachment_url ) : '',
+						'mp3_preview'           => $audio_url ? $audio_url : '',
+						'document_title'        => $filename ? $filename : '',
+						'mirror_text'           => $mirror_text ? $mirror_text : '',
 				);
 			}
 		}
@@ -1976,14 +1991,21 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$svg_icon              = bp_document_svg_icon( $extension, $attachment_id );
 					$svg_icon_download     = bp_document_svg_icon( 'download' );
 					$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
-					$filename              = basename( get_attached_file( $attachment_id ) );
+					$filename               = basename( get_attached_file( $attachment_id ) );
 					$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
 					$extension_description = '';
 					$url                   = wp_get_attachment_url( $attachment_id );
 					$extension_lists   	   = bp_document_extensions_list();
-
+					$text_attachment_url   = wp_get_attachment_url( $attachment_id );
+					$attachment_url        = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+					$mirror_text		   = bp_document_mirror_text( $attachment_id );
+					$audio_url			   = '';
 					if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
 						$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id() );
+					}
+
+					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 					}
 
 					if ( ! empty( $extension_lists ) ) {
@@ -2065,7 +2087,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'collapse'              => __( 'Collapse', 'buddyboss' ),
 						'copy_download_link'    => __( 'Copy Download Link', 'buddyboss' ),
 						'more_action'           => __( 'More actions', 'buddyboss' ),
-						'preview'               => $output,
+						'preview'               => $attachment_url,
+						'msg_preview'           => $output,
+						'privacy'               => bp_get_db_document_privacy(),
+						'author'                => bp_get_document_user_id,
+						'text_preview'          => $text_attachment_url ? esc_url( $text_attachment_url ) : '',
+						'mp3_preview'           => $audio_url ? $audio_url : '',
+						'document_title'        => $filename ? $filename : '',
+						'mirror_text'           => $mirror_text ? $mirror_text : '',
 					);
 				}
 			}
