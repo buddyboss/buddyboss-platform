@@ -75,7 +75,7 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 		return $retval;
 	}
 
-	$args = array(
+	$retval = array(
 		'relation' => 'AND',
 		array(
 			'column'  => 'user_id',
@@ -89,17 +89,12 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 	);
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$args[] = array(
+		$retval[] = array(
 			'column'  => 'title',
 			'compare' => 'LIKE',
 			'value'   => $filter['search_terms'],
 		);
 	}
-
-	$retval = array(
-		'relation' => 'OR',
-		$args
-	);
 
 	return $retval;
 }
