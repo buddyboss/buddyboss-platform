@@ -4585,6 +4585,7 @@ window.bp = window.bp || {};
 			var self   = this;
 			var document_elements = $( document ).find( '.document-theatre' );
 			document_elements.find( '.bb-media-section' ).removeClass( 'bb-media-no-preview' ).find('.document-preview').html( '' );
+			$( '.bb-media-info-section.document' ).show();
 			document_elements.hide();
 			self.is_open_document = false;
 

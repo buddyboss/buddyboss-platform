@@ -13463,6 +13463,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   position: static;
   background-color: #fff;
   border-radius: 4px 4px 4px 5px;
+  position: relative;
 }
 
 .bb-document-theater .bb-media-section .document-preview {
