@@ -33,6 +33,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 	protected $default_args = array(
 		'limit'        => 10,
 		'only_friends' => false,
+		'exclude_me'   => true,
 		'term'         => '',
 		'type'         => '',
 	);
@@ -47,6 +48,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 	 */
 	public function validate() {
 		$this->args['only_friends'] = (bool) $this->args['only_friends'];
+		$this->args['exclude_me']   = (bool) $this->args['exclude_me'];
 
 		/**
 		 * Filters the members suggestions args for the current user.
@@ -96,6 +98,11 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		// Only return matches of friends of this user.
 		if ( $this->args['only_friends'] && is_user_logged_in() ) {
 			$user_query['user_id'] = get_current_user_id();
+		}
+
+		// Exclude current user from mention list.
+		if ( ! $this->args['only_friends'] && $this->args['exclude_me'] && is_user_logged_in() ) {
+			$user_query['exclude'] = get_current_user_id();
 		}
 
 		/**

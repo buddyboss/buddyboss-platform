@@ -4103,25 +4103,26 @@ function bp_groups_prime_mentions_results() {
 		return;
 	}
 
-	$members = groups_get_group_members();
+	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id() ) );
 	$results = array();
 
 	if ( ! empty( $members['members'] ) ) {
-		foreach( $members['members'] as $user ) {
-			$result        = new stdClass();
-			$result->ID    = get_user_meta( $user->ID, 'nickname', true ) ?: $user->user_nicename;
-			$result->image = bp_core_fetch_avatar(
-				array(
-					'html'    => false,
-					'item_id' => $user->ID,
-				)
+		foreach ( $members['members'] as $user ) {
+			$result                = new stdClass();
+			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
+			$result->user_nicename = $user->user_nicename;
+			$result->image         = bp_core_fetch_avatar(
+					array(
+							'html'    => false,
+							'item_id' => $user->ID,
+					)
 			);
-
 			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
 				$result->name = bp_core_get_user_displayname( $user->ID );
 			} else {
 				$result->name = bp_core_get_user_displayname( $user->ID );
 			}
+			$result->user_id = $user->ID;
 
 			$results[] = $result;
 		}
