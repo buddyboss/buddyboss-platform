@@ -483,7 +483,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 					?>
 					<div class="document-audio-wrap">
-						<audio controls>
+						<audio controls controlsList="nodownload">
 							<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
 							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 						</audio>
@@ -2023,7 +2023,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 						?>
 						<div class="document-audio-wrap">
-							<audio controls>
+							<audio controls controlsList="nodownload">
 								<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
 								<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 							</audio>
