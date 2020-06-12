@@ -69,18 +69,21 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 					$public_groups = array();
 				}
 
-				$groups = groups_get_user_groups( bp_loggedin_user_id() );
-				if ( ! empty( $groups['groups'] ) ) {
-					$user_groups = $groups['groups'];
-				} else {
-					$user_groups = array();
+				$user_groups = array();
+				if ( is_user_logged_in() ) {
+					$groups = groups_get_user_groups( bp_loggedin_user_id() );
+					if ( ! empty( $groups['groups'] ) ) {
+						$user_groups = $groups['groups'];
+					} else {
+						$user_groups = array();
+					}
 				}
 
 				$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
 			}
 
 			$friends = array();
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bp_is_active( 'friends' ) && is_user_logged_in() ) {
 
 				// Determine friends of user.
 				$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );

@@ -1032,6 +1032,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 
 
 	$friends_filter = array();
+	$onlyme_filter = array();
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
@@ -1070,6 +1071,29 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 				);
 			}
 		}
+
+		if ( $user_id === bp_loggedin_user_id() ) {
+			$onlyme_filter = array(
+				'relation' => 'AND',
+				array(
+					'column'  => 'user_id',
+					'compare' => '=',
+					'value'   => $user_id,
+				),
+				array(
+					'column'  => 'privacy',
+					'compare' => '=',
+					'value'   => 'onlyme',
+				),
+				array(
+					'column'  => 'id',
+					'compare' => 'IN',
+					'value'   => (array) $favs,
+				),
+				$show_hidden
+			);
+			$privacy[] = 'loggedin';
+		}
 	}
 
 	$retval = array(
@@ -1087,18 +1111,19 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		$show_hidden,
 	);
 
-	if ( empty( $friends_filter ) ) {
+	if ( empty( $friends_filter ) && empty( $onlyme_filter ) ) {
 		$retval['override'] = array(
 			'filter'      => array( 'user_id' => 0 ),
 			'show_hidden' => true,
 		);
 	}
 
-	if ( ! empty( $friends_filter ) ) {
+	if ( ! empty( $friends_filter ) || ! empty( $onlyme_filter ) ) {
 		$retval = array(
 			'relation' => 'OR',
 			$retval,
 			$friends_filter,
+			$onlyme_filter,
 			// Overrides.
 			'override' => array(
 				'filter'           => array( 'user_id' => 0 ),
