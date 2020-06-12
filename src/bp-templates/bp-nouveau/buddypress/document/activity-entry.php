@@ -53,11 +53,6 @@ if ( ! empty( $extension_lists ) ) {
 $class_theatre 	= apply_filters( 'bp_document_activity_theater_class', 'bb-open-document-theatre' );
 $class_popup 	= apply_filters( 'bp_document_activity_theater_description_class', 'document-detail-wrap-description-popup' );
 $click_text 	= apply_filters( 'bp_document_activity_click_to_view_text', __( ' view', 'buddyboss' ) );
-if ( 'forums' === bp_get_db_document_privacy() ) {
-	//$class_theatre 	= '';
-	//$class_popup	= '';
-	$click_text 	= apply_filters( 'bp_document_activity_click_to_download_text', __( ' View', 'buddyboss' ) );
-}
 
 $bp_document_music_preview = apply_filters( 'bp_document_music_preview', true );
 $bp_document_text_preview  = apply_filters( 'bp_document_text_preview', true );
