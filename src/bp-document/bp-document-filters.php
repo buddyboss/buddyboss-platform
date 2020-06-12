@@ -1260,3 +1260,45 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 	return $retval;
 }
 add_filter( 'bp_activity_set_document_scope_args', 'bp_activity_filter_document_scope', 10, 2 );
+
+/**
+ * Shows default icon for media in wordpress media library list view.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param array   $attr       List of image attributes.
+ * @param WP_Post $attachment Attachment Post object.
+ * @param string  $size       Sizes for the image.
+ *
+ * @return mixed
+ */
+function bp_document_media_library_list_view_document_attachment_image( $attr, $attachment, $size ) {
+	if ( ! is_admin() ) {
+		return $attr;
+	}
+
+	global $current_screen;
+
+	if (
+		empty( $current_screen )
+		|| ! isset( $current_screen->parent_file )
+		|| $current_screen->parent_file !== 'upload.php'
+		|| empty( $attachment )
+		|| empty( $attachment->ID )
+	) {
+		return $attr;
+	}
+
+	$meta = get_post_meta( $attachment->ID, '_wp_attached_file', true );
+	if ( empty( $meta ) ) {
+		return $attr;
+	}
+
+	if ( strstr( $meta, 'bb_documents/' ) ) {
+		$attr['src']   = includes_url() . 'images/media/default.png';
+		$attr['style'] = "width:42px;height:60px;border:0;";
+	}
+
+	return $attr;
+}
+add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_list_view_document_attachment_image', 10, 3 );
