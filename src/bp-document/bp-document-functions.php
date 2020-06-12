@@ -2433,6 +2433,11 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		return false;
 	}
 
+	$has_destination_access = bp_folder_user_can_edit( $destination_folder_id );
+	if ( ! $has_destination_access ) {
+		return false;
+	}
+
 	if ( ! $group_id ) {
 		$get_folder = new BP_Document_Folder( $folder_id );
 		if ( $get_folder->group_id > 0 ) {
