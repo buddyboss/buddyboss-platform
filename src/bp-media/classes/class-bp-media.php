@@ -468,8 +468,6 @@ class BP_Media {
 		// Query first for media IDs.
 		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
 
-		error_log($media_ids_sql);
-
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
 			// populate the has_more_items flag.
