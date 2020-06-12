@@ -954,7 +954,7 @@ class BP_Document {
 			}
 			$folder_ids[]   = 0;
 		// My Group Documents Search.
-		} elseif ( $r['search_terms'] && ! $r['user_id'] && ! $r['folder_id'] && 'groups' === $r['scope'] && bp_is_document_directory() ) {
+		} elseif ( $r['search_terms'] && ! $r['user_id'] && ! $r['folder_id'] && 'groups' === $r['scope'] && bp_is_document_directory() && bp_is_active( 'groups' ) ) {
 
 			// Fetch public groups.
 			$public_groups = groups_get_groups(
@@ -1621,8 +1621,12 @@ class BP_Document {
 
 				if ( (int) $document->group_id > 0 ) {
 					$document->folder = 'group';
-					$group            = groups_get_group( array( 'group_id' => $document->group_id ) );
-					$document->link   = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
+					if ( bp_is_active( 'groups' ) ) {
+						$group              = groups_get_group( array( 'group_id' => $document->group_id ) );
+						$document->link     = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
+					}
+					$document->link = '';
+
 				} else {
 					$document->folder = 'profile';
 					$document->link   = bp_core_get_user_domain( (int) $document->user_id ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
@@ -1632,13 +1636,17 @@ class BP_Document {
 			$group_name = '';
 			$visibility = '';
 			if ( $document->group_id > 0 ) {
-				$group      = groups_get_group( $document->group_id );
-				$group_name = bp_get_group_name( $group );
-				$status     = bp_get_group_status( $group );
-				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				if ( bp_is_active( 'groups' ) ) {
+					$group      = groups_get_group( $document->group_id );
+					$group_name = bp_get_group_name( $group );
+					$status     = bp_get_group_status( $group );
+					if ( 'hidden' === $status || 'private' === $status ) {
+						$visibility = esc_html__( 'Group Members', 'buddyboss' );
+					} else {
+						$visibility = ucfirst( $status );
+					}
 				} else {
-					$visibility = ucfirst( $status );
+					$visibility = '';
 				}
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();

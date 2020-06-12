@@ -828,11 +828,6 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  * @since BuddyBoss 1.4.1
  */
 function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) {
-	if ( 4819 === $attachment->ID || 4828 === $attachment->ID ) {
-		error_log( print_r( $response, 1 ) );
-		//error_log( print_r( $attachment, 1 ) );
-		//error_log( print_r( $meta, 1 ) );
-	}
 	if ( isset( $response['url'] ) && strstr( $response['url'], 'bb_documents/' ) ) {
 		$response['icon'] 	= includes_url() . 'images/media/default.png';
 		$response['type'] 	= 'text';
