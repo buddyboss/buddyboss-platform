@@ -28,6 +28,11 @@ if ( isset( $explode_arr ) && !empty( $explode_arr ) && isset( $explode_arr[1] )
 	if ( $can_view && wp_attachment_is_image( $id ) ) {
 		$type = get_post_mime_type( $id );
 		$output_file_src = bp_document_scaled_image_path( $id );
+
+		if ( ! file_exists( $output_file_src ) ) {
+			echo '// Silence is golden.';
+			exit();
+		}
 		header("Content-Type: $type");
 		readfile("$output_file_src");
 	} else {

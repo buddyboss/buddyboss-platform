@@ -1070,7 +1070,8 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		}
 		$document_id        = 'forbidden_' . $document_id;
 		$attachment_id      = 'forbidden_' . $preview_attachment_id;
-		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) ) {
+		$output_file_src     = bp_document_scaled_image_path( $preview_attachment_id );
+		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
 			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
@@ -1146,7 +1147,7 @@ function bp_document_mirror_text( $attachment_id ) {
  *
  * @param $document_id
  * @param $extension
- * @param $preview_attachment_id
+ * @param $attachment_id
  *
  * @return mixed|void
  *
@@ -1156,9 +1157,11 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$document_id        = 'forbidden_' . $document_id;
-		$attachment_id      = 'forbidden_' . $attachment_id;
-		if ( ! empty( $attachment_id ) && ! empty( $document_id ) ) {
+		$passed_attachment_id   = $attachment_id;
+		$document_id            = 'forbidden_' . $document_id;
+		$attachment_id          = 'forbidden_' . $attachment_id;
+		$output_file_src         = get_attached_file( $passed_attachment_id );
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
 			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
