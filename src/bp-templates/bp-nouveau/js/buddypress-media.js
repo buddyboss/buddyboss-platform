@@ -299,6 +299,7 @@ window.bp = window.bp || {};
 
 			// Open edit folder popup if user redirected from activity edit folder privacy
 			if( window.location.hash == '#openEditFolder' && $('#bp-media-edit-child-folder').length ) {
+				history.pushState(null, null, window.location.href.split('#')[0]);
 				$('#bp-media-edit-child-folder').show();
 			}
 
