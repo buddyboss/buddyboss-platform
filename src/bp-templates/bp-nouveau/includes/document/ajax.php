@@ -801,13 +801,13 @@ function bp_nouveau_ajax_document_move() {
 
 	$has_access = bp_document_user_can_edit( $document_id );
 	if ( ! $has_access ) {
-		$response['feedback'] = esc_html__( 'You don\'t have a permission to move the document.', 'buddyboss' );
+		$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
 	$has_access = bp_folder_user_can_edit( $folder_id );
 	if ( ! $has_access ) {
-		$response['feedback'] = esc_html__( 'You don\'t have a permission to move the document.', 'buddyboss' );
+		$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
