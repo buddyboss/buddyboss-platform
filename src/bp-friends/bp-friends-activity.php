@@ -454,3 +454,32 @@ function bp_friends_delete_activity_on_friendship_delete( $friendship_id ) {
 	);
 }
 add_action( 'friends_friendship_deleted', 'bp_friends_delete_activity_on_friendship_delete' );
+
+/**
+ * Stop sending notification when user mentioned in activity and not in friend list.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param bool                 $send      Whether or not BuddyBoss should send a notification to the mentioned users.
+ * @param array                $usernames Array of users potentially notified.
+ * @param int                  $user_id   ID of the current user being notified.
+ * @param BP_Activity_Activity $activity  Activity object.
+ *
+ * @return bool
+ */
+function bp_friends_activity_at_name_do_notifications( $send, $usernames, $user_id, $activity ) {
+
+	if ( 'friends' !== $activity->privacy ) {
+		return $send;
+	}
+
+	$friends = friends_get_friend_user_ids( $activity->user_id );
+
+
+	if ( ! empty( $friends ) && in_array( $user_id, $friends ) ) {
+		return $send;
+	}
+
+	return false;
+}
+add_filter( 'bp_activity_at_name_do_notifications', 'bp_friends_activity_at_name_do_notifications', 10, 4 );

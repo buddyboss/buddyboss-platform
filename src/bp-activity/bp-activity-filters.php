@@ -435,7 +435,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
  */
 function bp_activity_at_name_send_emails( $activity ) {
 	// Are mentions disabled?
-	if ( ! bp_activity_do_mentions() ) {
+	if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
 		return;
 	}
 
@@ -466,10 +466,10 @@ function bp_activity_at_name_send_emails( $activity ) {
 		 */
 		if ( apply_filters( 'bp_activity_at_name_do_notifications', true, $usernames, $user_id, $activity ) ) {
 			bp_activity_at_message_notification( $activity->id, $user_id );
-		}
 
-		// Updates mention count for the user.
-		bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+			// Updates mention count for the user.
+			bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+		}
 	}
 }
 
