@@ -114,6 +114,7 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
+add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
 
 /* Actions *******************************************************************/
 
@@ -1476,7 +1477,7 @@ function bp_activity_media_fix_data() {
  */
 function bp_activity_has_activity_filter( $has_activities, $activities ) {
 
-	if ( ! bp_is_active( 'friends' ) || ! is_user_logged_in() || is_super_admin() ) {
+	if ( ! $has_activities || ! bp_is_active( 'friends' ) || ! is_user_logged_in() || is_super_admin() ) {
 		return $has_activities;
 	}
 
@@ -1505,6 +1506,89 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	}
 
 	$activities->activities = array_values( $activities->activities );
+	if ( $activities->activity_count === 0 ) {
+		return false;
+	}
+	return $has_activities;
+}
+
+/**
+ * Filter the activities for document and media privacy
+ *
+ * @since BuddyBoss 1.4.3
+ * @param $has_activities
+ * @param $activities
+ *
+ * @return mixed
+ */
+function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
+
+	if ( ! $has_activities || ! bp_is_active( 'media' ) || ! bp_is_single_activity() ) {
+		return $has_activities;
+	}
+
+	if ( ! empty( $activities->activities ) ) {
+		foreach ( $activities->activities as $key => $activity ) {
+			if ( in_array( $activity->privacy, array( 'media', 'document' ) ) ) {
+				$parent_activity_id = false;
+				if ( ! empty( $activity->secondary_item_id ) ) {
+					$parent_activity_id = $activity->secondary_item_id;
+				} else {
+					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
+					if ( ! empty( $attachment_id ) ) {
+						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					}
+				}
+
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent         = new BP_Activity_Activity( $parent_activity_id );
+					$parent_user    = $parent->user_id;
+					$parent_privacy = $parent->privacy;
+
+					if ( $parent_privacy === 'public' ) {
+						continue;
+					}
+
+					$remove_from_stream = false;
+
+					if ( $parent_privacy === 'loggedin' && ! bp_loggedin_user_id() ) {
+						$remove_from_stream = true;
+					}
+
+					if ( false === $remove_from_stream && $parent_privacy === 'onlyme' && bp_loggedin_user_id() !== $parent_user ) {
+						$remove_from_stream = true;
+					}
+
+					if ( false === $remove_from_stream && $parent_privacy === 'friends' ) {
+						if ( bp_is_active( 'friends' ) ) {
+							$is_friend = friends_check_friendship( bp_loggedin_user_id(), $parent_user );
+							if ( ! $is_friend && $parent_user !== bp_loggedin_user_id() ) {
+								$remove_from_stream = true;
+							}
+						} else {
+							$remove_from_stream = true;
+						}
+					}
+
+					if ( $remove_from_stream && isset( $activities->activity_count ) ) {
+						$activities->activity_count = $activities->activity_count - 1;
+
+						if ( isset( $activities->total_activity_count ) ) {
+							$activities->total_activity_count = $activities->total_activity_count - 1;
+						}
+
+						unset( $activities->activities[ $key ] );
+					}
+
+				}
+			}
+		}
+	}
+
+	$activities->activities = array_values( $activities->activities );
+	if ( $activities->activity_count === 0 ) {
+		return false;
+	}
 
 	return $has_activities;
 }
@@ -1526,7 +1610,10 @@ function bp_activity_media_add( $media ) {
 
 		if ( $bp_media_upload_count > 1 || true === $bp_new_activity_comment ) {
 
-			$args = array( 'hide_sitewide' => true, 'privacy' => 'media' );
+			$args = array(
+				'hide_sitewide'     => true,
+				'privacy'           => 'media'
+			);
 			if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
 				$args['group_id'] = $media->group_id;
 				$activity_id = groups_post_update( $args );
@@ -1547,6 +1634,11 @@ function bp_activity_media_add( $media ) {
 				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
 
 				if ( $parent_activity_id ) {
+
+					$media_activity = new BP_Activity_Activity( $activity_id );
+					$media_activity->secondary_item_id = $parent_activity_id;
+					$media_activity->save();
+
 					//save parent activity id in attachment meta
 					update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
 				}
@@ -1729,6 +1821,11 @@ function bp_activity_document_add( $document ) {
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( ! empty( $parent_activity_id ) ) {
+
+					$document_activity = new BP_Activity_Activity( $activity_id );
+					$document_activity->secondary_item_id = $parent_activity_id;
+					$document_activity->save();
+
 					// save parent activity id in attachment meta.
 					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 				}

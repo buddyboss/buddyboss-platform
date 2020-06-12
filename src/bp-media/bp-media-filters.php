@@ -1215,8 +1215,8 @@ function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) 
 		'relation' => 'AND',
 		array(
 				'column'  => 'privacy',
-				'value'   => array( 'media' ),
-				'compare' => 'IN',
+				'value'   => 'media',
+				'compare' => '=',
 		),
 		array(
 				'column' => 'hide_sitewide',

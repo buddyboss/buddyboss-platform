@@ -5260,6 +5260,12 @@ function bp_activity_default_scope( $scope = 'all' ) {
 			if ( bp_is_activity_follow_active() ) {
 				$new_scope[] = 'following';
 			}
+
+			if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
+				$new_scope[] = 'media';
+				$new_scope[] = 'document';
+			}
+
 		} else if ( bp_is_user_activity() ) {
 			if ( empty( bp_current_action() ) ) {
 				$new_scope[] = 'just-me';

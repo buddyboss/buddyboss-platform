@@ -1248,8 +1248,8 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 			'relation' => 'AND',
 			array(
 					'column'  => 'privacy',
-					'value'   => array( 'document' ),
-					'compare' => 'IN',
+					'value'   => 'document',
+					'compare' => '=',
 			),
 			array(
 					'column' => 'hide_sitewide',
