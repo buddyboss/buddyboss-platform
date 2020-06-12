@@ -264,7 +264,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$_POST['bp_activity_id']     = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
 		if ( $parent_activity->component === 'groups' ) {
 			$_POST['privacy'] = 'grouponly';
@@ -380,7 +380,7 @@ function bp_document_update_document_privacy( &$folder ) {
 			}
 		}
 
-		if ( ! empty( $activity_ids ) ) {
+		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids )  ) {
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 

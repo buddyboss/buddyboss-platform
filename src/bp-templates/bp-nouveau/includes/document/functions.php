@@ -1124,18 +1124,22 @@ function bp_document_chmod_r($path) {
  * @since BuddyBoss 1.4.1
  */
 function bp_document_mirror_text( $attachment_id ) {
-	$words 				 = 8000;
-	$more 				 = '...';
-	$text       		 = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
-	$mirror_text		 = '';
-	if ( $text ) {
-		$mirror_text = strlen($text) > $words ? substr($text,0,$words).'...' : $text;
-	} else {
-		if ( file_exists( get_attached_file( $attachment_id ) ) ) {
-			$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
-			$words       = 10000;
-			$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
-			update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+	$mirror_text = '';
+
+	$extension = bp_document_extension( $attachment_id );
+	if ( isset( $extension ) && !empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+		$words = 8000;
+		$more  = '...';
+		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
+		if ( $text ) {
+			$mirror_text = strlen( $text ) > $words ? substr( $text, 0, $words ) . '...' : $text;
+		} else {
+			if ( file_exists( get_attached_file( $attachment_id ) ) ) {
+				$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
+				$words       = 10000;
+				$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
+				update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+			}
 		}
 	}
 

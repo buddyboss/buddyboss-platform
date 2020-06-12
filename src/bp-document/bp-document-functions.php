@@ -2061,7 +2061,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 			$post_attachment = $document->attachment_id;
 			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-			if ( ! empty( $activity_id ) ) {
+			if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					$activity->privacy = $destination_privacy;
@@ -2490,7 +2490,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 			if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 				$post_attachment = $document->attachment_id;
 				$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-				if ( ! empty( $activity_id ) ) {
+				if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 					$activity = new BP_Activity_Activity( (int) $activity_id );
 					if ( bp_activity_user_can_delete( $activity ) ) {
 						$activity->privacy = $destination_privacy;
@@ -2523,7 +2523,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 					$post_attachment = $document->attachment_id;
 					$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-					if ( ! empty( $activity_id ) ) {
+					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
 							$activity->privacy = $destination_privacy;
@@ -2590,7 +2590,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 						if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 							$post_attachment = $document->attachment_id;
 							$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-							if ( ! empty( $activity_id ) ) {
+							if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 								$activity = new BP_Activity_Activity( (int) $activity_id );
 								if ( bp_activity_user_can_delete( $activity ) ) {
 									$activity->privacy = $privacy;
@@ -2614,7 +2614,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 					$post_attachment = $document->attachment_id;
 					$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-					if ( ! empty( $activity_id ) ) {
+					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
 							$activity->privacy = $privacy;
@@ -2640,7 +2640,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 			$post_attachment = $document->attachment_id;
 			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-			if ( ! empty( $activity_id ) ) {
+			if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					$activity->privacy = $privacy;
