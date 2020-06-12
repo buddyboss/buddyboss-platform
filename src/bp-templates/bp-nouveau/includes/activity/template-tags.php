@@ -1162,10 +1162,10 @@ function bp_nouveau_activity_privacy() {
 					<?php if ( $folder_id && ! empty( $folder_url ) ) : 
 						$folder_url = $folder_url . '#openEditFolder';	
 					?>
-						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy">
+						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
 							<a data-value="<?php echo $folder_url; ?>" href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
 					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy">
+						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
 							<a data-value="<?php echo $parent_activity_permalink; ?>" href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php endif; ?>

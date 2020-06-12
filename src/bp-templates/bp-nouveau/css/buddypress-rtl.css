@@ -1585,6 +1585,40 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   content: "\e95e";
 }
 
+.activity-privacy > li.bb-edit-privacy:before {
+  display: none;
+}
+
+.activity-privacy > li.bb-edit-privacy a:before {
+  content: "\e90d";
+  font-family: 'bb-icons';
+  /* stylelint-disable-line */
+  font-size: 16px;
+  vertical-align: middle;
+  display: inline-block;
+  margin-left: 10px;
+  width: 20px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.activity-privacy > li.bb-edit-privacy.public a:before {
+  content: "\e960";
+}
+
+.activity-privacy > li.bb-edit-privacy.onlyme a:before {
+  content: "\e95f";
+}
+
+.activity-privacy > li.bb-edit-privacy.loggedin a:before {
+  content: "\e95d";
+}
+
+.activity-privacy > li.bb-edit-privacy.friends a:before {
+  content: "\e95e";
+}
+
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy {
   right: auto;
   left: -20px;

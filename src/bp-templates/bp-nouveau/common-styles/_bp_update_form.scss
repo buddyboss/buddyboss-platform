@@ -576,6 +576,42 @@
 		&.friends:before {
 			content: "\e95e";
 		}
+
+		&.bb-edit-privacy {
+
+			&:before {
+				display: none;
+			}
+
+			a:before {
+				content: "\e90d";
+				font-family: 'bb-icons';/* stylelint-disable-line */
+				font-size: 16px;
+				vertical-align: middle;
+				display: inline-block;
+				margin-right: 10px;
+				width: 20px;
+				text-align: center;
+				display: inline-block;
+				vertical-align: bottom;
+			}
+	
+			&.public a:before {
+				content: "\e960";
+			}
+	
+			&.onlyme a:before {
+				content: "\e95f";
+			}
+	
+			&.loggedin a:before {
+				content: "\e95d";
+			}
+	
+			&.friends a:before {
+				content: "\e95e";
+			}
+		}
 	}
 }
 
