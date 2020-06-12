@@ -1042,6 +1042,11 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 				$friends = array( 0 );
 			}
 
+			if ( $user_id === bp_loggedin_user_id() ) {
+				$friends[] = bp_loggedin_user_id();
+				$friends = array_unique( $friends );
+			}
+
 			if ( ! empty( $friends ) ) {
 				$friends_filter = array(
 					'relation' => 'AND',
