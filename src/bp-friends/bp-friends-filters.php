@@ -75,20 +75,30 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 		return $retval;
 	}
 
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'user_id',
+			'compare' => 'IN',
+			'value'   => (array) $friends,
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'friends',
+		),
+	);
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
 	$retval = array(
 		'relation' => 'OR',
-		array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'user_id',
-				'compare' => 'IN',
-				'value'   => (array) $friends,
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'friends',
-			),
-		),
+		$args
 	);
 
 	return $retval;
