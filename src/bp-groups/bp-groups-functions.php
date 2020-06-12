@@ -4089,7 +4089,7 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 /**
  * Mentions results for groups.
  *
- * @since BuddyBoss 1.3.2
+ * @since BuddyBoss 1.4.3
  */
 function bp_groups_prime_mentions_results() {
 
