@@ -1,8 +1,8 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-	$pagePath = explode( '/wp-content/', dirname( __FILE__ ) );
-	include_once str_replace( 'wp-content/', '', $pagePath[0] . '/wp-load.php' );
+	$parse_uri = explode( 'wp-content', $_SERVER['SCRIPT_FILENAME'] );
+	include_once $parse_uri[0] . '/wp-load.php';
 }
 
 define( 'WP_USE_THEMES', true );
