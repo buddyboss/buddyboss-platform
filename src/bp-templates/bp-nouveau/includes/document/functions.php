@@ -55,7 +55,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	if ( bp_is_group_document() || bp_is_group_folders() ) {
 		$folder_id        = (int) bp_action_variable( 1 );
 		$type             = 'group';
-		$group_id         = bp_get_current_group_id();
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
 		$move_to_id_popup = $group_id;
 	} elseif ( bp_is_user_document() || bp_is_user_folders() ) {
 		$folder_id        = (int) bp_action_variable( 0 );

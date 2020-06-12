@@ -1359,8 +1359,10 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Documents', 'buddyboss' );
 	} else {
-		$group      = groups_get_group( (int) $id );
-		$first_text = bp_get_group_name( $group );
+		if ( bp_is_active( 'groups') ) {
+			$group      = groups_get_group( (int) $id );
+			$first_text = bp_get_group_name( $group );
+		}
 	}
 
 	wp_send_json_success(
