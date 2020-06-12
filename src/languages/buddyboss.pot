@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-12 04:33:15+00:00\n"
+"POT-Creation-Date: 2020-06-12 05:22:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20929,7 +20929,7 @@ msgid " view"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:59
-msgid " Download"
+msgid " View"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:115
@@ -22966,7 +22966,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:544
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2084
 #. translators: %s: download url
-msgid "Click to Download"
+msgid "Click to View"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:620
