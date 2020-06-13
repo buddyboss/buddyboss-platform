@@ -3284,7 +3284,8 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 		return false;
 	}
 	//Get invitation by id
-	$member 	= BP_Invitation_Manager::get_by_id( $invite_id );
+	$member 	= new BP_Invitation( $invite_id );
+
 	//$member = new BP_Groups_Member( $user_id, $group->id );
 	$inviter = array(
 		'id'   => $member->inviter_id,
