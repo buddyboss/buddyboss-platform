@@ -13575,8 +13575,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 .bb-document-theater .bb-media-section .img-section img {
-  padding: 20px 20px 10px;
+  padding: 20px 20px 8px;
   max-height: calc(90vh - 75px);
+}
+
+.bb-document-theater .bb-media-section .img-section a.download-button {
+  line-height: normal;
 }
 
 .bb-document-theater .bb-media-section .document-text {
