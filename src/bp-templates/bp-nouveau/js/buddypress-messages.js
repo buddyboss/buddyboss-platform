@@ -2711,7 +2711,7 @@ window.bp = window.bp || {};
 					errors.push( 'message_content' );
 				}
 
-				if(jQuery(content).text().trim() == "") {
+				if($(content).text().trim() === '') {
 					errors.push( 'message_content' );
 				}
 
