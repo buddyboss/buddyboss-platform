@@ -1174,29 +1174,32 @@ function bp_private_network_template_redirect() {
 			// Get excluded list from the settings
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
-
 				// Convert string to URL array
 				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
-				foreach ( $exclude_arr_url as $url ) {
-					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
-					$request_url              = home_url( add_query_arg( array(), $wp->request ) );
-					$un_trailing_slash_it_url = untrailingslashit( $url );
 
-					// Check if strict match
-					if ( false !== $check_is_full_url && ( !empty( $request_url ) && !empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
-						return;
-					} elseif ( false === $check_is_full_url && !empty( $request_url ) && !empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+				if ( ! empty( $exclude_arr_url ) && is_array( $exclude_arr_url ) ) {
+					$request_url = home_url( add_query_arg( array(), $wp->request ) );
 
-						$fragments = explode( '/', $request_url );
+					foreach ( $exclude_arr_url as $url ) {
+						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+						$un_trailing_slash_it_url = untrailingslashit( $url );
 
-						foreach ( $fragments as $fragment ) {
-							if ( $fragment === trim( $url, '/' ) ) {
-								return;
+						// Check if strict match
+						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+							return;
+						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+							$fragments = explode( '/', $request_url );
+
+							foreach ( $fragments as $fragment ) {
+								if ( $fragment === trim( $url, '/' ) ) {
+									return;
+								}
 							}
 						}
 					}
 				}
 			}
+
 			if ( get_option( 'users_can_register' ) ) {
 				if ( isset( $id ) ) {
 					if ( ! bp_is_register_page() && ! $activate && $terms !== $id && $privacy !== $id ) {
