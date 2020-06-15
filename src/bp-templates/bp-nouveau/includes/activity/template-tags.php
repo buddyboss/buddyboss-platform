@@ -1159,8 +1159,8 @@ function bp_nouveau_activity_privacy() {
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 				<ul class="activity-privacy">
-					<?php if ( $folder_id && ! empty( $folder_url ) ) : 
-						$folder_url = $folder_url . '#openEditFolder';	
+					<?php if ( $folder_id && ! empty( $folder_url ) ) :
+						$folder_url = $folder_url . '#openEditFolder';
 					?>
 						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
 							<a data-value="<?php echo $folder_url; ?>" href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
@@ -1270,7 +1270,8 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
+	$attachment_id 	= BP_Document::get_activity_attachment_id( $activity_id );
+	$document_id 	= BP_Document::get_activity_document_id( $activity_id );
 
 	if ( empty( $attachment_id ) ) {
 		return;
@@ -1289,6 +1290,24 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
+
+		<?php
+		if ( ! empty( $document_id ) ) {
+			$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+			$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+			if ( $can_download_btn ) {
+				$download_url      = bp_document_download_link( $attachment_id, $document_id );
+				if ( $download_url ) {
+					?>
+					<a class="download-document"
+					   href="<?php echo esc_url( $download_url ); ?>">
+						<?php _e( 'Download', 'buddyboss' ); ?>
+					</a>
+					<?php
+				}
+			}
+		}
+		?>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
                         <textarea id="add-activity-description"

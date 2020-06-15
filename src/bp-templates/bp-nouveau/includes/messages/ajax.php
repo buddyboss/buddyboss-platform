@@ -534,6 +534,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$reply['document'][] = array(
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
+						'attachment_id'         => bp_get_document_attachment_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,
@@ -2074,6 +2075,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->messages[ $i ]['document'][] = array(
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
+						'attachment_id'         => bp_get_document_attachment_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,

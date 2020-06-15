@@ -4471,7 +4471,12 @@ window.bp = window.bp || {};
 			self.setCurrentDocument( id );
 			self.showDocument();
 			self.navigationDocumentCommands();
-			self.getDocumentsActivity();
+
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && ! self.current_document.is_forum ) {
+				self.getDocumentsActivity();
+			} else {
+				self.getDocumentsDescription();
+			}
 
 			//Stop audio if it is playing before opening theater
 			if( $.inArray( self.current_document.extension, BP_Nouveau.document.mp3_preview_extension.split(',') ) !== -1 ) {
@@ -4654,6 +4659,7 @@ window.bp = window.bp || {};
 							id					: document_element.data( 'id' ),
 							attachment			: document_element.data( 'attachment-full' ),
 							activity_id			: document_element.data( 'activity-id' ),
+							attachment_id		: document_element.data( 'attachment-id' ),
 							privacy				: document_element.data( 'privacy' ),
 							parent_activity_id	: document_element.data( 'parent-activity-id' ),
 							album_id			: document_element.data( 'album-id' ),
@@ -4860,7 +4866,7 @@ window.bp = window.bp || {};
 			if (typeof self.documents[self.current_document_index + 1] !== 'undefined') {
 				self.current_document_index = self.current_document_index + 1;
 				activity_id        			= self.current_document.activity_id;
-				self.current_document = self.documents[self.current_document_index];
+				self.current_document 		= self.documents[self.current_document_index];
 				self.showDocument();
 				if (activity_id != self.current_document.activity_id) {
 					self.getDocumentsActivity();
@@ -5013,6 +5019,38 @@ window.bp = window.bp || {};
 			} else {
 				$( '.bb-media-info-section.document' ).hide();
 			}
+		},
+
+		getDocumentsDescription: function () {
+			var self = this;
+
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+
+			if (self.activity_ajax != false) {
+				self.activity_ajax.abort();
+			}
+
+			self.activity_ajax = $.ajax(
+				{
+					type	: 'POST',
+					url		: BP_Nouveau.ajaxurl,
+					data	: {
+						action	: 'document_get_document_description',
+						id		: self.current_document.id,
+						id1		: self.current_document.attachment_id,
+						nonce	: BP_Nouveau.nonces.media
+					},
+					success: function (response) {
+						if (response.success) {
+							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
+							$( '.bb-media-info-section:visible' ).show();
+							$( window ).scroll();
+						} else {
+							$( '.bb-media-info-section.document' ).hide();
+						}
+					}
+				}
+			);
 		},
 
 		activityDeleted: function (event, data) {

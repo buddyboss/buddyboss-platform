@@ -80,6 +80,7 @@
 							   class="document-detail-wrap bb-open-document-theatre"
 							   data-id="{{data.document[i].id}}"
 							   data-activity-id=""
+							   data-attachment-id="{{data.document[i].attachment_id}}"
 							   data-attachment-full=""
 							   data-privacy="{{data.document[i].privacy}}"
 							   data-extension="{{data.document[i].extension}}"
