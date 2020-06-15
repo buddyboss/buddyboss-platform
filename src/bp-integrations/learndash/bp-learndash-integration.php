@@ -61,4 +61,25 @@ class BP_Learndash_Integration extends BP_Integration {
 			)
 		);
 	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		if ( ! class_exists( 'BP_REST_Learndash_Courses_Endpoint' ) ) {
+
+			$file_path = trailingslashit( $this->path ) . '/classes/class-bp-rest-learndash-courses-endpoint.php';
+			if ( file_exists( $file_path ) ) {
+				require_once $file_path;
+			}
+
+			parent::rest_api_init( array(
+				'BP_REST_Learndash_Courses_Endpoint',
+			) );
+		}
+	}
 }

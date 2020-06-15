@@ -255,7 +255,7 @@ function bp_ps_current_page() {
  */
 function bp_ps_debug() {
 	$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_debug' );
-	return isset( $_REQUEST['bp_ps_debug'] ) ? true : isset( $_COOKIE[ $cookie ] ) ? true : false;
+	return isset( $_REQUEST['bp_ps_debug'] ) ? true : ( isset( $_COOKIE[ $cookie ] ) ? true : false );
 }
 
 // add_action ('bp_before_directory_members_content', 'bp_ps_display_filters');

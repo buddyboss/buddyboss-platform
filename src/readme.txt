@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.3.4
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,59 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.2 =
+* Documents - Added 'Download' link to Image and PDF file preview popups
+* Documents - Fixed search results for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed timeline of followers for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed content set to 'Only Me' being hidden from my sitewide activity feed
+* Documents - Newly added Image and PDF protected files display an icon in Media Library
+* Security - Added index.html into 'uploads/bb_documents' for enhanced file protection
+* WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
+* WC Vendors - Fixed products displayed in activity feed not showing featured image
+
+= 1.4.1 =
+* Forums - Fixed attached images getting removed after editing forum replies
+* Media - Set maximum amount of files uploaded per batch at 10 files
+* Security - Preventing executable file uploads from running in browser
+* Security - New file uploads go into 'uploads/bb_documents' with .htaccess protection
+
+= 1.4.0 =
+* Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
+* Documents - Added central Documents page for showing all site documents
+* Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
+* Documents - Added functionality to move and organized Documents into Folders
+* Documents - Added settings page for customizable Document File Extensions
+* Media - Added enhanced privacy controls for uploaded Photos and Documents
+* Media - Added functionality to enter 'Description' in Photo and Document popups
+* Media - Comments in single Photo and Document popups now sync with activity comments
+* Activity - Added enhanced privacy controls for user-created activity posts
+* REST API - New endpoints added for Activity privacy changes
+* Groups - Improved performance for groups with many thousands of members
+* Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
+* Forums - Fixed pagination when using shortcode [bbp-topic-index]
+* Forums - Fixed issues when using many levels of threaded replies
+* Forums - Fixed empty Forums page displaying with Private Network enabled
+* Forums - Fixed HTML elements displaying when pasting content as subscriber
+* Forums - Merged in security patches from bbPress 2.6.5
+* Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
+* Network Search - Fixed results title when using apostrophe or blank entry
+* Emails - Fixed email not sending for site admin changing a user's password
+* Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
+* Icons - Added new font icons to represent all common file types
+* LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
+* MemberPress - Fixed JavaScript conflicts with Stripe credit card field
+* WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
+
+= 1.3.5 =
+* REST API - Added official BuddyBoss REST API
+* Activity - Fixed website link previews not all using the same formatting
+* Activity - Fixed some websites not properly fetching link preview content
+* Text Editor - Fixed text formatting buttons overlapping with media uploader
+* Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
+* WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
+* Compatibility - Fixed deprecated code errors when using PHP 7.4
+* Translations - Updated German (formal) language files
 
 = 1.3.4 =
 * Activity - Fixed certain link previews displaying doubled in activity posts

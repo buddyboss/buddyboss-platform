@@ -43,7 +43,7 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 						?>
 					</span>
 					<?php
-					$tags_count = count($discussion_tags);
+					$tags_count = ( is_array( $discussion_tags ) || is_object( $discussion_tags ) ) ? count( $discussion_tags ) : 0;
 					$loop_count = 1;
 					foreach ( $discussion_tags as $key => $discussion_tag ) {
 						?>
