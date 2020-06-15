@@ -1969,10 +1969,10 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 		$html .= '<ul class="document-breadcrumb">';
 		if ( bp_is_group() && bp_is_group_single() ) {
 			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
-			$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug();
+			$link  = bp_get_group_permalink( $group ) . bp_get_document_slug();
 			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
 		} else {
-			$link  = bp_displayed_user_domain() . bp_get_document_root_slug();
+			$link  = bp_displayed_user_domain() . bp_get_document_slug();
 			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
 		}
 
