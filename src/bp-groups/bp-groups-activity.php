@@ -360,6 +360,14 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		);
 	}
 
+	if ( empty( $public_groups ) ) {
+		$public_groups = array( 0 );
+	}
+
+	if ( empty( $private_group ) ) {
+		$private_group = array( 0 );
+	}
+
 	$data = array(
 		'relation' => 'AND',
 		array(
