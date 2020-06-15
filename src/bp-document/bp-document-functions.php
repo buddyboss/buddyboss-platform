@@ -1957,7 +1957,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
             (SELECT @r := %d, @l := 0) vars, {$document_folder_table} m
         WHERE @r <> 0) d
     JOIN {$document_folder_table} c
-    ON d._id = c.id",
+    ON d._id = c.id d.level DESC",
 		$folder_id
 	);
 
