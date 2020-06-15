@@ -24,9 +24,14 @@ jQuery( document ).ready(
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
-								cleanReplacements: [],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
+								cleanReplacements: [
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
+								],
+								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								cleanTags: ['meta','div','section','button','svg','canvas','figure','input','textarea','form' ],
 								unwrapTags: []
 							}
 						}
@@ -61,13 +66,13 @@ jQuery( document ).ready(
 								forcePlainText: false,
 								cleanPastedHTML: true,
 								cleanReplacements: [
-									[new RegExp(/<div>/gi), '<p>'],
-									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
 									[new RegExp(/<h[1-6]/gi), '<b'],
-									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
+								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								cleanTags: ['meta','div','section','button','svg','canvas','figure','input','textarea','form' ],
 								unwrapTags: []
 							}
 						}
@@ -102,13 +107,13 @@ jQuery( document ).ready(
 								forcePlainText: false,
 								cleanPastedHTML: true,
 								cleanReplacements: [
-									[new RegExp(/<div>/gi), '<p>'],
-									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
 									[new RegExp(/<h[1-6]/gi), '<b'],
-									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
+								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								cleanTags: ['meta','div','section','button','svg','canvas','figure','input','textarea','form' ],
 								unwrapTags: []
 							}
 						}
