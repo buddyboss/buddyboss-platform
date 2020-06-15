@@ -1226,6 +1226,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
 		   href="#">
+		   	<span class="bb-icon-edit-thin"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1287,6 +1288,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
 		   href="#">
+		   	<span class="bb-icon-edit-thin"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1301,6 +1303,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 					?>
 					<a class="download-document"
 					   href="<?php echo esc_url( $download_url ); ?>">
+					   	<span class="bb-icon-download"></span>
 						<?php _e( 'Download', 'buddyboss' ); ?>
 					</a>
 					<?php

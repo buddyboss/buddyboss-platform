@@ -803,30 +803,50 @@ span.dashicons.dashicons-admin-file:before {
 	}
 }
 
+.bb-media-model-wrapper .activity-list.item-list > .activity-media-description {
+	margin: 15px
+}
+
 .activity-media-description {
 	margin-bottom: 10px;
 
 	.bp-add-media-activity-description.show-edit {
+		display: inline-block;
+    	margin-right: 10px;
 
 		.add {
 			display: none;
 		}
 
 		.edit {
-			display: block;
+			display: inline-block;
 		}
 	}
 
 	.bp-add-media-activity-description.show-add {
+		display: inline-block;
+    	margin-right: 10px;
 
 		.add {
-			display: block;
+			display: inline-block;	
 			margin-bottom: 10px;
 		}
 
 		.edit {
 			display: none;
 		}
+	}
+
+	.download-document {
+		font-size: 13px;
+		display: inline-block;
+		margin-bottom: 10px;
+	}
+
+	.bp-media-activity-description {
+		margin-bottom: 10px;
+		font-size: 14px;
+		line-height: 1.5;
 	}
 }
 
