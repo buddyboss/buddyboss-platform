@@ -90,6 +90,7 @@ function messages_new_message( $args = '' ) {
 	$message->mark_visible = $r['mark_visible'];
 
 	$new_reply = false;
+	$is_group_thread = isset( $r['group_thread'] ) ? $r['group_thread'] : false;
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
@@ -116,6 +117,13 @@ function messages_new_message( $args = '' ) {
 
 		$new_reply = true;
 
+		$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
+		if ( isset( $first_message->id ) ) {
+			$group = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+			if ( !empty( $group ) ) {
+				$is_group_thread = true;
+			}
+		}
 		// ...otherwise use the recipients passed
 	} else {
 
@@ -254,7 +262,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// check if force friendship is enabled and check recipients
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && $is_group_thread <> true) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
