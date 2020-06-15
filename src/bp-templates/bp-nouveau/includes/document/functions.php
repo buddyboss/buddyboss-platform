@@ -812,6 +812,9 @@ function bp_media_allowed_document_type() {
 
 function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_document_ie_nocache_headers_fix' );
+
 	if ( 'document' === $type ) {
 
 		$the_file = wp_get_attachment_url( $attachment_id );

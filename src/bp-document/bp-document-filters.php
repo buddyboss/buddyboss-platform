@@ -39,7 +39,7 @@ add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_atta
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
 
 // Download Document.
-add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
+add_action( 'init', 'bp_document_download_url_file' );
 
 // Sync Attachment data.
 //add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );

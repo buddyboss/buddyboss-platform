@@ -2680,7 +2680,7 @@ function bp_document_download_link( $attachment_id, $document_id ) {
 		return;
 	}
 
-	$link = get_the_permalink( $attachment_id ) . '?attachment_id=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
+	$link = site_url() . '/?attachment_id=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
 
 	return apply_filters( 'bp_document_download_link', $link, $attachment_id );
 
@@ -2700,7 +2700,7 @@ function bp_document_folder_download_link( $folder_id ) {
 		return;
 	}
 
-	$link = bp_get_folder_link( $folder_id ) . '?attachment_id=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
+	$link = site_url() . '/?attachment_id=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
 
 	return apply_filters( 'bp_document_folder_download_link', $link, $folder_id );
 
@@ -3127,3 +3127,18 @@ function bp_document_upload_dir_script( $pathdata ) {
 	return $pathdata;
 }
 
+/**
+ * Filter headers for IE to fix issues over SSL.
+ *
+ * IE bug prevents download via SSL when Cache Control and Pragma no-cache headers set.
+ *
+ * @param array $headers HTTP headers.
+ * @return array
+ */
+function bp_document_ie_nocache_headers_fix( $headers ) {
+	if ( is_ssl() && ! empty( $GLOBALS['is_IE'] ) ) {
+		$headers['Cache-Control'] = 'private';
+		unset( $headers['Pragma'] );
+	}
+	return $headers;
+}
