@@ -420,6 +420,13 @@ function bp_admin_repair_list() {
 		'bp_admin_invitations_table',
 	);
 
+	if ( bp_is_active( 'media' ) ) {
+		$repair_list[111] = array(
+				'bp-media-forum-privacy-repair',
+				__( 'Repair forum media privacy', 'buddyboss' ),
+				'bp_media_forum_privacy_repair',
+		);
+	}
 
 	ksort( $repair_list );
 
@@ -1148,6 +1155,8 @@ function bp_admin_repair_tools_wrapper_function() {
 		$status = bp_admin_update_activity_favourite();
 	} elseif ( 'bp-invitations-table' === $type ) {
 		$status = bp_admin_invitations_table();
+	} elseif ( 'bp-media-forum-privacy-repair' === $type ) {
+		$status = bp_media_forum_privacy_repair();
 	}
 	wp_send_json_success( $status );
 }
@@ -1293,4 +1302,41 @@ function bp_admin_invitations_table() {
 		'status'  => 0,
 		'message' => sprintf( $statement, $result ),
 	);
+}
+
+/**
+ * Resync BuddyBoss Forum media privacy.
+ *
+ * @since BuddyBoss 1.4.2
+ */
+function bp_media_forum_privacy_repair() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+	$squery 	= "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
+	$records 	= $wpdb->get_col( $squery );
+	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
+		foreach ( $records as $record ) {
+			if ( !empty( $record ) ) {
+				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
+				if ( $media_ids ) {
+					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ")";
+					$wpdb->query( $update_query );
+				}
+			}
+			$offset++;
+		}
+		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
+		return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
 }

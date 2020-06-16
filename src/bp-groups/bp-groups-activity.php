@@ -314,44 +314,97 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			: bp_loggedin_user_id();
 	}
 
+	// Fetch public groups.
+	$public_groups = groups_get_groups(
+		array(
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+			'user_id'  => $user_id,
+		)
+	);
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = array();
+	}
+
 	// Determine groups of user.
 	$groups = groups_get_user_groups( $user_id );
 	if ( empty( $groups['groups'] ) ) {
 		$groups = array( 'groups' => 0 );
 	}
 
-	if ( empty( $groups ) || empty( $groups['groups'] ) ) {
-		return $retval;
-	}
+	$groups = $groups['groups'];
+
+	$private_group = array_diff( $groups, $public_groups );
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
+	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+
+		// Determine groups of user.
+		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+			$private_group = array_intersect( $private_group, $logged_in_user_groups['groups'] );
+		} else {
+			$show_hidden = array(
+				'column' => 'hide_sitewide',
+				'value'  => 0,
+			);
+		}
+	} else if ( ! is_user_logged_in() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
 		);
 	}
 
-	$retval = array(
+	if ( empty( $public_groups ) ) {
+		$public_groups = array( 0 );
+	}
+
+	if ( empty( $private_group ) ) {
+		$private_group = array( 0 );
+	}
+
+	$data = array(
 		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
+			'column' => 'component',
+			'value'  => buddypress()->groups->id,
+		),
+		array(
+			'relation' => 'OR',
 			array(
-				'column' => 'component',
-				'value'  => buddypress()->groups->id,
+				'column'  => 'item_id',
+				'compare' => 'IN',
+				'value'   => (array) $public_groups,
 			),
 			array(
 				'column'  => 'item_id',
 				'compare' => 'IN',
-				'value'   => (array) $groups['groups'],
-			),
-			array(
-				'column'  => 'privacy',
-				'compare' => '=',
-				'value'   => 'public',
+				'value'   => (array) $private_group,
 			),
 		),
+		array(
+			'column'  => 'privacy',
+			'compare' => '=',
+			'value'   => 'public',
+		),
+	);
+
+	if ( bp_is_user() ) {
+		$data[] = array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => $user_id,
+		);
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		$data,
 		$show_hidden,
 		// Overrides.
 		'override' => array(

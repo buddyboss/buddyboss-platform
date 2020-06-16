@@ -202,6 +202,14 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 		),
 	);
 
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
 	return $retval;
 }
 add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );

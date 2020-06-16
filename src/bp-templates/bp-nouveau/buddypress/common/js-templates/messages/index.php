@@ -28,6 +28,9 @@
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 	bp_get_template_part( 'media/theatre' );
 }
+if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+	bp_get_template_part( 'document/theatre' );
+}
 
     /**
      * Split each js template to its own file. Easier for child theme to

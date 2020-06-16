@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.1
+Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,21 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.3 =
+* Activity - Fixed some activity posts hidden from logged out users, and new members
+* Activity - Fixed 'All Updates' tab not displaying updates from joined private groups
+* Documents - Fixed 404 error on profile breadcrumbs when Documents directory is custom page
+* Documents - Fixed download links not working when using various SEO plugins
+* Documents - Fixed issues with playing and downloading MP3 file uploads
+* Documents - Added media popups for documents uploaded into forums and messages
+* Documents - Improved the styling of media popups when Activity component is disabled
+* Documents - When clicking 'Edit Folder Privacy' we now auto-display the Edit Folder popup
+* Documents - When opening the Edit Folder popup, privacy dropdown now displays correct privacy
+* Documents - Improved the file upload previews in the WordPress Media Library
+* Photos - In Photos directory, fixed group photos displaying when performing any search query
+* Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
+* Compatibility - Fixed PHP 7.4 errors when using WP Engine hosting
 
 = 1.4.2 =
 * Documents - Added 'Download' link to Image and PDF file preview popups
