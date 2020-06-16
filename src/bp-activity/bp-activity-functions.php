@@ -5220,3 +5220,79 @@ function bp_activity_directory_page_content() {
 }
 
 add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
+
+
+/**
+ * Get default scope for the activity
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param string $scope Default scope.
+ *
+ * @return string
+ */
+function bp_activity_default_scope( $scope = 'all' ) {
+	$new_scope = array();
+
+	if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+
+		$new_scope[] = 'public';
+
+		if ( bp_is_activity_directory() || bp_is_single_activity() ) {
+			$new_scope[] = 'just-me';
+
+			if ( bp_is_activity_directory() ) {
+				$new_scope[] = 'public';
+			}
+
+			if ( bp_activity_do_mentions() ) {
+				$new_scope[] = 'mentions';
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$new_scope[] = 'friends';
+			}
+
+			if ( bp_is_active( 'groups' ) ) {
+				$new_scope[] = 'groups';
+			}
+
+			if ( bp_is_activity_follow_active() ) {
+				$new_scope[] = 'following';
+			}
+
+			if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
+				$new_scope[] = 'media';
+				$new_scope[] = 'document';
+			}
+
+		} else if ( bp_is_user_activity() ) {
+			if ( empty( bp_current_action() ) ) {
+				$new_scope[] = 'just-me';
+			} else {
+				$new_scope[] = bp_current_action();
+			}
+		} else if ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
+			$new_scope[] = 'groups';
+		}
+
+	} else if( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'public';
+	}
+
+	$new_scope = array_unique( $new_scope );
+
+	if ( empty( $new_scope ) ) {
+		$new_scope = (array) $scope;
+	}
+
+	/**
+	 * Filter to update default scope.
+	 *
+	 * @since BuddyBoss 1.4.3
+	 */
+	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
+
+	return implode( ',', $new_scope );
+
+}

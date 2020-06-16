@@ -42,7 +42,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -62,7 +62,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										<?php
 									}
 								}
-								if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) && is_user_logged_in() ) {
+								if ( bp_is_active( 'groups' ) && bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) && is_user_logged_in() ) {
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
