@@ -73,6 +73,7 @@ window.bp = window.bp || {};
                 var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
 				if( 'undefined' !== typeof field_id ) {
 					field_id = field_id.replace( 'field_', '' );
+					field_id = field_id.replace( '_day', '' );
 					field_id = field_id.replace( '[]', '' );
 					deleted_field_ids.push( field_id );
 				}
