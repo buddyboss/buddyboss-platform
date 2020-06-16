@@ -6,10 +6,9 @@
  * @version 3.1.0
  */
 
-global $bp;
 bp_nouveau_group_hook( 'before', 'request_membership_content' );
 
-if ( groups_check_user_has_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
+if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 
 	bp_nouveau_group_hook( 'before', 'invites_content' );
 	?>
@@ -33,7 +32,7 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), $bp->groups->current_g
 							<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
 							<p class="item-meta group-details">
-								<?php $inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), $bp->groups->current_group->id ); ?>
+								<?php $inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), bp_get_current_group_id() ); ?>
 								<?php if ( ! empty( $inviter ) ) : ?>
 									<?php
 									printf(
@@ -53,7 +52,7 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), $bp->groups->current_g
 							</p>
 
 							<p class="desc item-meta invite-message">
-								<?php echo bp_groups_get_invite_messsage_for_user( bp_displayed_user_id(), bp_get_group_id() ); ?>
+								<?php echo bp_groups_get_invite_messsage_for_user( bp_displayed_user_id(), bp_get_current_group_id() ); ?>
 							</p>
 
 						</div>
