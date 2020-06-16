@@ -58,8 +58,18 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.3 =
-* Photos - In Photos directory, group photos display when performing any search query
+* Activity - Fixed some activity posts hidden from logged out users, and new members
+* Activity - Fixed 'All Updates' tab not displaying updates from joined private groups
+* Documents - Fixed 404 error on profile breadcrumbs when Documents directory is custom page
+* Documents - Fixed download links not working when using various SEO plugins
+* Documents - Fixed issues with playing and downloading MP3 file uploads
+* Documents - Added media popups for documents uploaded into forums and messages
+* Documents - Improved the styling of media popups when Activity component is disabled
+* Documents - When clicking 'Edit Folder Privacy' we now auto-display the Edit Folder popup
+* Documents - When opening the Edit Folder popup, privacy dropdown now displays correct privacy
+* Photos - In Photos directory, fixed group photos displaying when performing any search query
 * Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
+* Compatibility - Fixed PHP 7.4 errors when using WP Engine hosting
 
 = 1.4.2 =
 * Documents - Added 'Download' link to Image and PDF file preview popups
