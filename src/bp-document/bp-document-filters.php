@@ -39,7 +39,7 @@ add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_atta
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
 
 // Download Document.
-add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
+add_action( 'init', 'bp_document_download_url_file' );
 
 // Sync Attachment data.
 //add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
@@ -264,7 +264,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$_POST['bp_activity_id']     = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
 		if ( $parent_activity->component === 'groups' ) {
 			$_POST['privacy'] = 'grouponly';
@@ -380,7 +380,7 @@ function bp_document_update_document_privacy( &$folder ) {
 			}
 		}
 
-		if ( ! empty( $activity_ids ) ) {
+		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids )  ) {
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
@@ -747,12 +747,12 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		$document_ids = explode( ',', $document_ids );
 
 		foreach ( $document_ids as $document_id ) {
-			$document          = new BP_Document( $document_id );
+			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( 'forums' !== $document->privacy ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
 				$document->privacy = $activity->privacy;
+				$document->save();
 			}
-			$document->save();
 		}
 	}
 }
@@ -828,20 +828,10 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  * @since BuddyBoss 1.4.1
  */
 function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) {
-
 	if ( isset( $response['url'] ) && strstr( $response['url'], 'bb_documents/' ) ) {
-
-		$preview_attachment_id  = get_post_meta( $attachment->ID, 'document_preview_attachment_id', true );
-		if ( ! $preview_attachment_id ) {
-			$preview_attachment_id = $attachment->ID;
-		}
-
-		$response['full']['url'] = includes_url() . 'images/media/default.png';
-		if ( isset( $response['sizes'] ) ) {
-			foreach ( $response['sizes'] as $size => $value ) {
-				$response['sizes'][ $size ]['url'] = includes_url() . 'images/media/default.png';
-			}
-		}
+		$response['icon'] 	= includes_url() . 'images/media/default.png';
+		$response['type'] 	= 'text';
+		$response['sizes'] 	= array();
 	}
 
 	return $response;
@@ -1258,8 +1248,8 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 			'relation' => 'AND',
 			array(
 					'column'  => 'privacy',
-					'value'   => array( 'document' ),
-					'compare' => 'IN',
+					'value'   => 'document',
+					'compare' => '=',
 			),
 			array(
 					'column' => 'hide_sitewide',
@@ -1270,3 +1260,45 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 	return $retval;
 }
 add_filter( 'bp_activity_set_document_scope_args', 'bp_activity_filter_document_scope', 10, 2 );
+
+/**
+ * Shows default icon for media in wordpress media library list view.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param array   $attr       List of image attributes.
+ * @param WP_Post $attachment Attachment Post object.
+ * @param string  $size       Sizes for the image.
+ *
+ * @return mixed
+ */
+function bp_document_media_library_list_view_document_attachment_image( $attr, $attachment, $size ) {
+	if ( ! is_admin() ) {
+		return $attr;
+	}
+
+	global $current_screen;
+
+	if (
+		empty( $current_screen )
+		|| ! isset( $current_screen->parent_file )
+		|| $current_screen->parent_file !== 'upload.php'
+		|| empty( $attachment )
+		|| empty( $attachment->ID )
+	) {
+		return $attr;
+	}
+
+	$meta = get_post_meta( $attachment->ID, '_wp_attached_file', true );
+	if ( empty( $meta ) ) {
+		return $attr;
+	}
+
+	if ( strstr( $meta, 'bb_documents/' ) ) {
+		$attr['src']   = includes_url() . 'images/media/default.png';
+		$attr['style'] = "width:42px;height:60px;border:0;";
+	}
+
+	return $attr;
+}
+add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_list_view_document_attachment_image', 10, 3 );
