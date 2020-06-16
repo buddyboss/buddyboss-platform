@@ -58,6 +58,18 @@ function bp_nouveau_get_members_directory_nav_items() {
 					'position'  => 16,
 				);
 			}
+
+			if ( ! empty( $counts['followers'] ) ) {
+				$nav_items['followers'] = array(
+					'component' => 'members',
+					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array(),
+					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-followers/',
+					'text'      => __( 'Followers', 'buddyboss' ),
+					'count'     => $counts['followers'],
+					'position'  => 17,
+				);
+			}
 		}
 	}
 

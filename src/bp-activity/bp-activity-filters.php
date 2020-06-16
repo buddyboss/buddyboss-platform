@@ -1191,6 +1191,14 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 				)
 			);
 		}
+
+		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
+			$qs .= '&include=' . bp_get_follower_ids(
+				array(
+					'user_id' => bp_loggedin_user_id(),
+				)
+			);
+		}
 	}
 
 	return $qs;

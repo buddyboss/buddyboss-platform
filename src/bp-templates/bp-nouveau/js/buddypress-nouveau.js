@@ -528,7 +528,7 @@ window.bp = window.bp || {};
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
-					if ( undefined !== typeType && typeType == 'following' ) {
+					if ( undefined !== typeType && ( typeType == 'following' || typeType == 'followers' ) ) {
 						scope = typeType;
 					} else if ( undefined !== objectData.scope ) {
 						scope = objectData.scope;

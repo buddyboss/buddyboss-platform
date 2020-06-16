@@ -181,6 +181,13 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 			$results['scopes']['following'] = $GLOBALS['members_template']->total_member_count;
 			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20, 2 );
 		}
+
+		if ( ! empty( $counts['followers'] ) ) {
+			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_followers_scope', 20, 2 );
+			bp_has_members( bp_ajax_querystring( 'members' ) );
+			$results['scopes']['followers'] = $GLOBALS['members_template']->total_member_count;
+			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_followers_scope', 20, 2 );
+		}
 	}
 
 	return $results;
@@ -258,6 +265,33 @@ function bp_nouveau_object_template_results_members_following_scope( $querystrin
 	$following_comma_separated_string = bp_get_following_ids( $args );
 	$querystring['include']           = $following_comma_separated_string;
 	$querystring['scope']             = 'following';
+	$querystring['page']              = 1;
+	$querystring['per_page']          = '1';
+	if ( isset( $querystring['user_id'] ) && ! empty( $querystring['user_id'] ) ) {
+		unset( $querystring['user_id'] );
+	}
+
+	return http_build_query( $querystring );
+}
+
+/**
+ * Object template results members Followers scope.
+ *
+ * @since BuddyBoss 1.4.3
+ */
+function bp_nouveau_object_template_results_members_followers_scope( $querystring, $object ) {
+	if ( 'members' !== $object ) {
+		return $querystring;
+	}
+
+	$querystring = wp_parse_args( $querystring );
+
+	$args                             = array(
+		'user_id' => ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id(),
+	);
+	$followers_comma_separated_string = bp_get_follower_ids( $args );
+	$querystring['include']           = $followers_comma_separated_string;
+	$querystring['scope']             = 'followers';
 	$querystring['page']              = 1;
 	$querystring['per_page']          = '1';
 	if ( isset( $querystring['user_id'] ) && ! empty( $querystring['user_id'] ) ) {
