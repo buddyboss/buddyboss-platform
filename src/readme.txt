@@ -67,6 +67,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Documents - Improved the styling of media popups when Activity component is disabled
 * Documents - When clicking 'Edit Folder Privacy' we now auto-display the Edit Folder popup
 * Documents - When opening the Edit Folder popup, privacy dropdown now displays correct privacy
+* Documents - Improved the file upload previews in the WordPress Media Library
 * Photos - In Photos directory, fixed group photos displaying when performing any search query
 * Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
 * Compatibility - Fixed PHP 7.4 errors when using WP Engine hosting
