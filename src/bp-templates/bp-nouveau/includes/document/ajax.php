@@ -388,24 +388,6 @@ function bp_nouveau_ajax_document_get_document_description() {
 				<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 			</a>
 
-			<?php
-			if ( ! empty( $document_id ) ) {
-				$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-				$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-				if ( $can_download_btn ) {
-					$download_url      = bp_document_download_link( $attachment_id, $document_id );
-					if ( $download_url ) {
-						?>
-						<a class="download-document"
-						   href="<?php echo esc_url( $download_url ); ?>">
-						   	<span class="bb-icon-download"></span>
-							<?php _e( 'Download', 'buddyboss' ); ?>
-						</a>
-						<?php
-					}
-				}
-			}
-			?>
 			<div class="bp-edit-media-activity-description" style="display: none;">
 				<div class="innerWrap">
 							<textarea id="add-activity-description"
@@ -428,6 +410,24 @@ function bp_nouveau_ajax_document_get_document_description() {
 		}
 		?>
 	</div>
+	<?php
+		if ( ! empty( $document_id ) ) {
+			$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+			$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+			if ( $can_download_btn ) {
+				$download_url      = bp_document_download_link( $attachment_id, $document_id );
+				if ( $download_url ) {
+					?>
+					<a class="download-document"
+						href="<?php echo esc_url( $download_url ); ?>">
+						<span class="bb-icon-download"></span>
+						<?php _e( 'Download', 'buddyboss' ); ?>
+					</a>
+					<?php
+				}
+			}
+		}
+	?>
 		<?php
 		$document_description = ob_get_contents();
 		ob_end_clean();

@@ -4764,7 +4764,6 @@ window.bp = window.bp || {};
 			var target_icon_class	= self.current_document.target_icon_class;
 			var document_elements 	= $( document ).find( '.document-theatre' );
 			var extension 			= self.current_document.extension;
-			var download 			= self.current_document.download;
 			var mirror_text_display = self.current_document.mirror_text;
 			if( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
@@ -4786,11 +4785,11 @@ window.bp = window.bp || {};
 				if ( self.current_document.preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /></div></div>' );
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p></div>' );
 				}
 			}
 

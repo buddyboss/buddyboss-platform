@@ -1193,9 +1193,16 @@ ul.bb-albums-list {
 				flex: none;
 				width: 100%;
 				margin-left: 0;
+				max-height: calc(50vh - 40px);
+
+				.activity-list.bp-list {
+					min-height: calc(50vh - 40px);
+					max-height: calc(50vh - 40px);
+				}
 
 				li.activity_update {
-					min-height: auto;
+					min-height: calc(50vh - 80px);
+					max-height: calc(50vh - 80px);
 				}
 			}
 		}
@@ -1203,8 +1210,8 @@ ul.bb-albums-list {
 		.bb-media-section {
 			width: 100%;
 			height: auto;
-			min-height: 260px;
-			max-height: 60vh;
+			min-height: 50vh;
+			max-height: 50vh;
 			background-color: #fff;
 			-webkit-box-align: center;
 			-ms-flex-align: center;
@@ -1212,7 +1219,7 @@ ul.bb-albums-list {
 			border-radius: 4px 4px 0 8px;
 
 			.img-section {
-				max-height: 60vh;
+				max-height: 50vh;
 				height: auto;
 				display: block;
 				text-align: center;
@@ -1220,10 +1227,11 @@ ul.bb-albums-list {
 
 				.img-block-wrap {
 					height: auto;
-					padding-bottom: 10px;
+					padding-bottom: 0;
+					padding-bottom: 0;
 
 					img {
-						max-height: calc(60vh - 81px);
+						max-height: calc(50vh - 80px);
 					}
 				}
 			}
@@ -1254,12 +1262,19 @@ ul.bb-albums-list {
 			}
 
 			.CodeMirror {
-				height: calc(60vh - 40px);
+				height: calc(50vh - 40px);
 				border-radius: 4px 4px 0 0;
 			}
 
-			.document-preview h3 {
-				right: 0;
+			.document-preview {
+
+				.document-text {
+					margin-top: 40px;
+				}
+
+				h3 {
+					right: 0;
+				}
 			}
 
 		}
@@ -2098,8 +2113,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			}
 
 			img {
-				padding: 20px 20px 8px;
-				max-height: calc(90vh - 75px);
+				padding: 20px;
+				max-height: calc(90vh - 40px);
 			}
 
 			a.download-button {
@@ -2159,6 +2174,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		margin-left: -1px;
 		border-radius: 0 4px 4px 0;
 		overflow: hidden;
+		max-height: 90vh;
 	}
 
 	.document-text-file-data-hidden {

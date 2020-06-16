@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-16 10:42:12+00:00\n"
+"POT-Creation-Date: 2020-06-16 13:30:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -540,7 +540,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/functions.php:188
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1248
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1310
-#: bp-templates/bp-nouveau/includes/document/ajax.php:424
+#: bp-templates/bp-nouveau/includes/document/ajax.php:406
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:935
 msgid "Cancel"
@@ -8279,7 +8279,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:116
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:255
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1328
-#: bp-templates/bp-nouveau/includes/document/ajax.php:402
+#: bp-templates/bp-nouveau/includes/document/ajax.php:424
 #: bp-templates/bp-nouveau/includes/document/functions.php:91
 #: bp-templates/bp-nouveau/includes/document/functions.php:94
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:547
@@ -21951,14 +21951,14 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1298
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1301
 #: bp-templates/bp-nouveau/includes/document/ajax.php:387
-#: bp-templates/bp-nouveau/includes/document/ajax.php:412
-#: bp-templates/bp-nouveau/includes/document/ajax.php:415
+#: bp-templates/bp-nouveau/includes/document/ajax.php:394
+#: bp-templates/bp-nouveau/includes/document/ajax.php:397
 msgid "Add a description"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1246
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1308
-#: bp-templates/bp-nouveau/includes/document/ajax.php:422
+#: bp-templates/bp-nouveau/includes/document/ajax.php:404
 msgid "Done Editing"
 msgstr ""
 

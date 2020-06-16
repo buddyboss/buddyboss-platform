@@ -803,8 +803,44 @@ span.dashicons.dashicons-admin-file:before {
 	}
 }
 
-.bb-media-model-wrapper .activity-list.item-list > .activity-media-description {
-	margin: 15px;
+#buddypress .bb-media-model-wrapper.document-theatre {
+
+	.activity-list.bp-list > .activity-media-description {
+		margin: 15px;
+
+		.download-document{
+			bottom: 0;
+			line-height: 1.5;
+			font-size: 14px;
+		}
+	}
+
+	.activity-list.bp-list {
+		position: relative;
+		height: 100%;
+		display: inline-block;
+
+		.activity-item {
+			margin-bottom: 40px;
+			max-height: calc(90vh - 40px);
+    		min-height: calc(90vh - 40px);
+			position: static;
+		}
+
+		.download-document {
+			position: absolute;
+			bottom: 0;
+			z-index: 999999;
+			left: 0;
+			right: 0;
+			text-align: center;
+			padding: 10px;
+			border-top: 1px solid #ecedee;
+			background-color: #fff;
+			line-height: 1.5;
+		}
+
+	}
 }
 
 .activity-media-description {
@@ -835,12 +871,6 @@ span.dashicons.dashicons-admin-file:before {
 		.edit {
 			display: none;
 		}
-	}
-
-	.download-document {
-		font-size: 13px;
-		display: inline-block;
-		margin-bottom: 10px;
 	}
 
 	.bp-media-activity-description {
