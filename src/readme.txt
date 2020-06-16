@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.3 =
+* Photos - In Photos directory, group photos display when performing any search query
 * Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
 
 = 1.4.2 =
