@@ -6,9 +6,7 @@
  * @package BuddyBoss\Core
  */
 
-?>
-
-<?php if ( bp_is_my_profile() || ( bp_is_group() && ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) : ?>
+if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) &&  bp_is_group() && ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) : ?>
 
 	<header class="bb-member-photos-header bb-photos-actions">
 		<div class="bb-photos-meta">

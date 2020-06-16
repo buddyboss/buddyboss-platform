@@ -55,7 +55,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	if ( bp_is_group_document() || bp_is_group_folders() ) {
 		$folder_id        = (int) bp_action_variable( 1 );
 		$type             = 'group';
-		$group_id         = bp_get_current_group_id();
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
 		$move_to_id_popup = $group_id;
 	} elseif ( bp_is_user_document() || bp_is_user_folders() ) {
 		$folder_id        = (int) bp_action_variable( 0 );
@@ -97,9 +97,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	);
 
 	$document_options = array(
-		'dictInvalidFileType' => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'max_upload_size'     => bp_document_file_upload_max_size( false, 'MB' ),
-		'maxFiles'            => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'max_upload_size'           => bp_document_file_upload_max_size( false, 'MB' ),
+		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
 
 	$params['document'] = $document_options;
@@ -811,6 +812,9 @@ function bp_media_allowed_document_type() {
 
 function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_document_ie_nocache_headers_fix' );
+
 	if ( 'document' === $type ) {
 
 		$the_file = wp_get_attachment_url( $attachment_id );
@@ -1069,7 +1073,8 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		}
 		$document_id        = 'forbidden_' . $document_id;
 		$attachment_id      = 'forbidden_' . $preview_attachment_id;
-		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) ) {
+		$output_file_src     = bp_document_scaled_image_path( $preview_attachment_id );
+		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
 			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
@@ -1122,20 +1127,51 @@ function bp_document_chmod_r($path) {
  * @since BuddyBoss 1.4.1
  */
 function bp_document_mirror_text( $attachment_id ) {
-	$words 				 = 8000;
-	$more 				 = '...';
-	$text       		 = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
-	$mirror_text		 = '';
-	if ( $text ) {
-		$mirror_text = strlen($text) > $words ? substr($text,0,$words).'...' : $text;
-	} else {
-		if ( file_exists( get_attached_file( $attachment_id ) ) ) {
-			$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
-			$words       = 10000;
-			$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
-			update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+	$mirror_text = '';
+
+	$extension = bp_document_extension( $attachment_id );
+	if ( isset( $extension ) && !empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+		$words = 8000;
+		$more  = '...';
+		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
+		if ( $text ) {
+			$mirror_text = strlen( $text ) > $words ? substr( $text, 0, $words ) . '...' : $text;
+		} else {
+			if ( file_exists( get_attached_file( $attachment_id ) ) ) {
+				$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
+				$words       = 10000;
+				$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
+				update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+			}
 		}
 	}
 
 	return $mirror_text;
+}
+
+/**
+ * Return the audio url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.0
+ */
+function bp_document_get_preview_audio_url( $document_id, $extension, $attachment_id ) {
+	$attachment_url = '';
+
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+		$passed_attachment_id   = $attachment_id;
+		$document_id            = 'forbidden_' . $document_id;
+		$attachment_id          = 'forbidden_' . $attachment_id;
+		$output_file_src         = get_attached_file( $passed_attachment_id );
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
+			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
+	}
+
+	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
 }

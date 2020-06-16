@@ -309,6 +309,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 15800 ) {
 			bp_update_to_1_4_0();
 		}
+
+		if ( $raw_db_version < 16000 ) {
+			bp_update_to_1_4_3();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -615,6 +619,25 @@ function bp_update_to_1_2_4() {
 
 function bp_update_to_1_4_0() {
 	bp_core_install_document();
+}
+
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.4.3
+ */
+function bp_update_to_1_4_3() {
+	global $wpdb;
+	$bp = buddypress();
+	$squery = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
+	$records = $wpdb->get_col( $squery );
+	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
+		$records = reset( $records );
+		if ( !empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ")";
+			$wpdb->query( $update_query );
+		}
+	}
 }
 
 function bp_update_default_doc_extensions() {

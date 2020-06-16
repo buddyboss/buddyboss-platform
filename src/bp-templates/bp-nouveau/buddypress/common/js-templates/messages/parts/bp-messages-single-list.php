@@ -73,10 +73,22 @@
 				<# for ( i in data.document ) { #>
 					<div class="bb-activity-media-elem document-activity " data-id="">
 						<div class="document-description-wrap">
-							<a href="{{data.document[i].url}}" target="_blank" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
+							<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
 								<i class="{{data.document[i].svg_icon}}" ></i>
 							</a>
-							<a href="{{data.document[i].url}}" class="document-detail-wrap">
+							<a href="{{data.document[i].url}}"
+							   class="document-detail-wrap bb-open-document-theatre"
+							   data-id="{{data.document[i].id}}"
+							   data-activity-id=""
+							   data-attachment-full=""
+							   data-privacy="{{data.document[i].privacy}}"
+							   data-extension="{{data.document[i].extension}}"
+							   data-author="{{data.document[i].author}}"
+							   data-preview="{{data.document[i].preview}}"
+							   data-text-preview="{{data.document[i].text_preview}}"
+							   data-mp3-preview="{{data.document[i].mp3_preview}}"
+							   data-document-title="{{data.document[i].document_title}}"
+							   data-mirror-text="{{data.document[i].mirror_text}}">
 								<span class="document-title">{{data.document[i].title}}.{{data.document[i].extension}}</span>
 								<span class="document-description">{{data.document[i].size}}</span>
 								{{{data.document[i].extension_description}}}
@@ -100,7 +112,7 @@
 								</ul>
 							</div>
 						</div>
-						{{{data.document[i].preview}}}
+						{{{data.document[i].msg_preview}}}
 					</div>
 				<# } #>
 			</div>
