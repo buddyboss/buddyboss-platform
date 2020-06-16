@@ -1292,25 +1292,6 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
-
-		<?php
-		if ( ! empty( $document_id ) ) {
-			$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-			$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-			if ( $can_download_btn ) {
-				$download_url      = bp_document_download_link( $attachment_id, $document_id );
-				if ( $download_url ) {
-					?>
-					<a class="download-document"
-					   href="<?php echo esc_url( $download_url ); ?>">
-					   	<span class="bb-icon-download"></span>
-						<?php _e( 'Download', 'buddyboss' ); ?>
-					</a>
-					<?php
-				}
-			}
-		}
-		?>
 		<div class="bp-edit-media-activity-description" style="display: none;">
 			<div class="innerWrap">
                         <textarea id="add-activity-description"
@@ -1334,6 +1315,22 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
+	if ( ! empty( $document_id ) ) {
+		$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+		$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+		if ( $can_download_btn ) {
+			$download_url      = bp_document_download_link( $attachment_id, $document_id );
+			if ( $download_url ) {
+				?>
+				<a class="download-document"
+					href="<?php echo esc_url( $download_url ); ?>">
+					<span class="bb-icon-download"></span>
+					<?php _e( 'Download', 'buddyboss' ); ?>
+				</a>
+				<?php
+			}
+		}
+	}
 }
 
 /**

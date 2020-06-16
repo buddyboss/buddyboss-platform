@@ -1209,7 +1209,7 @@ ul.bb-albums-list {
 			-webkit-box-align: center;
 			-ms-flex-align: center;
 			align-items: center;
-			border-radius: 4px 0 0 8px;
+			border-radius: 4px 4px 0 8px;
 
 			.img-section {
 				max-height: 60vh;
@@ -1221,6 +1221,10 @@ ul.bb-albums-list {
 				.img-block-wrap {
 					height: auto;
 					padding-bottom: 10px;
+
+					img {
+						max-height: calc(60vh - 81px);
+					}
 				}
 			}
 
@@ -1251,6 +1255,7 @@ ul.bb-albums-list {
 
 			.CodeMirror {
 				height: calc(60vh - 40px);
+				border-radius: 4px 4px 0 0;
 			}
 
 			.document-preview h3 {
@@ -1980,7 +1985,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		height: 90vh;
 		overflow: visible;
 		align-items: flex-end;
-		position: static;
 		background-color: #fff;
 		border-radius: 4px 4px 4px 5px;
 		position: relative;
