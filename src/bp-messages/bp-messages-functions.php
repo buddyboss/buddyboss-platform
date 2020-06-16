@@ -117,9 +117,8 @@ function messages_new_message( $args = '' ) {
 
 		$new_reply = true;
 
-		$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
-		if ( isset( $first_message->id ) ) {
-			$group = bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+		if ( isset( $thread->messages[0]->id ) ) {
+			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id
 			if ( !empty( $group ) ) {
 				$is_group_thread = true;
 			}
