@@ -97,7 +97,7 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 6px;
-		left: 38px;
+		left: 39px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
@@ -114,11 +114,11 @@
 			z-index: 112;
 			opacity: 1;
 			visibility: visible;
-			bottom: 10px;
+			bottom: 12px;
 			height: 40px;
 
 			div & {
-				bottom: 10px;
+				bottom: 12px;
 			}
 		}
 
@@ -129,6 +129,10 @@
 		.medium-editor-toolbar-actions {
 			background-color: transparent;
 			height: auto;
+
+			button.medium-editor-button-first {
+				padding-right: 6px;
+			}
 
 			button {
 				box-shadow: none;
@@ -172,7 +176,7 @@
 		.medium-editor-toolbar {
 			top: inherit;
 			bottom: 56px;
-			left: 38px;
+			left: 39px;
 			visibility: hidden;
 			z-index: 99;
 			background-color: #fff;
@@ -190,12 +194,16 @@
 				height: 44px;
 
 				div & {
-					bottom: 56px;
+					bottom: 58px;
 				}
 			}
 
 			.medium-editor-toolbar-actions {
 				background-color: transparent;
+
+				button.medium-editor-button-first {
+					padding-right: 6px;
+				}
 
 				button {
 					box-shadow: none;
@@ -276,7 +284,7 @@
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-	bottom: -25px;
+	bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -307,7 +315,6 @@
 #activity-form-submit-wrapper {
 	border-top: 1px solid #ddd;
 	display: flex;
-	justify-content: space-between;
 	flex-flow: row wrap;
 	align-items: center;
 	padding: 0 10px;
@@ -315,49 +322,98 @@
 
 #whats-new-post-in-box {
 	margin: $marg-sml 0;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
 
-	#whats-new-post-in-box-items {
-		list-style: none;
-		margin: $marg-sml 0;
+	#activity-autocomplete {
+		font-size: 15px;
+		padding: 2px 10px;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+}
 
-		li {
-			margin-bottom: $marg-sml;
-		}
+#whats-new-post-in-box-items {
+	list-style: none;
+	position: relative;
 
-		#activity-autocomplete {
-			padding: 0.3em;
-		}
-
-		.bp-activity-object {
-
-			@include center-vert();
-			padding: 0.2em;
-
-			.avatar {
-				width: 30px;
-			}
-
-			span {
-				padding-left: $marg-sml;
-				vertical-align: middle;
-			}
-
-			&:focus,
-			&:hover {
-				background: $light-grey;
-				cursor: pointer;
-			}
-
-			&.selected {
-				border: 1px solid $med-light-grey;
-			}
-		}
+	li {
+		margin-bottom: $marg-sml;
 	}
 
+	.bp-activity-object {
+
+		@include center-vert();
+		padding: 5px 10px;
+
+		.avatar {
+			width: 24px;
+		}
+
+		.bp-item-name {
+			font-size: 16px;
+			padding-left: $marg-sml;
+			vertical-align: middle;
+		}
+
+		&:focus,
+		&:hover {
+			background: $light-grey;
+			cursor: pointer;
+		}
+
+		&.selected {
+			border: 1px solid $med-light-grey;
+			padding: 0;
+		}
+
+		button.bp-remove-item {
+			padding: 0;
+			border: 0;
+			background: transparent;
+			font-size: 17px;
+			margin: 0 6px;
+		}
+	}
+}
+
+#whats-new-post-in {
+	margin-right: $marg-sml;
+}
+
+#bp-activity-group-ac-items {
+	background: #fff;
+	box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+	border-radius: 4px;
+	min-width: 200px;
+	max-height: 290px;
+	overflow: auto;
+	padding: 5px 0;
+	position: absolute;
+	width: 100%;
+	z-index: 11;
+
+	&:empty {
+		display: none;
+	}
+
+	> .dashicons {
+		display: block;
+		margin: 5px auto;
+	}
 }
 
 #whats-new-submit {
-	margin: $marg-sml 0;
+	margin: $marg-sml 0 $marg-sml auto;
 	display: flex;
 	flex-flow: row-reverse;
 
@@ -366,6 +422,175 @@
 		@include font-size(14);
 		line-height: 1;
 	}
+}
+
+#activity-post-form-privacy {
+	line-height: 1;
+}
+
+.bp-activity-privacy {
+	font-size: 16px;
+}
+
+.bb-media-privacy-wrap {
+	display: inline-block;
+	position: relative;
+
+	.privacy-wrap {
+		display: inline-block;
+	}
+
+	.privacy {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		line-height: 1;
+
+		&:before {
+			content: "\e960";
+			font-family: 'bb-icons';/* stylelint-disable-line */
+			font-size: 16px;
+			vertical-align: middle;
+			display: inline-block;
+		}
+
+		&:after {
+			content: "\e826";
+			font-family: 'bb-icons';/* stylelint-disable-line */
+			font-size: 20px;
+			vertical-align: middle;
+			display: inline-block;
+			line-height: 1;
+		}
+
+		&.no-change:after {
+			display: none;
+		}
+
+		&.onlyme:before {
+			content: "\e95f";
+		}
+
+		&.loggedin:before {
+			content: "\e95d";
+		}
+
+		&.friends:before {
+			content: "\e95e";
+		}
+
+		&.loading:before {
+			content: "\e838";
+			animation: spin 2s infinite linear;
+		}
+	}
+
+	.activity-privacy {
+		display: none;
+		margin: 0;
+		position: absolute;
+		background: #fff;
+		box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+		border-radius: 4px;
+		padding: 5px 0;
+		min-width: 200px;
+		left: -20px;
+		top: 35px;
+		z-index: 119;
+
+		&:before {
+			content: " ";
+			position: absolute;
+			width: 0;
+			height: 0;
+			top: 0;
+			left: 20px;
+			border: 6px solid #000;
+			border-color: #fff #fff transparent transparent;
+			-webkit-transform-origin: 0 0;
+			-ms-transform-origin: 0 0;
+			transform-origin: 0 0;
+			-webkit-transform: rotate(-45deg);
+			-ms-transform: rotate(-45deg);
+			transform: rotate(-45deg);
+			box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+			z-index: 1002;
+		}
+
+		li {
+			cursor: pointer;
+			line-height: 1;
+			margin: 0;
+			padding: 10px 14px;
+			position: relative;
+			display: flex;
+			align-items: center;
+			margin-bottom: 1px;
+
+			&:hover {
+				background: #f5f5f5;
+			}
+		}
+
+		.selected {
+			background: #f5f5f5;
+		}
+	}
+
+	.activity-privacy.bb-open {
+		display: block;
+	}
+}
+
+.activity-privacy {
+
+	> li {
+
+		a {
+			color: #7f868f;
+		}
+
+		&:before {
+			content: "\e90d";
+			font-family: 'bb-icons';/* stylelint-disable-line */
+			font-size: 16px;
+			vertical-align: middle;
+			display: inline-block;
+			margin-right: 10px;
+			width: 20px;
+			text-align: center;
+		}
+
+		&.public:before {
+			content: "\e960";
+		}
+
+		&.onlyme:before {
+			content: "\e95f";
+		}
+
+		&.loggedin:before {
+			content: "\e95d";
+		}
+
+		&.friends:before {
+			content: "\e95e";
+		}
+	}
+}
+
+.bb-media-model-container {
+
+	.bb-media-privacy-wrap .activity-privacy {
+		left: auto;
+		right: -20px;
+	}
+
+	.bb-media-privacy-wrap .activity-privacy:before {
+		left: auto;
+		right: 44px;
+	}
+
 }
 
 // GIF styles
@@ -390,6 +615,11 @@ div[class*="attached-gif-container"] {
 		color: #fff;
 		margin-top: 0;
 		position: absolute;
+
+		.bb-icon-close {
+			font-size: 20px;
+			vertical-align: top;
+		}
 	}
 
 	.gif-player {
@@ -411,13 +641,12 @@ div[class*="attached-gif-container"] {
 		top: 50%;
 		margin-top: -40px;
 
-		span.dashicons {
+		.bb-icon-play-thin {
 			font-size: 80px;
 			width: 80px;
 			height: 80px;
 			margin: 0;
 			padding: 0;
-			line-height: 0;
 		}
 	}
 
@@ -586,7 +815,7 @@ input.search-query-input {
 	}
 }
 
-@media screen and (max-width: 560px) {
+@media screen and (max-width: 603px) {
 
 	#buddypress > .activity-update-form .focus-in {
 
@@ -599,6 +828,80 @@ input.search-query-input {
 
 					div & {
 						bottom: 109px;
+					}
+				}
+			}
+
+		}
+
+	}
+
+	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 109px;
+	}
+}
+
+@media screen and (max-width: 560px) {
+
+	#buddypress .activity-update-form .focus-in {
+
+		#whats-new-content {
+
+			.medium-editor-toolbar {
+				bottom: 112px;
+
+				&.active {
+
+					div & {
+						bottom: 112px;
+					}
+				}
+			}
+
+		}
+	}
+
+	.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 111px;
+	}
+
+	.groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 58px;
+	}
+
+	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
+		bottom: 143px;
+	}
+
+	.bp_group #buddypress .activity-update-form .focus-in {
+
+		#whats-new-content {
+
+			.medium-editor-toolbar {
+				bottom: 58px;
+
+				&.active {
+
+					div & {
+						bottom: 58px;
+					}
+				}
+			}
+
+		}
+	}
+
+	#buddypress > .activity-update-form .focus-in {
+
+		#whats-new-content {
+
+			.medium-editor-toolbar {
+				bottom: 146px;
+
+				&.active {
+
+					div & {
+						bottom: 146px;
 					}
 				}
 			}

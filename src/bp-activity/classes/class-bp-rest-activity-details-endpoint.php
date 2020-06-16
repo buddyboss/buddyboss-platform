@@ -68,6 +68,10 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		$retval['filters'] = $this->get_activities_filters();
 		$retval['post_in'] = $this->get_activities_post_in();
 
+		if ( function_exists( 'bp_activity_get_visibility_levels' ) ) {
+			$retval['privacy'] = bp_activity_get_visibility_levels();
+		}
+
 		$response = rest_ensure_response( $retval );
 
 		/**
@@ -150,6 +154,15 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 				),
 			),
 		);
+
+		if ( function_exists( 'bp_activity_get_visibility_levels' ) ) {
+			$schema['properties']['privacy'] = array(
+				'context'     => array( 'embed', 'view' ),
+				'description' => __( 'Activity Privacy.', 'buddyboss' ),
+				'type'        => 'array',
+				'readonly'    => true,
+			);
+		}
 
 		/**
 		 * Filters the activity details schema.

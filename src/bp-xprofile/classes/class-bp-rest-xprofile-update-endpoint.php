@@ -293,8 +293,8 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 		$params['fields'] = array(
 			'description' => __( 'Fields array with field_id, group_id, type, value and visibility_level to update the data.', 'buddyboss' ),
-			'type'        => 'object',
-			'items'       => array( 'type' => 'array' ),
+			'type'        => 'array',
+			'items'       => array( 'type' => 'object' ),
 			'default'     => array(
 				array(
 					'field_id'         => '',

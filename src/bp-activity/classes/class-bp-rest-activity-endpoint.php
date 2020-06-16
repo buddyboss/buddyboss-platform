@@ -631,6 +631,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
+		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+			// Update privacy for the documents which are uploaded in root of the documents.
+			bp_document_update_activity_privacy( $activity->id, $activity->privacy );
+		}
+
+
+		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
+			// Update privacy for the media which are uploaded in the activity.
+			bp_media_update_activity_privacy( $activity->id, $activity->privacy );
+		}
+
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $activity, $request )
 		);
@@ -996,6 +1007,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Set up activity oEmbed cache.
 			bp_activity_embed();
 
+			// removed combined gif data with content.
+			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
+				remove_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+			}
+
 			$rendered = apply_filters_ref_array(
 				'bp_get_activity_content_body',
 				array(
@@ -1003,6 +1019,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&$activity,
 				)
 			);
+
+			// removed combined gif data with content.
+			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
+				add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
+			}
 
 			// Restore the `activities_template` global.
 			$GLOBALS['activities_template'] = $activities_template;
@@ -1488,12 +1509,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 						'raw'      => array(
 							'description' => __( 'Content for the activity, as it exists in the database.', 'buddyboss' ),
 							'type'        => 'string',
-							'context'     => array( 'edit' ),
+							'context'     => array( 'embed', 'edit' ),
 						),
 						'rendered' => array(
 							'description' => __( 'HTML content for the activity, transformed for display.', 'buddyboss' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view', 'edit' ),
 							'readonly'    => true,
 						),
 					),
@@ -1587,7 +1608,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$avatar_properties = array();
 
 			$avatar_properties['full'] = array(
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Full avatar width in pixels. 2: Full avatar height in pixels */
 				'description' => sprintf( __( 'Avatar URL with full image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_full_width() ), number_format_i18n( bp_core_avatar_full_height() ) ),
 				'type'        => 'string',
@@ -1595,7 +1616,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 
 			$avatar_properties['thumb'] = array(
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'embed', 'view', 'edit' ),
 				/* translators: 1: Thumb avatar width in pixels. 2: Thumb avatar height in pixels */
 				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
@@ -1603,7 +1624,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 
 			$schema['properties']['user_avatar'] = array(
-				'context'     => array( 'view', 'edit' ),
+				'context'     => array( 'embed', 'view', 'edit' ),
 				'description' => __( 'Avatar URLs for the author of the activity.', 'buddyboss' ),
 				'type'        => 'object',
 				'readonly'    => true,
@@ -1797,9 +1818,17 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		// check activity toolbar options if one of them is set, activity can be empty.
-		if ( bp_is_active( 'media' ) && empty( $request['bp_media_ids'] ) ) {
-			$toolbar_option = true;
-		} elseif ( bp_is_active( 'media' ) && empty( $request['media_gif'] ) ) {
+		if (
+			bp_is_active( 'media' )
+			&& empty( $request['bp_media_ids'] )
+			&& (
+				! empty( $request['media_gif'] )
+				&& (
+					empty( $request['media_gif']['url'] )
+					|| empty( $request['media_gif']['mp4'] )
+				)
+			)
+		) {
 			$toolbar_option = true;
 		}
 
