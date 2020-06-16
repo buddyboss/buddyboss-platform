@@ -38,7 +38,7 @@
                                 <span class="small">
                                 <?php
 								printf(
-										__( 'Invited by %1$s &middot; %2$s.', 'buddyboss-theme' ),
+										__( 'Invited by %1$s &middot; %2$s.', 'buddyboss' ),
 										sprintf(
 												'<a href="%s">%s</a>',
 												$inviter['url'],

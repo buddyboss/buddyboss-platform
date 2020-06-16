@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-16 06:53:48+00:00\n"
+"POT-Creation-Date: 2020-06-16 10:42:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -539,7 +539,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/includes/activity/functions.php:188
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1248
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1329
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1310
 #: bp-templates/bp-nouveau/includes/document/ajax.php:424
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:935
@@ -956,8 +956,8 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:787
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:13
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:145
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:305
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:147
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:306
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -2704,8 +2704,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:60
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
-#: bp-groups/bp-groups-admin.php:2536 bp-groups/bp-groups-functions.php:3391
-#: bp-groups/bp-groups-functions.php:3394
+#: bp-groups/bp-groups-admin.php:2536 bp-groups/bp-groups-functions.php:3400
+#: bp-groups/bp-groups-functions.php:3403
 msgid "Group Types"
 msgstr ""
 
@@ -3170,9 +3170,9 @@ msgstr ""
 #: bp-core/bp-core-template.php:561 bp-core/bp-core-update.php:763
 #: bp-core/classes/class-bp-email-tokens.php:394 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1396 bp-groups/bp-groups-admin.php:2052
-#: bp-groups/bp-groups-functions.php:3901
-#: bp-groups/bp-groups-functions.php:3920
-#: bp-groups/bp-groups-functions.php:3937 bp-groups/bp-groups-template.php:5418
+#: bp-groups/bp-groups-functions.php:3910
+#: bp-groups/bp-groups-functions.php:3929
+#: bp-groups/bp-groups-functions.php:3946 bp-groups/bp-groups-template.php:5418
 #: bp-groups/classes/class-bp-groups-component.php:635
 #: bp-groups/classes/class-bp-groups-component.php:917
 #: bp-groups/classes/class-bp-groups-list-table.php:439
@@ -4756,7 +4756,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2531
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
-#: bp-groups/bp-groups-functions.php:3393
+#: bp-groups/bp-groups-functions.php:3402
 #: bp-groups/bp-groups-notifications.php:1229
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-theme-compat.php:183
@@ -7321,34 +7321,34 @@ msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:232
 #: bp-core/deprecated/buddyboss/1.1.8.php:237
-#: bp-groups/bp-groups-functions.php:3390
-#: bp-groups/bp-groups-functions.php:3395
+#: bp-groups/bp-groups-functions.php:3399
+#: bp-groups/bp-groups-functions.php:3404
 msgid "New Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:234
-#: bp-groups/bp-groups-functions.php:3392
+#: bp-groups/bp-groups-functions.php:3401
 msgid "Edit Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:238
-#: bp-groups/bp-groups-functions.php:3396
+#: bp-groups/bp-groups-functions.php:3405
 msgid "No Group Types found"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:239
-#: bp-groups/bp-groups-functions.php:3397
+#: bp-groups/bp-groups-functions.php:3406
 msgid "No Group Types found in trash"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:240
-#: bp-groups/bp-groups-functions.php:3398
+#: bp-groups/bp-groups-functions.php:3407
 msgid "Search Group Types"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
 #: bp-groups/bp-groups-admin.php:1951 bp-groups/bp-groups-admin.php:2264
-#: bp-groups/bp-groups-functions.php:3399
+#: bp-groups/bp-groups-functions.php:3408
 #: bp-groups/classes/class-bp-groups-list-table.php:744
 #: bp-groups/classes/class-bp-rest-group-settings-endpoint.php:676
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:244
@@ -7386,13 +7386,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8278,7 +8278,7 @@ msgstr ""
 #: bp-document/bp-document-filters.php:243
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:116
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:255
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1307
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1328
 #: bp-templates/bp-nouveau/includes/document/ajax.php:402
 #: bp-templates/bp-nouveau/includes/document/functions.php:91
 #: bp-templates/bp-nouveau/includes/document/functions.php:94
@@ -11988,9 +11988,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:43 bp-groups/bp-groups-admin.php:1451
 #: bp-groups/bp-groups-functions.php:1286
-#: bp-groups/bp-groups-functions.php:3903
-#: bp-groups/bp-groups-functions.php:3922
-#: bp-groups/bp-groups-functions.php:3939
+#: bp-groups/bp-groups-functions.php:3912
+#: bp-groups/bp-groups-functions.php:3931
+#: bp-groups/bp-groups-functions.php:3948
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:343
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:359
 #. translators: user role
@@ -11999,9 +11999,9 @@ msgstr ""
 
 #: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2440
 #: bp-groups/bp-groups-admin.php:1452 bp-groups/bp-groups-functions.php:1294
-#: bp-groups/bp-groups-functions.php:3905
-#: bp-groups/bp-groups-functions.php:3924
-#: bp-groups/bp-groups-functions.php:3941
+#: bp-groups/bp-groups-functions.php:3914
+#: bp-groups/bp-groups-functions.php:3933
+#: bp-groups/bp-groups-functions.php:3950
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:344
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:360
 #. translators: user role
@@ -12743,9 +12743,9 @@ msgstr ""
 
 #: bp-forums/replies/functions.php:2406 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1453 bp-groups/bp-groups-functions.php:1302
-#: bp-groups/bp-groups-functions.php:3907
-#: bp-groups/bp-groups-functions.php:3926
-#: bp-groups/bp-groups-functions.php:3943
+#: bp-groups/bp-groups-functions.php:3916
+#: bp-groups/bp-groups-functions.php:3935
+#: bp-groups/bp-groups-functions.php:3952
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:345
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:361
 #: bp-members/bp-members-functions.php:3826
@@ -14608,9 +14608,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1206 bp-groups/bp-groups-admin.php:1227
 #: bp-groups/bp-groups-admin.php:1239 bp-groups/bp-groups-admin.php:1251
 #: bp-groups/bp-groups-admin.php:1263 bp-groups/bp-groups-admin.php:1390
-#: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3897
-#: bp-groups/bp-groups-functions.php:3916
-#: bp-groups/bp-groups-functions.php:3933
+#: bp-groups/bp-groups-admin.php:1996 bp-groups/bp-groups-functions.php:3906
+#: bp-groups/bp-groups-functions.php:3925
+#: bp-groups/bp-groups-functions.php:3942
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:512
 msgid "Organizers"
 msgstr ""
@@ -14697,9 +14697,9 @@ msgid "Enter a comma-separated list of user logins."
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1393 bp-groups/bp-groups-admin.php:2024
-#: bp-groups/bp-groups-functions.php:3899
-#: bp-groups/bp-groups-functions.php:3918
-#: bp-groups/bp-groups-functions.php:3935
+#: bp-groups/bp-groups-functions.php:3908
+#: bp-groups/bp-groups-functions.php:3927
+#: bp-groups/bp-groups-functions.php:3944
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:513
 msgid "Moderators"
 msgstr ""
@@ -20955,13 +20955,13 @@ msgstr ""
 msgid "Copy Download Link"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:158
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:160
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:488
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2029
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:184
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:186
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:513
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2054
 msgid "Click to expand"
@@ -21486,8 +21486,8 @@ msgstr ""
 msgid "Group Invites"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/groups/invites.php:42
-msgid "Invited by <a href=\"%s\">%s</a> <span class=\"last-activity\">%s</span>"
+#: bp-templates/bp-nouveau/buddypress/members/single/groups/invites.php:41
+msgid "Invited by %1$s &middot; %2$s."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:9
@@ -21948,8 +21948,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1236
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1239
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1292
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1317
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1320
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1298
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1301
 #: bp-templates/bp-nouveau/includes/document/ajax.php:387
 #: bp-templates/bp-nouveau/includes/document/ajax.php:412
 #: bp-templates/bp-nouveau/includes/document/ajax.php:415
@@ -21957,7 +21957,7 @@ msgid "Add a description"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1246
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1327
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1308
 #: bp-templates/bp-nouveau/includes/document/ajax.php:422
 msgid "Done Editing"
 msgstr ""
