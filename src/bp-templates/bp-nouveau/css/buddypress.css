@@ -12700,7 +12700,7 @@ ul.bb-albums-list .bb-more-photos strong {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    border-radius: 4px 0 0 8px;
+    border-radius: 4px 4px 0 8px;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section {
     max-height: 60vh;
@@ -12712,6 +12712,9 @@ ul.bb-albums-list .bb-more-photos strong {
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap {
     height: auto;
     padding-bottom: 10px;
+  }
+  #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap img {
+    max-height: calc(60vh - 81px);
   }
   #buddypress .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > p {
     font-size: 16px;
