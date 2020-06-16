@@ -1594,8 +1594,6 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   font-family: 'bb-icons';
   /* stylelint-disable-line */
   font-size: 16px;
-  vertical-align: middle;
-  display: inline-block;
   margin-right: 10px;
   width: 20px;
   text-align: center;
@@ -13460,7 +13458,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   height: 90vh;
   overflow: visible;
   align-items: flex-end;
-  position: static;
   background-color: #fff;
   border-radius: 4px 4px 4px 5px;
   position: relative;
