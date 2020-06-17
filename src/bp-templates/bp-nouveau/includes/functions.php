@@ -84,7 +84,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'sort_order=' . $post_query['extras'];
 	}
 
-	if ( 'personal' === $post_query['scope'] ) {
+	if ( 'personal' === $post_query['scope'] && 'document' !== $object  ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 		$qs[]    = 'user_id=' . $user_id;
 	}
