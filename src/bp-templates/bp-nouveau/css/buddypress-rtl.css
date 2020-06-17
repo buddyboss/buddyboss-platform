@@ -2607,16 +2607,6 @@ span.dashicons.dashicons-admin-file:before {
   overflow: visible;
 }
 
-#buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list > .activity-media-description {
-  margin: 15px;
-}
-
-#buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list > .activity-media-description .download-document {
-  bottom: 0;
-  line-height: 1.5;
-  font-size: 14px;
-}
-
 #buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list {
   position: relative;
   height: 100%;
@@ -12769,7 +12759,6 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap {
     height: auto;
-    padding-bottom: 0;
     padding-bottom: 0;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap img {
