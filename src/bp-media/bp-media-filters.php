@@ -1082,12 +1082,13 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		$media_ids = explode( ',', $media_ids );
 
 		foreach ( $media_ids as $media_id ) {
-			$media          = new BP_Media( $media_id );
+			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
-			if ( 'forums' !== $media->privacy ) {
+			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
 				$media->privacy = $activity->privacy;
+				$media->save();
 			}
-			$media->save();
+
 		}
 	}
 }
@@ -1214,8 +1215,8 @@ function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) 
 		'relation' => 'AND',
 		array(
 				'column'  => 'privacy',
-				'value'   => array( 'media' ),
-				'compare' => 'IN',
+				'value'   => 'media',
+				'compare' => '=',
 		),
 		array(
 				'column' => 'hide_sitewide',

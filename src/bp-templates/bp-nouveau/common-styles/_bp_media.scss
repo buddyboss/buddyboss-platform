@@ -1209,7 +1209,7 @@ ul.bb-albums-list {
 			-webkit-box-align: center;
 			-ms-flex-align: center;
 			align-items: center;
-			border-radius: 4px 0 0 8px;
+			border-radius: 4px 4px 0 8px;
 
 			.img-section {
 				max-height: 60vh;
@@ -1221,6 +1221,10 @@ ul.bb-albums-list {
 				.img-block-wrap {
 					height: auto;
 					padding-bottom: 10px;
+
+					img {
+						max-height: calc(60vh - 81px);
+					}
 				}
 			}
 
@@ -1228,10 +1232,6 @@ ul.bb-albums-list {
 				font-size: 16px;
 				padding: 0 10px;
 				word-break: break-word;
-			}
-
-			.document-preview {
-				padding-top: 35px;
 			}
 
 			.theater-command {
@@ -1255,6 +1255,7 @@ ul.bb-albums-list {
 
 			.CodeMirror {
 				height: calc(60vh - 40px);
+				border-radius: 4px 4px 0 0;
 			}
 
 			.document-preview h3 {
@@ -1984,9 +1985,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		height: 90vh;
 		overflow: visible;
 		align-items: flex-end;
-		position: static;
 		background-color: #fff;
-		border-radius: 4px 0 0 5px;
+		border-radius: 4px 4px 4px 5px;
+		position: relative;
 
 		.document-preview {
 			width: 100%;
@@ -2022,7 +2023,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		&.bb-media-no-preview {
 			background-color: #fff;
 			align-items: center;
-			border-radius: 4px 0 0 4px;
+			border-radius: 4px;
 
 			.bb-icon-loader {
 				font-size: 20px;
@@ -2061,7 +2062,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		.img-section {
 			overflow: auto;
-			height: calc(90vh - 30px);
+			height: 90vh;
 			background-color: #fff;
 			display: -webkit-box;
 			display: -ms-flexbox;
@@ -2072,10 +2073,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			-webkit-box-pack: center;
 			-ms-flex-pack: center;
 			justify-content: center;
-			border-radius: 0 0 0 4px;
+			border-radius: 4px 4px 4px 4px;
 
 			.img-block-wrap {
-				height: calc(90vh - 30px);
+				height: 90vh;
 				width: 100%;
 				display: -webkit-box;
 				display: -ms-flexbox;
@@ -2092,17 +2093,24 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				flex-direction: column;
 				background-color: #f5f5f5;
 				overflow: auto;
+				z-index: 1;
+				padding-top: 40px;
 			}
 
 			img {
-				padding: 20px 20px 10px;
+				padding: 20px 20px 8px;
 				max-height: calc(90vh - 75px);
+			}
+
+			a.download-button {
+				line-height: normal;
 			}
 
 		}
 
 		.document-text {
 			width: 100%;
+			border-radius: 0 0 0 4px;
 		}
 
 		.document-audio {
@@ -2113,6 +2121,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			align-items: center;
 			justify-content: center;
 			background-color: #fff;
+			border-radius: 4px;
 
 			audio {
 				outline: 0;
@@ -2128,15 +2137,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			top: 0;
 			left: 0;
 			padding: 6px;
-			right: 375px;
+			right: 0;
 			text-align: center;
 			border-bottom: 1px solid #ecedee;
 			font-size: 17px;
 			font-weight: 400;
-			border-radius: 4px 0 0 0;
+			border-radius: 4px 4px 0 0;
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			z-index: 11;
 		}
 
 	}
@@ -2158,6 +2168,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	.CodeMirror {/* stylelint-disable-line */
 		height: calc(90vh - 40px);
 		border-top: 1px solid #ecedee;
+		border-radius: 0 0 0 4px;
 	}
 
 	@media screen and (min-width: 768px) {

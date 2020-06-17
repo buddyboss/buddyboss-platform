@@ -1661,7 +1661,8 @@ function bp_folder_link() {
 function bp_get_folder_link() {
 	global $document_template, $document_folder_template;
 
-	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) && $document_template->document->group_id > 0 ) {
+	$url = '';
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) && $document_template->document->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group      = groups_get_group( $document_template->document->group_id );
 		$group_link = bp_get_group_permalink( $group );
 		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );

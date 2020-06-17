@@ -110,10 +110,11 @@ add_filter( 'bp_get_total_favorite_count_for_user', 'bp_core_number_format' );
 add_filter( 'bp_get_total_mention_count_for_user', 'bp_core_number_format' );
 
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
-add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
+//add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
+add_action( 'bp_has_activities', 'bp_activity_has_media_activity_filter', 10, 2 );
 
 /* Actions *******************************************************************/
 
@@ -435,7 +436,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
  */
 function bp_activity_at_name_send_emails( $activity ) {
 	// Are mentions disabled?
-	if ( ! bp_activity_do_mentions() ) {
+	if ( ! bp_activity_do_mentions() || ( ! empty( $activity->privacy ) && 'onlyme' === $activity->privacy ) ) {
 		return;
 	}
 
@@ -466,10 +467,10 @@ function bp_activity_at_name_send_emails( $activity ) {
 		 */
 		if ( apply_filters( 'bp_activity_at_name_do_notifications', true, $usernames, $user_id, $activity ) ) {
 			bp_activity_at_message_notification( $activity->id, $user_id );
-		}
 
-		// Updates mention count for the user.
-		bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+			// Updates mention count for the user.
+			bp_activity_update_mention_count_for_user( $user_id, $activity->id );
+		}
 	}
 }
 
@@ -918,7 +919,17 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
-			$privacy[] = 'friends';
+
+			// Determine friends of user.
+			$friends = friends_get_friend_user_ids( $user_id );
+
+			if ( bp_is_my_profile() || bp_is_activity_directory() ) {
+				$friends[] = bp_loggedin_user_id();
+			}
+
+			if ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) {
+				$privacy[] = 'friends';
+			}
 		}
 
 		if ( $user_id === bp_loggedin_user_id() ) {
@@ -950,6 +961,39 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	return $retval;
 }
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_activity_filter_just_me_scope', 10, 2 );
+
+/**
+ * Set up activity arguments for use with the 'public' scope.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array $retval
+ */
+function bp_activity_filter_public_scope( $retval = array(), $filter = array() ) {
+
+	$privacy = array( 'public' );
+	if ( bp_loggedin_user_id() ) {
+		$privacy[] = 'loggedin';
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN',
+		),
+		array(
+			'column' => 'hide_sitewide',
+			'value'  => 0,
+		)
+	);
+
+	return $retval;
+}
+add_filter( 'bp_activity_set_public_scope_args', 'bp_activity_filter_public_scope', 10, 2 );
 
 /**
  * Set up activity arguments for use with the 'favorites' scope.
@@ -986,6 +1030,72 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		);
 	}
 
+
+	$friends_filter = array();
+	$onlyme_filter = array();
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_active( 'friends' ) ) {
+			// Determine friends of user.
+			$friends = friends_get_friend_user_ids( $user_id );
+			if ( empty( $friends ) ) {
+				$friends = array( 0 );
+			}
+
+			if ( $user_id === bp_loggedin_user_id() ) {
+				$friends[] = bp_loggedin_user_id();
+				$friends = array_unique( $friends );
+			}
+
+			if ( ! empty( $friends ) ) {
+				$friends_filter = array(
+					'relation' => 'AND',
+					array(
+						'column'  => 'user_id',
+						'compare' => 'IN',
+						'value'   => (array) $friends,
+					),
+					array(
+						'column'  => 'privacy',
+						'compare' => '=',
+						'value'   => 'friends',
+					),
+					array(
+						'column'  => 'id',
+						'compare' => 'IN',
+						'value'   => (array) $favs,
+					),
+					$show_hidden
+				);
+			}
+		}
+
+		if ( $user_id === bp_loggedin_user_id() ) {
+			$onlyme_filter = array(
+				'relation' => 'AND',
+				array(
+					'column'  => 'user_id',
+					'compare' => '=',
+					'value'   => $user_id,
+				),
+				array(
+					'column'  => 'privacy',
+					'compare' => '=',
+					'value'   => 'onlyme',
+				),
+				array(
+					'column'  => 'id',
+					'compare' => 'IN',
+					'value'   => (array) $favs,
+				),
+				$show_hidden
+			);
+			$privacy[] = 'loggedin';
+		}
+	}
+
 	$retval = array(
 		'relation' => 'AND',
 		array(
@@ -993,14 +1103,34 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 			'compare' => 'IN',
 			'value'   => (array) $favs,
 		),
-		$show_hidden,
-
-		// Overrides.
-		'override' => array(
-			'filter'           => array( 'user_id' => 0 ),
-			'show_hidden'      => true,
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy
 		),
+		$show_hidden,
 	);
+
+	if ( empty( $friends_filter ) && empty( $onlyme_filter ) ) {
+		$retval['override'] = array(
+			'filter'      => array( 'user_id' => 0 ),
+			'show_hidden' => true,
+		);
+	}
+
+	if ( ! empty( $friends_filter ) || ! empty( $onlyme_filter ) ) {
+		$retval = array(
+			'relation' => 'OR',
+			$retval,
+			$friends_filter,
+			$onlyme_filter,
+			// Overrides.
+			'override' => array(
+				'filter'           => array( 'user_id' => 0 ),
+				'show_hidden'      => true,
+			),
+		);
+	}
 
 	return $retval;
 }
@@ -1236,10 +1366,13 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 		$following_ids = array( 0 );
 	}
 
-	$privacy = array( 'public', 'loggedin' );
+	$privacy = array( 'public' );
+	if ( bp_loggedin_user_id() ) {
+		$privacy[] = 'loggedin';
+	}
 
 	$friends_follow = array();
-	if ( bp_is_active( 'friends' ) && $user_id ) {
+	if ( bp_is_active( 'friends' ) && $user_id === bp_loggedin_user_id() ) {
 		// Determine friends of user.
 		$friends = friends_get_friend_user_ids( $user_id );
 		if ( ! empty( $friends ) ) {
@@ -1369,14 +1502,14 @@ function bp_activity_media_fix_data() {
  */
 function bp_activity_has_activity_filter( $has_activities, $activities ) {
 
-	if ( ! bp_is_active( 'friends' ) || ! is_user_logged_in() || is_super_admin() ) {
+	if ( ! $has_activities || ! bp_is_active( 'friends' ) || ! is_user_logged_in() || is_super_admin() ) {
 		return $has_activities;
 	}
 
 	if ( ! empty( $activities->activities ) ) {
 		foreach ( $activities->activities as $key => $activity ) {
 
-			if ( 'friends' == $activity->privacy ) {
+			if ( 'friends' == $activity->privacy && $activity->user_id !== bp_loggedin_user_id() ) {
 
 				$remove_from_stream = false;
 				$is_friend          = friends_check_friendship( bp_loggedin_user_id(), $activity->user_id );
@@ -1398,6 +1531,89 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	}
 
 	$activities->activities = array_values( $activities->activities );
+	if ( $activities->activity_count === 0 ) {
+		return false;
+	}
+	return $has_activities;
+}
+
+/**
+ * Filter the activities for document and media privacy
+ *
+ * @since BuddyBoss 1.4.3
+ * @param $has_activities
+ * @param $activities
+ *
+ * @return mixed
+ */
+function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
+
+	if ( ! $has_activities || ! bp_is_active( 'media' ) || ! bp_is_single_activity() ) {
+		return $has_activities;
+	}
+
+	if ( ! empty( $activities->activities ) ) {
+		foreach ( $activities->activities as $key => $activity ) {
+			if ( in_array( $activity->privacy, array( 'media', 'document' ) ) ) {
+				$parent_activity_id = false;
+				if ( ! empty( $activity->secondary_item_id ) ) {
+					$parent_activity_id = $activity->secondary_item_id;
+				} else {
+					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
+					if ( ! empty( $attachment_id ) ) {
+						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					}
+				}
+
+				if ( ! empty( $parent_activity_id ) ) {
+					$parent         = new BP_Activity_Activity( $parent_activity_id );
+					$parent_user    = $parent->user_id;
+					$parent_privacy = $parent->privacy;
+
+					if ( $parent_privacy === 'public' ) {
+						continue;
+					}
+
+					$remove_from_stream = false;
+
+					if ( $parent_privacy === 'loggedin' && ! bp_loggedin_user_id() ) {
+						$remove_from_stream = true;
+					}
+
+					if ( false === $remove_from_stream && $parent_privacy === 'onlyme' && bp_loggedin_user_id() !== $parent_user ) {
+						$remove_from_stream = true;
+					}
+
+					if ( false === $remove_from_stream && $parent_privacy === 'friends' ) {
+						if ( bp_is_active( 'friends' ) ) {
+							$is_friend = friends_check_friendship( bp_loggedin_user_id(), $parent_user );
+							if ( ! $is_friend && $parent_user !== bp_loggedin_user_id() ) {
+								$remove_from_stream = true;
+							}
+						} else {
+							$remove_from_stream = true;
+						}
+					}
+
+					if ( $remove_from_stream && isset( $activities->activity_count ) ) {
+						$activities->activity_count = $activities->activity_count - 1;
+
+						if ( isset( $activities->total_activity_count ) ) {
+							$activities->total_activity_count = $activities->total_activity_count - 1;
+						}
+
+						unset( $activities->activities[ $key ] );
+					}
+
+				}
+			}
+		}
+	}
+
+	$activities->activities = array_values( $activities->activities );
+	if ( $activities->activity_count === 0 ) {
+		return false;
+	}
 
 	return $has_activities;
 }
@@ -1419,7 +1635,10 @@ function bp_activity_media_add( $media ) {
 
 		if ( $bp_media_upload_count > 1 || true === $bp_new_activity_comment ) {
 
-			$args = array( 'hide_sitewide' => true, 'privacy' => 'media' );
+			$args = array(
+				'hide_sitewide'     => true,
+				'privacy'           => 'media'
+			);
 			if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
 				$args['group_id'] = $media->group_id;
 				$activity_id = groups_post_update( $args );
@@ -1440,6 +1659,11 @@ function bp_activity_media_add( $media ) {
 				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
 
 				if ( $parent_activity_id ) {
+
+					$media_activity = new BP_Activity_Activity( $activity_id );
+					$media_activity->secondary_item_id = $parent_activity_id;
+					$media_activity->save();
+
 					//save parent activity id in attachment meta
 					update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
 				}
@@ -1622,6 +1846,11 @@ function bp_activity_document_add( $document ) {
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( ! empty( $parent_activity_id ) ) {
+
+					$document_activity = new BP_Activity_Activity( $activity_id );
+					$document_activity->secondary_item_id = $parent_activity_id;
+					$document_activity->save();
+
 					// save parent activity id in attachment meta.
 					update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $parent_activity_id );
 				}

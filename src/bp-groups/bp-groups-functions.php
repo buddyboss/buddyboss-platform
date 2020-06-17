@@ -3284,12 +3284,21 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group->id );
+	//Check invitation is exists or not
+	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
 
+	if ( empty( $invite_id ) ) {
+		return false;
+	}
+	//Get invitation by id
+	$member 	= new BP_Invitation( $invite_id );
+
+	//$member = new BP_Groups_Member( $user_id, $group->id );
 	$inviter = array(
 		'id'   => $member->inviter_id,
 		'name' => bp_core_get_user_displayname( $member->inviter_id ),
 		'url'  => bp_core_get_user_domain( $member->inviter_id ),
+		'date_modified'  => $member->date_modified,
 	);
 
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );

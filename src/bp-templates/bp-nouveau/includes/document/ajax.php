@@ -613,7 +613,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		$privacy       = $parent_folder[0]->privacy;
 	}
 
-	if ( $parent > 0 ) {
+	if ( (int) $parent > 0 ) {
 		$has_access = bp_folder_user_can_edit( $parent );
 		if ( ! $has_access ) {
 			$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' );
@@ -710,10 +710,10 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		$privacy       = $parent_folder[0]->privacy;
 	}
 
-	if ( $folder_id > 0 ) {
+	if ( (int) $folder_id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $folder_id );
 		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have a permission to create a folder inside this folder.', 'buddyboss' );
+			$response['feedback'] = esc_html__( 'You don\'t have permission to create folder inside this folder.', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 	}
@@ -799,16 +799,20 @@ function bp_nouveau_ajax_document_move() {
 		wp_send_json_error( $response );
 	}
 
-	$has_access = bp_document_user_can_edit( $document_id );
-	if ( ! $has_access ) {
-		$response['feedback'] = esc_html__( 'You don\'t have a permission to move the document.', 'buddyboss' );
-		wp_send_json_error( $response );
+	if ( (int) $document_id > 0 ) {
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
 	}
 
-	$has_access = bp_folder_user_can_edit( $folder_id );
-	if ( ! $has_access ) {
-		$response['feedback'] = esc_html__( 'You don\'t have a permission to move the document.', 'buddyboss' );
-		wp_send_json_error( $response );
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this document.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
 	}
 
 	$document = bp_document_move_document_to_folder( $document_id, $folder_id, $group_id );
@@ -924,10 +928,12 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
-		$has_access = bp_document_user_can_edit( $document_id );
-		if ( ! $has_access ) {
-			$response['feedback'] =  esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
-			wp_send_json_error( $response );
+		if ( (int) $document_id > 0 ) {
+			$has_access = bp_document_user_can_edit( $document_id );
+			if ( ! $has_access ) {
+				$response['feedback'] = esc_html__( "You don't have a permission to rename the document.", 'buddyboss' );
+				wp_send_json_error( $response );
+			}
 		}
 
 		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
@@ -954,10 +960,12 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
-		$has_access = bp_folder_user_can_edit( $document_id );
-		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have a permission to rename the folder', 'buddyboss' );
-			wp_send_json_error( $response );
+		if ( (int) $document_id > 0 ) {
+			$has_access = bp_folder_user_can_edit( $document_id );
+			if ( ! $has_access ) {
+				$response['feedback'] = esc_html__( 'You don\'t have permission to rename folder', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
 		}
 
 		$folder = bp_document_rename_folder( $document_id, $title );
@@ -1021,18 +1029,17 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	// save media.
+	// save folder.
 	$title    = $_POST['title'];
 	$id       = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
 	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
 
-	$has_access = bp_folder_user_can_edit( $id );
-	if ( ! $has_access ) {
-		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You don\'t have a permission to rename the folder', 'buddyboss' )
-		);
-		wp_send_json_error( $response );
+	if ( (int) $id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $id );
+		if ( ! $has_access ) {
+			$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have permission to rename this folder', 'buddyboss' ) );
+			wp_send_json_error( $response );
+		}
 	}
 
 	if ( ! empty( $_POST['privacy'] ) ) {
@@ -1052,7 +1059,7 @@ function bp_nouveau_ajax_document_edit_folder() {
 	if ( ! $folder_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
+			esc_html__( 'There was a problem when trying to rename the folder.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -1213,13 +1220,20 @@ function bp_nouveau_ajax_document_folder_move() {
 	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
 	$group_id              = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
 
-	$has_access = bp_folder_user_can_edit( $folder_id );
-	if ( ! $has_access ) {
-		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'You don\'t have a permission to move the folder.', 'buddyboss' )
-		);
-		wp_send_json_error( $response );
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have permission to move this folder.', 'buddyboss' ) );
+			wp_send_json_error( $response );
+		}
+	}
+
+	if ( (int) $destination_folder_id > 0 ) {
+		$has_access_destination = bp_folder_user_can_edit( $destination_folder_id );
+		if ( ! $has_access_destination ) {
+			$response['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You don\'t have permission to move this folder.', 'buddyboss' ) );
+			wp_send_json_error( $response );
+		}
 	}
 
 	if ( '' === $destination_folder_id ) {
@@ -1345,8 +1359,10 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Documents', 'buddyboss' );
 	} else {
-		$group      = groups_get_group( (int) $id );
-		$first_text = bp_get_group_name( $group );
+		if ( bp_is_active( 'groups') ) {
+			$group      = groups_get_group( (int) $id );
+			$first_text = bp_get_group_name( $group );
+		}
 	}
 
 	wp_send_json_success(
@@ -1371,16 +1387,20 @@ function bp_nouveau_ajax_document_save_privacy() {
 	$privacy = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
 
 	if ( 'folder' === $type ) {
-		$has_access = bp_folder_user_can_edit( $id );
-		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' );
-			wp_send_json_error( $response );
+		if ( (int) $id > 0 ) {
+			$has_access = bp_folder_user_can_edit( $id );
+			if ( ! $has_access ) {
+				$response['feedback'] = esc_html__( 'You don\'t have permission to update this folder privacy.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
 		}
 	} else {
-		$has_access = bp_document_user_can_edit( $id );
-		if ( ! $has_access ) {
-			$response['feedback'] = esc_html__( 'You don\'t have a permission to update the privacy.', 'buddyboss' );
-			wp_send_json_error( $response );
+		if ( (int) $id > 0 ) {
+			$has_access = bp_document_user_can_edit( $id );
+			if ( ! $has_access ) {
+				$response['feedback'] = esc_html__( 'You don\'t have permission to update this document privacy.', 'buddyboss' );
+				wp_send_json_error( $response );
+			}
 		}
 	}
 

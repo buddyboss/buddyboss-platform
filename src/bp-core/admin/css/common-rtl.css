@@ -1489,7 +1489,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-content .article-child > ul > li {
-  list-style-type: none;
+  list-style-type: disc;
 }
 
 .bp-help-content .article-child .actions,
