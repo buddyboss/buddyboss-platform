@@ -1265,9 +1265,9 @@ function bp_nouveau_group_template_part() {
 		} elseif ( bp_is_group_albums() ) {
 			$template = 'albums';
 		} elseif ( bp_is_group_folders() ) {
-			$template = 'documents';
+			$template = 'document';
 		} elseif ( bp_is_group_document() ) {
-			$template = 'documents';
+			$template = 'document';
 		} elseif ( true === bp_disable_group_messages() && bp_is_group_messages() ) {
 			$template = 'messages';
 		}
