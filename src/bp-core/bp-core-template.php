@@ -3154,6 +3154,10 @@ function bp_is_group_albums() {
 function bp_is_group_document() {
 	$retval = false;
 
+	if ( ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
 		$retval = true;
 	}
@@ -3170,6 +3174,10 @@ function bp_is_group_document() {
  */
 function bp_is_group_folders() {
 	$retval = false;
+
+	if ( ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
 		$retval = true;
