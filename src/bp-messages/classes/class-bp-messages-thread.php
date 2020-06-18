@@ -803,7 +803,7 @@ class BP_Messages_Thread {
 		} else {
 
 			// Do not include hidden threads.
-			if ( false === $r['is_hidden'] && '' === $r['search_terms'] ) {
+			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
 				$user_threads_query = $wpdb->prepare(
 					"
 			SELECT DISTINCT(thread_id)
