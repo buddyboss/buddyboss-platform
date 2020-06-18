@@ -120,6 +120,8 @@ function bp_get_media_root_slug() {
 function bp_has_media( $args = '' ) {
 	global $media_template;
 
+	$args = bp_parse_args( $args );
+
 	/*
 	 * Smart Defaults.
 	 */
@@ -135,48 +137,24 @@ function bp_has_media( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	// Album filtering
+	// Album filtering.
 	if ( ! isset( $args['album_id'] ) ) {
 		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
 	} else {
 		$album_id = $args['album_id'];
 	}
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) ) {
-
-			// get the login user id.
-			$current_user_id = get_current_user_id();
-
-			// check if the login user is friends of the display user
-			$is_friend = friends_check_friendship( $current_user_id, $user_id );
-
-			/**
-			 * check if the login user is friends of the display user
-			 * OR check if the login user and the display user is the same
-			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
-				$privacy[] = 'friends';
-			}
-		}
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-		}
-	}
+	$privacy = bp_media_query_privacy( $user_id, 0, ( isset( $args['scope'] ) ? $args['scope'] : '' ) );
 
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-		$privacy  = array( 'grouponly' );
 		$group_id = bp_get_current_group_id();
 		$user_id  = false;
 	}
 
 	// The default scope should recognize custom slugs.
 	$scope = array();
-	if ( bp_is_media_directory() ) {
+	if ( bp_is_media_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) ) {
 		if ( bp_is_active( 'friends' ) ) {
 			$scope[] = 'friends';
 		}
@@ -202,7 +180,7 @@ function bp_has_media( $args = '' ) {
 			'include'      => false,           // Pass an media_id or string of IDs comma-separated.
 			'exclude'      => false,           // Pass an activity_id or string of IDs comma-separated.
 			'sort'         => 'DESC',          // Sort DESC or ASC.
-			'order_by'     => false,           // Order by. Default: date_created
+			'order_by'     => false,           // Order by. Default: date_created.
 			'page'         => 1,               // Which page to load.
 			'per_page'     => 20,              // Number of items per page.
 			'page_arg'     => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
@@ -213,7 +191,7 @@ function bp_has_media( $args = '' ) {
 			// Scope - pre-built media filters for a user (friends/groups).
 			'scope'        => $scope,
 
-			// Filtering
+			// Filtering.
 			'user_id'      => $user_id,        // user_id to filter on.
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
@@ -715,6 +693,37 @@ function bp_get_media_album_id() {
 }
 
 /**
+ * Output the media group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_media_group_id() {
+	echo bp_get_media_group_id();
+}
+
+/**
+ * Return the media group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media group ID.
+ */
+function bp_get_media_group_id() {
+	global $media_template;
+
+	/**
+	 * Filters the media group ID being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param int $id The media group ID.
+	 */
+	return apply_filters( 'bp_get_media_group_id', $media_template->media->group_id );
+}
+
+/**
  * Output the media activity ID.
  *
  * @since BuddyBoss 1.0.0
@@ -894,6 +903,68 @@ function bp_get_media_directory_permalink() {
 	 * @param string $value Media directory permalink.
 	 */
 	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_media_root_slug() ) );
+}
+
+/**
+ * Output the media privacy.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_media_privacy() {
+	echo bp_get_media_privacy();
+}
+
+/**
+ * Return the media privacy.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media privacy.
+ */
+function bp_get_media_privacy() {
+	global $media_template;
+
+	/**
+	 * Filters the media privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $id The media privacy.
+	 */
+	return apply_filters( 'bp_get_media_privacy', $media_template->media->privacy );
+}
+
+/**
+ * Output the media parent activity id.
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_media_parent_activity_id() {
+	echo bp_get_media_parent_activity_id();
+}
+
+/**
+ * Return the media parent activity id.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media parent activity id.
+ */
+function bp_get_media_parent_activity_id() {
+	global $media_template;
+
+	/**
+	 * Filters the media parent activity id.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $id The media parent activity id.
+	 */
+	return apply_filters( 'bp_get_media_privacy', get_post_meta( $media_template->media->attachment_id, 'bp_media_parent_activity_id', true ) );
 }
 
 // ****************************** Media Albums *********************************//

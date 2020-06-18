@@ -263,7 +263,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
 	}
 
 	/** Reply Title */
@@ -289,6 +289,7 @@ function bbp_new_reply_handler( $action = '' ) {
 		empty( $reply_content )
 		&& empty( $_POST['bbp_media'] )
 		&& empty( $_POST['bbp_media_gif'] )
+		&& empty( $_POST['bbp_document'] )
 	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
@@ -580,7 +581,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Reply Topic */
@@ -648,6 +649,11 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	if ( ! bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 		bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss' ) );
+	}
+
+	// Reply past edit lock checking.
+	if ( ! current_user_can( 'edit_others_replies' ) && bbp_past_edit_lock( $reply->post_date_gmt ) ) {
+		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
 	}
 
 	/** Reply Status */
@@ -1957,7 +1963,7 @@ function bbp_reply_content_autoembed() {
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
 		add_filter( 'bbp_get_reply_content', array( $wp_embed, 'autoembed' ), 2 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
-		// add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
+		add_filter( 'bbp_get_reply_content', 'bbp_reply_content_autoembed_paragraph', 99999, 1 );
 	}
 }
 
@@ -1970,36 +1976,36 @@ function bbp_reply_content_autoembed() {
  */
 function bbp_reply_content_autoembed_paragraph( $content ) {
 
-	// Check if WordPress already embed the link then return the original content.
-	if ( strpos( $content, '<iframe' ) !== false ) {
+	if ( strpos( $content, '<iframe' ) !== false )
 		return $content;
-	} else {
-		// Find all the URLs from the content.
-		preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match );
-		// Check if URL found.
-		if ( isset( $match[0] ) ) {
-			$html = '';
-			// Remove duplicate from array and run the loop
-			foreach ( array_unique( $match[0] ) as $url ) {
-				// Fetch the oembed code for URL.
-				$embed_code = wp_oembed_get( $url );
-				// If oembed found then store into the $html
-				if ( strpos( $embed_code, '<iframe' ) !== false ) {
-					$html .= '<p>' . $embed_code . '</p>';
-				}
+
+	global $wp_embed;
+	$embed_urls = $embeds_array = array();
+	$flag = true;
+
+	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content , $embed_urls );
+	}
+
+	if ( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
+		$embed_urls = array_filter( $embed_urls[0] );
+		$embed_urls = array_unique( $embed_urls );
+
+		foreach ( $embed_urls as $url ) {
+			if ( $flag == false ) {
+				continue;
 			}
-			// If $html blank return original content
-			if ( '' === $html ) {
-				return $content;
-				// Return the new content by adding oembed after the content.
-			} else {
-				return $content . $html;
+
+			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+			if( $embed ) {
+				$flag = false;
+				$embeds_array[] = wpautop( $embed );
 			}
-			// Else return original content.
-		} else {
-			return $content;
 		}
 	}
+
+	// Put the line breaks back.
+	return $content . implode( '', $embeds_array );
 }
 
 /** Filters *******************************************************************/
@@ -2420,15 +2426,21 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		if ( ! $author_id ) {
 			$display_role = __( 'Guest', 'buddyboss' );
 		} else {
-			$user_roles = array_values( get_userdata( $author_id )->roles );
 
-			if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
-				$display_role = __( 'Administrator', 'buddyboss' );
+			if ( empty( get_userdata( $author_id ) ) ) {
+				$display_role = __( 'Deleted User', 'buddyboss' );
+			} else {
+				$user_roles = array_values( get_userdata( $author_id )->roles );
+
+				if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
+					$display_role = __( 'Administrator', 'buddyboss' );
+				}
+
+				if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
+					$display_role = __( 'Moderator', 'buddyboss' );
+				}
 			}
 
-			if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
-				$display_role = __( 'Moderator', 'buddyboss' );
-			}
 		}
 	}
 

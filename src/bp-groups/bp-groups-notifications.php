@@ -144,6 +144,15 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 		'notification_type' => 'groups-membership-request',
 	);
 
+	$request_message = '';
+	$requests = groups_get_requests( $args = array(
+		'user_id'    => $requesting_user_id,
+		'item_id'    => $group_id,
+	) );
+	if ( $requests ) {
+		$request_message = current( $requests )->content;
+	}
+
 	$group = groups_get_group( $group_id );
 	$args  = array(
 		'tokens' => array(
@@ -156,6 +165,7 @@ function groups_notification_new_membership_request( $requesting_user_id = 0, $a
 			'profile.url'          => esc_url( bp_core_get_user_domain( $requesting_user_id ) ),
 			'requesting-user.id'   => $requesting_user_id,
 			'requesting-user.name' => bp_core_get_user_displayname( $requesting_user_id ),
+			'request.message'      => $request_message,
 			'unsubscribe'          => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
@@ -300,25 +310,28 @@ add_action( 'groups_promoted_member', 'groups_notification_promoted_member', 10,
  */
 function groups_notification_group_invites( &$group, &$member, $inviter_user_id ) {
 
+	// @todo $inviter_ud may be used for caching, test without it
+	$inviter_ud = bp_core_get_core_userdata( $inviter_user_id );
+
+	if ( $member instanceof BP_Groups_Member ) {
+		$invited_user_id = $member->user_id;
+	} else if ( is_int( $member ) ) {
+		$invited_user_id = $member;
+	}
+
 	// Bail if member has already been invited.
 	if ( ! empty( $member->invite_sent ) ) {
 		return;
 	}
 
-	// @todo $inviter_ud may be used for caching, test without it
-	$inviter_ud      = bp_core_get_core_userdata( $inviter_user_id );
-	$invited_user_id = $member->user_id;
-
 	// Trigger a BuddyPress Notification.
 	if ( bp_is_active( 'notifications' ) ) {
-		bp_notifications_add_notification(
-			array(
-				'user_id'          => $invited_user_id,
-				'item_id'          => $group->id,
-				'component_name'   => buddypress()->groups->id,
-				'component_action' => 'group_invite',
-			)
-		);
+		bp_notifications_add_notification( array(
+			'user_id'          => $invited_user_id,
+			'item_id'          => $group->id,
+			'component_name'   => buddypress()->groups->id,
+			'component_action' => 'group_invite',
+		) );
 	}
 
 	// Bail if member opted out of receiving this email.
@@ -333,6 +346,16 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 		'notification_type' => 'groups-invitation',
 	);
 
+	$invite_message = '';
+	$invitations = groups_get_invites( $args = array(
+		'user_id'    => $invited_user_id,
+		'item_id'    => $group->id,
+		'inviter_id' => $inviter_user_id,
+	) );
+	if ( $invitations ) {
+		$invite_message = current( $invitations )->content;
+	}
+
 	$args = array(
 		'tokens' => array(
 			'group'           => $group,
@@ -342,7 +365,7 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 			'inviter.url'     => bp_core_get_user_domain( $inviter_user_id ),
 			'inviter.id'      => $inviter_user_id,
 			'invites.url'     => esc_url( $invited_link . '/invites/' ),
-			'invites.message' => bp_groups_get_invite_messsage_for_user( $invited_user_id, $group->id ),
+			'invite.message' => $invite_message,
 			'unsubscribe'     => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
@@ -434,7 +457,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 				}
 			} else {
 				$user_fullname     = bp_core_get_user_displayname( $requesting_user_id );
-				$text              = sprintf( __( '%s requests group membership', 'buddyboss' ), $user_fullname );
+				$text              = sprintf( __( '%1$s requests membership for the group: %2$s', 'buddyboss' ), $user_fullname, $group->name );
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
 				if ( 'string' == $format ) {
@@ -1032,6 +1055,24 @@ function bp_groups_delete_group_delete_all_notifications( $group_id ) {
 add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_notifications', 10 );
 
 /**
+ * Remove Group invite notification when a user is uninvited.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int $group_id ID of the group being uninvited from.
+ * @param int $user_id  ID of the user being uninvited.
+ */
+function bp_groups_uninvite_user_delete_group_invite_notification( $group_id = 0, $user_id = 0 ) {
+	if ( ! bp_is_active( 'notifications' ) || ! $group_id || ! $user_id ) {
+		return;
+	}
+
+	bp_notifications_delete_notifications_by_item_id( $user_id, $group_id, buddypress()->groups->id, 'group_invite' );
+}
+add_action( 'groups_uninvite_user', 'bp_groups_uninvite_user_delete_group_invite_notification', 10, 2 );
+
+/**
  * When a demotion takes place, delete any corresponding promotion notifications.
  *
  * @since BuddyPress 2.0.0
@@ -1104,6 +1145,10 @@ function bp_groups_screen_my_groups_mark_notifications() {
 }
 add_action( 'groups_screen_my_groups', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 add_action( 'groups_screen_group_home', 'bp_groups_screen_my_groups_mark_notifications', 10 );
+/*
+ * Request membership screen in clear read notification and count.
+ */
+add_action( 'groups_screen_group_request_membership', 'bp_groups_screen_my_groups_mark_notifications', 10 );
 
 /**
  * Mark group invitation notifications read when a member views their invitations.
@@ -1168,6 +1213,12 @@ function groups_screen_notification_settings() {
 
 	if ( ! $group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
 		$group_request_completed = 'yes';
+	}
+
+	if ( true === bp_disable_group_messages() ) {
+		if ( ! $group_message = bp_get_user_meta( bp_displayed_user_id(), 'notification_group_messages_new_message', true ) ) {
+			$group_message = 'yes';
+		}
 	}
 	?>
 
@@ -1262,6 +1313,29 @@ function groups_screen_notification_settings() {
 					</div>
 				</td>
 			</tr>
+
+			<?php
+				if ( true === bp_disable_group_messages() ) {
+					?>
+					<tr id="groups-notification-settings-request-messages">
+						<td></td>
+						<td><?php _e( 'Group Message', 'buddyboss' ); ?></td>
+						<td class="yes">
+							<div class="bp-radio-wrap">
+								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />
+								<label for="notification-groups-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+							</div>
+						</td>
+						<td class="no">
+							<div class="bp-radio-wrap">
+								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-no" class="bs-styled-radio" value="no" <?php checked( $group_message, 'no', true ); ?> />
+								<label for="notification-groups-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+							</div>
+						</td>
+					</tr>
+					<?php
+				}
+			?>
 
 			<?php
 

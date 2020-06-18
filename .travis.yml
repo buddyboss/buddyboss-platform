@@ -5,6 +5,9 @@
 sudo: false
 
 language: php
+node_js:
+  - 8
+  - 10
 
 dist: trusty
 
@@ -20,41 +23,57 @@ git:
 
 php:
   - 7.3
-  - 7.2
-  - 5.6
+  #- 7.2
+  #- 5.6
 
 # WordPress comes from the Git mirror, where 'master' mirrors svn 'trunk' and
 # x.y mirrors the latest from the x.y branch
+#env:
+#  - WP_VERSION=master BP_TRAVISCI=travis:phpunit
+#  - WP_VERSION=5.2 BP_TRAVISCI=travis:phpunit
+#  - WP_VERSION=5.1 BP_TRAVISCI=travis:phpunit
+#  - WP_VERSION=5.0 BP_TRAVISCI=travis:phpunit
+#  - WP_VERSION=4.9 BP_TRAVISCI=travis:phpunit
+#  - WP_VERSION=4.8 BP_TRAVISCI=travis:phpunit
+#  - WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
 env:
-  - WP_VERSION=master BP_TRAVISCI=travis:phpunit
-  - WP_VERSION=5.2 BP_TRAVISCI=travis:phpunit
-  - WP_VERSION=5.1 BP_TRAVISCI=travis:phpunit
-  - WP_VERSION=5.0 BP_TRAVISCI=travis:phpunit
-  - WP_VERSION=4.9 BP_TRAVISCI=travis:phpunit
-  - WP_VERSION=4.8 BP_TRAVISCI=travis:phpunit
-  - WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
+  - WP_VERSION=master BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=5.2 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=5.1 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=5.0 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=4.9 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=4.8 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=4.7 BP_TRAVISCI=travis:grunt
 
 matrix:
   include:
     - php: 7.3
-      env: WP_VERSION=master BP_TRAVISCI=travis:grunt SNIFF=1
-    - php: 7.3
-      env: WP_VERSION=master BP_TRAVISCI=travis:phpcompat
-    - php: 5.3
-      env: WP_VERSION=4.8 BP_TRAVISCI=travis:phpunit
-      dist: precise
-    - php: 5.3
-      env: WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
-      dist: precise
-  exclude:
-    - php: 7.3
-      env: WP_VERSION=4.9 BP_TRAVISCI=travis:phpunit
-    - php: 7.3
-      env: WP_VERSION=4.8 BP_TRAVISCI=travis:phpunit
-    - php: 7.3
-      env: WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
-    - php: 7.3
-      env: WP_VERSION=master BP_TRAVISCI=travis:phpunit
+      env: WP_VERSION=master BP_TRAVISCI=travis:grunt
+      #env: WP_VERSION=master BP_TRAVISCI=travis:grunt SNIFF=1
+#    - php: 7.3
+#      env: WP_VERSION=master BP_TRAVISCI=travis:grunt
+#      #env: WP_VERSION=master BP_TRAVISCI=travis:phpcompat
+#    - php: 5.3
+#      env: WP_VERSION=4.8 BP_TRAVISCI=travis:grunt
+#      #env: WP_VERSION=4.8 BP_TRAVISCI=travis:phpunit
+#      dist: precise
+#    - php: 5.3
+#      env: WP_VERSION=4.7 BP_TRAVISCI=travis:grunt
+#      #env: WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
+#      dist: precise
+#  exclude:
+#    - php: 7.3
+#      env: WP_VERSION=4.9 BP_TRAVISCI=travis:grunt
+#      #env: WP_VERSION=4.9 BP_TRAVISCI=travis:phpunit
+#    - php: 7.3
+#      env: WP_VERSION=4.8 BP_TRAVISCI=travis:grunt
+#      #env: WP_VERSION=4.8 BP_TRAVISCI=travis:phpunit
+#    - php: 7.3
+#      env: WP_VERSION=4.7 BP_TRAVISCI=travis:grunt
+#      #env: WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
+#    - php: 7.3
+#      env: WP_VERSION=master BP_TRAVISCI=travis:grunt
+      #env: WP_VERSION=master BP_TRAVISCI=travis:phpunit
 
 # before_install: Failures in this section will result in build status 'errored'
 before_install:
@@ -101,7 +120,7 @@ before_install:
   # setup NodeJS version using NVM
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - node --version
-  - nvm install 6
+  - nvm install 12
   - node --version
   - npm install -g grunt-cli
   - npm --version
@@ -118,16 +137,16 @@ before_install:
 # before_script: Failures in this section will result in build status 'errored'
 before_script:
   - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress --ignore=*/vendor/* src/; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.3" ]]; then composer global require --dev phpunit/phpunit ^4; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then composer global require --dev phpunit/phpunit ^5; composer install; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer global require --dev phpunit/phpunit ^6; composer install; fi
-  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then composer global require --dev phpunit/phpunit ^6; composer install; fi
+#  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.3" ]]; then composer global require --dev phpunit/phpunit ^4; fi
+#  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then composer global require --dev phpunit/phpunit ^5; composer install; fi
+#  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer global require --dev phpunit/phpunit ^6; composer install; fi
+#  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then composer global require --dev phpunit/phpunit ^6; composer install; fi
   - mkdir -p /tmp/node/node_modules
   - ln -s /tmp/node/node_modules $plugin_dir/node_modules
   - npm install
 
 # Run tests
-script: grunt $BP_TRAVISCI
+script: grunt $BP_TRAVISCI --verbose
 
 notifications:
   email: false

@@ -21,24 +21,27 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param array|string $args {
  *     Array of arguments.
- *     @type int    $sender_id  Optional. ID of the user who is sending the
- *                              message. Default: ID of the logged-in user.
- *     @type int    $thread_id  Optional. ID of the parent thread. Leave blank to
- *                              create a new thread for the message.
- *     @type array  $recipients IDs or usernames of message recipients. If this
- *                              is an existing thread, it is unnecessary to pass a $recipients
- *                              argument - existing thread recipients will be assumed.
- *     @type string $subject    Optional. Subject line for the message. For
- *                              existing threads, the existing subject will be used. For new
- *                              threads, 'No Subject' will be used if no $subject is provided.
- *     @type string $content    Content of the message. Cannot be empty.
- *     @type string $date_sent  Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
- *     @type string $error_type Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ *     @type int    $sender_id     Optional. ID of the user who is sending the
+ *                                 message. Default: ID of the logged-in user.
+ *     @type int    $thread_id     Optional. ID of the parent thread. Leave blank to
+ *                                 create a new thread for the message.
+ *     @type array  $recipients    IDs or usernames of message recipients. If this
+ *                                 is an existing thread, it is unnecessary to pass a $recipients
+ *                                 argument - existing thread recipients will be assumed.
+ *     @type string $subject       Optional. Subject line for the message. For
+ *                                 existing threads, the existing subject will be used. For new
+ *                                 threads, 'No Subject' will be used if no $subject is provided.
+ *     @type string $content       Content of the message. Cannot be empty.
+ *     @type string $date_sent     Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
+ *     @type bool   $is_hidden     Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
+ *     @type bool   $mark_visible  Optional. Whether to mark thread visible to all other participants. Default: false.
+ *     @type string $error_type    Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  *
  * @return int|bool|WP_Error ID of the message thread on success, false on failure.
  */
 function messages_new_message( $args = '' ) {
+	global $wpdb, $bp;
 
 	// Parse the default arguments.
 	$r = bp_parse_args(
@@ -51,6 +54,8 @@ function messages_new_message( $args = '' ) {
 			'content'       => false,
 			'date_sent'     => bp_core_current_time(),
 			'append_thread' => true,
+			'is_hidden'     => false,
+			'mark_visible'  => false,
 			'error_type'    => 'bool',
 		),
 		'messages_new_message'
@@ -75,12 +80,14 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Create a new message object.
-	$message            = new BP_Messages_Message();
-	$message->thread_id = $r['thread_id'];
-	$message->sender_id = $r['sender_id'];
-	$message->subject   = $r['subject'];
-	$message->message   = $r['content'];
-	$message->date_sent = $r['date_sent'];
+	$message               = new BP_Messages_Message();
+	$message->thread_id    = $r['thread_id'];
+	$message->sender_id    = $r['sender_id'];
+	$message->subject      = $r['subject'];
+	$message->message      = $r['content'];
+	$message->date_sent    = $r['date_sent'];
+	$message->is_hidden    = $r['is_hidden'];
+	$message->mark_visible = $r['mark_visible'];
 
 	$new_reply = false;
 	// If we have a thread ID...
@@ -192,7 +199,47 @@ function messages_new_message( $args = '' ) {
 			$message->recipients[ $i ]->user_id = $recipient_id;
 		}
 
-		$previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] );
+		$previous_threads = BP_Messages_Message::get_existing_threads( $recipient_ids, $r['sender_id'] );
+		$previous_thread  = null;
+		if ( $previous_threads ) {
+
+			foreach ( $previous_threads as $thread ) {
+
+				$is_active_recipient = BP_Messages_Thread::is_thread_recipient( (int) $thread->thread_id, $r['sender_id'] );
+				if ( ! $is_active_recipient ) {
+					continue;
+				}
+
+				$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
+				$message_id    = $first_message->id;
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
+				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+
+				if ( !empty( $group ) && 'all' === $message_users && 'open' === $message_type && 'new' === $thread_type && 'group' === $message_from ) {
+					$previous_thread = null;
+				} else {
+					$previous_thread     = (int) $thread->thread_id;
+					$total_users_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $previous_thread ) ); // db call ok; no-cache ok;
+					foreach ( $total_users_threads as $total_users_thread ) {
+						if ( 1 === (int) $total_users_thread->is_deleted ) {
+							$previous_thread = null;
+							break;
+						}
+					}
+					if ( $previous_thread ) {
+						break;
+					}
+				}
+			}
+
+		} else {
+			$previous_threads = null;
+		}
+
+
 		if ( $previous_thread && $r['append_thread'] ) {
 			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
 
@@ -711,7 +758,92 @@ function messages_notification_new_message( $raw_args = array() ) {
 }
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
+/**
+ * Email message recipients to alert them of a new unread group message.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param array $raw_args
+ */
+function group_messages_notification_new_message( $raw_args = array() ) {
+	if ( is_object( $raw_args ) ) {
+		$args = (array) $raw_args;
+	} else {
+		$args = $raw_args;
+	}
 
+	// These should be extracted below.
+	$recipients    = array();
+	$email_subject = $subject = $email_content = '';
+	$sender_id     = $id = 0;
+
+	// Barf.
+	extract( $args );
+
+	if ( empty( $recipients ) ) {
+		return;
+	}
+
+	$sender_name = bp_core_get_user_displayname( $sender_id );
+
+	if ( isset( $message ) ) {
+		$message = wpautop( $message );
+	} else {
+		$message = '';
+	}
+
+	// Send an email to each recipient.
+	foreach ( $recipients as $recipient ) {
+		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+			continue;
+		}
+
+		// User data and links.
+		$ud = get_userdata( $recipient->user_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
+		$unsubscribe_args = array(
+			'user_id'           => $recipient->user_id,
+			'notification_type' => 'group-message-email',
+		);
+
+		$group      = bp_messages_get_meta( $id, 'group_id', true );
+		$group_name = bp_get_group_name( groups_get_group( $group ) );
+
+		bp_send_email(
+			'group-message-email',
+			$ud,
+			array(
+				'tokens' => array(
+					'message_id'  => $id,
+					'usermessage' => stripslashes( $message ),
+					'message'     => stripslashes( $message ),
+					'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+					'sender.name' => $sender_name,
+					'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+					'group.name'  => $group_name,
+					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Fires after the sending of a new group message email notification.
+	 *
+	 * @since BuddyPress 1.5.0
+	 * @deprecated 2.5.0 Use the filters in BP_Email.
+	 *                   $email_subject and $email_content arguments unset and deprecated.
+	 *
+	 * @param array  $recipients    User IDs of recipients.
+	 * @param string $email_subject Deprecated in 2.5; now an empty string.
+	 * @param string $email_content Deprecated in 2.5; now an empty string.
+	 * @param array  $args          Array of originally provided arguments.
+	 */
+	do_action( 'group_messages_notification_new_message', $recipients, '', '', $args );
+}
 
 
 /**

@@ -23,13 +23,14 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				<?php
 			}
 			?>
+			<th class="title actions"></th>
 		</tr>
 		</thead>
 
 		<tbody>
 
 		<?php
-		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 5 );
+		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 1 );
 		for ( $i = 0; $i < $raw; $i++ ) {
 			?>
 
@@ -71,9 +72,19 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 					<?php
 				}
 				?>
+				<td class="field-actions">
+					<span class="field-actions-remove"><i class="bb-icon bb-icon-close"></i></span>
+				</td>
 			</tr>
 
 		<?php }; ?>
+			<tr>
+				<td class="field-name" colspan="<?php if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) { echo 3; } else { echo 2; }?>">
+				</td>
+				<td class="field-actions-last" colspan="">
+					<span class="field-actions-add"><i class="bb-icon bb-icon-plus"></i></span>
+				</td>
+			</tr>
 
 		</tbody>
 	</table>
@@ -94,6 +105,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss' ) ?></label>
 		<?php
 		add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
+		add_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
 		wp_editor(
 			bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
 			'bp-member-invites-custom-content',
@@ -110,6 +122,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		);
 		// Remove the temporary filter on editor buttons
 		remove_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
+		remove_filter('tiny_mce_before_init','bp_nouveau_send_invite_content_css');
 		?>
 		<input type="hidden" value="<?php _e('Are you sure you want to send the invite without adding a message?', 'buddyboss') ?>" name="error-message-empty-body-field" id="error-message-empty-body-field">
 		<?php

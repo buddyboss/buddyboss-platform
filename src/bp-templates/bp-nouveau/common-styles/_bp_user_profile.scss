@@ -414,3 +414,39 @@ div.profile_completion_wrap {
 	}
 
 }
+
+/* Send Invites Table */
+
+#member-invites-table {
+
+	.field-actions,
+	.field-actions-last {
+		text-align: center;
+
+		.field-actions-remove {
+			cursor: pointer;
+		}
+	}
+
+	.field-actions-add {
+		cursor: pointer;
+
+		i {
+			background-color: #000;
+			color: #fff;
+			border-radius: 100%;
+			padding: 3px 4px 1px 3px;
+			height: auto;
+			width: auto;
+			line-height: normal;
+		}
+
+		&.disabled {
+			cursor: not-allowed;
+
+			i {
+				background-color: #ccc;
+			}
+		}
+	}
+}

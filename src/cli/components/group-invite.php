@@ -80,7 +80,12 @@ class Group_Invite extends BuddypressCommand {
 			)
 		);
 
-		groups_send_invites( $inviter->ID, $group_id );
+		groups_send_invites(
+			array(
+				'inviter_id' => $inviter->ID,
+				'group_id' => $group_id
+			)
+		);
 
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'silent' ) ) {
 			return;

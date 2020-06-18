@@ -3,7 +3,7 @@ name: "✨ New Enhancement"
 about: If you have an idea to improve an existing feature in core or need something
   for development (such as a new hook) please let us know or submit a Pull Request!
 title: ''
-labels: 'feature: enhancement'
+labels: 'feature: enhancement, priority: medium'
 assignees: ''
 
 ---
@@ -18,4 +18,4 @@ A clear and concise description of what you want to happen.
 A clear and concise description of any alternative solutions or features you've considered.
 
 **Support ticket links**
-If applicable, add Zendesk link or ticket number where the issue was originally reported.
+If applicable, add HelpScout link or ticket number where the issue was originally reported.

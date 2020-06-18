@@ -323,7 +323,24 @@ function bp_get_blog_avatar( $args = '' ) {
 		return false;
 	}
 
-	$author_displayname = bp_core_get_user_displayname( $blogs_template->blog->admin_user_id );
+	// Set default values.
+	$author_displayname = '';
+	$admin_user_id      = 0;
+	$blog_id            = 0;
+
+	if ( ! $blogs_template && isset( $args['admin_user_id'] ) && $args['admin_user_id'] ) {
+		$admin_user_id      = (int) $args['admin_user_id'];
+		$author_displayname = bp_core_get_user_displayname( $admin_user_id );
+	} else {
+		$admin_user_id      = $blogs_template->blog->admin_user_id;
+		$author_displayname = bp_core_get_user_displayname( $blogs_template->blog->admin_user_id );
+	}
+
+	if ( ! $blogs_template && isset( $args['blog_id'] ) && $args['blog_id'] ) {
+		$blog_id = (int) $args['blog_id'];
+	} else {
+		$blog_id = bp_get_blog_id();
+	}
 
 	// Parse the arguments.
 	$r = bp_parse_args(
@@ -342,11 +359,11 @@ function bp_get_blog_avatar( $args = '' ) {
 	// Use site icon if available.
 	$avatar = '';
 	if ( bp_is_active( 'blogs', 'site-icon' ) && function_exists( 'has_site_icon' ) ) {
-		$site_icon = bp_blogs_get_blogmeta( bp_get_blog_id(), "site_icon_url_{$r['type']}" );
+		$site_icon = bp_blogs_get_blogmeta( $blog_id, "site_icon_url_{$r['type']}" );
 
 		// Never attempted to fetch site icon before; do it now!
 		if ( '' === $site_icon ) {
-			switch_to_blog( bp_get_blog_id() );
+			switch_to_blog( $blog_id );
 
 			// Fetch the other size first.
 			if ( 'full' === $r['type'] ) {
@@ -364,7 +381,7 @@ function bp_get_blog_avatar( $args = '' ) {
 			}
 
 			// Sync site icon for other size to blogmeta.
-			bp_blogs_update_blogmeta( bp_get_blog_id(), "site_icon_url_{$save_size}", $site_icon );
+			bp_blogs_update_blogmeta( $blog_id, "site_icon_url_{$save_size}", $site_icon );
 
 			// Now, fetch the size we want.
 			if ( 0 !== $site_icon ) {
@@ -373,7 +390,7 @@ function bp_get_blog_avatar( $args = '' ) {
 			}
 
 			// Sync site icon to blogmeta.
-			bp_blogs_update_blogmeta( bp_get_blog_id(), "site_icon_url_{$r['type']}", $site_icon );
+			bp_blogs_update_blogmeta( $blog_id, "site_icon_url_{$r['type']}", $site_icon );
 
 			restore_current_blog();
 		}
@@ -400,7 +417,7 @@ function bp_get_blog_avatar( $args = '' ) {
 	if ( '' === $avatar ) {
 		$avatar = bp_core_fetch_avatar(
 			array(
-				'item_id' => $blogs_template->blog->admin_user_id,
+				'item_id' => $admin_user_id,
 				// 'avatar_dir' => 'blog-avatars',
 				// 'object'     => 'blog',
 				'type'    => $r['type'],
@@ -421,7 +438,7 @@ function bp_get_blog_avatar( $args = '' ) {
 	 * This filter is deprecated as of BuddyPress 1.5 and may be removed in a future version.
 	 * Use the 'bp_get_blog_avatar' filter instead.
 	 */
-	$avatar = apply_filters( 'bp_get_blog_avatar_' . $blogs_template->blog->blog_id, $avatar );
+	$avatar = apply_filters( 'bp_get_blog_avatar_' . $blog_id, $avatar );
 
 	/**
 	 * Filters a blog's avatar.
@@ -433,7 +450,7 @@ function bp_get_blog_avatar( $args = '' ) {
 	 * @param int    $blog_id ID of the blog whose avatar is being displayed.
 	 * @param array  $r       Array of arguments used when fetching avatar.
 	 */
-	return apply_filters( 'bp_get_blog_avatar', $avatar, $blogs_template->blog->blog_id, $r );
+	return apply_filters( 'bp_get_blog_avatar', $avatar, $blog_id, $r );
 }
 
 function bp_blog_permalink() {
