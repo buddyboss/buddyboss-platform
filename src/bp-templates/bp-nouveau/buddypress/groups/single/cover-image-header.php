@@ -33,7 +33,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss'); ?></a>
 					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss'); ?></a>
 					<span class="drag-element-helper"><i class="bb-icon-menu"></i><?php _e('Drag to move cover photo', 'buddyboss'); ?></span>
-					<img src="<?php echo esc_url( $group_cover_image );  ?>" />
+					<img src="<?php echo esc_url( $group_cover_image );  ?>" alt="<?php _e('Cover photo', 'buddyboss'); ?>" />
 				</div>
 			<?php } ?>
 		<?php } ?>
