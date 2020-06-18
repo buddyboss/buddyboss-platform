@@ -372,19 +372,30 @@ function bp_nouveau_ajax_document_get_document_description() {
 	$can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 
+	$document     = new BP_Document( $document_id );
+	$user_domain  = bp_core_get_user_domain( $document->user_id );
+	$display_name = bp_core_get_user_displayname( $document->user_id );
+	$time_since   = bp_core_time_since( $document->date_created );
+	$avatar       = bp_core_fetch_avatar( array(
+					'item_id' => $document->user_id,
+					'object'  => 'user',
+					'type'    => 'full',
+			) );
+
 	ob_start();
 
 	if ( $can_view ) {
+
 		?>
 		<li class="activity activity_update activity-item mini ">
 			<div class="bp-activity-head">
 				<div class="activity-avatar item-avatar">
-					<a href="http://localhost/buddyboss/members/john/"><img src="http://localhost/buddyboss/wp-content/uploads/avatars/2/5e8719c04cc47-bpfull.jpg" class="avatar user-2-avatar avatar-300 photo" width="300" height="300" alt="Profile"></a>
+					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
 				</div>
 
 				<div class="activity-header">
-					<p><a href="http://localhost/buddyboss/members/john/">John Smith</a> posted an update <a href="http://localhost/buddyboss/activity-feed/p/194747/" class="view activity-time-since"><span class="time-since">a day ago</span></a></p>
-					<p class="activity-date"><a href="http://localhost/buddyboss/activity-feed/p/194747/">1 day, 1 hour ago</a></p>
+					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'posted an document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
 				</div>
 			</div>
 		<div class="activity-media-description">
