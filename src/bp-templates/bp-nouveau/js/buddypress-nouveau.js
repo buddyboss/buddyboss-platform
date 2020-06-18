@@ -1765,34 +1765,34 @@ window.bp = window.bp || {};
 		 */
 		coverPhotoCropper: function ( e ){
 
-			var picture;
+			var picture, guillotineHeight, guillotineWidth, guillotineTop, guillotineScale;
+
 			if($( e.currentTarget ).hasClass( 'position-change-cover-image' )){
-				
 				var currentTarget = $( e.currentTarget );
-				var guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
-				var guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
+				guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
+				guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
+				guillotineTop = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top');
+				guillotineScale = $( e.currentTarget ).closest( '#header-cover-image' ).width() / $( e.currentTarget ).closest( '#header-cover-image' ).find('.header-cover-reposition-wrap img')[0].width;
 				currentTarget.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).show();
 				picture = $( '.header-cover-reposition-wrap img' );
-				picture.guillotine( { width: guillotineWidth, height: guillotineHeight, eventOnChange: 'guillotinechange' } );
-				picture.guillotine( 'fit' );
+				picture.guillotine({
+					width: guillotineWidth,
+					height: guillotineHeight,
+					eventOnChange: 'guillotinechange',
+					init: { scale: guillotineScale, y: guillotineTop ? -guillotineTop : 0, w: guillotineWidth, h: guillotineHeight }
+				});
+				// picture.guillotine('fit');
 				picture.on('guillotinechange', function(e, data) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y); });
-
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-save' ) ){
-
 				var coverImage = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' );
 				coverImage.css( { 'top' : coverImage.attr('data-top') + 'px'} );
-				coverImage.attr( 'data-top', '' );
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				// ajax call to save photo position
-
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-cancel' ) ){
-
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).attr( 'data-top', '' );
-
 			}
 			e.preventDefault();
-			
 		},		
 	};
 

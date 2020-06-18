@@ -21,7 +21,7 @@ $cover_image_url = bp_attachments_get_attachment(
 	<div id="header-cover-image">
 		<?php
 		if ( ! empty( $cover_image_url ) ) {
-			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '" />';
+			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '" data-top="0" />';
 		}
 		?>
 		<?php if ( bp_is_my_profile() ) { ?>

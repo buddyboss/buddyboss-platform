@@ -19,7 +19,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 			$group_cover_image = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups','item_id' => bp_get_group_id() ) );
 
 			if ( ! empty( $group_cover_image ) ) {
-				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '" />';
+				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '" data-top="0" />';
 			}
 			?>
 			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">

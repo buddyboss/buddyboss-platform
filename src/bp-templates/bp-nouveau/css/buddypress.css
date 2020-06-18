@@ -4108,7 +4108,7 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #buddypress #header-cover-image .header-cover-reposition-wrap img {
-  max-width: 100%;
+  max-width: initial;
   perspective: none !important;
   backface-visibility: initial !important;
 }
