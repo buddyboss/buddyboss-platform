@@ -4032,7 +4032,7 @@ body.no-js .single-item-header .js-self-profile-button {
   position: relative;
 }
 
-#header-cover-image {
+#buddypress #header-cover-image {
   background-color: #555;
   background-position: center top;
   background-repeat: no-repeat;
@@ -4049,7 +4049,7 @@ body.no-js .single-item-header .js-self-profile-button {
   overflow: hidden;
 }
 
-#header-cover-image .header-cover-img {
+#buddypress #header-cover-image .header-cover-img {
   max-width: 100%;
   min-width: 100%;
   height: auto;
@@ -4059,7 +4059,7 @@ body.no-js .single-item-header .js-self-profile-button {
   display: none;
 }
 
-#header-cover-image .header-cover-reposition-wrap {
+#buddypress #header-cover-image .header-cover-reposition-wrap {
   overflow: hidden;
   height: 100%;
   display: none;
@@ -4067,19 +4067,47 @@ body.no-js .single-item-header .js-self-profile-button {
   text-align: right;
 }
 
-#header-cover-image .header-cover-reposition-wrap > .button {
+#buddypress #header-cover-image .header-cover-reposition-wrap .drag-element-helper {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 119;
+  top: 50%;
+  color: #fff;
+  background-color: rgba(134, 132, 132, 0.6);
+  padding: 10px 15px;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap .drag-element-helper > i {
+  margin-right: 5px;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap > .button {
   position: relative;
   z-index: 1;
   float: none;
-  margin: 5px 5px 0 0;
+  margin: 12px 12px 0 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #939597;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 6px 10px;
 }
 
-#header-cover-image .header-cover-reposition-wrap .guillotine-window {
+#buddypress #header-cover-image .header-cover-reposition-wrap > .button:hover, #buddypress #header-cover-image .header-cover-reposition-wrap > .button:focus {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: none;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap .guillotine-window {
   position: absolute;
   top: 0;
 }
 
-#header-cover-image .header-cover-reposition-wrap img {
+#buddypress #header-cover-image .header-cover-reposition-wrap img {
   max-width: 100%;
   perspective: none !important;
   backface-visibility: initial !important;

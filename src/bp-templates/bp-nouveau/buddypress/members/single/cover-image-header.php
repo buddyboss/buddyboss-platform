@@ -36,6 +36,7 @@ $cover_image_url = bp_attachments_get_attachment(
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss'); ?></a>
 					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss'); ?></a>
+					<span class="drag-element-helper"><i class="bb-icon-menu"></i><?php _e('Drag to move cover photo', 'buddyboss'); ?></span>
 					<?php
 					echo '<img src="' . esc_url( $cover_image_url ) . '" />';
 					?>

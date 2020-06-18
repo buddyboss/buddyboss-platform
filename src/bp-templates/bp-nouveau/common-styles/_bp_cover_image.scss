@@ -13,7 +13,7 @@
 	position: relative;
 }
 
-#header-cover-image {
+#buddypress #header-cover-image {
 	background-color: #555;
 	background-position: center top;
 	background-repeat: no-repeat;
@@ -46,11 +46,40 @@
 		width: 100%;
 		text-align: right;
 
+		.drag-element-helper {
+			position: absolute;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			z-index: 119;
+			top: 50%;
+			color: #fff;
+			background-color: rgba(134, 132, 132, 0.60);
+			padding: 10px 15px;
+			border-radius: 5px;
+			pointer-events: none;
+
+			> i {
+				margin-right: 5px;
+			}
+		}
+
 		> .button {
 			position: relative;
 			z-index: 1;
 			float: none;
-			margin: 5px 5px 0 0;
+			margin: 12px 12px 0 0;
+			background-color: rgba(255, 255, 255, 0.9);
+			color: #939597;
+			border-radius: 5px;
+			font-size: 13px;
+			line-height: 1.6;
+			padding: 6px 10px;
+
+			&:hover,
+			&:focus {
+				background-color: rgba(255, 255, 255, 0.9);
+				box-shadow: none;
+			}
 		}
 
 		.guillotine-window {
