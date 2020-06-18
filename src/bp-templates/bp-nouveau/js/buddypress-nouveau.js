@@ -1768,14 +1768,14 @@ window.bp = window.bp || {};
 			var picture;
 			if($( e.currentTarget ).hasClass( 'position-change-cover-image' )){
 				
-				var currentTarget = $( e.currentTarget )
+				var currentTarget = $( e.currentTarget );
 				var guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
 				var guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
 				currentTarget.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).show();
 				picture = $( '.header-cover-reposition-wrap img' );
 				picture.guillotine( { width: guillotineWidth, height: guillotineHeight, eventOnChange: 'guillotinechange' } );
 				picture.guillotine( 'fit' );
-				picture.on('guillotinechange', function(e, data, action) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y) });
+				picture.on('guillotinechange', function(e, data) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y); });
 
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-save' ) ){
 

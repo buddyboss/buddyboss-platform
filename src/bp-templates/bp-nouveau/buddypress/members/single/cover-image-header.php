@@ -30,12 +30,12 @@ $cover_image_url = bp_attachments_get_attachment(
 			</a>
 
 			<?php if ( ! empty( $cover_image_url ) ) { ?>
-				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Photo', 'buddyboss-theme'); ?>">
+				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
 					<span class="dashicons dashicons-move"></span>
 				</a>
 				<div class="header-cover-reposition-wrap">
-					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss-theme'); ?></a>
-					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss-theme'); ?></a>
+					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss'); ?></a>
+					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss'); ?></a>
 					<?php
 					echo '<img src="' . esc_url( $cover_image_url ) . '" />';
 					?>

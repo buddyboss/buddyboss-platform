@@ -28,7 +28,8 @@
 	width: 100%;
 	z-index: 1;
 	overflow: hidden;
-	.header-cover-img{
+
+	.header-cover-img {
 		max-width: 100%;
 		min-width: 100%;
 		height: auto;
@@ -37,23 +38,27 @@
 		left: 0;
 		display: none;
 	}
-	.header-cover-reposition-wrap{
+
+	.header-cover-reposition-wrap {
 		overflow: hidden;
 		height: 100%;
 		display: none;
 		width: 100%;
 		text-align: right;
-		&> .button{
+
+		> .button {
 			position: relative;
 			z-index: 1;
 			float: none;
-    		margin: 5px 5px 0 0;
+			margin: 5px 5px 0 0;
 		}
-		.guillotine-window{
+
+		.guillotine-window {
 			position: absolute;
 			top: 0;
 		}
-		img{
+
+		img {
 			max-width: 100%;
 			perspective: none !important;
 			backface-visibility: initial !important;
@@ -88,7 +93,6 @@
 	min-width: 0;
 }
 
-
 /*
 * end cover photo block
 */
@@ -96,26 +100,27 @@
 /*
 * Cover photo cropper
 */
-body.guillotine-dragging, body.guillotine-dragging * {
+body.guillotine-dragging,
+body.guillotine-dragging * {
 	cursor: move !important;
 	cursor: -webkit-grabbing !important;
-	cursor:    -moz-grabbing !important;
-	cursor:         grabbing !important;
+	cursor: -moz-grabbing !important;
+	cursor: grabbing !important;
 	cursor: grabbing, move;  /* IE hack */
-  }
-  
-  .guillotine-window {
+}
+
+.guillotine-window {
 	display: block;
 	position: relative;
 	overflow: hidden;
 	cursor: move;
 	cursor: -webkit-grab;
-	cursor:    -moz-grab;
-	cursor:         grab;
+	cursor: -moz-grab;
+	cursor: grab;
 	cursor: grab, move;  /* IE hack */
-  }
-  
-  .guillotine-canvas {
+}
+
+.guillotine-canvas {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -123,6 +128,7 @@ body.guillotine-dragging, body.guillotine-dragging * {
 	margin: 0 !important;
 	padding: 0 !important;
 	border: none !important;
+
 	> * {
 		position: absolute;
 		top: 0;
@@ -135,14 +141,12 @@ body.guillotine-dragging, body.guillotine-dragging * {
 		padding: 0 !important;
 		border: none !important;
 	}
-  }
-  
-  .guillotine-canvas 
-  
-  .guillotine-sample {
+}
+
+.guillotine-sample {
 	position: absolute !important;
-	top: -100000px     !important;
-	left: -100000px    !important;
-	width: auto        !important;
-	height: auto       !important;
+	top: -100000px !important;
+	left: -100000px !important;
+	width: auto !important;
+	height: auto !important;
 }

@@ -3419,60 +3419,6 @@ form.ac-form .ac-reply-content input {
   -ms-flex: 1;
   flex: 1;
   min-width: 0;
-  position: relative;
-}
-
-#header-cover-image {
-  background-color: #555;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: cover;
-  border: 0;
-  display: block;
-  right: 0;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  top: 0;
-  width: 100%;
-  z-index: 1;
-  overflow: hidden;
-}
-
-#header-cover-image .header-cover-img {
-  max-width: 100%;
-  min-width: 100%;
-  height: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: none;
-}
-
-#header-cover-image .header-cover-reposition-wrap {
-  overflow: hidden;
-  height: 100%;
-  display: none;
-  width: 100%;
-  text-align: left;
-}
-
-#header-cover-image .header-cover-reposition-wrap > .button {
-  position: relative;
-  z-index: 1;
-  float: none;
-  margin: 5px 0 0 5px;
-}
-
-#header-cover-image .header-cover-reposition-wrap .guillotine-window {
-  position: absolute;
-  top: 0;
-}
-
-#header-cover-image .header-cover-reposition-wrap img {
-  max-width: 100%;
-  perspective: none !important;
-  backface-visibility: initial !important;
   color: #767676;
   padding-right: 1em;
 }
@@ -3502,65 +3448,6 @@ form.ac-form .ac-reply-content input {
   .buddypress-wrap .bp-dir-vert-nav .blogs-list .list-title {
     width: auto;
   }
-}
-
-/*
-* end cover photo block
-*/
-/*
-* Cover photo cropper
-*/
-body.guillotine-dragging, body.guillotine-dragging * {
-  cursor: move !important;
-  cursor: -webkit-grabbing !important;
-  cursor: -moz-grabbing !important;
-  cursor: grabbing !important;
-  cursor: grabbing, move;
-  /* IE hack */
-}
-
-.guillotine-window {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  cursor: move;
-  cursor: -webkit-grab;
-  cursor: -moz-grab;
-  cursor: grab;
-  cursor: grab, move;
-  /* IE hack */
-}
-
-.guillotine-canvas {
-  position: absolute;
-  top: 0;
-  right: 0;
-  text-align: center;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.guillotine-canvas > * {
-  position: absolute;
-  top: 0;
-  right: 0;
-  max-width: none;
-  max-height: none;
-  width: 100%;
-  height: 100%;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.guillotine-canvas
-.guillotine-sample {
-  position: absolute !important;
-  top: -100000px     !important;
-  right: -100000px    !important;
-  width: auto        !important;
-  height: auto       !important;
 }
 
 /**
@@ -4159,6 +4046,43 @@ body.no-js .single-item-header .js-self-profile-button {
   top: 0;
   width: 100%;
   z-index: 1;
+  overflow: hidden;
+}
+
+#header-cover-image .header-cover-img {
+  max-width: 100%;
+  min-width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+}
+
+#header-cover-image .header-cover-reposition-wrap {
+  overflow: hidden;
+  height: 100%;
+  display: none;
+  width: 100%;
+  text-align: left;
+}
+
+#header-cover-image .header-cover-reposition-wrap > .button {
+  position: relative;
+  z-index: 1;
+  float: none;
+  margin: 5px 0 0 5px;
+}
+
+#header-cover-image .header-cover-reposition-wrap .guillotine-window {
+  position: absolute;
+  top: 0;
+}
+
+#header-cover-image .header-cover-reposition-wrap img {
+  max-width: 100%;
+  perspective: none !important;
+  backface-visibility: initial !important;
 }
 
 #item-header-cover-image {
@@ -4190,6 +4114,62 @@ body.no-js .single-item-header .js-self-profile-button {
 /*
 * end cover photo block
 */
+/*
+* Cover photo cropper
+*/
+body.guillotine-dragging,
+body.guillotine-dragging * {
+  cursor: move !important;
+  cursor: -webkit-grabbing !important;
+  cursor: -moz-grabbing !important;
+  cursor: grabbing !important;
+  cursor: grabbing, move;
+  /* IE hack */
+}
+
+.guillotine-window {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+  cursor: grab, move;
+  /* IE hack */
+}
+
+.guillotine-canvas {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.guillotine-canvas > * {
+  position: absolute;
+  top: 0;
+  right: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.guillotine-sample {
+  position: absolute !important;
+  top: -100000px !important;
+  right: -100000px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
 /**
 *-----------------------------------------------------
 * @subsection 5.1.1 - item-header Groups
@@ -5205,6 +5185,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #item-header a.link-change-cover-image,
+#item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
@@ -5224,6 +5205,23 @@ body.register .buddypress-wrap .page ul {
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
 
+#item-header a.position-change-cover-image {
+  top: 55px;
+  display: none;
+}
+
+@media screen and (min-width: 1220px) {
+  #buddypress #item-header a.position-change-cover-image {
+    display: flex;
+  }
+  #buddypress #item-header .header-cover-img {
+    display: block;
+  }
+  #buddypress #item-header #header-cover-image {
+    background-image: none;
+  }
+}
+
 #item-header-avatar a.link-change-profile-image {
   top: 100px;
   right: 50%;
@@ -5231,7 +5229,8 @@ body.register .buddypress-wrap .page ul {
 }
 
 #header-cover-image:hover a.link-change-cover-image,
-#item-header-avatar:hover a.link-change-profile-image {
+#item-header-avatar:hover a.link-change-profile-image,
+#header-cover-image:hover a.position-change-cover-image {
   opacity: 1;
 }
 

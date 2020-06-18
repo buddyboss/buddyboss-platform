@@ -301,23 +301,29 @@ body.register .buddypress-wrap .page ul {
 	@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
 }
 
-#item-header a.position-change-cover-image{
+#item-header a.position-change-cover-image {
 	top: 55px;
 	display: none;
 }
-#buddypress #item-header{
-	@media screen and (min-width: 1220px){
-		a.position-change-cover-image{
+
+#buddypress #item-header {
+
+	@media screen and (min-width: 1220px) {
+
+		a.position-change-cover-image {
 			display: flex;
 		}
-		.header-cover-img{
+
+		.header-cover-img {
 			display: block;
 		}
-		#header-cover-image{
+
+		#header-cover-image {
 			background-image: none;
 		}
 	}
 }
+
 #item-header-avatar a.link-change-profile-image {
 	top: 100px;
 	left: 50%;
