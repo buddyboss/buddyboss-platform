@@ -1325,8 +1325,7 @@ window.bp = window.bp || {};
 			// Check the value & if exists split the string to obtain the nonce string
 			// if no value, i.e false, null then the href attr is used.
 			if ( nonceUrl ) {
-				nonce = nonceUrl.split( '?_wpnonce=' );
-				nonce = nonce[1];
+				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
 				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
 			}
