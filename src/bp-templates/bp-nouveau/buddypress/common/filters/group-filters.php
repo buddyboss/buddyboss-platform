@@ -13,40 +13,42 @@ if ( false === bp_disable_group_type_creation() ) {
 	return '';
 }
 
-$group_types = bp_get_active_group_types();
-$display_arr = array();
-foreach ( $group_types as $group_type_id ) {
+$args = array(
+	'meta_query' => array(
+		array(
+			'key'   => '_bp_group_type_enable_filter',
+			'value' => 1,
+		),
+	)
+);
 
-	if ( !get_post_meta( $group_type_id, '_bp_group_type_enable_filter', true ) ) {
-		continue;
-	}
-
-	$group_key        = bp_group_get_group_type_key( $group_type_id );
-	$group_type_label = bp_groups_get_group_type_object( $group_key )->labels['name'];
-
-
-	if ( !empty( $group_key ) ) {
-		$display_arr[] = array(
-			'group_type_label' => $group_type_label,
-			'group_type_name' => $group_key,
-		);
-	}
-
+// Get active group types
+if ( bp_is_groups_directory() ) {
+	$args['meta_query'][] = array(
+		'key'   => '_bp_group_type_enable_remove',
+		'value' => 0,
+	);
 }
 
-if ( isset( $display_arr ) && !empty( $display_arr )) {
+$group_types = bp_get_active_group_types( $args );
+
+if ( ! empty( $group_types ) ) {
 	?>
 	<div id="group-type-filters" class="component-filters clearfix">
 		<div id="group-type-select" class="last filter">
 			<label class="bp-screen-reader-text" for="group-type-order-by">
-				<span ><?php bp_nouveau_filter_label(); ?></span>
+				<span><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="group-type-order-by" data-bp-group-type-filter="<?php bp_nouveau_search_object_data_attr() ?>">
+				<select id="group-type-order-by"
+				        data-bp-group-type-filter="<?php bp_nouveau_search_object_data_attr() ?>">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
-					foreach ( $display_arr as $group ) {
+					foreach ( $group_types as $group_type_id ) {
+						$group_type_key   = bp_group_get_group_type_key( $group_type_id );
+						$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 						?>
-						<option value="<?php echo $group['group_type_name']; ?>"><?php echo $group['group_type_label']; ?></option><?php
+						<option
+						value="<?php echo esc_attr( $group_type_key ); ?>"><?php echo esc_attr( $group_type_label ); ?></option><?php
 					}
 					?>
 				</select>

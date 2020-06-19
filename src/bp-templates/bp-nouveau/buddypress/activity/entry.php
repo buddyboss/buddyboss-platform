@@ -29,7 +29,11 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 			<?php bp_activity_action(); ?>
 
+			<?php bp_nouveau_activity_privacy(); ?>
+
 		</div>
+
+		<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
 
 		<?php if ( bp_nouveau_activity_has_content() ) : ?>
 
@@ -37,7 +41,9 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 		<?php endif; ?>
 
-		<?php bp_nouveau_activity_state() ?>
+		<?php bp_nouveau_activity_hook( 'after', 'activity_content' ); ?>
+
+		<?php bp_nouveau_activity_state(); ?>
 
 		<?php bp_nouveau_activity_entry_buttons(); ?>
 

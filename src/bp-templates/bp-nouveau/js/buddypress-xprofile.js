@@ -8,20 +8,20 @@ window.bp = window.bp || {};
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
-    
+
     // Collapse repeater sets on page load, if there are more than one sets
     var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
-    
+
     if ( repeater_set_count > 0 ) {
         var repeater_set_sequence = [];
         $( '#profile-edit-form .repeater_group_outer' ).each( function(){
             var $set = $(this);
             repeater_set_sequence.push( $set.data('set_no') );
-            
+
             if ( repeater_set_count > 1 ) {
                 $set.find( '.repeater_group_inner' ).hide();
             }
-            
+
             var title = '';
             $set.find('.editfield').each( function(){
                 var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
@@ -30,12 +30,12 @@ window.bp = window.bp || {};
                     return false;
                 }
             });
-            
+
             $set.find('.repeater_set_title').html( title );
         });
-        
+
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
-        
+
         // Sortable
         $( '.repeater_sets_sortable' ).sortable({
             items: '.repeater_group_outer',
@@ -63,29 +63,32 @@ window.bp = window.bp || {};
         if ( $delete_button.hasClass( 'disabled' ) ) {
             return;
         }
-        
+
         var r = confirm( BP_Nouveau.confirm_delete_set );
         if ( r ) {
             var deleted_field_ids = [];
-            
+
             $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function(){
                 var $field = $(this);
                 var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
-                field_id = field_id.replace( 'field_', '' );
-                field_id = field_id.replace( '[]', '' );
-                deleted_field_ids.push( field_id );
+				if( 'undefined' !== typeof field_id ) {
+					field_id = field_id.replace( 'field_', '' );
+					field_id = field_id.replace( '_day', '' );
+					field_id = field_id.replace( '[]', '' );
+					deleted_field_ids.push( field_id );
+				}
             });
-            
+
             // Remove field set
             $delete_button.closest( '.repeater_group_outer' ).remove();
-            
+
             // Update sorting order
             var repeater_set_sequence = [];
             $( '#profile-edit-form .repeater_group_outer' ).each( function(){
                 repeater_set_sequence.push( $(this).data('set_no') );
             });
             $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
-            
+
             // Remove the deleted field ids, so that it doesn't generate validation errors
             var all_field_ids = $( '#profile-edit-form [name="field_ids"]' ).val().split( ',' );
             var remaining_field_ids = [];
@@ -97,45 +100,45 @@ window.bp = window.bp || {};
                         break;
                     }
                 }
-                
+
                 if ( !is_deleted ) {
                     remaining_field_ids.push( all_field_ids[ i ] );
                 }
             }
-            
+
             remaining_field_ids = remaining_field_ids.join( ',' );
-            
+
             $( '#profile-edit-form [name="field_ids"]' ).val( remaining_field_ids );
-            
+
             //keep a record of deleted fields
             if ( ! $( '#profile-edit-form [name="deleted_field_ids"]' ).length ) {
                 $( '#profile-edit-form' ).append( '<input type="hidden" name="deleted_field_ids" >' );
             }
             $( '#profile-edit-form [name="deleted_field_ids"]' ).val( deleted_field_ids.join( ',' ) );
-            
+
             // Disable the delete button if it's the only set remaining
             if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
                 //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
             }
         }
     });
-    
+
     // Disable the delete button if it's the only set
     if ( repeater_set_count === 1 ) {
         //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
-    
+
     // Add repeater set button, on edit profile screens
     $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
         e.preventDefault();
         var $button = $(this);
-        
+
         if ( $button.hasClass( 'disabled' ) ) {
             return;
         }
-        
+
         $button.addClass('disabled');
-        
+
         $.ajax({
             'url' : ajaxurl,
             'method' : 'POST',

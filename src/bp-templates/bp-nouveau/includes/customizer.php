@@ -175,6 +175,9 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	if ( bp_is_active( 'media' ) ) {
 		$options['media'] = __( 'Photos', 'buddyboss' );
 	}
+	if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
+		$options['document'] = __( 'Documents', 'buddyboss' );
+	}
 
 	$controls = array(
 		'user_nav_display' => array(

@@ -591,7 +591,7 @@ class BP_Email_Tokens {
 
 		ob_start();
 		?>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">			
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -700,7 +700,12 @@ class BP_Email_Tokens {
 	public function token__message( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
-		if ( 'messages-unread' != $bp_email->get( 'type' ) ) {
+		$allow_type = array(
+			'group-message-email',
+			'messages-unread'
+		);
+
+		if ( ! in_array( $bp_email->get( 'type' ), $allow_type ) ) {
 			return $output;
 		}
 
@@ -816,7 +821,7 @@ class BP_Email_Tokens {
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
-																	<span class="dashicons dashicons-video-alt3"></span>
+																	<span class="bb-icon-play-thin"></span>
 																	<img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																</a>
 																<span class="gif-icon"></span>
@@ -1130,7 +1135,7 @@ class BP_Email_Tokens {
 			return '';
 		}
 
-		if ( empty( $formatted_tokens['invites.message'] ) ) {
+		if ( empty( $tokens['invite.message'] ) ) {
 			return $output;
 		}
 
@@ -1152,7 +1157,7 @@ class BP_Email_Tokens {
 						<tr>
 							<td>
 								<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-									<?php echo wpautop( $formatted_tokens['invites.message'] ); ?>
+									<?php echo wpautop( $tokens['invite.message'] ); ?>
 								</div>
 							</td>
 						</tr>
@@ -1195,7 +1200,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">			
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -1293,7 +1298,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">			
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%">

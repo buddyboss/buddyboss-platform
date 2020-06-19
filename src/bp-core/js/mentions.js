@@ -152,8 +152,8 @@ window.bp = window.bp || {};
 					 * Override default behaviour which inserts junk tags in the WordPress Visual editor.
 					 *
 					 * @param {unknown} $inputor Element which we're inserting content into.
-					 * @param {string) content The content that will be inserted.
-					 * @param {string) suffix Applied to the end of the content string.
+					 * @param {string} content The content that will be inserted.
+					 * @param {string} suffix Applied to the end of the content string.
 					 * @return {string}
 					 * @since BuddyPress 2.1.0
 					 */
@@ -196,13 +196,6 @@ window.bp = window.bp || {};
 						}
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
-
-						if ( typeof window.BP_Nouveau !== 'undefined' &&
-						typeof window.BP_Nouveau.messages !== 'undefined' &&
-						typeof window.BP_Nouveau.messages.force_friendship_to_message !== 'undefined' &&
-						window.BP_Nouveau.messages.force_friendship_to_message ) {
-							params.only_friends = 1;
-						}
 
 						if ( $.isNumeric( this.$inputor.data( 'suggestions-group-id' ) ) ) {
 							params['group-id'] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
@@ -278,16 +271,6 @@ window.bp = window.bp || {};
 			BP_Mentions_Options.extra_options,
 			mentions
 		);
-
-		// Remove atwho-query class from target to handle after save issues.
-		this.on( 'hidden.atwho', function( event ) {
-			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
-				var atwho_query = $( event.currentTarget ).find( 'span.atwho-query' );
-				for( var i = 0; i < atwho_query.length; i++ ) {
-					$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
-				}
-			}
-		});
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {

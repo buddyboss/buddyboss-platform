@@ -22,12 +22,12 @@ defined( 'ABSPATH' ) || exit;
  * By using cookies we can also make sure that user settings are retained
  * across page loads.
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $query_string Query string for the current request.
- * @param string $object       Object for cookie.
+ * @param string $object Object for cookie.
  *
  * @return string Query string for the component loops
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	if ( empty( $object ) ) {
@@ -111,14 +111,14 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
-		$member_type_id = $_POST['member_type_id'];
-		$member_type_key= get_post_meta( $member_type_id, '_bp_member_type_key', true);
-		$qs[] = 'member_type=' . $member_type_key;
+		$member_type_id  = $_POST['member_type_id'];
+		$member_type_key = get_post_meta( $member_type_id, '_bp_member_type_key', true );
+		$qs[]            = 'member_type=' . $member_type_key;
 	}
 
 	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] ) {
 		$group_type = $_POST['group_type'];
-		$qs[] = 'group_type=' . $group_type;
+		$qs[]       = 'group_type=' . $group_type;
 	}
 
 	$object_search_text = bp_get_search_default_text( $object );
@@ -152,15 +152,16 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	/**
 	 * Filters the AJAX query string for the component loops.
 	 *
+	 * @param string $query_string The query string we are working with.
+	 * @param string $object The type of page we are on.
+	 * @param string $filter The current object filter.
+	 * @param string $scope The current object scope.
+	 * @param string $page The current object page.
+	 * @param string $search_terms The current object search terms.
+	 * @param string $extras The current object extras.
+	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param string $query_string The query string we are working with.
-	 * @param string $object       The type of page we are on.
-	 * @param string $filter       The current object filter.
-	 * @param string $scope        The current object scope.
-	 * @param string $page         The current object page.
-	 * @param string $search_terms The current object search terms.
-	 * @param string $extras       The current object extras.
 	 */
 	return apply_filters( 'bp_nouveau_ajax_querystring', $query_string, $object, $filter, $scope, $page, $search_terms, $extras );
 }
@@ -168,9 +169,9 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 /**
  * Output ajax button for action (e.g. request connection with member, join group, leave group, follow member, etc.)
  *
+ * @return string
  * @since BuddyPress 3.0.0
  *
- * @return string
  */
 function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $after = '', $r = array() ) {
 	if ( empty( $button->component ) ) {
@@ -186,7 +187,7 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 		'group_membership'  => true,
 	);
 
-	if ( ! empty( $reset_ids[ $button->id ] ) )  {
+	if ( ! empty( $reset_ids[ $button->id ] ) ) {
 		$parse_class = array_map( 'sanitize_html_class', explode( ' ', $r['button_attr']['class'] ) );
 		if ( false === $parse_class ) {
 			return $output;
@@ -234,31 +235,31 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 /**
  * Output HTML content into a wrapper.
  *
- * @since BuddyPress 3.0.0
- *
  * @param array $args {
  *     Optional arguments.
  *
- *     @type string $container         String HTML container type that should wrap
+ * @type string $container String HTML container type that should wrap
  *                                     the items as a group: 'div', 'ul', or 'p'. Required.
- *     @type string $container_id      The group wrapping container element ID
- *     @type string $container_classes The group wrapping container elements class
- *     @type string $output            The HTML to output. Required.
+ * @type string $container_id The group wrapping container element ID
+ * @type string $container_classes The group wrapping container elements class
+ * @type string $output The HTML to output. Required.
  * }
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_wrapper( $args = array() ) {
- /**
-	* Classes need to be determined & set by component to a certain degree
-	*
-	* Check the component to find a default container_class to add
-	*/
+	/**
+	 * Classes need to be determined & set by component to a certain degree
+	 *
+	 * Check the component to find a default container_class to add
+	 */
 	$current_component_class = bp_current_component() . '-meta';
-	$generic_class = 'bp-generic-meta';
+	$generic_class           = 'bp-generic-meta';
 
 	$r = wp_parse_args( $args, array(
 		'container'         => 'div',
 		'container_id'      => '',
-		'container_classes' => array( $generic_class, $current_component_class   ),
+		'container_classes' => array( $generic_class, $current_component_class ),
 		'output'            => '',
 	) );
 
@@ -282,7 +283,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	$container         = $r['container'];
 	$container_id      = '';
 	$container_classes = '';
-	$output            = trim($r['output']);
+	$output            = trim( $r['output'] );
 
 	if ( ! empty( $r['container_id'] ) ) {
 		$container_id = ' id="' . esc_attr( $r['container_id'] ) . '"';
@@ -299,9 +300,9 @@ function bp_nouveau_wrapper( $args = array() ) {
 /**
  * Check if Nouveau sidebar object nav widget is active.
  *
+ * @return bool
  * @since BuddyPress 3.0.0
  *
- * @return bool
  */
 function bp_nouveau_is_object_nav_in_sidebar() {
 	return is_active_widget( false, false, 'bp_nouveau_sidebar_object_nav_widget', true );
@@ -310,19 +311,20 @@ function bp_nouveau_is_object_nav_in_sidebar() {
 /**
  * Check if logged in user has queried capability.
  *
+ * @return bool
  * @since BuddyPress 3.0.0
  *
- * @return bool
  */
 function bp_nouveau_current_user_can( $capability = '' ) {
 	/**
 	 * Filters whether or not the current user can perform an action for BuddyPress Nouveau.
 	 *
+	 * @param bool $value Whether or not the user is logged in.
+	 * @param string $capability Current capability being checked.
+	 * @param int $value Current logged in user ID.
+	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param bool   $value      Whether or not the user is logged in.
-	 * @param string $capability Current capability being checked.
-	 * @param int    $value      Current logged in user ID.
 	 */
 	return apply_filters( 'bp_nouveau_current_user_can', is_user_logged_in(), $capability, bp_loggedin_user_id() );
 }
@@ -330,13 +332,13 @@ function bp_nouveau_current_user_can( $capability = '' ) {
 /**
  * Parse an html output to a list of component's directory nav item.
  *
- * @since BuddyPress 3.0.0
- *
- * @param string $hook      The hook to fire.
+ * @param string $hook The hook to fire.
  * @param string $component The component nav belongs to.
- * @param int    $position  The position of the nav item.
+ * @param int $position The position of the nav item.
  *
  * @return array A list of component's dir nav items
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position = 99 ) {
 	$extra_nav_items = array();
@@ -408,12 +410,12 @@ function bp_nouveau_parse_hooked_dir_nav( $hook = '', $component = '', $position
 /**
  * Run specific "select filter" hooks to catch the options and build an array out of them
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $hook
- * @param array  $filters
+ * @param array $filters
  *
  * @return array
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
 	if ( empty( $hook ) ) {
@@ -449,12 +451,12 @@ function bp_nouveau_parse_hooked_options( $hook = '', $filters = array() ) {
 /**
  * Get Dropdawn filters for the current component of the one passed in params
  *
- * @since BuddyPress 3.0.0
- *
- * @param string $context   'directory', 'user' or 'group'
+ * @param string $context 'directory', 'user' or 'group'
  * @param string $component The BuddyPress component ID
  *
  * @return array the dropdown filters
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 	$filters = array();
@@ -465,7 +467,7 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 		} elseif ( bp_is_group() ) {
 			$context = 'group';
 
-		// Defaults to directory
+			// Defaults to directory
 		} else {
 			$context = 'directory';
 		}
@@ -510,12 +512,12 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
  * When previewing make sure to get the temporary setting of the customizer.
  * This is necessary when we need to get these very early.
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $option the index of the setting to get.
- * @param mixed  $retval the value to use as default.
+ * @param mixed $retval the value to use as default.
  *
  * @return mixed The value for the requested option.
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 	if ( empty( $option ) || ! isset( $_POST['customized'] ) ) {
@@ -540,11 +542,11 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 			$retval[ $k ] = $setting;
 		}
 
-	// Used when it's an early regular request
+		// Used when it's an early regular request
 	} elseif ( isset( $temporary_setting[ 'bp_nouveau_appearance[' . $option . ']' ] ) ) {
 		$retval = $temporary_setting[ 'bp_nouveau_appearance[' . $option . ']' ];
 
-	// Used when it's an ajax request
+		// Used when it's an ajax request
 	} elseif ( isset( $_POST['customized'][ 'bp_nouveau_appearance_' . $option ] ) ) {
 		$retval = $_POST['customized'][ 'bp_nouveau_appearance_' . $option ];
 	}
@@ -555,12 +557,12 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 /**
  * Get the BP Nouveau Appearance settings.
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $option Leave empty to get all settings, specify a value for a specific one.
  * @param mixed          An array of settings, the value of the requested setting.
  *
  * @return array|false|mixed
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_get_appearance_settings( $option = '' ) {
 	$default_args = array(
@@ -572,8 +574,8 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'bp_emails'          => '',
 		'user_default_tab'   => 'profile'
 	);
-    
-    if ( bp_is_active( 'friends' ) ) {
+
+	if ( bp_is_active( 'friends' ) ) {
 		$default_args['members_friends_layout'] = 4;
 	}
 
@@ -624,25 +626,26 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 /**
  * Sanitize a list of slugs to save it as an array
  *
- * @since BuddyPress 3.0.0
- *
- * @param  string $option A comma separated list of nav items slugs.
+ * @param string $option A comma separated list of nav items slugs.
  *
  * @return array An array of nav items slugs.
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_sanitize_nav_order( $option = '' ) {
 	$option = explode( ',', $option );
+
 	return array_map( 'sanitize_key', $option );
 }
 
 /**
  * BP Nouveau's callback for the cover photo feature.
  *
- * @since BuddyPress 3.0.0
- *
  * @param array $params Optional. The current component's feature parameters.
  *
  * @return string
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_theme_cover_image( $params = array() ) {
 	if ( empty( $params ) ) {
@@ -656,7 +659,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 	$top_offset  = bp_core_avatar_full_height() - 10;
 	$left_offset = bp_core_avatar_full_width() + 20;
 
-	$cover_image = isset( $params['cover_image'] ) ? 'background-image: url( ' . $params['cover_image'] . ' );' : '';
+	$cover_image       = isset( $params['cover_image'] ) ? 'background-image: url( ' . $params['cover_image'] . ' );' : '';
 	$hide_avatar_style = '';
 
 	// Adjust the cover photo header, in case avatars are completely disabled.
@@ -757,11 +760,11 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 /**
  * All user feedback messages are available here
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $feedback_id The ID of the message.
  *
  * @return string|false The list of parameters for the message
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	/**
@@ -769,164 +772,169 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	 *
 	 * Use this filter to add your custom feedback messages.
 	 *
+	 * @param array $value The list of feedback messages.
+	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param array $value The list of feedback messages.
 	 */
 	$feedback_messages = apply_filters( 'bp_nouveau_feedback_messages', array(
-		'registration-disabled' => array(
+		'registration-disabled'             => array(
 			'type'    => 'info',
 			'message' => __( 'Member registration is currently disabled.', 'buddyboss' ),
 			'before'  => 'bp_before_registration_disabled',
 			'after'   => 'bp_after_registration_disabled'
 		),
-		'completed-confirmation' => array(
+		'completed-confirmation'            => array(
 			'type'    => 'info',
 			'message' => __( 'You have successfully created your account! Please log in using the email and password you have just created.', 'buddyboss' ),
 			'before'  => 'bp_before_registration_confirmed',
 			'after'   => 'bp_after_registration_confirmed',
 		),
-		'directory-activity-loading' => array(
+		'directory-activity-loading'        => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading community updates. Please wait.', 'buddyboss' ),
 		),
-		'activity-comments-loading' => array(
+		'activity-comments-loading'         => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading activity comments. Please wait.', 'buddyboss' ),
 		),
-		'single-activity-loading' => array(
+		'single-activity-loading'           => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the update. Please wait.', 'buddyboss' ),
 		),
-		'activity-loop-none' => array(
+		'activity-loop-none'                => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, there was no activity found.', 'buddyboss' ),
 		),
-		'blogs-loop-none' => array(
+		'blogs-loop-none'                   => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, there were no sites found.', 'buddyboss' ),
 		),
-		'blogs-no-signup' => array(
+		'blogs-no-signup'                   => array(
 			'type'    => 'info',
 			'message' => __( 'Site registration is currently disabled.', 'buddyboss' ),
 		),
-		'directory-blogs-loading' => array(
+		'directory-blogs-loading'           => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the sites of the network. Please wait.', 'buddyboss' ),
 		),
-		'directory-groups-loading' => array(
+		'directory-groups-loading'          => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading groups of the community. Please wait.', 'buddyboss' ),
 		),
-		'groups-loop-none' => array(
+		'groups-loop-none'                  => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, there were no groups found.', 'buddyboss' ),
 		),
-		'group-activity-loading' => array(
+		'group-activity-loading'            => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the group updates. Please wait.', 'buddyboss' ),
 		),
-		'group-members-loading' => array(
+		'group-members-loading'             => array(
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group members. Please wait.', 'buddyboss' ),
 		),
-		'group-leaders-loading' => array(
+		'group-leaders-loading'             => array(
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
 		),
-		'group-media-loading' => array(
+		'group-media-loading'               => array(
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group photos. Please wait.', 'buddyboss' ),
 		),
-		'group-members-none' => array(
+		'group-document-loading'            => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group documents. Please wait.', 'buddyboss' ),
+		),
+		'group-members-none'                => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no group members were found.', 'buddyboss' ),
 		),
-		'group-members-search-none' => array(
+		'group-members-search-none'         => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, there was no member with that name found within this group.', 'buddyboss' ),
 		),
-		'group-manage-members-none' => array(
+		'group-manage-members-none'         => array(
 			'type'    => 'info',
 			'message' => __( 'This group has no members.', 'buddyboss' ),
 		),
-		'group-requests-none' => array(
+		'group-requests-none'               => array(
 			'type'    => 'info',
 			'message' => __( 'There are no pending membership requests.', 'buddyboss' ),
 		),
-		'group-requested-membership' => array(
+		'group-requested-membership'        => array(
 			'type'    => 'info',
 			'message' => __( 'You have already requested to join this group.', 'buddyboss' ),
 		),
-		'group-requests-loading' => array(
+		'group-requests-loading'            => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the members who requested to join the group. Please wait.', 'buddyboss' ),
 		),
-		'group-delete-warning' => array(
+		'group-delete-warning'              => array(
 			'type'    => 'warning',
 			'message' => __( 'WARNING: Deleting this group will completely remove ALL content associated with it. There is no way back. Please be careful with this option.', 'buddyboss' ),
 		),
-		'group-avatar-delete-info' => array(
+		'group-avatar-delete-info'          => array(
 			'type'    => 'info',
 			'message' => __( 'To remove the existing group photo, please use the delete group profile photo button.', 'buddyboss' ),
 		),
-		'directory-members-loading' => array(
+		'directory-members-loading'         => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading members of the community. Please wait.', 'buddyboss' ),
 		),
-		'members-loop-none' => array(
+		'members-loop-none'                 => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no members were found.', 'buddyboss' ),
 		),
-		'member-requests-none' => array(
+		'member-requests-none'              => array(
 			'type'    => 'info',
 			'message' => __( 'You have no pending requests to connect.', 'buddyboss' ),
 		),
-		'member-mutual-friends-none' => array(
+		'member-mutual-friends-none'        => array(
 			'type'    => 'loading',
 			'message' => __( 'You have no mutual connections with this member.', 'buddyboss' ),
 		),
-		'member-invites-none' => array(
+		'member-invites-none'               => array(
 			'type'    => 'info',
 			'message' => __( 'You have no outstanding group invites.', 'buddyboss' ),
 		),
-		'member-notifications-none' => array(
+		'member-notifications-none'         => array(
 			'type'    => 'info',
 			'message' => __( 'This member has no notifications.', 'buddyboss' ),
 		),
-		'member-wp-profile-none' => array(
+		'member-wp-profile-none'            => array(
 			'type'    => 'info',
 			'message' => __( '%s did not save any profile information yet.', 'buddyboss' ),
 		),
-		'member-delete-account' => array(
+		'member-delete-account'             => array(
 			'type'    => 'warning',
 			'message' => __( 'Deleting this account will delete all of the content it has created. It will be completely unrecoverable.', 'buddyboss' ),
 		),
-		'member-activity-loading' => array(
+		'member-activity-loading'           => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s updates. Please wait.', 'buddyboss' ),
 		),
-		'member-blogs-loading' => array(
+		'member-blogs-loading'              => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s blog. Please wait.', 'buddyboss' ),
 		),
-		'member-friends-loading' => array(
+		'member-friends-loading'            => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s friends. Please wait.', 'buddyboss' ),
 		),
-		'member-mutual-friends-loading' => array(
+		'member-mutual-friends-loading'     => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s mutual connections. Please wait.', 'buddyboss' ),
 		),
-		'member-groups-loading' => array(
+		'member-groups-loading'             => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s groups. Please wait.', 'buddyboss' ),
 		),
-		'member-notifications-loading' => array(
+		'member-notifications-loading'      => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading notifications. Please wait.', 'buddyboss' ),
 		),
-		'member-group-invites-all' => array(
+		'member-group-invites-all'          => array(
 			'type'    => 'info',
 			'message' => __( 'Currently every member of the community can invite you to join their groups. Optionally, you may restrict group invites to your connections only.', 'buddyboss' ),
 		),
@@ -934,33 +942,53 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Currently only your connections may invite you to join a group. Uncheck this box to allow any member to send invites.', 'buddyboss' ),
 		),
-		'member-data-export' => array(
+		'member-data-export'                => array(
 			'type'    => 'info',
 			'message' => __( 'You may download a copy of all data you have created on this platform. Click the button below to start a new request. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, a zip file will be generated and emailed to you.', 'buddyboss' ),
 		),
-		'member-media-loading' => array(
+		'member-media-loading'              => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s photos. Please wait.', 'buddyboss' ),
 		),
-		'media-loop-none' => array(
+		'member-document-loading'           => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading member\'s documents. Please wait.', 'buddyboss' ),
+		),
+		'media-loop-none'                   => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
-		'member-media-none' => array(
+		'document-loop-none'                => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
+		),
+		'media-loop-document-none'          => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
+		),
+		'member-media-none'                 => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
-		'media-album-none' => array(
+		'member-media-document-none'        => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
+		),
+		'media-album-none'                  => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
 		),
-		'album-media-loading' => array(
+		'album-media-loading'               => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 		),
-		'directory-media-loading' => array(
+		'directory-media-loading'           => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss' ),
+		),
+		'directory-media-document-loading'  => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 		),
 	) );
 
@@ -1002,9 +1030,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	/**
 	 * Filter here if you wish to edit the message just before being displayed
 	 *
+	 * @param array $feedback_messages
+	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param array $feedback_messages
 	 */
 	return apply_filters( 'bp_nouveau_get_user_feedback', $feedback_messages[ $feedback_id ] );
 }
@@ -1012,11 +1041,11 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 /**
  * Get the signup fields for the requested section
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $section Optional. The section of fields to get 'account_details' or 'blog_details'.
  *
  * @return array|false The list of signup fields for the requested section. False if not found.
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_get_signup_fields( $section = '' ) {
 	if ( empty( $section ) ) {
@@ -1029,9 +1058,10 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	 * If you need to use other types of field, please use the
 	 * do_action( 'bp_account_details_fields' ) or do_action( 'blog_details' ) hooks instead.
 	 *
+	 * @param array $value The list of fields organized into sections.
+	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param array $value The list of fields organized into sections.
 	 */
 
 	$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
@@ -1040,7 +1070,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	if ( true === $email_opt && true === $password_opt ) {
 		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
 			'account_details' => array(
-				'signup_email' => array(
+				'signup_email'            => array(
 					'label'          => __( 'Email', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_email_value',
@@ -1048,7 +1078,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'email',
 					'class'          => '',
 				),
-				'signup_email_confirm' => array(
+				'signup_email_confirm'    => array(
 					'label'          => __( 'Confirm Email', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_confirm_email_value',
@@ -1056,7 +1086,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'email',
 					'class'          => '',
 				),
-				'signup_password' => array(
+				'signup_password'         => array(
 					'label'          => __( 'Password', 'buddyboss' ),
 					'required'       => true,
 					'value'          => '',
@@ -1073,8 +1103,8 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'class'          => 'password-entry-confirm',
 				)
 			),
-			'blog_details' => array(
-				'signup_blog_url' => array(
+			'blog_details'    => array(
+				'signup_blog_url'             => array(
 					'label'          => __( 'Site URL', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_url_value',
@@ -1082,7 +1112,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_title' => array(
+				'signup_blog_title'           => array(
 					'label'          => __( 'Site Title', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_title_value',
@@ -1090,7 +1120,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_privacy_public' => array(
+				'signup_blog_privacy_public'  => array(
 					'label'          => __( 'Yes', 'buddyboss' ),
 					'required'       => false,
 					'value'          => 'public',
@@ -1111,7 +1141,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	} elseif ( false === $email_opt && true === $password_opt ) {
 		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
 			'account_details' => array(
-				'signup_email' => array(
+				'signup_email'            => array(
 					'label'          => __( 'Email', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_email_value',
@@ -1119,7 +1149,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'email',
 					'class'          => '',
 				),
-				'signup_password' => array(
+				'signup_password'         => array(
 					'label'          => __( 'Password', 'buddyboss' ),
 					'required'       => true,
 					'value'          => '',
@@ -1136,8 +1166,8 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'class'          => 'password-entry-confirm',
 				)
 			),
-			'blog_details' => array(
-				'signup_blog_url' => array(
+			'blog_details'    => array(
+				'signup_blog_url'             => array(
 					'label'          => __( 'Site URL', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_url_value',
@@ -1145,7 +1175,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_title' => array(
+				'signup_blog_title'           => array(
 					'label'          => __( 'Site Title', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_title_value',
@@ -1153,7 +1183,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_privacy_public' => array(
+				'signup_blog_privacy_public'  => array(
 					'label'          => __( 'Yes', 'buddyboss' ),
 					'required'       => false,
 					'value'          => 'public',
@@ -1174,7 +1204,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	} elseif ( true === $email_opt && false === $password_opt ) {
 		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
 			'account_details' => array(
-				'signup_email' => array(
+				'signup_email'         => array(
 					'label'          => __( 'Email', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_email_value',
@@ -1190,7 +1220,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'email',
 					'class'          => '',
 				),
-				'signup_password' => array(
+				'signup_password'      => array(
 					'label'          => __( 'Password', 'buddyboss' ),
 					'required'       => true,
 					'value'          => '',
@@ -1199,8 +1229,8 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'class'          => 'password-entry',
 				)
 			),
-			'blog_details' => array(
-				'signup_blog_url' => array(
+			'blog_details'    => array(
+				'signup_blog_url'             => array(
 					'label'          => __( 'Site URL', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_url_value',
@@ -1208,7 +1238,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_title' => array(
+				'signup_blog_title'           => array(
 					'label'          => __( 'Site Title', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_title_value',
@@ -1216,7 +1246,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_privacy_public' => array(
+				'signup_blog_privacy_public'  => array(
 					'label'          => __( 'Yes', 'buddyboss' ),
 					'required'       => false,
 					'value'          => 'public',
@@ -1237,7 +1267,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	} else {
 		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
 			'account_details' => array(
-				'signup_email' => array(
+				'signup_email'    => array(
 					'label'          => __( 'Email', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_email_value',
@@ -1254,8 +1284,8 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'class'          => 'password-entry',
 				)
 			),
-			'blog_details' => array(
-				'signup_blog_url' => array(
+			'blog_details'    => array(
+				'signup_blog_url'             => array(
 					'label'          => __( 'Site URL', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_url_value',
@@ -1263,7 +1293,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_title' => array(
+				'signup_blog_title'           => array(
 					'label'          => __( 'Site Title', 'buddyboss' ),
 					'required'       => true,
 					'value'          => 'bp_get_signup_blog_title_value',
@@ -1271,7 +1301,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 					'type'           => 'text',
 					'class'          => '',
 				),
-				'signup_blog_privacy_public' => array(
+				'signup_blog_privacy_public'  => array(
 					'label'          => __( 'Yes', 'buddyboss' ),
 					'required'       => false,
 					'value'          => 'public',
@@ -1305,12 +1335,12 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 /**
  * Get Some submit buttons data.
  *
- * @since BuddyPress 3.0.0
- *
  * @param string $action The action requested.
  *
  * @return array|false The list of the submit button parameters for the requested action
  *                     False if no actions were found.
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_get_submit_button( $action = '' ) {
 	if ( empty( $action ) ) {
@@ -1320,14 +1350,14 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 	/**
 	 * Filter the Submit buttons to add your own.
 	 *
-	 * @since BuddyPress 3.0.0
-	 *
 	 * @param array $value The list of submit buttons.
 	 *
 	 * @return array|false
+	 * @since BuddyPress 3.0.0
+	 *
 	 */
 	$actions = apply_filters( 'bp_nouveau_get_submit_button', array(
-		'register' => array(
+		'register'                      => array(
 			'before'     => 'bp_before_registration_submit_buttons',
 			'after'      => 'bp_after_registration_submit_buttons',
 			'nonce'      => 'bp_new_signup',
@@ -1337,30 +1367,30 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'value' => __( 'Create Account', 'buddyboss' ),
 			),
 		),
-		'member-profile-edit' => array(
-			'before' => '',
-			'after'  => '',
-			'nonce'  => 'bp_xprofile_edit',
+		'member-profile-edit'           => array(
+			'before'     => '',
+			'after'      => '',
+			'nonce'      => 'bp_xprofile_edit',
 			'attributes' => array(
 				'name'  => 'profile-group-edit-submit',
 				'id'    => 'profile-group-edit-submit',
 				'value' => __( 'Save Changes', 'buddyboss' ),
 			),
 		),
-		'member-capabilities' => array(
-			'before' => 'bp_members_capabilities_account_before_submit',
-			'after'  => 'bp_members_capabilities_account_after_submit',
-			'nonce'  => 'capabilities',
+		'member-capabilities'           => array(
+			'before'     => 'bp_members_capabilities_account_before_submit',
+			'after'      => 'bp_members_capabilities_account_after_submit',
+			'nonce'      => 'capabilities',
 			'attributes' => array(
 				'name'  => 'capabilities-submit',
 				'id'    => 'capabilities-submit',
 				'value' => __( 'Save', 'buddyboss' ),
 			),
 		),
-		'member-delete-account' => array(
-			'before' => 'bp_members_delete_account_before_submit',
-			'after'  => 'bp_members_delete_account_after_submit',
-			'nonce'  => 'delete-account',
+		'member-delete-account'         => array(
+			'before'     => 'bp_members_delete_account_before_submit',
+			'after'      => 'bp_members_delete_account_after_submit',
+			'nonce'      => 'delete-account',
 			'attributes' => array(
 				'disabled' => 'disabled',
 				'name'     => 'delete-account-button',
@@ -1368,10 +1398,10 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'value'    => __( 'Delete Account', 'buddyboss' ),
 			),
 		),
-		'members-general-settings' => array(
-			'before' => 'bp_core_general_settings_before_submit',
-			'after'  => 'bp_core_general_settings_after_submit',
-			'nonce'  => 'bp_settings_general',
+		'members-general-settings'      => array(
+			'before'     => 'bp_core_general_settings_before_submit',
+			'after'      => 'bp_core_general_settings_after_submit',
+			'nonce'      => 'bp_settings_general',
 			'attributes' => array(
 				'name'  => 'submit',
 				'id'    => 'submit',
@@ -1380,9 +1410,9 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 			),
 		),
 		'member-notifications-settings' => array(
-			'before' => 'bp_members_notification_settings_before_submit',
-			'after'  => 'bp_members_notification_settings_after_submit',
-			'nonce'  => 'bp_settings_notifications',
+			'before'     => 'bp_members_notification_settings_before_submit',
+			'after'      => 'bp_members_notification_settings_after_submit',
+			'nonce'      => 'bp_settings_notifications',
 			'attributes' => array(
 				'name'  => 'submit',
 				'id'    => 'submit',
@@ -1390,10 +1420,10 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'class' => 'auto',
 			),
 		),
-		'members-profile-settings' => array(
-			'before' => 'bp_core_xprofile_settings_before_submit',
-			'after'  => 'bp_core_xprofile_settings_after_submit',
-			'nonce'  => 'bp_xprofile_settings',
+		'members-profile-settings'      => array(
+			'before'     => 'bp_core_xprofile_settings_before_submit',
+			'after'      => 'bp_core_xprofile_settings_after_submit',
+			'nonce'      => 'bp_xprofile_settings',
 			'attributes' => array(
 				'name'  => 'xprofile-settings-submit',
 				'id'    => 'submit',
@@ -1401,8 +1431,8 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'class' => 'auto',
 			),
 		),
-		'member-group-invites' => array(
-			'nonce'  => 'bp_nouveau_group_invites_settings',
+		'member-group-invites'          => array(
+			'nonce'      => 'bp_nouveau_group_invites_settings',
 			'attributes' => array(
 				'name'  => 'member-group-invites-submit',
 				'id'    => 'submit',
@@ -1410,18 +1440,18 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'class' => 'auto',
 			),
 		),
-		'activity-new-comment' => array(
-			'after'     => 'bp_activity_entry_comments',
-			'nonce'     => 'new_activity_comment',
-			'nonce_key' => '_wpnonce_new_activity_comment',
-			'wrapper'   => false,
+		'activity-new-comment'          => array(
+			'after'      => 'bp_activity_entry_comments',
+			'nonce'      => 'new_activity_comment',
+			'nonce_key'  => '_wpnonce_new_activity_comment',
+			'wrapper'    => false,
 			'attributes' => array(
 				'name'  => 'ac_form_submit',
 				'value' => __( 'Post', 'buddyboss' ),
 			),
 		),
-		'member-data-export' => array(
-			'nonce'  => 'buddyboss_data_export_request',
+		'member-data-export'            => array(
+			'nonce'      => 'buddyboss_data_export_request',
 			'attributes' => array(
 				'name'  => 'member-data-export-submit',
 				'id'    => 'submit',
@@ -1429,8 +1459,8 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'class' => 'auto',
 			),
 		),
-		'member-invites-submit' => array(
-			'nonce'  => 'bp_member_invite_submit',
+		'member-invites-submit'         => array(
+			'nonce'      => 'bp_member_invite_submit',
 			'attributes' => array(
 				'name'  => 'member-invite-submit',
 				'id'    => 'submit',
@@ -1450,13 +1480,13 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 /**
  * Reorder a BuddyPress item nav according to a given list of nav item slugs
  *
- * @since BuddyPress 3.0.0
- *
- * @param object $nav         The BuddyPress Item Nav object to reorder
- * @param array  $order       A list of slugs ordered (eg: array( 'profile', 'activity', etc..) )
+ * @param object $nav The BuddyPress Item Nav object to reorder
+ * @param array $order A list of slugs ordered (eg: array( 'profile', 'activity', etc..) )
  * @param string $parent_slug A parent slug if it's a secondary nav we are reordering (case of the Groups single item)
  *
  * @return bool True on success. False otherwise.
+ * @since BuddyPress 3.0.0
+ *
  */
 function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_slug = '' ) {
 	if ( ! is_object( $nav ) || empty( $order ) || ! is_array( $order ) ) {

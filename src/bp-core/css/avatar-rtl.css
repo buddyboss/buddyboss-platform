@@ -357,6 +357,7 @@ body.users_page_bp-profile-edit.modal-open #TB_ajaxContent,
 body.profile_page_bp-profile-edit.modal-open #TB_ajaxContent {
 	height: 95% !important;
 	width: 95% !important;
+	margin: 0 auto;
 }
 
 body.users_page_bp-profile-edit.modal-open #TB_ajaxContent p.updated,
