@@ -1,8 +1,7 @@
 <?php
 
 $is_enrolled            = false;
-$lession_list           = learndash_get_lesson_list( get_the_ID() );
-$lesson_count           = learndash_get_lesson_list( get_the_ID(), array( 'num' => - 1 ) );
+$lesson_list           = learndash_get_lesson_list( get_the_ID(), array( 'num' => - 1 ) );
 $current_user_id        = get_current_user_id();
 $access_list            = learndash_get_course_meta_setting( $post->ID, 'course_access_list' );
 $admin_enrolled         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' );
@@ -146,7 +145,7 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
         </div>
         <div class="bb-card-course-details">
 			<?php
-			$lessons_count = sizeof( $lesson_count );
+			$lessons_count = sizeof( $lesson_list );
 			$total_lessons = (
 			$lessons_count > 1
 				? sprintf(
