@@ -1675,7 +1675,7 @@ function bp_activity_user_can_edit( $activity = false ) {
 	$can_edit = false;
 
 	// Only logged in users can edit activity and Activity must be of type 'activity_update', 'activity_comment'
-	if ( is_user_logged_in() && in_array( $activity->type, array( 'activity_update', 'activity_comment' ) ) ) {
+	if ( is_user_logged_in() && in_array( $activity->type, array( 'activity_update', 'activity_comment', 'message_media_update', 'message_document_update' ) ) ) {
 
 		// Users are allowed to edit their own activity.
 		if ( isset( $activity->user_id ) && ( bp_loggedin_user_id() === $activity->user_id ) ) {

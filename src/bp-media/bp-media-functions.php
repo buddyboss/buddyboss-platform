@@ -530,6 +530,10 @@ function bp_media_add_handler( $medias = array() ) {
 				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 			) );
 
+			if ( bp_is_active( 'messages') && isset( $media['thread_id'] ) && (int) $media['thread_id'] > 0 && 'message' === $media['privacy'] ) {
+				//bp_media_update_meta( $media_id, 'thread_id', $media['thread_id'] );
+			}
+
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
 			}

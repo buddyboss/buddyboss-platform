@@ -425,12 +425,13 @@ function bp_nouveau_ajax_messages_send_reply() {
 				bp_the_media();
 
 				$reply['media'][] = array(
-					'id'        => bp_get_media_id(),
-					'title'     => bp_get_media_title(),
-					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-					'full'      => bp_get_media_attachment_image(),
-					'meta'      => $media_template->media->attachment_data->meta,
-					'privacy'   => bp_get_media_privacy(),
+					'id'            => bp_get_media_id(),
+					'title'         => bp_get_media_title(),
+					'activity_id' 	=> bp_get_media_activity_id(),
+					'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
+					'full'          => bp_get_media_attachment_image(),
+					'meta'          => $media_template->media->attachment_data->meta,
+					'privacy'   	=> bp_get_media_privacy(),
 				);
 			}
 		}
@@ -535,6 +536,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
 						'attachment_id'         => bp_get_document_attachment_id(),
+						'activity_id'         	=> bp_get_document_activity_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,
@@ -1962,11 +1964,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					bp_the_media();
 
 					$thread->messages[ $i ]['media'][] = array(
-						'id'        => bp_get_media_id(),
-						'title'     => bp_get_media_title(),
-						'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-						'full'      => bp_get_media_attachment_image(),
-						'meta'      => $media_template->media->attachment_data->meta,
+						'id'            => bp_get_media_id(),
+						'title'         => bp_get_media_title(),
+						'activity_id' 	=> bp_get_media_activity_id(),
+						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
+						'full'          => bp_get_media_attachment_image(),
+						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'   => bp_get_media_privacy(),
 					);
 				}
@@ -2076,6 +2079,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
 						'attachment_id'         => bp_get_document_attachment_id(),
+						'activity_id'         	=> bp_get_document_activity_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,

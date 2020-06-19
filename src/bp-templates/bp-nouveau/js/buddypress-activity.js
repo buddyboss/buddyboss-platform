@@ -1362,12 +1362,17 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
-								response.data.uuid       = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
-								response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-								response.data.saved      = false;
+								file.id                  	= response.id;
+								response.data.uuid       	= file.upload.uuid;
+								response.data.menu_order 	= $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								response.data.album_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+								response.data.group_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+								response.data.saved      	= false;
+								if ( $( document ).find( 'body' ).hasClass( 'my-messages' ) ) {
+									response.data.privacy 	 	= 'message';
+									var thread_id 				= $( document ).find( '#thread-id' ).val();
+									response.data.thread_id 	= thread_id;
+								}
 								self.dropzone_media.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
@@ -1528,12 +1533,17 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                   = response.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
 								response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 								response.data.saved      = false;
+								if ( $( document ).find( 'body' ).hasClass( 'my-messages' ) ) {
+									response.data.privacy 	 	= 'message';
+									var thread_id 				= $( document ).find( '#thread-id' ).val();
+									response.data.thread_id 	= thread_id;
+								}
 								self.dropzone_document.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {

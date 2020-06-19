@@ -48,10 +48,33 @@ add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 );
 // add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );.
 
+// Register the activity stream actions for messages
+add_action( 'bp_register_activity_actions', 'bp_media_messages_register_activity_actions' );
+
 // Core tools.
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
+
+function bp_media_messages_register_activity_actions() {
+
+	if ( bp_is_active( 'messages' ) ) {
+		// Sitewide activity stream items
+		bp_activity_set_action( buddypress()->messages->id, 'message_media_update', esc_html__( 'attached a media', 'buddyboss' ), 'bp_media_messages_activity_action_callback' );
+	}
+}
+
+function bp_media_messages_activity_action_callback( $action, $activity ) {
+	$user_id  = $activity->user_id;
+
+	// User
+	$user_link = bp_core_get_userlink( $user_id );
+
+	return sprintf(
+			esc_html__( '%1$s attached a media', 'buddyboss' ),
+			$user_link
+	);
+}
 
 /**
  * Add media theatre template for activity pages
@@ -188,6 +211,11 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	);
 
 	$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+
+	// For show the media on message popup activity comment media.
+	if ( 'message_media_update' === $activity->type ) {
+		$args['privacy'][] = 'message';
+	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
@@ -607,6 +635,32 @@ function bp_media_attach_media_to_message( &$message ) {
 		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
 		$media_ids = bp_media_add_handler( $_POST['media'] );
+
+		if ( bp_is_active( 'activity' ) && !empty( $media_ids ) ) {
+			foreach ( $media_ids as $media_id ) {
+
+				$activity_id = bp_activity_add( array(
+								'hide_sitewide' => true,
+								'action'        => sprintf( __( '%s attached a media', 'buddyboss' ), bp_core_get_userlink( bp_loggedin_user_id() ) ),
+								'component'     => buddypress()->messages->id,
+								'type'          => 'message_media_update',
+								'privacy'       => 'media',
+								'content'       => ' ',
+						) );
+
+				bp_activity_update_meta( $activity_id, 'bp_media_ids', $media_id );
+				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+
+				// save media activity id in media.
+				$media = new BP_Media( $media_id );
+
+				update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
+
+				$media->activity_id = $activity_id;
+				$media->save();
+
+			}
+		}
 
 		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );

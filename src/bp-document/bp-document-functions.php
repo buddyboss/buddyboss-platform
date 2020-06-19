@@ -631,6 +631,10 @@ function bp_document_add_handler( $documents = array() ) {
 				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
 			}
 
+			if ( bp_is_active( 'messages') && isset( $document['thread_id'] ) && (int) $document['thread_id'] > 0 && 'message' === $document['privacy'] ) {
+				bp_document_update_meta( $document_id, 'thread_id', $document['thread_id'] );
+			}
+
 			if ( $document_id ) {
 				$document_ids[] = $document_id;
 			}

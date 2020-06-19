@@ -1011,6 +1011,10 @@ function bp_nouveau_activity_privacy() {
 			return;
 		}
 
+		if ( bp_is_active( 'messages' ) && buddypress()->messages->id === bp_get_activity_object_name() ) {
+			return;
+		}
+
 		$privacy                   = bp_get_activity_privacy();
 		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
 		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
@@ -1211,6 +1215,9 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	}
 
 	$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+
+	error_log( $activity_id );
+	error_log( $attachment_id );
 
 	if ( empty( $attachment_id ) ) {
 		return;

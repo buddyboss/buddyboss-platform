@@ -144,8 +144,10 @@ function bp_has_media( $args = '' ) {
 		$album_id = $args['album_id'];
 	}
 
+	//error_log( print_r( $args, 1 ) );
 	$privacy = bp_media_query_privacy( $user_id, 0, ( isset( $args['scope'] ) ? $args['scope'] : '' ) );
 
+	//error_log( print_r( $privacy, 1 ) );
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
@@ -202,6 +204,8 @@ function bp_has_media( $args = '' ) {
 		),
 		'has_media'
 	);
+
+//	error_log( print_r( $r, true ) );
 
 	/*
 	 * Smart Overrides.
