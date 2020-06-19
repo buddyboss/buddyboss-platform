@@ -150,8 +150,8 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			// Format User Progress array to pass on to the template.
 			$user_progress_formmatted = $this->get_user_progress_formatted( $user_progress_arr );
 
-			// set Transient here.
-			set_transient( $pc_transient_name, $user_progress_formmatted );
+			// set Transient here with 3hours expiration.
+			set_transient( $pc_transient_name, $user_progress_formmatted, HOUR_IN_SECONDS * 3 );
 		}
 
 		return $user_progress_formmatted;
@@ -180,7 +180,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$this->delete_transient_query( $transient_name_prefix );
 	}
 
-
 	/**
 	 * Function deletes Transient based on the transient name specified.
 	 *
@@ -190,13 +189,19 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function delete_transient_query( $transient_name_prefix ) {
 		global $wpdb;
-		$delete_transient_query = $wpdb->prepare(
-			"DELETE FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
+		$sql = $wpdb->prepare(
+			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
 			$transient_name_prefix
 		);
-		$wpdb->query( $delete_transient_query );
-	}
 
+		$keys = $wpdb->get_col( $sql );
+
+		if ( ! empty( $keys ) ) {
+			foreach ( $keys as $transient ) {
+				delete_transient( str_replace( '_transient_', '', $transient ) );
+			}
+		}
+	}
 
 	/**
 	 * Return Transient name using logged in User ID.
@@ -560,14 +565,8 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		do_action( 'xprofile_profile_completion_form' );
 		?>
 
-		<p><small>
-		<?php
-		esc_html_e(
-			'Note: This widget is only displayed if a member is logged in.',
-			'buddyboss'
-		);
-		?>
-					</small>
+		<p>
+			<small><?php esc_html_e( 'Note: This widget is only displayed if a member is logged in.', 'buddyboss' ); ?></small>
 		</p>
 
 		<?php
