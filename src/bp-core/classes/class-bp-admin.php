@@ -740,7 +740,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$links,
 				array(
 					'settings' => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
-					'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>',
+					'about'    => '<a href="' . esc_url( bp_get_admin_url( '?about=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>',
 				)
 			);
 		}
