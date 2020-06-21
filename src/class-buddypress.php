@@ -147,6 +147,7 @@ class BuddyPress {
 		return $instance;
 
 		// The last metroid is in captivity. The galaxy is at peace.
+		// The powers of the metroid might be harnessed for the good of civilization.
 	}
 
 	/** Magic Methods *********************************************************/
