@@ -2233,13 +2233,13 @@ input.search-query-input {
   box-shadow: 0 0 6px 0 #eaeaea;
 }
 
-.medium-editor-toolbar-actions .medium-editor-action b {
+ul.medium-editor-toolbar-actions .medium-editor-action b {
   font-family: bb-icons;
   text-align: center;
   width: 24px;
 }
 
-.medium-editor-toolbar-actions .medium-editor-action b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action b:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   line-height: 1;
@@ -2248,35 +2248,35 @@ input.search-query-input {
   font-size: 24px;
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-bold b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-italic b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-italic b:before {
   content: "\e949";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
   content: "\e9c9";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
   content: "\e9ca";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\e961";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
   content: "\e9a2";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
   content: "\e9c7";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-close b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   content: "\e80a";
 }
 
