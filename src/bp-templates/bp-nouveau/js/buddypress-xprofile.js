@@ -31,7 +31,13 @@ window.bp = window.bp || {};
                 }
             });
 
-            $set.find('.repeater_set_title').html( title );
+            if ( '' === title ) {
+				$set.find('.repeater_set_title').addClass( 'repeater-empty' );
+				$set.find('.repeater_set_title').html( xprofile_translation_object_name.empty_field );
+			} else {
+				$set.find('.repeater_set_title').html( title );
+			}
+
         });
 
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );

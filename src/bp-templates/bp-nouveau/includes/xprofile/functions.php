@@ -42,5 +42,11 @@ function bp_nouveau_xprofile_enqueue_scripts() {
 		return;
 	}
 
+	// Localize the script with new data
+	$translation_array = array(
+		'empty_field' => __( 'New Field', 'buddyboss' ),
+	);
+
+	wp_localize_script( 'bp-nouveau-xprofile', 'xprofile_translation_object_name', $translation_array );
 	wp_enqueue_script( 'bp-nouveau-xprofile' );
 }
