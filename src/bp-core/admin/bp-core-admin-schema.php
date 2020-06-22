@@ -86,8 +86,10 @@ function bp_core_install( $active_components = false ) {
 	// Media
 	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
+		bp_core_install_document();
 	}
 
+	do_action( 'bp_core_install', $active_components );
 }
 
 /**
@@ -707,6 +709,68 @@ function bp_core_install_media() {
 	dbDelta( $sql );
 }
 
+function bp_core_install_document() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_folder (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   blog_id bigint(20) NULL DEFAULT NULL,
+	   user_id bigint(20) NOT NULL,
+	   group_id bigint(20) NULL,
+	   parent bigint(20) NULL DEFAULT 0,
+	   title text NOT NULL,
+	   privacy varchar(50) NULL DEFAULT 'public',
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   PRIMARY KEY  (id)
+   ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_folder_meta (
+				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				folder_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				KEY folder_id (folder_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document (
+		id bigint(20) NOT NULL AUTO_INCREMENT ,
+		blog_id bigint(20) NULL DEFAULT NULL,
+		attachment_id bigint(20) NOT NULL ,
+		user_id bigint(20) NOT NULL,
+		title text,
+		folder_id bigint(20),
+		group_id bigint(20),
+		activity_id bigint(20) NULL DEFAULT NULL ,
+		privacy varchar(50) NULL DEFAULT 'public',
+		menu_order bigint(20) NULL DEFAULT 0 ,
+		date_created datetime DEFAULT '0000-00-00 00:00:00',
+		date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY  (id),
+		KEY attachment_id (attachment_id),
+		KEY user_id (user_id),
+		KEY folder_id (folder_id),
+		KEY document_author_id (folder_id,user_id),
+		KEY activity_id (activity_id)
+	) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_document_meta (
+				id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				document_id bigint(20) NOT NULL,
+				meta_key varchar(255) DEFAULT NULL,
+				meta_value longtext DEFAULT NULL,
+				KEY document_id (document_id),
+				KEY meta_key (meta_key(191))
+			) {$charset_collate};";
+
+
+	dbDelta( $sql );
+}
+
 /** Search *********************************************************/
 
 /** Signups *******************************************************************/
@@ -987,4 +1051,52 @@ function bp_core_install_group_message_email() {
 	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_core_install_group_message_email' );
+}
+
+/**
+ * Install database tables for the Invitations API
+ *
+ * @since BuddyBoss 1.3.5
+ *
+ * @since BuddyPress 5.0.0
+ *
+ * @uses bp_core_set_charset()
+ * @uses bp_core_get_table_prefix()
+ * @uses dbDelta()
+ */
+function bp_core_install_invitations() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations (
+		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		user_id bigint(20) NOT NULL,
+		inviter_id bigint(20) NOT NULL,
+		invitee_email varchar(100) DEFAULT NULL,
+		class varchar(120) NOT NULL,
+		item_id bigint(20) NOT NULL,
+		secondary_item_id bigint(20) DEFAULT NULL,
+		type varchar(12) NOT NULL DEFAULT 'invite',
+		content longtext DEFAULT '',
+		date_modified datetime NOT NULL,
+		invite_sent tinyint(1) NOT NULL DEFAULT '0',
+		accepted tinyint(1) NOT NULL DEFAULT '0',
+		KEY user_id (user_id),
+		KEY inviter_id (inviter_id),
+		KEY invitee_email (invitee_email),
+		KEY class (class),
+		KEY item_id (item_id),
+		KEY secondary_item_id (secondary_item_id),
+		KEY type (type),
+		KEY invite_sent (invite_sent),
+		KEY accepted (accepted)
+		) {$charset_collate};";
+	dbDelta( $sql );
+
+	/**
+	 * Fires after BuddyPress adds the invitations table.
+	 *
+	 * @since BuddyPress 5.0.0
+	 */
+	do_action( 'bp_core_install_invitations' );
 }

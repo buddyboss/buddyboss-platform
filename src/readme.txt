@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.0
+Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.3.1
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,108 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.3 =
+* Activity - Fixed some activity posts hidden from logged out users, and new members
+* Activity - Fixed 'All Updates' tab not displaying updates from joined private groups
+* Documents - Fixed 404 error on profile breadcrumbs when Documents directory is custom page
+* Documents - Fixed download links not working when using various SEO plugins
+* Documents - Fixed issues with playing and downloading MP3 file uploads
+* Documents - Added media popups for documents uploaded into forums and messages
+* Documents - Improved the styling of media popups when Activity component is disabled
+* Documents - When clicking 'Edit Folder Privacy' we now auto-display the Edit Folder popup
+* Documents - When opening the Edit Folder popup, privacy dropdown now displays correct privacy
+* Documents - Improved the file upload previews in the WordPress Media Library
+* Photos - In Photos directory, fixed group photos displaying when performing any search query
+* Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
+* Compatibility - Fixed PHP 7.4 errors when using WP Engine hosting
+
+= 1.4.2 =
+* Documents - Added 'Download' link to Image and PDF file preview popups
+* Documents - Fixed search results for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed timeline of followers for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed content set to 'Only Me' being hidden from my sitewide activity feed
+* Documents - Newly added Image and PDF protected files display an icon in Media Library
+* Security - Added index.html into 'uploads/bb_documents' for enhanced file protection
+* WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
+* WC Vendors - Fixed products displayed in activity feed not showing featured image
+
+= 1.4.1 =
+* Forums - Fixed attached images getting removed after editing forum replies
+* Media - Set maximum amount of files uploaded per batch at 10 files
+* Security - Preventing executable file uploads from running in browser
+* Security - New file uploads go into 'uploads/bb_documents' with .htaccess protection
+
+= 1.4.0 =
+* Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
+* Documents - Added central Documents page for showing all site documents
+* Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
+* Documents - Added functionality to move and organized Documents into Folders
+* Documents - Added settings page for customizable Document File Extensions
+* Media - Added enhanced privacy controls for uploaded Photos and Documents
+* Media - Added functionality to enter 'Description' in Photo and Document popups
+* Media - Comments in single Photo and Document popups now sync with activity comments
+* Activity - Added enhanced privacy controls for user-created activity posts
+* REST API - New endpoints added for Activity privacy changes
+* Groups - Improved performance for groups with many thousands of members
+* Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
+* Forums - Fixed pagination when using shortcode [bbp-topic-index]
+* Forums - Fixed issues when using many levels of threaded replies
+* Forums - Fixed empty Forums page displaying with Private Network enabled
+* Forums - Fixed HTML elements displaying when pasting content as subscriber
+* Forums - Merged in security patches from bbPress 2.6.5
+* Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
+* Network Search - Fixed results title when using apostrophe or blank entry
+* Emails - Fixed email not sending for site admin changing a user's password
+* Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
+* Icons - Added new font icons to represent all common file types
+* LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
+* MemberPress - Fixed JavaScript conflicts with Stripe credit card field
+* WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
+
+= 1.3.5 =
+* REST API - Added official BuddyBoss REST API
+* Activity - Fixed website link previews not all using the same formatting
+* Activity - Fixed some websites not properly fetching link preview content
+* Text Editor - Fixed text formatting buttons overlapping with media uploader
+* Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
+* WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
+* Compatibility - Fixed deprecated code errors when using PHP 7.4
+* Translations - Updated German (formal) language files
+
+= 1.3.4 =
+* Activity - Fixed certain link previews displaying doubled in activity posts
+* Profiles - Fixed 'Profile Type' filter not working when any Profile Type is hidden
+* Widgets - Improved formatting structure of activities in '(BB) Latest Activities' widget
+* Tools - Added 'Repair Community' tool for running 'Update activity favorites data'
+* Performance - Optimized code when activating plugin on site with 60,000 or more users
+* Translations - Updated German (formal) language files
+
+= 1.3.3 =
+* Text Editor - Fixed content formatting reset issues when switching edit buttons
+* Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
+* Forums - Fixed URL conflict between 'Subscriptions' tab and plugin 'WooCommerce Subscriptions'
+* Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
+* Groups - Fixed organizer of sub-group unable to send invites if not organizer of parent group
+* Groups - Fixed subgroups not in 'Subgroups' tab if group type is hidden from Groups Directory
+* LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
+
+= 1.3.2 =
+* Text Editor - New text formatting interface in Messages, Activity, Forums
+* Text Editor - New text formatting option for adding a code block
+* Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
+* Activity - Allow for commenting on activity posts from custom post types
+* Activity - Improved formatting of images in activity posts from custom post types
+* Activity - Fixed @mentions moving the cursor position when no results are found
+* Activity - Fixed link embeds from Chinese websites displaying broken text characters
+* Activity - Fixed link embeds not always fetching the best image and description
+* Activity - Fixed group members without access posting into group from sitewide activity
+* Notifications - Fixed notification for rejected group join request not clearing
+* LearnDash - Fixed alignment of Certificate banner for group with single course
+* LearnDash - Code optimization and performance improvements for Grid View ajax
+* Multisite - Fixed duplicate BuddyBoss menus when enabling 'BP_ENABLE_MULTIBLOG'
+* Translations - Added French language files, credits to Jean-Pierre Michaud
+* Translations - Updated German (formal) language files
 
 = 1.3.1 =
 * Compatibility - Updated a file that was causing false alerts from Windows Defender

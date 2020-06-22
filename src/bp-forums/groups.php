@@ -558,7 +558,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							break;
 					}
 
-					// Create the initial forum
+					// Create the initial forum.
 					$forum_id = bbp_insert_forum(
 						array(
 							'post_parent'  => bbp_get_group_forums_root_id(),
