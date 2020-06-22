@@ -283,6 +283,7 @@ function bp_nouveau_ajax_document_get_activity() {
 	if ( ! empty( $document_activity ) ) {
 		$args = array(
 			'include'     => $post_id,
+			'privacy'     => false,
 			'show_hidden' => true,
 			'scope'       => 'document',
 		);
