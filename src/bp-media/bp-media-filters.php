@@ -286,7 +286,7 @@ function bp_media_groups_activity_update_media_meta( $content, $user_id, $group_
  */
 function bp_media_activity_comments_update_media_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
-	$bp_new_activity_comment = true;
+	$bp_new_activity_comment = $comment_id;
 	bp_media_update_activity_media_meta( false, false, $comment_id );
 }
 

@@ -316,7 +316,7 @@ function bp_document_groups_activity_update_document_meta( $content, $user_id, $
  */
 function bp_document_activity_comments_update_document_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
-	$bp_new_activity_comment = true;
+	$bp_new_activity_comment = $comment_id;
 	bp_document_update_activity_document_meta( false, false, $comment_id );
 }
 
