@@ -56,6 +56,11 @@ window.bp = window.bp || {};
         $(this).parents('.repeater_group_outer').toggleClass('active');
     });
 
+    if (window.location.href.indexOf('#bpxpro') > -1) {
+        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
+        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
+      }
+
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
@@ -149,6 +154,8 @@ window.bp = window.bp || {};
             },
             'success' : function() {
                 //$button.closest('form').submit();
+                history.pushState('', document.title, window.location.pathname);
+                window.location.href += '#bpxpro';
                 window.location.reload();
             }
         });
