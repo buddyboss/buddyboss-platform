@@ -532,15 +532,7 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	if ( ! strlen( trim( strip_tags($_POST['content'] ) ) ) ) {
-		wp_send_json_error(
-			array(
-				'message' => __( 'Please enter some content to post.', 'buddyboss' ),
-			)
-		);
-	}
-
-	if ( ! strlen( trim( $_POST['content'] ) ) ) {
+	if ( ! strlen( trim( strip_tags( $_POST['content'] ) ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty.
 		$toolbar_option = false;
