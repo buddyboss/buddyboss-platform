@@ -537,10 +537,10 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	if ( 'groups' !== $filter['scope'] ) {
 		// Fetch public groups.
 		$public_groups = groups_get_groups( array(
-				'fields'   => 'ids',
-				'status'   => 'public',
-				'per_page' => - 1,
-			) );
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+		) );
 	}
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
@@ -581,6 +581,14 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 			'value'  => 'grouponly',
 		),
 	);
+
+	if ( ! bp_is_group_albums_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$args[] = array(

@@ -72,7 +72,15 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
-		return $retval;
+		$friends = array( 0 );
+	}
+
+	if ( $user_id !== bp_loggedin_user_id() ) {
+		array_push( $friends, bp_loggedin_user_id() );
+	}
+
+	if ( ! bp_is_profile_media_support_enabled() ) {
+		$friends = array( 0 );
 	}
 
 	$retval = array(
@@ -87,6 +95,14 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 			'value'  => 'friends',
 		),
 	);
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$retval[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(

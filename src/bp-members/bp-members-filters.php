@@ -184,7 +184,7 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			: bp_loggedin_user_id();
 	}
 
-	$privacy = array( 'onlyme' );
+	$privacy = array( 'public', 'loggedin', 'onlyme' );
 	if ( bp_is_active( 'friends' ) ) {
 		$privacy[] = 'friends';
 	}
@@ -201,6 +201,14 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			'compare' => 'IN'
 		),
 	);
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$retval[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(

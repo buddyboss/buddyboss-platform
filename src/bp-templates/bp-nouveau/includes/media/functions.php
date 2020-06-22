@@ -172,7 +172,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'position'  => 5,
 	);
 
-	if ( is_user_logged_in() ) {
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 		$nav_items['personal'] = array(
 			'component' => 'media',
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.

@@ -368,6 +368,8 @@ function bp_media_get_specific( $args = '' ) {
 			'sort'      => 'DESC',     // Sort ASC or DESC.
 			'order_by'  => false,     // Sort ASC or DESC.
 			'privacy'   => false,     // privacy to filter.
+			'album_id'  => false,     // Album ID.
+			'user_id'   => false,     // User ID.
 		),
 		'media_get_specific'
 	);
@@ -380,6 +382,8 @@ function bp_media_get_specific( $args = '' ) {
 		'sort'     => $r['sort'],
 		'order_by' => $r['order_by'],
 		'privacy'  => $r['privacy'],
+		'album_id' => $r['album_id'],
+		'user_id'  => $r['user_id'],
 	);
 
 	/**
@@ -838,19 +842,7 @@ function bp_get_total_media_count() {
 function bp_media_object_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = array();
-
-	if ( bp_is_active( 'friends' ) ) {
-		$querystring['scope'][] = 'friends';
-	}
-
-	if ( bp_is_active( 'groups' ) ) {
-		$querystring['scope'][] = 'groups';
-	}
-
-	if ( is_user_logged_in() ) {
-		$querystring['scope'][] = 'personal';
-	}
+	$querystring['scope'] = bp_media_default_scope( 'all' );
 
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
@@ -2288,4 +2280,53 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
 			}
 		}
 	}
+}
+
+/**
+ * Get default scope for the media.
+ *
+ * @since BuddyBoss 1.4.4
+ *
+ * @param string $scope Default scope.
+ *
+ * @return string
+ */
+function bp_media_default_scope( $scope ) {
+
+	$new_scope = array();
+
+	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_media_directory() ) {
+		$new_scope[] = 'public';
+
+		if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
+			$new_scope[] = 'friends';
+		}
+
+		if ( bp_is_active( 'groups' ) && bp_is_group_media_support_enabled() ) {
+			$new_scope[] = 'groups';
+		}
+
+		if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+			$new_scope[] = 'personal';
+		}
+
+	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
+		$new_scope[] = 'personal';
+	}
+
+	$new_scope = array_unique( $new_scope );
+
+	if ( empty( $new_scope ) ) {
+		$new_scope = (array) $scope;
+	}
+
+	/**
+	 * Filter to update default scope.
+	 *
+	 * @since BuddyBoss 1.4.4
+	 */
+	$new_scope = apply_filters( 'bp_media_default_scope', $new_scope );
+
+	return implode( ',', $new_scope );
+
 }
