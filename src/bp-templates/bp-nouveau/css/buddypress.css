@@ -4949,6 +4949,10 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   min-width: 0;
 }
 
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_title_empty {
+  color: #ccc;
+}
+
 .buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_edit {
   margin-left: auto;
   margin-right: 5px;

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-22 01:09:35+00:00\n"
+"POT-Creation-Date: 2020-06-22 02:07:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23192,6 +23192,10 @@ msgid ""
 "class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%1$s</a> "
 "and <a class=\"popup-modal-register popup-privacy\" "
 "href=\"#privacy-modal\">%2$s</a>."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/xprofile/functions.php:47
+msgid "New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:27
