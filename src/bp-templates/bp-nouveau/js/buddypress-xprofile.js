@@ -33,7 +33,7 @@ window.bp = window.bp || {};
 
             if ( '' === title ) {
 				$set.find('.repeater_set_title').addClass( 'repeater_set_title_empty' );
-				$set.find('.repeater_set_title').html( xprofile_translation_object_name.empty_field );
+				$set.find('.repeater_set_title').html( BP_Nouveau.empty_field );
 			} else {
 				$set.find('.repeater_set_title').html( title );
 			}
