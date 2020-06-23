@@ -2668,7 +2668,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
 	$can_manage   = false;
 	$can_view     = false;
-	$can_download = true;
+	$can_download = false;
 	$folder       = new BP_Document_Folder( $folder_id );
 	$data         = array();
 
