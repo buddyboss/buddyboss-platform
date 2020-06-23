@@ -2630,6 +2630,7 @@ span.dashicons.dashicons-admin-file:before {
   border-top: 1px solid #ecedee;
   background-color: #fff;
   line-height: 1.5;
+  font-size: 15px;
 }
 
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list {
@@ -13691,7 +13692,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   right: 0;
   text-align: center;
   border-bottom: 1px solid #ecedee;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
   border-radius: 4px 4px 0 0;
   white-space: nowrap;

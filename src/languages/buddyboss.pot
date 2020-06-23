@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-23 06:48:57+00:00\n"
+"POT-Creation-Date: 2020-06-23 11:43:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -405,10 +405,10 @@ msgstr ""
 #: bp-forums/topics/template.php:54 bp-forums/topics/template.php:2575
 #: bp-groups/classes/class-bp-groups-list-table.php:570
 #: bp-invites/bp-invites-admin.php:268
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1231
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1293
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1232
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1310
 #: bp-templates/bp-nouveau/includes/document/ajax.php:411
-#: bp-templates/bp-nouveau/includes/media/ajax.php:931
+#: bp-templates/bp-nouveau/includes/media/ajax.php:929
 #: bp-xprofile/bp-xprofile-admin.php:924
 #: bp-xprofile/bp-xprofile-repeaters.php:777
 #: bp-xprofile/bp-xprofile-repeaters.php:779
@@ -539,10 +539,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:133
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/includes/activity/functions.php:188
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1248
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1310
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1249
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1327
 #: bp-templates/bp-nouveau/includes/document/ajax.php:429
-#: bp-templates/bp-nouveau/includes/media/ajax.php:949
+#: bp-templates/bp-nouveau/includes/media/ajax.php:947
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:935
 msgid "Cancel"
@@ -671,7 +671,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:533
 #: bp-core/classes/class-bp-admin.php:534 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:899
+#: bp-media/bp-media-filters.php:902
 msgid "Tools"
 msgstr ""
 
@@ -1226,7 +1226,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:276
 #: bp-forums/classes/class-bp-forums-component.php:327
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:950 bp-media/bp-media-settings.php:208
+#: bp-media/bp-media-filters.php:953 bp-media/bp-media-settings.php:208
 #: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
 #: bp-media/bp-media-settings.php:229 bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
@@ -2668,7 +2668,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2358
-#: bp-media/bp-media-filters.php:991
+#: bp-media/bp-media-filters.php:994
 msgid "Run Migration"
 msgstr ""
 
@@ -3259,7 +3259,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
-#: bp-media/bp-media-filters.php:956
+#: bp-media/bp-media-filters.php:959
 #: bp-templates/bp-nouveau/includes/groups/classes.php:300
 msgid "Discussions"
 msgstr ""
@@ -3276,7 +3276,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:962
+#: bp-media/bp-media-filters.php:965
 msgid "Replies"
 msgstr ""
 
@@ -3759,7 +3759,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:944
+#: bp-media/bp-media-filters.php:947
 msgid "Media"
 msgstr ""
 
@@ -8280,17 +8280,18 @@ msgstr ""
 #: bp-document/bp-document-filters.php:243
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:116
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:255
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1328
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1267
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1345
 #: bp-templates/bp-nouveau/includes/document/ajax.php:447
 #: bp-templates/bp-nouveau/includes/document/functions.php:91
 #: bp-templates/bp-nouveau/includes/document/functions.php:94
-#: bp-templates/bp-nouveau/includes/media/ajax.php:965
+#: bp-templates/bp-nouveau/includes/media/ajax.php:963
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:550
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2094
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1007 bp-media/bp-media-filters.php:1250
+#: bp-document/bp-document-filters.php:1007 bp-media/bp-media-filters.php:1253
 msgid "File not found"
 msgstr ""
 
@@ -15322,7 +15323,7 @@ msgid "Pending Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:788
-#: bp-media/bp-media-filters.php:938
+#: bp-media/bp-media-filters.php:941
 #: bp-media/classes/class-bp-media-component.php:298
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
@@ -17501,43 +17502,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:841 bp-media/bp-media-filters.php:857
-#: bp-media/bp-media-filters.php:858 bp-media/bp-media-filters.php:911
-#: bp-media/bp-media-filters.php:1038
+#: bp-media/bp-media-filters.php:844 bp-media/bp-media-filters.php:860
+#: bp-media/bp-media-filters.php:861 bp-media/bp-media-filters.php:914
+#: bp-media/bp-media-filters.php:1041
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:916
+#: bp-media/bp-media-filters.php:919
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:933
+#: bp-media/bp-media-filters.php:936
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:935
+#: bp-media/bp-media-filters.php:938
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:940 bp-media/bp-media-filters.php:946
-#: bp-media/bp-media-filters.php:952 bp-media/bp-media-filters.php:958
-#: bp-media/bp-media-filters.php:964
+#: bp-media/bp-media-filters.php:943 bp-media/bp-media-filters.php:949
+#: bp-media/bp-media-filters.php:955 bp-media/bp-media-filters.php:961
+#: bp-media/bp-media-filters.php:967
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:974 bp-media/bp-media-filters.php:985
+#: bp-media/bp-media-filters.php:977 bp-media/bp-media-filters.php:988
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:981 bp-media/bp-media-functions.php:2158
+#: bp-media/bp-media-filters.php:984 bp-media/bp-media-functions.php:2158
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:990
+#: bp-media/bp-media-filters.php:993
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -17545,7 +17546,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1036
+#: bp-media/bp-media-filters.php:1039
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -17554,7 +17555,7 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1267
+#: bp-media/bp-media-filters.php:1270
 msgid "Go to media"
 msgstr ""
 
@@ -21952,25 +21953,25 @@ msgstr ""
 msgid "Edit Folder Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1230
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1236
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1239
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1292
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1298
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1301
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1231
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1237
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1240
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1309
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1315
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1318
 #: bp-templates/bp-nouveau/includes/document/ajax.php:410
 #: bp-templates/bp-nouveau/includes/document/ajax.php:417
 #: bp-templates/bp-nouveau/includes/document/ajax.php:420
-#: bp-templates/bp-nouveau/includes/media/ajax.php:930
-#: bp-templates/bp-nouveau/includes/media/ajax.php:937
-#: bp-templates/bp-nouveau/includes/media/ajax.php:940
+#: bp-templates/bp-nouveau/includes/media/ajax.php:928
+#: bp-templates/bp-nouveau/includes/media/ajax.php:935
+#: bp-templates/bp-nouveau/includes/media/ajax.php:938
 msgid "Add a description"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1246
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1308
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1247
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1325
 #: bp-templates/bp-nouveau/includes/document/ajax.php:427
-#: bp-templates/bp-nouveau/includes/media/ajax.php:947
+#: bp-templates/bp-nouveau/includes/media/ajax.php:945
 msgid "Done Editing"
 msgstr ""
 
@@ -22931,7 +22932,7 @@ msgstr ""
 msgid "There was an error for updating a description. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:918
+#: bp-templates/bp-nouveau/includes/media/ajax.php:916
 msgid "uploaded a media"
 msgstr ""
 
