@@ -1279,6 +1279,20 @@ function bp_media_admin_repair_media() {
 						$wpdb->query( $update_query );
 					}
 					if ( 'media' === $activity->privacy ) {
+						if ( ! empty( $activity->secondary_item_id ) ) {
+							$media_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+							if ( ! empty( $media_activity->id ) ) {
+								if ( 'activity_comment' === $media_activity->type ) {
+									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
+								}
+								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
+									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . " ";
+									$wpdb->query( $update_query );
+									$activity->item_id   = $media_activity->item_id;
+									$activity->component = buddypress()->groups->id;
+								}
+							}
+						}
 						$activity->hide_sitewide = true;
 						$activity->save();
 					}
