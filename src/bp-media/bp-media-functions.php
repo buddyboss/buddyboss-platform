@@ -2301,7 +2301,7 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
  * @return mixed|void
  * @since BuddyBoss 1.4.4
  */
-function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0, $thread_id = 0, $message_id = 0 ) {
+function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 
 	$can_manage   = false;
 	$can_view     = false;
@@ -2388,9 +2388,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0, $thread_id
 			break;
 
 		case 'message':
-			if ( ! (int) $thread_id ) {
-				$thread_id = bp_media_get_thread_id( $media_id );
-			}
+			$thread_id = bp_media_get_thread_id( $media_id );
 			$has_access = messages_check_thread_access( $thread_id, $user_id );
 			if ( ! is_user_logged_in() ) {
 				$can_manage   = false;

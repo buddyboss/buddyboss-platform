@@ -58,8 +58,6 @@
 				<div class="bb-activity-media-elem">
 					<a class="bb-open-media-theatre bb-photo-cover-wrap"
 					   data-id="{{data.media[i].id}}"
-					   data-thread-id="{{data.media[i].thread_id}}"
-					   data-message-id="{{data.media[i].message_id}}"
 					   data-attachment-id="{{data.media[i].attachment_id}}"
 					   data-attachment-full="{{data.media[i].full}}"
 					   data-privacy="{{data.media[i].privacy}}"

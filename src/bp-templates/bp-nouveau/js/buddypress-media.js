@@ -4475,8 +4475,6 @@ window.bp = window.bp || {};
 						action		: 'media_get_media_description',
 						id			: self.current_media.id,
 						id1			: self.current_media.attachment_id,
-						thread_id	: self.current_media.thread_id,
-						message_id	: self.current_media.message_id,
 						nonce		: BP_Nouveau.nonces.media
 					},
 					success: function (response) {
@@ -4657,8 +4655,6 @@ window.bp = window.bp || {};
 							attachment			: media_element.data( 'attachment-full' ),
 							activity_id			: media_element.data( 'activity-id' ),
 							attachment_id		: media_element.data( 'attachment-id' ),
-							message_id			: media_element.data( 'message-id' ),
-							thread_id			: media_element.data( 'thread-id' ),
 							privacy				: media_element.data( 'privacy' ),
 							parent_activity_id	: media_element.data( 'parent-activity-id' ),
 							album_id			: media_element.data( 'album-id' ),

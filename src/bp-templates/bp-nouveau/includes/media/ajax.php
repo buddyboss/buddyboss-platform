@@ -876,8 +876,6 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 	$media_id		= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$attachment_id 	= filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
-	$thread_id 		= filter_input( INPUT_POST, 'thread_id', FILTER_VALIDATE_INT );
-	$message_id 	= filter_input( INPUT_POST, 'message_id', FILTER_VALIDATE_INT );
 
 	if ( empty( $media_id ) || empty( $attachment_id ) ) {
 		wp_send_json_error( $response );
@@ -889,7 +887,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 	$content = get_post_field( 'post_content', $attachment_id );
 
-	$media_privacy  	= bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id(), $thread_id, $message_id );
+	$media_privacy  	= bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
 	$can_download_btn  	= ( true === (bool) $media_privacy['can_download'] ) ? true : false;
 	$can_manage_btn    	= ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
 	$can_view          	= ( true === (bool) $media_privacy['can_view'] ) ? true : false;
