@@ -52,6 +52,7 @@ add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_dat
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
+add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
 
 // Download Media.
 add_action( 'init', 'bp_media_download_url_file' );
@@ -289,7 +290,7 @@ function bp_media_groups_activity_update_media_meta( $content, $user_id, $group_
  */
 function bp_media_activity_comments_update_media_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
-	$bp_new_activity_comment = true;
+	$bp_new_activity_comment = $comment_id;
 	bp_media_update_activity_media_meta( false, false, $comment_id );
 }
 
@@ -1230,6 +1231,132 @@ function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) 
 	return $retval;
 }
 add_filter( 'bp_activity_set_media_scope_args', 'bp_activity_filter_media_scope', 10, 2 );
+
+/**
+ * Add media repair list item.
+ *
+ * @param $repair_list
+ *
+ * @since BuddyBoss 1.4.4
+ * @return array Repair list items.
+ */
+function bp_media_add_admin_repair_items( $repair_list ) {
+	if ( bp_is_active( 'activity' ) ) {
+		$repair_list[] = array(
+				'bp-repair-media',
+				__( 'Repair media on the site.', 'buddyboss' ),
+				'bp_media_admin_repair_media',
+		);
+		$repair_list[] = array(
+				'bp-media-forum-privacy-repair',
+				__( 'Repair forum media privacy', 'buddyboss' ),
+				'bp_media_forum_privacy_repair',
+		);
+	}
+	return $repair_list;
+}
+
+/**
+ * Repair BuddyBoss media.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_media_admin_repair_media() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+
+	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
+	$medias 	= $wpdb->get_results( $media_query );
+
+	if ( ! empty( $medias ) ) {
+		foreach ( $medias as $media ) {
+			if ( ! empty( $media->id ) && ! empty( $media->activity_id ) ) {
+				$activity = new BP_Activity_Activity( $media->activity_id );
+				if ( ! empty( $activity->id ) ) {
+					if ( 'activity_comment' === $activity->type ) {
+						$activity = new BP_Activity_Activity( $activity->item_id );
+					}
+					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . " ";
+						$wpdb->query( $update_query );
+					}
+					if ( 'media' === $activity->privacy ) {
+						if ( ! empty( $activity->secondary_item_id ) ) {
+							$media_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+							if ( ! empty( $media_activity->id ) ) {
+								if ( 'activity_comment' === $media_activity->type ) {
+									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
+								}
+								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
+									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . " ";
+									$wpdb->query( $update_query );
+									$activity->item_id   = $media_activity->item_id;
+									$activity->component = buddypress()->groups->id;
+								}
+							}
+						}
+						$activity->hide_sitewide = true;
+						$activity->save();
+					}
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		return array(
+				'status'  => 1,
+				'message' => __( 'Media update complete!', 'buddyboss' ),
+		);
+	}
+}
+
+/**
+ * Repair BuddyBoss media forums privacy.
+ *
+ * @since BuddyBoss 1.4.2
+ */
+function bp_media_forum_privacy_repair() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+
+	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
+	$records = $wpdb->get_col( $squery );
+	if ( ! empty( $records ) ) {
+		foreach ( $records as $record ) {
+			if ( ! empty( $record ) ) {
+				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
+				if ( $media_ids ) {
+					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ")";
+					$wpdb->query( $update_query );
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
+
+		return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
 
 /**
  * Force download - this is the default method.

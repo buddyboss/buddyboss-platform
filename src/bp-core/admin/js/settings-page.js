@@ -667,6 +667,9 @@
 			if ( $( '#bp-tools-submit' ).length ) {
 
 					var bp_admin_repair_tools_wrapper_function = function( offset, currentAction ) {
+						if ( typeof BbToolsCommunityRepairActions[currentAction] === 'undefined' ) {
+							return false;
+						}
 						$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<div class="loader-repair-tools"></div>' );
 						$.ajax(
 							{
@@ -679,20 +682,25 @@
 									'nonce' : $( 'body .section-repair_community .settings fieldset .submit input[name="_wpnonce"]' ).val()
 								},
 								'success' : function( response ) {
-									if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
-										if ( 'running' === response.data.status ) {
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools' ).remove();
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code' ).remove();
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<code>' + response.data.records + '</code>' );
-											bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
+									if ( typeof response.success !== 'undefined' ) {
+										if ( response.success && typeof response.data !== 'undefined' ) {
+											if ('running' === response.data.status) {
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code').remove();
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]').append('<code>' + response.data.records + '</code>');
+												bp_admin_repair_tools_wrapper_function(response.data.offset, currentAction);
+											} else {
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+												$('.section-repair_community .settings fieldset').append('<div class="updated"><p>' + response.data.message + '</p></div>');
+												currentAction = currentAction + 1;
+												bp_admin_repair_tools_wrapper_function(response.data.offset, currentAction);
+											}
+											if (BbToolsCommunityRepairActions.length === currentAction) {
+												$('body .section-repair_community .settings fieldset .submit a').removeClass('disable-btn');
+											}
 										} else {
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools' ).remove();
-											$( '.section-repair_community .settings fieldset' ).append( '<div class="updated"><p>' + response.data.message + '</p></div>' );
-											currentAction = currentAction + 1;
-											bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
-										}
-										if ( BbToolsCommunityRepairActions.length === currentAction ) {
 											$( 'body .section-repair_community .settings fieldset .submit a' ).removeClass( 'disable-btn' );
+											return false;
 										}
 									}
 								},
