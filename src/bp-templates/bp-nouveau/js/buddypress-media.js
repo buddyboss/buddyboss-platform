@@ -4444,13 +4444,52 @@ window.bp = window.bp || {};
 			self.setCurrentMedia( id );
 			self.showMedia();
 			self.navigationCommands();
-			self.getActivity();
+
+			if (typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && ! self.current_media.is_forum ) {
+				self.getActivity();
+			} else {
+				self.getMediasDescription();
+			}
 
 			$( '.bb-media-model-wrapper.document' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
+		},
+
+		getMediasDescription: function () {
+			var self = this;
+
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+
+			if (self.activity_ajax != false) {
+				self.activity_ajax.abort();
+			}
+
+			self.activity_ajax = $.ajax(
+				{
+					type	: 'POST',
+					url		: BP_Nouveau.ajaxurl,
+					data	: {
+						action		: 'media_get_media_description',
+						id			: self.current_media.id,
+						id1			: self.current_media.attachment_id,
+						thread_id	: self.current_media.thread_id,
+						message_id	: self.current_media.message_id,
+						nonce		: BP_Nouveau.nonces.media
+					},
+					success: function (response) {
+						if (response.success) {
+							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
+							$( '.bb-media-info-section:visible' ).show();
+							$( window ).scroll();
+						} else {
+							$( '.bb-media-info-section.media' ).hide();
+						}
+					}
+				}
+			);
 		},
 
 		openDocumentTheatre: function (event) {
@@ -4617,6 +4656,9 @@ window.bp = window.bp || {};
 							id					: media_element.data( 'id' ),
 							attachment			: media_element.data( 'attachment-full' ),
 							activity_id			: media_element.data( 'activity-id' ),
+							attachment_id		: media_element.data( 'attachment-id' ),
+							message_id			: media_element.data( 'message-id' ),
+							thread_id			: media_element.data( 'thread-id' ),
 							privacy				: media_element.data( 'privacy' ),
 							parent_activity_id	: media_element.data( 'parent-activity-id' ),
 							album_id			: media_element.data( 'album-id' ),

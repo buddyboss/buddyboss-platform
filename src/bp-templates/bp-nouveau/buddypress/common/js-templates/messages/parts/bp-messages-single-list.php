@@ -58,7 +58,9 @@
 				<div class="bb-activity-media-elem">
 					<a class="bb-open-media-theatre bb-photo-cover-wrap"
 					   data-id="{{data.media[i].id}}"
-					   data-activity-id="{{data.media[i].activity_id}}"
+					   data-thread-id="{{data.media[i].thread_id}}"
+					   data-message-id="{{data.media[i].message_id}}"
+					   data-attachment-id="{{data.media[i].attachment_id}}"
 					   data-attachment-full="{{data.media[i].full}}"
 					   data-privacy="{{data.media[i].privacy}}"
 					   href="#">
@@ -74,13 +76,13 @@
 				<# for ( i in data.document ) { #>
 					<div class="bb-activity-media-elem document-activity " data-id="">
 						<div class="document-description-wrap">
-							<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].activity_id}}">
+							<a href="{{data.document[i].url}}" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
 								<i class="{{data.document[i].svg_icon}}" ></i>
 							</a>
 							<a href="{{data.document[i].url}}"
 							   class="document-detail-wrap bb-open-document-theatre"
 							   data-id="{{data.document[i].id}}"
-							   data-activity-id="{{data.document[i].activity_id}}"
+							   data-activity-id=""
 							   data-icon-class={{data.document[i].svg_icon}}"
 							   data-attachment-id="{{data.document[i].attachment_id}}"
 							   data-attachment-full=""

@@ -833,6 +833,36 @@ span.dashicons.dashicons-admin-file:before {
 	}
 }
 
+#buddypress .bb-media-model-wrapper.media-theatre {
+
+	.activity-list.bp-list {
+		position: relative;
+		height: 100%;
+		display: inline-block;
+
+		.activity-item {
+			margin-bottom: 40px;
+			max-height: calc(90vh - 40px);
+			min-height: calc(90vh - 40px);
+			position: static;
+		}
+
+		.download-media {
+			position: absolute;
+			bottom: 0;
+			z-index: 999999;
+			left: 0;
+			right: 0;
+			text-align: center;
+			padding: 10px;
+			border-top: 1px solid #ecedee;
+			background-color: #fff;
+			line-height: 1.5;
+		}
+
+	}
+}
+
 .activity-media-description {
 	margin-bottom: 10px;
 

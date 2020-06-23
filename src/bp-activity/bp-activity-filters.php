@@ -1643,12 +1643,6 @@ function bp_activity_media_add( $media ) {
 				$args['group_id'] = $media->group_id;
 				$activity_id = groups_post_update( $args );
 			} else {
-
-				if ( bp_is_active( 'messages' ) && isset( $media->privacy ) && 'message' === $media->privacy ) {
-					$args['component']  = buddypress()->messages->id;
-					$args['type']       = 'message_media_update';
-				}
-
 				$activity_id = bp_activity_post_update( $args );
 			}
 
@@ -1836,12 +1830,6 @@ function bp_activity_document_add( $document ) {
 				$args['group_id'] = $document->group_id;
 				$activity_id = groups_post_update( $args );
 			} else {
-
-				if ( bp_is_active( 'messages' ) && isset( $document->privacy ) && 'message' === $document->privacy ) {
-					$args['component']  = buddypress()->messages->id;
-					$args['type']       = 'message_document_update';
-				}
-
 				$activity_id = bp_activity_post_update( $args );
 			}
 

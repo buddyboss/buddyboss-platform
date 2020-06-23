@@ -37,8 +37,6 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
-// Register the activity stream actions for messages
-add_action( 'bp_register_activity_actions', 'bp_document_messages_register_activity_actions' );
 
 // Download Document.
 add_action( 'init', 'bp_document_download_url_file' );
@@ -58,26 +56,6 @@ add_filter( 'bp_get_folder_title', 'convert_chars' );
 
 // Change label for global search.
 add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
-
-function bp_document_messages_register_activity_actions() {
-
-	if ( bp_is_active( 'messages' ) ) {
-		// Sitewide activity stream items
-		bp_activity_set_action( buddypress()->messages->id, 'message_document_update', esc_html__( 'attached a document', 'buddyboss' ), 'bp_document_messages_activity_action_callback' );
-	}
-}
-
-function bp_document_messages_activity_action_callback( $action, $activity ) {
-	$user_id  = $activity->user_id;
-
-	// User
-	$user_link = bp_core_get_userlink( $user_id );
-
-	return sprintf(
-			esc_html__( '%1$s attached a document', 'buddyboss' ),
-			$user_link
-	);
-}
 
 function bp_document_search_label_search( $type ) {
 
@@ -503,27 +481,6 @@ function bp_document_forums_new_post_document_save( $post_id ) {
 			);
 
 			if ( ! is_wp_error( $document_id ) && ! empty( $document_id ) ) {
-
-				$activity_id = bp_activity_add(
-					array(
-						'hide_sitewide' => true,
-						'action'        => sprintf( __( '%s attached a document', 'buddyboss' ), bp_core_get_userlink( bp_loggedin_user_id() ) ),
-						'component'     => 'forums',
-						'type'          => 'forum_update',
-						'privacy'       => 'document',
-						'content'       => ' ',
-					)
-				);
-
-				bp_activity_update_meta( $activity_id, 'bp_document_ids', $document_id );
-				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
-				update_post_meta( $attachment_id, 'bp_document_activity_id', $activity_id );
-
-				// save document activity id in document.
-				$document = new BP_Document( $document_id );
-				$document->activity_id = $activity_id;
-				$document->save();
-
 				$document_ids[] = $document_id;
 
 				// save document meta.
@@ -638,28 +595,6 @@ function bp_document_attach_document_to_message( &$message ) {
 			);
 
 			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
-
-				$activity_id = bp_activity_add(
-					array(
-						'hide_sitewide' => true,
-						'action'        => sprintf( __( '%s attached a document', 'buddyboss' ), bp_core_get_userlink( bp_loggedin_user_id() ) ),
-						'component'     => buddypress()->messages->id,
-						'type'          => 'message_document_update',
-						'privacy'       => 'document',
-						'content'       => ' ',
-					)
-				);
-
-				bp_activity_update_meta( $activity_id, 'bp_document_ids', $document_id );
-				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
-				update_post_meta( $attachment_id, 'bp_document_activity_id', $activity_id );
-
-
-				// save document activity id in document.
-				$document = new BP_Document( $document_id );
-				$document->activity_id = $activity_id;
-				$document->save();
-
 				$document_ids[] = $document_id;
 
 				// save document meta.

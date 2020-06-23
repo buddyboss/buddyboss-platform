@@ -530,10 +530,6 @@ function bp_media_add_handler( $medias = array() ) {
 				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 			) );
 
-			if ( bp_is_active( 'messages') && isset( $media['thread_id'] ) && (int) $media['thread_id'] > 0 && 'message' === $media['privacy'] ) {
-				//bp_media_update_meta( $media_id, 'thread_id', $media['thread_id'] );
-			}
-
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
 			}
@@ -2292,4 +2288,229 @@ function bp_media_update_activity_privacy( $activity_id = 0, $privacy = '' ) {
 			}
 		}
 	}
+}
+
+/**
+ * Check user have a permission to manage the media.
+ *
+ * @param int $media_id
+ * @param int $user_id
+ * @param int $thread_id
+ * @param int $message_id
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.4.4
+ */
+function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0, $thread_id = 0, $message_id = 0 ) {
+
+	$can_manage   = false;
+	$can_view     = false;
+	$can_download = false;
+	$media        = new BP_Media( $media_id );
+	$data         = array();
+
+	switch ( $media->privacy ) {
+
+		case 'public':
+			if ( $media->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} else {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'grouponly':
+			if ( bp_is_active( 'groups' ) ) {
+
+				$manage = groups_can_user_manage_media( $user_id, $media->group_id );
+
+				if ( $manage ) {
+					$can_manage   = true;
+					$can_view     = true;
+					$can_download = true;
+				} else {
+					$the_group = groups_get_group( (int) $media->group_id );
+					if ( $the_group->id > 0 && $the_group->user_has_access ) {
+						$can_view     = true;
+						$can_download = true;
+					}
+				}
+			}
+
+			break;
+
+		case 'loggedin':
+			if ( $media->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_loggedin_user_id() === $user_id ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'friends':
+
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $media->user_id, $user_id ) : false;
+			if ( $media->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $is_friend ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'forums':
+			$args       = array(
+				'user_id'         => $user_id,
+				'forum_id'        => ( function_exists( 'bp_media_get_meta' )  ? bp_media_get_meta( $media_id, 'forum_id', true ) : '' ),
+				'check_ancestors' => false,
+			);
+			$has_access = bbp_user_can_view_forum( $args );
+			if ( $media->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $has_access ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'message':
+			if ( ! (int) $thread_id ) {
+				$thread_id = bp_media_get_thread_id( $media_id );
+			}
+			$has_access = messages_check_thread_access( $thread_id, $user_id );
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( ! $thread_id ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( $media->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $has_access > 0 ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'onlyme':
+			if ( $media->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+	}
+
+	$data['can_manage']   = $can_manage;
+	$data['can_view']     = $can_view;
+	$data['can_download'] = $can_download;
+
+	return apply_filters( 'bp_media_user_can_manage_media', $data, $media_id, $user_id );
+}
+
+function bp_media_get_thread_id( $media_id ) {
+
+	$thread_id = 0;
+
+	if ( bp_is_active( 'messages' ) ) {
+		$meta = array(
+			array(
+				'key'     => 'bp_media_ids',
+				'value'   => $media_id,
+				'compare' => 'LIKE',
+			),
+		);
+
+		// Check if there is already previously individual group thread created.
+		if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) { // phpcs:ignore
+			while ( bp_message_threads() ) {
+				bp_message_thread();
+				$thread_id = bp_get_message_thread_id();
+				if ( $thread_id ) {
+					break;
+				}
+			}
+		}
+	}
+	return apply_filters( 'bp_media_get_thread_id', $thread_id, $media_id );
+
+}
+
+/**
+ * Return download link of the media.
+ *
+ * @param $attachment_id
+ * @param $media_id
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.4.4
+ */
+function bp_media_download_link( $attachment_id, $media_id ) {
+
+	if ( empty( $attachment_id ) ) {
+		return;
+	}
+
+	$link = site_url() . '/?attachment_id=' . $attachment_id . '&media_type=media&download_media_file=1' . '&media_file=' . $media_id;
+
+	return apply_filters( 'bp_media_download_link', $link, $attachment_id );
+
+}
+
+/**
+ * Check if user have a access to download the file. If not redirect to homepage.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_media_download_url_file() {
+	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( 'folder' !== $_GET['media_type'] ) {
+			error_log( 'come' );
+			$media_privacy = bp_media_user_can_manage_media( $_GET['media_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
+
+			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+			error_log( $can_download_btn );
+		}
+		if ( $can_download_btn ) {
+			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		} else {
+			wp_safe_redirect( site_url() );
+		}
+	}
+}
+
+/**
+ * Filter headers for IE to fix issues over SSL.
+ *
+ * IE bug prevents download via SSL when Cache Control and Pragma no-cache headers set.
+ *
+ * @param array $headers HTTP headers.
+ * @return array
+ */
+function bp_media_ie_nocache_headers_fix( $headers ) {
+	if ( is_ssl() && ! empty( $GLOBALS['is_IE'] ) ) {
+		$headers['Cache-Control'] = 'private';
+		unset( $headers['Pragma'] );
+	}
+	return $headers;
 }

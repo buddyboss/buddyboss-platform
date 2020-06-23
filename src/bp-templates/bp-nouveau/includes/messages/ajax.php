@@ -427,7 +427,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$reply['media'][] = array(
 					'id'            => bp_get_media_id(),
 					'title'         => bp_get_media_title(),
-					'activity_id' 	=> bp_get_media_activity_id(),
+					'message_id'	=> bp_get_the_thread_message_id(),
+					'thread_id'		=> bp_get_the_thread_id(),
+					'attachment_id' => bp_get_media_attachment_id(),
 					'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
 					'full'          => bp_get_media_attachment_image(),
 					'meta'          => $media_template->media->attachment_data->meta,
@@ -536,7 +538,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
 						'attachment_id'         => bp_get_document_attachment_id(),
-						'activity_id'         	=> bp_get_document_activity_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,
@@ -1965,8 +1966,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 					$thread->messages[ $i ]['media'][] = array(
 						'id'            => bp_get_media_id(),
+						'message_id'	=> bp_get_the_thread_message_id(),
+						'thread_id'		=> bp_get_the_thread_id(),
 						'title'         => bp_get_media_title(),
-						'activity_id' 	=> bp_get_media_activity_id(),
+						'attachment_id' => bp_get_media_attachment_id(),
 						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
 						'full'          => bp_get_media_attachment_image(),
 						'meta'          => $media_template->media->attachment_data->meta,
@@ -2079,7 +2082,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
 						'attachment_id'         => bp_get_document_attachment_id(),
-						'activity_id'         	=> bp_get_document_activity_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,
