@@ -1210,7 +1210,8 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+	$attachment_id 	= BP_Media::get_activity_attachment_id( $activity_id );
+	$media_id 		= BP_Media::get_activity_media_id( $activity_id );
 
 	if ( empty( $attachment_id ) ) {
 		return;
@@ -1253,6 +1254,22 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
+	if ( ! empty( $media_id ) ) {
+		$media_privacy  = bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
+		$can_download_btn  = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+		if ( $can_download_btn ) {
+			$download_url      = bp_media_download_link( $attachment_id, $media_id );
+			if ( $download_url ) {
+				?>
+				<a class="download-media"
+				   href="<?php echo esc_url( $download_url ); ?>">
+					<span class="bb-icon-download"></span>
+					<?php _e( 'Download', 'buddyboss' ); ?>
+				</a>
+				<?php
+			}
+		}
+	}
 }
 
 /**
