@@ -1263,7 +1263,6 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 				?>
 				<a class="download-media"
 				   href="<?php echo esc_url( $download_url ); ?>">
-					<span class="bb-icon-download"></span>
 					<?php _e( 'Download', 'buddyboss' ); ?>
 				</a>
 				<?php
@@ -1341,7 +1340,6 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 				?>
 				<a class="download-document"
 					href="<?php echo esc_url( $download_url ); ?>">
-					<span class="bb-icon-download"></span>
 					<?php _e( 'Download', 'buddyboss' ); ?>
 				</a>
 				<?php
