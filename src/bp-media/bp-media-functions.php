@@ -2372,16 +2372,19 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 		case 'forums':
 			$args       = array(
 				'user_id'         => $user_id,
-				'forum_id'        => ( function_exists( 'bp_media_get_meta' )  ? bp_media_get_meta( $media_id, 'forum_id', true ) : '' ),
+				'forum_id'        => bp_media_get_forum_id( $media_id ),
 				'check_ancestors' => false,
 			);
+
 			$has_access = bbp_user_can_view_forum( $args );
 			if ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $has_access ) {
-				$can_manage   = true;
+				if ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_manage   = true;
+				}
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2511,4 +2514,107 @@ function bp_media_ie_nocache_headers_fix( $headers ) {
 		unset( $headers['Pragma'] );
 	}
 	return $headers;
+}
+
+function bp_media_get_forum_id( $media_id ) {
+
+	$forum_id = 0;
+	$forums_media_query = new WP_Query(
+		array(
+			'post_type'      => bbp_get_forum_post_type(),
+			'fields'         => 'ids',
+			'posts_per_page' => - 1,
+			'meta_query'     => array(
+				array(
+					'key'     => 'bp_media_ids',
+					'value'   => $media_id,
+					'compare' => 'LIKE',
+				),
+			),
+		)
+	);
+
+	if ( ! empty( $forums_media_query->found_posts ) && ! empty( $forums_media_query->posts ) ) {
+
+		foreach ( $forums_media_query->posts as $post_id ) {
+			$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				if ( in_array( $media_id, $media_ids ) ) {
+					$forum_id = $post_id;
+					break;
+				}
+			}
+		}
+	}
+	wp_reset_postdata();
+
+	if ( ! $forum_id ) {
+		$topics_media_query = new WP_Query( array(
+				'post_type'      => bbp_get_topic_post_type(),
+				'fields'         => 'ids',
+				'posts_per_page' => - 1,
+				'meta_query'     => array(
+					array(
+						'key'     => 'bp_media_ids',
+						'value'   => $media_id,
+						'compare' => 'LIKE',
+					),
+				),
+			) );
+
+		if ( ! empty( $topics_media_query->found_posts ) && ! empty( $topics_media_query->posts ) ) {
+
+			foreach ( $topics_media_query->posts as $post_id ) {
+				$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+
+				if ( ! empty( $media_ids ) ) {
+					$media_ids = explode( ',', $media_ids );
+					if ( in_array( $media_id, $media_ids ) ) {
+						$forum_id = bbp_get_topic_forum_id( $post_id );
+						break;
+					}
+				}
+			}
+		}
+		wp_reset_postdata();
+	}
+
+	if ( ! $forum_id ) {
+		$reply_media_query = new WP_Query( array(
+				'post_type'      => bbp_get_reply_post_type(),
+				'fields'         => 'ids',
+				'posts_per_page' => - 1,
+				'meta_query'     => array(
+					array(
+						'key'     => 'bp_media_ids',
+						'value'   => $media_id,
+						'compare' => 'LIKE',
+					),
+				),
+			) );
+
+		if ( ! empty( $reply_media_query->found_posts ) && ! empty( $reply_media_query->posts ) ) {
+
+			foreach ( $reply_media_query->posts as $post_id ) {
+				$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+
+				if ( ! empty( $media_ids ) ) {
+					$media_ids = explode( ',', $media_ids );
+					foreach ( $media_ids as $media_id ) {
+						if ( in_array( $media_id, $media_ids ) ) {
+							$forum_id = bbp_get_reply_forum_id( $post_id );
+							break;
+						}
+					}
+				}
+			}
+		}
+		wp_reset_postdata();
+	}
+
+
+	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
+
 }

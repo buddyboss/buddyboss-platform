@@ -4872,6 +4872,8 @@ window.bp = window.bp || {};
 				self.showMedia();
 				if (activity_id != self.current_media.activity_id) {
 					self.getActivity();
+				} else {
+					self.getMediasDescription();
 				}
 			} else {
 				self.nextLink.hide();
@@ -4889,6 +4891,8 @@ window.bp = window.bp || {};
 				self.showMedia();
 				if (activity_id != self.current_media.activity_id) {
 					self.getActivity();
+				} else {
+					self.getMediasDescription();
 				}
 			} else {
 				self.previousLink.hide();
@@ -4907,6 +4911,8 @@ window.bp = window.bp || {};
 				self.showDocument();
 				if (activity_id != self.current_document.activity_id) {
 					self.getDocumentsActivity();
+				} else {
+					self.getDocumentsDescription();
 				}
 			} else {
 				self.nextDocumentLink.hide();
@@ -4924,6 +4930,8 @@ window.bp = window.bp || {};
 				self.showDocument();
 				if (activity_id != self.current_document.activity_id) {
 					self.getDocumentsActivity();
+				} else {
+					self.getDocumentsDescription();
 				}
 			} else {
 				self.previousDocumentLink.hide();
