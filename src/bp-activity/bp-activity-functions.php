@@ -2104,6 +2104,8 @@ function bp_activity_get_specific( $args = '' ) {
 		'update_meta_cache' => $r['update_meta_cache'],
 	);
 
+
+
 	/**
 	 * Filters the requested specific activity item.
 	 *

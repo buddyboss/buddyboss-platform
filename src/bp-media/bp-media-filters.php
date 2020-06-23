@@ -639,15 +639,18 @@ function bp_media_attach_media_to_message( &$message ) {
 		if ( bp_is_active( 'activity' ) && !empty( $media_ids ) ) {
 			foreach ( $media_ids as $media_id ) {
 
+				$thread_id = ( isset( $_POST['thread_id'] ) ? $_POST['thread_id'] : 0 );
 				$activity_id = bp_activity_add( array(
-								'hide_sitewide' => true,
-								'action'        => sprintf( __( '%s attached a media', 'buddyboss' ), bp_core_get_userlink( bp_loggedin_user_id() ) ),
-								'component'     => buddypress()->messages->id,
-								'type'          => 'message_media_update',
-								'privacy'       => 'media',
-								'content'       => ' ',
-						) );
+					'hide_sitewide' => true,
+					'action'        => sprintf( __( '%s attached a media', 'buddyboss' ), bp_core_get_userlink( bp_loggedin_user_id() ) ),
+					'component'     => buddypress()->messages->id,
+					'type'          => 'message_media_update',
+					'privacy'       => 'message',
+					'content'       => ' ',
+					'item_id'    	=> $thread_id
+				) );
 
+				bp_activity_update_meta( $activity_id, 'thread_id', $thread_id );
 				bp_activity_update_meta( $activity_id, 'bp_media_ids', $media_id );
 				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
 

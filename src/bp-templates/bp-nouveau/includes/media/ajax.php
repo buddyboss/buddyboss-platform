@@ -643,6 +643,11 @@ function bp_nouveau_ajax_media_get_activity() {
 		);
 	}
 
+	$check_message_activity = bp_activity_get_meta( $media_activity, 'thread_id', true );
+	if ( $check_message_activity ) {
+		$args['privacy'] = 'message';
+	}
+
 	ob_start();
 	if ( bp_has_activities( $args ) ) {
 		while ( bp_activities() ) {

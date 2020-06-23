@@ -349,10 +349,11 @@ function bp_has_activities( $args = '' ) {
 		$r['spam'] = 'all';
 	}
 
+
+
 	/*
 	 * Query
 	 */
-
 	$activities_template = new BP_Activity_Template( $r );
 
 	/**

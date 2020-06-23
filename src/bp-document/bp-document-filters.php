@@ -639,17 +639,20 @@ function bp_document_attach_document_to_message( &$message ) {
 
 			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
 
+				$thread_id = ( isset( $_POST['thread_id'] ) ? $_POST['thread_id'] : 0 );
 				$activity_id = bp_activity_add(
 					array(
 						'hide_sitewide' => true,
 						'action'        => sprintf( __( '%s attached a document', 'buddyboss' ), bp_core_get_userlink( bp_loggedin_user_id() ) ),
 						'component'     => buddypress()->messages->id,
 						'type'          => 'message_document_update',
-						'privacy'       => 'document',
+						'privacy'       => 'message',
 						'content'       => ' ',
+						'item_id'    	=> $thread_id
 					)
 				);
 
+				bp_activity_update_meta( $activity_id, 'thread_id', $thread_id );
 				bp_activity_update_meta( $activity_id, 'bp_document_ids', $document_id );
 				bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
 				update_post_meta( $attachment_id, 'bp_document_activity_id', $activity_id );

@@ -312,6 +312,12 @@ function bp_nouveau_ajax_document_get_activity() {
 		}
 	}
 
+	$check_message_activity = bp_activity_get_meta( $post_id, 'thread_id', true );
+	if ( $check_message_activity ) {
+		$args['privacy'] = 'message';
+		$args['scope'] 	 = 'message';
+	}
+
 	ob_start();
 	if ( bp_has_activities( $args ) ) {
 		while ( bp_activities() ) {
