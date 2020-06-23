@@ -130,7 +130,7 @@ foreach ( $F->fields as $f ) {
 			$km          = __( 'km', 'buddyboss' );
 			$miles       = __( 'miles', 'buddyboss' );
 			$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-			$icon_url    = BP_PLATFORM_API . 'bp-core/profile-search/templates/members/locator.png';
+			$icon_url    = buddypress()->plugin_url . 'bp-core/profile-search/templates/members/locator.png';
 			$icon_title  = __( 'get current location', 'buddyboss' );
 			?>
 			<input type="number" min="1" style="width: 5em;" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>">
