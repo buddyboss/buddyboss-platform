@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss - Groups Media
+ * BuddyBoss - Groups Document
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.4.0
  */
 ?>
 
@@ -18,7 +18,7 @@
 
 		switch ( bp_current_action() ) :
 
-			// Home/Media
+			// Home/Documents
 			case 'documents':
 				?>
                 <div class="bp-document-listing">

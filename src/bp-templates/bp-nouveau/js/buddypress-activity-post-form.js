@@ -943,26 +943,26 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// The content of the activity.
-	bp.Views.WhatsNew = bp.View.extend(
-		{
-			tagName   : 'div',
-			className : 'bp-suggestions',
-			id        : 'whats-new',
-			events: {
-				'paste': 'handlePaste',
-				'keyup': 'handleKeyUp'
-			},
-			attributes: {
-				name         : 'whats-new',
-				cols         : '50',
-				rows         : '4',
-				placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
-				'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
-				contenteditable: true
-			},
-			loadURLAjax : null,
-			loadedURLs : [],
+	// The content of the activity
+	bp.Views.WhatsNew = bp.View.extend( {
+		tagName   : 'div',
+		className : 'bp-suggestions',
+		id        : 'whats-new',
+		events: {
+			'paste': 'handlePaste',
+			'keyup': 'handleKeyUp'
+		},
+		attributes: {
+			name         : 'whats-new',
+			cols         : '50',
+			rows         : '4',
+			placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
+			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
+			contenteditable: true,
+			'data-suggestions-group-id': ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ? BP_Nouveau.activity.params.item_id : false,
+		},
+		loadURLAjax : null,
+		loadedURLs : [],
 
 			initialize: function() {
 				this.on( 'ready', this.adjustContent, this );

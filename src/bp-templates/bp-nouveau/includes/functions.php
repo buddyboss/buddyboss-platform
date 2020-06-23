@@ -633,7 +633,9 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  *
  */
 function bp_nouveau_sanitize_nav_order( $option = '' ) {
-	$option = explode( ',', $option );
+	if ( ! is_array( $option ) ) {
+		$option = explode( ',', $option );
+	}
 
 	return array_map( 'sanitize_key', $option );
 }
