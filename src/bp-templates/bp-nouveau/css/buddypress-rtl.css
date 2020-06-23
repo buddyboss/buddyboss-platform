@@ -2609,7 +2609,6 @@ span.dashicons.dashicons-admin-file:before {
 
 #buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list {
   position: relative;
-  height: 100%;
   display: inline-block;
 }
 
@@ -2635,7 +2634,6 @@ span.dashicons.dashicons-admin-file:before {
 
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list {
   position: relative;
-  height: 100%;
   display: inline-block;
 }
 
