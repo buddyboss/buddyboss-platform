@@ -959,7 +959,6 @@ function bp_nouveau_ajax_media_get_media_description() {
 						?>
 						<a class="download-media"
 						   href="<?php echo esc_url( $download_url ); ?>">
-							<span class="bb-icon-download"></span>
 							<?php _e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php

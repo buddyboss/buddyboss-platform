@@ -443,7 +443,6 @@ function bp_nouveau_ajax_document_get_document_description() {
 						?>
 						<a class="download-document"
 							href="<?php echo esc_url( $download_url ); ?>">
-							<span class="bb-icon-download"></span>
 							<?php _e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
