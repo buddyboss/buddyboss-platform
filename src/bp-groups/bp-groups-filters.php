@@ -632,12 +632,14 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 		$folder_id = (int) $filter['folder_id'];
 	}
 
-	// Fetch public groups.
-	$public_groups = groups_get_groups( array(
-		'fields'   => 'ids',
-		'status'   => 'public',
-		'per_page' => - 1,
-	) );
+	if ( 'groups' !== $filter['scope'] ) {
+		// Fetch public groups.
+		$public_groups = groups_get_groups( array(
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+		) );
+	}
 
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
@@ -663,7 +665,7 @@ function bp_groups_filter_document_scope( $retval = array(), $filter = array() )
 	}
 
 	if ( empty( $group_ids ) ) {
-		$group_ids = array( 'groups' => 0 );
+		$group_ids = array( 'groups' => array() );
 	}
 
 	if ( bp_is_group() ) {
@@ -749,12 +751,14 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 		$folder_id = (int) $filter['folder_id'];
 	}
 
-	// Fetch public groups.
-	$public_groups = groups_get_groups( array(
-		'fields'   => 'ids',
-		'status'   => 'public',
-		'per_page' => - 1,
-	) );
+	if ( 'groups' !== $filter['scope'] ) {
+		// Fetch public groups.
+		$public_groups = groups_get_groups( array(
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+		) );
+	}
 
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
@@ -780,7 +784,7 @@ function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
 	}
 
 	if ( empty( $group_ids ) ) {
-		$group_ids = array( 'groups' => 0 );
+		$group_ids = array( 'groups' => array() );
 	}
 
 	if ( bp_is_group() ) {
