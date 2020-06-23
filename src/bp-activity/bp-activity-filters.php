@@ -1641,7 +1641,7 @@ function bp_activity_media_add( $media ) {
 				if ( ! empty( $comment->item_id ) ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
-						$media->group_id = $comment->item_id;
+						$media->group_id = $comment_activity->item_id;
 						$media->privacy = 'grouponly';
 					}
 				}
@@ -1843,7 +1843,7 @@ function bp_activity_document_add( $document ) {
 				if ( ! empty( $comment->item_id ) ) {
 					$comment_activity = new BP_Activity_Activity( $comment->item_id );
 					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
-						$document->group_id = $comment->item_id;
+						$document->group_id = $comment_activity->item_id;
 						$document->privacy = 'grouponly';
 					}
 				}
