@@ -2680,15 +2680,15 @@ window.bp = window.bp || {};
 			var pattern				   		= '';
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
-				pattern = /^[-\w^&@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
+				pattern = /["'<>|~;:^*`?\/\\ ]+/g; // regex to find not supported characters - \ * | / > < ? ` ; :
 			} else if ( $( event.currentTarget ).closest( '.ac-folder-list' ).length ) {
-				pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
+				pattern = /["'<>|~;:^*`?\/\\]+/g; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
 			}
 
 			var matches     = pattern.exec( document_name_val );
 			var matchStatus = Boolean( matches );
 
-			if ( matchStatus ) { // If any not supported character found add error class.
+			if ( !matchStatus ) { // If any not supported character found add error class.
 				document_edit.removeClass( 'error' );
 			} else {
 				document_edit.addClass( 'error' );
@@ -2703,7 +2703,7 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).hasClass( 'name_edit_save' ) || event.keyCode == 13 ) {
 
-				if ( ! matchStatus ) {
+				if ( matchStatus ) {
 					return; // prevent user to add not supported characters.
 				}
 
