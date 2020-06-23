@@ -10,7 +10,7 @@ window.bp = window.bp || {};
 	bp.mentions.users = window.bp.mentions.users || [];
 
 	if ( typeof window.BP_Suggestions === 'object' ) {
-		bp.mentions.users = window.BP_Suggestions.friends || bp.mentions.users;
+		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
 	}
 
 	/**

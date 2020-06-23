@@ -1442,10 +1442,11 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
 	$results = bp_core_get_suggestions(
-		[
-			'term' => sanitize_text_field( $_GET['term'] ),
-			'type' => 'members',
-		]
+		array(
+			'term'         => sanitize_text_field( $_GET['term'] ),
+			'type'         => 'members',
+			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message()
+		)
 	);
 
 	$results = apply_filters( 'bp_members_suggestions_results', $results );

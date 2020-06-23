@@ -179,11 +179,12 @@ function bp_nouveau_ajax_joinleave_group() {
 				$group->is_member = '1';
 
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
-					'type'     => 'success',
-					'is_user'  => bp_is_user(),
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => bp_is_group(),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
+					'type'      => 'success',
+					'is_user'   => bp_is_user(),
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => bp_is_group(),
+					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
 			break;
@@ -199,6 +200,7 @@ function bp_nouveau_ajax_joinleave_group() {
 					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
 					'type'     => 'success',
 					'is_user'  => bp_is_user(),
+					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
 			break;
