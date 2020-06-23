@@ -1633,15 +1633,31 @@ function bp_activity_media_add( $media ) {
 			$parent_activity_id = (int) $_POST['bp_activity_id'];
 		}
 
-		if ( $bp_media_upload_count > 1 || true === $bp_new_activity_comment ) {
+		if ( $bp_media_upload_count > 1 || ! empty( $bp_new_activity_comment ) ) {
+
+			if ( bp_is_active( 'groups' ) && ! empty( $bp_new_activity_comment ) && empty( $media->group_id ) ) {
+				$comment = new BP_Activity_Activity( $bp_new_activity_comment );
+
+				if ( ! empty( $comment->item_id ) ) {
+					$comment_activity = new BP_Activity_Activity( $comment->item_id );
+					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
+						$media->group_id = $comment_activity->item_id;
+						$media->privacy = 'grouponly';
+					}
+				}
+			}
 
 			$args = array(
 				'hide_sitewide'     => true,
 				'privacy'           => 'media'
 			);
+
 			if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['group_id'] = $media->group_id;
-				$activity_id = groups_post_update( $args );
+				$args['item_id'] = $media->group_id;
+				$args['type']    = 'activity_update';
+				$current_group   = groups_get_group( $media->group_id );
+				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+				$activity_id     = groups_record_activity( $args );
 			} else {
 				$activity_id = bp_activity_post_update( $args );
 			}
@@ -1819,7 +1835,19 @@ function bp_activity_document_add( $document ) {
 			$parent_activity_id = (int) $_POST['bp_activity_id'];
 		}
 
-		if ( $bp_document_upload_count > 1 || true === $bp_new_activity_comment ) {
+		if ( $bp_document_upload_count > 1 || ! empty( $bp_new_activity_comment ) ) {
+
+			if ( bp_is_active( 'groups' ) && ! empty( $bp_new_activity_comment ) && empty( $document->group_id ) ) {
+				$comment = new BP_Activity_Activity( $bp_new_activity_comment );
+
+				if ( ! empty( $comment->item_id ) ) {
+					$comment_activity = new BP_Activity_Activity( $comment->item_id );
+					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
+						$document->group_id = $comment_activity->item_id;
+						$document->privacy = 'grouponly';
+					}
+				}
+			}
 
 			$args = array(
 				'hide_sitewide' => true,
@@ -1827,8 +1855,11 @@ function bp_activity_document_add( $document ) {
 			);
 
 			if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
-				$args['group_id'] = $document->group_id;
-				$activity_id = groups_post_update( $args );
+				$args['item_id'] = $document->group_id;
+				$args['type']    = 'activity_update';
+				$current_group   = groups_get_group( $document->group_id );
+				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+				$activity_id     = groups_record_activity( $args );
 			} else {
 				$activity_id = bp_activity_post_update( $args );
 			}
