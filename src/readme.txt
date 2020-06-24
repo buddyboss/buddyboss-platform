@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.4.4 =
 * Profiles - Improved the user experience when adding a new Repeater field on frontend
+* Profiles - Fixed certain profile fields types preventing Repeater fields from saving
 * Forums - Fixed disabling 'Subscriptions' should remove Subscriptions from member profile
 * Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
 * Groups - When viewing group invitations page, fixed invitations showing incorrect dates
