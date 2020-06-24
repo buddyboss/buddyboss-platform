@@ -205,3 +205,27 @@ function bp_nouveau_get_media_directory_nav_items() {
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
 }
+
+function bp_media_download_file( $attachment_id, $type = 'media' ) {
+
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
+
+	if ( 'media' === $type ) {
+
+		$the_file = wp_get_attachment_url( $attachment_id );
+
+		if ( ! $the_file ) {
+			return;
+		}
+
+		// clean the file url.
+		$file_url = stripslashes( trim( $the_file ) );
+
+		// get filename.
+		$file_name = basename( $the_file );
+
+		bp_media_download_file_force( $the_file, $file_name );
+	}
+
+}

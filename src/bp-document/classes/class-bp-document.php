@@ -1915,84 +1915,17 @@ class BP_Document {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_document_id_before_save', array( $this->id, &$this ) );
-		$this->blog_id       = apply_filters_ref_array(
-			'bp_document_blog_id_before_save',
-			array(
-				$this->blog_id,
-				&$this,
-			)
-		);
-		$this->attachment_id = apply_filters_ref_array(
-			'bp_document_attachment_id_before_save',
-			array(
-				$this->attachment_id,
-				&$this,
-			)
-		);
-		$this->user_id       = apply_filters_ref_array(
-			'bp_document_user_id_before_save',
-			array(
-				$this->user_id,
-				&$this,
-			)
-		);
-		$this->title         = apply_filters_ref_array(
-			'bp_document_title_before_save',
-			array(
-				$this->title,
-				&$this,
-			)
-		);
-		$this->folder_id     = apply_filters_ref_array(
-			'bp_document_folder_id_before_save',
-			array(
-				$this->folder_id,
-				&$this,
-			)
-		);
-		$this->activity_id   = apply_filters_ref_array(
-			'bp_document_activity_id_before_save',
-			array(
-				$this->activity_id,
-				&$this,
-			)
-		);
-		$this->group_id      = apply_filters_ref_array(
-			'bp_document_group_id_before_save',
-			array(
-				$this->group_id,
-				&$this,
-			)
-		);
-
-		$this->privacy       = apply_filters_ref_array(
-			'bp_document_privacy_before_save',
-			array(
-				$this->privacy,
-				&$this,
-			)
-		);
-		$this->menu_order    = apply_filters_ref_array(
-			'bp_document_menu_order_before_save',
-			array(
-				$this->menu_order,
-				&$this,
-			)
-		);
-		$this->date_created  = apply_filters_ref_array(
-			'bp_document_date_created_before_save',
-			array(
-				$this->date_created,
-				&$this,
-			)
-		);
-		$this->date_modified = apply_filters_ref_array(
-			'bp_document_date_modified_before_save',
-			array(
-				$this->date_modified,
-				&$this,
-			)
-		);
+		$this->blog_id       = apply_filters_ref_array( 'bp_document_blog_id_before_save', array( $this->blog_id, &$this ) );
+		$this->attachment_id = apply_filters_ref_array( 'bp_document_attachment_id_before_save', array( $this->attachment_id, &$this ) );
+		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this ) );
+		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
+		$this->folder_id     = apply_filters_ref_array( 'bp_document_folder_id_before_save', array( $this->folder_id, &$this ) );
+		$this->activity_id   = apply_filters_ref_array( 'bp_document_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
+		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
+		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->date_modified  = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.

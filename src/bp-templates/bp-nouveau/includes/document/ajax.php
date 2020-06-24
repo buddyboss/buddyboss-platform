@@ -98,6 +98,12 @@ add_action(
 				),
 			),
 			array(
+				'document_get_document_description' => array(
+					'function' => 'bp_nouveau_ajax_document_get_document_description',
+					'nopriv'   => true,
+				),
+			),
+			array(
 				'document_activity_delete' => array(
 					'function' => 'bp_nouveau_ajax_document_activity_delete',
 					'nopriv'   => true,
@@ -323,6 +329,136 @@ function bp_nouveau_ajax_document_get_activity() {
 	wp_send_json_success(
 		array(
 			'activity' => $activity,
+		)
+	);
+}
+
+/**
+ * Get description for the document.
+ *
+ * @since BuddyBoss 1.4.2
+ */
+function bp_nouveau_ajax_document_get_document_description() {
+
+	$document_description = '';
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Nonce check!
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$document_id	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id 	= filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
+
+	if ( empty( $document_id ) || empty( $attachment_id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $attachment_id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$content = get_post_field( 'post_content', $attachment_id );
+
+	$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+	$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+
+	$document     = new BP_Document( $document_id );
+	$user_domain  = bp_core_get_user_domain( $document->user_id );
+	$display_name = bp_core_get_user_displayname( $document->user_id );
+	$time_since   = bp_core_time_since( $document->date_created );
+	$avatar       = bp_core_fetch_avatar( array(
+					'item_id' => $document->user_id,
+					'object'  => 'user',
+					'type'    => 'full',
+			) );
+
+	ob_start();
+
+	if ( $can_view ) {
+
+		?>
+		<li class="activity activity_update activity-item mini ">
+			<div class="bp-activity-head">
+				<div class="activity-avatar item-avatar">
+					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
+				</div>
+
+				<div class="activity-header">
+					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
+				</div>
+			</div>
+		<div class="activity-media-description">
+			<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
+			<?php
+			if ( $can_manage_btn ) {
+				?>
+				<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+				href="#">
+					<span class="bb-icon-edit-thin"></span>
+					<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+					<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+				</a>
+
+				<div class="bp-edit-media-activity-description" style="display: none;">
+					<div class="innerWrap">
+								<textarea id="add-activity-description"
+										title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+										class="textInput"
+										name="caption_text"
+										placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+										role="textbox"><?php echo $content; ?></textarea>
+					</div>
+					<div class="in-profile description-new-submit">
+						<?php ?>
+						<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+						<input type="submit" id="bp-activity-description-new-submit" class="button small"
+							name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+						<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
+							value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+					</div>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+		<?php
+			if ( ! empty( $document_id ) ) {
+				$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+				$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+				if ( $can_download_btn ) {
+					$download_url      = bp_document_download_link( $attachment_id, $document_id );
+					if ( $download_url ) {
+						?>
+						<a class="download-document"
+							href="<?php echo esc_url( $download_url ); ?>">
+							<?php _e( 'Download', 'buddyboss' ); ?>
+						</a>
+						<?php
+					}
+				}
+			}
+		?>
+	</li>
+		<?php
+		$document_description = ob_get_contents();
+		ob_end_clean();
+	}
+
+	wp_send_json_success(
+		array(
+			'description' => $document_description,
 		)
 	);
 }
