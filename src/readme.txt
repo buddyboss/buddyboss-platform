@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.4 =
-*
+* Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
 
 = 1.4.3 =
 * Activity - Fixed some activity posts hidden from logged out users, and new members
