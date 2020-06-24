@@ -61,10 +61,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Improved the user experience when adding a new Repeater field on frontend
 * Forums - Fixed disabling 'Subscriptions' should remove Subscriptions from member profile
 * Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
-* Text Editor - Fixed icons conflict with plugin 'BuddyPress User Blog' in Forum replies
-* Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
+* Groups - When viewing group invitations page, fixed invitations showing incorrect dates
+* Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
 * Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
 * Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
+* Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
+* Translations - Fixed text 'Invited by' for group invites not available for translation
 
 = 1.4.3 =
 * Activity - Fixed some activity posts hidden from logged out users, and new members
