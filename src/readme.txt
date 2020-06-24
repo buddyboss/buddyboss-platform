@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.4 =
+* Profiles - Improved the user experience when adding a new Repeater field on frontend
 * Forums - Fixed disabling "Subscriptions" should remove Subscriptions from member profile
 * Forums - Fixed disabling "Favorites" should remove Favorites from member profile
 * Text Editor - Fixed icons conflict with plugin 'BuddyPress User Blog' in Forum replies
