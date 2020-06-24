@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
 * Text Editor - Fixed icons conflict with plugin 'BuddyPress User Blog' in Forum replies
 * Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
+* Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
 * Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
 
 = 1.4.3 =
