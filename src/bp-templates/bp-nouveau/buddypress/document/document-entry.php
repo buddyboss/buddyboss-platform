@@ -97,6 +97,7 @@ if ( $attachment_id ) {
 		   href="<?php echo esc_url( $link ); ?>"
 		   data-id="<?php bp_document_id(); ?>"
 		   data-attachment-full=""
+		   data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 		   data-privacy="<?php bp_db_document_privacy(); ?>"
 		   data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
 		   data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"

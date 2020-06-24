@@ -1866,7 +1866,7 @@ function bp_activity_document_add( $document ) {
 
 			if ( $activity_id ) {
 
-				// save media activity id in media.
+				// save document activity id in document.
 				$document->activity_id = $activity_id;
 				$document->save();
 
@@ -1939,7 +1939,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		//save media meta for activity.
+		//save document meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
@@ -1949,9 +1949,9 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				// get one of the media's privacy for the activity privacy.
 				$privacy = $document->privacy;
 
-				// get media album id.
-				if ( ! empty( $document->album_id ) ) {
-					$folder_id = $document->album_id;
+				// get document folder id.
+				if ( ! empty( $document->folder_id ) ) {
+					$folder_id = $document->folder_id;
 				}
 
 				if ( 1 === $bp_document_upload_count ) {
