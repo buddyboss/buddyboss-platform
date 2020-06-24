@@ -2214,7 +2214,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	$new_filename_unsanitized = $new_filename;
 
 	// sanitizing file name (using sanitize_title because sanitize_file_name doesn't remove accents).
-	$new_filename = sanitize_file_name( remove_accents( $new_filename ) );
+	$new_filename = sanitize_file_name( $new_filename );
 
 	$file_abs_path     = get_attached_file( $post->ID );
 	$file_abs_dir      = dirname( $file_abs_path );
@@ -2243,7 +2243,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	if ( ! $new_filename ) {
 		return __( 'The document name is empty!', 'buddyboss' );
 	}
-	if ( $new_filename != sanitize_file_name( remove_accents( $new_filename ) ) ) {
+	if ( $new_filename != sanitize_file_name( $new_filename ) ) {
 		return __( 'Bad characters or invalid document name!', 'buddyboss' );
 	}
 	if ( file_exists( $new_file_abs_path ) ) {
@@ -2381,6 +2381,8 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 			return false;
 		}
 	}
+
+	$title = wp_strip_all_tags( $title );
 
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 

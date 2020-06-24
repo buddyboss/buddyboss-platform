@@ -732,7 +732,7 @@ function bp_nouveau_ajax_document_folder_save() {
 	// save media.
 	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = $_POST['title'];
+	$title     = wp_strip_all_tags( $_POST['title'] );
 	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
 	$parent    = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
 	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
@@ -838,7 +838,7 @@ function bp_nouveau_ajax_document_child_folder_save() {
 	// save folder.
 	$id        = 0;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = $_POST['title'];
+	$title     = wp_strip_all_tags( $_POST['title'] );
 	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
 	$privacy   = '';
 
