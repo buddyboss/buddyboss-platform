@@ -54,6 +54,8 @@ add_filter( 'bp_get_folder_title', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_folder_title', 'stripslashes' );
 add_filter( 'bp_get_folder_title', 'convert_chars' );
 
+add_filter( 'bp_repair_list', 'bp_document_add_admin_repair_items' );
+
 // Change label for global search.
 add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
 
@@ -316,7 +318,7 @@ function bp_document_groups_activity_update_document_meta( $content, $user_id, $
  */
 function bp_document_activity_comments_update_document_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
-	$bp_new_activity_comment = true;
+	$bp_new_activity_comment = $comment_id;
 	bp_document_update_activity_document_meta( false, false, $comment_id );
 }
 
@@ -1302,3 +1304,85 @@ function bp_document_media_library_list_view_document_attachment_image( $attr, $
 	return $attr;
 }
 add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_list_view_document_attachment_image', 10, 3 );
+
+/**
+ * Add document repair list item.
+ *
+ * @param $repair_list
+ *
+ * @since BuddyBoss 1.4.4
+ * @return array Repair list items.
+ */
+function bp_document_add_admin_repair_items( $repair_list ) {
+	if ( bp_is_active( 'activity' ) ) {
+		$repair_list[] = array(
+				'bp-repair-document',
+				__( 'Repair document on the site.', 'buddyboss' ),
+				'bp_document_admin_repair_document',
+		);
+	}
+	return $repair_list;
+}
+
+/**
+ * Repair BuddyBoss document.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_document_admin_repair_document() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+
+	$document_query = "SELECT id, activity_id FROM {$bp->document->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
+	$documents 	= $wpdb->get_results( $document_query );
+
+	if ( ! empty( $documents ) ) {
+		foreach ( $documents as $document ) {
+			if ( ! empty( $document->id ) && ! empty( $document->activity_id ) ) {
+				$activity = new BP_Activity_Activity( $document->activity_id );
+				if ( ! empty( $activity->id ) ) {
+					if ( 'activity_comment' === $activity->type ) {
+						$activity = new BP_Activity_Activity( $activity->item_id );
+					}
+					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
+						$wpdb->query( $update_query );
+					}
+					if ( 'document' === $activity->privacy ) {
+						if ( ! empty( $activity->secondary_item_id ) ) {
+							$document_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+							if ( ! empty( $document_activity->id ) ) {
+								if ( 'activity_comment' === $document_activity->type ) {
+									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
+								}
+								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
+									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
+									$wpdb->query( $update_query );
+									$activity->item_id   = $document_activity->item_id;
+									$activity->component = buddypress()->groups->id;
+								}
+							}
+						}
+
+						$activity->hide_sitewide = true;
+						$activity->save();
+					}
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		return array(
+				'status'  => 1,
+				'message' => __( 'document update complete!', 'buddyboss' ),
+		);
+	}
+}

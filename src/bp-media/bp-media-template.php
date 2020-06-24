@@ -203,10 +203,6 @@ function bp_has_media( $args = '' ) {
 		'has_media'
 	);
 
-	/*
-	 * Smart Overrides.
-	 */
-
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
 		$r['search_terms'] = $_REQUEST['s'];

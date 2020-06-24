@@ -425,12 +425,15 @@ function bp_nouveau_ajax_messages_send_reply() {
 				bp_the_media();
 
 				$reply['media'][] = array(
-					'id'        => bp_get_media_id(),
-					'title'     => bp_get_media_title(),
-					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-					'full'      => bp_get_media_attachment_image(),
-					'meta'      => $media_template->media->attachment_data->meta,
-					'privacy'   => bp_get_media_privacy(),
+					'id'            => bp_get_media_id(),
+					'title'         => bp_get_media_title(),
+					'message_id'	=> bp_get_the_thread_message_id(),
+					'thread_id'		=> bp_get_the_thread_id(),
+					'attachment_id' => bp_get_media_attachment_id(),
+					'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
+					'full'          => bp_get_media_attachment_image(),
+					'meta'          => $media_template->media->attachment_data->meta,
+					'privacy'   	=> bp_get_media_privacy(),
 				);
 			}
 		}
@@ -534,6 +537,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$reply['document'][] = array(
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
+						'attachment_id'         => bp_get_document_attachment_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,
@@ -1442,10 +1446,11 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
 	$results = bp_core_get_suggestions(
-		[
-			'term' => sanitize_text_field( $_GET['term'] ),
-			'type' => 'members',
-		]
+		array(
+			'term'         => sanitize_text_field( $_GET['term'] ),
+			'type'         => 'members',
+			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message()
+		)
 	);
 
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
@@ -1961,11 +1966,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					bp_the_media();
 
 					$thread->messages[ $i ]['media'][] = array(
-						'id'        => bp_get_media_id(),
-						'title'     => bp_get_media_title(),
-						'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-						'full'      => bp_get_media_attachment_image(),
-						'meta'      => $media_template->media->attachment_data->meta,
+						'id'            => bp_get_media_id(),
+						'message_id'	=> bp_get_the_thread_message_id(),
+						'thread_id'		=> bp_get_the_thread_id(),
+						'title'         => bp_get_media_title(),
+						'attachment_id' => bp_get_media_attachment_id(),
+						'thumbnail'     => bp_get_media_attachment_image_thumbnail(),
+						'full'          => bp_get_media_attachment_image(),
+						'meta'          => $media_template->media->attachment_data->meta,
 						'privacy'   => bp_get_media_privacy(),
 					);
 				}
@@ -2074,6 +2082,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$thread->messages[ $i ]['document'][] = array(
 						'id'                    => bp_get_document_id(),
 						'title'                 => bp_get_document_title(),
+						'attachment_id'         => bp_get_document_attachment_id(),
 						'url'                   => $download_url,
 						'extension'             => $extension,
 						'svg_icon'              => $svg_icon,

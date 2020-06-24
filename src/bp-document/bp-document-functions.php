@@ -2888,7 +2888,9 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $has_access ) {
-				$can_manage   = true;
+				if ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_manage   = true;
+				}
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2910,7 +2912,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $has_access > 0 ) {
-				$can_manage   = true;
+				$can_manage   = false;
 				$can_view     = true;
 				$can_download = true;
 			}
