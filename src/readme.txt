@@ -66,6 +66,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Improved the experience for accepting an invite into a private group
 * Media - Added media popups for all Documents and Photos posted into Forums and Messages
 * Media - Added 'Download' link to media popups for all Document types and Photos
+* Activity - Fixed comments not displaying in activity feed for blog posts and custom post types
 * Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
 * Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
 * Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
