@@ -3874,7 +3874,14 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 				$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 			} else {
 				$split_value    = explode( '_', $gender );
-				$gender_pronoun = sprintf( __( " %s ", 'buddyboss' ), $split_value[0] );
+				if ( 'his' === $split_value[0] ) {
+					$gender_pronoun = esc_html__( 'his', 'buddyboss' );
+				} elseif ( 'her' === $split_value[0] ) {
+					$gender_pronoun = esc_html__( 'her', 'buddyboss' );
+				} else {
+					$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+				}
+
 			}
 		} else {
 			$gender_pronoun = esc_html__( 'their', 'buddyboss' );
