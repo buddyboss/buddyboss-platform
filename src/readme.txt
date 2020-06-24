@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed disabling 'Subscriptions' should remove Subscriptions from member profile
 * Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
 * Groups - When viewing group invitations page, fixed invitations showing incorrect dates
+* Groups - Improved the experience for accepting an invite into a private group
 * Media - Added media popups for all Documents and Photos posted into Forums and Messages
 * Media - Added 'Download' link to media popups for all Document types and Photos
 * Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
