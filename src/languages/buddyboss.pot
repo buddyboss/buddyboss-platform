@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.4.3\n"
+"Project-Id-Version: BuddyBoss Platform 1.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-24 03:11:55+00:00\n"
+"POT-Creation-Date: 2020-06-24 21:16:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -678,7 +678,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:533
 #: bp-core/classes/class-bp-admin.php:534 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:903
+#: bp-media/bp-media-filters.php:970
 msgid "Tools"
 msgstr ""
 
@@ -877,9 +877,9 @@ msgid "A member replies to an update or comment you've posted"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:459
-#: bp-document/bp-document-template.php:373
-#: bp-document/bp-document-template.php:1358 bp-media/bp-media-template.php:323
-#: bp-media/bp-media-template.php:1216
+#: bp-document/bp-document-template.php:322
+#: bp-document/bp-document-template.php:1307 bp-media/bp-media-template.php:309
+#: bp-media/bp-media-template.php:1202
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
@@ -1233,7 +1233,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:278
 #: bp-forums/classes/class-bp-forums-component.php:329
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:954 bp-media/bp-media-settings.php:208
+#: bp-media/bp-media-filters.php:1021 bp-media/bp-media-settings.php:208
 #: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
 #: bp-media/bp-media-settings.php:229 bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
@@ -2675,7 +2675,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2358
-#: bp-media/bp-media-filters.php:995
+#: bp-media/bp-media-filters.php:1062
 msgid "Run Migration"
 msgstr ""
 
@@ -3134,8 +3134,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
 #: bp-document/bp-document-filters.php:67
-#: bp-document/bp-document-functions.php:1973
-#: bp-document/bp-document-functions.php:1976
+#: bp-document/bp-document-functions.php:1922
+#: bp-document/bp-document-functions.php:1925
 #: bp-document/classes/class-bp-document-component.php:69
 #: bp-document/classes/class-bp-document-component.php:260
 #: bp-document/classes/class-bp-document-component.php:262
@@ -3207,7 +3207,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-friends.php:21
 #: bp-core/gdpr/class-bp-friendship-export.php:58
 #: bp-document/classes/class-bp-document.php:720
-#: bp-document/classes/class-bp-document.php:1654
+#: bp-document/classes/class-bp-document.php:1380
 #: bp-friends/bp-friends-activity.php:110
 #: bp-friends/bp-friends-activity.php:119
 #: bp-friends/bp-friends-notifications.php:261
@@ -3266,7 +3266,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
-#: bp-media/bp-media-filters.php:960
+#: bp-media/bp-media-filters.php:1027
 #: bp-templates/bp-nouveau/includes/groups/classes.php:300
 msgid "Discussions"
 msgstr ""
@@ -3283,7 +3283,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:966
+#: bp-media/bp-media-filters.php:1033
 msgid "Replies"
 msgstr ""
 
@@ -3421,7 +3421,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1522 bp-forums/admin/tools.php:1524
 #: bp-forums/admin/tools.php:1598 bp-forums/admin/tools.php:1600
 #: bp-forums/admin/tools.php:1672 bp-forums/admin/tools.php:1674
-#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1356
+#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1423
 msgid "Complete!"
 msgstr ""
 
@@ -3504,15 +3504,15 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:1099 bp-forums/admin/tools.php:1892
 #: bp-forums/functions.php:866
 #: bp-templates/bp-nouveau/includes/document/ajax.php:195
-#: bp-templates/bp-nouveau/includes/document/ajax.php:623
-#: bp-templates/bp-nouveau/includes/document/ajax.php:700
-#: bp-templates/bp-nouveau/includes/document/ajax.php:806
-#: bp-templates/bp-nouveau/includes/document/ajax.php:909
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1050
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1138
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1221
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1347
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1566
+#: bp-templates/bp-nouveau/includes/document/ajax.php:514
+#: bp-templates/bp-nouveau/includes/document/ajax.php:591
+#: bp-templates/bp-nouveau/includes/document/ajax.php:697
+#: bp-templates/bp-nouveau/includes/document/ajax.php:800
+#: bp-templates/bp-nouveau/includes/document/ajax.php:941
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1029
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1112
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1238
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1457
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:106
@@ -3753,7 +3753,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:948
+#: bp-media/bp-media-filters.php:1015
 msgid "Media"
 msgstr ""
 
@@ -5713,9 +5713,9 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:30
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
-#: bp-templates/bp-nouveau/includes/document/ajax.php:971
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1270
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1417
+#: bp-templates/bp-nouveau/includes/document/ajax.php:862
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1161
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1308
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
 msgstr ""
@@ -6433,31 +6433,31 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-document/bp-document-functions.php:1449
+#: bp-document/bp-document-functions.php:1398
 #: bp-media/bp-media-functions.php:117
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-document/bp-document-functions.php:1450
+#: bp-document/bp-document-functions.php:1399
 #: bp-media/bp-media-functions.php:118
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-document/bp-document-functions.php:1452
+#: bp-document/bp-document-functions.php:1401
 #: bp-media/bp-media-functions.php:120
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-document/bp-document-functions.php:1453
+#: bp-document/bp-document-functions.php:1402
 #: bp-media/bp-media-functions.php:121
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-document/bp-document-functions.php:1454
+#: bp-document/bp-document-functions.php:1403
 #: bp-media/bp-media-functions.php:122
 msgid "File upload stopped by extension."
 msgstr ""
@@ -8285,102 +8285,102 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1009 bp-media/bp-media-filters.php:1380
+#: bp-document/bp-document-filters.php:1010 bp-media/bp-media-filters.php:1515
 msgid "File not found"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1026
+#: bp-document/bp-document-filters.php:1027
 msgid "Go to document"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1320
+#: bp-document/bp-document-filters.php:1321
 msgid "Repair document on the site."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1375
+#: bp-document/bp-document-filters.php:1376
 msgid "%s document updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1385
+#: bp-document/bp-document-filters.php:1386
 msgid "document update complete!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1392
+#: bp-document/bp-document-functions.php:1341
 msgid "Please login in order to upload file document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1447
-#: bp-document/bp-document-functions.php:1448
+#: bp-document/bp-document-functions.php:1396
+#: bp-document/bp-document-functions.php:1397
 #: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1473
+#: bp-document/bp-document-functions.php:1422
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1808
+#: bp-document/bp-document-functions.php:1757
 msgid "Default"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1812
+#: bp-document/bp-document-functions.php:1761
 msgid "Archive"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1816
+#: bp-document/bp-document-functions.php:1765
 msgid "Audio"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1820
+#: bp-document/bp-document-functions.php:1769
 msgid "Code"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1824
+#: bp-document/bp-document-functions.php:1773
 msgid "Design"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1828
+#: bp-document/bp-document-functions.php:1777
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:26
 msgid "Image"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1832
+#: bp-document/bp-document-functions.php:1781
 msgid "Presentation"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1836
+#: bp-document/bp-document-functions.php:1785
 msgid "Spreadsheet"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1840
+#: bp-document/bp-document-functions.php:1789
 msgid "Text"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1844
+#: bp-document/bp-document-functions.php:1793
 msgid "Video"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1980
+#: bp-document/bp-document-functions.php:1929
 msgid "..."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2244
+#: bp-document/bp-document-functions.php:2193
 msgid "The document name is empty!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2247
+#: bp-document/bp-document-functions.php:2196
 msgid "Bad characters or invalid document name!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2250
+#: bp-document/bp-document-functions.php:2199
 msgid "A file with that name already exists in the containing folder!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2253
+#: bp-document/bp-document-functions.php:2202
 msgid "The document containing directory is not writable!"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:2283
+#: bp-document/bp-document-functions.php:2232
 msgid "File renaming error!"
 msgstr ""
 
@@ -8401,7 +8401,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document-folder.php:517
 #: bp-document/classes/class-bp-document-privacy.php:58
 #: bp-document/classes/class-bp-document.php:710
-#: bp-document/classes/class-bp-document.php:1644
+#: bp-document/classes/class-bp-document.php:1370
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:154
 #: bp-media/classes/class-bp-media-privacy.php:59
 msgid "Group Members"
@@ -13046,9 +13046,9 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-forum.php:95
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:55
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
-#: bp-templates/bp-nouveau/includes/document/ajax.php:985
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1284
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1431
+#: bp-templates/bp-nouveau/includes/document/ajax.php:876
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1175
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1322
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1653
 msgid "Visibility"
 msgstr ""
@@ -15324,7 +15324,7 @@ msgid "Pending Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:788
-#: bp-media/bp-media-filters.php:942
+#: bp-media/bp-media-filters.php:1009
 #: bp-media/classes/class-bp-media-component.php:298
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
@@ -17495,43 +17495,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:845 bp-media/bp-media-filters.php:861
-#: bp-media/bp-media-filters.php:862 bp-media/bp-media-filters.php:915
-#: bp-media/bp-media-filters.php:1042
+#: bp-media/bp-media-filters.php:912 bp-media/bp-media-filters.php:928
+#: bp-media/bp-media-filters.php:929 bp-media/bp-media-filters.php:982
+#: bp-media/bp-media-filters.php:1109
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:920
+#: bp-media/bp-media-filters.php:987
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:937
+#: bp-media/bp-media-filters.php:1004
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:939
+#: bp-media/bp-media-filters.php:1006
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:944 bp-media/bp-media-filters.php:950
-#: bp-media/bp-media-filters.php:956 bp-media/bp-media-filters.php:962
-#: bp-media/bp-media-filters.php:968
+#: bp-media/bp-media-filters.php:1011 bp-media/bp-media-filters.php:1017
+#: bp-media/bp-media-filters.php:1023 bp-media/bp-media-filters.php:1029
+#: bp-media/bp-media-filters.php:1035
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:978 bp-media/bp-media-filters.php:989
+#: bp-media/bp-media-filters.php:1045 bp-media/bp-media-filters.php:1056
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:985 bp-media/bp-media-functions.php:2158
+#: bp-media/bp-media-filters.php:1052 bp-media/bp-media-functions.php:2150
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:994
+#: bp-media/bp-media-filters.php:1061
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -17539,7 +17539,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1040
+#: bp-media/bp-media-filters.php:1107
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -17548,31 +17548,31 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1247
+#: bp-media/bp-media-filters.php:1314
 msgid "Repair media on the site."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1252
+#: bp-media/bp-media-filters.php:1319
 msgid "Repair forum media privacy"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1306
+#: bp-media/bp-media-filters.php:1373
 msgid "%s media updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1316
+#: bp-media/bp-media-filters.php:1383
 msgid "Media update complete!"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1344
+#: bp-media/bp-media-filters.php:1411
 msgid "%s Forums media privacy updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1352
+#: bp-media/bp-media-filters.php:1419
 msgid "Forums media privacy updated %s"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1397
+#: bp-media/bp-media-filters.php:1532
 msgid "Go to media"
 msgstr ""
 
@@ -17584,7 +17584,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2159
+#: bp-media/bp-media-functions.php:2151
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -20588,9 +20588,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:59
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1009
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1308
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1455
+#: bp-templates/bp-nouveau/includes/document/ajax.php:900
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1199
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1346
 #: bp-templates/bp-nouveau/includes/media/ajax.php:154
 msgid "Load More"
 msgstr ""
@@ -21062,9 +21062,9 @@ msgid "Edit Post Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:36
-#: bp-templates/bp-nouveau/includes/document/ajax.php:978
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1277
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1424
+#: bp-templates/bp-nouveau/includes/document/ajax.php:869
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1168
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1315
 msgid "Modified"
 msgstr ""
 
@@ -22104,95 +22104,95 @@ msgstr ""
 msgid "Please provide attachment id to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:648
+#: bp-templates/bp-nouveau/includes/document/ajax.php:539
 msgid "Please upload a document before saving."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:657
+#: bp-templates/bp-nouveau/includes/document/ajax.php:548
 msgid "Please login to upload a document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:722
-#: bp-templates/bp-nouveau/includes/document/ajax.php:828
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1163
+#: bp-templates/bp-nouveau/includes/document/ajax.php:613
+#: bp-templates/bp-nouveau/includes/document/ajax.php:719
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1054
 msgid "Please enter title of folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:728
-#: bp-templates/bp-nouveau/includes/document/ajax.php:834
+#: bp-templates/bp-nouveau/includes/document/ajax.php:619
+#: bp-templates/bp-nouveau/includes/document/ajax.php:725
 msgid "Please login to create a folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:756
+#: bp-templates/bp-nouveau/includes/document/ajax.php:647
 msgid "You don't have a permission to create a folder inside this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:772
-#: bp-templates/bp-nouveau/includes/document/ajax.php:869
+#: bp-templates/bp-nouveau/includes/document/ajax.php:663
+#: bp-templates/bp-nouveau/includes/document/ajax.php:760
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:853
+#: bp-templates/bp-nouveau/includes/document/ajax.php:744
 msgid "You don't have permission to create folder inside this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:942
-#: bp-templates/bp-nouveau/includes/document/ajax.php:950
+#: bp-templates/bp-nouveau/includes/document/ajax.php:833
+#: bp-templates/bp-nouveau/includes/document/ajax.php:841
 msgid "You don't have permission to move this document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:968
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1267
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1414
+#: bp-templates/bp-nouveau/includes/document/ajax.php:859
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1158
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1305
 msgid "Sort By:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1071
+#: bp-templates/bp-nouveau/includes/document/ajax.php:962
 msgid "You don't have a permission to rename the document."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1103
+#: bp-templates/bp-nouveau/includes/document/ajax.php:994
 msgid "You don't have permission to rename folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1177
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1068
 msgid "You don't have permission to rename this folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1199
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1090
 msgid "There was a problem when trying to rename the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1363
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1371
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1254
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1262
 msgid "You don't have permission to move this folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1384
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1275
 msgid "Couldn’t move item. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1396
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1287
 msgid "Couldn’t move item because it's parent folder. "
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1497
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1388
 msgid " Documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1518
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1409
 msgid "Please login to edit a privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1530
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1421
 msgid "You don't have permission to update this folder privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1538
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1429
 msgid "You don't have permission to update this document privacy."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/document/ajax.php:1545
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1436
 #: bp-templates/bp-nouveau/includes/media/ajax.php:493
 msgid "Invalid privacy status."
 msgstr ""
