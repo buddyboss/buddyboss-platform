@@ -3203,7 +3203,6 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 	}
 }
 
-
 #bp-media-create-folder,
 #bp-media-edit-child-folder,
 #bp-media-create-child-folder {
@@ -3220,6 +3219,19 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		text-align: right !important;
 	}
 
+}
+
+#bp-media-create-folder {
+
+	.error-box {
+		display: none;
+		line-height: 1.3;
+		margin-top: 5px;
+	}
+
+	#bb-album-title.error + .error-box {
+		display: block;
+	}
 }
 
 .modal-container.has-folderlocationUI {

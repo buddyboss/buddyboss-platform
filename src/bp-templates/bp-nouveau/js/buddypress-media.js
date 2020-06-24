@@ -2680,9 +2680,9 @@ window.bp = window.bp || {};
 			var pattern				   		= '';
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
-				pattern = /["'<>|~;:^*`?\/\\ ]+/g; // regex to find not supported characters - \ * | / > < ? ` ; :
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
 			} else if ( $( event.currentTarget ).closest( '.ac-folder-list' ).length ) {
-				pattern = /["'<>|~;:^*`?\/\\]+/g; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
+				pattern = /[\/\\:*?"<>|\[\]&$,.]+/g; // regex to find not supported characters - /\:*?"<>|[]&$,.
 			}
 
 			var matches     = pattern.exec( document_name_val );
@@ -2692,6 +2692,16 @@ window.bp = window.bp || {};
 				document_edit.removeClass( 'error' );
 			} else {
 				document_edit.addClass( 'error' );
+			}
+
+			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) { 
+
+				if( document_name_val.indexOf("\\\\") != -1 || matchStatus) { //Also check if filename has "\\"
+					document_edit.addClass( 'error' );
+				} else {
+					document_edit.removeClass( 'error' );
+				}
+
 			}
 
 			if ( $( event.currentTarget ).hasClass( 'name_edit_cancel' ) || event.keyCode == 27 ) {
@@ -3465,7 +3475,11 @@ window.bp = window.bp || {};
 				privacy = $( event.currentTarget ).parents().find( '.open-popup #bb-folder-privacy option:selected' );
 			event.preventDefault();
 
-			if ($.trim( title.val() ) === '') {
+			var pattern = /[\/\\:*?"<>|\[\]&$,.]+/g; // regex to find not supported characters - /\:*?"<>|[]&$,.
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
