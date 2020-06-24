@@ -2406,7 +2406,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $has_access > 0 ) {
-				$can_manage   = true;
+				$can_manage   = false;
 				$can_view     = true;
 				$can_download = true;
 			}
