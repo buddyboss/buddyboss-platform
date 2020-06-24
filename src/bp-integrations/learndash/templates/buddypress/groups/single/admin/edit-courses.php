@@ -9,7 +9,7 @@
  * $ldGroupId - (int) The associated LearnDash group id
  */
 ?>
-<h4><?php esc_html_e( 'Group Courses Settings', 'buddyboss' ); ?></h4>
+<h4><?php esc_html_e( 'Group Course Settings', 'buddyboss' ); ?></h4>
 
 <p>
 	<?php esc_html_e( 'Create and associate to a LearnDash group, allowing courses to be managed within the group.', 'buddyboss' ); ?>
