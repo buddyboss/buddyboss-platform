@@ -68,6 +68,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Media - Added 'Download' link to media popups for all Document types and Photos
 * Activity - Fixed comments not displaying in activity feed for blog posts and custom post types
 * Activity - Fixed media attachments not displaying when commenting on a group update
+* Compatibility - Fixed default Profile Type not being assigned when registering via MemberPress
 * Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
 * Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
 * Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
