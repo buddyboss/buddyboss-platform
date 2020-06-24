@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.4.4 =
 * Forums - Fixed disabling "Subscriptions" should remove Subscriptions from member profile
 * Forums - Fixed disabling "Favorites" should remove Favorites from member profile
+* Text Editor - Fixed icons conflict with plugin 'BuddyPress User Blog' in Forum replies
 * Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
 
 = 1.4.3 =
