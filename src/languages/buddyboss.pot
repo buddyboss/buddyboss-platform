@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-24 21:16:58+00:00\n"
+"POT-Creation-Date: 2020-06-24 22:59:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2886,8 +2886,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:178
 msgid ""
-"Allow activity stream commenting on blog posts, forum discussions and "
-"replies"
+"Allow activity feed commenting on blog posts, custom post types, and forum "
+"discussions"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:225
@@ -3602,8 +3602,7 @@ msgid "WordPress"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:150
-#: bp-search/bp-search-functions.php:363
-msgid "Post Comments"
+msgid "Post Type Comments"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:159
@@ -20262,6 +20261,10 @@ msgstr ""
 
 #: bp-search/bp-search-functions.php:344
 msgid "Viewing %1$d - %2$d of %3$d results"
+msgstr ""
+
+#: bp-search/bp-search-functions.php:363
+msgid "Post Comments"
 msgstr ""
 
 #: bp-search/bp-search-functions.php:507
