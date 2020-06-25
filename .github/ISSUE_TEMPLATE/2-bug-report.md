@@ -26,3 +26,14 @@ If applicable, add screenshots to help explain your problem.
 
 **Support ticket links**
 If applicable, add HelpScout link or ticket number where the issue was originally reported.
+
+**Configuration:**
+- buddyboss-platform version: 
+- buddyboss-theme version: 
+- WordPress version: 
+- PHP version: 
+- <!-- If relevant -->Relevant plugins in case of a bug: 
+
+- Browser: 
+- OS: 
+
