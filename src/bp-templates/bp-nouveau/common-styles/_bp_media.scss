@@ -36,6 +36,17 @@
 	min-width: 0;
 }
 
+.bb-media-length-1 .bb-activity-media-elem {
+
+	.entry-img {
+
+		img {
+			min-height: auto;
+			min-width: auto;
+		}
+	}
+}
+
 .bb-activity-media-elem {
 
 	padding: 3px;
@@ -71,7 +82,7 @@
 			z-index: 0;
 			min-height: 100%;
 			width: auto;
-			min-width: auto;
+			min-width: 100%;
 			object-fit: cover;
 		}
 	}
