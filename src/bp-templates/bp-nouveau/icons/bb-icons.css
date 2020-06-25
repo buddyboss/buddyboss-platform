@@ -410,7 +410,7 @@
 .bb-icon-watch-alarm:before { content: '\e985'; }
 .bb-icon-file-pdf:before { content: '\e986'; }
 .bb-icon-zip:before { content: '\e987'; }
-.bb-icon-file:before { content: '\e98e'; }
+.bb-icon-file-default:before { content: '\e98e'; }
 .bb-icon-file-csv:before { content: '\e98f'; }
 .bb-icon-file-ico:before { content: '\e990'; }
 .bb-icon-file-ics:before { content: '\e991'; }
@@ -468,6 +468,7 @@
 .bb-icon-file-xml:before { content: '\e9c5'; }
 .bb-icon-file-png:before { content: '\e9c6'; }
 .bb-icon-file-video:before { content: '\e962'; }
+.bb-icon-check-connection:before { content: '\e963'; }
 .bb-icon-trash-small:before { content: '\eaea'; }
 .bb-icon-rounded-instagram:before { content: '\eaec'; }
 .bb-icon-rounded-facebook:before { content: '\eaed'; }

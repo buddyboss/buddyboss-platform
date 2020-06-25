@@ -1737,7 +1737,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 			$svg = 'bb-icon-download';
 			break;
 		default:
-			$svg = 'bb-icon-file';
+			$svg = 'bb-icon-file-default';
 	}
 
 	return apply_filters( 'bp_document_svg_icon', $svg, $extension );
@@ -1753,7 +1753,7 @@ function bp_document_svg_icon_list() {
 
 	$icons = array(
 		'default_1' => array(
-			'icon' => 'bb-icon-file',
+			'icon' => 'bb-icon-file-default',
 			'title' =>  __( 'Default', 'buddyboss' )
 		),
 		'default_2' => array(
