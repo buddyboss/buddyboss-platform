@@ -66,6 +66,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Improved the experience for accepting an invite into a private group
 * Media - Added media popups for all Documents and Photos posted into Forums and Messages
 * Media - Added 'Download' link to media popups for all Document types and Photos
+* Media - Fixed private group Documents visibility, when uploading to profiles is disabled
 * Activity - Fixed comments not displaying in activity feed for blog posts and custom post types
 * Activity - Fixed media attachments not displaying when commenting on a group update
 * Compatibility - Fixed default Profile Type not being assigned when registering via MemberPress
