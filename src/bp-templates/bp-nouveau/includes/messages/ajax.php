@@ -1959,6 +1959,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					'privacy'  => array( 'message' ),
 					'order_by' => 'menu_order',
 					'sort'     => 'ASC',
+					'user_id'  => false,
 				)
 			) ) {
 				$thread->messages[ $i ]['media'] = array();
