@@ -1378,9 +1378,9 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
 	} else {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
 	$first_text = '';

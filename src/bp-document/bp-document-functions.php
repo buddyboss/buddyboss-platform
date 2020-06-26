@@ -1816,11 +1816,8 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
 	}
 
-	if ( $group_id > 0 ) {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d AND user_id = %d ORDER BY id DESC", $group_id, bp_loggedin_user_id() );
-	} else {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
-	}
+	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+
 
 	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
