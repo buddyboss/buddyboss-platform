@@ -274,15 +274,13 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></legend>
-			<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss' ); ?></p>
 
 			<div class="field-group">
 				<p class="checkbox bp-checkbox-wrap bp-group-option-enable">
 					<input type="checkbox" name="bbp-edit-group-forum" id="bbp-edit-group-forum" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
 					<label for="bbp-edit-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
 				</p>
-
-				<p class="description"><?php esc_html_e( 'Saying no will not delete existing forum content.', 'buddyboss' ); ?></p>
 			</div>
 
 				<?php if ( bbp_is_user_keymaster() ) : ?>
