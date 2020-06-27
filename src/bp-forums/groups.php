@@ -46,7 +46,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		private function setup_variables() {
 
 			// Component Name
-			$this->name          = __( 'Discussions', 'buddyboss' );
+			$this->name          = __( 'Forum', 'buddyboss' );
 			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
 
 			// Component slugs (hardcoded to match Forums 1.x functionality)
