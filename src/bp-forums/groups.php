@@ -270,7 +270,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Should box be checked already?
 			$checked = is_admin() ? bp_group_is_forum_enabled( $group ) : bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( bp_get_group_id() ); ?>
 
-		<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss-pro' ); ?></h4>
+		<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></h4>
 
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></legend>
@@ -286,7 +286,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				<?php if ( bbp_is_user_keymaster() ) : ?>
 				<hr class="bb-sep-line" />
 				<div class="field-group">
-					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss-pro' ); ?></h4>
+					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
 					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 					<?php
 						bbp_dropdown(
