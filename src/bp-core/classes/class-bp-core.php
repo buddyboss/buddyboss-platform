@@ -189,7 +189,7 @@ class BP_Core extends BP_Component {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action( 'bp_core_inetegrations_included' );
+		do_action( 'bp_core_integrations_included' );
 	}
 
 	/**
