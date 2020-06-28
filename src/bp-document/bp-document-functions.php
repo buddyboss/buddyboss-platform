@@ -1320,6 +1320,12 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
 
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
+
 	if ( ! is_wp_error( $id ) ) {
 		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
 	}
@@ -2232,6 +2238,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return __( 'File renaming error!', 'buddyboss' );
 	}
 
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
 	update_post_meta( $attachment_document_id, '_wp_attached_file', $new_file_rel_path );
 	wp_update_attachment_metadata( $attachment_document_id, wp_generate_attachment_metadata( $attachment_document_id, $new_file_abs_path ) );
 
