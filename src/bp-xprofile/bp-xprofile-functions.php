@@ -1970,6 +1970,8 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 			}
 			break;
 	}
+	
+	if ( ! isset( $display_name ) ) $display_name = '';
 
 	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
