@@ -2370,7 +2370,9 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$manage = groups_can_user_manage_media( $user_id, $media->group_id );
 
 				if ( $manage ) {
-					$can_manage   = true;
+					if ( $media->user_id === $user_id ) {
+						$can_manage   = true;
+					}
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2658,4 +2660,99 @@ function bp_media_get_forum_id( $media_id ) {
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
+}
+
+/**
+ * Check user have a permission to manage the album.
+ *
+ * @param int $album_id
+ * @param int $user_id
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.4.5
+ */
+function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
+
+	$can_manage   = false;
+	$can_view     = false;
+	$can_download = false;
+	$album        = new BP_Media_Album( $album_id );
+	$data         = array();
+
+	switch ( $album->privacy ) {
+
+		case 'public':
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} else {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'grouponly':
+			if ( bp_is_active( 'groups' ) ) {
+
+				$manage = groups_can_user_manage_document( $user_id, $album->group_id );
+
+				if ( $manage ) {
+					if ( $album->user_id === $user_id ) {
+						$can_manage   = true;
+					}
+					$can_view     = true;
+					$can_download = true;
+				} else {
+					$the_group = groups_get_group( absint( $album->group_id ) );
+					if ( $the_group->id > 0 && $the_group->user_has_access ) {
+						$can_view     = true;
+						$can_download = true;
+					}
+				}
+			}
+
+			break;
+
+		case 'loggedin':
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_loggedin_user_id() === $user_id ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'friends':
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $album->user_id, $user_id ) : false;
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( $is_friend ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'onlyme':
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+	}
+
+	$data['can_manage']   = $can_manage;
+	$data['can_view']     = $can_view;
+	$data['can_download'] = $can_download;
+
+	return apply_filters( 'bp_media_user_can_manage_album', $data, $album_id, $user_id );
 }

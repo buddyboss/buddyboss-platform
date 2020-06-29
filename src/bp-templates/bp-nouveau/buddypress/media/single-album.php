@@ -4,14 +4,24 @@
  *
  * @since BuddyBoss 1.0.0
  */
-?>
 
-<?php
 global $media_album_template;
-$album_id = (int) bp_action_variable( 0 );
-?>
 
-<?php if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
+$album_id           = (int) bp_action_variable( 0 );
+$folder_privacy     = bp_media_user_can_manage_album( $album_id, bp_loggedin_user_id() );
+$can_manage_btn     = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+$media_album_access = false;
+
+if ( $can_manage_btn ) {
+	$media_album_access = true;
+}
+
+global $media_album_access;
+
+
+error_log( $media_album_access );
+
+if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
 	while ( bp_album() ) :
 		bp_the_album();
@@ -23,7 +33,7 @@ $album_id = (int) bp_action_variable( 0 );
 
                 <div class="bb-single-album-header text-center">
                     <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
-                    <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
+                    <?php if ( bp_is_my_profile() || ( bp_is_group() && $can_manage_btn ) ) : ?>
                         <input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php _e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
                         <a href="#" id="bp-edit-album-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
                         <a href="#" id="bp-save-album-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
@@ -34,7 +44,8 @@ $album_id = (int) bp_action_variable( 0 );
                     </p>
                 </div>
 
-	            <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
+	            <?php
+				if ( bp_is_my_profile() || ( bp_is_group() && $can_manage_btn ) ) : ?>
 
                     <div class="bb-album-actions">
                         <a class="bb-delete button small outline error" id="bb-delete-album" href="#">
@@ -57,11 +68,15 @@ $album_id = (int) bp_action_variable( 0 );
 	                    <?php endif; ?>
                     </div>
 
-	            <?php bp_get_template_part( 'media/uploader' ); ?>
+					<?php
+					if ( $can_manage_btn ) {
+						bp_get_template_part( 'media/uploader' );
+					}
+				endif;
 
-	            <?php endif; ?>
-
-                <?php bp_get_template_part( 'media/actions' ); ?>
+				if ( $can_manage_btn ) {
+					bp_get_template_part( 'media/actions' );
+				} ?>
 
                 <div id="media-stream" class="media" data-bp-list="media">
 
@@ -71,5 +86,6 @@ $album_id = (int) bp_action_variable( 0 );
 
             </div>
         </div>
-	<?php endwhile; ?>
-<?php endif; ?>
+	<?php
+	endwhile;
+endif; ?>

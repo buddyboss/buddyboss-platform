@@ -640,6 +640,7 @@ function bp_nouveau_ajax_media_get_activity() {
 			'include'     => $_POST['id'],
 			'show_hidden' => true,
 			'scope'       => 'media',
+			'privacy'     => false,
 		);
 	} else {
 		$args = array(
