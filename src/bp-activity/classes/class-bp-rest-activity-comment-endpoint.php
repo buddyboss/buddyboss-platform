@@ -67,17 +67,17 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	/**
 	 * Retrieve activity comments.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
-	 *
-	 * @api {GET} /wp-json/buddyboss/v1/activity/:id/comment Get activity comments
-	 * @apiName GetActivityComment
-	 * @apiGroup Activity
+	 * @api            {GET} /wp-json/buddyboss/v1/activity/:id/comment Get activity comments
+	 * @apiName        GetActivityComment
+	 * @apiGroup       Activity
 	 * @apiDescription Get all comments for an activity.
-	 * @apiVersion 1.0.0
-	 * @apiPermission LoggedInUser
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the activity.
 	 * @apiParam {String=threaded,stream,false} [display_comments=threaded] Comments by default, stream for within stream display, threaded for below each activity item.
 	 */

@@ -106,7 +106,7 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Members
 	 * @apiDescription Retrieve member cover
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} user_id A unique numeric ID for the User.
 	 */
 	public function get_item( $request ) {
