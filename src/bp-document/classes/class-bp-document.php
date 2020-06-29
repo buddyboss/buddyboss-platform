@@ -2024,7 +2024,11 @@ class BP_Document {
 					);
 
 					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-					require_once ABSPATH . 'wp-admin/includes/image.php';
+					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+					}
 					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
@@ -2162,6 +2166,11 @@ class BP_Document {
 							}
 						}
 					}
+					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+					}
 					// Generate new intermediate thumbnails.
 					$meta = wp_generate_attachment_metadata( $id, $file );
 					if ( ! $meta ) {
@@ -2232,7 +2241,11 @@ class BP_Document {
 							);
 
 							$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-							require_once ABSPATH . 'wp-admin/includes/image.php';
+							if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+								require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+								require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+								require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+							}
 							$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 							wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 							update_post_meta( $id, 'document_preview_generated', 'yes' );
