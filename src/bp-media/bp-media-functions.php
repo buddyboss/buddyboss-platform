@@ -2529,11 +2529,9 @@ function bp_media_download_link( $attachment_id, $media_id ) {
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['media_type'] ) {
-			error_log( 'come' );
 			$media_privacy = bp_media_user_can_manage_media( $_GET['media_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
-			error_log( $can_download_btn );
 		}
 		if ( $can_download_btn ) {
 			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
