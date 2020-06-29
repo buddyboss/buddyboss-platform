@@ -10,16 +10,6 @@ global $media_album_template;
 $album_id           = (int) bp_action_variable( 0 );
 $folder_privacy     = bp_media_user_can_manage_album( $album_id, bp_loggedin_user_id() );
 $can_manage_btn     = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
-$media_album_access = false;
-
-if ( $can_manage_btn ) {
-	$media_album_access = true;
-}
-
-global $media_album_access;
-
-
-error_log( $media_album_access );
 
 if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
 	<?php
