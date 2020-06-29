@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-25 03:12:46+00:00\n"
+"POT-Creation-Date: 2020-06-28 05:11:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3260,8 +3260,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1712 bp-forums/admin/topics.php:676
 #: bp-forums/admin.php:237 bp-forums/admin.php:293
 #: bp-forums/classes/class-bp-forums-component.php:211
-#: bp-forums/forums/template.php:2635 bp-forums/groups.php:49
-#: bp-forums/groups.php:50
+#: bp-forums/forums/template.php:2635 bp-forums/groups.php:50
 #: bp-forums/templates/default/bbpress/content-statistics.php:27
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
@@ -8970,7 +8969,7 @@ msgstr ""
 #: bp-forums/admin/metaboxes.php:393 bp-forums/admin/metaboxes.php:452
 #: bp-forums/admin/replies.php:623 bp-forums/admin/settings.php:297
 #: bp-forums/admin/topics.php:677 bp-forums/forums/functions.php:1672
-#: bp-forums/forums/template.php:50
+#: bp-forums/forums/template.php:50 bp-forums/groups.php:49
 #: bp-forums/templates/default/bbpress/loop-forums.php:18
 msgid "Forum"
 msgstr ""
@@ -12495,25 +12494,22 @@ msgstr ""
 msgid "Group Forum Settings"
 msgstr ""
 
-#: bp-forums/groups.php:277 bp-forums/groups.php:503
+#: bp-forums/groups.php:277
 msgid ""
-"Create a discussion forum to allow members of this group to communicate in "
-"a structured, bulletin-board style fashion."
+"Connect a discussion forum to allow members of this group to communicate in "
+"a structured, bulletin-board style fashion. Unchecking this option will not "
+"delete existing forum content."
 msgstr ""
 
 #: bp-forums/groups.php:282 bp-forums/groups.php:507
 msgid "Yes, I want this group to have a discussion forum."
 msgstr ""
 
-#: bp-forums/groups.php:285
-msgid "Saying no will not delete existing forum content."
+#: bp-forums/groups.php:289
+msgid "Connected Forum"
 msgstr ""
 
 #: bp-forums/groups.php:290
-msgid "Group Forum:"
-msgstr ""
-
-#: bp-forums/groups.php:300
 msgid "Only site administrators can reconfigure which forum belongs to this group."
 msgstr ""
 
@@ -12523,6 +12519,12 @@ msgstr ""
 
 #: bp-forums/groups.php:501
 msgid "Group Forum"
+msgstr ""
+
+#: bp-forums/groups.php:503
+msgid ""
+"Create a discussion forum to allow members of this group to communicate in "
+"a structured, bulletin-board style fashion."
 msgstr ""
 
 #: bp-forums/groups.php:812
@@ -17094,13 +17096,13 @@ msgstr ""
 msgid "Group Course Settings"
 msgstr ""
 
-#: bp-integrations/learndash/templates/buddypress/groups/single/admin/edit-courses.php:15
+#: bp-integrations/learndash/templates/buddypress/groups/single/admin/edit-courses.php:14
 msgid ""
 "Create and associate to a LearnDash group, allowing courses to be managed "
 "within the group."
 msgstr ""
 
-#: bp-integrations/learndash/templates/buddypress/groups/single/admin/edit-courses.php:20
+#: bp-integrations/learndash/templates/buddypress/groups/single/admin/edit-courses.php:19
 msgid "Yes, I want this group to sync with a LearnDash group."
 msgstr ""
 
