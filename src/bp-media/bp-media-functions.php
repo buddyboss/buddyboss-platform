@@ -2310,7 +2310,7 @@ function bp_media_default_scope( $scope ) {
 			$new_scope[] = 'personal';
 		}
 
-	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
+	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
 

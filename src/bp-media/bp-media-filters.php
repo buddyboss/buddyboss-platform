@@ -88,6 +88,7 @@ function bp_media_activity_entry() {
 		'include'  => $media_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+		'user_id'  => false,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
@@ -119,6 +120,8 @@ function bp_media_activity_entry() {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
 	}
+
+	error_log(print_r($args,1));
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
 		<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count );
