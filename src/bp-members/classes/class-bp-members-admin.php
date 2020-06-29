@@ -1264,7 +1264,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 		 */
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+		<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
@@ -2628,7 +2628,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$redirect = add_query_arg( array( 'updated' => 'member-type-change-success' ), wp_get_referer() );
 			}
 
-			wp_redirect( $redirect );
+			wp_safe_redirect( $redirect );
 			exit();
 		}
 

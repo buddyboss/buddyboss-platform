@@ -250,6 +250,17 @@ class BP_Members_Component extends BP_Component {
 		}
 		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'profile';
 
+		/**
+		 * - Enable Photos as default user profile page.
+		 */
+		if ( 'media' === $default_tab ) {
+			$default_tab = 'photos';
+		}
+
+		if ( 'document' === $default_tab ) {
+			$default_tab = 'documents';
+		}
+
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************
@@ -461,5 +472,41 @@ class BP_Members_Component extends BP_Component {
 		);
 
 		parent::setup_cache_groups();
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			/**
+			 * As the Members component is always loaded,
+			 * let's register the Components endpoint here.
+			 */
+			'BP_REST_Components_Endpoint',
+			'BP_REST_Settings_Endpoint',
+			'BP_REST_Members_Endpoint',
+			'BP_REST_Members_Actions_Endpoint',
+			'BP_REST_Members_Details_Endpoint',
+			'BP_REST_Attachments_Member_Avatar_Endpoint',
+		);
+
+		if ( function_exists( 'bp_core_get_suggestions' ) ) {
+			$controllers[] = 'BP_REST_Mention_Endpoint';
+		}
+
+		if ( bp_is_active( 'members', 'cover_image' ) || bp_is_active( 'xprofile', 'cover_image' ) ) {
+			$controllers[] = 'BP_REST_Attachments_Member_Cover_Endpoint';
+		}
+
+		if ( bp_get_signup_allowed() ) {
+			$controllers[] = 'BP_REST_Signup_Endpoint';
+		}
+
+		parent::rest_api_init( $controllers );
 	}
 }

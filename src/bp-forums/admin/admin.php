@@ -199,50 +199,51 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			$hooks = array();
 
 			// These are later removed in admin_head
-			if ( current_user_can( 'bbp_tools_page' ) ) {
-				if ( current_user_can( 'bbp_tools_repair_page' ) ) {
-					$hooks[] = add_submenu_page(
-						'buddyboss-platform',
-						__( 'Repair Forums', 'buddyboss' ),
-						__( 'Forum Repair', 'buddyboss' ),
-						$this->minimum_capability,
-						'bbp-repair',
-						'bbp_admin_repair'
-					);
-				}
+			if ( ! is_network_admin() && ! bp_is_network_activated() ) {
+				if ( current_user_can( 'bbp_tools_page' ) ) {
+					if ( current_user_can( 'bbp_tools_repair_page' ) ) {
+						$hooks[] = add_submenu_page(
+							'buddyboss-platform',
+							__( 'Repair Forums', 'buddyboss' ),
+							__( 'Forum Repair', 'buddyboss' ),
+							$this->minimum_capability,
+							'bbp-repair',
+							'bbp_admin_repair'
+						);
+					}
 
-				if ( current_user_can( 'bbp_tools_import_page' ) ) {
-					$hooks[] = add_submenu_page(
-						'buddyboss-platform',
-						__( 'Import Forums', 'buddyboss' ),
-						__( 'Forum Import', 'buddyboss' ),
-						$this->minimum_capability,
-						'bbp-converter',
-						'bbp_converter_settings'
-					);
-				}
+					if ( current_user_can( 'bbp_tools_import_page' ) ) {
+						$hooks[] = add_submenu_page(
+							'buddyboss-platform',
+							__( 'Import Forums', 'buddyboss' ),
+							__( 'Forum Import', 'buddyboss' ),
+							$this->minimum_capability,
+							'bbp-converter',
+							'bbp_converter_settings'
+						);
+					}
 
-				if ( current_user_can( 'bbp_tools_reset_page' ) ) {
-					// $hooks[] = add_submenu_page(
-					// 'buddyboss-platform',
-					// __( 'Reset Forums', 'buddyboss' ),
-					// __( 'Forum Reset', 'buddyboss' ),
-					// $this->minimum_capability,
-					// 'bbp-reset',
-					// 'bbp_admin_reset'
-					// );
-				}
+					if ( current_user_can( 'bbp_tools_reset_page' ) ) {
+						//				$hooks[] = add_submenu_page(
+						//					'buddyboss-platform',
+						//					__( 'Reset Forums', 'buddyboss' ),
+						//					__( 'Forum Reset', 'buddyboss' ),
+						//					$this->minimum_capability,
+						//					'bbp-reset',
+						//					'bbp_admin_reset'
+						//				);
+					}
 
-				// Fudge the highlighted subnav item when on a Forums admin page
-				foreach ( $hooks as $hook ) {
-					add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
+					// Fudge the highlighted subnav item when on a Forums admin page
+					foreach ( $hooks as $hook ) {
+						add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
+					}
+
 				}
 			}
-
 			// Bail if plugin is not network activated
-			if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
+			if ( ! is_plugin_active_for_network( bbpress()->basename ) )
 				return;
-			}
 
 			add_submenu_page(
 				'index.php',
@@ -743,40 +744,40 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// Get action
 			$action = isset( $_GET['action'] ) ? $_GET['action'] : ''; ?>
 
-		<div class="wrap">
-			<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
-			<h2><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></h2>
+			<div class="wrap">
+				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
+				<h2><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></h2>
 
-			<?php
+				<?php
 
-			// Taking action
-			switch ( $action ) {
-				case 'bbp-update':
-					// Run the full updater
-					bbp_version_updater();
-					?>
+				// Taking action
+				switch ( $action ) {
+					case 'bbp-update':
+						// Run the full updater
+						bbp_version_updater();
+						?>
 
-				<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
-				<a class="button" href="index.php?page=bbp-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
+						<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
+						<a class="button" href="index.php?page=bbp-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
 
-					<?php
+						<?php
 
-					break;
+						break;
 
-				case 'show':
-				default:
-					?>
+					case 'show':
+					default:
+						?>
 
-				<p><?php esc_html_e( 'You can update your forum through this page. Hit the link below to update.', 'buddyboss' ); ?></p>
-				<p><a class="button" href="index.php?page=bbp-update&amp;action=bbp-update"><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></a></p>
+						<p><?php esc_html_e( 'You can update your forum through this page. Hit the link below to update.', 'buddyboss' ); ?></p>
+						<p><a class="button" href="index.php?page=bbp-update&amp;action=bbp-update"><?php esc_html_e( 'Update Forum', 'buddyboss' ); ?></a></p>
 
-					<?php
-					break;
+						<?php
+						break;
 
-			}
-			?>
+				}
+				?>
 
-		</div>
+			</div>
 			<?php
 		}
 
@@ -796,14 +797,14 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			$action = isset( $_GET['action'] ) ? $_GET['action'] : '';
 			?>
 
-		<div class="wrap">
-			<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
-			<h2><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></h2>
+			<div class="wrap">
+				<div id="icon-edit" class="icon32 icon32-posts-topic"><br /></div>
+				<h2><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></h2>
 
-			<?php
+				<?php
 
-			// Taking action
-			switch ( $action ) {
+				// Taking action
+				switch ( $action ) {
 				case 'bbpress-update':
 					// Site counter
 					$n = isset( $_GET['n'] ) ? intval( $_GET['n'] ) : 0;
@@ -812,17 +813,17 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 					$blogs = $wpdb->get_results( "SELECT * FROM {$wpdb->blogs} WHERE site_id = '{$wpdb->siteid}' AND spam = '0' AND deleted = '0' AND archived = '0' ORDER BY registered DESC LIMIT {$n}, 5", ARRAY_A );
 
 					// No blogs so all done!
-					if ( empty( $blogs ) ) :
-						?>
+				if ( empty( $blogs ) ) :
+					?>
 
 					<p><?php esc_html_e( 'All done!', 'buddyboss' ); ?></p>
 					<a class="button" href="update-core.php?page=bbpress-update"><?php esc_html_e( 'Go Back', 'buddyboss' ); ?></a>
 
-						<?php
+				<?php
 
-						// Still have sites to loop through
-					else :
-						?>
+				// Still have sites to loop through
+				else :
+				?>
 
 					<ul>
 
@@ -867,43 +868,43 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 							do_action( 'after_bbpress_upgrade', $response );
 							do_action( 'bbp_upgrade_site', $details['blog_id'] );
 
-							endforeach;
+						endforeach;
 						?>
 
 					</ul>
 
 					<p>
-							<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
+						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
 						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
 					</p>
 					<script type='text/javascript'>
-						<!--
-						function nextpage() {
-							location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo ( $n + 5 ); ?>';
-						}
-						setTimeout( 'nextpage()', 250 );
-						//-->
+                        <!--
+                        function nextpage() {
+                            location.href = 'update-core.php?page=bbpress-update&action=bbpress-update&n=<?php echo ( $n + 5 ); ?>';
+                        }
+                        setTimeout( 'nextpage()', 250 );
+                        //-->
 					</script>
-						<?php
+				<?php
 
-					endif;
+				endif;
 
-					break;
+				break;
 
 				case 'show':
 				default:
-					?>
+				?>
 
-				<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss' ); ?></p>
-				<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></a></p>
+					<p><?php esc_html_e( 'You can update all the forums on your network through this page. It works by calling the update script of each site automatically. Hit the link below to update.', 'buddyboss' ); ?></p>
+					<p><a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update"><?php esc_html_e( 'Update Forums', 'buddyboss' ); ?></a></p>
 
 					<?php
 					break;
 
-			}
-			?>
+				}
+				?>
 
-		</div>
+			</div>
 			<?php
 		}
 	}

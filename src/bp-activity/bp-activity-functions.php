@@ -98,7 +98,7 @@ function bp_activity_find_mentions( $content ) {
 	 * @param array $mentioned_users Associative array with user IDs as keys and usernames as values.
 	 * @param string $content Activity content
 	 */
-	return apply_filters( 'bp_activity_mentioned_users', [], $content );
+	return apply_filters( 'bp_activity_mentioned_users', array(), $content );
 }
 
 /**
@@ -106,9 +106,10 @@ function bp_activity_find_mentions( $content ) {
  *
  * @since Buddyboss 1.2.0
  * @version  Buddyboss 1.2.0
+ * @deprecated BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
- * @param string $content Activity content
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content Activity content.
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.
  */
@@ -140,8 +141,6 @@ function bp_activity_find_mention_by_at_sign( $mentioned_users, $content ) {
 
 	return $mentioned_users;
 }
-add_filter( 'bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2 );
-
 
 /**
  * Reset a user's unread mentions list and count.
@@ -263,6 +262,7 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
  * Get a user ID from a "mentionname", the name used for a user in @-mentions.
  *
  * @since BuddyPress 1.9.0
+ * @deprecated BuddyBoss 1.2.8
  *
  * @param string $mentionname Username of user in @-mentions.
  * @return int|bool ID of the user, if one is found. Otherwise false.
@@ -1253,7 +1253,22 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 function bp_activity_favorites_upgrade_data() {
 	$bp_activity_favorites = bp_get_option( 'bp_activity_favorites', false );
 
-	if ( ! $bp_activity_favorites ) {
+	if ( ! $bp_activity_favorites && bp_is_active( 'activity' ) ) {
+
+		if ( bp_is_large_install() ) {
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) );
+			$notice    = sprintf(
+				'%1$s <a href="%2$s">%3$s</a> %4$s',
+				__( 'Due to the large size of your users table, you need to manually update user activity favorites data via BuddyBoss > ', 'buddyboss' ),
+				esc_url( $admin_url ),
+				__( 'Tools', 'buddyboss' ),
+				__( ' > Repair Community. Check the box "Update activity favorites data" and click on "Repair Items". ', 'buddyboss' )
+			);
+
+			bp_core_add_admin_notice( $notice, 'error' );
+			return;
+		}
+
 		$args = array(
 			'fields' => 'ID',
 		);
@@ -1264,13 +1279,13 @@ function bp_activity_favorites_upgrade_data() {
 		// User Loop
 		if ( $user_query->get_results() ) {
 			foreach ( $user_query->get_results() as $user_id ) {
-				$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+				$user_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
 
-				if ( empty( $my_favs ) || ! is_array( $my_favs ) ) {
+				if ( empty( $user_favs ) || ! is_array( $user_favs ) ) {
 					continue;
 				}
 
-				foreach ( $my_favs as $fav ) {
+				foreach ( $user_favs as $fav ) {
 
 					// Update the users who have favorited this activity.
 					$users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
@@ -1290,8 +1305,6 @@ function bp_activity_favorites_upgrade_data() {
 		}
 	}
 }
-
-add_action( 'bp_init', 'bp_activity_favorites_upgrade_data' );
 
 /**
  * Check whether an activity item exists with a given content string.
@@ -1348,6 +1361,25 @@ function bp_activity_total_favorites_for_user( $user_id = 0 ) {
 	}
 
 	return BP_Activity_Activity::total_favorite_count( $user_id );
+}
+
+/**
+ * Get activity visibility levels out of the $bp global.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return array
+ */
+function bp_activity_get_visibility_levels() {
+
+	/**
+	 * Filters the activity visibility levels out of the $bp global.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param array $visibility_levels Array of visibility levels.
+	 */
+	return apply_filters( 'bp_activity_get_visibility_levels', buddypress()->activity->visibility_levels );
 }
 
 /** Meta *********************************************************************/
@@ -1487,6 +1519,9 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
+
+	// Removed users liked activity meta.
+	bp_activity_remove_user_favorite_meta( $user_id );
 
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
@@ -1756,7 +1791,7 @@ function bp_activity_generate_action_string( $activity ) {
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
 	if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
-		$mentioned_users = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+		$mentioned_users      = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
 		$mentioned_users_link = array_map(
 			function( $mentioned_user ) {
 					return bp_core_get_userlink( $mentioned_user->ID );
@@ -2046,8 +2081,10 @@ function bp_activity_get_specific( $args = '' ) {
 			'page'              => 1,          // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,      // Results per page.
 			'show_hidden'       => true,       // When fetching specific items, show all.
+			'privacy'           => false,      // privacy of activity.
 			'sort'              => 'DESC',     // Sort ASC or DESC
 			'spam'              => 'ham_only', // Retrieve items marked as spam.
+			'scope'             => false, // Retrieve items marked as spam.
 			'update_meta_cache' => true,
 		),
 		'activity_get_specific'
@@ -2060,8 +2097,10 @@ function bp_activity_get_specific( $args = '' ) {
 		'page'              => $r['page'],
 		'per_page'          => $r['per_page'],
 		'show_hidden'       => $r['show_hidden'],
+		'privacy'           => $r['privacy'],
 		'sort'              => $r['sort'],
 		'spam'              => $r['spam'],
+		'scope'             => $r['scope'],
 		'update_meta_cache' => $r['update_meta_cache'],
 	);
 
@@ -2219,6 +2258,7 @@ function bp_activity_post_update( $args = '' ) {
 		array(
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
+			'component'     => buddypress()->activity->id,
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
@@ -2262,7 +2302,7 @@ function bp_activity_post_update( $args = '' ) {
 			'user_id'       => $r['user_id'],
 			'content'       => $add_content,
 			'primary_link'  => $add_primary_link,
-			'component'     => buddypress()->activity->id,
+			'component'     => $r['component'],
 			'type'          => $r['type'],
 			'hide_sitewide' => $r['hide_sitewide'],
 			'privacy'       => $r['privacy'],
@@ -2931,6 +2971,13 @@ function bp_activity_new_comment( $args = '' ) {
 		}
 	}
 
+	// update comment privacy with parent one.
+	if ( ! empty( $activity->privacy ) ) {
+		$privacy = $activity->privacy;
+	} else {
+		$privacy = 'public';
+	}
+
 	// Check to see if the parent activity is hidden, and if so, hide this comment publicly.
 	$is_hidden = $activity->hide_sitewide ? 1 : 0;
 
@@ -2957,6 +3004,7 @@ function bp_activity_new_comment( $args = '' ) {
 			'item_id'           => $activity_id,
 			'secondary_item_id' => $r['parent_id'],
 			'hide_sitewide'     => $is_hidden,
+			'privacy'           => $privacy,
 			'error_type'        => $r['error_type'],
 		)
 	);
@@ -3168,6 +3216,58 @@ function bp_activity_delete( $args = '' ) {
 	return true;
 }
 
+/**
+ * Delete users liked activity meta.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @param int To delete user id.
+ * @return bool True on success, false on failure.
+ */
+function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	/**
+	 * For delete user id from other liked activity
+	 */
+	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+
+	// Loop through activity ids and attempt to delete favorite.
+	if ( ! empty( $activity_ids ) && is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			// Attempt to delete meta value.
+			if ( ! empty( $activity->id ) ) {
+
+				// Update the users who have favorited this activity.
+				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				if ( empty( $users ) || ! is_array( $users ) ) {
+					$users = array();
+				}
+
+				$found_user = array_search( $user_id, $users );
+				if ( ! empty( $found_user ) ) {
+					unset( $users[ $found_user ] );
+				}
+
+				// Update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
+
+				// Update the total number of users who have favorited this activity.
+				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+				if ( ! empty( $fav_count ) ) {
+					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
+				}
+			}
+		}
+	}
+
+	return true;
+}
 	/**
 	 * Delete an activity item by activity id.
 	 *
@@ -4258,42 +4358,6 @@ function bp_activity_do_heartbeat() {
 }
 
 /**
- * AJAX endpoint for Suggestions API lookups.
- *
- * @since BuddyPress 2.1.0
- */
-function bp_ajax_get_suggestions() {
-	if ( ! bp_is_user_active() || empty( $_GET['term'] ) || empty( $_GET['type'] ) ) {
-		wp_send_json_error( 'missing_parameter' );
-		exit;
-	}
-
-	$args = array(
-		'term' => sanitize_text_field( $_GET['term'] ),
-		'type' => sanitize_text_field( $_GET['type'] ),
-	);
-
-	if ( ! empty( $_GET['only_friends'] ) ) {
-		$args['only_friends'] = absint( $_GET['only_friends'] );
-	}
-
-	// Support per-Group suggestions.
-	if ( ! empty( $_GET['group-id'] ) ) {
-		$args['group_id'] = absint( $_GET['group-id'] );
-	}
-
-	$results = bp_core_get_suggestions( $args );
-
-	if ( is_wp_error( $results ) ) {
-		wp_send_json_error( $results->get_error_message() );
-		exit;
-	}
-
-	wp_send_json_success( $results );
-}
-add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
-
-/**
  * AJAX endpoint for activity comments.
  *
  * @since BuddyBoss 1.0.0
@@ -4339,7 +4403,6 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	 * @param WP_Post $post Post data.
 	 *
 	 * @since BuddyBoss 1.2.3
-	 *
 	 */
 	$pre_transition = apply_filters( 'bp_activity_pre_transition_post_type_status', true, $new_status, $old_status, $post );
 
@@ -4845,7 +4908,9 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
 
 			if ( isset( $src[0] ) ) {
-				$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( $src[0] ) );
+			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
+				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
@@ -4865,6 +4930,8 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			$activity_summary = '';
 			if ( isset( $src[0] ) ) {
 				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
+				$activity_summary .= sprintf( '<img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
 
 			// Backward compatibility filter for the blogs component.
@@ -4999,160 +5066,24 @@ add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 )
  * @since BuddyBoss 1.0.0
  */
 function bp_activity_action_parse_url() {
-	require_once trailingslashit( buddypress()->plugin_dir . 'bp-activity/vendors' ) . '/website-parser/website_parser.php';
+	// Get URL.
+	$url = $_POST['url'];
 
-	// curling
-	$json_data = array();
-	if ( class_exists( 'WebsiteParser' ) ) {
-
-		$url = $_POST['url'];
-
-		if ( strpos( $url, 'youtube' ) > 0 || strpos( $url, 'youtu' ) > 0 || strpos( $url, 'vimeo' ) > 0 ) {
-
-			// Fetch the oembed code for URL.
-			$embed_code = wp_oembed_get( $url );
-			if ( $embed_code ) {
-				$json_data['title']       = ' ';
-				$json_data['description'] = $embed_code;
-				$json_data['images']      = '';
-				$json_data['error']       = '';
-				wp_send_json( $json_data );
-			}
-		}
-
-		$parser = new WebsiteParser( $url );
-		$body   = wp_remote_get( $url );
-
-		if ( ! is_wp_error( $body ) && isset( $body['body'] ) ) {
-
-			$title       = '';
-			$description = '';
-			$images      = array();
-
-			$parser->content = $body['body'];
-
-			$meta_tags = $parser->getMetaTags( false );
-
-			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
-				foreach ( $meta_tags as $tag ) {
-					if ( is_array( $tag ) && ! empty( $tag ) ) {
-						if ( $tag[0] == 'og:title' ) {
-							$title = $tag[1];
-						}
-						if ( $tag[0] == 'og:description' ) {
-							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
-						} elseif ( strtolower( $tag[0] ) == 'description' && $description == '' ) {
-							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
-						}
-						if ( $tag[0] == 'og:image' ) {
-							$images[] = $tag[1];
-						}
-					}
-				}
-			}
-			if ( $title == '' ) {
-				$title = $parser->getTitle( false );
-			}
-			if ( empty( $images ) ) {
-				$images = $parser->getImageSources( false );
-			}
-			if ( ! empty( $images ) ) {
-				$images_obj = [];
-
-				foreach ( $images as $key => $img ) {
-					if ( strpos( $url, 'youtube.com' ) > 0 ) {
-						$img = 'https://www.youtube.com' . $img;
-					}
-					if ( @fopen( $img, 'r' ) ) {
-						$images_obj[] = $img;
-					}
-				}
-				$images = $images_obj;
-			}
-
-			// Generate Image URL Previews
-			if ( empty( $images ) ) {
-				$content_type = wp_remote_retrieve_header( $body, 'content-type' );
-				if ( false !== strpos( $content_type, 'image' ) ) {
-					$images = array( $url );
-				}
-			}
-
-			$json_data['title']       = $title;
-			$json_data['description'] = $description;
-			$json_data['images']      = $images;
-			$json_data['error']       = '';
-		} else {
-			// Extract HTML using curl
-			$ch = curl_init();
-
-			curl_setopt( $ch, CURLOPT_HEADER, 1 );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-			curl_setopt( $ch, CURLOPT_URL, $url );
-			curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1 );
-
-			$data = curl_exec( $ch );
-			curl_close( $ch );
-
-			// Load HTML to DOM Object
-			$dom = new DOMDocument();
-			@$dom->loadHTML( $data );
-
-			// Parse DOM to get Title
-			$nodes = $dom->getElementsByTagName( 'title' );
-			$title = $nodes->item( 0 )->nodeValue;
-
-			if ( '' === $title || null === $title ) {
-				$nodes = $dom->getElementsByTagName( 'h1' );
-				$title = $nodes->item( 0 )->nodeValue;
-			}
-
-			if ( '' === $title || null === $title ) {
-				$nodes = $dom->getElementsByTagName( 'h2' );
-				$title = $nodes->item( 0 )->nodeValue;
-			}
-
-			// Parse DOM to get Meta Description
-			$metas = $dom->getElementsByTagName( 'meta' );
-			$body  = '';
-			for ( $i = 0; $i < $metas->length; $i ++ ) {
-				$meta = $metas->item( $i );
-				if ( $meta->getAttribute( 'name' ) == 'description' ) {
-					$body = $meta->getAttribute( 'content' );
-				}
-			}
-
-			// Parse DOM to get Images
-			$image_urls = array();
-			$images     = $dom->getElementsByTagName( 'img' );
-
-			for ( $i = 0; $i < $images->length; $i ++ ) {
-				$image = $images->item( $i );
-				$src   = $image->getAttribute( 'src' );
-
-				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
-					$image_src[] = $src;
-				}
-			}
-
-			if ( isset( $image_src ) && isset( $body ) && '' === trim( $title ) ) {
-				$title = $body;
-			}
-
-			if ( isset( $title ) && isset( $body ) && isset( $image_src ) ) {
-				$json_data['title']       = $title;
-				$json_data['description'] = $body;
-				$json_data['images']      = $image_src;
-				$json_data['error']       = '';
-			} else {
-				$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
-			}
-		}
-	} else {
-		$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+	// Check if URL is validated.
+	if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
+		wp_send_json( array( 'error' => __( 'URL is not valid.', 'buddyboss' ) ) );
 	}
 
-	wp_send_json( $json_data );
+	// Get URL parsed data.
+	$parse_url_data = bp_core_parse_url( $url );
+
+	// If empty data then send error.
+	if ( empty( $parse_url_data ) ) {
+		wp_send_json( array( 'error' => __( 'Sorry! preview is not available right now. Please try again later.', 'buddyboss' ) ) );
+	}
+
+	// send json success.
+	wp_send_json( $parse_url_data );
 }
 
 add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
@@ -5272,4 +5203,97 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 	}
 
 	return $id;
+}
+
+/**
+ * Function to add the content on top of activity listing
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_activity_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['activity'] ) ) {
+		$activity_page_content = get_post_field( 'post_content', $page_ids['activity'] );
+		echo apply_filters( 'the_content', $activity_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
+
+
+/**
+ * Get default scope for the activity
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param string $scope Default scope.
+ *
+ * @return string
+ */
+function bp_activity_default_scope( $scope = 'all' ) {
+	$new_scope = array();
+
+	if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+
+		$new_scope[] = 'public';
+
+		if ( bp_is_activity_directory() || bp_is_single_activity() ) {
+			$new_scope[] = 'just-me';
+
+			if ( bp_is_activity_directory() ) {
+				$new_scope[] = 'public';
+			}
+
+			if ( bp_activity_do_mentions() ) {
+				$new_scope[] = 'mentions';
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$new_scope[] = 'friends';
+			}
+
+			if ( bp_is_active( 'groups' ) ) {
+				$new_scope[] = 'groups';
+			}
+
+			if ( bp_is_activity_follow_active() ) {
+				$new_scope[] = 'following';
+			}
+
+			if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
+				$new_scope[] = 'media';
+				$new_scope[] = 'document';
+			}
+
+		} else if ( bp_is_user_activity() ) {
+			if ( empty( bp_current_action() ) ) {
+				$new_scope[] = 'just-me';
+			} else {
+				$new_scope[] = bp_current_action();
+			}
+		} else if ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
+			$new_scope[] = 'groups';
+		}
+
+	} else if( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'public';
+	}
+
+	$new_scope = array_unique( $new_scope );
+
+	if ( empty( $new_scope ) ) {
+		$new_scope = (array) $scope;
+	}
+
+	/**
+	 * Filter to update default scope.
+	 *
+	 * @since BuddyBoss 1.4.3
+	 */
+	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
+
+	return implode( ',', $new_scope );
+
 }

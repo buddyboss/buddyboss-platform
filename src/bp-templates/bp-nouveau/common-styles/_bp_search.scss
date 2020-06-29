@@ -46,10 +46,9 @@
 			text-align: center;
 			text-transform: none;
 			width: 20%;
-			visibility: visible!important;
+			visibility: visible !important;
 
 			span {
-				font-family: dashicons;
 
 				@include font-size(18);
 				line-height: 1.6;

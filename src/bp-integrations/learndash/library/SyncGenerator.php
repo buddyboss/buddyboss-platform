@@ -411,7 +411,12 @@ class SyncGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncLdUser( $userId, $remove = false ) {
-		$ldGroupAdmins = learndash_get_groups_administrator_ids( $this->ldGroupid );
+
+		if ( ! isset( $this->ldGroupId ) ) {
+			return $this;
+		}
+
+		$ldGroupAdmins = learndash_get_groups_administrator_ids( $this->ldGroupId );
 
 		// if this user is learndash leader, we don't want to downgrad them (bp only allow 1 user)
 		if ( in_array( $userId, $ldGroupAdmins ) ) {
@@ -639,6 +644,9 @@ class SyncGenerator {
 		$syncTo      = $this->getLdSyncToRole( $type );
 
 		if ( $remove ) {
+			if ( bp_is_active( 'messages' ) ) {
+				bp_messages_remove_user_to_group_message_thread( $this->bpGroupId, $userId );
+			}
 			return $groupMember->remove();
 		}
 
@@ -649,12 +657,15 @@ class SyncGenerator {
 		$groupMember->is_confirmed  = 1;
 		$groupMember->date_modified = bp_core_current_time();
 
-		if ( 'user' != $syncTo ) {
+		if ( 'user' !== $syncTo ) {
 			$var               = "is_{$syncTo}";
 			$groupMember->$var = 1;
 		}
 
 		$groupMember->save();
+		if ( bp_is_active( 'messages' ) ) {
+			bp_messages_add_user_to_group_message_thread( $this->bpGroupId, $userId );
+		}
 	}
 
 	/**

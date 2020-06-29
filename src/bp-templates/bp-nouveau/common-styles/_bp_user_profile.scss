@@ -90,6 +90,10 @@
 				min-width: 0;
 			}
 
+			.repeater_set_title_empty {
+				color: #ccc;
+			}
+
 			.repeater_set_edit {
 				margin-left: auto;
 				margin-right: 5px;
@@ -337,5 +341,97 @@ body.register .buddypress-wrap .page ul {
 
 	.single-headers li.generic-button {
 		float: none;
+	}
+}
+
+/* Profile Completion Widget  */
+
+div.profile_completion_wrap {
+
+	.progress_text_wrap {
+		text-align: right;
+		margin-bottom: 5px;
+	}
+
+	.progress_container {
+
+		border: 1px solid #000;
+		border-radius: 12px;
+
+		.pc_progress {
+			height: 8px;
+			background-color: $informational;
+			border-radius: 12px 0 0 12px;
+		}
+	}
+
+	ul.pc_detailed_progress li {
+
+		margin: 15px 0;
+
+		span.completed_staus {
+			color: #fff;
+			border-radius: 8px;
+			padding: 2px;
+			float: right;
+			width: 50px;
+			text-align: center;
+		}
+	}
+
+	ul.pc_detailed_progress li.completed {
+
+		span.completed_staus {
+			background-color: $update-success;
+		}
+	}
+
+	ul.pc_detailed_progress li.incomplete {
+
+		span.section_name a {
+			color: $text-link-hover;
+			text-decoration: underline;
+		}
+
+		span.completed_staus {
+			background-color: $warn;
+		}
+	}
+
+}
+
+/* Send Invites Table */
+
+#member-invites-table {
+
+	.field-actions,
+	.field-actions-last {
+		text-align: center;
+
+		.field-actions-remove {
+			cursor: pointer;
+		}
+	}
+
+	.field-actions-add {
+		cursor: pointer;
+
+		i {
+			background-color: #000;
+			color: #fff;
+			border-radius: 100%;
+			padding: 3px 4px 1px 3px;
+			height: auto;
+			width: auto;
+			line-height: normal;
+		}
+
+		&.disabled {
+			cursor: not-allowed;
+
+			i {
+				background-color: #ccc;
+			}
+		}
 	}
 }

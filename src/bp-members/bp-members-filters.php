@@ -184,6 +184,11 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			: bp_loggedin_user_id();
 	}
 
+	$privacy = array( 'public', 'loggedin', 'onlyme' );
+	if ( bp_is_active( 'friends' ) ) {
+		$privacy[] = 'friends';
+	}
+
 	$retval = array(
 		'relation' => 'AND',
 		array(
@@ -191,11 +196,238 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			'value'  => $user_id,
 		),
 		array(
-			'column' => 'privacy',
-			'value'  => 'onlyme',
+			'column'  => 'privacy',
+			'value'   => $privacy,
+			'compare' => 'IN'
 		),
 	);
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$retval[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$retval[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
 
 	return $retval;
 }
 add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );
+
+/**
+ * Set up media arguments for use with the 'personal' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_members_filter_document_personal_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$folder_id = 0;
+	$folders   = array();
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
+	$privacy = array( 'public' );
+
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_active( 'friends' ) ) {
+			$friends = friends_get_friend_user_ids( $user_id );
+			if ( ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) || $user_id === bp_loggedin_user_id() ) {
+				$privacy[] = 'friends';
+			}
+		}
+
+		if ( $user_id === bp_loggedin_user_id() ) {
+			$privacy[] = 'onlyme';
+		}
+	}
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		$user_id = '0';
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		if ( ! empty( $folder_id ) ) {
+			$user_root_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+
+			$folder_ids = array();
+			if ( $user_root_folder_ids ) {
+				foreach ( $user_root_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
+					}
+					array_push( $folder_ids, $single_folder );
+				}
+			}
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'folder_id',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
+		}
+	} else {
+		if ( ! empty( $folder_id ) ) {
+			$folders = array(
+				'column'  => 'folder_id',
+				'compare' => '=',
+				'value'   => $folder_id,
+			);
+		} else {
+			$folders = array(
+				'column' => 'folder_id',
+				'value'  => 0,
+			);
+		}
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => $user_id,
+		),
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy
+		),
+		array(
+			'column'  => 'group_id',
+			'compare' => '=',
+			'value'   => '0',
+		),
+		$folders
+	);
+
+	return $args;
+}
+add_filter( 'bp_document_set_document_personal_scope_args', 'bp_members_filter_document_personal_scope', 10, 2 );
+
+/**
+ * Set up media arguments for use with the 'personal' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_members_filter_folder_personal_scope( $retval = array(), $filter = array() ) {
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		return $retval;
+	}
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = (int) $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$folder_id = 0;
+	$folders   = array();
+
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		if ( ! empty( $folder_id ) ) {
+			$user_root_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+
+			$folder_ids = array();
+			if ( $user_root_folder_ids ) {
+				foreach ( $user_root_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
+					}
+					array_push( $folder_ids, $single_folder );
+				}
+			}
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'parent',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
+		}
+	} else {
+		if ( ! empty( $folder_id ) ) {
+			$folders = array(
+				'column'  => 'parent',
+				'compare' => '=',
+				'value'   => $folder_id,
+			);
+		} else {
+			$folders = array(
+				'column' => 'parent',
+				'value'  => 0,
+			);
+		}
+	}
+
+	$privacy = array( 'public' );
+
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_active( 'friends' ) ) {
+			$friends = friends_get_friend_user_ids( $user_id );
+			if ( ( ! empty( $friends ) && in_array( bp_loggedin_user_id(), $friends ) ) || $user_id === bp_loggedin_user_id() ) {
+				$privacy[] = 'friends';
+			}
+		}
+
+		if ( $user_id === bp_loggedin_user_id() ) {
+			$privacy[] = 'onlyme';
+		}
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => $user_id,
+		),
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy,
+		),
+		$folders,
+	);
+
+	return $args;
+}
+add_filter( 'bp_document_set_folder_personal_scope_args', 'bp_members_filter_folder_personal_scope', 10, 2 );

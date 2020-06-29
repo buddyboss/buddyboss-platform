@@ -193,6 +193,8 @@ function bp_get_activity_directory_permalink() {
 function bp_has_activities( $args = '' ) {
 	global $activities_template;
 
+	$args = bp_parse_args( $args );
+
 	// Get BuddyPress.
 	$bp = buddypress();
 
@@ -205,38 +207,28 @@ function bp_has_activities( $args = '' ) {
 		? bp_displayed_user_id()
 		: false;
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) && ! bp_is_group() && ! bp_is_activity_directory() ) {
-			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-			if ( $is_friend ) {
-				$privacy[] = 'friends';
-			}
-		} elseif ( bp_is_active( 'friends' ) && bp_is_activity_directory() ) {
-			$privacy[] = 'friends';
-		}
+	// The default scope should recognize custom slugs.
+	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
+			? $bp->loaded_components[ bp_current_action() ]
+			: (
+				( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
+				? bp_current_action()
+				: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+			);
 
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-		}
-	}
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {
-		$object      = $bp->groups->id;
-		$primary_id  = bp_get_current_group_id();
-		$show_hidden = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
+		$object          = $bp->groups->id;
+		$args['privacy'] = ( isset( $args['privacy'] ) ? $args['privacy'] : array( 'public' ) );
+		$primary_id      = bp_get_current_group_id();
+		$show_hidden     = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
 	} else {
 		$object      = false;
 		$primary_id  = false;
 		$show_hidden = false;
 	}
-
-	// The default scope should recognize custom slugs.
-	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
-		? $bp->loaded_components[ bp_current_action() ]
-		: bp_current_action();
 
 	// Support for permalinks on single item pages: /groups/my-group/activity/124/.
 	$include = bp_is_current_action( bp_get_activity_slug() )
@@ -275,7 +267,7 @@ function bp_has_activities( $args = '' ) {
 		// Scope - pre-built activity filters for a user (friends/groups/favorites/mentions).
 			'scope'             => $scope,
 
-			// Filtering
+			// Filtering.
 			'user_id'           => $user_id,     // user_id to filter on.
 			'object'            => $object,      // Object to filter on e.g. groups, profile, status, friends.
 			'action'            => false,        // Action to filter on e.g. activity_update, profile_updated.
@@ -283,7 +275,7 @@ function bp_has_activities( $args = '' ) {
 			'secondary_id'      => false,        // Secondary object ID to filter on e.g. a post_id.
 			'offset'            => false,        // Return only items >= this ID.
 			'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
-			'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, media.
+			'privacy'           => false,        // privacy to filter on - public, onlyme, loggedin, friends, media, document.
 
 			'meta_query'        => false,        // Filter on activity meta. See WP_Meta_Query for format.
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
@@ -685,6 +677,11 @@ function bp_activity_id() {
 function bp_get_activity_id() {
 	global $activities_template;
 
+	$activity_id = 0;
+	if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id  ) ) {
+		$activity_id = $activities_template->activity->id ;
+	}
+
 	/**
 	 * Filters the activity ID being displayed.
 	 *
@@ -692,7 +689,7 @@ function bp_get_activity_id() {
 	 *
 	 * @param int $id The activity ID.
 	 */
-	return apply_filters( 'bp_get_activity_id', $activities_template->activity->id );
+	return apply_filters( 'bp_get_activity_id', $activity_id );
 }
 
 /**
@@ -1473,6 +1470,38 @@ function bp_get_activity_content() {
 }
 
 /**
+ * Output the activity privacy.
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_activity_privacy() {
+	echo bp_get_activity_privacy();
+}
+
+/**
+ * Return the activity privacy.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity privacy.
+ */
+function bp_get_activity_privacy() {
+	global $activities_template;
+
+	/**
+	 * Filters the activity privacy.
+	 *
+	 * @since BuddyBoss1.2.0
+	 *
+	 * @param string $privacy  Content body.
+	 * @param object $activity Activity object. Passed by reference.
+	 */
+	return apply_filters_ref_array( 'bp_get_activity_privacy', array( $activities_template->activity->privacy, &$activities_template->activity ) );
+}
+
+/**
  * Attach metadata about an activity item to the activity content.
  *
  * This metadata includes the time since the item was posted (which will appear
@@ -1617,6 +1646,57 @@ function bp_activity_user_can_delete( $activity = false ) {
 	 * @param object $activity   Current activity item object.
 	 */
 	return (bool) apply_filters( 'bp_activity_user_can_delete', $can_delete, $activity );
+}
+
+/**
+ * Determine if the current user can edit an activity item.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @param false|BP_Activity_Activity $activity Optional. Falls back on the current item in the loop.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_activity_user_can_edit( $activity = false ) {
+	global $activities_template;
+
+	// Try to use current activity if none was passed.
+	if ( empty( $activity ) && ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	}
+
+	// If current_comment is set, we'll use that in place of the main activity.
+	if ( isset( $activity->current_comment ) ) {
+		$activity = $activity->current_comment;
+	}
+
+	// Assume the user cannot edit the activity item.
+	$can_edit = false;
+
+	// Only logged in users can edit activity and Activity must be of type 'activity_update', 'activity_comment'
+	if ( is_user_logged_in() && in_array( $activity->type, array( 'activity_update', 'activity_comment' ) ) ) {
+
+		// Users are allowed to edit their own activity.
+		if ( isset( $activity->user_id ) && ( bp_loggedin_user_id() === $activity->user_id ) ) {
+			$can_edit = true;
+		}
+
+		// Viewing a single item, and this user is an admin of that item.
+		if ( bp_is_single_item() && bp_is_item_admin() ) {
+			$can_edit = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an activity item.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $activity   Current activity item object.
+	 */
+	return (bool) apply_filters( 'bp_activity_user_can_edit', $can_edit, $activity );
 }
 
 /**
@@ -2607,6 +2687,10 @@ function bp_get_activity_css_class() {
 
 	if ( bp_activity_get_comment_count() && bp_activity_can_comment() ) {
 		$class .= ' has-comments';
+	}
+
+	if ( '0' !== bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true ) ) {
+		$class .= ' wp-link-embed';
 	}
 
 	/**
