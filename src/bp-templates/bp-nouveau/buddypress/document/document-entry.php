@@ -8,8 +8,8 @@
 
 $attachment_id       = bp_get_document_attachment_id();
 $extension           = '';
-$can_download_btn    = false;
-$can_manage_btn      = false;
+$can_download    = false;
+$can_manage      = false;
 $can_view            = false;
 $attachment_url      = '';
 $text_attachment_url = '';
@@ -29,8 +29,8 @@ if ( $attachment_id ) {
 	$listing_class       = 'ac-document-list';
 	$document_type       = 'document';
 	$document_privacy    = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
-	$can_download_btn    = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage_btn      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_download    = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$can_add             = ( true === (bool) $document_privacy['can_add'] ) ? true : false;
 	$group_id            = bp_get_document_group_id();
@@ -59,9 +59,9 @@ if ( $attachment_id ) {
 	$listing_class    = 'ac-folder-list';
 	$document_type    = 'folder';
 	$folder_privacy   = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
-	$can_manage_btn   = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+	$can_manage   = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
 	$can_view         = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
-	$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+	$can_download = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 	$can_add          = ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
 	$group_id         = bp_get_document_folder_group_id();
 	$document_title   = bp_get_folder_title();
@@ -192,11 +192,11 @@ if ( $attachment_id ) {
 	</div>
 	<?php
 	$show = false;
-	if ( $attachment_id && $can_download_btn ) {
+	if ( $attachment_id && $can_download ) {
 		$show = true;
-	} elseif ( $can_download_btn ) {
+	} elseif ( $can_download ) {
 		$show = true;
-	} elseif ( $can_manage_btn ) {
+	} elseif ( $can_manage ) {
 		$show = true;
 	}
 	?>
@@ -208,7 +208,7 @@ if ( $attachment_id ) {
 			<div class="media-folder_action__list">
 				<ul>
 					<?php
-					if ( $can_download_btn ) {
+					if ( $can_download ) {
 						?>
 						<li class="download_file">
 							<a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a>
@@ -218,7 +218,7 @@ if ( $attachment_id ) {
 						</li>
 						<?php
 					}
-					if ( $can_manage_btn ) {
+					if ( $can_manage ) {
 						if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id && 0 === bp_get_document_parent_id() ) {
 							$url            = '#';
 							$child_activity = '';
@@ -242,7 +242,7 @@ if ( $attachment_id ) {
 								}
 							}
 
-							if ( $can_add ) {
+							if ( $can_manage ) {
 								?>
 								<li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
 									<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
