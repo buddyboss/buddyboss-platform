@@ -43,7 +43,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 								</form>
 							</div>
 							<?php
-							if ( is_user_logged_in() && ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) ) :
+							if ( is_user_logged_in() && ( bp_is_user_document() || bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
@@ -56,7 +56,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
-									} elseif ( ! bp_is_group() ) {
+									} elseif ( ! bp_is_group() && $can_add_btn ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -89,7 +89,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										</div>
 									</div> <!-- .media-folder_items -->
 									<?php
-								} elseif ( ! bp_is_group() ) {
+								} elseif ( ! bp_is_group() && $can_manage_btn ) {
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">

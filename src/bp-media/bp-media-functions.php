@@ -2359,6 +2359,11 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2410,6 +2415,11 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2425,6 +2435,11 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2445,6 +2460,11 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_manage   = true;
@@ -2470,6 +2490,11 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access > 0 ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2483,6 +2508,11 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_view     = true;
 				$can_download = true;
 				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 
@@ -2710,6 +2740,11 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2761,6 +2796,11 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$can_add      = true;
 				$can_view     = true;
 				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2775,6 +2815,11 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$can_add      = true;
 				$can_view     = true;
 				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2788,6 +2833,11 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$can_add      = true;
 				$can_view     = true;
 				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 

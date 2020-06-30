@@ -241,11 +241,14 @@ if ( $attachment_id ) {
 									}
 								}
 							}
-							?>
-							<li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
-								<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
-							</li>
-							<?php
+
+							if ( $can_add ) {
+								?>
+								<li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
+									<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
+								</li>
+								<?php
+							}
 						}
 						?>
 						<li class="rename_file">
