@@ -895,7 +895,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			bp_document_get_child_folders( $attachment_id, $parent_folder );
 
 			$zip_name  = $upload_dir . '/' . $folder->title . '.zip';
-			$file_name = $folder->title . '.zip';
+			$file_name  = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
 			$zip = new ZipArchive();

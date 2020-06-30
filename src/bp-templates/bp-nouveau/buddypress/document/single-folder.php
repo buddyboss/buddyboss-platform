@@ -15,6 +15,7 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 
 $folder_privacy     = bp_document_user_can_manage_folder( $folder_id, bp_loggedin_user_id() );
 $can_manage_btn     = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+$can_add_btn     	= ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
 
 $bradcrumbs = bp_document_folder_bradcrumb( $folder_id );
 if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
@@ -46,7 +47,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_manage_btn ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_add_btn ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>

@@ -62,6 +62,7 @@ if ( $attachment_id ) {
 	$can_manage_btn   = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
 	$can_view         = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
 	$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+	$can_add_btn 	  = ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
 	$group_id         = bp_get_document_folder_group_id();
 	$document_title   = bp_get_folder_title();
 	$data_action = 'folder';
