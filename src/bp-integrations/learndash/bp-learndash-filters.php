@@ -156,8 +156,12 @@ function bp_activity_pre_transition_post_type_status( $bool, $new_status, $old_s
  * @since BuddyBoss 2.2.3
  */
 function bp_activity_add_meta_boxes() {
-
 	global $post;
+
+	if ( ! bp_is_active( 'activity' ) ) {
+		return;
+	}
+
 	$post_ID = $post->ID;
 
 	if (

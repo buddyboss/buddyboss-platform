@@ -208,8 +208,10 @@ class BP_Activity_Template {
 					'per_page'          => $this->pag_num,
 					'sort'              => $sort,
 					'display_comments'  => $display_comments,
+					'privacy'           => $privacy,
 					'show_hidden'       => $show_hidden,
 					'spam'              => $spam,
+					'scope'             => $scope,
 					'update_meta_cache' => $update_meta_cache,
 				)
 			);

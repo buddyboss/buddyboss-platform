@@ -776,6 +776,13 @@ function bp_disable_account_deletion( $default = false ) {
  *              false.
  */
 function bp_enable_private_network( $default = false ) {
+	global $bp;
+
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-network'] ) ) {
+		$val = (bool) $bp->site_options['bp-enable-private-network'];
+	} else {
+		$val = (bool) bp_get_option( 'bp-enable-private-network', $default );
+	}
 
 	/**
 	 * Filters whether private network for site is enabled.
@@ -784,7 +791,7 @@ function bp_enable_private_network( $default = false ) {
 	 *
 	 * @param bool $value Whether private network for site is enabled.
 	 */
-	return apply_filters( 'bp_enable_private_network', (bool) bp_get_option( 'bp-enable-private-network', $default ) );
+	return apply_filters( 'bp_enable_private_network', $val );
 }
 
 /**

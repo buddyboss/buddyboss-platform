@@ -66,7 +66,7 @@ class BP_Nouveau_Media {
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI
-		add_action( 'bp_nouveau_enqueue_scripts',                       'bp_nouveau_media_enqueue_scripts'                          );
+		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_media_enqueue_scripts' );
 	}
 
 	/**
