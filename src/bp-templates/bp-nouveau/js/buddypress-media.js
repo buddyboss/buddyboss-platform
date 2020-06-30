@@ -659,7 +659,7 @@ window.bp = window.bp || {};
 		},
 
 		bp_ajax_media_request: function (event, data) {
-			if (typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0) {
+			if ( ( this.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups === 0 ) || ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0 ) ) {
 				$( '.bb-photos-actions' ).hide();
 			}
 		},
