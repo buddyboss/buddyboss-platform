@@ -2347,6 +2347,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$media        = new BP_Media( $media_id );
 	$data         = array();
 
@@ -2357,6 +2358,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2367,11 +2369,24 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_media( $user_id, $media->group_id );
+				$manage   = groups_can_user_manage_media( $user_id, $media->group_id );
+				$status   = bp_group_get_media_status( $media->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $media->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $media->group_id );
 
 				if ( $manage ) {
 					if ( $media->user_id === $user_id ) {
 						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2391,6 +2406,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2405,6 +2421,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2424,6 +2441,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_manage   = true;
@@ -2448,6 +2466,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
 			} elseif ( $has_access > 0 ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2460,6 +2479,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
 			}
 			break;
 
@@ -2468,6 +2488,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_media_user_can_manage_media', $data, $media_id, $user_id );
 }
@@ -2674,6 +2695,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$album        = new BP_Media_Album( $album_id );
 	$data         = array();
 
@@ -2681,6 +2703,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
 		case 'public':
 			if ( $album->user_id === $user_id ) {
+				$can_add      = true;
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -2694,11 +2717,24 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_media( $user_id, $album->group_id );
+				$manage   = groups_can_user_manage_media( $user_id, $album->group_id );
+				$status   = bp_group_get_media_status( $album->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $album->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $album->group_id );
 
 				if ( $manage ) {
 					if ( $album->user_id === $user_id ) {
 						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2716,6 +2752,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 		case 'loggedin':
 			if ( $album->user_id === $user_id ) {
 				$can_manage   = true;
+				$can_add      = true;
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
@@ -2729,6 +2766,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $album->user_id, $user_id ) : false;
 			if ( $album->user_id === $user_id ) {
 				$can_manage   = true;
+				$can_add      = true;
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $is_friend ) {
@@ -2741,6 +2779,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 		case 'onlyme':
 			if ( $album->user_id === $user_id ) {
 				$can_manage   = true;
+				$can_add      = true;
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2751,6 +2790,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_media_user_can_manage_album', $data, $album_id, $user_id );
 }
