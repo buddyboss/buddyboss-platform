@@ -23,8 +23,8 @@
         <?php
 		$media_privacy  = bp_media_user_can_manage_media( bp_get_media_id(), bp_loggedin_user_id() );
 		$can_manage_btn = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
-		if ( bp_is_my_profile() || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage_btn ) || ( bp_is_group_albums() && $can_manage_btn ) ) ) ) : ?>
-            <div class="bb-media-check-wrap sd">
+		if ( ( ( bp_is_my_profile() || bp_is_user_media() ) && $can_manage_btn ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage_btn ) || ( bp_is_group_albums() && $can_manage_btn ) ) ) ) : ?>
+            <div class="bb-media-check-wrap">
                 <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
                 <label class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="bb-icon bb-icon-check"></span></label>
             </div>

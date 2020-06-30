@@ -487,6 +487,12 @@ function bp_nouveau_ajax_media_album_save() {
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
+	$user_id = bp_loggedin_user_id();
+	if ( $id ) {
+		$album = new BP_Media_Album( $id );
+		$user_id = $album->user_id;
+	}
+
 	if ( ! array_key_exists( $privacy, bp_media_get_visibility_levels() ) && ! empty( $id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -501,6 +507,7 @@ function bp_nouveau_ajax_media_album_save() {
 			'title'    => $title,
 			'privacy'  => $privacy,
 			'group_id' => $group_id,
+			'user_id'  => $user_id,
 		)
 	);
 
