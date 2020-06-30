@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.5 =
+* Profiles - Now allowing underscores in Nickname field for registration and @mentions
 * Activity - Fixed small images in activity feed getting scaled up and distorted
 
 = 1.4.4 =
