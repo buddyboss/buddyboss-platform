@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-30 04:21:51+00:00\n"
+"POT-Creation-Date: 2020-06-30 20:33:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3838,7 +3838,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:152
 #: bp-core/profile-search/bps-start.php:59
 #: bp-core/profile-search/bps-start.php:62
-#: bp-core/profile-search/bps-start.php:245
+#: bp-core/profile-search/bps-start.php:247
 #: bp-xprofile/bp-xprofile-admin.php:1117
 msgid "Profile Search"
 msgstr ""
@@ -7966,13 +7966,13 @@ msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:107
 #: bp-core/profile-search/bps-admin.php:272
-#: bp-core/profile-search/bps-start.php:190
+#: bp-core/profile-search/bps-start.php:192
 msgid "Drag & drop to reorder fields"
 msgstr ""
 
 #: bp-core/profile-search/bps-admin.php:118
 #: bp-core/profile-search/bps-admin.php:283
-#: bp-core/profile-search/bps-start.php:192 bp-groups/bp-groups-admin.php:1459
+#: bp-core/profile-search/bps-start.php:194 bp-groups/bp-groups-admin.php:1459
 msgid "Remove"
 msgstr ""
 
@@ -8062,19 +8062,19 @@ msgstr ""
 msgid "No forms found in trash"
 msgstr ""
 
-#: bp-core/profile-search/bps-start.php:122
+#: bp-core/profile-search/bps-start.php:124
 msgid "Form updated."
 msgstr ""
 
-#: bp-core/profile-search/bps-start.php:127
+#: bp-core/profile-search/bps-start.php:129
 msgid "Form created."
 msgstr ""
 
-#: bp-core/profile-search/bps-start.php:191
+#: bp-core/profile-search/bps-start.php:193
 msgid "Select field"
 msgstr ""
 
-#: bp-core/profile-search/bps-start.php:214
+#: bp-core/profile-search/bps-start.php:216
 msgid "Filter Results"
 msgstr ""
 

@@ -2607,11 +2607,13 @@ span.dashicons.dashicons-admin-file:before {
   overflow: visible;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list,
 #buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list {
   position: relative;
   display: inline-block;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list .activity-item {
   margin-bottom: 40px;
   max-height: calc(90vh - 40px);
@@ -2619,6 +2621,7 @@ span.dashicons.dashicons-admin-file:before {
   position: static;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .download-document,
 #buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list .download-document {
   position: absolute;
   bottom: 0;
@@ -2633,11 +2636,13 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list {
   position: relative;
   display: inline-block;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
   margin-bottom: 40px;
   max-height: calc(90vh - 40px);
@@ -2645,6 +2650,7 @@ span.dashicons.dashicons-admin-file:before {
   position: static;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media {
   position: absolute;
   bottom: 0;
@@ -12135,7 +12141,8 @@ body.login .login-popup .mfp-close:hover {
   overflow: auto;
 }
 
-.bb-media-model-container {
+#bbpress-forums .bb-media-model-container,
+#buddypress .bb-media-model-container {
   max-width: 90%;
   min-width: 90%;
   position: relative;
@@ -12143,6 +12150,7 @@ body.login .login-popup .mfp-close:hover {
   padding: 20px 0;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list,
 #buddypress .bb-media-model-container .activity-list {
   border: 0;
   margin: 0;
