@@ -25,7 +25,7 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 
 	return array_merge( $styles, array(
 		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/css/mentions%1$s%2$s.css',
+			'file'         => buddypress()->plugin_url . 'bp-core/css/mentions%1$s%2$s.css',
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 		),
@@ -48,7 +48,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 
 	return array_merge( $scripts, array(
 		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
+			'file'         => buddypress()->plugin_url . 'bp-core/js/mentions%s.js',
 			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
 			'version'      => bp_get_version(),
 			'footer'       => true,

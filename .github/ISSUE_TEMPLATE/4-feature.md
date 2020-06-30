@@ -18,4 +18,4 @@ A clear and concise description of what you want to happen.
 A clear and concise description of any alternative solutions or features you've considered.
 
 **Support ticket links**
-If applicable, add Zendesk link or ticket number where the issue was originally reported.
+If applicable, add HelpScout link or ticket number where the issue was originally reported.

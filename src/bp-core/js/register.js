@@ -28,7 +28,7 @@ jQuery( document ).ready( function() {
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
 
-	if ( dropDownSelected.val().length ) {
+	if ( typeof dropDownSelected.val() !== 'undefined' && dropDownSelected.val().length ) {
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );

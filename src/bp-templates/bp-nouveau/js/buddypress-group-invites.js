@@ -396,7 +396,6 @@ window.bp = window.bp || {};
 					data: param,
 					success: function (response) {
 						if ( response.success ) {
-							console.log(343);
 							listSelector.html('');
 							listSelector.html( response.data.html );
 							lastSelector.html('');

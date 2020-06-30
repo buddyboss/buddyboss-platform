@@ -142,10 +142,6 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 
 				if ( has_post_thumbnail() ) {
 					the_post_thumbnail( 'medium' );
-				} else {
-					?>
-                    <img src="<?php echo bp_learndash_url( '/assets/images/mystery-course.png' ); ?>" class="photo" />
-					<?php
 				} ?>
             </a>
         </div>
