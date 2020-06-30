@@ -2759,7 +2759,6 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$status   = bp_group_get_media_status( $album->group_id );
 				$is_admin = groups_is_user_admin( $user_id, $album->group_id );
 				$is_mod   = groups_is_user_mod( $user_id, $album->group_id );
-
 				if ( $manage ) {
 					if ( $album->user_id === $user_id ) {
 						$can_manage   = true;
