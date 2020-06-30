@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.5 =
+* 
 
 = 1.4.4 =
 * Profiles - Improved the user experience when adding a new Repeater field on frontend
