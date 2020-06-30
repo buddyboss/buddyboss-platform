@@ -63,7 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Media - Fixed certain document types not always uploading into Forum replies
 * Media - Improved the formatting of media popups in Forum replies
 * REST API - Fixed API issues in private messages, activity privacy, and site permissions
-* Compatibility - Fixed conflicts with Privacy settings on Memcached servers
+* Compatibility - Fixed conflicts with Private Network settings on Memcached servers
 
 = 1.4.4 =
 * Profiles - Improved the user experience when adding a new Repeater field on frontend
