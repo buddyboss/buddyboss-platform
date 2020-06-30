@@ -2711,6 +2711,9 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 						$can_manage   = true;
 						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 						$can_manage   = true;
 						$can_add      = false;
@@ -2814,7 +2817,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			if ( bp_is_active( 'groups' ) ) {
 
 				$manage   = groups_can_user_manage_document( $user_id, $document->group_id );
-				$status   = bp_group_get_media_status( $document->group_id );
+				$status   = bp_group_get_document_status( $document->group_id );
 				$is_admin = groups_is_user_admin( $user_id, $document->group_id );
 				$is_mod   = groups_is_user_mod( $user_id, $document->group_id );
 
@@ -2823,6 +2826,9 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 						$can_manage   = true;
 						$can_add      = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
 						$can_manage   = true;
 						$can_add      = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {

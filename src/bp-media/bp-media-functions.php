@@ -2381,6 +2381,9 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 						$can_manage   = true;
 						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 						$can_manage   = true;
 						$can_add      = false;
@@ -2727,6 +2730,9 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 						$can_manage   = true;
 						$can_add      = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
 						$can_manage   = true;
 						$can_add      = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
