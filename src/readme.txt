@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.5 =
-* 
+* Activity - Fixed small images in activity feed getting scaled up and distorted
 
 = 1.4.4 =
 * Profiles - Improved the user experience when adding a new Repeater field on frontend
