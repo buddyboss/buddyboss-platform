@@ -303,7 +303,8 @@ class BP_Media {
 				'page'         => 1,               // The current page.
 				'per_page'     => 20,              // Media items per page.
 				'max'          => false,           // Max number of items to return.
-				'fields'       => 'all',           // Fields to include.
+				'fields'        => 'all',           // Fields to include.
+				'activity_id'  => false,           // comma separated strings of activity ids.
 				'sort'         => 'DESC',          // ASC or DESC.
 				'order_by'     => 'date_created',  // Column to order by.
 				'exclude'      => false,           // Array of ids to exclude.
@@ -397,6 +398,36 @@ class BP_Media {
 
 		if ( ! empty( $r['activity_id'] ) ) {
 			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
+		}
+
+		if ( ! empty( $r['activity_id'] ) && bp_is_active( 'activity') ) {
+			// Convert activity_id to array.
+			$activity_ids = explode( ',', $r['activity_id'] );
+			$in_activity_ids = array();
+			foreach ( $activity_ids as $activity_id ) {
+				// Check is single media activity.
+				$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+				if ( $media_activity ) {
+					$in_activity_ids[] = $activity_id;
+					// Goes to else when you have added multiple media in single activity and that consider the parent activity.
+				} else {
+					// Get activity media ids.
+					$activity_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+					if ( $activity_media_ids ) {
+						$activity_media_ids = explode( ',', $activity_media_ids );
+						foreach ( $activity_media_ids as $media_id ) {
+							$media              = new BP_Media( $media_id );
+							$in_activity_ids[]  = $media->activity_id;
+						}
+					}
+				}
+			}
+			$in_activity_ids = implode( ',', wp_parse_id_list( $in_activity_ids ) );
+			if( $in_activity_ids ) {
+				$where_conditions_document['activity'] = "m.activity_id IN ({$in_activity_ids})";
+			} else {
+				$where_conditions['activity'] = "m.id = 0";
+			}
 		}
 
 		// existing-media check to query media which has no albums assigned.
