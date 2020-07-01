@@ -1893,7 +1893,7 @@ class BP_Document {
 	public static function get_activity_document_id( $activity_id = false ) {
 		global $bp, $wpdb;
 
-		if ( ! $activity_id ) {
+		if ( ! $activity_id || ! bp_is_active( 'activity' ) ) {
 			return false;
 		}
 
