@@ -917,7 +917,7 @@ class BP_Document {
 			$where_conditions_folder['in']   = "f.id IN ({$in})";
 		}
 
-		if ( ! empty( $r['activity_id'] ) ) {
+		if ( ! empty( $r['activity_id'] ) && bp_is_active( 'activity') ) {
 			// Convert activity_id to array.
 			$activity_ids = explode( ',', $r['activity_id'] );
 			$in_activity_ids = array();
