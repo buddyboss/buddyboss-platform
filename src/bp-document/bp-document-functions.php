@@ -371,7 +371,7 @@ function bp_document_get( $args = '' ) {
 
 			// want to limit the query.
 			'user_id'             => false,
-			'activity_id'         => false,
+			'activity_id'         => false,         // comma separated strings of activity ids.
 			'folder_id'           => false,
 			'group_id'            => false,
 			'search_terms'        => false,        // Pass search terms as a string.

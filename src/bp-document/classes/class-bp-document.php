@@ -803,7 +803,8 @@ class BP_Document {
 			'page'                => 1,               // The current page.
 			'per_page'            => 20,              // Document items per page.
 			'max'                 => false,           // Max number of items to return.
-			'fields'              => 'all',           // Fields to include.
+			'fields'               => 'all',           // Fields to include.
+			'activity_id'         => false,           // comma separated strings of activity ids.
 			'sort'                => 'DESC',          // ASC or DESC.
 			'order_by'            => 'date_created',  // Column to order by.
 			'exclude'             => false,           // Array of ids to exclude.
@@ -917,7 +918,34 @@ class BP_Document {
 		}
 
 		if ( ! empty( $r['activity_id'] ) ) {
-			$where_conditions_document['activity'] = "d.activity_id = {$r['activity_id']}";
+			// Convert activity_id to array.
+			$activity_ids = explode( ',', $r['activity_id'] );
+			$in_activity_ids = array();
+			foreach ( $activity_ids as $activity_id ) {
+				// Check is single document activity.
+				$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );
+				if ( $document_activity ) {
+					$in_activity_ids[] = $activity_id;
+				// Goes to else when you have added multiple document in single activity and that consider the parent activity.
+				} else {
+					// Get activity document ids.
+					$activity_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+					if ( $activity_document_ids ) {
+						$activity_media_ids = explode( ',', $activity_document_ids );
+						foreach ( $activity_media_ids as $document_id ) {
+							$document          = new BP_Document( $document_id );
+							$in_activity_ids[] = $document->activity_id;
+						}
+					}
+				}
+			}
+			$in_activity_ids = implode( ',', wp_parse_id_list( $in_activity_ids ) );
+			if( $in_activity_ids ) {
+				$where_conditions_document['activity'] = "d.activity_id IN ({$in_activity_ids})";
+			} else {
+				$where_conditions_document['activity'] = "d.id = 0";
+			}
+			$where_conditions_folder['activity']   = "f.id = 0";
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
@@ -1869,7 +1897,14 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+		$document_activity = bp_activity_get_meta( $activity_id, 'bp_document_activity', true );
+		if ( $document_activity ) {
+			$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
+		} else {
+			$activity_document_id = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+			$activity_document_id = explode( ',', $activity_document_id );
+		}
+
 
 		return $activity_document_id;
 	}

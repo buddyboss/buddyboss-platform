@@ -1150,7 +1150,13 @@ class BP_Media {
 			return false;
 		}
 
-		$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+		$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+		if ( $media_activity ) {
+			$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+		} else {
+			$activity_media_id = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+			$activity_media_id = explode( ',', $activity_media_id );
+		}
 
 		return $activity_media_id;
 	}
