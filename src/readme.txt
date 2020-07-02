@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.6 =
+* Media - Fixed photo attachments in messages not always displaying for recipients
 
 = 1.4.5 =
 * Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
