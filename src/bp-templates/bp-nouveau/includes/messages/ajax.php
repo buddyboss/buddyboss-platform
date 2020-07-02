@@ -1153,8 +1153,10 @@ function bp_nouveau_ajax_delete_thread() {
 		// Get the message ids in order to pass to the action.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) ); // WPCS: db call ok. // WPCS: cache ok.
 
-		// Delete Message Notifications
-		bp_messages_message_delete_notifications( $thread_id, $message_ids );
+		if ( bp_is_active( 'notifications' ) ) {
+			// Delete Message Notifications.
+			bp_messages_message_delete_notifications( $thread_id, $message_ids );
+		}
 
 		// Delete thread messages.
 		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
