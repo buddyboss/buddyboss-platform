@@ -2376,10 +2376,10 @@ ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   color: #82878c;
   background: #fff;
   border: 1px solid #e5e5e5;
+  border-radius: 3px;
   position: relative;
   overflow: auto;
   zoom: 1;
-  margin: 0 -3px;
 }
 
 .activity-link-preview-container + .bb-activity-media-wrap {
