@@ -1971,7 +1971,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @return WP_HTTP_Response
 	 */
 	public function bp_rest_post_dispatch( $result, $server, $request ) {
-		header( 'bbp-unread-messages', (int) messages_get_unread_count( bp_loggedin_user_id() ) );
+		if ( function_exists( 'messages_get_unread_count' ) ) {
+			$result->header( 'bbp-unread-messages', (int) messages_get_unread_count( bp_loggedin_user_id() ) );
+		}
 
 		return $result;
 	}
