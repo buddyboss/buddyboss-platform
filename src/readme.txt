@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed 'his, her, their' text not translatable for 'Gender' profile field
 * Messages - Fixed unable to delete a conversation if Notifications is disabled
 * Activity - Fixed very long URLs unable to be entered into activity feed posts
+* Private Network - Fixed homepage displaying when using 'Custom URL' for Registration
 * LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
 * LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
 
