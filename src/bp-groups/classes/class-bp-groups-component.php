@@ -552,15 +552,11 @@ class BP_Groups_Component extends BP_Component {
 		// Only grab count if we're on a user page.
 		if ( bp_is_user() ) {
 			$class = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
-
-			$nav_name = sprintf(
-				/* translators: %s: Group count for the current user */
-				__( 'Groups %s', 'buddyboss' ),
-				sprintf(
-					'<span class="%s">%s</span>',
-					esc_attr( $class ),
-					bp_get_total_group_count_for_user()
-				)
+			$nav_name = __( 'Groups', 'buddyboss' );
+			$nav_name .= sprintf(
+				' <span class="%s">%s</span>',
+				esc_attr( $class ),
+				bp_get_total_group_count_for_user()
 			);
 		} else {
 			$nav_name = __( 'Groups', 'buddyboss' );
