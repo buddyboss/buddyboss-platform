@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.4.6 =
 * Media - Fixed photo attachments in messages not always displaying for recipients
+* Groups - Fixed error notices on Group Courses tab when 'wp_debug' is enabled
 
 = 1.4.5 =
 * Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
