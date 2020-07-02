@@ -60,13 +60,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.4.6 =
 * Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
 * Media - Fixed photo attachments in messages not always displaying for recipients
-* Profiles - Fixed 'his, her, their' text not translatable for 'Gender' profile field
 * Messages - Fixed unable to delete a conversation if Notifications is disabled
 * Activity - Fixed very long URLs unable to be entered into activity feed posts
 * Private Network - Fixed homepage displaying when using 'Custom URL' for Registration
 * REST API - Fixed conflict on some servers, with creating and editing posts and pages
 * LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
 * LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
+* Translations - Fixed 'his, her, their' text not translatable for 'Gender' profile field
+* Translations - Fixed layout issues on profile page when language set to Hungarian
 
 = 1.4.5 =
 * Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
