@@ -2084,6 +2084,7 @@ function bp_activity_get_specific( $args = '' ) {
 			'privacy'           => false,      // privacy of activity.
 			'sort'              => 'DESC',     // Sort ASC or DESC
 			'spam'              => 'ham_only', // Retrieve items marked as spam.
+			'scope'             => false, // Retrieve items marked as spam.
 			'update_meta_cache' => true,
 		),
 		'activity_get_specific'
@@ -2099,6 +2100,7 @@ function bp_activity_get_specific( $args = '' ) {
 		'privacy'           => $r['privacy'],
 		'sort'              => $r['sort'],
 		'spam'              => $r['spam'],
+		'scope'             => $r['scope'],
 		'update_meta_cache' => $r['update_meta_cache'],
 	);
 
@@ -2256,6 +2258,7 @@ function bp_activity_post_update( $args = '' ) {
 		array(
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
+			'component'     => buddypress()->activity->id,
 			'hide_sitewide' => false,
 			'type'          => 'activity_update',
 			'privacy'       => 'public',
@@ -2299,7 +2302,7 @@ function bp_activity_post_update( $args = '' ) {
 			'user_id'       => $r['user_id'],
 			'content'       => $add_content,
 			'primary_link'  => $add_primary_link,
-			'component'     => buddypress()->activity->id,
+			'component'     => $r['component'],
 			'type'          => $r['type'],
 			'hide_sitewide' => $r['hide_sitewide'],
 			'privacy'       => $r['privacy'],
@@ -4906,6 +4909,8 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 
 			if ( isset( $src[0] ) ) {
 				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( $src[0] ) );
+			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
+				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
@@ -4925,6 +4930,8 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			$activity_summary = '';
 			if ( isset( $src[0] ) ) {
 				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
+				$activity_summary .= sprintf( '<img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
 
 			// Backward compatibility filter for the blogs component.
@@ -5214,3 +5221,79 @@ function bp_activity_directory_page_content() {
 }
 
 add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
+
+
+/**
+ * Get default scope for the activity
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param string $scope Default scope.
+ *
+ * @return string
+ */
+function bp_activity_default_scope( $scope = 'all' ) {
+	$new_scope = array();
+
+	if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+
+		$new_scope[] = 'public';
+
+		if ( bp_is_activity_directory() || bp_is_single_activity() ) {
+			$new_scope[] = 'just-me';
+
+			if ( bp_is_activity_directory() ) {
+				$new_scope[] = 'public';
+			}
+
+			if ( bp_activity_do_mentions() ) {
+				$new_scope[] = 'mentions';
+			}
+
+			if ( bp_is_active( 'friends' ) ) {
+				$new_scope[] = 'friends';
+			}
+
+			if ( bp_is_active( 'groups' ) ) {
+				$new_scope[] = 'groups';
+			}
+
+			if ( bp_is_activity_follow_active() ) {
+				$new_scope[] = 'following';
+			}
+
+			if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
+				$new_scope[] = 'media';
+				$new_scope[] = 'document';
+			}
+
+		} else if ( bp_is_user_activity() ) {
+			if ( empty( bp_current_action() ) ) {
+				$new_scope[] = 'just-me';
+			} else {
+				$new_scope[] = bp_current_action();
+			}
+		} else if ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
+			$new_scope[] = 'groups';
+		}
+
+	} else if( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'public';
+	}
+
+	$new_scope = array_unique( $new_scope );
+
+	if ( empty( $new_scope ) ) {
+		$new_scope = (array) $scope;
+	}
+
+	/**
+	 * Filter to update default scope.
+	 *
+	 * @since BuddyBoss 1.4.3
+	 */
+	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
+
+	return implode( ',', $new_scope );
+
+}

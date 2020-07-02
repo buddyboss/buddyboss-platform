@@ -118,7 +118,7 @@ function bp_get_document_root_slug() {
  * @return bool Returns true when document found, otherwise false.
  */
 function bp_has_document( $args = '' ) {
-	global $document_template;
+	global $document_template, $bp;
 
 	$args = bp_parse_args( $args );
 
@@ -126,14 +126,13 @@ function bp_has_document( $args = '' ) {
 	 * Smart Defaults.
 	 */
 
-	// User filtering.
-	$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : false;
-
 	$search_terms_default = false;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'document' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
+
+	$privacy = false;
 
 	// folder filtering.
 	$folder_id = 0;
@@ -142,68 +141,19 @@ function bp_has_document( $args = '' ) {
 		if ( bp_is_group_single() && bp_is_group_folders() ) {
 			$folder_id = (int) bp_action_variable( 1 );
 		}
-	} elseif( !empty( $args['folder_id'] ) ) {
+	} elseif ( ! empty( $args['folder_id'] ) ) {
 		$folder_id = $args['folder_id'];
 	}
 
-	$privacy = array();
-	if ( bp_is_profile_document_support_enabled() && empty( $args['include'] ) ) {
-		$privacy = array( 'public' );
-		if ( is_user_logged_in() ) {
-			$privacy[] = 'loggedin';
-
-			if ( bp_is_my_profile() ) {
-				$privacy[] = 'onlyme';
-				$privacy[] = 'friends';
-			}
-		}
-
-		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
-
-			// get the login user id.
-			$current_user_id = get_current_user_id();
-
-			// check if the login user is friends of the display user.
-			$is_friend = friends_check_friendship( $current_user_id, $user_id );
-
-			/**
-			 * Check if the login user is friends of the display user.
-			 * OR check if the login user and the display user is the same
-			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
-				$privacy[] = 'friends';
-			}
-		}
-	}
-
-
 	$group_id = false;
-	if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) && bp_is_group() && empty( $args['include'] ) ) {
-		$privacy  = array( 'grouponly' );
-		$group_id = bp_get_current_group_id();
-		$user_id  = false;
-	}
 
 	// The default scope should recognize custom slugs.
-	$scope = array();
-	if ( bp_is_document_directory() ) {
-		if ( bp_is_profile_document_support_enabled() && bp_is_active( 'friends' ) ) {
-			$scope[] = 'friends';
-		}
-
-		if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) ) {
-			$scope[] = 'groups';
-		}
-
-		if ( bp_is_profile_document_support_enabled() && is_user_logged_in() ) {
-			$scope[] = 'personal';
-		}
-	}
+	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = bp_document_default_scope( $scope );
 
 	/*
 	 * Parse Args.
 	 */
-
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args(
@@ -220,7 +170,7 @@ function bp_has_document( $args = '' ) {
 			'fields'              => 'all',
 			'count_total'         => false,         // Scope - pre-built document filters for a user (friends/groups).
 			'scope'               => $scope,        // Filtering.
-			'user_id'             => $user_id,      // user_id to filter on.
+			'user_id'             => false,         // user_id to filter on.
 			'folder_id'           => $folder_id,    // folder_id to filter on.
 			'group_id'            => $group_id,     // group_id to filter on.
 			'privacy'             => $privacy,      // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
@@ -266,7 +216,6 @@ function bp_has_document( $args = '' ) {
 	/*
 	 * Query
 	 */
-
 	$document_template = new BP_Document_Template( $r );
 
 	/**
@@ -815,6 +764,56 @@ function bp_document_user_can_delete( $document = false ) {
 	 * @param object $document   Current document item object.
 	 */
 	return (bool) apply_filters( 'bp_document_user_can_delete', $can_delete, $document );
+}
+
+/**
+ * Determine if the current user can edit an document item.
+ *
+ * @since BuddyBoss 1.4.2
+ *
+ * @param int|BP_Document $document BP_Document object or ID of the document.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_document_user_can_edit( $document = false ) {
+
+	// Assume the user cannot edit the document item.
+	$can_edit = false;
+
+	if ( empty( $document ) ) {
+		return $can_edit;
+	}
+
+	if ( ! is_object( $document ) ) {
+		$document = new BP_Document( $document );
+	}
+
+	if ( empty( $document ) ) {
+		return $can_edit;
+	}
+
+	// Only logged in users can edit document.
+	if ( is_user_logged_in() ) {
+
+		// Community moderators can always edit document (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+		}
+
+		// Users are allowed to edit their own document.
+		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
+			$can_edit = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an document item.
+	 *
+	 * @since BuddyBoss 1.4.2
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $document   Current document item object.
+	 */
+	return (bool) apply_filters( 'bp_document_user_can_edit', $can_edit, $document );
 }
 
 /**
@@ -1611,7 +1610,8 @@ function bp_folder_link() {
 function bp_get_folder_link() {
 	global $document_template, $document_folder_template;
 
-	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) && $document_template->document->group_id > 0 ) {
+	$url = '';
+	if ( isset( $document_template ) && isset( $document_template->document ) && isset( $document_template->document->group_id ) && $document_template->document->group_id > 0 && bp_is_active( 'groups' ) ) {
 		$group      = groups_get_group( $document_template->document->group_id );
 		$group_link = bp_get_group_permalink( $group );
 		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
@@ -1710,6 +1710,60 @@ function bp_folder_user_can_delete( $folder = false ) {
 	 * @param object $folder   Current folder item object.
 	 */
 	return (bool) apply_filters( 'bp_folder_user_can_delete', $can_delete, $folder );
+}
+
+/**
+ * Determine if the current user can edit an folder item.
+ *
+ * @since BuddyBoss 1.4.2
+ *
+ * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the folder.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_folder_user_can_edit( $folder = false ) {
+
+	// Assume the user cannot edit the folder item.
+	$can_edit = false;
+
+	if ( empty( $folder ) ) {
+		return $can_edit;
+	}
+
+	if ( ! is_object( $folder ) ) {
+		$folder = new BP_Document_Folder( $folder );
+	}
+
+	if ( empty( $folder ) ) {
+		return $can_edit;
+	}
+
+	// Only logged in users can edit folder.
+	if ( is_user_logged_in() ) {
+
+		// Groups documents have their own access.
+		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
+			$can_edit = true;
+
+			// Users are allowed to edit their own folder.
+		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
+			$can_edit = true;
+		}
+
+		// Community moderators can always edit folder (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an folder item.
+	 *
+	 * @since BuddyBoss 1.4.2
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $folder   Current folder item object.
+	 */
+	return (bool) apply_filters( 'bp_folder_user_can_delete', $can_edit, $folder );
 }
 
 /**

@@ -134,6 +134,11 @@ class BP_Document {
 	 */
 	public $error_type = 'bool';
 
+	static $per_pdf_secs = 20; // Seconds to allow for regenerating the preview of each PDF in the "Regen. PDF Previews" administraion tool.
+	static $min_time_limit = 300; // Minimum seconds to set max execution time to on doing regeneration.
+	static $poll_interval = 1; // How often to poll for progress info in seconds.
+	static $timing_dec_places = 1; // Number of decimal places to show on time (in seconds) taken.
+
 	/**
 	 * Constructor method.
 	 *
@@ -148,6 +153,30 @@ class BP_Document {
 		if ( ! empty( $id ) ) {
 			$this->id = (int) $id;
 			$this->populate();
+		}
+	}
+
+	/**
+	 * Called on 'wp_image_editors' action.
+	 * Adds Ghostscript `BP_GOPP_Image_Editor_GS` class to head of image editors list.
+	 */
+	static function bp_document_wp_image_editors( $image_editors ) {
+		if ( ! in_array( 'BP_GOPP_Image_Editor_GS', $image_editors, true ) ) {
+			self::bp_document_load_gopp_image_editor_gs();
+			array_unshift( $image_editors, 'BP_GOPP_Image_Editor_GS' );
+		}
+		return $image_editors;
+	}
+
+	/**
+	 * Helper to load BP_GOPP_Image_Editor_GS class.
+	 */
+	static function bp_document_load_gopp_image_editor_gs() {
+		if ( ! class_exists( 'BP_GOPP_Image_Editor_GS' ) ) {
+			if ( ! class_exists( 'WP_Image_Editor' ) ) {
+				require ABSPATH . WPINC . '/class-wp-image-editor.php';
+			}
+			require trailingslashit( dirname( __FILE__ ) ) . '/class-bp-gopp-image-editor-gs.php';
 		}
 	}
 
@@ -793,7 +822,7 @@ class BP_Document {
 		$select_sql_folder   = 'SELECT DISTINCT f.*';
 
 		$from_sql_document = " FROM {$bp->document->table_name} d, {$bp->document->table_name_meta} dm WHERE ( d.id = dm.document_id ) ";
-		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f";
+		$from_sql_folder   = " FROM {$bp->document->table_name_folder} f WHERE id != '0' ";
 
 		$join_sql_document = '';
 		$join_sql_folder   = '';
@@ -891,187 +920,6 @@ class BP_Document {
 			$where_conditions_document['activity'] = "d.activity_id = {$r['activity_id']}";
 		}
 
-		$folder_ids = array();
-		// Search inside child folder in group.
-		if ( $r['search_terms'] && $r['group_id'] && $r['folder_id'] && ! bp_is_document_directory() ) {
-			$folder_ids     = bp_document_get_folder_children( (int) $r['folder_id'] );
-			$folder_ids[]   = (int) $r['folder_id'];
-		// Search inside root folder in group.
-		} elseif ( $r['search_terms'] && $r['group_id'] && ! $r['folder_id'] && ! bp_is_document_directory() ) {
-			$folder_ids     = bp_document_get_group_root_folders( (int) $r['group_id'] );
-			$folder_ids[]   = 0;
-		// Search inside child folder in user.
-		} elseif ( $r['search_terms'] && $r['user_id'] && $r['folder_id'] && ! bp_is_document_directory() ) {
-			$folder_ids     = bp_document_get_folder_children( (int) $r['folder_id'] );
-			$folder_ids[]   = (int) $r['folder_id'];
-		// Search inside root folder in user.
-		} elseif ( $r['search_terms'] && $r['user_id'] && ! $r['folder_id'] && ! bp_is_document_directory() ) {
-			$folder_ids     = bp_document_get_user_root_folders( (int) $r['user_id'] );
-			$folder_ids[]   = 0;
-		// My Documents Search.
-		} elseif ( $r['search_terms'] && $r['user_id'] && ! $r['folder_id'] && 'personal' === $r['scope'] && bp_is_document_directory() ) {
-			$user_root_folder_ids = bp_document_get_user_root_folders( (int) $r['user_id'] );
-			if ( $user_root_folder_ids ) {
-				foreach ( $user_root_folder_ids as $single_folder ) {
-					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-					if ( $single_folder_ids ) {
-						array_merge( $folder_ids, $single_folder_ids );
-					}
-					array_push( $folder_ids, $single_folder );
-				}
-			}
-			$folder_ids[]   = 0;
-		// My Group Documents Search.
-		} elseif ( $r['search_terms'] && ! $r['user_id'] && ! $r['folder_id'] && 'groups' === $r['scope'] && bp_is_document_directory() ) {
-
-			// Fetch public groups.
-			$public_groups = groups_get_groups(
-				array(
-					'fields'   => 'ids',
-					'status'   => 'public',
-					'per_page' => -1,
-				)
-			);
-			if ( ! empty( $public_groups['groups'] ) ) {
-				$public_groups = $public_groups['groups'];
-			} else {
-				$public_groups = array();
-			}
-
-			$groups = groups_get_user_groups( bp_loggedin_user_id() );
-			if ( ! empty( $groups['groups'] ) ) {
-				$user_groups = $groups['groups'];
-			} else {
-				$user_groups = array();
-			}
-
-			$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
-			if ( $user_groups ) {
-				foreach ( $user_groups as $single_group ) {
-					$fetch_folder_ids = bp_document_get_group_root_folders( (int) $single_group );
-					if ( $fetch_folder_ids ) {
-						foreach ( $fetch_folder_ids as $single_folder ) {
-							$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-							if ( $single_folder_ids ) {
-								array_merge( $folder_ids, $single_folder_ids );
-							}
-							array_push( $folder_ids, $single_folder );
-						}
-					}
-				}
-			}
-			$folder_ids[]   = 0;
-
-		// All Documents Search.
-		} elseif ( $r['search_terms'] && ! $r['user_id'] && ! $r['folder_id'] && $r['scope'] && is_array( $r['scope'] ) && bp_is_document_directory() ) {
-			$user_root_folder_ids = bp_document_get_user_root_folders( bp_loggedin_user_id() );
-			if ( $user_root_folder_ids ) {
-				foreach ( $user_root_folder_ids as $single_folder ) {
-					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-					if ( $single_folder_ids ) {
-						array_merge( $folder_ids, $single_folder_ids );
-					}
-					array_push( $folder_ids, $single_folder );
-				}
-			}
-
-			// Fetch public groups.
-			$public_groups = groups_get_groups(
-				array(
-					'fields'   => 'ids',
-					'status'   => 'public',
-					'per_page' => -1,
-				)
-			);
-			if ( ! empty( $public_groups['groups'] ) ) {
-				$public_groups = $public_groups['groups'];
-			} else {
-				$public_groups = array();
-			}
-
-			$groups = groups_get_user_groups( bp_loggedin_user_id() );
-			if ( ! empty( $groups['groups'] ) ) {
-				$user_groups = $groups['groups'];
-			} else {
-				$user_groups = array();
-			}
-
-			$user_groups = array_unique( array_merge( $user_groups, $public_groups ) );
-			if ( $user_groups ) {
-				foreach ( $user_groups as $single_group ) {
-					$fetch_folder_ids = bp_document_get_group_root_folders( (int) $single_group );
-					if ( $fetch_folder_ids ) {
-						foreach ( $fetch_folder_ids as $single_folder ) {
-							$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-							if ( $single_folder_ids ) {
-								array_merge( $folder_ids, $single_folder_ids );
-							}
-							array_push( $folder_ids, $single_folder );
-						}
-					}
-				}
-			}
-			$folder_ids[]   = 0;
-		}
-
-		// existing-document check to query document which has no folders assigned.
-		if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-			if ( $r['search_terms'] ) {
-				$folder_id_in                        = implode( ',', $folder_ids );
-				$where_conditions_document['folder'] = "d.folder_id IN ($folder_id_in)";
-				$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in)";
-			} else {
-				$where_conditions_document['folder'] = "d.folder_id = {$r['folder_id']}";
-				$where_conditions_folder['folder'] = "f.parent = {$r['folder_id']}";
-			}
-		} elseif ( ! empty( $r['folder_id'] ) && 'existing-document' === $r['folder_id'] ) {
-			if ( $r['search_terms'] ) {
-				$folder_id_in                        = implode( ',', $folder_ids );
-				$where_conditions_document['folder'] = "d.folder_id IN ($folder_id_in)";
-				$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in)";
-			} else {
-				$where_conditions_document['folder'] = "d.folder_id = {$r['folder_id']}";
-				$where_conditions_folder['folder'] = "f.parent = {$r['folder_id']}";
-			}
-		} else {
-			if ( $r['search_terms'] ) {
-				$folder_id_in                        = implode( ',', $folder_ids );
-				$where_conditions_document['folder'] = "d.folder_id IN ($folder_id_in)";
-				if ( $r['search_terms'] && ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && is_array( $r['scope'] ) ) {
-					$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in) AND f.user_id = ". bp_loggedin_user_id();
-				} else {
-					$where_conditions_folder['folder']   = "f.parent IN ($folder_id_in)";
-				}
-			} else {
-				$where_conditions_document['folder'] = 'd.folder_id = 0';
-				$where_conditions_folder['folder']   = 'f.parent = 0';
-			}
-		}
-
-		// Add privacy "friends" when in directory page click on "My Documents" tab.
-		if ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['user_id'] ) && ! empty( $r['scope'] ) ) {
-			if ( bp_is_active( 'friends' ) ) {
-				array_push( $r['privacy'], 'friends' );
-			}
-			array_push( $r['privacy'], 'onlyme' );
-			if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() && $r['scope'] !== 'personal' ) {
-				array_push( $r['privacy'], 'grouponly' );
-			}
-		// All Document Tab on search.
-		} elseif ( $r['search_terms'] && ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && is_array( $r['scope'] ) ) {
-			if ( bp_is_active( 'friends' ) ) {
-				array_push( $r['privacy'], 'friends' );
-			}
-			array_push( $r['privacy'], 'onlyme' );
-			if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() && $r['scope'] !== 'personal' ) {
-				array_push( $r['privacy'], 'grouponly' );
-			}
-		// My Groups Document Tab.
-		} elseif ( ! empty( $r['privacy'] ) && bp_is_document_directory() && ! empty( $r['scope'] ) && 'groups' === $r['scope'] ) {
-			$r['privacy'] = array( 'grouponly' );
-			$r['user_id'] = bp_loggedin_user_id();
-		}
-
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions_document['user'] = "d.user_id = {$r['user_id']}";
 			$where_conditions_folder['user']   = "f.user_id = {$r['user_id']}";
@@ -1080,38 +928,6 @@ class BP_Document {
 		if ( ! empty( $r['group_id'] ) ) {
 			$where_conditions_document['user'] = "d.group_id = {$r['group_id']}";
 			$where_conditions_folder['user']   = "f.group_id = {$r['group_id']}";
-		}
-
-		if ( ! empty( $r['user_directory'] ) && true === $r['user_directory'] ) {
-			if ( ! empty( $r['folder_id'] ) && 'existing-document' !== $r['folder_id'] ) {
-				if ( $r['search_terms'] ) {
-					$folder_ids                                  = bp_document_get_folder_children( (int) $r['folder_id'] );
-					$folder_ids[]                                = (int) $r['folder_id'];
-					$folder_id_in                                = implode( ',', $folder_ids );
-					$where_conditions_folder['user_directory']   = "f.parent IN ($folder_id_in)";
-				} else {
-					$where_conditions_folder['user_directory'] = "f.parent = {$r['folder_id']}";
-				}
-			} elseif ( ! empty( $r['group_id'] ) && bp_is_group_folders() && 'folder' === bp_action_variable( 0 ) && (int) bp_action_variable( 1 ) > 0 ) {
-				$folder_id = (int) bp_action_variable( 1 );
-				$folder_ids = bp_document_get_folder_children( $folder_id );
-				if ( $r['search_terms'] ) {
-					$folder_id_in                                = implode( ',', $folder_ids );
-					$where_conditions_folder['user_directory']   = "f.parent IN ($folder_id_in)";
-					$where_conditions_document['user_directory'] = "d.folder_id IN ($folder_id_in)";
-				} else {
-					$where_conditions_folder['user_directory']   = "f.parent = {$folder_id}";
-					$where_conditions_document['user_directory'] = "d.folder_id = {$folder_id}";
-				}
-			}
-		}
-
-		if ( bp_is_document_directory() && ! bp_is_profile_document_support_enabled() ) {
-			$where_conditions_folder['type']   = "f.group_id > 0";
-			$where_conditions_document['type'] = "d.group_id > 0";
-		} elseif ( bp_is_document_directory() && ! bp_is_group_document_support_enabled() ) {
-			$where_conditions_folder['type']   = "f.group_id = 0";
-			$where_conditions_document['type'] = "d.group_id = 0";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -1154,21 +970,21 @@ class BP_Document {
 		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
 		$where_conditions_folder   = apply_filters( 'bp_document_get_where_conditions_folder', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
 
-		if ( empty( $where_conditions_document ) ) {
-			$where_conditions_document['2'] = '2';
-		}
-
-		if ( empty( $where_conditions_folder ) ) {
-			$where_conditions_folder['2'] = '2';
-		}
-
-		// Join the where conditions together.
-		if ( ! empty( $scope_query_document['sql'] ) && ! empty( $scope_query_folder['sql'] ) ) {
-			$where_sql_folder   = 'WHERE ( ' . join( ' AND ', $where_conditions_folder ) . ' ) OR ( ' . $scope_query_folder['sql'] . ' )';
-			$where_sql_document = 'AND ( ' . join( ' AND ', $where_conditions_document ) . ' ) OR ( ' . $scope_query_document['sql'] . ' )';
+		// Join the where conditions together for document.
+		if ( ! empty( $scope_query_document['sql'] ) ) {
+			$where_sql_document = 'AND ' .
+			                      ( ! empty( $where_conditions_document ) ? '( ' . join( ' AND ', $where_conditions_document ) . ' ) AND ' : '' ) .
+			                      ' ( ' . $scope_query_document['sql'] . ' )';
 		} else {
-			$where_sql_folder   = 'WHERE ' . join( ' AND ', $where_conditions_folder );
-			$where_sql_document = 'AND ' . join( ' AND ', $where_conditions_document );
+			$where_sql_document = ( ! empty( $where_conditions_document ) ? 'AND ' . join( ' AND ', $where_conditions_document ) : '' );
+		}
+
+		// Join the where conditions together for folder.
+		if ( ! empty( $scope_query_folder['sql'] ) ) {
+			$where_sql_folder = 'AND ' . ( ! empty( $where_conditions_folder ) ? '( ' . join( ' AND ', $where_conditions_folder ) . ' ) AND ' : '' ) .
+			                    ' ( ' . $scope_query_folder['sql'] . ' )';
+		} else {
+			$where_sql_folder = ( ! empty( $where_conditions_folder ) ? 'AND ' . join( ' AND ', $where_conditions_folder ) : '' );
 		}
 
 		/**
@@ -1531,8 +1347,12 @@ class BP_Document {
 
 				if ( (int) $document->group_id > 0 ) {
 					$document->folder = 'group';
-					$group            = groups_get_group( array( 'group_id' => $document->group_id ) );
-					$document->link   = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
+					if ( bp_is_active( 'groups' ) ) {
+						$group              = groups_get_group( array( 'group_id' => $document->group_id ) );
+						$document->link     = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
+					}
+					$document->link = '';
+
 				} else {
 					$document->folder = 'profile';
 					$document->link   = bp_core_get_user_domain( (int) $document->user_id ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
@@ -1542,13 +1362,17 @@ class BP_Document {
 			$group_name = '';
 			$visibility = '';
 			if ( $document->group_id > 0 ) {
-				$group      = groups_get_group( $document->group_id );
-				$group_name = bp_get_group_name( $group );
-				$status     = bp_get_group_status( $group );
-				if ( 'hidden' === $status || 'private' === $status ) {
-					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				if ( bp_is_active( 'groups' ) ) {
+					$group      = groups_get_group( $document->group_id );
+					$group_name = bp_get_group_name( $group );
+					$status     = bp_get_group_status( $group );
+					if ( 'hidden' === $status || 'private' === $status ) {
+						$visibility = esc_html__( 'Group Members', 'buddyboss' );
+					} else {
+						$visibility = ucfirst( $status );
+					}
 				} else {
-					$visibility = ucfirst( $status );
+					$visibility = '';
 				}
 			} else {
 				$document_privacy = bp_document_get_visibility_levels();
@@ -1845,6 +1669,14 @@ class BP_Document {
 		$activity_ids   = wp_parse_id_list( wp_list_pluck( $documents, 'activity_id' ) );
 		$attachment_ids = wp_parse_id_list( wp_list_pluck( $documents, 'attachment_id' ) );
 
+		// Delete preview attachment.
+		foreach ( $document_ids as $document_delete ) {
+			$preview_id = bp_document_get_meta( $document_delete, 'preview_attachment_id', true );
+			if ( $preview_id ) {
+				wp_delete_attachment( $preview_id, true );
+			}
+		}
+
 //		if ( ! empty( $document_ids ) ) {
 //			// Loop through attachment ids and attempt to delete.
 //			foreach ( $document_ids as $document ) {
@@ -2083,84 +1915,17 @@ class BP_Document {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_document_id_before_save', array( $this->id, &$this ) );
-		$this->blog_id       = apply_filters_ref_array(
-			'bp_document_blog_id_before_save',
-			array(
-				$this->blog_id,
-				&$this,
-			)
-		);
-		$this->attachment_id = apply_filters_ref_array(
-			'bp_document_attachment_id_before_save',
-			array(
-				$this->attachment_id,
-				&$this,
-			)
-		);
-		$this->user_id       = apply_filters_ref_array(
-			'bp_document_user_id_before_save',
-			array(
-				$this->user_id,
-				&$this,
-			)
-		);
-		$this->title         = apply_filters_ref_array(
-			'bp_document_title_before_save',
-			array(
-				$this->title,
-				&$this,
-			)
-		);
-		$this->folder_id     = apply_filters_ref_array(
-			'bp_document_folder_id_before_save',
-			array(
-				$this->folder_id,
-				&$this,
-			)
-		);
-		$this->activity_id   = apply_filters_ref_array(
-			'bp_document_activity_id_before_save',
-			array(
-				$this->activity_id,
-				&$this,
-			)
-		);
-		$this->group_id      = apply_filters_ref_array(
-			'bp_document_group_id_before_save',
-			array(
-				$this->group_id,
-				&$this,
-			)
-		);
-
-		$this->privacy       = apply_filters_ref_array(
-			'bp_document_privacy_before_save',
-			array(
-				$this->privacy,
-				&$this,
-			)
-		);
-		$this->menu_order    = apply_filters_ref_array(
-			'bp_document_menu_order_before_save',
-			array(
-				$this->menu_order,
-				&$this,
-			)
-		);
-		$this->date_created  = apply_filters_ref_array(
-			'bp_document_date_created_before_save',
-			array(
-				$this->date_created,
-				&$this,
-			)
-		);
-		$this->date_modified = apply_filters_ref_array(
-			'bp_document_date_modified_before_save',
-			array(
-				$this->date_modified,
-				&$this,
-			)
-		);
+		$this->blog_id       = apply_filters_ref_array( 'bp_document_blog_id_before_save', array( $this->blog_id, &$this ) );
+		$this->attachment_id = apply_filters_ref_array( 'bp_document_attachment_id_before_save', array( $this->attachment_id, &$this ) );
+		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this ) );
+		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
+		$this->folder_id     = apply_filters_ref_array( 'bp_document_folder_id_before_save', array( $this->folder_id, &$this ) );
+		$this->activity_id   = apply_filters_ref_array( 'bp_document_activity_id_before_save', array( $this->activity_id, &$this ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
+		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->menu_order    = apply_filters_ref_array( 'bp_document_menu_order_before_save', array( $this->menu_order, &$this ) );
+		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->date_modified  = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
 
 		/**
 		 * Fires before the current document item gets saved.
@@ -2192,24 +1957,55 @@ class BP_Document {
 		}
 
 		// Generate PDF file preview image.
-		$attachment_id = $this->attachment_id;
-
+		$attachment_id         = $this->attachment_id;
+		$pdf_preview           = false;
+		$is_pdf                = false;
 		$is_preview_generated  = get_post_meta( $attachment_id, 'document_preview_generated', true );
 		$preview_attachment_id = (int) get_post_meta( $attachment_id, 'document_preview_attachment_id', true );
 		if ( empty( $is_preview_generated ) ) {
 			$extension             = bp_document_extension( $attachment_id );
 			$preview_attachment_id = 0;
-			$file                  = get_attached_file( $attachment_id );
+			$file                   = get_attached_file( $attachment_id );
 			$upload_dir            = wp_upload_dir();
 
 			if ( 'pdf' === $extension ) {
+				$is_pdf         = true;
+				$output_file     = wp_get_attachment_image_url( $attachment_id, 'full' );
+				$output_file_src = bp_document_scaled_image_path( $attachment_id );
+				if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
+					add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+					$upload_dir = $upload_dir['basedir'];
 
-				$output_file = wp_get_attachment_image_url( $attachment_id, 'full' );
-				if ( '' !== $output_file && '' !== basename( $output_file ) ) {
-					$image_data = file_get_contents( $output_file );
+					// Create temp folder.
+					$upload_dir = $upload_dir . '/preview-image-folder-' . time();
+					$preview_folder = $upload_dir;
+					// If folder not exists then create.
+					if ( ! is_dir( $upload_dir ) ) {
+
+						// Create temp folder.
+						wp_mkdir_p( $upload_dir );
+						chmod( $upload_dir, 0777 );
+
+						// Create given main parent folder.
+						$preview_folder = $upload_dir;
+						wp_mkdir_p( $preview_folder );
+
+						$file_name = basename( $output_file );
+						$extension_pos = strrpos($file_name, '.'); // find position of the last dot, so where the extension starts
+						$thumb = substr($file_name, 0, $extension_pos) . '_thumb' . substr($file_name, $extension_pos);
+						copy( $output_file_src, $preview_folder . '/' . $thumb );
+
+					}
+
+					$files = scandir( $preview_folder );
+					$firstFile = $preview_folder . '/' . $files[2];
+					bp_document_chmod_r( $preview_folder );
+
+					$image_data = file_get_contents( $firstFile );
 
 					$filename = basename( $output_file );
 
+					$upload_dir = wp_upload_dir();
 					if ( wp_mkdir_p( $upload_dir['path'] ) ) {
 						$file = $upload_dir['path'] . '/' . $filename;
 					} else {
@@ -2228,11 +2024,54 @@ class BP_Document {
 					);
 
 					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-					require_once ABSPATH . 'wp-admin/includes/image.php';
+					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+					}
 					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
 					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
+					$pdf_preview = true;
+					BP_Document::bp_document_remove_temp_directory( $preview_folder );
+					remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+				}
+			} else if ( 'css' === $extension || 'txt' === $extension || 'js' === $extension || 'html' === $extension || 'htm' === $extension || 'csv' === $extension ) {
+				$absolute_path  = get_attached_file( $attachment_id );
+				if ( '' !== $absolute_path && '' !== basename( $absolute_path ) && strstr( $absolute_path, 'bb_documents/' ) ) {
+					$upload_dir = $upload_dir['basedir'];
+
+					// Create temp folder.
+					$upload_dir = $upload_dir . '/preview-image-folder-' . time();
+					$preview_folder = $upload_dir;
+					// If folder not exists then create.
+					if ( ! is_dir( $upload_dir ) ) {
+
+						// Create temp folder.
+						wp_mkdir_p( $upload_dir );
+						chmod( $upload_dir, 0777 );
+
+						// Create given main parent folder.
+						$preview_folder = $upload_dir;
+						wp_mkdir_p( $preview_folder );
+
+						$file_name = basename( $absolute_path );
+						$extension_pos = strrpos($file_name, '.'); // find position of the last dot, so where the extension starts
+						$thumb = substr($file_name, 0, $extension_pos) . '_thumb' . substr($file_name, $extension_pos);
+						copy( $absolute_path, $preview_folder . '/' . $thumb );
+
+					}
+
+					$files = scandir( $preview_folder );
+					$firstFile = $preview_folder . '/' . $files[2];
+					bp_document_chmod_r( $preview_folder );
+
+					$image_data = file_get_contents( $firstFile );
+					$words 				 = 10000;
+					$mirror_text = strlen($image_data) > $words ? substr($image_data,0,$words).'...' : $image_data;
+					update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+					BP_Document::bp_document_remove_temp_directory( $preview_folder );
 				}
 			}
 		}
@@ -2253,7 +2092,15 @@ class BP_Document {
 			$this->id = $wpdb->insert_id;
 		}
 
-		bp_document_update_meta( $this->id, 'preview_attachment_id', $preview_attachment_id );
+		if ( $preview_attachment_id ) {
+			bp_document_update_meta( $this->id, 'preview_attachment_id', $preview_attachment_id );
+		}
+
+		if ( ! $pdf_preview && $is_pdf ) {
+			add_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
+			self::bp_document_pdf_previews( array( $this->attachment_id ), true, $this->id );
+			remove_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
+		}
 
 		// Update folder modified date.
 		$folder = (int) $this->folder_id;
@@ -2271,6 +2118,148 @@ class BP_Document {
 		do_action_ref_array( 'bp_document_after_save', array( &$this ) );
 
 		return true;
+	}
+
+	/**
+	 * Helper to set the max_execution_time.
+	 */
+	static function bp_document_set_time_limit( $time_limit ) {
+		$max_execution_time = ini_get( 'max_execution_time' );
+		if ( $max_execution_time && $time_limit > $max_execution_time ) {
+			return @ set_time_limit( $time_limit );
+		}
+		return null;
+	}
+
+	/**
+	 * Does the actual PDF preview regenerate.
+	 */
+	static function bp_document_pdf_previews( $ids, $check_mime_type = false, $document_id ) {
+
+		$cnt                    = $num_updates = $num_fails = $time = 0;
+		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		if ( $ids && ! $preview_attachment_id ) {
+			$time = microtime( true );
+			$cnt = count( $ids );
+			self::bp_document_set_time_limit( max( $cnt * self::$per_pdf_secs, self::$min_time_limit ) );
+
+			foreach ( $ids as $idx => $id ) {
+				if ( $check_mime_type && 'application/pdf' !== get_post_mime_type( $id ) ) {
+					continue;
+				}
+				$file = get_attached_file( $id );
+				if ( false === $file || '' === $file ) {
+					$num_fails++;
+				} else {
+					// Get current metadata if any.
+					$old_value = get_metadata( 'post', $id, '_wp_attachment_metadata' );
+					if ( $old_value && ( ! is_array( $old_value ) || 1 !== count( $old_value ) ) ) {
+						$old_value = null;
+					}
+					// Remove old intermediate thumbnails if any.
+					if ( $old_value && ! empty( $old_value[0]['sizes'] ) && is_array( $old_value[0]['sizes'] ) ) {
+						$dirname = dirname( $file ) . '/';
+						foreach ( $old_value[0]['sizes'] as $sizeinfo ) {
+							// Check whether pre WP 4.7.3 lacking PDF marker and if so don't delete so as not to break links to thumbnails in content.
+							if ( false !== strpos( $sizeinfo['file'], '-pdf' ) ) {
+								@ unlink( $dirname . $sizeinfo['file'] );
+							}
+						}
+					}
+					if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+						require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+						require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+					}
+					// Generate new intermediate thumbnails.
+					$meta = wp_generate_attachment_metadata( $id, $file );
+					if ( ! $meta ) {
+						$num_fails++;
+					} else {
+						// wp_update_attachment_metadata() returns false if nothing to update so check first.
+						if ( ( $old_value && $old_value[0] === $meta ) || false !== wp_update_attachment_metadata( $id, $meta ) ) {
+							$num_updates++;
+						} else {
+							$num_fails++;
+						}
+					}
+					if ( $meta ) {
+						$upload_dir     = wp_upload_dir();
+						$preview_folder = '';
+						$output_file     = wp_get_attachment_image_url( $id, 'full' );
+						$output_file_src = bp_document_scaled_image_path( $id );
+
+						if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
+							add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+							$upload_dir = $upload_dir['basedir'];
+
+							// Create temp folder.
+							$upload_dir = $upload_dir . '/preview-image-folder-' . time();
+
+							// If folder not exists then create.
+							if ( ! is_dir( $upload_dir ) ) {
+
+								// Create temp folder.
+								wp_mkdir_p( $upload_dir );
+								chmod( $upload_dir, 0777 );
+
+								// Create given main parent folder.
+								$preview_folder = $upload_dir;
+								wp_mkdir_p( $preview_folder );
+
+								$file_name = basename( $output_file );
+								$extension_pos = strrpos($file_name, '.'); // find position of the last dot, so where the extension starts
+								$thumb = substr($file_name, 0, $extension_pos) . '_thumb' . substr($file_name, $extension_pos);
+								copy( $output_file_src, $preview_folder . '/' . $thumb );
+
+							}
+
+							$files = scandir( $preview_folder );
+							$firstFile = $preview_folder . '/' . $files[2];
+							bp_document_chmod_r( $preview_folder );
+
+							$image_data = file_get_contents( $firstFile );
+
+							$filename = basename( $output_file );
+							$upload_dir = wp_upload_dir();
+
+							if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+								$file = $upload_dir['path'] . '/' . $filename;
+							} else {
+								$file = $upload_dir['basedir'] . '/' . $filename;
+							}
+
+							file_put_contents( $file, $image_data );
+
+							$wp_filetype = wp_check_filetype( $filename, null );
+
+							$attachment = array(
+								'post_mime_type' => $wp_filetype['type'],
+								'post_title'     => sanitize_file_name( $filename ),
+								'post_content'   => '',
+								'post_status'    => 'inherit',
+							);
+
+							$preview_attachment_id = wp_insert_attachment( $attachment, $file );
+							if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+								require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+								require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+								require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+							}
+							$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
+							wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+							update_post_meta( $id, 'document_preview_generated', 'yes' );
+							update_post_meta( $id, 'document_preview_attachment_id', $preview_attachment_id );
+							bp_document_update_meta( $document_id, 'preview_attachment_id', $preview_attachment_id );
+							BP_Document::bp_document_remove_temp_directory( $preview_folder );
+							remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+						}
+					}
+				}
+			}
+			$time = round( microtime( true ) - $time, self::$timing_dec_places );
+		}
+		return array( $cnt, $num_updates, $num_fails, $time );
 	}
 
 	/**

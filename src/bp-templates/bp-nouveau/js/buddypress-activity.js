@@ -70,14 +70,15 @@ window.bp = window.bp || {};
 				window.Dropzone.autoDiscover = false;
 
 				this.dropzone_options = {
-					url				: BP_Nouveau.ajaxurl,
-					timeout			: 3 * 60 * 60 * 1000,
-					dictDefaultMessage : BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles	: 'image/*',
-					autoProcessQueue: true,
-					addRemoveLinks	: true,
-					uploadMultiple	: false,
-					maxFilesize		: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					url					: BP_Nouveau.ajaxurl,
+					timeout				: 3 * 60 * 60 * 1000,
+					dictDefaultMessage 	: BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles		: 'image/*',
+					autoProcessQueue	: true,
+					addRemoveLinks		: true,
+					uploadMultiple		: false,
+					maxFiles			: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize			: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				};
 
 				// if defined, add custom dropzone options.
@@ -118,7 +119,7 @@ window.bp = window.bp || {};
 			// Activity actions.
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li.bb-edit-privacy a', bp.Nouveau, this.activityPrivacyRedirect.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li:not(.bb-edit-privacy)', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
@@ -1361,12 +1362,12 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
-								response.data.uuid       = file.upload.uuid;
-								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
-								response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-								response.data.saved      = false;
+								file.id                  	= response.id;
+								response.data.uuid       	= file.upload.uuid;
+								response.data.menu_order 	= $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								response.data.album_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+								response.data.group_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+								response.data.saved      	= false;
 								self.dropzone_media.push( response.data );
 								return file.previewElement.classList.add( 'dz-success' );
 							} else {
@@ -1485,7 +1486,8 @@ window.bp = window.bp || {};
 						autoProcessQueue		: true,
 						addRemoveLinks			: true,
 						uploadMultiple			: false,
-						maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+						maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+						maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 						dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
 					};
 
@@ -1526,7 +1528,7 @@ window.bp = window.bp || {};
 						'success',
 						function(file, response) {
 							if ( response.data.id ) {
-								file.id                  = response.id;
+								file.id                   = response.id;
 								response.data.uuid       = file.upload.uuid;
 								response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 								response.data.album_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;

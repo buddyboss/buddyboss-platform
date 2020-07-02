@@ -55,7 +55,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	if ( bp_is_group_document() || bp_is_group_folders() ) {
 		$folder_id        = (int) bp_action_variable( 1 );
 		$type             = 'group';
-		$group_id         = bp_get_current_group_id();
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
 		$move_to_id_popup = $group_id;
 	} elseif ( bp_is_user_document() || bp_is_user_folders() ) {
 		$folder_id        = (int) bp_action_variable( 0 );
@@ -68,7 +68,6 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$exclude = array_merge( $mime_types, $extensions );
 	$document_params = array(
-		'max_upload_size_document'        => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_document'                => bp_is_profile_document_support_enabled(),
 		'group_document'                  => bp_is_group_document_support_enabled(),
 		'messages_document'               => bp_is_messages_document_support_enabled(),
@@ -81,13 +80,13 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'                => $group_id,
 		'target_text'                     => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_file_type'                => __( 'Unable to upload the file', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
 		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
+		'move_to_file'                     => __( 'Move document to...', 'buddyboss' ),
 		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
 		'download_button'                 => __( 'Download', 'buddyboss' ),
 		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
@@ -98,7 +97,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	);
 
 	$document_options = array(
-		'dictInvalidFileType' => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'max_upload_size'           => bp_document_file_upload_max_size( false, 'MB' ),
+		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
 
 	$params['document'] = $document_options;
@@ -149,7 +151,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 		'position'  => 5,
 	);
 
-	if ( is_user_logged_in() ) {
+	if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
 		$nav_items['personal'] = array(
 			'component' => 'document',
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
@@ -506,6 +508,14 @@ function bp_media_allowed_document_type() {
 			'icon'        => '',
 		),
 		'bb_doc_40' => array(
+			'extension'   => '.pps',
+			'mime_type'   => 'application/vnd.ms-powerpoint',
+			'description' => 'PowerPoint Template',
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_41' => array(
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
 			'description' => 'PowerPoint Slideshow',
@@ -513,7 +523,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_41' => array(
+		'bb_doc_42' => array(
 			'extension'   => '.ppsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Slideshow',
@@ -521,7 +531,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_42' => array(
+		'bb_doc_43' => array(
 			'extension'   => '.ppt',
 			'mime_type'   => 'application/vnd.ms-powerpoint',
 			'description' => 'PowerPoint Presentation',
@@ -529,7 +539,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_43' => array(
+		'bb_doc_44' => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
@@ -537,7 +547,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_44' => array(
+		'bb_doc_45' => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/octet-stream',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
@@ -545,7 +555,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_45' => array(
+		'bb_doc_46' => array(
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Presentation (Macro Enabled)',
@@ -553,7 +563,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_46' => array(
+		'bb_doc_47' => array(
 			'extension'   => '.pptx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'PowerPoint Presentation',
@@ -561,7 +571,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_47' => array(
+		'bb_doc_48' => array(
 			'extension'   => '.psd',
 			'mime_type'   => 'image/vnd.adobe.photoshop',
 			'description' => 'Photoshop Document',
@@ -569,7 +579,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_48' => array(
+		'bb_doc_49' => array(
 			'extension'   => '.rar',
 			'mime_type'   => 'application/x-rar-compressed',
 			'description' => 'RAR Archive',
@@ -577,7 +587,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_49' => array(
+		'bb_doc_50' => array(
 			'extension'   => '.rar',
 			'mime_type'   => 'application/x-rar',
 			'description' => 'RAR Archive',
@@ -585,7 +595,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_50' => array(
+		'bb_doc_51' => array(
 			'extension'   => '.rss',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'RSS',
@@ -593,7 +603,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_51' => array(
+		'bb_doc_52' => array(
 			'extension'   => '.rtf',
 			'mime_type'   => 'application/rtf',
 			'description' => 'Rich Text Format',
@@ -601,7 +611,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_52' => array(
+		'bb_doc_53' => array(
 			'extension'   => '.sketch',
 			'mime_type'   => 'application/x-sqlite3',
 			'description' => 'Sketch Document',
@@ -609,7 +619,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_53' => array(
+		'bb_doc_54' => array(
 			'extension'   => '.svg',
 			'mime_type'   => 'image/svg+xml',
 			'description' => 'SVG',
@@ -617,7 +627,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_54' => array(
+		'bb_doc_55' => array(
 			'extension'   => '.tar',
 			'mime_type'   => 'application/x-tar',
 			'description' => 'TAR Archive',
@@ -625,7 +635,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_55' => array(
+		'bb_doc_56' => array(
 			'extension'   => '.tiff',
 			'mime_type'   => 'image/tiff',
 			'description' => 'Tagged Image File',
@@ -633,7 +643,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_56' => array(
+		'bb_doc_57' => array(
 			'extension'   => '.txt',
 			'mime_type'   => 'text/plain',
 			'description' => 'Text File',
@@ -641,7 +651,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_57' => array(
+		'bb_doc_58' => array(
 			'extension'   => '.vcf',
 			'mime_type'   => 'text/x-vcard',
 			'description' => 'vCard',
@@ -649,7 +659,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_58' => array(
+		'bb_doc_59' => array(
 			'extension'   => '.vcf',
 			'mime_type'   => 'text/vcard',
 			'description' => 'vCard',
@@ -657,7 +667,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_59' => array(
+		'bb_doc_60' => array(
 			'extension'   => '.wav',
 			'mime_type'   => 'audio/x-wav',
 			'description' => 'Waveform Audio',
@@ -665,7 +675,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_60' => array(
+		'bb_doc_61' => array(
 			'extension'   => '.xlam',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
@@ -673,7 +683,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_61' => array(
+		'bb_doc_62' => array(
 			'extension'   => '.xls',
 			'mime_type'   => 'application/vnd.ms-excel',
 			'description' => 'Excel Spreadsheet',
@@ -681,17 +691,9 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_62' => array(
-			'extension'   => '.xlsb',
-			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
-			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
 		'bb_doc_63' => array(
 			'extension'   => '.xlsb',
-			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'mime_type'   => 'application/vnd.ms-excel.sheet.binary.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
 			'is_default'  => 1,
 			'is_active'   => 1,
@@ -706,6 +708,14 @@ function bp_media_allowed_document_type() {
 			'icon'        => '',
 		),
 		'bb_doc_65' => array(
+			'extension'   => '.xlsb',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'description' => 'Excel Spreadsheet (Binary, Macro Enabled)',
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_66' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
@@ -713,7 +723,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_66' => array(
+		'bb_doc_67' => array(
 			'extension'   => '.xlsm',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet (Macro Enabled)',
@@ -721,7 +731,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_67' => array(
+		'bb_doc_68' => array(
 			'extension'   => '.xlsx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Spreadsheet',
@@ -729,7 +739,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_68' => array(
+		'bb_doc_69' => array(
 			'extension'   => '.xltm',
 			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
 			'description' => 'Excel Template (Macro Enabled)',
@@ -737,15 +747,15 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_69' => array(
+		'bb_doc_70' => array(
 			'extension'   => '.xltx',
-			'mime_type'   => 'applicatadp ion/vnd.openxmlformats-officedocument.spreadsheetml.template',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
 			'description' => 'Excel Template',
 			'is_default'  => 1,
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_70' => array(
+		'bb_doc_71' => array(
 			'extension'   => '.xltx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 			'description' => 'Excel Template',
@@ -753,7 +763,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_71' => array(
+		'bb_doc_72' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'application/rss+xml',
 			'description' => 'XML',
@@ -761,7 +771,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_72' => array(
+		'bb_doc_73' => array(
 			'extension'   => '.xml',
 			'mime_type'   => 'text/xml',
 			'description' => 'XML',
@@ -769,7 +779,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_73' => array(
+		'bb_doc_74' => array(
 			'extension'   => '.yaml',
 			'mime_type'   => 'text/yaml',
 			'description' => 'YAML',
@@ -777,7 +787,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_74' => array(
+		'bb_doc_75' => array(
 			'extension'   => '.zip',
 			'mime_type'   => 'application/zip',
 			'description' => 'Zip',
@@ -785,7 +795,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_75' => array(
+		'bb_doc_76' => array(
 			'extension'   => '.7z',
 			'mime_type'   => 'application/x-7z-compressed',
 			'description' => '7z Archive',
@@ -801,6 +811,9 @@ function bp_media_allowed_document_type() {
 }
 
 function bp_document_download_file( $attachment_id, $type = 'document' ) {
+
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_document_ie_nocache_headers_fix' );
 
 	if ( 'document' === $type ) {
 
@@ -846,16 +859,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
 		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
 
-		header( 'Expires: 0' );
-		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
-		header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
-		header( 'Pragma: no-cache' );
-		header( "Content-type: {$content_type}" );
-		header( "Content-Disposition:attachment; filename={$file_new_name}" );
-		header( 'Content-Type: application/force-download' );
-
-		readfile( "{$file_url}" );
-		exit();
+		bp_document_download_file_force( $the_file, $file_name );
 	} else {
 
 		// Get folder object.
@@ -1062,10 +1066,111 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		if ( 'pdf' ===  $extension ) {
-			$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		$get_preview            = $preview_attachment_id;
+		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		if ( ! $preview_attachment_id ) {
+			$preview_attachment_id = $get_preview;
 		}
-		$attachment_url = wp_get_attachment_url( $preview_attachment_id );
+		$document_id        = 'forbidden_' . $document_id;
+		$attachment_id      = 'forbidden_' . $preview_attachment_id;
+		$output_file_src     = bp_document_scaled_image_path( $preview_attachment_id );
+		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
+	}
+
+	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+}
+
+/**
+ * Return absolute path of the document file.
+ *
+ * @param $path
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_scaled_image_path( $attachment_id ) {
+	$is_image = wp_attachment_is_image( $attachment_id );
+	$img_url  = get_attached_file( $attachment_id );
+	$meta             = wp_get_attachment_metadata( $attachment_id );
+	$img_url_basename = wp_basename( $img_url );
+	if ( ! $is_image ) {
+		if ( ! empty( $meta['sizes']['full'] ) ) {
+			$img_url = str_replace( $img_url_basename, $meta['sizes']['full']['file'], $img_url );
+		}
+	}
+
+	return $img_url;
+}
+
+/**
+ * Give recursive file permission.
+ *
+ * @param $path
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_chmod_r($path) {
+	$dir = new DirectoryIterator($path);
+	foreach ($dir as $item) {
+		chmod($item->getPathname(), 0777);
+		if ($item->isDir() && !$item->isDot()) {
+			bp_document_chmod_r($item->getPathname());
+		}
+	}
+}
+
+/**
+ * Return the preview text for the document files.
+ *
+ * @param $attachment_id
+ *
+ * @return false|mixed|string
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_mirror_text( $attachment_id ) {
+	$mirror_text = '';
+
+	$extension = bp_document_extension( $attachment_id );
+	if ( isset( $extension ) && !empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+		$words = 8000;
+		$more  = '...';
+		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
+		if ( $text ) {
+			$mirror_text = strlen( $text ) > $words ? substr( $text, 0, $words ) . '...' : $text;
+		} else {
+			if ( file_exists( get_attached_file( $attachment_id ) ) ) {
+				$image_data  = file_get_contents( get_attached_file( $attachment_id ) );
+				$words       = 10000;
+				$mirror_text = strlen( $image_data ) > $words ? substr( $image_data, 0, $words ) . '...' : $image_data;
+				update_post_meta( $attachment_id, 'document_preview_mirror_text', $mirror_text );
+			}
+		}
+	}
+
+	return $mirror_text;
+}
+
+/**
+ * Return the audio url of the file.
+ *
+ * @param $document_id
+ * @param $extension
+ * @param $attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.0
+ */
+function bp_document_get_preview_audio_url( $document_id, $extension, $attachment_id ) {
+	$attachment_url = '';
+
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+		$passed_attachment_id   = $attachment_id;
+		$document_id            = 'forbidden_' . $document_id;
+		$attachment_id          = 'forbidden_' . $attachment_id;
+		$output_file_src         = get_attached_file( $passed_attachment_id );
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
+			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		}
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );

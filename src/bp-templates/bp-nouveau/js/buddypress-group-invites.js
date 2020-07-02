@@ -162,7 +162,7 @@ window.bp = window.bp || {};
 							isWorking = 0;
 							if ( response.success ) {
 								//memberInvitedList.html('');
-								memberInvitedList.find(".load-more").remove();
+								memberInvitedList.find('.load-more').remove();
 								memberInvitedList.append( response.data.html );
 								subNavFilterLast.html('');
 								subNavFilterLast.html( response.data.pagination );

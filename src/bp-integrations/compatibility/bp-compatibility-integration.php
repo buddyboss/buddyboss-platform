@@ -18,7 +18,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'compatibility',
-			__( 'BuddyPress Plugins', 'buddyboss' ),
+			__( 'BuddyPress', 'buddyboss' ),
 			'compatibility',
 			array(
 				'required_plugin' => array(),

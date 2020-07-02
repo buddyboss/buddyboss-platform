@@ -97,7 +97,7 @@
 	.medium-editor-toolbar {
 		top: inherit;
 		bottom: 6px;
-		left: 41px;
+		left: 39px;
 		visibility: hidden;
 		z-index: 99;
 		background-color: #fff;
@@ -114,11 +114,11 @@
 			z-index: 112;
 			opacity: 1;
 			visibility: visible;
-			bottom: 10px;
+			bottom: 12px;
 			height: 40px;
 
 			div & {
-				bottom: 11px;
+				bottom: 12px;
 			}
 		}
 
@@ -176,7 +176,7 @@
 		.medium-editor-toolbar {
 			top: inherit;
 			bottom: 56px;
-			left: 41px;
+			left: 39px;
 			visibility: hidden;
 			z-index: 99;
 			background-color: #fff;
@@ -194,7 +194,7 @@
 				height: 44px;
 
 				div & {
-					bottom: 57px;
+					bottom: 58px;
 				}
 			}
 
@@ -284,7 +284,7 @@
 }
 
 .buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-	bottom: 55px;
+	bottom: 58px;
 }
 
 .bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
@@ -576,6 +576,40 @@
 		&.friends:before {
 			content: "\e95e";
 		}
+
+		&.bb-edit-privacy {
+
+			&:before {
+				display: none;
+			}
+
+			a:before {
+				content: "\e90d";
+				font-family: 'bb-icons';/* stylelint-disable-line */
+				font-size: 16px;
+				margin-right: 10px;
+				width: 20px;
+				text-align: center;
+				display: inline-block;
+				vertical-align: bottom;
+			}
+
+			&.public a:before {
+				content: "\e960";
+			}
+
+			&.onlyme a:before {
+				content: "\e95f";
+			}
+
+			&.loggedin a:before {
+				content: "\e95d";
+			}
+
+			&.friends a:before {
+				content: "\e95e";
+			}
+		}
 	}
 }
 
@@ -822,12 +856,12 @@ input.search-query-input {
 		#whats-new-content {
 
 			.medium-editor-toolbar {
-				bottom: 110px;
+				bottom: 109px;
 
 				&.active {
 
 					div & {
-						bottom: 110px;
+						bottom: 109px;
 					}
 				}
 			}
@@ -848,12 +882,12 @@ input.search-query-input {
 		#whats-new-content {
 
 			.medium-editor-toolbar {
-				bottom: 110px;
+				bottom: 112px;
 
 				&.active {
 
 					div & {
-						bottom: 110px;
+						bottom: 112px;
 					}
 				}
 			}
@@ -862,11 +896,11 @@ input.search-query-input {
 	}
 
 	.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 109px;
+		bottom: 111px;
 	}
 
 	.groups.buddypress #buddypress.buddypress-wrap .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
-		bottom: 55px;
+		bottom: 58px;
 	}
 
 	.buddypress #buddypress.buddypress-wrap > .activity-update-form.media-off #whats-new-content .medium-editor-toolbar {
@@ -878,12 +912,12 @@ input.search-query-input {
 		#whats-new-content {
 
 			.medium-editor-toolbar {
-				bottom: 56px;
+				bottom: 58px;
 
 				&.active {
 
 					div & {
-						bottom: 56px;
+						bottom: 58px;
 					}
 				}
 			}
@@ -896,12 +930,12 @@ input.search-query-input {
 		#whats-new-content {
 
 			.medium-editor-toolbar {
-				bottom: 144px;
+				bottom: 146px;
 
 				&.active {
 
 					div & {
-						bottom: 144px;
+						bottom: 146px;
 					}
 				}
 			}

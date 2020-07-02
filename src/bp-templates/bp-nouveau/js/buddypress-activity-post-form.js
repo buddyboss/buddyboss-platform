@@ -66,6 +66,7 @@ window.bp = window.bp || {};
 				autoProcessQueue		: true,
 				addRemoveLinks			: true,
 				uploadMultiple			: false,
+				maxFiles				: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 				maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 			};
 
@@ -419,7 +420,8 @@ window.bp = window.bp || {};
 					autoProcessQueue		: true,
 					addRemoveLinks			: true,
 					uploadMultiple			: false,
-					maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+					maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 					dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
 				};
 
@@ -941,26 +943,26 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// The content of the activity.
-	bp.Views.WhatsNew = bp.View.extend(
-		{
-			tagName   : 'div',
-			className : 'bp-suggestions',
-			id        : 'whats-new',
-			events: {
-				'paste': 'handlePaste',
-				'keyup': 'handleKeyUp'
-			},
-			attributes: {
-				name         : 'whats-new',
-				cols         : '50',
-				rows         : '4',
-				placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
-				'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
-				contenteditable: true
-			},
-			loadURLAjax : null,
-			loadedURLs : [],
+	// The content of the activity
+	bp.Views.WhatsNew = bp.View.extend( {
+		tagName   : 'div',
+		className : 'bp-suggestions',
+		id        : 'whats-new',
+		events: {
+			'paste': 'handlePaste',
+			'keyup': 'handleKeyUp'
+		},
+		attributes: {
+			name         : 'whats-new',
+			cols         : '50',
+			rows         : '4',
+			placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
+			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
+			contenteditable: true,
+			'data-suggestions-group-id': ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ? BP_Nouveau.activity.params.item_id : false,
+		},
+		loadURLAjax : null,
+		loadedURLs : [],
 
 			initialize: function() {
 				this.on( 'ready', this.adjustContent, this );
@@ -2260,7 +2262,7 @@ window.bp = window.bp || {};
 				if ( this.model.get( 'link_success' ) ) {
 					var images = this.model.get( 'link_images' ),
 						index  = this.model.get( 'link_image_index' );
-					if ( images.length ) {
+					if ( images && images.length ) {
 						data = _.extend(
 							data,
 							{

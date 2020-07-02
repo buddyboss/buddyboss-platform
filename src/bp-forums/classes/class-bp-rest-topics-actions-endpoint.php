@@ -1079,7 +1079,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {POST} /wp-json/buddyboss/v1/topics/dropdown/:id Topic Actions
+	 * @api            {GET} /wp-json/buddyboss/v1/topics/dropdown/:id Topic Actions
 	 * @apiName        DropdownBBPTopic
 	 * @apiGroup       Forum Topics
 	 * @apiDescription Siblings of the topic.

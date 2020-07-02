@@ -141,10 +141,8 @@ function bp_has_media( $args = '' ) {
 	if ( ! isset( $args['album_id'] ) ) {
 		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
 	} else {
-		$album_id = $args['album_id'];
+		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
-
-	$privacy = bp_media_query_privacy( $user_id, 0, ( isset( $args['scope'] ) ? $args['scope'] : '' ) );
 
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
@@ -153,20 +151,8 @@ function bp_has_media( $args = '' ) {
 	}
 
 	// The default scope should recognize custom slugs.
-	$scope = array();
-	if ( bp_is_media_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) ) {
-		if ( bp_is_active( 'friends' ) ) {
-			$scope[] = 'friends';
-		}
-
-		if ( bp_is_active( 'groups' ) ) {
-			$scope[] = 'groups';
-		}
-
-		if ( is_user_logged_in() ) {
-			$scope[] = 'personal';
-		}
-	}
+	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = bp_media_default_scope( $scope );
 
 	/*
 	 * Parse Args.
@@ -195,17 +181,13 @@ function bp_has_media( $args = '' ) {
 			'user_id'      => $user_id,        // user_id to filter on.
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
-			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'privacy'      => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
 		),
 		'has_media'
 	);
-
-	/*
-	 * Smart Overrides.
-	 */
 
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {

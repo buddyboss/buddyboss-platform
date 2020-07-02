@@ -864,7 +864,18 @@ function bp_core_get_admin_integration_active_tab() {
 function bp_core_get_admin_integration_active_tab_object() {
 	global $bp_admin_integration_tabs;
 
-	return $bp_admin_integration_tabs[ bp_core_get_admin_integration_active_tab() ];
+	$active_tab = bp_core_get_admin_integration_active_tab();
+	if ( isset( $bp_admin_integration_tabs[ $active_tab ] ) ) {
+		return $bp_admin_integration_tabs[ $active_tab ];
+	}
+
+	if ( ! empty( $bp_admin_integration_tabs ) ) {
+		$tabs = array_keys( $bp_admin_integration_tabs );
+
+		return $bp_admin_integration_tabs[ $tabs[0] ];
+	}
+
+	return false;
 }
 
 /**

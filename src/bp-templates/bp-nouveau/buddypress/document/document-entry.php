@@ -17,7 +17,9 @@ $move_id             = '';
 $move_type           = '';
 $folder_link         = '';
 $document_id         = bp_get_document_id();
-$filename            = basename( get_attached_file( $attachment_id ) );
+$filename             = basename( get_attached_file( $attachment_id ) );
+$mirror_text		 = '';
+$audio_url 			 = '';
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
@@ -31,9 +33,10 @@ if ( $attachment_id ) {
 	$can_manage_btn      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$group_id            = bp_get_document_group_id();
-	// $document_title      = basename( get_attached_file( $attachment_id ) );
-	$document_title = bp_get_document_title();
-	$data_action = 'document';
+	// $document_title   = basename( get_attached_file( $attachment_id ) );
+	$document_title      = bp_get_document_title();
+	$data_action 		 = 'document';
+	$mirror_text		 = bp_document_mirror_text( $attachment_id );
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -43,6 +46,11 @@ if ( $attachment_id ) {
 		$move_type = 'profile';
 	}
 	$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
+
+
+	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
+		$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
+	}
 } else {
 	$svg_icon         = bp_document_svg_icon( 'folder' );
 	$download_link    = bp_document_folder_download_link( bp_get_document_folder_id() );
@@ -71,9 +79,11 @@ $document_id = bp_get_document_id();
 $link = ( $attachment_id ) ? $download_link : $folder_link;
 
 $class = '';
-if ( $attachment_id && bp_get_document_activity_id() ) {
+if ( $attachment_id ) {
 	$class = 'bb-open-document-theatre';
 }
+
+
 
 ?>
 <div class="media-folder_items <?php echo esc_attr( $listing_class ); ?>" data-author="<?php bp_document_user_id(); ?>" data-group-id="<?php bp_document_group_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-id="<?php bp_document_id(); ?>" data-parent-id="<?php bp_document_parent_id(); ?>" id="div-listing-<?php bp_document_id(); ?>">
@@ -87,6 +97,7 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		   href="<?php echo esc_url( $link ); ?>"
 		   data-id="<?php bp_document_id(); ?>"
 		   data-attachment-full=""
+		   data-attachment-id="<?php echo esc_attr( $attachment_id ); ?>"
 		   data-privacy="<?php bp_db_document_privacy(); ?>"
 		   data-extension="<?php echo $extension ? esc_attr( $extension ) : ''; ?>"
 		   data-parent-activity-id="<?php bp_document_parent_activity_id(); ?>"
@@ -94,9 +105,11 @@ if ( $attachment_id && bp_get_document_activity_id() ) {
 		   data-author="<?php bp_document_user_id(); ?>"
 		   data-preview="<?php echo $attachment_url ? esc_url( $attachment_url ) : ''; ?>"
 		   data-text-preview="<?php echo $text_attachment_url ? esc_url( $text_attachment_url ) : ''; ?>"
+		   data-mp3-preview="<?php echo $audio_url ? esc_url( $audio_url ) : ''; ?>"
 		   data-album-id="<?php bp_document_folder_id(); ?>"
 		   data-group-id="<?php bp_document_group_id(); ?>"
 		   data-document-title="<?php echo esc_html( $filename ); ?>"
+		   data-mirror-text="<?php echo esc_html( $mirror_text ); ?>"
 		   data-icon-class="<?php echo esc_attr( $svg_icon ); ?>">
 <!--			<span>--><?php // echo esc_html( $document_title ); ?><!--</span>-->
 			<span><?php echo esc_html( $document_title ); ?></span><?php echo $extension ? '.' . esc_html( $extension ) : ''; ?>
@@ -254,9 +267,31 @@ if ( wp_is_mobile() ) {
 							&& 0 === $group_id
 							&& 0 === bp_get_document_parent_id()
 						) {
+							$url = '#';
+							$child_activity = '';
+							$text = esc_html__( 'Edit Privacy', 'buddyboss' );
+							$class = 'ac-document-privacy';
+							$li_class = '';
+							if ( 'document' === $document_type ) {
+								$child_activity = get_post_meta( $attachment_id, 'bp_document_activity_id', true );
+								if ( $child_activity ) {
+									$parent_activity_id        = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
+									$parent_activity_permalink = '';
+									if ( bp_is_active( 'activity' ) ) {
+										$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+									}
+									if ( $parent_activity_permalink ) {
+										$text 		= esc_html__( 'Edit Post Privacy', 'buddyboss' );
+										$url		= $parent_activity_permalink;
+										$class		= '';
+										$li_class 	= 'redirect-activity-privacy-change';
+									}
+
+								}
+							}
 							?>
-							<li class="privacy_file" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
-								<a href="#" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a>
+							<li class="privacy_file <?php echo esc_attr( $li_class ); ?>" id="<?php echo esc_attr( bp_get_document_id() ); ?>">
+								<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-privacy="<?php echo esc_attr( bp_get_db_document_privacy() ); ?>" class="<?php echo esc_attr( $class ); ?>"><?php echo esc_html( $text ); ?></a>
 							</li>
 							<?php
 						}

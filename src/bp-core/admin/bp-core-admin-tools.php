@@ -420,7 +420,6 @@ function bp_admin_repair_list() {
 		'bp_admin_invitations_table',
 	);
 
-
 	ksort( $repair_list );
 
 	/**
@@ -1094,15 +1093,18 @@ function bp_admin_repair_nickname_value() {
  * @since BuddyBoss 1.1.8
  */
 function bp_admin_repair_tools_wrapper_function() {
-
-	$type = isset( $_POST['type'] ) ? $_POST['type'] : '';
-
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+			'feedback' => sprintf(
+					'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			),
 	);
+
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+
+	if ( empty( $type ) ) {
+		wp_send_json_error( $response );
+	}
 
 	// Bail if not a POST action.
 	if ( ! bp_is_post_request() ) {
@@ -1122,33 +1124,45 @@ function bp_admin_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
-	if ( 'bp-user-friends' === $type ) {
-		$status = bp_admin_repair_friend_count();
-	} elseif ( 'bp-group-count' === $type ) {
-		$status = bp_admin_repair_group_count();
-	} elseif ( 'bp-total-member-count' === $type ) {
-		$status = bp_admin_repair_count_members();
-	} elseif ( 'bp-last-activity' === $type ) {
-		$status = bp_admin_repair_last_activity();
-	} elseif ( 'bp-xprofile-fields' === $type ) {
-		$status = repair_default_profiles_fields();
-	} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-		$status = resync_xprofile_wordpress_fields();
-	} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-		$status = resync_wordpress_xprofile_fields();
-	} elseif ( 'bp-wordpress-update-display-name' === $type ) {
-		$status = xprofile_update_display_names();
-	} elseif ( 'bp-blog-records' === $type ) {
-		$status = bp_admin_repair_blog_records();
-	} elseif ( 'bp-reinstall-emails' === $type ) {
-		$status = bp_admin_reinstall_emails();
-	} elseif ( 'bp-assign-member-type' === $type ) {
-		$status = bp_admin_assign_member_type();
-	} elseif ( 'bp-sync-activity-favourite' === $type ) {
-		$status = bp_admin_update_activity_favourite();
-	} elseif ( 'bp-invitations-table' === $type ) {
-		$status = bp_admin_invitations_table();
+	$repair_list = bp_admin_repair_list();
+
+	$status = array();
+	foreach ( $repair_list as $repair_item ) {
+		if ( $repair_item[0] === $type && is_callable( $repair_item[2] ) ) {
+			$status = call_user_func( $repair_item[2] );
+			break;
+		}
 	}
+
+//	if ( 'bp-user-friends' === $type ) {
+//		$status = bp_admin_repair_friend_count();
+//	} elseif ( 'bp-group-count' === $type ) {
+//		$status = bp_admin_repair_group_count();
+//	} elseif ( 'bp-total-member-count' === $type ) {
+//		$status = bp_admin_repair_count_members();
+//	} elseif ( 'bp-last-activity' === $type ) {
+//		$status = bp_admin_repair_last_activity();
+//	} elseif ( 'bp-xprofile-fields' === $type ) {
+//		$status = repair_default_profiles_fields();
+//	} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
+//		$status = resync_xprofile_wordpress_fields();
+//	} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
+//		$status = resync_wordpress_xprofile_fields();
+//	} elseif ( 'bp-wordpress-update-display-name' === $type ) {
+//		$status = xprofile_update_display_names();
+//	} elseif ( 'bp-blog-records' === $type ) {
+//		$status = bp_admin_repair_blog_records();
+//	} elseif ( 'bp-reinstall-emails' === $type ) {
+//		$status = bp_admin_reinstall_emails();
+//	} elseif ( 'bp-assign-member-type' === $type ) {
+//		$status = bp_admin_assign_member_type();
+//	} elseif ( 'bp-sync-activity-favourite' === $type ) {
+//		$status = bp_admin_update_activity_favourite();
+//	} elseif ( 'bp-invitations-table' === $type ) {
+//		$status = bp_admin_invitations_table();
+//	} elseif ( 'bp-media-forum-privacy-repair' === $type ) {
+//		$status = bp_media_forum_privacy_repair();
+//	}
 	wp_send_json_success( $status );
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );

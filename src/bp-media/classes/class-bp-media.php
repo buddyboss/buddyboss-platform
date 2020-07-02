@@ -309,6 +309,7 @@ class BP_Media {
 				'exclude'      => false,           // Array of ids to exclude.
 				'in'           => false,           // Array of ids to limit query by (IN).
 				'search_terms' => false,           // Terms to search by.
+				'album_id'     => false,           // Album ID.
 				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
 				'count_total'  => false,           // Whether or not to use count_total.
 			)
@@ -437,7 +438,9 @@ class BP_Media {
 
 		// Join the where conditions together.
 		if ( ! empty( $scope_query['sql'] ) ) {
-			$where_sql = 'WHERE ( ' . join( ' AND ', $where_conditions ) . ' ) OR ( ' . $scope_query['sql'] . ' )';
+			$where_sql = 'WHERE ' .
+			             ( ! empty( $where_conditions ) ? '( ' . join( ' AND ', $where_conditions ) . ' ) AND ' : '' )  .
+			             ' ( ' . $scope_query['sql'] . ' )';
 		} else {
 			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
 		}

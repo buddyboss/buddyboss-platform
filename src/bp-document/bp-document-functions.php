@@ -292,7 +292,7 @@ function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes'
 		}
 	}
 
-	return bp_document_format_size_units( $max_size, $post_string, $type );
+	return apply_filters( 'bp_document_file_upload_max_size', bp_document_format_size_units( $max_size, $post_string, $type ) );
 }
 
 /**
@@ -591,6 +591,10 @@ function bp_document_add_handler( $documents = array() ) {
 	global $bp_document_upload_count;
 	$document_ids = array();
 
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
 	if ( empty( $documents ) && ! empty( $_POST['document'] ) ) {
 		$documents = $_POST['document'];
 	}
@@ -866,57 +870,6 @@ function bp_document_get_total_group_folder_count( $group_id = 0 ) {
 	 * @since BuddyBoss 1.4.0
 	 */
 	return apply_filters( 'bp_document_get_total_group_folder_count', (int) $count );
-}
-
-/**
- * Return the total document count in your BP instance.
- *
- * @return int document count.
- * @since BuddyBoss 1.4.0
- */
-function bp_get_total_document_count() {
-
-	add_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	remove_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
-	$count = $GLOBALS['document_template']->total_document_count;
-
-	/**
-	 * Filters the total number of document.
-	 *
-	 * @param int $count Total number of document.
-	 *
-	 * @since BuddyBoss 1.4.0
-	 */
-	return apply_filters( 'bp_get_total_document_count', (int) $count );
-}
-
-/**
- * document results all scope.
- *
- * @since BuddyBoss 1.4.0
- */
-function bp_document_object_results_document_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope'] = array();
-
-	if ( bp_is_active( 'friends' ) ) {
-		$querystring['scope'][] = 'friends';
-	}
-
-	if ( bp_is_active( 'groups' ) ) {
-		$querystring['scope'][] = 'groups';
-	}
-
-	if ( is_user_logged_in() ) {
-		$querystring['scope'][] = 'personal';
-	}
-
-	$querystring['user_id']     = 0;
-	$querystring['count_total'] = true;
-
-	return http_build_query( $querystring );
 }
 
 // ******************** Folders *********************/
@@ -1367,6 +1320,12 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
 
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
+
 	if ( ! is_wp_error( $id ) ) {
 		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
 	}
@@ -1509,8 +1468,8 @@ function bp_document_extension( $attachment_id ) {
 	$extension = trim( $file_type['ext'] );
 
 	if ( '' === $extension ) {
-		$file      = pathinfo( $file_url );
-		$extension = $file['extension'];
+		$file       = pathinfo( $file_url );
+		$extension = ( isset( $file['extension'] ) ) ? $file['extension'] : '';
 	}
 
 	return $extension;
@@ -1676,7 +1635,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 			$svg = 'bb-icon-file-jar';
 			break;
 		case 'mp3':
-			$svg = 'bb-icon-mp3';
+			$svg = 'bb-icon-file-mp3';
 			break;
 		case 'ods':
 			$svg = 'bb-icon-file-ods';
@@ -1685,7 +1644,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 			$svg = 'bb-icon-file-odt';
 			break;
 		case 'pdf':
-			$svg = 'bb-icon-pdf';
+			$svg = 'bb-icon-file-pdf';
 			break;
 		case 'png':
 			$svg = 'bb-icon-file-png';
@@ -1808,7 +1767,7 @@ function bp_document_svg_icon_list() {
 			'title' => __( 'Archive', 'buddyboss' )
 		),
 		'default_3' => array(
-			'icon' => 'bb-icon-mp3',
+			'icon' => 'bb-icon-file-mp3',
 			'title' => __( 'Audio', 'buddyboss' )
 		),
 		'default_4' => array(
@@ -1953,7 +1912,7 @@ function bp_document_folder_bradcrumb( $folder_id ) {
             (SELECT @r := %d, @l := 0) vars, {$document_folder_table} m
         WHERE @r <> 0) d
     JOIN {$document_folder_table} c
-    ON d._id = c.id",
+    ON d._id = c.id ORDER BY d.level ASC",
 		$folder_id
 	);
 
@@ -1965,10 +1924,10 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 		$html .= '<ul class="document-breadcrumb">';
 		if ( bp_is_group() && bp_is_group_single() ) {
 			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
-			$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug();
+			$link  = bp_get_group_permalink( $group ) . bp_get_document_slug();
 			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
 		} else {
-			$link  = bp_displayed_user_domain() . bp_get_document_root_slug();
+			$link  = bp_displayed_user_domain() . bp_get_document_slug();
 			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
 		}
 
@@ -2012,6 +1971,20 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		return false;
 	}
 
+	if ( (int) $document_id > 0 ) {
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
 	if ( ! $group_id ) {
 		$get_document = new BP_Document( $document_id );
 		if ( $get_document->group_id > 0 ) {
@@ -2043,7 +2016,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 			$post_attachment = $document->attachment_id;
 			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-			if ( ! empty( $activity_id ) ) {
+			if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					$activity->privacy = $destination_privacy;
@@ -2179,6 +2152,13 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
+	if ( (int) $document_id > 0 ) {
+		$has_access = bp_document_user_can_edit( $document_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
 	$file_name    = $title;
 	$new_filename = $title;
 
@@ -2258,6 +2238,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return __( 'File renaming error!', 'buddyboss' );
 	}
 
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
 	update_post_meta( $attachment_document_id, '_wp_attached_file', $new_file_rel_path );
 	wp_update_attachment_metadata( $attachment_document_id, wp_generate_attachment_metadata( $attachment_document_id, $new_file_abs_path ) );
 
@@ -2350,6 +2335,13 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		return false;
 	}
 
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
 	bp_document_update_privacy( $folder_id, $privacy, 'folder' );
@@ -2404,6 +2396,20 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 		return false;
 	}
 
+	if ( (int) $folder_id > 0 ) {
+		$has_access = bp_folder_user_can_edit( $folder_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
+	if ( (int) $destination_folder_id > 0 ) {
+		$has_destination_access = bp_folder_user_can_edit( $destination_folder_id );
+		if ( ! $has_destination_access ) {
+			return false;
+		}
+	}
+
 	if ( ! $group_id ) {
 		$get_folder = new BP_Document_Folder( $folder_id );
 		if ( $get_folder->group_id > 0 ) {
@@ -2444,7 +2450,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 			if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 				$post_attachment = $document->attachment_id;
 				$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-				if ( ! empty( $activity_id ) ) {
+				if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 					$activity = new BP_Activity_Activity( (int) $activity_id );
 					if ( bp_activity_user_can_delete( $activity ) ) {
 						$activity->privacy = $destination_privacy;
@@ -2477,7 +2483,7 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 					$post_attachment = $document->attachment_id;
 					$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-					if ( ! empty( $activity_id ) ) {
+					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
 							$activity->privacy = $destination_privacy;
@@ -2510,7 +2516,19 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		return false;
 	}
 
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
 	if ( 'folder' === $type ) {
+
+		if ( (int) $document_id > 0 ) {
+			$has_access = bp_folder_user_can_edit( $document_id );
+			if ( ! $has_access ) {
+				return false;
+			}
+		}
+
 		$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );  // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$wpdb->query( $q );
 
@@ -2532,7 +2550,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 						if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 							$post_attachment = $document->attachment_id;
 							$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-							if ( ! empty( $activity_id ) ) {
+							if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 								$activity = new BP_Activity_Activity( (int) $activity_id );
 								if ( bp_activity_user_can_delete( $activity ) ) {
 									$activity->privacy = $privacy;
@@ -2556,7 +2574,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 				if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 					$post_attachment = $document->attachment_id;
 					$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-					if ( ! empty( $activity_id ) ) {
+					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
 							$activity->privacy = $privacy;
@@ -2567,6 +2585,14 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			}
 		}
 	} else {
+
+		if ( (int) $document_id > 0 ) {
+			$has_access = bp_document_user_can_edit( $document_id );
+			if ( ! $has_access ) {
+				return false;
+			}
+		}
+
 		$document_query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET privacy = %s, date_modified = %s WHERE id = %d", $privacy, bp_core_current_time(), $document_id );
 		$wpdb->query( $document_query );
 
@@ -2574,7 +2600,7 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 			$post_attachment = $document->attachment_id;
 			$activity_id     = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
-			if ( ! empty( $activity_id ) ) {
+			if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
 					$activity->privacy = $privacy;
@@ -2614,7 +2640,7 @@ function bp_document_download_link( $attachment_id, $document_id ) {
 		return;
 	}
 
-	$link = get_the_permalink( $attachment_id ) . '?attachment_id=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
+	$link = site_url() . '/?attachment=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
 
 	return apply_filters( 'bp_document_download_link', $link, $attachment_id );
 
@@ -2634,7 +2660,7 @@ function bp_document_folder_download_link( $folder_id ) {
 		return;
 	}
 
-	$link = bp_get_folder_link( $folder_id ) . '?attachment_id=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
+	$link = site_url() . '/?attachment=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
 
 	return apply_filters( 'bp_document_folder_download_link', $link, $folder_id );
 
@@ -2653,7 +2679,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
 	$can_manage   = false;
 	$can_view     = false;
-	$can_download = true;
+	$can_download = false;
 	$folder       = new BP_Document_Folder( $folder_id );
 	$data         = array();
 
@@ -2798,7 +2824,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 
 		case 'friends':
 
-			$is_friend = ( bp_is_active( 'friends') ) ? friends_check_friendship( $document->user_id, $user_id ) : false ;
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $document->user_id, $user_id ) : false;
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
@@ -2822,7 +2848,9 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $has_access ) {
-				$can_manage   = true;
+				if ( bp_current_user_can( 'bp_moderate' ) ) {
+					$can_manage   = true;
+				}
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -2831,12 +2859,20 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 		case 'message':
 			$thread_id  = bp_document_get_meta( $document_id, 'thread_id', true );
 			$has_access = messages_check_thread_access( $thread_id, $user_id );
-			if ( $document->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( ! $thread_id ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
 			} elseif ( $has_access > 0 ) {
-				$can_manage   = true;
+				$can_manage   = false;
 				$can_view     = true;
 				$can_download = true;
 			}
@@ -3001,4 +3037,119 @@ function bp_document_update_activity_privacy( $activity_id = 0, $privacy = '' ) 
 			}
 		}
 	}
+}
+
+/**
+ * Set bb_documents folder for the document upload directory.
+ *
+ * @param $pathdata
+ *
+ * @return mixed
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_upload_dir( $pathdata ) {
+	if ( isset( $_POST['action'] ) && 'document_document_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
+
+		if ( empty( $pathdata['subdir'] ) ) {
+			$pathdata['path']   = $pathdata['path'] . '/bb_documents';
+			$pathdata['url']    = $pathdata['url'] . '/bb_documents';
+			$pathdata['subdir'] = '/bb_documents';
+		} else {
+			$new_subdir = '/bb_documents' . $pathdata['subdir'];
+
+			$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
+		}
+	}
+	return $pathdata;
+}
+
+/**
+ * Set bb_documents folder for the document upload directory.
+ *
+ * @param $pathdata
+ *
+ * @return mixed
+ * @since BuddyBoss 1.4.1
+ */
+function bp_document_upload_dir_script( $pathdata ) {
+
+	if ( empty( $pathdata['subdir'] ) ) {
+		$pathdata['path']   = $pathdata['path'] . '/bb_documents';
+		$pathdata['url']    = $pathdata['url'] . '/bb_documents';
+		$pathdata['subdir'] = '/bb_documents';
+	} else {
+		$new_subdir = '/bb_documents' . $pathdata['subdir'];
+
+		$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
+	}
+	return $pathdata;
+}
+
+/**
+ * Filter headers for IE to fix issues over SSL.
+ *
+ * IE bug prevents download via SSL when Cache Control and Pragma no-cache headers set.
+ *
+ * @param array $headers HTTP headers.
+ * @return array
+ */
+function bp_document_ie_nocache_headers_fix( $headers ) {
+	if ( is_ssl() && ! empty( $GLOBALS['is_IE'] ) ) {
+		$headers['Cache-Control'] = 'private';
+		unset( $headers['Pragma'] );
+	}
+	return $headers;
+}
+
+/**
+ * Get default scope for the document.
+ *
+ * @since BuddyBoss 1.4.4
+ *
+ * @param string $scope Default scope.
+ *
+ * @return string
+ */
+function bp_document_default_scope( $scope = 'all' ) {
+	$new_scope = array();
+
+	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_document_directory() ) {
+		$new_scope[] = 'public';
+		if ( is_user_logged_in() ) {
+			$new_scope[] = 'personal';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$new_scope[] = 'friends';
+			}
+		}
+
+		if ( bp_is_active( 'groups' ) ) {
+			$new_scope[] = 'groups';
+		}
+
+	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
+	}
+
+	$new_scope = array_unique( $new_scope );
+
+	if ( empty( $new_scope ) ) {
+		$new_scope = (array) $scope;
+	}
+
+	/**
+	 * Filter to update default scope.
+	 *
+	 * @since BuddyBoss 1.4.4
+	 */
+	$new_scope = apply_filters( 'bp_document_default_scope', $new_scope );
+
+	return implode( ',', $new_scope );
+
 }

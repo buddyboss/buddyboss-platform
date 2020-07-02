@@ -90,8 +90,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	//initialize media vars because it is used globally
 	$params['media'] = array(
 		'max_upload_size'              => bp_media_file_upload_max_size( false, 'MB' ),
-		'profile_media'                => bp_is_profile_media_support_enabled(),
-		'profile_album'                => bp_is_profile_albums_support_enabled(),
+		'profile_media'                 => bp_is_profile_media_support_enabled(),
+		'profile_album'                 => bp_is_profile_albums_support_enabled(),
 		'group_media'                  => bp_is_group_media_support_enabled(),
 		'group_album'                  => bp_is_group_albums_support_enabled(),
 		'messages_media'               => bp_is_messages_media_support_enabled(),
@@ -102,6 +102,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
 		'dictFileTooBig'               => __( "File is too big: {{filesize}} MB. Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
+		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -171,7 +172,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'position'  => 5,
 	);
 
-	if ( is_user_logged_in() ) {
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 		$nav_items['personal'] = array(
 			'component' => 'media',
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
@@ -203,4 +204,28 @@ function bp_nouveau_get_media_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+}
+
+function bp_media_download_file( $attachment_id, $type = 'media' ) {
+
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
+
+	if ( 'media' === $type ) {
+
+		$the_file = wp_get_attachment_url( $attachment_id );
+
+		if ( ! $the_file ) {
+			return;
+		}
+
+		// clean the file url.
+		$file_url = stripslashes( trim( $the_file ) );
+
+		// get filename.
+		$file_name = basename( $the_file );
+
+		bp_media_download_file_force( $the_file, $file_name );
+	}
+
 }
