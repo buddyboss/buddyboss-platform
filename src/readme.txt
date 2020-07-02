@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.6 =
+* Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
 * Media - Fixed photo attachments in messages not always displaying for recipients
 * LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
 * LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
