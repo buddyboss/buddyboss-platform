@@ -62,7 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Media - Fixed photo attachments in messages not always displaying for recipients
 * Messages - Fixed unable to delete a conversation if Notifications is disabled
 * Activity - Fixed very long URLs unable to be entered into activity feed posts
-* Private Network - Fixed homepage displaying when using 'Custom URL' for Registration
+* Private Network - Fixed homepage being visible when using 'Custom URL' for Registration
 * REST API - Fixed conflict on some servers, with creating and editing posts and pages
 * LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
 * LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
