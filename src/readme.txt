@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
 * Media - Fixed photo attachments in messages not always displaying for recipients
 * Profiles - Fixed 'his, her, their' text not translatable for 'Gender' profile field
+* Messages - Fixed unable to delete a conversation if Notifications is disabled
 * LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
 * LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
 
