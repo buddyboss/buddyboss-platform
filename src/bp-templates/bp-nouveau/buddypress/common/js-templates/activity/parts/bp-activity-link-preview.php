@@ -10,7 +10,7 @@
 		<p class="activity-link-preview-title">{{{data.link_title}}}</p>
 		<# } #>
 
-		<# if ( data.link_images && data.link_images.length && data.link_success && ! data.link_error ) { #>
+		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
 		<div id="activity-url-scrapper-img-holder">
 			<div class="activity-link-preview-image">
 				<img src="{{{data.link_images[data.link_image_index]}}}"/>

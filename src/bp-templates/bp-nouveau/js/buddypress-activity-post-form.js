@@ -2262,7 +2262,7 @@ window.bp = window.bp || {};
 				if ( this.model.get( 'link_success' ) ) {
 					var images = this.model.get( 'link_images' ),
 						index  = this.model.get( 'link_image_index' );
-					if ( images && images.length ) {
+					if ( images.length ) {
 						data = _.extend(
 							data,
 							{
