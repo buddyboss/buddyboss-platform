@@ -28,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform.zip'
+3. Upload the file 'buddyboss-platform-pro.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
