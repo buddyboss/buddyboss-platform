@@ -1150,13 +1150,9 @@ function bp_private_network_template_redirect() {
 			}
 
 			$allow_custom_registration = bp_allow_custom_registration();
-			$actual_link                = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$actual_link               = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			if ( $allow_custom_registration ) {
-
-				$link_array = explode( '/', untrailingslashit( $actual_link ) );
-				$page       = end( $link_array );
-
-				if ( strpos( untrailingslashit( bp_custom_register_page_url() ), $page ) !== false ) {
+				if ( untrailingslashit( $actual_link ) === untrailingslashit( bp_custom_register_page_url() ) ) {
 					return;
 				}
 
