@@ -105,7 +105,7 @@ class BP_REST_Attachments_Member_Avatar_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Members
 	 * @apiDescription Retrieve member avatar
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} user_id A unique numeric ID for the Member.
 	 * @apiParam {Boolean} [html=false] Whether to return an <img> HTML element, vs a raw URL to an avatar.
 	 * @apiParam {String} [alt] The alt attribute for the <img> element.

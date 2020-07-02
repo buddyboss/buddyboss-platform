@@ -872,57 +872,6 @@ function bp_document_get_total_group_folder_count( $group_id = 0 ) {
 	return apply_filters( 'bp_document_get_total_group_folder_count', (int) $count );
 }
 
-/**
- * Return the total document count in your BP instance.
- *
- * @return int document count.
- * @since BuddyBoss 1.4.0
- */
-function bp_get_total_document_count() {
-
-	add_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	remove_filter( 'bp_ajax_querystring', 'bp_document_object_results_document_all_scope', 20 );
-	$count = $GLOBALS['document_template']->total_document_count;
-
-	/**
-	 * Filters the total number of document.
-	 *
-	 * @param int $count Total number of document.
-	 *
-	 * @since BuddyBoss 1.4.0
-	 */
-	return apply_filters( 'bp_get_total_document_count', (int) $count );
-}
-
-/**
- * document results all scope.
- *
- * @since BuddyBoss 1.4.0
- */
-function bp_document_object_results_document_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope'] = array();
-
-	if ( bp_is_active( 'friends' ) ) {
-		$querystring['scope'][] = 'friends';
-	}
-
-	if ( bp_is_active( 'groups' ) ) {
-		$querystring['scope'][] = 'groups';
-	}
-
-	if ( is_user_logged_in() ) {
-		$querystring['scope'][] = 'personal';
-	}
-
-	$querystring['user_id']     = 0;
-	$querystring['count_total'] = true;
-
-	return http_build_query( $querystring );
-}
-
 // ******************** Folders *********************/
 /**
  * Retrieve an folder or folders.
@@ -1370,6 +1319,12 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 
 	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
 
 	if ( ! is_wp_error( $id ) ) {
 		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
@@ -2283,6 +2238,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return __( 'File renaming error!', 'buddyboss' );
 	}
 
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
 	update_post_meta( $attachment_document_id, '_wp_attached_file', $new_file_rel_path );
 	wp_update_attachment_metadata( $attachment_document_id, wp_generate_attachment_metadata( $attachment_document_id, $new_file_abs_path ) );
 
@@ -2680,7 +2640,7 @@ function bp_document_download_link( $attachment_id, $document_id ) {
 		return;
 	}
 
-	$link = site_url() . '/?attachment_id=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
+	$link = site_url() . '/?attachment=' . $attachment_id . '&document_type=document&download_document_file=1' . '&document_file=' . $document_id;
 
 	return apply_filters( 'bp_document_download_link', $link, $attachment_id );
 
@@ -2700,7 +2660,7 @@ function bp_document_folder_download_link( $folder_id ) {
 		return;
 	}
 
-	$link = site_url() . '/?attachment_id=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
+	$link = site_url() . '/?attachment=' . $folder_id . '&document_type=folder&download_document_file=1' . '&document_file=' . $folder_id;
 
 	return apply_filters( 'bp_document_folder_download_link', $link, $folder_id );
 
@@ -2719,7 +2679,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
 	$can_manage   = false;
 	$can_view     = false;
-	$can_download = true;
+	$can_download = false;
 	$folder       = new BP_Document_Folder( $folder_id );
 	$data         = array();
 
@@ -3143,4 +3103,53 @@ function bp_document_ie_nocache_headers_fix( $headers ) {
 		unset( $headers['Pragma'] );
 	}
 	return $headers;
+}
+
+/**
+ * Get default scope for the document.
+ *
+ * @since BuddyBoss 1.4.4
+ *
+ * @param string $scope Default scope.
+ *
+ * @return string
+ */
+function bp_document_default_scope( $scope = 'all' ) {
+	$new_scope = array();
+
+	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_document_directory() ) {
+		$new_scope[] = 'public';
+		if ( is_user_logged_in() ) {
+			$new_scope[] = 'personal';
+
+			if ( bp_is_active( 'friends' ) ) {
+				$new_scope[] = 'friends';
+			}
+		}
+
+		if ( bp_is_active( 'groups' ) ) {
+			$new_scope[] = 'groups';
+		}
+
+	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'personal';
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
+		$new_scope[] = 'groups';
+	}
+
+	$new_scope = array_unique( $new_scope );
+
+	if ( empty( $new_scope ) ) {
+		$new_scope = (array) $scope;
+	}
+
+	/**
+	 * Filter to update default scope.
+	 *
+	 * @since BuddyBoss 1.4.4
+	 */
+	$new_scope = apply_filters( 'bp_document_default_scope', $new_scope );
+
+	return implode( ',', $new_scope );
+
 }

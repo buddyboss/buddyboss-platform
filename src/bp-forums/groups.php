@@ -46,7 +46,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 		private function setup_variables() {
 
 			// Component Name
-			$this->name          = __( 'Discussions', 'buddyboss' );
+			$this->name          = __( 'Forum', 'buddyboss' );
 			$this->nav_item_name = __( 'Discussions', 'buddyboss' );
 
 			// Component slugs (hardcoded to match Forums 1.x functionality)
@@ -270,24 +270,24 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			// Should box be checked already?
 			$checked = is_admin() ? bp_group_is_forum_enabled( $group ) : bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( bp_get_group_id() ); ?>
 
-		<h4><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></h4>
+		<h4 class="bb-section-title"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></h4>
 
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'Group Forum Settings', 'buddyboss' ); ?></legend>
-			<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ); ?></p>
+			<p class="bb-section-info"><?php esc_html_e( 'Connect a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion. Unchecking this option will not delete existing forum content.', 'buddyboss' ); ?></p>
 
 			<div class="field-group">
-				<p class="checkbox bp-checkbox-wrap">
+				<p class="checkbox bp-checkbox-wrap bp-group-option-enable">
 					<input type="checkbox" name="bbp-edit-group-forum" id="bbp-edit-group-forum" class="bs-styled-checkbox" value="1"<?php checked( $checked ); ?> />
 					<label for="bbp-edit-group-forum"><?php esc_html_e( 'Yes, I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
 				</p>
-
-				<p class="description"><?php esc_html_e( 'Saying no will not delete existing forum content.', 'buddyboss' ); ?></p>
 			</div>
 
 				<?php if ( bbp_is_user_keymaster() ) : ?>
+				<hr class="bb-sep-line" />
 				<div class="field-group">
-					<label for="bbp_group_forum_id"><?php esc_html_e( 'Group Forum:', 'buddyboss' ); ?></label>
+					<h4 class="bb-section-title"><?php esc_html_e( 'Connected Forum', 'buddyboss' ); ?></h4>
+					<p class="bb-section-info"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 					<?php
 						bbp_dropdown(
 							array(
@@ -297,11 +297,11 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 							)
 						);
 					?>
-					<p class="description"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 				</div>
 			<?php endif; ?>
 
 				<?php if ( ! is_admin() ) : ?>
+				<br />
 				<input type="submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
 			<?php endif; ?>
 

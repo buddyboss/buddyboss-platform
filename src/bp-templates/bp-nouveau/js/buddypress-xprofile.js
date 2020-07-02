@@ -25,7 +25,10 @@ window.bp = window.bp || {};
             var title = '';
             $set.find('.editfield').each( function(){
                 var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
-                if ( $.trim( field_val ) !== '' ) {
+                var field_name = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).attr('name' );
+                var name_split = field_name.split('_');
+				var arrayContainsVisibility = (name_split.indexOf('visibility') > -1);
+                if ( $.trim( field_val ) !== '' && ! arrayContainsVisibility ) {
                     title = $.trim( field_val );
                     return false;
                 }

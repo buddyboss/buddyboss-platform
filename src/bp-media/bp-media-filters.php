@@ -90,11 +90,31 @@ function bp_media_activity_entry() {
 		'sort'     => 'ASC',
 	);
 
-	$args['privacy'] = bp_media_query_privacy( bp_get_activity_user_id(), 0, bp_get_activity_object_name() );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
+		if ( bp_is_group_media_support_enabled() ) {
+			$args['privacy'] = array( 'grouponly' );
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-media';
+		}
+	} else {
+		$args['privacy'] = bp_media_query_privacy( bp_get_activity_user_id(), 0, bp_get_activity_object_name() );
+		if ( ! bp_is_profile_media_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_albums_support_enabled() ) {
+			$args['album_id'] = 'existing-media';
+		}
+	}
+
 	$is_forum_activity = false;
 	if (
 		bp_is_active( 'forums' )
 		&& in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		&& bp_is_forums_media_support_enabled()
 	) {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
@@ -138,12 +158,31 @@ function bp_media_activity_append_media( $content, $activity ) {
 			'sort'     => 'ASC',
 		);
 
-		$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			if ( bp_is_group_media_support_enabled() ) {
+				$args['privacy'] = array( 'grouponly' );
+				if ( ! bp_is_group_albums_support_enabled() ) {
+					$args['album_id'] = 'existing-media';
+				}
+			} else {
+				$args['privacy']  = array( '0' );
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+			if ( ! bp_is_profile_media_support_enabled() ) {
+				$args['user_id'] = 'null';
+			}
+			if ( ! bp_is_profile_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		}
 
 		$is_forum_activity = false;
 		if (
 			bp_is_active( 'forums' )
 			&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+			&& bp_is_forums_media_support_enabled()
 		) {
 			$is_forum_activity = true;
 			$args['privacy'][] = 'forums';
@@ -191,7 +230,35 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'sort'     => 'ASC',
 	);
 
-	$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_media_support_enabled() ) {
+			$args['privacy'] = array( 'grouponly' );
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-media';
+		}
+	} else {
+		$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( ! bp_is_profile_media_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_albums_support_enabled() ) {
+			$args['album_id'] = 'existing-media';
+		}
+	}
+
+	$is_forum_activity = false;
+	if (
+		bp_is_active( 'forums' )
+		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		&& bp_is_forums_media_support_enabled()
+	) {
+		$is_forum_activity = true;
+		$args['privacy'][] = 'forums';
+	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
@@ -1357,6 +1424,74 @@ function bp_media_forum_privacy_repair() {
 		);
 	}
 }
+
+
+/**
+ * Set up media arguments for use with the 'public' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+		$privacy[] = 'loggedin';
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column' => 'privacy',
+			'compare' => 'IN',
+			'value'  => $privacy,
+		),
+	);
+
+	if ( ! bp_is_profile_media_support_enabled() && ! bp_is_profile_albums_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
+
+	return $retval;
+}
+add_filter( 'bp_media_set_public_scope_args', 'bp_media_filter_public_scope', 10, 2 );
 
 /**
  * Force download - this is the default method.
