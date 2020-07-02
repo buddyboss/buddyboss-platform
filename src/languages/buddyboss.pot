@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-02 07:39:41+00:00\n"
+"POT-Creation-Date: 2020-07-02 15:08:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23272,38 +23272,27 @@ msgstr ""
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2564
-msgid ""
-"By creating an account you are agreeing to the <a "
-"class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%s</a>."
+#: bp-templates/bp-nouveau/includes/template-tags.php:2565
+#: bp-templates/bp-nouveau/includes/template-tags.php:2582
+msgid "By creating an account you are agreeing to the %s."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2572
-#: bp-templates/bp-nouveau/includes/template-tags.php:2588
-#: bp-templates/bp-nouveau/includes/template-tags.php:2604
-#: bp-templates/bp-nouveau/includes/template-tags.php:2612
+#: bp-templates/bp-nouveau/includes/template-tags.php:2573
+#: bp-templates/bp-nouveau/includes/template-tags.php:2590
+#: bp-templates/bp-nouveau/includes/template-tags.php:2608
+#: bp-templates/bp-nouveau/includes/template-tags.php:2616
 msgid "Close (Esc)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2572
-#: bp-templates/bp-nouveau/includes/template-tags.php:2588
-#: bp-templates/bp-nouveau/includes/template-tags.php:2604
-#: bp-templates/bp-nouveau/includes/template-tags.php:2612
+#: bp-templates/bp-nouveau/includes/template-tags.php:2573
+#: bp-templates/bp-nouveau/includes/template-tags.php:2590
+#: bp-templates/bp-nouveau/includes/template-tags.php:2608
+#: bp-templates/bp-nouveau/includes/template-tags.php:2616
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2580
-msgid ""
-"By creating an account you are agreeing to the <a "
-"class=\"popup-modal-register popup-privacy\" href=\"#privacy-modal\">%s</a>."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/template-tags.php:2596
-msgid ""
-"By creating an account you are agreeing to the <a "
-"class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%1$s</a> "
-"and <a class=\"popup-modal-register popup-privacy\" "
-"href=\"#privacy-modal\">%2$s</a>."
+#: bp-templates/bp-nouveau/includes/template-tags.php:2600
+msgid "By creating an account you are agreeing to the %1$s and %2$s."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:27
