@@ -483,6 +483,7 @@ function bp_core_get_packaged_component_ids() {
 		'xprofile',
 		'friends',
 		'media',
+		'document',
 		'messages',
 		'settings',
 		'notifications',
@@ -506,7 +507,7 @@ function bp_core_get_packaged_component_ids() {
 function bp_core_get_directory_page_ids( $status = 'active' ) {
 	$page_ids = bp_get_option( 'bp-pages', array() );
 
-	// Loop through pages
+	// Loop through pages.
 	foreach ( $page_ids as $component_name => $page_id ) {
 
 		// Ensure that empty indexes are unset. Should only matter in edge cases.
@@ -515,7 +516,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// Trashed pages should never appear in results.
-		if ( 'trash' == get_post_status( $page_id ) ) {
+		if ( 'trash' === get_post_status( $page_id ) ) {
 			unset( $page_ids[ $component_name ] );
 		}
 
@@ -705,7 +706,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy
+	// check for privacy page if already exists in WP settings > privacy.
 	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
 	$static_pages   = array( 'terms' );
 
@@ -715,7 +716,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		$pages_to_create['privacy'] = $page_titles['privacy'];
 	}
 
-	// Create terms and privacy pages
+	// Create terms and privacy pages.
 	foreach ( $static_pages as $slug ) {
 		if ( ! isset( $pages[ $slug ] ) ) {
 			$pages_to_create[ $slug ] = $page_titles[ $slug ];
@@ -734,13 +735,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 
 	// Create the pages.
 	foreach ( $pages_to_create as $component_name => $page_name ) {
-		$exists = get_page_by_path( $component_name );
+		$exists     = get_page_by_path( $component_name );
 		$page_exist = post_exists( $page_name, '', '', 'page' );
 
 		// If page already exists, use it.
 		if ( ! empty( $exists ) ) {
 			$pages[ $component_name ] = $exists->ID;
-		} else if ( ! empty( $page_exist ) ) {
+		} elseif ( ! empty( $page_exist ) ) {
 			$pages[ $component_name ] = $page_exist;
 		} else {
 			$pages[ $component_name ] = wp_insert_post(
@@ -779,6 +780,7 @@ function bp_core_get_directory_page_default_titles() {
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
+		'document'        => __( 'Documents', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
 		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
@@ -1375,8 +1377,8 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 /**
  * Return the Default date format
  *
- * @param bool $date
- * @param bool $time
+ * @param bool   $date
+ * @param bool   $time
  * @param string $symbol
  *
  * @return mixed
@@ -1447,8 +1449,8 @@ function bp_core_add_message( $message, $type = '' ) {
 	}
 
 	// Send the values to the cookie for page reload display.
-	@setcookie( 'bp-message', $message, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp-message-type', $type, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message', rawurlencode( $message ), time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message-type', rawurlencode( $type ), time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 
 	// Get BuddyPress.
 	$bp = buddypress();
@@ -1479,11 +1481,11 @@ function bp_core_setup_message() {
 	$bp = buddypress();
 
 	if ( empty( $bp->template_message ) && isset( $_COOKIE['bp-message'] ) ) {
-		$bp->template_message = stripslashes( $_COOKIE['bp-message'] );
+		$bp->template_message = stripslashes( rawurldecode( $_COOKIE['bp-message'] ) );
 	}
 
 	if ( empty( $bp->template_message_type ) && isset( $_COOKIE['bp-message-type'] ) ) {
-		$bp->template_message_type = stripslashes( $_COOKIE['bp-message-type'] );
+		$bp->template_message_type = stripslashes( rawurldecode( $_COOKIE['bp-message-type'] ) );
 	}
 
 	add_action( 'template_notices', 'bp_core_render_message' );
@@ -2347,7 +2349,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages'  ),
+			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
 
@@ -2579,6 +2581,20 @@ function bp_core_get_components( $type = 'all' ) {
 				)
 			),
 			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'document'      => array(
+			'title'       => __( 'Document Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages'      => array(
@@ -3316,75 +3332,111 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param bool $use_wp_mail Whether to fallback to the regular wp_mail() function or not.
+	 * @param bool $wp_html_emails || ! $is_default_wpmail $is_default_wpmail Whether to fallback to the regular wp_mail() function or not.
 	 */
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
+	/**
+	 * Filter to forcefully use template
+	 *
+	 * This is done if wp_mail_content_type() has been configured for HTML,
+	 * or if wp_mail() has been redeclared (it's a pluggable function).
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param bool true default fallback will be always true.
+	 */
+	$force_use_template = apply_filters( 'bp_email_force_use_templates', true );
+
+	if ( $force_use_template ) {
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+	}
+
 	if ( $must_use_wpmail ) {
+
 		$to = $email->get( 'to' );
 
 		return wp_mail(
 			array_shift( $to )->get_address(),
 			$email->get( 'subject', 'replace-tokens' ),
-			$email->get( 'content_plaintext', 'replace-tokens' )
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
 		);
 	}
 
-	/*
-	 * Send the email.
-	 */
+	$must_use_bp_mail = apply_filters( 'bp_email_use_bp_mail', false );
 
-	/**
-	 * Filter the email delivery class.
-	 *
-	 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
-	 *
-	 * @since BuddyPress 2.5.0
-	 *
-	 * @param string       $deliver_class The email delivery class name.
-	 * @param string       $email_type    Type of email being sent.
-	 * @param array|string $to            Array or comma-separated list of email addresses to the email to.
-	 * @param array        $args {
-	 *     Optional. Array of extra parameters.
-	 *
-	 *     @type array $tokens Optional. Assocative arrays of string replacements for the email.
-	 * }
-	 */
-	$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
-	if ( ! class_exists( $delivery_class ) ) {
-		return new WP_Error( 'missing_class', __CLASS__, $this );
-	}
+	if ( $must_use_bp_mail ) {
 
-	$delivery = new $delivery_class();
-	$status   = $delivery->bp_email( $email );
-
-	if ( is_wp_error( $status ) ) {
+		/*
+		 * Send the email.
+		 */
 
 		/**
-		 * Fires after BuddyPress has tried - and failed - to send an email.
+		 * Filter the email delivery class.
 		 *
+		 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
+		 *
+		 * @param string $deliver_class The email delivery class name.
+		 * @param string $email_type Type of email being sent.
+		 * @param array|string $to Array or comma-separated list of email addresses to the email to.
+		 * @param array $args {
+		 *     Optional. Array of extra parameters.
+		 *
+		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
+		 * }
 		 * @since BuddyPress 2.5.0
-		 *
-		 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
-		 *                         will vary based on the email delivery class you are using.
-		 * @param BP_Email $email  The email we tried to send.
 		 */
-		do_action( 'bp_send_email_failure', $status, $email );
+		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
+		if ( ! class_exists( $delivery_class ) ) {
+			return new WP_Error( 'missing_class', 'No class found by that name', $delivery_class );
+		}
+
+		$delivery = new $delivery_class();
+		$status   = $delivery->bp_email( $email );
+
+		if ( is_wp_error( $status ) ) {
+
+			/**
+			 * Fires after BuddyPress has tried - and failed - to send an email.
+			 *
+			 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
+			 *                         will vary based on the email delivery class you are using.
+			 * @param BP_Email $email The email we tried to send.
+			 *
+			 * @since BuddyPress 2.5.0
+			 */
+			do_action( 'bp_send_email_failure', $status, $email );
+
+		} else {
+
+			/**
+			 * Fires after BuddyPress has succesfully sent an email.
+			 *
+			 * @param bool $status True if the email was sent successfully.
+			 * @param BP_Email $email The email sent.
+			 *
+			 * @since BuddyPress 2.5.0
+			 */
+			do_action( 'bp_send_email_success', $status, $email );
+		}
+
+		return $status;
 
 	} else {
 
-		/**
-		 * Fires after BuddyPress has succesfully sent an email.
-		 *
-		 * @since BuddyPress 2.5.0
-		 *
-		 * @param bool     $status True if the email was sent successfully.
-		 * @param BP_Email $email  The email sent.
-		 */
-		do_action( 'bp_send_email_success', $status, $email );
-	}
+		$to = $email->get( 'to' );
 
-	return $status;
+		return wp_mail(
+			array_shift( $to )->get_address(),
+			$email->get( 'subject', 'replace-tokens' ),
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
+		);
+
+	}
 }
 
 /**
@@ -3408,7 +3460,7 @@ function bp_email_get_appearance_settings() {
 		'footer_text_color'         => '#7F868F',
 		'footer_text_size'          => 12,
 		'highlight_color'           => '#007CFF',
-		'site_title_logo_size'      => 150,
+		'site_title_logo_size'      => 180,
 		'site_title_text_color'     => '#122B46',
 		'site_title_text_size'      => 20,
 		'recipient_text_color'      => '#7F868F',
@@ -3675,6 +3727,14 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
+		'group-message-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+		),
 	);
 }
 
@@ -3838,6 +3898,14 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
+	$group_message_email = array(
+		'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_group_messages_new_message',
+			'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+		),
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -3858,6 +3926,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
+		'group-message-email'                => $group_message_email,
 	);
 
 	if ( $field !== 'all' ) {
@@ -4068,6 +4137,7 @@ function bp_get_allowedtags() {
 			'u'       => array(),
 			'i'       => array(),
 			'br'      => array(),
+			'pre'     => array(),
 
 		)
 	);
@@ -4352,7 +4422,7 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *
  * @since BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Content
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.
@@ -4426,4 +4496,305 @@ function bp_get_userid_from_mentionname( $mentionname ) {
 	}
 
 	return $user_id;
+}
+
+/**
+ * Get unique ID.
+ *
+ * This is a PHP implementation of Underscore's uniqueId method. A static variable
+ * contains an integer that is incremented with each call. This number is returned
+ * with the optional prefix. As such the returned value is not universally unique,
+ * but it is unique across the life of the PHP process.
+ *
+ * @since 1.2.10
+ *
+ * @staticvar int $id_counter
+ *
+ * @param string $prefix Prefix for the returned ID.
+ * @return string Unique ID.
+ */
+function bp_unique_id( $prefix = '' ) {
+	static $id_counter = 0;
+	return $prefix . (string) ++$id_counter;
+}
+
+function bp_array_flatten( $array ) {
+	if ( ! is_array( $array ) ) {
+		return false;
+	}
+	$result = array();
+	foreach ( $array as $key => $value ) {
+		if ( is_array( $value ) ) {
+			$result = array_merge( $result, bp_array_flatten( $value ) );
+		} else {
+			$result[ $key ] = $value;
+		}
+	}
+	return $result;
+}
+/**
+ * Get Group avatar.
+ *
+ * This function will give you the group avatar if previously group is created and
+ * group is not deleted but if admin disabled group component then in Messages
+ * section if previously group thread created then will show the actual group avatar
+ * in messages view.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $avatar_size
+ * @param $avatar_folder_dir
+ * @param $avatar_folder_url
+ *
+ * @return mixed
+ */
+function bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url ) {
+
+	$group_avatar = '';
+
+	if ( file_exists( $avatar_folder_dir ) ) {
+
+		// Open directory.
+		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+			// Stash files in an array once to check for one that matches.
+			$avatar_files = array();
+			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+				// Only add files to the array (skip directories).
+				if ( 2 < strlen( $avatar_file ) ) {
+					$avatar_files[] = $avatar_file;
+				}
+			}
+
+			// Check for array.
+			if ( 0 < count( $avatar_files ) ) {
+
+				// Check for current avatar.
+				foreach ( $avatar_files as $key => $value ) {
+					if ( strpos( $value, $avatar_size ) !== false ) {
+						$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+					}
+				}
+
+				// Legacy avatar check.
+				if ( ! isset( $group_avatar ) ) {
+					foreach ( $avatar_files as $key => $value ) {
+						if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+							$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+						}
+					}
+
+					// Legacy group avatar check.
+					if ( ! isset( $group_avatar ) ) {
+						foreach ( $avatar_files as $key => $value ) {
+							if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+								$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+							}
+						}
+					}
+				}
+			}
+		}
+		// Close the avatar directory.
+		closedir( $av_dir );
+	}
+
+	return $group_avatar;
+}
+
+/**
+ * Parse url and get data about URL.
+ *
+ * @param string $url URL to parse data.
+ *
+ * @return array Parsed URL data.
+ * @since BuddyBoss 1.3.2
+ */
+function bp_core_parse_url( $url ) {
+	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+
+	// get transient data for url.
+	$parsed_url_data = get_transient( $cache_key );
+	if ( ! empty( $parsed_url_data ) ) {
+		return $parsed_url_data;
+	}
+
+	$parsed_url_data = array();
+
+	// Fetch the oembed code for URL.
+	$embed_code = wp_oembed_get( $url, array( 'discover' => false ) );
+	if ( ! empty( $embed_code ) ) {
+		$parsed_url_data['title']       = ' ';
+		$parsed_url_data['description'] = $embed_code;
+		$parsed_url_data['images']      = '';
+		$parsed_url_data['error']       = '';
+		$parsed_url_data['wp_embed']    = true;
+	} else {
+
+		// safely get URL and response body.
+		$response = wp_safe_remote_get( $url );
+		$body     = wp_remote_retrieve_body( $response );
+
+		// if response is not empty
+		if ( ! is_wp_error( $body ) && ! empty( $body ) ) {
+
+			// Load HTML to DOM Object
+			$dom = new DOMDocument();
+			@$dom->loadHTML( $body );
+
+			$meta_tags   = array();
+			$images      = array();
+			$description = '';
+			$title       = '';
+
+			$xpath       = new DOMXPath( $dom );
+			$query       = '//*/meta[starts-with(@property, \'og:\')]';
+			$metas_query = $xpath->query( $query );
+			foreach ( $metas_query as $meta ) {
+				$property    = $meta->getAttribute( 'property' );
+				$content     = $meta->getAttribute( 'content' );
+				$meta_tags[] = array( $property, $content );
+			}
+
+			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+				foreach ( $meta_tags as $tag ) {
+					if ( is_array( $tag ) && ! empty( $tag ) ) {
+						if ( $tag[0] == 'og:title' ) {
+							$title = $tag[1];
+						}
+						if ( $tag[0] == 'og:description' || 'description' === strtolower( $tag[0] ) ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, 'utf-8' );
+						}
+						if ( $tag[0] == 'og:image' ) {
+							$images[] = $tag[1];
+						}
+					}
+				}
+			}
+
+			// Parse DOM to get Title
+			if ( empty( $title ) ) {
+				$nodes = $dom->getElementsByTagName( 'title' );
+				$title = $nodes->item( 0 )->nodeValue;
+			}
+
+			// Parse DOM to get Meta Description
+			if ( empty( $description ) ) {
+				$metas = $dom->getElementsByTagName( 'meta' );
+				for ( $i = 0; $i < $metas->length; $i ++ ) {
+					$meta = $metas->item( $i );
+					if ( 'description' === $meta->getAttribute( 'name' ) ) {
+						$description = $meta->getAttribute( 'content' );
+						break;
+					}
+				}
+			}
+
+			// Parse DOM to get Images
+			$image_elements = $dom->getElementsByTagName( 'img' );
+			for ( $i = 0; $i < $image_elements->length; $i ++ ) {
+				$image = $image_elements->item( $i );
+				$src   = $image->getAttribute( 'src' );
+
+				if ( filter_var( $src, FILTER_VALIDATE_URL ) ) {
+					$images[] = $src;
+				}
+			}
+
+			if ( ! empty( $description ) && '' === trim( $title ) ) {
+				$title = $description;
+			}
+
+			if ( ! empty( $title ) && '' === trim( $description ) ) {
+				$description = $title;
+			}
+
+			if ( ! empty( $title ) ) {
+				$parsed_url_data['title'] = $title;
+			}
+
+			if ( ! empty( $description ) ) {
+				$parsed_url_data['description'] = $description;
+			}
+
+			if ( ! empty( $images ) ) {
+				$parsed_url_data['images'] = $images;
+			}
+
+			if ( ! empty( $title ) || ! empty( $description ) || ! empty( $images ) ) {
+				$parsed_url_data['error'] = '';
+			}
+		}
+	}
+
+	if ( ! empty( $parsed_url_data ) ) {
+		// set the transient.
+		set_transient( $cache_key, $parsed_url_data, DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Filters parsed URL data.
+	 *
+	 * @since BuddyBoss 1.3.2
+	 * @param array $parsed_url_data Parse URL data.
+	 */
+	return apply_filters( 'bp_core_parse_url', $parsed_url_data );
+}
+
+/**
+ * Format file size units
+ *
+ * @param int $bytes
+ * @param bool $unit_label
+ * @param string $type
+ *
+ * @return string
+ * @since BuddyBoss 1.3.5
+ *
+ */
+function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
+
+	if ( $bytes > 0 && ! $unit_label ) {
+		if ( 'GB' === $type ) {
+			return $bytes / 1073741824;
+		} elseif ( 'MB' === $type ) {
+			return $bytes / 1048576;
+		} elseif ( 'KB' === $type ) {
+			return $bytes / 1024;
+		} else {
+			return $bytes;
+		}
+	}
+
+	if ( empty( $type ) ) {
+		if ( $bytes >= 1073741824 ) {
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+		} elseif ( $bytes >= 1048576 ) {
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+		} elseif ( $bytes >= 1024 ) {
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+		} elseif ( $bytes > 1 ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( $bytes == 1 ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0' . ' bytes';
+		}
+	} else {
+		if ( 'GB' === $type ) {
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+		} elseif ( 'MB' === $type ) {
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+		} elseif ( 'KB' === $type ) {
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+		} elseif ( 'bytes' === $type ) {
+			$bytes = $bytes . ' bytes';
+		} elseif ( 1 === $bytes ) {
+			$bytes = $bytes . ' byte';
+		} else {
+			$bytes = '0' . ' bytes';
+		}
+	}
+
+	return $bytes;
 }

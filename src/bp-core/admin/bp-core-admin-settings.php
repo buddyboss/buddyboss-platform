@@ -175,7 +175,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 	?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on blog posts, forum discussions and replies', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -1243,5 +1243,17 @@ function bp_admin_registration_setting_tutorial() {
 		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
     </p>
 
+	<?php
+}
+
+/**
+ * Enable group messages field markup.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_admin_setting_callback_group_messages() {
+	?>
+	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
+	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }

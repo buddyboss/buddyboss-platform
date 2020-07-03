@@ -384,3 +384,15 @@ function bp_core_get_incrementor( $group ) {
 function bp_core_reset_incrementor( $group ) {
 	return wp_cache_delete( 'incrementor', $group );
 }
+
+/**
+ * Resets all incremented bp_invitations caches.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ */
+function bp_invitations_reset_cache_incrementor() {
+	bp_core_reset_incrementor( 'bp_invitations' );
+}
+add_action( 'bp_invitation_after_save', 'bp_invitations_reset_cache_incrementor' );
+add_action( 'bp_invitation_after_delete', 'bp_invitations_reset_cache_incrementor' );
