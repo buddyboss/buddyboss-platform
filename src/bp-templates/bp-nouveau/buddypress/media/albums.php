@@ -6,7 +6,7 @@
  */
 ?>
 
-<?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
+<?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) { ?>
 
     <div class="bb-media-actions-wrap album-actions-wrap">
 		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss' ); ?></h2>
@@ -17,7 +17,11 @@
 
     <?php bp_get_template_part( 'media/create-album' ); ?>
 
-<?php endif; ?>
+<?php } else { ?>
+	<div class="bb-media-actions-wrap album-actions-wrap">
+		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss' ); ?></h2>
+	</div>
+<?php } ?>
 
 <?php bp_nouveau_media_hook( 'before', 'media_album_content' ); ?>
 

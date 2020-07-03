@@ -15,9 +15,16 @@ switch ( bp_current_action() ) :
 	// Home/Media
 	case 'photos':
 
-		if ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
-		    bp_get_template_part( 'media/add-media' );
-		endif;
+		?>
+		<div class="bb-media-actions-wrap">
+			<h2 class="bb-title"><?php _e( 'Photos', 'buddyboss' ); ?></h2>
+			<?php
+			if ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
+				bp_get_template_part( 'media/add-media' );
+			endif;
+			?>
+		</div>
+		<?php
 
 		bp_nouveau_group_hook( 'before', 'media_content' );
 
