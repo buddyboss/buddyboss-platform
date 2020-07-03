@@ -459,7 +459,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 				$svg_icon_download     = bp_document_svg_icon( 'download' );
 				$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
 				$filename               = basename( get_attached_file( $attachment_id ) );
-				$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
+				$size                  = bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) );
 				$extension_description = '';
 				$extension_lists       = bp_document_extensions_list();
 				$text_attachment_url   = wp_get_attachment_url( $attachment_id );
@@ -2003,7 +2003,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					$svg_icon_download     = bp_document_svg_icon( 'download' );
 					$download_url          = bp_document_download_link( $attachment_id, bp_get_document_id() );
 					$filename               = basename( get_attached_file( $attachment_id ) );
-					$size                  = size_format( filesize( get_attached_file( $attachment_id ) ) );
+					$size                  = bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) );
 					$extension_description = '';
 					$url                   = wp_get_attachment_url( $attachment_id );
 					$extension_lists   	   = bp_document_extensions_list();
