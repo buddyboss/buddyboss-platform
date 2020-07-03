@@ -1445,7 +1445,10 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				if( window.group_messages_editor.exportSelection() === null ) {
+					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				}
+				e.preventDefault();
 			}
 		}
 	);
@@ -1777,8 +1780,14 @@ window.bp = window.bp || {};
 				$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 				if ( $( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+					if( window.group_messages_editor.exportSelection() != null ){
+						medium_editor.addClass('medium-editor-toolbar-active');
+					}
 				} else {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+					if( window.group_messages_editor.exportSelection() === null ) {
+						medium_editor.removeClass('medium-editor-toolbar-active');
+					}
 				}
 				medium_editor.toggleClass( 'active' );
 			}
