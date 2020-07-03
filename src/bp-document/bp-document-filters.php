@@ -263,6 +263,10 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// Add in description in attachment when only one document uploaded.
 	if ( is_array( $_POST['document'] ) && 1 === count( $_POST['document'] ) ) {
+		if ( '' === trim( $content ) && ! empty( $activity_id ) ) {
+			$get_content = new BP_Activity_Activity( $activity_id );
+			$content = $get_content->content;
+		}
 		foreach ( $_POST['document'] as $document ) {
 			$document_attachment_post = array();
 			$document_attachment_post['ID']           = $document['id'];

@@ -298,6 +298,10 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 	// Add in description in attachment when only one media uploaded.
 	if ( is_array( $_POST['media'] ) && 1 === count( $_POST['media'] ) ) {
+		if ( '' === trim( $content ) && ! empty( $activity_id ) ) {
+			$get_content = new BP_Activity_Activity( $activity_id );
+			$content = $get_content->content;
+		}
 		foreach ( $_POST['media'] as $media ) {
 			$media_attachment_post = array();
 			$media_attachment_post['ID']           = $media['id'];
