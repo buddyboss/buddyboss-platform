@@ -175,7 +175,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 	?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on blog posts, forum discussions and replies', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -1178,5 +1178,82 @@ function bp_group_directories_tutorial() {
 		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
+	<?php
+}
+
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_allow_custom_registration() {
+
+	$allow_custom_registration = bp_allow_custom_registration();
+	?>
+
+    <select name="allow-custom-registration" id="allow-custom-registration">
+	    <option value="0" <?php selected( 0, $allow_custom_registration ); ?>><?php _e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
+	    <option value="1" <?php selected( 1, $allow_custom_registration ); ?>><?php _e( 'Custom URL', 'buddyboss' ); ?></option>
+    </select>
+	<?php
+    if ( ! $allow_custom_registration ) {
+	    printf( '<p class="description">%s</p>',
+		    sprintf( __( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
+			    'buddyboss' ),
+			    add_query_arg( array(
+				    'page' => 'bp-pages'
+			    ),
+				    admin_url( 'admin.php' ) ) ) );
+    }
+}
+
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_page_url() {
+	?>
+    <input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
+	<?php
+	printf(
+		'<p class="description">%s</p>', sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+	);
+}
+
+/**
+ * Link to Registration tutorial
+ *
+ * @since BuddyBoss 1.2.8
+ */
+function bp_admin_registration_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 86158,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
+/**
+ * Enable group messages field markup.
+ *
+ * @since BuddyBoss 1.2.9
+ */
+function bp_admin_setting_callback_group_messages() {
+	?>
+	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
+	<label for="bp-disable-group-messages"><?php _e( 'Allow for sending group messages to group members', 'buddyboss' ); ?></label>
 	<?php
 }

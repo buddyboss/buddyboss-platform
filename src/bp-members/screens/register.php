@@ -18,6 +18,28 @@ function bp_core_screen_signup() {
 		return;
 	}
 
+	$allow_custom_registration = bp_allow_custom_registration();
+	if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+
+		// Check it's not a Email Invites
+		if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) {
+			if ( parse_url( bp_custom_register_page_url(), PHP_URL_QUERY ) ) {
+				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
+				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
+				$url = bp_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
+			} else {
+				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
+				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
+				$url = bp_custom_register_page_url() . '?bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
+			}
+			bp_core_redirect( $url );
+			return;
+		} else {
+			bp_core_redirect( bp_custom_register_page_url() );
+			return;
+		}
+	}
+
 	// Not a directory.
 	bp_update_is_directory( false, 'register' );
 
@@ -63,7 +85,8 @@ function bp_core_screen_signup() {
 
 		// If there are errors with account details, set them for display.
 		if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
-			$bp->signup->errors['signup_username'] = $account_details['errors']->errors['user_name'][0];
+			$nickname_field                        = 'field_' . bp_xprofile_nickname_field_id();
+			$bp->signup->errors[ $nickname_field ] = $account_details['errors']->errors['user_name'][0];
 		}
 
 		if ( ! empty( $account_details['errors']->errors['user_email'] ) ) {

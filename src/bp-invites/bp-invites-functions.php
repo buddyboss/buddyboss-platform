@@ -514,3 +514,92 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 
 }
 add_action( 'bp_core_activated_user', 'bp_invites_member_invite_activate_user', 10, 3 );
+
+/**
+ * Mark the invited user as registered via custom URL.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param $user_id
+ *
+ */
+function bp_invites_member_invite_mark_register_user( $user_id ) {
+	global $bp;
+
+	$allow_custom_registration = bp_allow_custom_registration();
+	if ( ! $allow_custom_registration ) {
+	    return;
+	}
+
+	$email = bp_core_get_user_email( $user_id );
+
+	$inviters = array();
+
+	$args = array(
+		'post_type'      => bp_get_invite_post_type(),
+		'posts_per_page' => -1,
+		'meta_query'     => array(
+			array(
+				'key'     => '_bp_invitee_email',
+				'value'   => $email,
+				'compare' => '=',
+			),
+		),
+	);
+
+	$bp_get_invitee_email = new WP_Query( $args );
+
+	if ( $bp_get_invitee_email->have_posts() ) {
+
+		// From the posts returned by the query, get a list of unique inviters
+		while ( $bp_get_invitee_email->have_posts() ) {
+			$bp_get_invitee_email->the_post();
+
+			$inviter_id = get_the_author_meta( 'ID' );
+			$inviters[] = $inviter_id;
+
+			// Mark as accepted
+			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+
+			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+			if ( isset( $member_type ) && ! empty( $member_type ) ) {
+				bp_set_member_type( $user_id, '' );
+				bp_set_member_type( $user_id, $member_type );
+
+				$member_type_id                = bp_member_type_post_by_type( $member_type );
+				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+					$bp_user = new WP_User( $user_id );
+					foreach ( $bp_user->roles as $role ) {
+						// Remove role
+						$bp_user->remove_role( $role );
+					}
+					// Add role
+					$bp_user->add_role( $selected_member_type_wp_roles[0] );
+				}
+			}
+		}
+	}
+
+}
+add_action( 'user_register', 'bp_invites_member_invite_mark_register_user', 10, 1 );
+
+/**
+ * Set the font in Send Invites TinyMCE editor to Arial
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param $user_id
+ *
+ */
+function bp_nouveau_send_invite_content_css( $mceInit ) {
+	$styles = 'body.mce-content-body { font-family: Arial, sans-serif;}';
+	if ( isset( $mceInit['content_style'] ) ) {
+		$mceInit['content_style'] .= ' ' . $styles . ' ';
+	} else {
+		$mceInit['content_style'] = $styles . ' ';
+	}
+	return $mceInit;
+}

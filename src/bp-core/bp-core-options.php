@@ -776,6 +776,13 @@ function bp_disable_account_deletion( $default = false ) {
  *              false.
  */
 function bp_enable_private_network( $default = false ) {
+	global $bp;
+
+	if ( isset( $bp ) && isset( $bp->site_options ) && is_array( $bp->site_options ) && isset( $bp->site_options['bp-enable-private-network'] ) ) {
+		$val = (bool) $bp->site_options['bp-enable-private-network'];
+	} else {
+		$val = (bool) bp_get_option( 'bp-enable-private-network', $default );
+	}
 
 	/**
 	 * Filters whether private network for site is enabled.
@@ -784,7 +791,7 @@ function bp_enable_private_network( $default = false ) {
 	 *
 	 * @param bool $value Whether private network for site is enabled.
 	 */
-	return apply_filters( 'bp_enable_private_network', (bool) bp_get_option( 'bp-enable-private-network', $default ) );
+	return apply_filters( 'bp_enable_private_network', $val );
 }
 
 /**
@@ -1445,4 +1452,57 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
  */
 function bp_group_layout_default_format( $default = 'grid' ) {
 	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
+}
+
+/**
+ * Allow custom registration.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not allow custom registrations.
+ */
+function bp_allow_custom_registration( $default = false ) {
+
+	/**
+	 * Filters whether or not allow custom registrations.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param bool $value whether or not allow custom registrations.
+	 */
+	return (bool) apply_filters( 'bp_allow_custom_registration', (bool) bp_get_option( 'allow-custom-registration', $default ) );
+}
+
+/**
+ * Register page URL.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @return string URL of register page.
+ */
+function bp_custom_register_page_url( $default = '' ) {
+
+	return apply_filters( 'bp_custom_register_page_url', bp_get_option( 'register-page-url', $default ) );
+}
+/**
+ * Are group messages disabled?
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group message are disabled, otherwise false.
+ */
+function bp_disable_group_messages( $default = false ) {
+
+	/**
+	 * Filters whether or not group organizer and moderator allowed to send group message.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
 }
