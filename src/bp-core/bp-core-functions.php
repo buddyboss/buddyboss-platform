@@ -4640,7 +4640,7 @@ function bp_core_parse_url( $url ) {
 
 			// Load HTML to DOM Object
 			$dom = new DOMDocument();
-			@$dom->loadHTML( $body );
+			@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
 
 			$meta_tags   = array();
 			$images      = array();
