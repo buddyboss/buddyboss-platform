@@ -378,6 +378,21 @@ abstract class BP_Invitation_Manager {
 		// Use the class_name property value.
 		$args['class'] = $this->class_name;
 
+
+		/**
+		 * We are making sure that we are passing limits and page
+		 * @since 1.4.7
+		 */
+		$page = 1;
+		if (isset($_POST['page'])){
+			$page = (int) sanitize_text_field($_POST['page']);
+		}
+
+		$args['page'] = $page;
+		$args['per_page'] = 100;
+
+
+
 		return BP_Invitation::get( $args );
 	}
 
