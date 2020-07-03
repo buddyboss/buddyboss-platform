@@ -12750,11 +12750,11 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 #buddypress #bp-media-single-album .bb-single-album-header #bp-edit-album-title {
-  margin: 0px 0px 0px 10px;
+  margin: 0 0 0 10px;
 }
 
 #buddypress #bp-media-single-album .bb-single-album-header #bp-save-album-title {
-  margin: 0px 10px 0px 10px;
+  margin: 0 10px 0 10px;
 }
 
 #buddypress #bp-media-single-album .bb-single-album-header p {

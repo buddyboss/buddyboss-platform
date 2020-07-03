@@ -692,7 +692,7 @@ a.bb-close-model {
 
 				&:focus {
 
-					@include box-shadow( 0 0 6px $med-light-grey );
+					@include box-shadow(0 0 6px $med-light-grey);
 				}
 			}
 
@@ -1163,7 +1163,9 @@ ul.bb-albums-list {
 
 
 #buddypress {
+
 	#bp-media-single-album {
+
 		.bb-single-album-header {
 			display: flex;
 			flex-wrap: wrap;
@@ -1179,16 +1181,16 @@ ul.bb-albums-list {
 			}
 
 			#bp-edit-album-title {
-				margin: 0px 0px 0px 10px;
+				margin: 0 0 0 10px;
 			}
 
 			#bp-save-album-title {
-				margin: 0px 10px 0px 10px;
+				margin: 0 10px 0 10px;
 			}
 
 			p {
 				flex-basis: 100%;
-    			width: 100%;
+				width: 100%;
 			}
 
 			.button.small {
@@ -1373,8 +1375,11 @@ ul.bb-albums-list {
 }
 
 @media (max-width: 480px) {
+
 	div#buddypress {
+
 		div.bb-single-album-header {
+
 			input[type="text"] {
 				display: block;
 				width: 100%;
@@ -1382,14 +1387,17 @@ ul.bb-albums-list {
 				margin-bottom: 10px;
 			}
 		}
+
 		div.bb-album-actions {
 			flex-wrap: wrap;
 			justify-content: space-around;
+
 			.button {
 				margin: 0 0 10px 0;
 			}
+
 			select {
-				width: 100%;			
+				width: 100%;
 				direction: ltr;
 			}
 		}
@@ -1808,7 +1816,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			float: right;
 		}
 
-		@media screen and ( max-width: 420px ) {
+		@media screen and (max-width: 420px) {
 
 			.bb-dropdown-wrap {
 				margin-bottom: 10px;
@@ -1979,7 +1987,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		a.button.loading:after {
 			content: "\e838";
-			font-family: "bb-icons";/* stylelint-disable-line */
+			font-family: "bb-icons"; /* stylelint-disable-line */
 			font-size: 18px;
 			line-height: 1;
 			margin-left: 10px;
@@ -2253,7 +2261,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		display: none;
 	}
 
-	.CodeMirror {/* stylelint-disable-line */
+	.CodeMirror { /* stylelint-disable-line */
 		height: calc(90vh - 40px);
 		border-top: 1px solid #ecedee;
 		border-radius: 0 0 0 4px;
@@ -2492,7 +2500,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						}
 
 						&:before {
-							font-family: 'bb-icons';/* stylelint-disable-line */
+							font-family: 'bb-icons'; /* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -2800,7 +2808,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		&:after {
 			content: "\e81f";
-			font-family: bb-icons;/* stylelint-disable-line */
+			font-family: bb-icons; /* stylelint-disable-line */
 			display: inline-block;
 			color: #4d5c6d;
 			opacity: 0.4;
@@ -2843,7 +2851,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 }
 
-body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
+body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
 	-webkit-box-orient: horizontal;
 	-webkit-box-direction: normal;
 	-ms-flex-direction: row;
@@ -2963,7 +2971,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		@media screen and (max-width: 1480px) {
 
 			.bp-media-header-wrap-inner {
-				webkit-box-orient: vertical;/* stylelint-disable-line */
+				webkit-box-orient: vertical; /* stylelint-disable-line */
 				-webkit-box-direction: normal;
 				-ms-flex-direction: column;
 				flex-direction: column;
@@ -3045,7 +3053,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 				&:after {
 					content: "\f345";
-					font-family: dashicons;/* stylelint-disable-line */
+					font-family: dashicons; /* stylelint-disable-line */
 					vertical-align: middle;
 					font-size: 15px;
 					margin-right: 6px;
@@ -3177,7 +3185,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 							}
 
 							i:before {
-								font-family: 'bb-icons';/* stylelint-disable-line */
+								font-family: 'bb-icons'; /* stylelint-disable-line */
 								font-size: 16px;
 								display: inline-block;
 								margin-right: 10px;
@@ -3305,7 +3313,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			&:after {
 				content: "\e838";
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -3364,7 +3372,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		margin: 0;
 	}
 
-	@media screen and ( max-width: 520px ) {
+	@media screen and (max-width: 520px) {
 
 		.bb-model-footer a.bp-document-open-create-popup-folder {
 			display: block;
@@ -3403,7 +3411,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			&:after {
 				content: "\e838";
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -3422,7 +3430,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 	&:after {
 		content: "\e81f";
-		font-family: bb-icons;/* stylelint-disable-line */
+		font-family: bb-icons; /* stylelint-disable-line */
 		display: inline-block;
 		color: #4d5c6d;
 		opacity: 0.4;
@@ -3468,7 +3476,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			span:before {
 				content: "\e827";
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 20px;
 				vertical-align: middle;
 				display: inline-block;
@@ -3489,7 +3497,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 				white-space: nowrap;
 				vertical-align: middle;
 
-				@media screen and ( max-width: 520px ) {
+				@media screen and (max-width: 520px) {
 					max-width: 120px;
 				}
 
@@ -3574,7 +3582,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 					&:before {
 						content: "\e959";
-						font-family: bb-icons;/* stylelint-disable-line */
+						font-family: bb-icons; /* stylelint-disable-line */
 						color: #939597;
 						margin-right: 12px;
 						font-size: 16px;
