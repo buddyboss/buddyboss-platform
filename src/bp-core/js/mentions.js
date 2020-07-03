@@ -10,7 +10,7 @@ window.bp = window.bp || {};
 	bp.mentions.users = window.bp.mentions.users || [];
 
 	if ( typeof window.BP_Suggestions === 'object' ) {
-		bp.mentions.users = window.BP_Suggestions.friends || bp.mentions.users;
+		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
 	}
 
 	/**
@@ -152,8 +152,8 @@ window.bp = window.bp || {};
 					 * Override default behaviour which inserts junk tags in the WordPress Visual editor.
 					 *
 					 * @param {unknown} $inputor Element which we're inserting content into.
-					 * @param {string) content The content that will be inserted.
-					 * @param {string) suffix Applied to the end of the content string.
+					 * @param {string} content The content that will be inserted.
+					 * @param {string} suffix Applied to the end of the content string.
 					 * @return {string}
 					 * @since BuddyPress 2.1.0
 					 */
@@ -271,16 +271,6 @@ window.bp = window.bp || {};
 			BP_Mentions_Options.extra_options,
 			mentions
 		);
-
-		// Remove atwho-query class from target to handle after save issues.
-		this.on( 'hidden.atwho', function( event ) {
-			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
-				var atwho_query = $( event.currentTarget ).find( 'span.atwho-query' );
-				for( var i = 0; i < atwho_query.length; i++ ) {
-					$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
-				}
-			}
-		});
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {
