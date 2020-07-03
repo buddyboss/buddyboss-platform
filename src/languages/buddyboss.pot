@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-06-30 16:32:03+00:00\n"
+"POT-Creation-Date: 2020-07-03 14:22:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -878,8 +878,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:459
 #: bp-document/bp-document-template.php:322
-#: bp-document/bp-document-template.php:1307 bp-media/bp-media-template.php:309
-#: bp-media/bp-media-template.php:1202
+#: bp-document/bp-document-template.php:1329 bp-media/bp-media-template.php:309
+#: bp-media/bp-media-template.php:1220
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
