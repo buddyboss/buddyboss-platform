@@ -13,6 +13,8 @@ window.bp = window.bp || {};
 		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
 	}
 
+	bp.mentions.xhr = null;
+
 	/**
 	 * Adds BuddyPress @mentions to form inputs.
 	 *
@@ -191,8 +193,8 @@ window.bp = window.bp || {};
 							return;
 						}
 
-						if ( self.xhr ) {
-							self.xhr.abort();
+						if ( bp.mentions.xhr ) {
+							bp.mentions.xhr.abort();
 						}
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
@@ -201,7 +203,7 @@ window.bp = window.bp || {};
 							params['group-id'] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
 						}
 
-						self.xhr = $.getJSON( ajaxurl, params )
+						bp.mentions.xhr = $.getJSON( ajaxurl, params )
 						/**
 						 * Success callback for the @suggestions lookup.
 						 *
@@ -266,6 +268,7 @@ window.bp = window.bp || {};
 
 			at:         '@',
 			searchKey:  'search',
+			startWithSpace: true,
 			displayTpl: BP_Mentions_Options.display_tpl
 			},
 			BP_Mentions_Options.extra_options,
