@@ -567,10 +567,10 @@ ul.medium-editor-toolbar-actions {
 	color: #82878c;
 	background: #fff;
 	border: 1px solid #e5e5e5;
+	border-radius: 3px;
 	position: relative;
 	overflow: auto;
 	zoom: 1;
-	margin: 0 -3px;
 
 	+ .bb-activity-media-wrap {
 		margin-top: 10px;
@@ -803,6 +803,7 @@ span.dashicons.dashicons-admin-file:before {
 	}
 }
 
+#bbpress-forums .bb-media-model-container,
 #buddypress .bb-media-model-wrapper.document-theatre {
 
 	.activity-list.bp-list {
@@ -833,6 +834,7 @@ span.dashicons.dashicons-admin-file:before {
 	}
 }
 
+#bbpress-forums .bb-media-model-container,
 #buddypress .bb-media-model-wrapper.media-theatre {
 
 	.activity-list.bp-list {

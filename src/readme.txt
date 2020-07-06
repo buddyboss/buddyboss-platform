@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.4.4
+Stable tag: 1.4.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform.zip'
+3. Upload the file 'buddyboss-platform-pro.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -56,6 +56,26 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.6 =
+* Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
+* Media - Fixed photo attachments in messages not always displaying for recipients
+* Messages - Fixed unable to delete a conversation if Notifications is disabled
+* Activity - Fixed very long URLs unable to be entered into activity feed posts
+* Private Network - Fixed homepage being visible when using 'Custom URL' for Registration
+* REST API - Fixed conflict on some servers, with creating and editing posts and pages
+* LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
+* LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
+* Translations - Fixed 'his, her, their' text not translatable for 'Gender' profile field
+* Translations - Fixed layout issues on profile page when language set to Hungarian
+
+= 1.4.5 =
+* Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
+* Activity - Fixed small images in activity feed getting scaled up and distorted
+* Media - Fixed certain document types not always uploading into Forum replies
+* Media - Improved the formatting of media popups in Forum replies
+* REST API - Fixed API issues in private messages, activity privacy, and site permissions
+* Compatibility - Fixed conflicts with Private Network settings on Memcached servers
 
 = 1.4.4 =
 * Profiles - Improved the user experience when adding a new Repeater field on frontend
