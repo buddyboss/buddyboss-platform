@@ -501,7 +501,7 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
 	// Extract URL from href
 	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
 
-	$url_host      = parse_url( $match[0][0], PHP_URL_HOST );
+	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? parse_url( $match[0][0], PHP_URL_HOST ) : '' );
 	$base_url_host = parse_url( site_url(), PHP_URL_HOST );
 
 	// If site link then nothing to do.

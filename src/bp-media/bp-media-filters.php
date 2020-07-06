@@ -57,6 +57,8 @@ add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
 // Download Media.
 add_action( 'init', 'bp_media_download_url_file' );
 
+add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
+
 /**
  * Add media theatre template for activity pages
  */
@@ -228,6 +230,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'include'  => $media_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+        'user_id'  => false,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
@@ -1887,4 +1890,26 @@ function bp_media_parse_file_path( $file_path ) {
 			'remote_file' => $remote_file,
 			'file_path'   => $file_path,
 	);
+}
+
+/**
+ * Added text on the email when replied on the activity.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param BP_Activity_Activity $activity Activity Object.
+ */
+function bp_media_activity_after_email_content( $activity ) {
+	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) ) {
+		$media_ids = explode( ',', $media_ids );
+		$content   = sprintf(
+		    /* translator: 1. Activity link, 2. Activity media count */
+			__( '<a href="%1$s" target="_blank">%2$s Media Uploaded.</a>', 'buddyboss' ),
+			bp_activity_get_permalink( $activity->id ),
+			count( $media_ids )
+		);
+		echo wpautop( $content );
+	}
 }

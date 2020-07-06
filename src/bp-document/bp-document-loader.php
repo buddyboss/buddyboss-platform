@@ -19,4 +19,4 @@ defined( 'ABSPATH' ) || exit;
 function bp_setup_document() {
 	buddypress()->document = new BP_Document_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_document', 6 );
+add_action( 'bp_setup_components', 'bp_setup_document', 5 );
