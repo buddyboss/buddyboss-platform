@@ -1822,11 +1822,8 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
 	}
 
-	if ( $group_id > 0 ) {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} else {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
-	}
+	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+
 
 	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
@@ -2680,6 +2677,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$folder       = new BP_Document_Folder( $folder_id );
 	$data         = array();
 
@@ -2690,6 +2688,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2700,10 +2704,28 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_document( $user_id, $folder->group_id );
+				$manage   = groups_can_user_manage_document( $user_id, $folder->group_id );
+				$status   = bp_group_get_media_status( $folder->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $folder->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $folder->group_id );
 
 				if ( $manage ) {
-					$can_manage   = true;
+					if ( $folder->user_id === $user_id ) {
+						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
+					}
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2722,6 +2744,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2735,6 +2763,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2747,6 +2781,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 
@@ -2755,6 +2795,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $folder_id, $user_id );
 }
@@ -2773,6 +2814,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$document     = new BP_Document( $document_id );
 	$data         = array();
 
@@ -2783,6 +2825,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2793,10 +2841,28 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_document( $user_id, $document->group_id );
+				$manage   = groups_can_user_manage_document( $user_id, $document->group_id );
+				$status   = bp_group_get_document_status( $document->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $document->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $document->group_id );
 
 				if ( $manage ) {
-					$can_manage   = true;
+					if ( $document->user_id === $user_id ) {
+						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
+					}
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2815,6 +2881,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2829,6 +2901,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2847,6 +2925,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_manage   = true;
@@ -2871,6 +2955,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access > 0 ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2883,6 +2973,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 
@@ -2891,6 +2987,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $document_id, $user_id );
 }

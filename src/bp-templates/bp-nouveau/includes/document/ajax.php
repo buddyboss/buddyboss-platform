@@ -664,8 +664,10 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -761,8 +763,10 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -1378,9 +1382,9 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
 	} else {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
 	$first_text = '';

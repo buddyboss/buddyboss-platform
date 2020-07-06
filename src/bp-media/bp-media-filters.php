@@ -90,6 +90,7 @@ function bp_media_activity_entry() {
 		'include'  => $media_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+		'user_id'  => false,
 	);
 
 	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
