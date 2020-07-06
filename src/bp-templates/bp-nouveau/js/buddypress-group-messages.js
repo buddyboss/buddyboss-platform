@@ -690,8 +690,14 @@ window.bp = window.bp || {};
 					$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 					if ( jQuery( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+						if( window.group_messages_editor.exportSelection() != null ){
+							medium_editor.addClass('medium-editor-toolbar-active');
+						}
 					} else {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+						if( window.group_messages_editor.exportSelection() === null ) {
+							medium_editor.removeClass('medium-editor-toolbar-active');
+						}
 					}
 					medium_editor.toggleClass( 'active' );
 				}
@@ -700,7 +706,9 @@ window.bp = window.bp || {};
 				'click',
 				'#group-messages-container .medium-editor-toolbar-actions',
 				function(e) {
-					$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+					if( window.group_messages_editor.exportSelection() === null ) {
+						$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+					}
 				}
 			);
 		},
