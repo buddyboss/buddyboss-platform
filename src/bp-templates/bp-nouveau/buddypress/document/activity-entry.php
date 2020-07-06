@@ -13,8 +13,8 @@ $extension         = bp_document_extension( $attachment_id );
 $svg_icon          = bp_document_svg_icon( $extension, $attachment_id );
 $svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
-$filename          = basename( get_attached_file( $attachment_id ) );
-$size              = is_file( get_attached_file( $attachment_id ) ) ? size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
+$filename           = basename( get_attached_file( $attachment_id ) );
+$size              = is_file( get_attached_file( $attachment_id ) ) ? bp_document_size_format( filesize( get_attached_file( $attachment_id ) ) ) : 0;
 $download_url      = bp_document_download_link( $attachment_id, bp_get_document_id() );
 $document_privacy  = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
 $can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
@@ -22,8 +22,9 @@ $can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true 
 $can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
-$attachment_url	   = '';
-$mirror_text	   = '';
+$attachment_url    = '';
+$mirror_text       = '';
+
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
 	$mirror_text		 = bp_document_mirror_text( $attachment_id );
