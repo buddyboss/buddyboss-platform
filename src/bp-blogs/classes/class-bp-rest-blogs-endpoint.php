@@ -88,7 +88,6 @@ class BP_REST_Blogs_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Blogs
 	 * @apiDescription Retrieve blogs
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} [page] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -198,7 +197,6 @@ class BP_REST_Blogs_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Blogs
 	 * @apiDescription Retrieve blog
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the Blog.
 	 */
 	public function get_item( $request ) {

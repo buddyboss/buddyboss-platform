@@ -217,15 +217,13 @@ class BP_Blogs_Component extends BP_Component {
 		// Add 'Sites' to the main navigation.
 		$count    = (int) bp_get_total_blog_count_for_user();
 		$class    = ( 0 === $count ) ? 'no-count' : 'count';
-		$nav_text = sprintf(
-			/* translators: %s: Site count for the current user */
-			__( 'Sites %s', 'buddyboss' ),
-			sprintf(
-				'<span class="%s">%s</span>',
-				esc_attr( $class ),
-				bp_core_number_format( $count )
-			)
+		$nav_text = __( 'Sites', 'buddyboss' );
+		$nav_text .= sprintf(
+			' <span class="%s">%s</span>',
+			esc_attr( $class ),
+			bp_core_number_format( $count )
 		);
+
 		$main_nav = array(
 			'name'                => $nav_text,
 			'slug'                => $slug,

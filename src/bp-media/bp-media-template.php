@@ -141,10 +141,8 @@ function bp_has_media( $args = '' ) {
 	if ( ! isset( $args['album_id'] ) ) {
 		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
 	} else {
-		$album_id = $args['album_id'];
+		$album_id = ( isset( $args['album_id'] ) ? $args['album_id'] : false );
 	}
-
-	$privacy = bp_media_query_privacy( $user_id, 0, ( isset( $args['scope'] ) ? $args['scope'] : '' ) );
 
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
@@ -153,20 +151,8 @@ function bp_has_media( $args = '' ) {
 	}
 
 	// The default scope should recognize custom slugs.
-	$scope = array();
-	if ( bp_is_media_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) ) {
-		if ( bp_is_active( 'friends' ) ) {
-			$scope[] = 'friends';
-		}
-
-		if ( bp_is_active( 'groups' ) ) {
-			$scope[] = 'groups';
-		}
-
-		if ( is_user_logged_in() ) {
-			$scope[] = 'personal';
-		}
-	}
+	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = bp_media_default_scope( $scope );
 
 	/*
 	 * Parse Args.
@@ -195,7 +181,7 @@ function bp_has_media( $args = '' ) {
 			'user_id'      => $user_id,        // user_id to filter on.
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
-			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'privacy'      => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
@@ -643,6 +629,24 @@ function bp_media_user_can_delete( $media = false ) {
 		// Users are allowed to delete their own media.
 		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
 			$can_delete = true;
+		}
+
+		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
+			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $media->group_id );
+			$status   = bp_group_get_media_status( $media->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
+			if ( $manage ) {
+				if ( $media->user_id === bp_loggedin_user_id() ) {
+					$can_delete = true;
+				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+					$can_delete = true;
+				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+					$can_delete = true;
+				} elseif ( 'admins' == $status && $is_admin ) {
+					$can_delete = true;
+				}
+			}
 		}
 	}
 

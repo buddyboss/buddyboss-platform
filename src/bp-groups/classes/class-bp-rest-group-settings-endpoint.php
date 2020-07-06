@@ -23,6 +23,13 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	protected $groups_endpoint;
 
 	/**
+	 * Navigation.
+	 *
+	 * @var array Setting Navigation items.
+	 */
+	protected $nav;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
@@ -31,6 +38,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base       = buddypress()->groups->id;
 		$this->groups_endpoint = new BP_REST_Groups_Endpoint();
+		$this->nav             = array( 'group-settings' );
 	}
 
 	/**
@@ -39,14 +47,34 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function register_routes() {
+
+		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) && bbp_is_group_forums_active() ) {
+			$this->nav[] = 'forum';
+		}
+
+		if ( function_exists( 'bp_ld_sync' ) ) {
+			$va = bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true );
+			if ( '1' === $va ) {
+				$this->nav[] = 'courses';
+			}
+		}
+
 		register_rest_route(
 			$this->namespace,
 			'/' . $this->rest_base . '/(?P<id>[\d]+)/settings',
 			array(
 				'args'   => array(
-					'id' => array(
+					'id'  => array(
 						'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 						'type'        => 'integer',
+					),
+					'nav' => array(
+						'description'       => __( 'Navigation item slug.', 'buddyboss' ),
+						'type'              => 'string',
+						'required'          => true,
+						'enum'              => $this->nav,
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => 'rest_validate_request_arg',
 					),
 				),
 				array(
@@ -78,7 +106,9 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve groups settings.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the Group.
+	 * @apiParam {String=group-settings,forum,courses} nav Navigation item slug.
 	 */
 	public function get_item( $request ) {
 
@@ -94,7 +124,38 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$fields = $this->get_settings_fields( $group->id );
+		$nav    = $request->get_param( 'nav' );
+		$fields = array();
+		switch ( $nav ) {
+			case 'group-settings':
+				$fields = $this->get_settings_fields( $group->id );
+				break;
+
+			case 'forum':
+				$fields = $this->get_forum_fields( $group->id );
+				break;
+
+			case 'courses':
+				$fields = $this->get_courses_fields( $group->id );
+				break;
+		}
+
+		$fields = apply_filters( 'bp_rest_groups_setting_fields', $fields, $group->id, $nav );
+
+		if ( is_wp_error( $fields ) ) {
+			return $fields;
+		}
+
+		if ( empty( $fields ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_group_setting_nav',
+				__( 'Sorry, you are not allowed to see the group settings options.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
 		$retval = array();
 		if ( ! empty( $fields ) ) {
 			foreach ( $fields as $field ) {
@@ -202,14 +263,33 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		$group = $this->groups_endpoint->get_group_object( $request );
+		$nav   = $request->get_param( 'nav' );
 
-		$updated = $this->update_settings_fields( $request );
-		$fields  = $this->get_settings_fields( $group->id );
+		$fields  = array();
+		$updated = array();
 
-		$fields  = apply_filters( 'bp_rest_group_setting_update_fields', $fields, $group->id );
-		$updated = apply_filters( 'bp_rest_group_setting_update_message', $updated, $group->id );
+		switch ( $nav ) {
+			case 'group-settings':
+				$updated = $this->update_settings_fields( $request );
+				$fields  = $this->get_settings_fields( $group->id );
+				break;
+
+			case 'forum':
+				$updated = $this->update_forum_fields( $request );
+				$fields  = $this->get_forum_fields( $group->id );
+				break;
+
+			case 'courses':
+				$updated = $this->update_courses_fields( $request );
+				$fields  = $this->get_courses_fields( $group->id );
+				break;
+		}
+
+		$fields  = apply_filters( 'bp_rest_group_setting_update_fields', $fields, $group->id, $nav );
+		$updated = apply_filters( 'bp_rest_group_setting_update_message', $updated, $group->id, $nav );
 
 		$fields_update = $this->update_additional_fields_for_object( $group->id, $request );
+
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
@@ -330,6 +410,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
 					'type'        => 'integer',
 					'required'    => true,
+				),
+				'nav'    => array(
+					'description'       => __( 'Navigation item slug.', 'buddyboss' ),
+					'type'              => 'string',
+					'required'          => true,
+					'enum'              => $this->nav,
+					'sanitize_callback' => 'sanitize_key',
+					'validate_callback' => 'rest_validate_request_arg',
 				),
 				'fields' => array(
 					'context'     => array( 'view', 'edit' ),
@@ -886,5 +974,317 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		);
 
 	}
+
+	/**
+	 * Get Group forum Settings.
+	 *
+	 * @param integer $group_id Group ID.
+	 *
+	 * @return mixed|void
+	 */
+	protected function get_forum_fields( $group_id ) {
+		$fields                             = array();
+		buddypress()->groups->current_group = groups_get_group( $group_id );
+
+		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() ) {
+			return new WP_Error(
+				'bp_rest_invalid_group_setting_nav',
+				__( 'Sorry, you are not allowed to see the forum group settings options.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		$forum_id  = 0;
+		$forum_ids = bbp_get_group_forum_ids( $group_id );
+
+		// Get the first forum ID.
+		if ( ! empty( $forum_ids ) ) {
+			$forum_id = (int) is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids;
+		}
+
+		$checked = bp_get_new_group_enable_forum() || bp_group_is_forum_enabled( $group_id );
+
+		$fields[] = array(
+			'label'       => esc_html__( 'Group Forum Settings', 'buddyboss' ),
+			'name'        => '',
+			'description' => esc_html__( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ),
+			'field'       => 'heading',
+			'value'       => '',
+			'options'     => array(),
+		);
+
+		$fields[] = array(
+			'label'       => esc_html__( 'Yes. I want this group to have a discussion forum.', 'buddyboss' ),
+			'name'        => 'bbp-edit-group-forum',
+			'description' => esc_html__( 'Saying no will not delete existing forum content.', 'buddyboss' ),
+			'field'       => 'checkbox',
+			'value'       => $checked,
+			'options'     => array(),
+		);
+
+		if ( bbp_is_user_keymaster() ) {
+			$forum_field = array(
+				'label'       => esc_html__( 'Group Forum:', 'buddyboss' ),
+				'name'        => 'bbp_group_forum_id',
+				'description' => esc_html__( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ),
+				'field'       => 'select',
+				'value'       => $forum_id,
+				'options'     => array(),
+			);
+
+			$forums = get_posts(
+				array(
+					'post_type'          => 'forum',
+					'numberposts'        => -1,
+					'orderby'            => 'menu_order title',
+					'order'              => 'ASC',
+					'disable_categories' => true,
+				)
+			);
+
+			if ( ! empty( $forums ) ) {
+				$forum_field['options'][] = array(
+					'label'             => esc_html__( '(No Forum)', 'buddyboss' ),
+					'value'             => '',
+					'description'       => '',
+					'is_default_option' => empty( $forum_id ),
+				);
+				foreach ( $forums as $forum ) {
+					$title = $forum->post_title;
+					if ( '' === $title ) {
+						/* translators: %d: ID of a post. */
+						$title = sprintf( __( '#%d (no title)', 'buddyboss' ), $forum->ID );
+					}
+					$forum_field['options'][] = array(
+						'label'             => $title,
+						'value'             => $forum->ID,
+						'description'       => '',
+						'is_default_option' => $forum_id === $forum->ID,
+					);
+				}
+			}
+
+			$fields[] = $forum_field;
+		}
+
+		return apply_filters( 'bp_rest_group_settings_forum', $fields, $group_id );
+
+	}
+
+	/**
+	 * Update Group Forum settings.
+	 *
+	 * @param WP_REST_Request $request Request used to generate the response.
+	 *
+	 * @return array
+	 */
+	protected function update_forum_fields( $request ) {
+		$post_fields                        = $request->get_param( 'fields' );
+		$group_id                           = $request->get_param( 'id' );
+		$group                              = groups_get_group( $group_id );
+		buddypress()->groups->current_group = $group;
+
+		if ( ! bp_is_active( 'forums' ) || ! function_exists( 'bbp_is_group_forums_active' ) || ! bbp_is_group_forums_active() || ! class_exists( 'BBP_Forums_Group_Extension' ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_group_setting_nav',
+				__( 'Sorry, you are not allowed to update the forum group settings options.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		if ( empty( $post_fields ) ) {
+			return array(
+				'error'  => '',
+				'notice' => '',
+			);
+		}
+
+		$edit_forum = ( array_key_exists( 'bbp-edit-group-forum', (array) $post_fields ) && ! empty( $post_fields['bbp-edit-group-forum'] ) ) ? true : false;
+		$forum_id   = 0;
+
+		$group_forum_extention = new BBP_Forums_Group_Extension();
+
+		// Keymasters have the ability to reconfigure forums.
+		if ( bbp_is_user_keymaster() ) {
+			$forum_ids = ( array_key_exists( 'bbp_group_forum_id', (array) $post_fields ) && ! empty( $post_fields['bbp_group_forum_id'] ) ) ? (array) (int) $post_fields['bbp_group_forum_id'] : array();
+
+			// Use the existing forum IDs.
+		} else {
+			$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
+		}
+
+		// Normalize group forum relationships now.
+		if ( ! empty( $forum_ids ) ) {
+
+			// Loop through forums, and make sure they exist.
+			foreach ( $forum_ids as $forum_id ) {
+
+				// Look for forum.
+				$forum = bbp_get_forum( $forum_id );
+
+				// No forum exists, so break the relationship.
+				if ( empty( $forum ) ) {
+					$group_forum_extention->remove_forum(
+						array(
+							'forum_id' => $forum_id,
+							'group_id' => $group_id,
+						)
+					);
+					unset( $forum_ids[ $forum_id ] );
+				}
+			}
+
+			// No support for multiple forums yet.
+			$forum_id = (int) ( is_array( $forum_ids ) ? $forum_ids[0] : $forum_ids );
+		}
+
+		// Update the group ID and forum ID relationships.
+		bbp_update_group_forum_ids( $group_id, (array) $forum_ids );
+		bbp_update_forum_group_ids( $forum_id, (array) $group_id );
+
+		// Update the group forum setting.
+		$group = $group_forum_extention->toggle_group_forum( $group_id, $edit_forum, $forum_id );
+
+		// Create a new forum.
+		if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
+
+			// Set the default forum status.
+			switch ( $group->status ) {
+				case 'hidden':
+					$status = bbp_get_hidden_status_id();
+					break;
+				case 'private':
+					$status = bbp_get_private_status_id();
+					break;
+				case 'public':
+				default:
+					$status = bbp_get_public_status_id();
+					break;
+			}
+
+			// Create the initial forum.
+			$forum_id = bbp_insert_forum(
+				array(
+					'post_parent'  => bbp_get_group_forums_root_id(),
+					'post_title'   => $group->name,
+					'post_content' => $group->description,
+					'post_status'  => $status,
+				)
+			);
+
+			// Setup forum args with forum ID.
+			$new_forum_args = array( 'forum_id' => $forum_id );
+
+			// If in admin, also include the group ID.
+			if ( is_admin() && ! empty( $group_id ) ) {
+				$new_forum_args['group_id'] = $group_id;
+			}
+
+			// Run the BP-specific functions for new groups.
+			$group_forum_extention->new_forum( $new_forum_args );
+		}
+
+		$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
+
+		return array(
+			'error'  => '',
+			'notice' => $notice,
+		);
+	}
+
+	/**
+	 * Get Group course Settings.
+	 *
+	 * @param integer $group_id Group ID.
+	 *
+	 * @return mixed|void
+	 */
+	protected function get_courses_fields( $group_id ) {
+		$fields                             = array();
+		buddypress()->groups->current_group = groups_get_group( $group_id );
+
+		if ( ! function_exists( 'bp_ld_sync' ) || '1' !== bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_group_setting_nav',
+				__( 'Sorry, you are not allowed to see the courses group settings options.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		$has_ld_group = bp_ld_sync( 'buddypress' )->sync->generator( $group_id )->hasLdGroup();
+
+		$fields[] = array(
+			'label'       => esc_html__( 'Group Courses Settings', 'buddyboss' ),
+			'name'        => '',
+			'description' => esc_html__( 'Create and associate to a LearnDash group, allowing courses and reports to be managed within the group.', 'buddyboss' ),
+			'field'       => 'heading',
+			'value'       => '',
+			'options'     => array(),
+		);
+
+		$fields[] = array(
+			'label'       => esc_html__( 'Yes. I want this group to sync with a LearnDash group.', 'buddyboss' ),
+			'name'        => 'bp-ld-sync-enable',
+			'description' => '',
+			'field'       => 'checkbox',
+			'value'       => $has_ld_group,
+			'options'     => array(),
+		);
+
+		return apply_filters( 'bp_rest_group_settings_courses', $fields, $group_id );
+	}
+
+	/**
+	 * Update Group Courses settings.
+	 *
+	 * @param WP_REST_Request $request Request used to generate the response.
+	 *
+	 * @return array
+	 */
+	protected function update_courses_fields( $request ) {
+		$post_fields                        = $request->get_param( 'fields' );
+		$group_id                           = $request->get_param( 'id' );
+		$group                              = groups_get_group( $group_id );
+		buddypress()->groups->current_group = $group;
+
+		if ( ! function_exists( 'bp_ld_sync' ) || '1' !== bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_group_setting_nav',
+				__( 'Sorry, you are not allowed to update the courses group settings options.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
+
+		if ( empty( $post_fields ) ) {
+			return array(
+				'error'  => '',
+				'notice' => '',
+			);
+		}
+
+		$generator = bp_ld_sync( 'buddypress' )->sync->generator( $group_id );
+
+		if ( array_key_exists( 'bp-ld-sync-enable', (array) $post_fields ) && empty( $post_fields['bp-ld-sync-enable'] ) ) {
+			$generator->desyncFromLearndash();
+		} elseif ( array_key_exists( 'bp-ld-sync-enable', (array) $post_fields ) && ! empty( $post_fields['bp-ld-sync-enable'] ) ) {
+			$generator->associateToLearndash()->syncBpAdmins();
+		}
+
+		$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
+
+		return array(
+			'error'  => '',
+			'notice' => $notice,
+		);
+	}
+
 }
 

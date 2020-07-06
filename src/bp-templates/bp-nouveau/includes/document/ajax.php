@@ -502,115 +502,6 @@ function bp_nouveau_ajax_document_delete_attachment() {
 	wp_send_json_success();
 }
 
-// add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2 );
-
-/**
- * Object template results media tabs.
- *
- * @param $results
- * @param $object
- *
- * @since BuddyBoss 1.4.0
- *
- * @return mixed
- */
-function bp_nouveau_object_template_results_document_tabs( $results, $object ) {
-	if ( 'document' !== $object ) {
-		return $results;
-	}
-
-	$results['scopes'] = array();
-
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_all_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	$results['scopes']['all'] = $GLOBALS['document_template']->total_document_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_all_scope', 20 );
-
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_personal_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	$results['scopes']['personal'] = $GLOBALS['document_template']->total_document_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_personal_scope', 20 );
-
-	return $results;
-}
-
-/**
- * Object template results document all scope.
- *
- * @param $querystring
- *
- * @since BuddyBoss 1.4.0
- *
- * @return string
- */
-function bp_nouveau_object_template_results_document_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope'] = array();
-
-	if ( bp_is_profile_document_support_enabled() && bp_is_active( 'friends' ) ) {
-		$querystring['scope'][] = 'friends';
-	}
-
-	if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) ) {
-		$querystring['scope'][] = 'groups';
-	}
-
-	if ( bp_is_profile_document_support_enabled() && is_user_logged_in() ) {
-		$querystring['scope'][] = 'personal';
-	}
-
-	$querystring['user_id']     = 0;
-	$querystring['count_total'] = true;
-	$querystring['type']        = 'document';
-	return http_build_query( $querystring );
-}
-
-/**
- * Object template results media personal scope.
- *
- * @since BuddyBoss 1.4.0
- */
-function bp_nouveau_object_template_results_document_personal_scope( $querystring ) {
-
-	if ( ! bp_is_profile_document_support_enabled() ) {
-		return $querystring;
-	}
-
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope']   = 'personal';
-	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	$querystring['type']    = 'document';
-	$privacy                = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-		$privacy[] = 'onlyme';
-	}
-
-	$querystring['privacy']     = $privacy;
-	$querystring['count_total'] = true;
-
-	return http_build_query( $querystring );
-}
-
-/**
- * Change the querystring based on caller of the albums media query
- *
- * @param $querystring
- */
-function bp_nouveau_object_template_results_folders_existing_document_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	if ( ! empty( $_POST['caller'] ) && 'bp-existing-document' === $_POST['caller'] ) {
-		$querystring['folder_id'] = 0;
-	}
-
-	return http_build_query( $querystring );
-}
-
-add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_folders_existing_document_query', 20 );
-
 /**
  * Save media
  *
@@ -778,8 +669,10 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -879,8 +772,10 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -1509,9 +1404,9 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
 	} else {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
 	$first_text = '';
