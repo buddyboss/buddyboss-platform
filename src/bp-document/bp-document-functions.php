@@ -2382,6 +2382,10 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		}
 	}
 
+	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+		return false;
+	}
+
 	$title = wp_strip_all_tags( $title );
 
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;

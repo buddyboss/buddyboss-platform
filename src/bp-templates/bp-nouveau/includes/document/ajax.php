@@ -718,14 +718,19 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
 
-	if ( ! is_user_logged_in() ) {
-		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -826,12 +831,16 @@ function bp_nouveau_ajax_document_child_folder_save() {
 
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
-
 		wp_send_json_error( $response );
 	}
 
 	if ( ! is_user_logged_in() ) {
 		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -1097,6 +1106,11 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
+		if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+			$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
 		if ( (int) $document_id > 0 ) {
 			$has_access = bp_folder_user_can_edit( $document_id );
 			if ( ! $has_access ) {
@@ -1163,6 +1177,14 @@ function bp_nouveau_ajax_document_edit_folder() {
 			esc_html__( 'Please enter title of folder.', 'buddyboss' )
 		);
 
+		wp_send_json_error( $response );
+	}
+
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'Invalid folder name', 'buddyboss' )
+		);
 		wp_send_json_error( $response );
 	}
 
