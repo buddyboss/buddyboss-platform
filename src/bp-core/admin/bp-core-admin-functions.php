@@ -2378,6 +2378,10 @@ function bp_member_type_import_submenu_page() {
 
 	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
 
+		if( is_multisite() && bp_is_network_activated() ){
+			switch_to_blog( bp_get_root_blog_id() );
+		}
+
 		$registered_member_types = bp_get_member_types();
 		$created_member_types    = bp_get_active_member_types();
 		$active_member_types     = array();
@@ -2427,6 +2431,10 @@ function bp_member_type_import_submenu_page() {
 				<div class="updated notice " id="message"><p><?php _e( 'Successfully Imported', 'buddyboss' ); ?></p></div>
 				<?php
 			}
+		}
+
+		if( is_multisite() && bp_is_network_activated() ) {
+			restore_current_blog();
 		}
 	}
 
@@ -2818,16 +2826,11 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 	// Tabs for the BuddyBoss > Tools
 	$tabs = array(
 		'0' => array(
-			'href' => get_admin_url(
-				'',
-				add_query_arg(
-					array(
-						'page' => 'bp-tools',
-						'tab'  => 'bp-tools',
-					),
-					'admin.php'
-				)
+			'href' => bp_get_admin_url( add_query_arg( array(
+				'page' => 'bp-tools',
+				'tab'  => 'bp-tools',
 			),
+				'admin.php' ) ),
 			'name' => __( 'Default Data', 'buddyboss' ),
 			'slug' => 'bp-tools',
 		),
@@ -2846,16 +2849,11 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-member-type-import',
-					'tab'  => 'bp-member-type-import',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-member-type-import',
+			'tab'  => 'bp-member-type-import',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Import Profile Types', 'buddyboss' ),
 		'slug' => 'bp-member-type-import',
 	);
@@ -2867,16 +2865,11 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_p
 function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-repair-community',
-					'tab'  => 'bp-repair-community',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-repair-community',
+			'tab'  => 'bp-repair-community',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Repair Community', 'buddyboss' ),
 		'slug' => 'bp-repair-community',
 	);
@@ -2909,6 +2902,27 @@ function bp_import_profile_types_admin_menu() {
 		'bp-member-type-import',
 		'bp_member_type_import_submenu_page'
 	);
+
+	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_repair_page' ) ) {
+		add_submenu_page(
+			'buddyboss-platform',
+			__( 'Repair Forums', 'buddyboss' ),
+			__( 'Forum Repair', 'buddyboss' ),
+			'manage_options',
+			'bbp-repair',
+			'bbp_admin_repair'
+		);
+
+		add_submenu_page(
+			'buddyboss-platform',
+			__( 'Import Forums', 'buddyboss' ),
+			__( 'Forum Import', 'buddyboss' ),
+			'manage_options',
+			'bbp-converter',
+			'bbp_converter_settings'
+		);
+	}
+
 
 }
 add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );

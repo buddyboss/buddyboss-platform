@@ -43,6 +43,49 @@ function bbp_admin_repair() {
 
 			<form class="settings" method="post" action="">
 
+				<?php
+				if ( is_multisite() && is_network_admin() ) {
+					$bbp_network_sites = bbp_get_network_sites();
+					?>
+					<fieldset>
+						<legend>
+							<?php
+							esc_html_e( 'Select the site:', 'buddyboss' );
+							?>
+						</legend>
+						<label for="select-site">
+							<?php
+							esc_html_e( 'Select the site:', 'buddyboss' );
+
+							if ( ! empty( $bbp_network_sites ) ) {
+								?>
+								<select name="bbp-network-site" id="bbp-network-site" required>
+									<option value="0">
+										<?php
+										esc_html_e( 'Select a site to fix the forums', 'buddyboss' );
+										?>
+									</option>
+									<?php
+									foreach ( $bbp_network_sites as $bbp_network_site ) {
+										?>
+										<option value="<?php echo esc_attr( $bbp_network_site->blog_id ); ?>">
+											<?php
+											echo esc_html( $bbp_network_site->domain . '/' . $bbp_network_site->path );
+											?>
+										</option>
+										<?php
+									}
+									?>
+								</select>
+								<?php
+							}
+							?>
+						</label>
+					</fieldset>
+					<?php
+				}
+				?>
+
 				<fieldset>
 					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ); ?></legend>
 					<div class="checkbox">
@@ -177,6 +220,19 @@ function bbp_admin_repair_list() {
 	ksort( $repair_list );
 
 	return (array) apply_filters( 'bbp_repair_list', $repair_list );
+}
+
+/**
+ * Function get network sites.
+ *
+ * @since BuddyBoss 1.2.10
+ *
+ * @return mixed|void
+ */
+function bbp_get_network_sites() {
+	$sites = get_sites();
+
+	return apply_filters( 'bbp_get_network_sites', ( $sites ) ? $sites : array() );
 }
 
 /**
@@ -1911,6 +1967,10 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
+	if( is_multisite() && bp_is_network_activated() ){
+		switch_to_blog( $_POST['site_id'] );
+	}
+
 	if ( 'bbp-sync-topic-meta' === $type ) {
 		$status = bbp_admin_repair_topic_meta();
 	} elseif ( 'bbp-sync-forum-meta' === $type ) {
@@ -1949,6 +2009,10 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		$status = bbp_admin_repair_user_roles();
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
+	}
+
+	if( is_multisite() && bp_is_network_activated() ) {
+		restore_current_blog();
 	}
 
 	if ( 0 === $status['status'] ) {
