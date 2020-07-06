@@ -51,7 +51,7 @@
 		        ?>
 		        <div class="message_actions">
 			        <a href="#" class="message_action__anchor">
-				        <i class="dashicons dashicons-menu"></i>
+				        <i class="bb-icon-menu-dots-v"></i>
 			        </a>
 			        <div class="message_action__list">
 				        <ul>
@@ -72,7 +72,7 @@
 	        	?>
 				<div class="message_actions">
 			        <a href="#" class="message_action__anchor">
-				        <i class="dashicons dashicons-menu"></i>
+				        <i class="bb-icon-menu-dots-v"></i>
 			        </a>
 			        <div class="message_action__list">
 				        <ul>

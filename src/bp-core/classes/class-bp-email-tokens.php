@@ -643,7 +643,22 @@ class BP_Email_Tokens {
 											<tr>
 												<td>
 													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-														<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) ); ?>
+														<?php
+														/**
+														 * Display text before activity comment.
+														 */
+														do_action( 'bp_activity_before_email_content', $activity_comment );
+
+														if ( in_array( $activity_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
+															$activity_comment->content = '';
+														}
+														echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) );
+
+                                                        /**
+														 * Display text after activity comment.
+														 */
+														do_action( 'bp_activity_after_email_content', $activity_comment );
+														?>
 													</div>
 												</td>
 											</tr>
@@ -821,7 +836,7 @@ class BP_Email_Tokens {
 														<div class="activity-attached-gif-container">
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
-																	<span class="dashicons dashicons-video-alt3"></span>
+																	<span class="bb-icon-play-thin"></span>
 																	<img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
 																</a>
 																<span class="gif-icon"></span>
@@ -1135,7 +1150,7 @@ class BP_Email_Tokens {
 			return '';
 		}
 
-		if ( empty( $formatted_tokens['invites.message'] ) ) {
+		if ( empty( $tokens['invite.message'] ) ) {
 			return $output;
 		}
 
@@ -1157,7 +1172,7 @@ class BP_Email_Tokens {
 						<tr>
 							<td>
 								<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-									<?php echo wpautop( $formatted_tokens['invites.message'] ); ?>
+									<?php echo wpautop( $tokens['invite.message'] ); ?>
 								</div>
 							</td>
 						</tr>

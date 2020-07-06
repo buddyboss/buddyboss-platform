@@ -378,7 +378,7 @@ function bp_has_members( $args = array() ) {
 
 	$args = bp_parse_args( $args, array() );
 	// Exclude Member Types
-	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) ) ) {
+	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) && empty( $args['member_type'] ) ) ) {
 	    // get all excluded member types.
 	    $bp_member_type_ids = bp_get_removed_member_types();
 	    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
@@ -1404,7 +1404,7 @@ function bp_displayed_user_get_front_template( $displayed_user = null ) {
 
 	// Init the hierarchy
 	$template_names = array(
-		'members/single/front-id-' . sanitize_file_name( $displayed_user->id ) . '.php',
+		'members/single/front-id-' . (int) $displayed_user->id . '.php',
 		'members/single/front-nicename-' . sanitize_file_name( $displayed_user->userdata->user_nicename ) . '.php',
 	);
 

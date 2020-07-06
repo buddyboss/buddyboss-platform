@@ -851,21 +851,25 @@ function bbp_is_search() {
 	// Assume false
 	$retval = false;
 
+	// Get the rewrite ID (one time, to avoid repeated calls)
+	$rewrite_id = bbp_get_search_rewrite_id();
+
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_search ) && ( true === $wp_query->bbp_is_search ) ) {
 		$retval = true;
 	}
 
 	// Check query name
-	if ( empty( $retval ) && bbp_is_query_name( bbp_get_search_rewrite_id() ) ) {
+	if ( empty( $retval ) && bbp_is_query_name( $rewrite_id ) ) {
 		$retval = true;
 	}
 
 	// Check $_GET
-	if ( empty( $retval ) && isset( $_REQUEST[ bbp_get_search_rewrite_id() ] ) && empty( $_REQUEST[ bbp_get_search_rewrite_id() ] ) ) {
+	if ( empty( $retval ) && isset( $_REQUEST[ $rewrite_id ] ) && empty( $_REQUEST[ $rewrite_id ] ) ) {
 		$retval = true;
 	}
 
+	// Filter & return.
 	return (bool) apply_filters( 'bbp_is_search', $retval );
 }
 
@@ -1122,6 +1126,17 @@ function is_bbpress() {
 
 	// Defalt to false
 	$retval = false;
+
+	// Bail if main query has not been populated.
+	if ( ! isset( $GLOBALS['wp_query'] ) || ! is_a( $GLOBALS['wp_query'], 'WP_Query' ) ) {
+		_doing_it_wrong(
+			__FUNCTION__,
+			esc_html__( 'Conditional query tags do not work before the query is run. Before then, they always return false.', 'buddyboss' ),
+			'1.4.0'
+		);
+
+		return $retval;
+	}
 
 	/** Archives */
 
@@ -1919,7 +1934,7 @@ function bbp_get_the_content( $args = array() ) {
 		$editor_unique_id = bp_unique_id( 'forums_editor_' );
 
 		?>
-			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>">
+			<div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content_<?php echo esc_attr( $editor_unique_id ); ?>" class="<?php echo esc_attr( $r['editor_class'] ); ?> bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" data-key="<?php echo esc_attr( $editor_unique_id ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>>
 			<?php echo $post_content; ?>
 			</div>
 			<input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
@@ -1954,7 +1969,7 @@ function bbp_get_the_content( $args = array() ) {
 		else :
 			?>
 
-			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>"><?php echo $post_content; ?></textarea>
+			<textarea id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" cols="60" rows="<?php echo esc_attr( $r['textarea_rows'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>" <?php echo bp_is_group() ? 'data-suggestions-group-id="'. bp_get_current_group_id() .'"' : ''; ?>><?php echo $post_content; ?></textarea>
 
 			<?php
 		endif;
