@@ -4112,7 +4112,7 @@ function bp_groups_prime_mentions_results() {
 		return;
 	}
 
-	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id() ) );
+	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id(), 'per_page' => 10, 'page' => 1 ) );
 	$results = array();
 
 	if ( ! empty( $members['members'] ) ) {
