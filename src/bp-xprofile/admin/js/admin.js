@@ -344,6 +344,8 @@ function hide( id ) {
 	document.getElementById( field_id ).value = '';
 }
 
+// ignoring this because it is used as javascript attribute and added via code.
+/* jshint ignore:start */
 function remove_div( id ) {
 	if ( ! document.getElementById( id ) ) {
 		return false;
@@ -351,6 +353,7 @@ function remove_div( id ) {
 
 	document.getElementById( id ).remove();
 }
+/* jshint ignore:end */
 
 /**
  * @summary Toggles "no profile type" notice.
