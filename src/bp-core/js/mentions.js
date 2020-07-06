@@ -184,8 +184,7 @@ window.bp = window.bp || {};
 					 * @since BuddyPress 3.0.0. Renamed from "remote_filter" for at.js v1.5.4 support.
 					 */
 					remoteFilter: function( query, render_view ) {
-						var self = $( this ),
-						params   = {};
+						var params   = {};
 
 						mentionsItem = mentionsQueryCache[ query ];
 						if ( typeof mentionsItem === 'object' ) {
