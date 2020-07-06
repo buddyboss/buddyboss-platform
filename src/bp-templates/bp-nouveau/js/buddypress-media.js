@@ -2700,7 +2700,7 @@ window.bp = window.bp || {};
 
 			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) { 
 
-				if( document_name_val.indexOf("\\\\") != -1 || matchStatus) { //Also check if filename has "\\"
+				if( document_name_val.indexOf('\\\\') != -1 || matchStatus) { //Also check if filename has "\\"
 					document_edit.addClass( 'error' );
 				} else {
 					document_edit.removeClass( 'error' );
@@ -3477,7 +3477,7 @@ window.bp = window.bp || {};
 			var target  = $( event.currentTarget ), self = this, title = $( '#bb-album-title' ),
 				privacy = $( event.currentTarget ).parents().find( '.open-popup #bb-folder-privacy option:selected' );
 			event.preventDefault();
-			
+
 			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			var matches     = pattern.exec( title.val() );
 			var matchStatus = Boolean( matches );
