@@ -383,12 +383,12 @@ abstract class BP_Invitation_Manager {
 		 * @since 1.4.7
 		 */
 		$page = 1;
-		if (isset($_POST['page'])){
-			$page = (int) sanitize_text_field($_POST['page']);
+		if ( isset( $_POST['page'] ) ){
+			$page = (int) sanitize_text_field( $_POST['page'] );
 		}
 
 		$args['page'] = $page;
-		$args['per_page'] = 100;
+		$args['per_page'] = apply_filters( 'get_invitations_per_page', 500 );
 
 		return BP_Invitation::get( $args );
 	}
