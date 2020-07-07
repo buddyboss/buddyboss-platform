@@ -65,7 +65,9 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		// Back up global.
 		$old_members_template = $members_template;
-
+		$online_count         = 0;
+		$connection_count     = 0;
+		
 		// Setup args for querying members.
 		$online_args = array(
 			'user_id'         => 0,
@@ -325,6 +327,9 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		'search_terms'    => false,
 		'exclude'         => bp_loggedin_user_id(),
 	);
+
+	$online_count     = 0;
+	$connection_count = 0;
 
 	ob_start();
 	if ( bp_has_members( $online_args ) ) : ?>

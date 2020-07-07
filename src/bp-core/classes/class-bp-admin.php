@@ -175,6 +175,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 			// Hello BuddyBoss/AppBoss.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
+			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
 			add_action( 'admin_footer', array( $this, 'about_appboss_screen' ) );
 
 			/* Filters ***********************************************************/
@@ -200,6 +201,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_enqueue_scripts', array( $this, 'deregister_wp_job_manager_shared_assets' ), 21 );
 
 			add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
+			add_action( bp_core_admin_hook(), array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
@@ -376,7 +378,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		$hooks = array();
-		if ( is_multisite() && bp_is_network_activated() ) {
+		if ( is_multisite() && bp_is_network_activated() && ! bp_is_multiblog_mode() ) {
 			$hooks[] = add_menu_page(
 				__( 'BuddyBoss', 'buddyboss' ),
 				__( 'BuddyBoss', 'buddyboss' ),
@@ -665,7 +667,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 	public function bp_emails_add_sub_menu_page_admin_menu() {
 
-		if ( is_multisite() && bp_is_network_activated() ) {
+		if ( is_multisite() && bp_is_network_activated() && bp_is_root_blog() ) {
 			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
 			// Add our screen.
 			$hook = add_submenu_page( 'buddyboss-platform',
@@ -700,6 +702,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-media.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
+		    require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 		}
 
 		/**
@@ -781,6 +784,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
+				wp_enqueue_style( 'bp-hello-css' );
+				wp_enqueue_script( 'bp-hello-js' );
+			}
+
 	        wp_enqueue_script( 'bp-fitvids-js' );
 
 	        wp_enqueue_script( 'bp-wp-api-js' );
@@ -821,6 +829,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			include $this->admin_dir . 'templates/about-buddyboss.php';
+		}
+
+		public function document_extension_mime_type_check_screen() {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) {
+				return;
+			}
+
+			include $this->admin_dir . 'templates/check-document-mime-type.php';
 		}
 
 		/**

@@ -10,8 +10,10 @@ window.bp = window.bp || {};
 	bp.mentions.users = window.bp.mentions.users || [];
 
 	if ( typeof window.BP_Suggestions === 'object' ) {
-		bp.mentions.users = window.BP_Suggestions.friends || bp.mentions.users;
+		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
 	}
+
+	bp.mentions.xhr = null;
 
 	/**
 	 * Adds BuddyPress @mentions to form inputs.
@@ -152,8 +154,8 @@ window.bp = window.bp || {};
 					 * Override default behaviour which inserts junk tags in the WordPress Visual editor.
 					 *
 					 * @param {unknown} $inputor Element which we're inserting content into.
-					 * @param {string) content The content that will be inserted.
-					 * @param {string) suffix Applied to the end of the content string.
+					 * @param {string} content The content that will be inserted.
+					 * @param {string} suffix Applied to the end of the content string.
 					 * @return {string}
 					 * @since BuddyPress 2.1.0
 					 */
@@ -182,8 +184,7 @@ window.bp = window.bp || {};
 					 * @since BuddyPress 3.0.0. Renamed from "remote_filter" for at.js v1.5.4 support.
 					 */
 					remoteFilter: function( query, render_view ) {
-						var self = $( this ),
-						params   = {};
+						var params   = {};
 
 						mentionsItem = mentionsQueryCache[ query ];
 						if ( typeof mentionsItem === 'object' ) {
@@ -191,8 +192,8 @@ window.bp = window.bp || {};
 							return;
 						}
 
-						if ( self.xhr ) {
-							self.xhr.abort();
+						if ( bp.mentions.xhr ) {
+							bp.mentions.xhr.abort();
 						}
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
@@ -201,7 +202,7 @@ window.bp = window.bp || {};
 							params['group-id'] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
 						}
 
-						self.xhr = $.getJSON( ajaxurl, params )
+						bp.mentions.xhr = $.getJSON( ajaxurl, params )
 						/**
 						 * Success callback for the @suggestions lookup.
 						 *
@@ -266,21 +267,12 @@ window.bp = window.bp || {};
 
 			at:         '@',
 			searchKey:  'search',
+			startWithSpace: true,
 			displayTpl: BP_Mentions_Options.display_tpl
 			},
 			BP_Mentions_Options.extra_options,
 			mentions
 		);
-
-		// Remove atwho-query class from target to handle after save issues.
-		this.on( 'hidden.atwho', function( event ) {
-			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
-				var atwho_query = $( event.currentTarget ).find( 'span.atwho-query' );
-				for( var i = 0; i < atwho_query.length; i++ ) {
-					$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
-				}
-			}
-		});
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {

@@ -9,69 +9,97 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_init', function () {
+add_action(
+	'admin_init',
+	function () {
 
-	$ajax_actions = array(
-		array( 'groups_filter' => array( 'function' => 'bp_nouveau_ajax_object_template_loader', 'nopriv' => true ) ),
-		array( 'groups_join_group' => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_leave_group' => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_accept_invite' => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_reject_invite' => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array(
-			'groups_request_membership' => array(
-				'function' => 'bp_nouveau_ajax_joinleave_group',
-				'nopriv'   => false
-			)
-		),
-		array(
-			'groups_get_group_potential_invites' => array(
-				'function' => 'bp_nouveau_ajax_get_users_to_invite',
-				'nopriv'   => false
-			)
-		),
-		array(
-			'groups_get_group_members_listing' => array(
-				'function' => 'bp_nouveau_ajax_groups_get_group_members_listing',
-				'nopriv'   => false
-			)
-		),
-		array(
-			'groups_get_group_members_send_message' => array(
-				'function' => 'bp_nouveau_ajax_groups_send_message',
-				'nopriv'   => false
-			)
-		),
-		array(
-			'groups_send_group_invites' => array(
-				'function' => 'bp_nouveau_ajax_send_group_invites',
-				'nopriv'   => false
-			)
-		),
-		array(
-			'groups_delete_group_invite' => array(
-				'function' => 'bp_nouveau_ajax_remove_group_invite',
-				'nopriv'   => false
-			)
-		),
-	);
+		$ajax_actions = array(
+			array(
+				'groups_filter' => array(
+					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'groups_join_group' => array(
+					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_leave_group' => array(
+					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_accept_invite' => array(
+					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_reject_invite' => array(
+					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_request_membership' => array(
+					'function' => 'bp_nouveau_ajax_joinleave_group',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_get_group_potential_invites' => array(
+					'function' => 'bp_nouveau_ajax_get_users_to_invite',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_get_group_members_listing' => array(
+					'function' => 'bp_nouveau_ajax_groups_get_group_members_listing',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_get_group_members_send_message' => array(
+					'function' => 'bp_nouveau_ajax_groups_send_message',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_send_group_invites' => array(
+					'function' => 'bp_nouveau_ajax_send_group_invites',
+					'nopriv'   => false,
+				),
+			),
+			array(
+				'groups_delete_group_invite' => array(
+					'function' => 'bp_nouveau_ajax_remove_group_invite',
+					'nopriv'   => false,
+				),
+			),
+		);
 
-	foreach ( $ajax_actions as $ajax_action ) {
-		$action = key( $ajax_action );
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
 
-		add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+			add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
 
-		if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
-			add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
+				add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			}
 		}
-	}
-}, 12 );
+	},
+	12
+);
 
 /**
  * Join or leave a group when clicking the "join/leave" button via a POST request.
  *
  * @return string HTML
  * @since BuddyPress 3.0.0
- *
  */
 function bp_nouveau_ajax_joinleave_group() {
 	$response = array(
@@ -127,6 +155,10 @@ function bp_nouveau_ajax_joinleave_group() {
 	switch ( $_POST['action'] ) {
 
 		case 'groups_accept_invite':
+			if ( ! groups_check_user_has_invite( bp_loggedin_user_id(), $group_id ) ) {
+				wp_send_json_error( $response );
+			}
+
 			if ( ! groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
 				$response = array(
 					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invitation could not be accepted.', 'buddyboss' ) ),
@@ -135,21 +167,24 @@ function bp_nouveau_ajax_joinleave_group() {
 
 			} else {
 				if ( bp_is_active( 'activity' ) ) {
-					groups_record_activity( array(
+					groups_record_activity(
+						array(
 							'type'    => 'joined_group',
 							'item_id' => $group->id,
-						) );
+						)
+					);
 				}
 
 				// User is now a member of the group
 				$group->is_member = '1';
 
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
-					'type'     => 'success',
-					'is_user'  => bp_is_user(),
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => bp_is_group(),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
+					'type'      => 'success',
+					'is_user'   => bp_is_user(),
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => bp_is_group(),
+					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
 			break;
@@ -165,6 +200,7 @@ function bp_nouveau_ajax_joinleave_group() {
 					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
 					'type'     => 'success',
 					'is_user'  => bp_is_user(),
+					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
 			break;
@@ -197,25 +233,29 @@ function bp_nouveau_ajax_joinleave_group() {
 			}
 			break;
 
-		case 'groups_request_membership' :
-			if ( ! groups_send_membership_request( bp_loggedin_user_id(), $group->id ) ) {
-				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error requesting membership.', 'buddyboss' ) ),
-					'type'     => 'error',
-				);
-			} else {
-				// Request is pending
-				$group->is_pending = '1';
+        case 'groups_request_membership' :
+            if ( ! groups_send_membership_request( array( 'user_id' => bp_loggedin_user_id(), 'group_id' => $group->id ) ) ) {
+                $response = array(
+                    'feedback' => sprintf(
+                        '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+                        esc_html__( 'Error requesting membership.', 'buddyboss' )
+                    ),
+                    'type'     => 'error',
+                );
+            } else {
+                // Request is pending
+                $group->is_pending = '1';
 
-				$response = array(
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => bp_is_group(),
-					'type'     => 'success',
-				);
-			}
-			break;
+	            $response = array(
+		            'contents'  => bp_get_group_join_button( $group ),
+		            'is_group'  => bp_is_group(),
+		            'type'      => 'success',
+		            'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+	            );
+            }
+            break;
 
-		case 'groups_leave_group' :
+		case 'groups_leave_group':
 			if ( ! groups_leave_group( $group->id ) ) {
 				$response = array(
 					'feedback' => sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Error leaving group.', 'buddyboss' ) ),
@@ -288,28 +328,14 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		wp_send_json_error( $response );
 	}
 
-	$request = wp_parse_args( $_POST, array(
-		'scope' => 'members',
-	) );
+	$request = wp_parse_args(
+		$_POST,
+		array(
+			'scope' => 'members',
+		)
+	);
 
 	if ( 'groups_get_group_potential_invites' === $request['action'] ) {
-
-		// check if subgroup.
-		$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
-
-		if ( isset( $parent_group_id ) && $parent_group_id > 0 ) {
-
-			$check_admin = groups_is_user_admin( bp_loggedin_user_id(), $parent_group_id );
-			$check_moder = groups_is_user_mod( bp_loggedin_user_id(), $parent_group_id );
-
-			// Check role of current logged in user for this group.
-			if ( false === $check_admin && false === $check_moder ) {
-				wp_send_json_error( array(
-					'feedback' => __( 'You are not authorized to send invites to other users.', 'buddyboss' ),
-					'type'     => 'info',
-				) );
-			}
-		}
 
 		$group_type = bp_groups_get_group_type( $request['group_id'] );
 
@@ -323,27 +349,31 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		}
 
 		// Include users ( Restrict group invites to only members of who already exists in parent group ) in BuddyBoss > Settings > Social Groups > Group Hierarchies
-		//if ( false !== $group_type ) {
+		// if ( false !== $group_type ) {
 		if ( true === bp_enable_group_hierarchies() ) {
 			if ( true === bp_enable_group_restrict_invites() ) {
 				$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
 				if ( $parent_group_id > 0 ) {
-					$members_query      = groups_get_group_members( array(
-						'group_id' => $parent_group_id,
-					) );
+					$members_query      = groups_get_group_members(
+						array(
+							'group_id' => $parent_group_id,
+						)
+					);
 					$members            = wp_list_pluck( $members_query['members'], 'ID' );
 					$request['include'] = implode( ',', $members );
 
 					if ( empty( $request['include'] ) ) {
-						wp_send_json_error( array(
+						wp_send_json_error(
+							array(
 								'feedback' => __( 'No members found in parent group.', 'buddyboss' ),
 								'type'     => 'info',
-							) );
+							)
+						);
 					}
 				}
 			}
 		}
-		//}
+		// }
 
 		// Exclude users if ( Restrict invites if user already in other same group type ) is checked
 		if ( false !== $group_type ) {
@@ -359,9 +389,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					}
 					$member_arr = array();
 					foreach ( $group_arr as $group_id ) {
-						$members_query = groups_get_group_members( array(
-							'group_id' => $group_id,
-						) );
+						$members_query = groups_get_group_members(
+							array(
+								'group_id' => $group_id,
+							)
+						);
 						$members_list  = wp_list_pluck( $members_query['members'], 'ID' );
 						foreach ( $members_list as $id ) {
 							$member_arr[] = $id;
@@ -389,20 +421,29 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( 'invited' === $request['scope'] ) {
 
-		if ( ! bp_group_has_invites( array( 'user_id' => 'any', 'group_id' => $request['group_id'] ) ) ) {
+		if ( ! bp_group_has_invites(
+			array(
+				'user_id'  => 'any',
+				'group_id' => $request['group_id'],
+			)
+		) ) {
 
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 				// This message displays if you search in pending invites screen and if no results found in search.
-				wp_send_json_error( array(
-					'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
-					'type'     => 'info',
-				) );
+				wp_send_json_error(
+					array(
+						'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
+						'type'     => 'info',
+					)
+				);
 			} else {
 				// This message displays when pending invites screen doesn't have any users invitation.
-				wp_send_json_error( array(
-					'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
-					'type'     => 'info',
-				) );
+				wp_send_json_error(
+					array(
+						'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
+						'type'     => 'info',
+					)
+				);
 			}
 		}
 
@@ -440,7 +481,6 @@ function bp_nouveau_ajax_get_users_to_invite() {
 					'type'     => 'info',
 				);
 			}
-
 		}
 
 		if ( 'friends' === $bp->groups->invites_scope ) {
@@ -510,16 +550,42 @@ function bp_nouveau_ajax_get_users_to_invite() {
 							</ul>
 						<?php } ?>
 						<p class="status">
-							<?php if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) { ?><?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?><?php } else { ?><?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?><?php } ?>
+							<?php
+							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
+								?>
+								<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
+								<?php
+							} else {
+								?>
+								<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?><?php } ?>
 						</p>
 					</div>
 				<?php } ?>
 			</div>
 			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-					<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<?php if ( $user['selected'] ) { ?> selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="<?php if ( $user['selected'] ) { ?><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><?php } else { ?><?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
+					<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+														<?php
+														if ( isset( $user['selected'] ) && $user['selected'] ) {
+															?>
+						 selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="
+						<?php
+						if ( isset( $user['selected'] ) && $user['selected'] ) {
+							?>
+												<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>
+							<?php
+						} else {
+							?>
+							<?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
 						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-						<?php if ( $user['selected'] ) { ?><?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?><?php } else { ?><?php esc_html_e( 'Invite', 'buddyboss' ); ?><?php } ?>
+						<?php
+						if ( isset( $user['selected'] ) && $user['selected'] ) {
+							?>
+							<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
+							<?php
+						} else {
+							?>
+							<?php esc_html_e( 'Invite', 'buddyboss' ); ?><?php } ?>
 					</span>
 					</button>
 				<?php } ?>
@@ -541,7 +607,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						</button>
 						<?php
 					}
-					?><?php } ?>
+					?>
+					<?php } ?>
 			</div>
 		</li>
 		<?php
@@ -551,12 +618,11 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="load-more">
 			<div class="center">
-				<i class="dashicons dashicons-update animate-spin"></i>
+				<i class="bb-icons bb-icon-loader animate-spin"></i>
 			</div>
 		</li>
 		<?php
 	}
-
 
 	$html = ob_get_contents();
 	ob_clean();
@@ -567,19 +633,21 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	ob_start();
 
 	if ( $total_page > 1 ) {
-		if ( 1 !== $page ) { ?>
+		if ( 1 !== $page ) {
+			?>
 			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
 				<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
-		<?php }
-
+			<?php
+		}
 
 		if ( $total_page !== $page ) {
 			$page = $page + 1;
 			?>
 			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
 				<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
-		<?php }
+			<?php
+		}
 	}
 
 	$paginate = ob_get_contents();
@@ -631,24 +699,32 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
+	// For feedback
+	$invited = array();
+
+	foreach ( (array) $_POST['users'] as $user_id ) {
+		$user_id = (int) $user_id;
+		$invited[ $user_id ] = groups_invite_user(
+			array(
+				'user_id'  => $user_id,
+				'group_id' => $group_id,
+				'content'  => $_POST['message'],
+			)
+		);
+	}
+
+	if ( ! $invited ) {
+		wp_send_json_error( $response );
+	}
+
 	if ( ! empty( $_POST['message'] ) ) {
 		$bp->groups->invites_message = wp_kses( wp_unslash( $_POST['message'] ), array() );
 
 		add_filter( 'groups_notification_group_invites_message', 'bp_nouveau_groups_invites_custom_message', 10, 1 );
 	}
 
-	// For feedback
-	$invited = array();
-
-	foreach ( (array) $_POST['users'] as $user_id ) {
-		$invited[ (int) $user_id ] = groups_invite_user( array(
-				'user_id'  => $user_id,
-				'group_id' => $group_id,
-			) );
-	}
-
 	// Send the invites.
-	groups_send_invites( bp_loggedin_user_id(), $group_id );
+	groups_send_invites( array( 'group_id' => $group_id ) );
 
 	if ( ! empty( $_POST['message'] ) ) {
 		unset( $bp->groups->invites_message );
@@ -662,17 +738,21 @@ function bp_nouveau_ajax_send_group_invites() {
 		$error_count   = count( $errors );
 		$error_message = sprintf( /* translators: count of users affected */ _n( 'Invitation failed for %s user.', 'Invitation failed for %s users.', $error_count, 'buddyboss' ), number_format_i18n( $error_count ) );
 
-		wp_send_json_error( array(
+		wp_send_json_error(
+			array(
 				'feedback' => $error_message,
 				'users'    => $errors,
 				'type'     => 'error',
-			) );
+			)
+		);
 	}
 
-	wp_send_json_success( array(
+	wp_send_json_success(
+		array(
 			'feedback' => __( 'Invitations sent.', 'buddyboss' ),
 			'type'     => 'success',
-		) );
+		)
+	);
 }
 
 /**
@@ -684,36 +764,64 @@ function bp_nouveau_ajax_remove_group_invite() {
 	$user_id  = (int) $_POST['user'];
 	$group_id = bp_get_current_group_id();
 
+	$response = array(
+		'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
+		'type'     => 'error',
+	);
+
 	// Verify nonce
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
-		wp_send_json_error( array(
-				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
-				'type'     => 'error',
-			) );
+		wp_send_json_error( $response );
 	}
 
-	if ( BP_Groups_Member::check_for_membership_request( $user_id, $group_id ) ) {
-		wp_send_json_error( array(
+	// Verify that a sent invite exists.
+	$inviter_ids = groups_get_invites( array(
+		'user_id'     => $user_id,
+		'item_id'     => $group_id,
+		'invite_sent' => 'sent',
+		'fields'      => 'inviter_ids'
+	) );
+
+	if ( empty( $inviter_ids ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Is the current user the inviter?
+	$inviter_id = in_array( bp_loggedin_user_id(), $inviter_ids, true ) ? bp_loggedin_user_id() : false;
+
+	// A site moderator, group admin or the inviting user should be able to remove an invitation.
+	if ( ! bp_is_item_admin() && ! $inviter_id ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( groups_is_user_member( $user_id, $group_id ) ) {
+		wp_send_json_error(
+			array(
 				'feedback' => __( 'The member is already a member of the group.', 'buddyboss' ),
 				'type'     => 'warning',
 				'code'     => 1,
-			) );
+			)
+		);
 	}
 
-	// Remove the unsent invitation.
-	if ( ! groups_uninvite_user( $user_id, $group_id ) ) {
-		wp_send_json_error( array(
+	// Remove the invitation.
+	if ( ! groups_uninvite_user( $user_id, $group_id, $inviter_id ) ) {
+		wp_send_json_error(
+			array(
 				'feedback' => __( 'Group invitation could not be removed.', 'buddyboss' ),
 				'type'     => 'error',
 				'code'     => 0,
-			) );
+			)
+		);
 	}
 
-	wp_send_json_success( array(
+	wp_send_json_success(
+		array(
 			'feedback'    => __( 'There are no more pending invitations for the group.', 'buddyboss' ),
 			'type'        => 'info',
 			'has_invites' => bp_group_has_invites( array( 'user_id' => 'any' ) ),
-		) );
+		)
+	);
 }
 
 /**
@@ -740,7 +848,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'retrieve_group_members' ) ) {
+	if ( empty( wp_unslash( $_POST['nonce'] ) ) || ! wp_verify_nonce( wp_unslash( $_POST['nonce'] ), 'retrieve_group_members' ) ) {
 		wp_send_json_error( $response );
 	}
 
@@ -773,20 +881,22 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 	$total_page    = 0;
 
 	if ( empty( $group_members['members'] ) ) {
-		wp_send_json_success( [
-			'results' => 'no_member',
-		] );
+		wp_send_json_success( array( 'results' => 'no_member' ) );
 	} else {
 		$total_page = (int) ceil( (int) $group_members['count'] / $per_page );
 		ob_start();
 		foreach ( $group_members['members'] as $member ) {
 
-			$image = htmlspecialchars_decode( bp_core_fetch_avatar( array(
-				'item_id' => $member->ID,
-				'object'  => 'user',
-				'type'    => 'thumb',
-				'class'   => '',
-			) ) );
+			$image = htmlspecialchars_decode(
+				bp_core_fetch_avatar(
+					array(
+						'item_id' => $member->ID,
+						'object'  => 'user',
+						'type'    => 'thumb',
+						'class'   => '',
+					)
+				)
+			);
 
 			$name = bp_core_get_user_displayname( $member->ID );
 			?>
@@ -818,7 +928,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="dashicons dashicons-update animate-spin"></i>
+					<i class="bb-icon-loader animate-spin"></i>
 				</div>
 			</li>
 			<?php
@@ -831,18 +941,21 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			ob_start();
 
-			if ( 1 !== (int) $_POST['page'] ) { ?>
+			if ( 1 !== (int) $_POST['page'] ) {
+				?>
 				<a href="javascript:void(0);" id="bp-group-messages-prev-page" class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
 					<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
 					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
-			<?php }
+				<?php
+			}
 
 			if ( $total_page !== (int) $_POST['page'] ) {
 				$page = $page + 1;
 				?>
 				<a href="javascript:void(0);" id="bp-group-messages-next-page" class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
 					<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
-			<?php }
+				<?php
+			}
 
 			$paginate = ob_get_contents();
 			ob_clean();
@@ -855,13 +968,15 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
 		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
 
-		wp_send_json_success( [
-			'results'     => $html,
-			'total_page'  => $total_page,
-			'page'        => $page,
-			'pagination'  => $paginate,
-			'total_count' => __( 'Members', 'buddyboss' ),
-		] );
+		wp_send_json_success(
+			array(
+				'results'     => $html,
+				'total_page'  => $total_page,
+				'page'        => $page,
+				'pagination'  => $paginate,
+				'total_count' => __( 'Members', 'buddyboss' ),
+			)
+		);
 
 	}
 }
@@ -904,13 +1019,21 @@ function bp_nouveau_ajax_groups_send_message() {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST['media'] ), true );
 	}
 
+	if ( isset( $_POST['document'] ) && '' !== $_POST['document'] ) {
+		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
+	}
+
+	if ( '' === $_POST['content'] && ( ! empty( $_POST['document'] ) || !empty( $_POST['media'] ) ) ) {
+		$_POST['content'] = '&nbsp;';
+	}
+
 	// Get Members list if "All Group Members" selected.
 	if ( 'all' === $_POST['users'] ) {
 
 		// Fetch all the group members.
 		$args = array(
 			'per_page'            => 9999999999999999999,
-			'group'               => $_POST['group'],
+			'group_id'            => trim( $_POST['group'] ),
 			'exclude'             => array( bp_loggedin_user_id() ),
 			'exclude_admins_mods' => false,
 		);
@@ -920,9 +1043,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
-
 		$members = $_POST['users_list'];
-
 	}
 
 	if ( empty( $members ) ) {
@@ -948,11 +1069,14 @@ function bp_nouveau_ajax_groups_send_message() {
 			// Comma separated members list to find in meta query.
 			$message_users_ids = implode( ',', $members );
 
-			// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids"
+			// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "message_users_ids".
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
-			$group_thread = groups_get_groupmeta( (int) $group, 'group_message_thread' );
-			$is_deleted   = false;
+			$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
+			$is_deleted                   = false;
+			$group_thread_id              = '';
+			$_POST['message_thread_type'] = '';
+
 			if ( '' !== $group_thread ) {
 				$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
 				foreach ( $total_threads as $thread ) {
@@ -963,65 +1087,18 @@ function bp_nouveau_ajax_groups_send_message() {
 				}
 
 				if ( $is_deleted ) {
-
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'new';
-
-					remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					// Attempt to send the message.
-					$send = messages_new_message( array(
-						'recipients'    => $members,
-						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-						'content'       => $_POST['content'],
-						'error_type'    => 'wp_error',
-						'append_thread' => false,
-					) );
-					remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-					if ( is_wp_error( $send ) ) {
-						$response['feedback'] = $send->get_error_message();
-						wp_send_json_error( $response );
-					} elseif ( ! empty( $send ) ) {
-						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-						$response['type']          = 'success';
-						wp_send_json_success( $response );
-					}
-
 				}
-
 			}
-			if ( '' !== $group_thread && ! $is_deleted ) {
-				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+
+			if ( '' !== $group_thread && ! $is_deleted && isset( $_POST['message_thread_type'] ) && empty( $_POST['message_thread_type'] ) ) {
+				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 				$_POST['message_thread_type'] = 'reply';
-
-				remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-				add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-				$new_reply = messages_new_message( array(
-					'thread_id'  => $group_thread,
-					'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-					'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-					'date_sent'  => $date_sent = bp_core_current_time(),
-					'error_type' => 'wp_error',
-				) );
-				remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-				add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-				if ( is_wp_error( $new_reply ) ) {
-					$response['feedback'] = $new_reply->get_error_message();
-					wp_send_json_error( $response );
-				} elseif ( ! empty( $new_reply ) ) {
-					$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-					$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-					$response['type']          = 'success';
-					wp_send_json_success( $response );
-				}
-
+				$group_thread_id              = $group_thread;
 			} else {
 
+				// Backward compatibility when we dont store thread_id in group meta.
 				$meta = array(
 					array(
 						'key'     => 'group_id',
@@ -1049,114 +1126,73 @@ function bp_nouveau_ajax_groups_send_message() {
 
 					$thread_id = 0;
 
-					while ( bp_message_threads() ) :
+					while ( bp_message_threads() ) {
 						bp_message_thread();
 						$thread_id = bp_get_message_thread_id();
 
 						if ( $thread_id ) {
 							break;
 						}
-
-					endwhile;
+					}
 
 					// If $thread_id found then add as a reply to that thread.
 					if ( $thread_id ) {
+						$group_thread_id = $thread_id;
 
-						groups_update_groupmeta( (int) $group, 'group_message_thread', $thread_id );
-
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
-
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						$new_reply = messages_new_message( array(
-							'thread_id'  => $thread_id,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-						if ( is_wp_error( $new_reply ) ) {
-							$response['feedback'] = $new_reply->get_error_message();
-							wp_send_json_error( $response );
-						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-							$response['type']          = 'success';
-							wp_send_json_success( $response );
-						}
 
 						// Create a new group thread.
 					} else {
-
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
-
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						// Attempt to send the message.
-						$send = messages_new_message( array(
-							'recipients'    => $members,
-							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-							'content'       => $_POST['content'],
-							'error_type'    => 'wp_error',
-							'append_thread' => false,
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-						if ( is_wp_error( $send ) ) {
-							$response['feedback'] = $send->get_error_message();
-							wp_send_json_error( $response );
-						} elseif ( ! empty( $send ) ) {
-
-							groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-							$response['type']          = 'success';
-							wp_send_json_success( $response );
-						}
-
 					}
 
 					// Create a new group thread.
 				} else {
-
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'new';
+				}
+			}
 
-					remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					// Attempt to send the message.
-					$send = messages_new_message( array(
+			/**
+			 * Create Message based on the `message_thread_type` and `group_thread_id`.
+			 */
+			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
+				$send = bp_groups_messages_new_message(
+					array(
 						'recipients'    => $members,
 						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 						'content'       => $_POST['content'],
 						'error_type'    => 'wp_error',
 						'append_thread' => false,
-					) );
-					remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+					)
+				);
 
-					if ( is_wp_error( $send ) ) {
-						$response['feedback'] = $send->get_error_message();
-						wp_send_json_error( $response );
-					} elseif ( ! empty( $send ) ) {
-						groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-						$response['type']          = 'success';
-						wp_send_json_success( $response );
-					}
+				if ( ! is_wp_error( $send ) && ! empty( $send ) ) {
+					groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
 				}
+
+				bp_groups_messages_validate_message( $send );
+			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $group_thread_id ) ) {
+				groups_update_groupmeta( (int) $group, 'group_message_thread', $group_thread_id );
+
+				$new_reply = bp_groups_messages_new_message(
+					array(
+						'thread_id'    => $group_thread_id,
+						'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'date_sent'    => bp_core_current_time(),
+						'mark_visible' => true,
+						'error_type'   => 'wp_error',
+					)
+				);
+
+				bp_groups_messages_validate_message( $new_reply );
 			}
+
 			// "Individual Members" Selected.
 		} else {
-
 			$meta = array(
 				array(
 					'key'     => 'group_message_type',
@@ -1165,12 +1201,15 @@ function bp_nouveau_ajax_groups_send_message() {
 				),
 			);
 
+			$individual_thread_id         = 0;
+			$_POST['message_thread_type'] = '';
+
 			// Check if there is already previously individual group thread created.
 			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
 
 				$thread_id = 0;
 
-				while ( bp_message_threads() ) :
+				while ( bp_message_threads() ) {
 					bp_message_thread();
 					$thread_id = bp_get_message_thread_id();
 
@@ -1207,12 +1246,10 @@ function bp_nouveau_ajax_groups_send_message() {
 							break;
 						}
 					}
-
-				endwhile;
+				}
 
 				// If $thread_id found then add as a reply to that thread.
 				if ( $thread_id ) {
-
 					// get the thread recipients.
 					$thread                     = new BP_Messages_Thread( $thread_id );
 					$thread_recipients          = $thread->get_recipients();
@@ -1244,43 +1281,21 @@ function bp_nouveau_ajax_groups_send_message() {
 
 					// If recipients are matched.
 					if ( $is_recipient_match && (int) $thread_id !== $group_thread ) {
+						$individual_thread_id = $thread_id;
 
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
-
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						$new_reply = messages_new_message( array(
-							'thread_id'  => $thread_id,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-						if ( is_wp_error( $new_reply ) ) {
-							$response['feedback'] = $new_reply->get_error_message();
-							wp_send_json_error( $response );
-						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-							$response['type']          = 'success';
-							wp_send_json_success( $response );
-						}
 
 						// Else recipients not matched.
 					} else {
-
 						$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 						$existing_thread  = 0;
 						if ( $previous_threads ) {
 							foreach ( $previous_threads as $thread ) {
 
 								$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
-								if ( $is_active_recipient ) {
 
+								if ( $is_active_recipient ) {
 									// get the thread recipients.
 									$thread                     = new BP_Messages_Thread( $thread->thread_id );
 									$thread_recipients          = $thread->get_recipients();
@@ -1309,13 +1324,14 @@ function bp_nouveau_ajax_groups_send_message() {
 									$message_ids  = wp_list_pluck( $thread->messages, 'id' );
 									$add_existing = true;
 									foreach ( $message_ids as $id ) {
-										// group_message_users not open
-										$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual
+										// group_message_users not open.
+										$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 										if ( 'all' === $message_users ) {
 											$add_existing = false;
 											break;
 										}
 									}
+
 									// If recipients are matched.
 									if ( $is_recipient_match && $add_existing ) {
 										$existing_thread = (int) $thread->thread_id;
@@ -1324,88 +1340,21 @@ function bp_nouveau_ajax_groups_send_message() {
 							}
 
 							if ( $existing_thread > 0 ) {
-								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+								$individual_thread_id = $existing_thread;
+
+								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 								$_POST['message_thread_type'] = 'reply';
-
-								remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-								add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-								$new_reply = messages_new_message( array(
-									'thread_id'  => $existing_thread,
-									'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-									'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-									'date_sent'  => $date_sent = bp_core_current_time(),
-									'error_type' => 'wp_error',
-								) );
-								remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-								add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-								if ( is_wp_error( $new_reply ) ) {
-									$response['feedback'] = $new_reply->get_error_message();
-									wp_send_json_error( $response );
-								} elseif ( ! empty( $new_reply ) ) {
-									$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-									$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-									$response['type']          = 'success';
-									wp_send_json_success( $response );
-								}
 							} else {
-								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+								// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 								$_POST['message_thread_type'] = 'new';
-
-								remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-								add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-								// Attempt to send the message.
-								$send = messages_new_message( array(
-									'recipients'    => $members,
-									'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-									'content'       => $_POST['content'],
-									'error_type'    => 'wp_error',
-									'append_thread' => false,
-								) );
-								remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-								add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-								if ( is_wp_error( $send ) ) {
-									$response['feedback'] = $send->get_error_message();
-									wp_send_json_error( $response );
-								} elseif ( ! empty( $send ) ) {
-									$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-									$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-									$response['type']          = 'success';
-									wp_send_json_success( $response );
-								}
 							}
 						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
-
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							// Attempt to send the message.
-							$send = messages_new_message( array(
-								'recipients'    => $members,
-								'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-								'content'       => $_POST['content'],
-								'error_type'    => 'wp_error',
-								'append_thread' => false,
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-							if ( is_wp_error( $send ) ) {
-								$response['feedback'] = $send->get_error_message();
-								wp_send_json_error( $response );
-							} elseif ( ! empty( $send ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-								$response['type']          = 'success';
-								wp_send_json_success( $response );
-							}
 						}
 					}
 					// Else no thread found.
 				} else {
-
 					$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 					$existing_thread  = 0;
 					if ( $previous_threads ) {
@@ -1442,110 +1391,46 @@ function bp_nouveau_ajax_groups_send_message() {
 								$add_existing = true;
 								foreach ( $message_ids as $id ) {
 									// group_message_users not open
-									$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual
+									$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 									if ( 'all' === $message_users ) {
 										$add_existing = false;
 										break;
 									}
 								}
+
 								// If recipients are matched.
 								if ( $is_recipient_match && $add_existing ) {
 									$existing_thread = (int) $thread->thread_id;
 								}
 							}
 						}
+
 						if ( $existing_thread > 0 ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+							$individual_thread_id = $existing_thread;
+
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
-
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							$new_reply = messages_new_message( array(
-								'thread_id'  => $existing_thread,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-							if ( is_wp_error( $new_reply ) ) {
-								$response['feedback'] = $new_reply->get_error_message();
-								wp_send_json_error( $response );
-							} elseif ( ! empty( $new_reply ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-								$response['type']          = 'success';
-								wp_send_json_success( $response );
-							}
 						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'new';
-
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							// Attempt to send the message.
-							$send = messages_new_message( array(
-								'recipients'    => $members,
-								'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-								'content'       => $_POST['content'],
-								'error_type'    => 'wp_error',
-								'append_thread' => false,
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-							if ( is_wp_error( $send ) ) {
-								$response['feedback'] = $send->get_error_message();
-								wp_send_json_error( $response );
-							} elseif ( ! empty( $send ) ) {
-								$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-								$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-								$response['type']          = 'success';
-								wp_send_json_success( $response );
-							}
 						}
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
-
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						// Attempt to send the message.
-						$send = messages_new_message( array(
-							'recipients'    => $members,
-							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-							'content'       => $_POST['content'],
-							'error_type'    => 'wp_error',
-							'append_thread' => false,
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-						if ( is_wp_error( $send ) ) {
-							$response['feedback'] = $send->get_error_message();
-							wp_send_json_error( $response );
-						} elseif ( ! empty( $send ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-							$response['type']          = 'success';
-							wp_send_json_success( $response );
-						}
 					}
 				}
+
 				// Else no previous thread found.
 			} else {
-
 				$previous_threads = BP_Messages_Message::get_existing_threads( $members, bp_loggedin_user_id() );
 				$existing_thread  = 0;
+
 				if ( $previous_threads ) {
 					foreach ( $previous_threads as $thread ) {
 
 						$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
 
 						if ( $is_active_recipient ) {
-
 							// get the thread recipients.
 							$thread                     = new BP_Messages_Thread( $thread->thread_id );
 							$thread_recipients          = $thread->get_recipients();
@@ -1575,12 +1460,13 @@ function bp_nouveau_ajax_groups_send_message() {
 							$add_existing = true;
 							foreach ( $message_ids as $id ) {
 								// group_message_users not open
-								$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual
+								$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 								if ( 'all' === $message_users ) {
 									$add_existing = false;
 									break;
 								}
 							}
+
 							// If recipients are matched.
 							if ( $is_recipient_match && $add_existing ) {
 								$existing_thread = (int) $thread->thread_id;
@@ -1589,85 +1475,48 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 
 					if ( $existing_thread > 0 ) {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						$individual_thread_id = $existing_thread;
+
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
-
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						$new_reply = messages_new_message( array(
-							'thread_id'  => $existing_thread,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-						if ( is_wp_error( $new_reply ) ) {
-							$response['feedback'] = $new_reply->get_error_message();
-							wp_send_json_error( $response );
-						} elseif ( ! empty( $new_reply ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-							$response['type']          = 'success';
-							wp_send_json_success( $response );
-						}
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
-
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						// Attempt to send the message.
-						$send = messages_new_message( array(
-							'recipients'    => $members,
-							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-							'content'       => $_POST['content'],
-							'error_type'    => 'wp_error',
-							'append_thread' => false,
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-
-						if ( is_wp_error( $send ) ) {
-							$response['feedback'] = $send->get_error_message();
-							wp_send_json_error( $response );
-						} elseif ( ! empty( $send ) ) {
-							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-							$response['type']          = 'success';
-							wp_send_json_success( $response );
-						}
 					}
 				} else {
-
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 					$_POST['message_thread_type'] = 'new';
+				}
+			}
 
-					remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					// Attempt to send the message.
-					$send = messages_new_message( array(
+			/**
+			 * Create Message based on the `message_thread_type` and `individual_thread_id`.
+			 */
+			if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
+				$send = bp_groups_messages_new_message(
+					array(
 						'recipients'    => $members,
 						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 						'content'       => $_POST['content'],
 						'error_type'    => 'wp_error',
 						'append_thread' => false,
-					) );
-					remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+					)
+				);
 
-					if ( is_wp_error( $send ) ) {
-						$response['feedback'] = $send->get_error_message();
-						wp_send_json_error( $response );
-					} elseif ( ! empty( $send ) ) {
-						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
-						$response['type']          = 'success';
-						wp_send_json_success( $response );
-					}
-				}
+				bp_groups_messages_validate_message( $send, 'individual' );
+			} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $individual_thread_id ) ) {
+				$new_reply = bp_groups_messages_new_message(
+					array(
+						'thread_id'    => $individual_thread_id,
+						'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'date_sent'    => bp_core_current_time(),
+						'mark_visible' => true,
+						'error_type'   => 'wp_error',
+					)
+				);
+
+				bp_groups_messages_validate_message( $new_reply, 'individual' );
 			}
 		}
 
@@ -1676,16 +1525,13 @@ function bp_nouveau_ajax_groups_send_message() {
 
 		// We have to send Message to all members to "Individual" message in both cases like "All Group Members" OR "Individual Members" selected.
 		foreach ( $members as $member ) {
-
-			if ( bp_loggedin_user_id() ) {
-				$meta = array(
-					array(
-						'key'     => 'group_message_type',
-						'value'   => 'open',
-						'compare' => '!=',
-					),
-				);
-			}
+			$meta = array(
+				array(
+					'key'     => 'group_message_type',
+					'value'   => 'open',
+					'compare' => '!=',
+				),
+			);
 
 			$thread_loop_message_member = $member;
 			$thread_loop_message_sent   = false;
@@ -1695,12 +1541,14 @@ function bp_nouveau_ajax_groups_send_message() {
 
 				$thread_id = 0;
 
-				while ( bp_message_threads() ) : bp_message_thread();
+				$member_thread_id = 0;
+
+				while ( bp_message_threads() ) {
+					bp_message_thread();
 
 					$thread_id = bp_get_message_thread_id();
 
 					if ( $thread_id ) {
-
 						// get the thread recipients.
 						$thread                     = new BP_Messages_Thread( $thread_id );
 						$thread_recipients          = $thread->get_recipients();
@@ -1724,49 +1572,25 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						$first_message = BP_Messages_Thread::get_first_message( $thread_id );
 						$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
-						$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
-
+						$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 						// check both previous and current recipients are same.
 						$is_recipient_match = ( $previous_thread_recipients == $member_arr );
 
 						// If recipients are matched.
 						if ( $is_recipient_match && 'all' !== $message_user ) {
-
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
-
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							$message = messages_new_message( array(
-								'thread_id'  => $thread_id,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+							$member_thread_id             = $thread_id;
 
 							$thread_loop_message_sent = true;
 
 							// If recipients then break the loop and go ahead because we don't need to check other threads.
 							break;
 						} elseif ( $is_recipient_match && 'all' === $message_user && 'open' !== $message_type ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
-
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							$message = messages_new_message( array(
-								'thread_id'  => $thread_id,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+							$member_thread_id             = $thread_id;
 
 							$thread_loop_message_sent = true;
 
@@ -1774,12 +1598,10 @@ function bp_nouveau_ajax_groups_send_message() {
 							break;
 						}
 					}
-
-				endwhile;
+				}
 
 				// If there is no any thread matched.
 				if ( false === $thread_loop_message_sent ) {
-
 					$member_check     = array();
 					$member_check[]   = $member;
 					$member_check[]   = bp_loggedin_user_id();
@@ -1792,7 +1614,6 @@ function bp_nouveau_ajax_groups_send_message() {
 							$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread->thread_id, bp_loggedin_user_id() );
 
 							if ( $is_active_recipient ) {
-
 								// get the thread recipients.
 								$thread                     = new BP_Messages_Thread( $thread->thread_id );
 								$thread_recipients          = $thread->get_recipients();
@@ -1822,7 +1643,6 @@ function bp_nouveau_ajax_groups_send_message() {
 								$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
 								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
 
-
 								// check both previous and current recipients are same.
 								$is_recipient_match = ( $previous_thread_recipients == $members );
 
@@ -1834,56 +1654,48 @@ function bp_nouveau_ajax_groups_send_message() {
 								}
 							}
 						}
+
 						if ( $existing_thread > 0 ) {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 							$_POST['message_thread_type'] = 'reply';
 
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							$message = messages_new_message( array(
-								'thread_id'  => $existing_thread,
-								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-								'date_sent'  => $date_sent = bp_core_current_time(),
-								'error_type' => 'wp_error',
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						} else {
-							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
-							$_POST['message_thread_type'] = 'new';
+							$member_thread_id = $existing_thread;
 
-							remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							// Attempt to send the message.
-							$message = messages_new_message( array(
-								'recipients'    => $member,
-								'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-								'content'       => $_POST['content'],
-								'error_type'    => 'wp_error',
-								'append_thread' => false,
-							) );
-							remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-							add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+						} else {
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							$_POST['message_thread_type'] = 'new';
 						}
 					} else {
-
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
+					}
+				}
 
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						// Attempt to send the message.
-						$message = messages_new_message( array(
+				/**
+				 * Create Message based on the `message_thread_type` and `member_thread_id`.
+				 */
+				if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
+					$message = bp_groups_messages_new_message(
+						array(
 							'recipients'    => $member,
 							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 							'content'       => $_POST['content'],
 							'error_type'    => 'wp_error',
+							'is_hidden'     => true,
 							'append_thread' => false,
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-					}
+						)
+					);
+				} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $member_thread_id ) ) {
+					$message = bp_groups_messages_new_message(
+						array(
+							'thread_id'    => $member_thread_id,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
+						)
+					);
 				}
 				// If no existing private thread found.
 			} else {
@@ -1893,6 +1705,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$member_check[]   = bp_loggedin_user_id();
 				$previous_threads = BP_Messages_Message::get_existing_threads( $member_check, bp_loggedin_user_id() );
 				$existing_thread  = 0;
+				$member_thread_id = 0;
 
 				if ( $previous_threads ) {
 					foreach ( $previous_threads as $thread ) {
@@ -1928,7 +1741,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
 							$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
-							$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
+							$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 							// check both previous and current recipients are same.
 							$is_recipient_match = ( $previous_thread_recipients == $members );
@@ -1941,65 +1754,139 @@ function bp_nouveau_ajax_groups_send_message() {
 							}
 						}
 					}
+
 					if ( $existing_thread > 0 ) {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'reply';
 
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						$message = messages_new_message( array(
-							'thread_id'  => $existing_thread,
-							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-							'date_sent'  => $date_sent = bp_core_current_time(),
-							'error_type' => 'wp_error',
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+						$member_thread_id = $existing_thread;
 					} else {
-						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
+					}
+				} else {
+					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+					$_POST['message_thread_type'] = 'new';
+				}
 
-						remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						// Attempt to send the message.
-						$message = messages_new_message( array(
+				/**
+				 * Create Message based on the `message_thread_type` and `member_thread_id`.
+				 */
+				if ( isset( $_POST['message_thread_type'] ) && 'new' === $_POST['message_thread_type'] ) {
+					$message = bp_groups_messages_new_message(
+						array(
 							'recipients'    => $member,
 							'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 							'content'       => $_POST['content'],
 							'error_type'    => 'wp_error',
+							'is_hidden'     => true,
 							'append_thread' => false,
-						) );
-						remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-						add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-					}
-				} else {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
-					$_POST['message_thread_type'] = 'new';
-
-					remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					// Attempt to send the message.
-					$message = messages_new_message( array(
-						'recipients'    => $member,
-						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
-						'content'       => $_POST['content'],
-						'error_type'    => 'wp_error',
-						'append_thread' => false,
-					) );
-					remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
-					add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+						)
+					);
+				} elseif ( isset( $_POST['message_thread_type'] ) && 'reply' === $_POST['message_thread_type'] && ! empty( $member_thread_id ) ) {
+					$message = bp_groups_messages_new_message(
+						array(
+							'thread_id'    => $member_thread_id,
+							'subject'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'      => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'    => $date_sent = bp_core_current_time(),
+							'mark_visible' => true,
+							'error_type'   => 'wp_error',
+						)
+					);
 				}
 			}
 		}
+
 		if ( is_wp_error( $message ) ) {
 			$response['feedback'] = $message->get_error_message();
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
-			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+			if ( 'all' !== $_POST['users'] ) {
+				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
+			} else {
+				$response['feedback'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
+			}
+
 			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
 		}
+	}
+}
+
+/**
+ * Create New Group Message.
+ *
+ * @param array|string $args {
+ *     Array of arguments.
+ *     @type int    $sender_id     Optional. ID of the user who is sending the
+ *                                 message. Default: ID of the logged-in user.
+ *     @type int    $thread_id     Optional. ID of the parent thread. Leave blank to
+ *                                 create a new thread for the message.
+ *     @type array  $recipients    IDs or usernames of message recipients. If this
+ *                                 is an existing thread, it is unnecessary to pass a $recipients
+ *                                 argument - existing thread recipients will be assumed.
+ *     @type string $subject       Optional. Subject line for the message. For
+ *                                 existing threads, the existing subject will be used. For new
+ *                                 threads, 'No Subject' will be used if no $subject is provided.
+ *     @type string $content       Content of the message. Cannot be empty.
+ *     @type string $date_sent     Date sent, in 'Y-m-d H:i:s' format. Default: current date/time.
+ *     @type bool   $is_hidden     Optional. Whether to hide the thread from sender messages inbox or not. Default: false.
+ *     @type bool   $mark_visible  Optional. Whether to mark thread visible to all other participants. Default: false.
+ *     @type string $error_type    Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * }
+ *
+ * @return int|bool|WP_Error ID of the message thread on success, false on failure.
+ */
+function bp_groups_messages_new_message( $args = '' ) {
+	$send = '';
+	remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+	add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
+
+	$r = bp_parse_args(
+		$args,
+		array(
+			'sender_id'     => bp_loggedin_user_id(),
+			'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
+			'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
+			'subject'       => false,
+			'content'       => false,
+			'date_sent'     => bp_core_current_time(),
+			'append_thread' => false,
+			'is_hidden'     => false,
+			'mark_visible'  => false,
+			'error_type'    => 'wp_error',
+		),
+		'bp_groups_messages_new_message'
+	);
+
+	// Attempt to send the message.
+	$send = messages_new_message( $r );
+	remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
+	add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
+	return $send;
+}
+
+/**
+ * Check group message has been successfully sent or not.
+ *
+ * @param mixed  $send int|bool|WP_Error
+ * @param string $type Type of the message `all` or `individual`.
+ */
+function bp_groups_messages_validate_message( $send, $type = 'all' ) {
+	if ( is_wp_error( $send ) ) {
+		$response['feedback'] = $send->get_error_message();
+		wp_send_json_error( $response );
+	} elseif ( ! empty( $send ) ) {
+		if ( 'individual' === $type ) {
+			$response['feedback'] = __( 'Your message was sent to %%count%% members of this group.', 'buddyboss' );
+		} else {
+			$response['feedback'] = __( 'Your message was sent to all members of this group.', 'buddyboss' );
+		}
+		$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+		$response['type']          = 'success';
+		wp_send_json_success( $response );
 	}
 }
