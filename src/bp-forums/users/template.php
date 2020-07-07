@@ -1800,6 +1800,18 @@ function bbp_user_can_view_forum( $args = '' ) {
 	$forum_id = bbp_get_forum_id( $r['forum_id'] );
 	$retval   = false;
 
+	/**
+	 * For check Current topic's forum is part of group or not.
+	 */
+	$group_id  = 0;
+	$is_member = 0;
+	if ( bp_is_active( 'groups' ) ) {
+		$group_id   = bbp_forum_recursive_group_id( $forum_id );
+		$is_member  = groups_is_user_member( $user_id, $group_id );
+	}
+
+	$retval = ( $group_id && ! $is_member ) ? false : true;
+
 	// User is a keymaster
 	if ( ! empty( $user_id ) && bbp_is_user_keymaster( $user_id ) ) {
 		$retval = true;
@@ -1809,22 +1821,14 @@ function bbp_user_can_view_forum( $args = '' ) {
 		$retval = true;
 
 	// Forum is private, and user can see it
-	} elseif ( bbp_is_forum_private( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_private_forums' ) ) {
-
-		/**
-		 * For check Current topic's forum is part of group or not.
-		 */
-		$group_id  = 0;
-		$is_member = 0;
-		if ( bp_is_active( 'groups' ) ) {
-			$group_id   = bbp_forum_recursive_group_id( $forum_id );
-			$is_member  = BP_Groups_Member::check_is_member( $user_id, $group_id );
-		}
-
-		$retval = ( $group_id && ! $is_member ) ? false : true;
+	} elseif ( bbp_is_forum_private( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_private_forums' ) && empty( $group_id ) ) {
+		$retval = true;
 
 	// Forum is hidden, and user can see it
-	} elseif ( bbp_is_forum_hidden( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_hidden_forums' ) ) {
+	} elseif ( bbp_is_forum_hidden( $forum_id, $r['check_ancestors'] ) && user_can( $user_id, 'read_hidden_forums' ) && empty( $group_id ) ) {
+		$retval = true;
+
+	} elseif ( ! empty( $group_id ) && ! empty( $is_member ) ) {
 		$retval = true;
 	}
 
