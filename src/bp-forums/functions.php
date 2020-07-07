@@ -793,8 +793,14 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 			}
 		}
 
+		//Conflicted with wp query so removed
+		remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 		// Update Forums' internal private and forum ID variables
 		bbp_repair_forum_visibility();
+
+		//added again after complete wp-query
+		add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
 	}
 }
