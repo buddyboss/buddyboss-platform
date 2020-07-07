@@ -726,12 +726,8 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				$this->disconnect_forum_from_group( $group_id );
 			}
 
-			//Conflicted with wp query so removed
-			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 			// Update Forums' internal private and forum ID variables
 			bbp_repair_forum_visibility();
-			//added again after complete wp-query
-			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
 			// Return the group
 			return $group;

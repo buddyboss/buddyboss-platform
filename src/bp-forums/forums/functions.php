@@ -970,8 +970,10 @@ function bbp_repair_forum_visibility() {
 			'fields'           => 'ids',
 		)
 	);
+
 	// Reset the $post global
 	wp_reset_postdata();
+
 	$hidden_forums  = new WP_Query(
 		array(
 			'suppress_filters' => true,
@@ -981,15 +983,19 @@ function bbp_repair_forum_visibility() {
 			'fields'           => 'ids',
 		)
 	);
+
 	// Reset the $post global
 	wp_reset_postdata();
+
 	// Bail if queries returned errors
 	if ( is_wp_error( $private_forums ) || is_wp_error( $hidden_forums ) ) {
 		return false;
 	}
+
 	// Update the private/hidden options
 	update_option( '_bbp_private_forums', $private_forums->posts ); // Private forums
 	update_option( '_bbp_hidden_forums', $hidden_forums->posts ); // Hidden forums
+
 	// Complete results
 	return true;
 }
