@@ -361,7 +361,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 				// Forum is private and user does not have caps
 			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
 			// Return contents of output buffer
@@ -418,7 +418,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 				// Forum is private and user does not have caps
 			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
 			// Return contents of output buffer
@@ -482,7 +482,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 				// Forum is private and user does not have caps
 			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				bbp_get_template_part( 'feedback', 'no-access-reply' );
 			}
 
 			// Return contents of output buffer
