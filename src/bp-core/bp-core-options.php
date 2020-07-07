@@ -702,6 +702,27 @@ function bp_enable_group_hierarchies( $default = false ) {
 }
 
 /**
+ * Are group hide subgroups from the main Groups Directory?
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group hide subgroups from the main Groups Directory, otherwise false.
+ */
+function bp_enable_group_hide_subgroups( $default = false ) {
+
+	/**
+	 * Filters whether or not group hide subgroups from the main Groups Directory
+	 *
+	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param bool $value whether or not group hide subgroups from the main Groups Directory.
+	 */
+	return (bool) apply_filters( 'bp_enable_group_hide_subgroups', (bool) bp_get_option( 'bp-enable-group-hide-subgroups', $default ) );
+}
+
+/**
  * Are group restrict invites to members who already in specific parent group?
  *
  * @since BuddyBoss 1.0.0
