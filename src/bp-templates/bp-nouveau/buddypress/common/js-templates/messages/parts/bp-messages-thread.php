@@ -21,18 +21,8 @@
 	<# } #>
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
-            <# if ( data.avatars && data.avatars.length > 1  ) {
-                if( data.avatars.length == 2 ) { #>
-                    <div class="thread-multiple-avatar">
-                <# } #>
-                    <img class="avatar" src="{{data.avatars[0].url}}" alt="{{data.avatars[0].name}}"/>
-                    <# if( data.avatars[1] ) { #>
-                        <img class="avatar" src="{{data.avatars[1].url}}" alt="{{data.avatars[1].name}}"/>
-                    <# }
-                if( data.avatars.length == 2 ) { #>
-                    </div>
-                <# } #>
-            <# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
+
+			<# if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
 				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
