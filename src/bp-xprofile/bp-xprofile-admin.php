@@ -333,7 +333,7 @@ endif;
 														}
 
 														// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-														$current_value = bp_get_option( 'bp-display-name-format' );
+														$current_value = bp_core_display_name_format();
 
 														// If First Name selected then do not add last name field.
 														if ( 'first_name' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {

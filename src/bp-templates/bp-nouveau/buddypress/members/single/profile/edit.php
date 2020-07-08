@@ -41,7 +41,7 @@ bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 
 
 					// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-					$current_value = bp_get_option( 'bp-display-name-format' );
+					$current_value = bp_core_display_name_format();
 
 					// If First Name selected then do not add last name field.
 					if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
@@ -71,7 +71,7 @@ bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 					?>
 
                     <?php bp_nouveau_xprofile_hook( 'before', 'field_html' ); ?>
-            
+
 					<div<?php bp_field_css_class( 'editfield' ); ?>>
 						<fieldset>
 
@@ -84,7 +84,7 @@ bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 
 						</fieldset>
 					</div>
-            
+
                     <?php bp_nouveau_xprofile_hook( 'after', 'field_html' ); ?>
 
 				<?php endwhile; ?>

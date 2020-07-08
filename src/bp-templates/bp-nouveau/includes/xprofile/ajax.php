@@ -138,7 +138,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	if ( bp_has_profile( "profile_group_id=$signup_group_id&exclude_fields=$existing_fields_exclude&include_fields=$include_fields" ) ) :
 
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-		$current_value = bp_get_option( 'bp-display-name-format' );
+		$current_value = bp_core_display_name_format();
 
 		while ( bp_profile_groups() ) : bp_the_profile_group();
 			while ( bp_profile_fields() ) : bp_the_profile_field();

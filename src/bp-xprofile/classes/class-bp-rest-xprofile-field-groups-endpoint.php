@@ -708,7 +708,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				 * Added support for display name format support from platform.
 				 */
 				// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-				$current_value = bp_get_option( 'bp-display-name-format' );
+				$current_value = bp_core_display_name_format();
 
 				// If First Name selected then do not add last name field.
 				if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {

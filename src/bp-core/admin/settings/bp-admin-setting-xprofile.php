@@ -225,7 +225,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			'nickname'        => __( 'Nickname', 'buddyboss' ),
 		);
 
-		$current_value = bp_get_option( 'bp-display-name-format' );
+		$current_value = bp_core_display_name_format();
 
 		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
 		foreach ( $options as $key => $value ) {
