@@ -6801,8 +6801,6 @@ MediumEditor.extensions = {};
                     p.innerHTML = '<br>';
                     var newP = node.parentNode.parentNode.prepend(p);
                     MediumEditor.selection.moveCursor(this.options.ownerDocument, p);
-                }else{
-
                 }
             }
         }else if (MediumEditor.util.isKey(event, MediumEditor.util.keyCode.BACKSPACE) &&
