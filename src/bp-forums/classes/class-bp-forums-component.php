@@ -242,7 +242,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			}
 
 			// Subscribed topics (my profile only)
-			if ( bp_is_my_profile() && bbp_is_subscriptions_active() ) {
+			if ( ( is_admin() || bp_is_my_profile() ) && bbp_is_subscriptions_active() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Subscriptions', 'buddyboss' ),
 					'slug'            => bbp_get_user_subscriptions_slug(),

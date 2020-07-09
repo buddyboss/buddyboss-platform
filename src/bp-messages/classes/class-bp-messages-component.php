@@ -244,7 +244,7 @@ class BP_Messages_Component extends BP_Component {
 		);
 
 		// Show certain screens only if the current user is the displayed user.
-		if ( bp_is_my_profile() ) {
+		if ( bp_is_my_profile() || is_admin() ) {
 
 			// Show "Compose" on the logged-in user's profile only.
 			$sub_nav[] = array(
@@ -261,7 +261,7 @@ class BP_Messages_Component extends BP_Component {
 			 * Show "Notices" on the logged-in user's profile only
 			 * and then only if the user can create notices.
 			 */
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
+			if ( bp_current_user_can( 'bp_moderate' ) || is_admin() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Notices', 'buddyboss' ),
 					'slug'            => 'notices',

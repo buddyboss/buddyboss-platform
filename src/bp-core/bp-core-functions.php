@@ -2762,6 +2762,43 @@ function bp_nav_menu_get_loggedin_pages() {
 			)
 		);
 
+		if ( 'messages' === $bp_item['slug'] ) {
+
+			if ( bp_current_user_can( 'bp_moderate' ) ) {
+				$page_args['site-notice'] = (object) array(
+					'ID'             => hexdec( uniqid() ),
+					'post_title'     => __( 'Site Notices', 'buddyboss' ),
+					'object_id'      => hexdec( uniqid() ),
+					'post_author'    => 0,
+					'post_date'      => 0,
+					'post_excerpt'   => 'email-preference',
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'guid'           => admin_url( '/admin.php?page=bp-notices' ),
+					'post_parent'    => $nav_counter,
+				);
+			}
+		}
+
+		if ( 'groups' === $bp_item['slug'] && bp_user_can_create_groups() ) {
+			$page_args['group-create'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Create Group', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'create-group',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
+				'post_parent'    => $nav_counter,
+			);
+		}
+
+
+
 		if ( ! empty( $nav_sub ) ) {
 			foreach ( $nav_sub as $s_nav ) {
 				$sub_name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
@@ -2770,8 +2807,22 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				$key = $s_nav['slug'];
 
+				if ( in_array( $key, array( 'capabilities', 'delete-account'), true ) ) {
+					continue;
+				}
+
+				if ( 'settings' === $bp_item['slug'] && 'notifications' === $key ) {
+					$key = 'settings-notifications';
+				}
+
 				if ( 'profile' === $key ) {
 					$key = 'view';
+				} elseif ( 'invites' === $key ) {
+					$key = 'group-invites';
+				}
+
+				if ( 'my-friends' === $s_nav['slug'] ){
+					$sub_name = __( 'My Connections', 'buddyboss' );
 				}
 
 				$page_args[ $key ] =
