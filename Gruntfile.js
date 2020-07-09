@@ -8,20 +8,23 @@ module.exports = function (grunt) {
 		BP_CSS = [
 			'**/*.css',
 			'!**/*.min.css',
-			'!**/vendor/**/*.css'
+			'!**/vendor/**/*.css',
+			'!**/endpoints/**/*.css'
 		],
 
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss
 		BP_EXCLUDED_CSS = [
 			'!**/*-rtl.css',
-			'!bp-forums/**/*.css'
+			'!bp-forums/**/*.css',
+			'!**/endpoints/**/*.css'
 		],
 
 		BP_JS = [
 			'**/*.js',
 			'!**/*.min.js',
 			'!bp-forums/**/*.js',
-			'!**/vendor/**/*.js'
+			'!**/vendor/**/*.js',
+			'!**/endpoints/**/*.js',
 		],
 
 		BP_EXCLUDED_MISC = [],
@@ -32,7 +35,8 @@ module.exports = function (grunt) {
 			'!bp-templates/bp-nouveau/css/buddypress.css',
 			'!bp-core/admin/css/hello.css',
 			'!bp-core/css/medium-editor-beagle.css',
-			'!bp-core/css/medium-editor.css'
+			'!bp-core/css/medium-editor.css',
+			'!**/endpoints/**/*.css'
 		],
 
 		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
@@ -221,7 +225,8 @@ module.exports = function (grunt) {
 			}
 		},
 		clean: {
-			all: [BUILD_DIR]
+			all: [BUILD_DIR],
+			bp_rest: [SOURCE_DIR + 'buddyboss-platform-api/']
 		},
 		copy: {
 			files: {
@@ -240,6 +245,64 @@ module.exports = function (grunt) {
 						src: ['composer.json']
 					}
 				]
+			},
+			bp_rest_components: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
+				dest: SOURCE_DIR,
+				dot: true,
+				expand: true,
+				src: [
+					'**/bp-activity/**',
+					'**/bp-blogs/**',
+					'**/bp-forums/**',
+					'**/bp-friends/**',
+					'**/bp-groups/**',
+					'**/bp-invites/**',
+					'**/bp-media/**',
+					'**/bp-members/**',
+					'**/bp-messages/**',
+					'**/bp-notifications/**',
+					'**/bp-settings/**',
+					'**/bp-xprofile/**',
+					'**/bp-integrations/**'
+				],
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
+			},
+			bp_rest_core: {
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
+				dest: SOURCE_DIR + 'bp-core/classes/',
+				dot: true,
+				expand: true,
+				flatten: true,
+				filter: 'isFile',
+				src: [
+					'**',
+					'!actions.php',
+					'!filters.php',
+					'!functions.php',
+					'!**/bp-activity/**',
+					'!**/bp-blogs/**',
+					'!**/bp-forums/**',
+					'!**/bp-friends/**',
+					'!**/bp-groups/**',
+					'!**/bp-invites/**',
+					'!**/bp-media/**',
+					'!**/bp-members/**',
+					'!**/bp-messages/**',
+					'!**/bp-notifications/**',
+					'!**/bp-settings/**',
+					'!**/bp-xprofile/**',
+					'**/bp-integrations/**'
+				],
+				options: {
+					process : function( content ) {
+						return content.replace( /\, 'buddypress'/g, ', \'buddyboss\'' ); // update text-domain.
+					}
+				}
 			}
 		},
 		uglify: {
@@ -256,6 +319,7 @@ module.exports = function (grunt) {
 					'!**/emojione-edited.js',
 					'!**/emojionearea-edited.js',
 					'!**/node_modules/**/*.js',
+					'!**/endpoints/**/*.js',
 				])
 			}
 		},
@@ -271,7 +335,8 @@ module.exports = function (grunt) {
 					[
 						'!**/*.min.css',
 						'!**/admin/**/*.css',
-						'!**/emojionearea-edited.css'
+						'!**/emojionearea-edited.css',
+						'!**/endpoints/**/*.css'
 					]
 				)
 			},
@@ -282,7 +347,11 @@ module.exports = function (grunt) {
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: ['**/*.scss', '!**/vendors/**/*.scss']
+				src: [
+						'**/*.scss',
+						'!**/vendors/**/*.scss',
+						'!bp-templates/bp-nouveau/common-styles/_codemirror.scss'
+					]
 			}
 		},
 		cssmin: {
@@ -314,6 +383,11 @@ module.exports = function (grunt) {
 				command: 'git add .; git commit -am "grunt release build";',
 				cwd: '.',
 				stdout: false
+			},
+			rest_api: {
+				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
+				cwd: SOURCE_DIR,
+				stdout: false
 			}
 		},
 		jsvalidate: {
@@ -329,7 +403,8 @@ module.exports = function (grunt) {
 						'!**/emojione-edited.js',
 						'!**/emojionearea-edited.js',
 						'!**/vendor/**/*.js',
-						'!**/node_modules/**/*.js'
+						'!**/node_modules/**/*.js',
+						'!**/endpoints/**/*.js'
 					].concat(BP_EXCLUDED_MISC)
 				}
 			}
@@ -345,6 +420,16 @@ module.exports = function (grunt) {
 				}]
 			}
 		},
+		apidoc: {
+			api: {
+				src: SOURCE_DIR,
+				dest: SOURCE_DIR + 'endpoints/',
+				options : {
+					includeFilters: ['.*\\.php$'],
+					excludeFilters : ['assets/', 'bin/','languages/', 'node_modules/', 'src/bp-core/admin/js/lib/'],
+				},
+			}
+		},
 	});
 
 
@@ -352,6 +437,7 @@ module.exports = function (grunt) {
 	 * Register tasks.
 	 */
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
+    grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
 	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 

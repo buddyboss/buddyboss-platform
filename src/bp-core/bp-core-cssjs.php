@@ -277,14 +277,14 @@ function bp_core_register_common_scripts() {
 			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
 			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
 			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
-			'dictFileTooBig'               => __( "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
+			'dictFileTooBig'               => __( "File is too large ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
 			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
 			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
 			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
 			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss' ),
 			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss' ),
 			'dictRemoveFile'               => __( "Remove file", 'buddyboss' ),
-			'dictMaxFilesExceeded'         => __( "You can not upload any more files.", 'buddyboss' ),
+			'dictMaxFilesExceeded'         => __( "You cannot upload more than 10 files at a time.", 'buddyboss' ),
 		)
 	);
 }

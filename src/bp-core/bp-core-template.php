@@ -2283,6 +2283,17 @@ function bp_is_media_component() {
 }
 
 /**
+ * Check whether the current page is part of the Document component.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is part of the Media component.
+ */
+function bp_is_document_component() {
+	return (bool) bp_is_current_component( 'document' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2740,6 +2751,20 @@ function bp_is_user_media() {
 }
 
 /**
+ * Is this a user's document page?
+ *
+ * Eg http://example.com/members/joe/documents/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a user's media page.
+ */
+function bp_is_user_document() {
+	return (bool) ( bp_is_user() && bp_is_document_component() );
+}
+
+
+/**
  * Is the current page the media directory?
  *
  * @since BuddyBoss 1.0.0
@@ -2748,6 +2773,21 @@ function bp_is_user_media() {
  */
 function bp_is_media_directory() {
 	if ( ! bp_displayed_user_id() && bp_is_media_component() && ! bp_current_action() ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Is the current page the media directory?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is the media directory.
+ */
+function bp_is_document_directory() {
+	if ( ! bp_displayed_user_id() && bp_is_document_component() && ! bp_current_action() ) {
 		return true;
 	}
 
@@ -2768,6 +2808,39 @@ function bp_is_single_album() {
 	}
 
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+/**
+ * Is the current page a single folder item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single album item permalink.
+ */
+function bp_is_single_folder() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && is_numeric( bp_action_variable( 1 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_document_component() && 'folders' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+
+/**
+ * Is the current page a single document item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single document item permalink.
+ */
+function bp_is_single_document() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document() && is_numeric( bp_action_variable( 0 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_media_component() && 'my-document' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 
@@ -3071,6 +3144,65 @@ function bp_is_group_albums() {
 	return $retval;
 }
 
+/**
+ * Is the current page a group's document page?
+ *
+ * @since BuddyPress 1.2.3
+ *
+ * @return bool True if the current page is a group's document page.
+ */
+function bp_is_group_document() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's folder page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's folder page.
+ */
+function bp_is_group_folders() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a user's folder page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's folder page.
+ */
+function bp_is_user_folders() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component') && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
 /** Messages ******************************************************************/
 
 /**
@@ -3228,7 +3360,9 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 		if ( ! empty( $bp->members->nav ) ) {
 			$primary_nav_item = $bp->members->nav->get_primary( array( 'slug' => $component_id ), false );
-			$primary_nav_item = reset( $primary_nav_item );
+			if ( is_array( $primary_nav_item ) ) {
+				$primary_nav_item = reset( $primary_nav_item );
+			}
 		}
 
 		// Use the component nav name.

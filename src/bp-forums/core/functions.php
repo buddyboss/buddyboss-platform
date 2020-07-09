@@ -587,3 +587,104 @@ function bbp_is_get_request() {
 	return (bool) ( 'GET' === strtoupper( $_SERVER['REQUEST_METHOD'] ) );
 }
 
+/**
+ * Fix forums media
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bbp_fix_forums_media() {
+
+	$forums_media_query = new WP_Query(
+		array(
+			'post_type'      => bbp_get_forum_post_type(),
+			'fields'         => 'ids',
+			'posts_per_page' => - 1,
+			'meta_query'     => array(
+				array(
+					'key'     => 'bp_media_ids',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( ! empty( $forums_media_query->found_posts ) && ! empty( $forums_media_query->posts ) ) {
+
+		foreach ( $forums_media_query->posts as $post_id ) {
+			$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				foreach ( $media_ids as $media_id ) {
+					$media          = new BP_Media( $media_id );
+					$media->privacy = 'forums';
+					$media->save();
+				}
+			}
+		}
+	}
+	wp_reset_postdata();
+
+	$topics_media_query = new WP_Query(
+		array(
+			'post_type'      => bbp_get_topic_post_type(),
+			'fields'         => 'ids',
+			'posts_per_page' => - 1,
+			'meta_query'     => array(
+				array(
+					'key'     => 'bp_media_ids',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( ! empty( $topics_media_query->found_posts ) && ! empty( $topics_media_query->posts ) ) {
+
+		foreach ( $topics_media_query->posts as $post_id ) {
+			$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				foreach ( $media_ids as $media_id ) {
+					$media          = new BP_Media( $media_id );
+					$media->privacy = 'forums';
+					$media->save();
+				}
+			}
+		}
+	}
+	wp_reset_postdata();
+
+	$reply_media_query = new WP_Query(
+		array(
+			'post_type'      => bbp_get_reply_post_type(),
+			'fields'         => 'ids',
+			'posts_per_page' => - 1,
+			'meta_query'     => array(
+				array(
+					'key'     => 'bp_media_ids',
+					'compare' => 'EXISTS',
+				),
+			),
+		)
+	);
+
+	if ( ! empty( $reply_media_query->found_posts ) && ! empty( $reply_media_query->posts ) ) {
+
+		foreach ( $reply_media_query->posts as $post_id ) {
+			$media_ids = get_post_meta( $post_id, 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				foreach ( $media_ids as $media_id ) {
+					$media          = new BP_Media( $media_id );
+					$media->privacy = 'forums';
+					$media->save();
+				}
+			}
+		}
+	}
+	wp_reset_postdata();
+}
+
