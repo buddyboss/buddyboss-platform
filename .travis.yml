@@ -5,6 +5,9 @@
 sudo: false
 
 language: php
+node_js:
+  - 8
+  - 10
 
 dist: trusty
 
@@ -117,7 +120,7 @@ before_install:
   # setup NodeJS version using NVM
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - node --version
-  - nvm install 6
+  - nvm install 12
   - node --version
   - npm install -g grunt-cli
   - npm --version

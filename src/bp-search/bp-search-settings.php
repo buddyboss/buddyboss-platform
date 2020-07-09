@@ -195,6 +195,25 @@ function bp_search_get_settings_fields() {
 		);
 	}
 
+	if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+		$fields['bp_search_settings_community']['bp_search_documents'] = array(
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_documents',
+				'sanitize_callback' => 'intval',
+				'args'              => array(
+						'class' => 'bp-search-parent-field',
+				),
+		);
+		$fields['bp_search_settings_community']['bp_search_folders'] = array(
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_folders',
+				'sanitize_callback' => 'intval',
+				'args'              => array(
+						'class' => 'bp-search-child-field',
+				),
+		);
+	}
+
 	if ( bp_is_active( 'activity' ) ) {
 		$fields['bp_search_settings_community']['bp_search_activity'] = array(
 			'title'             => '&#65279;',
@@ -694,6 +713,50 @@ function bp_search_settings_callback_groups() {
 }
 
 /**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_documents() {
+	?>
+	<input
+			name="bp_search_documents"
+			id="bp_search_documents"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_documents_enable( false ) ); ?>
+	/>
+	<label for="bp_search_documents">
+		<?php esc_html_e( 'Documents', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_folders() {
+	?>
+	<input
+			name="bp_search_folders"
+			id="bp_search_folders"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_folders_enable( false ) ); ?>
+	/>
+	<label for="bp_search_folders">
+		<?php esc_html_e( 'Folders', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
  * Checks if groups search is enabled.
  *
  * @since BuddyBoss 1.0.0
@@ -704,6 +767,32 @@ function bp_search_settings_callback_groups() {
  */
 function bp_is_search_groups_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_groups_enable', (bool) get_option( 'bp_search_groups', $default ) );
+}
+
+/**
+ * Checks if document search is enabled.
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is documents search enabled or not
+ */
+function bp_is_search_documents_enable( $default = 0) {
+	return (bool) apply_filters( 'bp_is_search_documents_enable', (bool) get_option( 'bp_search_documents', $default ) );
+}
+
+/**
+ * Checks if folder search is enabled.
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is documents search enabled or not
+ */
+function bp_is_search_folders_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_folders_enable', (bool) get_option( 'bp_search_folders', $default ) );
 }
 
 /**
