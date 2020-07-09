@@ -2738,11 +2738,13 @@ function bp_nav_menu_get_loggedin_pages() {
 
 	foreach ( $bp_menu_items as $bp_item ) {
 
+		$nav_counter = hexdec(uniqid());
+
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
-		$page_args[ $bp_item['slug'] ] = (object) array(
-			'ID'             => -1,
+		$page_args[] = (object) array(
+			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
 			'post_author'    => 0,
 			'post_date'      => 0,
@@ -2751,7 +2753,37 @@ function bp_nav_menu_get_loggedin_pages() {
 			'post_status'    => 'publish',
 			'comment_status' => 'closed',
 			'guid'           => $bp_item['link'],
+			'post_parent'    => 0,
 		);
+
+		$nav_sub = buddypress()->members->nav->get_secondary(
+			array(
+				'parent_slug'     => $bp_item['slug'],
+			)
+		);
+
+		if ( ! empty( $nav_sub ) ) {
+			foreach ( $nav_sub as $s_nav ) {
+				$sub_name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
+				$sub_name = trim( $sub_name );
+				$nav_counter_child = hexdec(uniqid());
+				$page_args[] =
+					(object) array(
+						'ID'               => $nav_counter_child,
+						'post_title'       => $sub_name,
+						'object_id'			=> $nav_counter_child,
+						'post_author'      => 0,
+						'post_date'        => 0,
+						'post_excerpt'     => $s_nav['slug'],
+						'post_type'        => 'page',
+						'post_status'      => 'publish',
+						'comment_status'   => 'closed',
+						'guid'             => $s_nav['link'],
+						'post_parent' => $nav_counter,
+					);
+			}
+		}
+
 	}
 
 	if ( empty( buddypress()->wp_nav_menu_items ) ) {
