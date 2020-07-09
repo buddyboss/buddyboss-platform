@@ -1316,7 +1316,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) trim( $output ) ) {
+			if ( ! (int) $count || ! (int) $count2 ) {
 				$output = $right_now_text;
 			}
 		}
