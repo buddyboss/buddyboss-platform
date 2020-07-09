@@ -74,12 +74,14 @@ add_filter( 'bbp_forums_at_name_do_notifications', 'bp_groups_disable_at_mention
 add_filter( 'bp_core_avatar_default', 'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 
-// Exclude Forums if group type hide
+// Exclude Forums if group type hide.
 add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
-// Exclude Forums if group type hide
+// Exclude Forums if group type hide.
 add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
-// media scope filter
+// media scope filter.
 add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
+add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
+add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -179,14 +181,13 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 /**
  * Disable at-mention forum notifications for users who are not a member of the non-public group.
  *
- * @param bool $send Whether to send the notification.
+ * @param bool  $send Whether to send the notification.
  * @param array $usernames Array of all usernames being notified.
- * @param int $user_id ID of the user to be notified.
- * @param int $forum_id ID of the forum.
+ * @param int   $user_id ID of the user to be notified.
+ * @param int   $forum_id ID of the forum.
  *
  * @return bool
  * @since BuddyBoss 1.2.9
- *
  */
 function bp_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.
@@ -533,14 +534,14 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 			: bp_loggedin_user_id();
 	}
 
-	// Fetch public groups
-	$public_groups = groups_get_groups(
-		array(
+	if ( 'groups' !== $filter['scope'] ) {
+		// Fetch public groups.
+		$public_groups = groups_get_groups( array(
 			'fields'   => 'ids',
 			'status'   => 'public',
-			'per_page' => -1,
-		)
-	);
+			'per_page' => - 1,
+		) );
+	}
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
 	} else {
@@ -568,21 +569,277 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 		$group_ids = array( 'groups' => 0 );
 	}
 
-	$retval = array(
-		'relation' => 'OR',
+	$args = array(
+		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
-			array(
-				'column'  => 'group_id',
-				'compare' => 'IN',
-				'value'   => (array) $group_ids['groups'],
-			),
-			array(
-				'column' => 'privacy',
-				'value'  => 'grouponly',
-			),
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
 		),
 	);
 
+	if ( ! bp_is_group_albums_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
+
 	return $retval;
+}
+
+/**
+ * Set up document arguments for use with the 'groups' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_groups_filter_document_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$folder_id = 0;
+	$folders   = array();
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
+	if ( 'groups' !== $filter['scope'] ) {
+		// Fetch public groups.
+		$public_groups = groups_get_groups( array(
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+		) );
+	}
+
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = array();
+	}
+
+	// Determine groups of user.
+	$groups = groups_get_user_groups( $user_id );
+	if ( ! empty( $groups['groups'] ) ) {
+		$groups = $groups['groups'];
+	} else {
+		$groups = array();
+	}
+
+	$group_ids = false;
+	if ( ! empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => array_unique( array_merge( $groups, $public_groups ) ) );
+	} elseif ( empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $public_groups );
+	} elseif ( ! empty( $groups ) && empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $groups );
+	}
+
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => array() );
+	}
+
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		if ( ! empty( $folder_id ) ) {
+			$folder_ids       = array();
+			$fetch_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+			if ( $fetch_folder_ids ) {
+				foreach ( $fetch_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
+					}
+					array_push( $folder_ids, $single_folder );
+				}
+			}
+
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'parent',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
+		}
+	} else {
+		if ( ! empty( $folder_id ) ) {
+			$folders = array(
+				'column'  => 'folder_id',
+				'compare' => '=',
+				'value'   => $folder_id,
+			);
+		} else {
+			$folders = array(
+				'column' => 'folder_id',
+				'value'  => 0,
+			);
+		}
+	}
+
+	if ( ! bp_is_group_document_support_enabled() ) {
+		$group_ids['groups'] = array( 0 );
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
+		),
+		$folders,
+	);
+
+	return $args;
+}
+
+function bp_groups_filter_folder_scope( $retval = array(), $filter = array() ) {
+
+	if ( ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$folder_id = 0;
+	$folders = array();
+
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
+	if ( 'groups' !== $filter['scope'] ) {
+		// Fetch public groups.
+		$public_groups = groups_get_groups( array(
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+		) );
+	}
+
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = array();
+	}
+
+	// Determine groups of user.
+	$groups = groups_get_user_groups( $user_id );
+	if ( ! empty( $groups['groups'] ) ) {
+		$groups = $groups['groups'];
+	} else {
+		$groups = array();
+	}
+
+	$group_ids = false;
+	if ( ! empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => array_unique( array_merge( $groups, $public_groups ) ) );
+	} elseif ( empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $public_groups );
+	} elseif ( ! empty( $groups ) && empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $groups );
+	}
+
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => array() );
+	}
+
+	if ( bp_is_group() ) {
+		$group_ids = array( 'groups' => array( bp_get_current_group_id() ) );
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		if ( ! empty( $folder_id ) ) {
+			$folder_ids = array();
+			$fetch_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+			if ( $fetch_folder_ids ) {
+				foreach ( $fetch_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
+					}
+					array_push( $folder_ids, $single_folder );
+				}
+			}
+
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'parent',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
+		}
+	} else {
+		if ( ! empty( $folder_id ) ) {
+			$folders = array(
+				'column'  => 'parent',
+				'compare' => '=',
+				'value'   => $folder_id,
+			);
+		} else {
+			$folders = array(
+				'column' => 'parent',
+				'value'  => 0,
+			);
+		}
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'group_id',
+			'compare' => 'IN',
+			'value'   => (array) $group_ids['groups'],
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'grouponly',
+		),
+		$folders,
+	);
+
+	return $args;
 }

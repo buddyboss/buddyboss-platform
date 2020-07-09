@@ -82,6 +82,7 @@ defined( 'ABSPATH' ) || exit;
 			<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
 			<a href="https://github.com/ichord/Caret.js">Caret.js</a>,
 			<a href="https://tedgoas.github.io/Cerberus/">Cerberus</a>,
+			<a href="https://wordpress.org/plugins/gs-only-pdf-preview/">GS Only PDF Preview</a>,
 			<a href="https://ionicons.com/">Ionicons</a>,
 			<a href="https://github.com/carhartl/jquery-cookie">jquery.cookie</a>,
 			<a href="https://mattbradley.github.io/livestampjs/">Livestamp.js</a>,

@@ -147,6 +147,7 @@ class BuddyPress {
 		return $instance;
 
 		// The last metroid is in captivity. The galaxy is at peace.
+		// The powers of the metroid might be harnessed for the good of civilization.
 	}
 
 	/** Magic Methods *********************************************************/
@@ -329,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 15601;
+		$this->db_version = 16000;
 
 		/** Loading */
 
@@ -576,10 +577,10 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddypress/3.0.php';
 
 			// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php' );
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -616,6 +617,7 @@ class BuddyPress {
 			'forums',
 			'search',
 			'media',
+			'document',
 			'gdpr',
 			'invites',
 		);
@@ -707,6 +709,7 @@ class BuddyPress {
 			'BP_REST_Group_Membership_Endpoint'            => 'groups',
 			'BP_REST_Group_Invites_Endpoint'               => 'groups',
 			'BP_REST_Group_Membership_Request_Endpoint'    => 'groups',
+			'BP_REST_Group_Settings_Endpoint'              => 'groups',
 			'BP_REST_Groups_Types_Endpoint'                => 'groups',
 			'BP_REST_Attachments_Group_Avatar_Endpoint'    => 'groups',
 			'BP_REST_Attachments_Group_Cover_Endpoint'     => 'groups',

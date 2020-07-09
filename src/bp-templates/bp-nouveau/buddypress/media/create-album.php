@@ -14,7 +14,7 @@
 
                     <header class="bb-model-header">
                         <h4><?php _e( 'Create Album', 'buddyboss' ); ?></h4>
-                        <a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
+                        <a class="bb-model-close-button" id="bp-media-create-album-close" href="#"><span class="bb-icon bb-icon-close"></span></a>
                     </header>
 
                     <div class="bb-field-wrap">
@@ -31,9 +31,8 @@
                     <footer class="bb-model-footer">
                         <?php if ( ! bp_is_group() ) : ?>
                             <div class="bb-dropdown-wrap">
-                                <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
                                 <select id="bb-album-privacy">
-                                    <?php foreach ( $privacy_options as $k => $option ) {
+                                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
                                         ?>
                                         <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
                                         <?php

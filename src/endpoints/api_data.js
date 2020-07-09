@@ -278,7 +278,6 @@ define({ "api": [
             ],
             "optional": true,
             "field": "privacy",
-            "defaultValue": "public",
             "description": "<p>Privacy of the activity.</p>"
           },
           {
@@ -340,7 +339,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -382,7 +381,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -545,7 +544,6 @@ define({ "api": [
             ],
             "optional": true,
             "field": "privacy",
-            "defaultValue": "public",
             "description": "<p>Privacy of the activity.</p>"
           }
         ]
@@ -604,7 +602,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -756,7 +754,6 @@ define({ "api": [
             ],
             "optional": true,
             "field": "privacy",
-            "defaultValue": "public",
             "description": "<p>Privacy of the activity.</p>"
           },
           {
@@ -816,11 +813,6 @@ define({ "api": [
     "group": "Blogs",
     "description": "<p>Retrieve blog</p>",
     "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -845,11 +837,6 @@ define({ "api": [
     "group": "Blogs",
     "description": "<p>Retrieve blogs</p>",
     "version": "1.0.0",
-    "permission": [
-      {
-        "name": "LoggedInUser"
-      }
-    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1617,6 +1604,11 @@ define({ "api": [
     "group": "Forum_Replies",
     "description": "<p>Retrieve Replies</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -1745,6 +1737,11 @@ define({ "api": [
     "group": "Forum_Replies",
     "description": "<p>Retrieve a single reply.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2102,7 +2099,7 @@ define({ "api": [
     "groupTitle": "Forum_Topics"
   },
   {
-    "type": "POST",
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/topics/dropdown/:id",
     "title": "Topic Actions",
     "name": "DropdownBBPTopic",
@@ -2138,6 +2135,11 @@ define({ "api": [
     "group": "Forum_Topics",
     "description": "<p>Retrieve a single topic.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2162,6 +2164,11 @@ define({ "api": [
     "group": "Forum_Topics",
     "description": "<p>Retrieve topics</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2584,6 +2591,11 @@ define({ "api": [
     "group": "Forums",
     "description": "<p>Retrieve a single forum</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2608,6 +2620,11 @@ define({ "api": [
     "group": "Forums",
     "description": "<p>Subscribe/Unsubscribe forum for the user.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -2632,6 +2649,11 @@ define({ "api": [
     "group": "Forums",
     "description": "<p>Retrieve forums</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -3095,6 +3117,13 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "boolean",
+            "optional": false,
+            "field": "delete_group_forum",
+            "description": "<p>Delete the Group forum if exist.</p>"
           }
         ]
       }
@@ -3264,7 +3293,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -3291,6 +3320,11 @@ define({ "api": [
     "group": "Groups",
     "description": "<p>Retrieve group avatar</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -3332,7 +3366,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -3361,7 +3395,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -3526,6 +3560,11 @@ define({ "api": [
     "group": "Groups",
     "description": "<p>Retrieve groups detail tabs.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -3682,7 +3721,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -3872,12 +3911,58 @@ define({ "api": [
   },
   {
     "type": "GET",
+    "url": "/wp-json/buddyboss/v1/groups/:id/settings",
+    "title": "Group Settings",
+    "name": "GetBBGroupsSettings",
+    "group": "Groups",
+    "description": "<p>Retrieve groups settings.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "group-settings",
+              "forum",
+              "courses"
+            ],
+            "optional": false,
+            "field": "nav",
+            "description": "<p>Navigation item slug.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
+    "type": "GET",
     "url": "/wp-json/buddyboss/v1/groups/types",
     "title": "Groups Types",
     "name": "GetBBGroupsTypes",
     "group": "Groups",
     "description": "<p>Retrieve Groups Types.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "filename": "src/bp-groups/classes/class-bp-rest-groups-types-endpoint.php",
     "groupTitle": "Groups"
   },
@@ -4086,6 +4171,42 @@ define({ "api": [
     "groupTitle": "Groups"
   },
   {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/groups/:id/settings",
+    "title": "Update Group Settings",
+    "name": "UpdateBBGroupsSettings",
+    "group": "Groups",
+    "description": "<p>Update Group settings.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "fields",
+            "description": "<p>The list of fields to update with name and value of the field.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-groups/classes/class-bp-rest-group-settings-endpoint.php",
+    "groupTitle": "Groups"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/learndash/courses",
     "title": "LearnDash Courses",
@@ -4093,6 +4214,11 @@ define({ "api": [
     "group": "Learndash",
     "description": "<p>Retrieve courses.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -4278,6 +4404,11 @@ define({ "api": [
     "group": "Learndash",
     "description": "<p>Retrieve courses.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -4645,6 +4776,35 @@ define({ "api": [
     "groupTitle": "Media"
   },
   {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/media/",
+    "title": "Delete Photos",
+    "name": "DeleteBBPhotos",
+    "group": "Media",
+    "description": "<p>Delete Multiple Photos.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "media_ids",
+            "description": "<p>A unique numeric IDs for the media photo.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-media/classes/class-bp-rest-media-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
     "type": "GET",
     "url": "/wp-json/buddyboss/v1/media/albums/:id",
     "title": "Get Album",
@@ -4652,6 +4812,11 @@ define({ "api": [
     "group": "Media",
     "description": "<p>Retrieve a single Album.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -4676,6 +4841,11 @@ define({ "api": [
     "group": "Media",
     "description": "<p>Retrieve Albums.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -4797,6 +4967,11 @@ define({ "api": [
     "group": "Media",
     "description": "<p>Retrieve a single photo.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -4821,6 +4996,11 @@ define({ "api": [
     "group": "Media",
     "description": "<p>Retrieve photos.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -5273,7 +5453,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -5325,7 +5505,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -5354,7 +5534,7 @@ define({ "api": [
     "version": "1.0.0",
     "permission": [
       {
-        "name": "LoggedInUser"
+        "name": "LoggedInUser if the site is in Private Network."
       }
     ],
     "parameter": {
@@ -5516,6 +5696,11 @@ define({ "api": [
     "group": "Members",
     "description": "<p>Retrieve Member detail tabs.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -5845,7 +6030,8 @@ define({ "api": [
             "type": "String",
             "allowedValues": [
               "delete_messages",
-              "hide_thread"
+              "hide_thread",
+              "unread"
             ],
             "optional": false,
             "field": "action",
@@ -5886,6 +6072,13 @@ define({ "api": [
             "optional": false,
             "field": "term",
             "description": "<p>Text for search recipients.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "group_id",
+            "description": "<p>Group id to search members.</p>"
           }
         ]
       }
@@ -6642,6 +6835,11 @@ define({ "api": [
     "group": "Profile_Fields",
     "description": "<p>Retrieve Profile Types.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "filename": "src/bp-xprofile/classes/class-bp-rest-xprofile-types-endpoint.php",
     "groupTitle": "Profile_Fields"
   },
@@ -6653,6 +6851,11 @@ define({ "api": [
     "group": "Profile_Fields",
     "description": "<p>Retrieve Single xProfile Group</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -6739,6 +6942,11 @@ define({ "api": [
     "group": "Profile_Fields",
     "description": "<p>Retrieve xProfile single Field</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -6778,6 +6986,11 @@ define({ "api": [
     "group": "Profile_Fields",
     "description": "<p>Retrieve xProfile Field data for the user.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -6809,6 +7022,11 @@ define({ "api": [
     "group": "Profile_Fields",
     "description": "<p>Retrieve Multiple xProfile Fields</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -6902,6 +7120,11 @@ define({ "api": [
     "group": "Profile_Fields",
     "description": "<p>Retrieve xProfile Groups</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -7435,6 +7658,11 @@ define({ "api": [
     "group": "Signups",
     "description": "<p>Create signup</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "WithoutLoggedInUser"
+      }
+    ],
     "parameter": {
       "fields": {
         "Parameter": [
@@ -7509,6 +7737,11 @@ define({ "api": [
     "group": "Signups",
     "description": "<p>Retrieve Signup Form Fields.</p>",
     "version": "1.0.0",
+    "permission": [
+      {
+        "name": "WithoutLoggedInUser"
+      }
+    ],
     "filename": "src/bp-members/classes/class-bp-rest-signup-endpoint.php",
     "groupTitle": "Signups"
   },

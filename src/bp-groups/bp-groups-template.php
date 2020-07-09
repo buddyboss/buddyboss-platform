@@ -2639,6 +2639,25 @@ function bp_group_show_media_status_setting( $setting, $group = false ) {
 }
 
 /**
+ * Output the 'checked' value, if needed, for a given document_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_document_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$document_status = bp_group_get_document_status( $group_id );
+
+	if ( $setting === $document_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
  * Get the media status of a group.
  *
  * This function can be used either in or out of the loop.
@@ -2687,6 +2706,57 @@ function bp_group_get_media_status( $group_id = false ) {
 	 * @param int    $group_id      ID of the group whose status is being checked.
 	 */
 	return apply_filters( 'bp_group_get_media_status', $media_status, $group_id );
+}
+
+/**
+ * Get the media status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_document_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$document_status = groups_get_groupmeta( $group_id, 'document_status' );
+
+	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
+	if ( ! $document_status ) {
+		$document_status = apply_filters( 'bp_group_document_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $media_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_document_status', $document_status, $group_id );
 }
 
 /**
@@ -4650,9 +4720,6 @@ function bp_get_group_member_section_title() {
 	$user_id               = bp_get_group_member_id();
 	$group_id              = bp_get_current_group_id();
 	$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
-	$group_admin           = groups_get_group_admins( $group_id );
-	$group_mode            = groups_get_group_mods( $group_id );
-	$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
 
 	ob_start();
 
@@ -4665,23 +4732,11 @@ function bp_get_group_member_section_title() {
 
 				<?php
 				if ( groups_is_user_admin( $user_id, $group_id ) ) {
-					if ( isset( $group_admin ) && count( $group_admin ) > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
 				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-					if ( isset( $group_mode ) && count( $group_mode ) > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
 				} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-					if ( isset( $group_member['count'] ) && (int) $group_member['count'] > 1 ) {
-						echo esc_html( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
-					} else {
-						echo esc_html( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
-					}
+					esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
 				}
 				?>
 
@@ -5295,7 +5350,7 @@ function bp_groups_get_front_template( $group = null ) {
 	}
 
 	$template_names = array(
-		'groups/single/front-id-' . sanitize_file_name( $group->id ) . '.php',
+		'groups/single/front-id-' . (int) $group->id . '.php',
 		'groups/single/front-slug-' . sanitize_file_name( $group->slug ) . '.php',
 	);
 

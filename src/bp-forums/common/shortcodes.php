@@ -6,7 +6,7 @@
  * @package BuddyBoss\Shortcodes
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BBP_Shortcodes' ) ) :
@@ -49,44 +49,44 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		private function setup_globals() {
 
-			// Setup the shortcodes
+			// Setup the shortcodes.
 			$this->codes = apply_filters(
 				'bbp_shortcodes',
 				array(
 
 					/** Forums */
 
-					'bbp-forum-index'  => array( $this, 'display_forum_index' ), // Forum Index
-					'bbp-forum-form'   => array( $this, 'display_forum_form' ), // Topic form
-					'bbp-single-forum' => array( $this, 'display_forum' ), // Specific forum - pass an 'id' attribute
+					'bbp-forum-index'  => array( $this, 'display_forum_index' ), // Forum Index.
+					'bbp-forum-form'   => array( $this, 'display_forum_form' ), // Topic form.
+					'bbp-single-forum' => array( $this, 'display_forum' ), // Specific forum - pass an 'id' attribute.
 
 					/** Topics */
 
-					'bbp-topic-index'  => array( $this, 'display_topic_index' ), // Topic index
-					'bbp-topic-form'   => array( $this, 'display_topic_form' ), // Topic form
-					'bbp-single-topic' => array( $this, 'display_topic' ), // Specific topic - pass an 'id' attribute
+					'bbp-topic-index'  => array( $this, 'display_topic_index' ), // Topic index.
+					'bbp-topic-form'   => array( $this, 'display_topic_form' ), // Topic form.
+					'bbp-single-topic' => array( $this, 'display_topic' ), // Specific topic - pass an 'id' attribute.
 
 					/** Topic Tags */
 
-					'bbp-topic-tags'   => array( $this, 'display_topic_tags' ), // All topic tags in a cloud
-					'bbp-single-tag'   => array( $this, 'display_topics_of_tag' ), // Topics of Tag
+					'bbp-topic-tags'   => array( $this, 'display_topic_tags' ), // All topic tags in a cloud.
+					'bbp-single-tag'   => array( $this, 'display_topics_of_tag' ), // Topics of Tag.
 
 					/** Replies */
-					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Reply form
-					'bbp-single-reply' => array( $this, 'display_reply' ), // Specific reply - pass an 'id' attribute
+					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Reply form.
+					'bbp-single-reply' => array( $this, 'display_reply' ), // Specific reply - pass an 'id' attribute.
 
 					/** Views */
 
-					'bbp-single-view'  => array( $this, 'display_view' ), // Single view
+					'bbp-single-view'  => array( $this, 'display_view' ), // Single view.
 
 					/** Search */
 
-					'bbp-search-form'  => array( $this, 'display_search_form' ), // Search form
-					'bbp-search'       => array( $this, 'display_search' ), // Search
+					'bbp-search-form'  => array( $this, 'display_search_form' ), // Search form.
+					'bbp-search'       => array( $this, 'display_search' ), // Search.
 
 					/** Others */
 
-					'bbp-stats'        => array( $this, 'display_stats' ), // Stats
+					'bbp-stats'        => array( $this, 'display_stats' ), // Stats.
 				)
 			);
 		}
@@ -113,20 +113,20 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		private function unset_globals() {
 			$bbp = bbpress();
 
-			// Unset global queries
+			// Unset global queries.
 			$bbp->forum_query  = new WP_Query();
 			$bbp->topic_query  = new WP_Query();
 			$bbp->reply_query  = new WP_Query();
 			$bbp->search_query = new WP_Query();
 
-			// Unset global ID's
+			// Unset global ID's.
 			$bbp->current_view_id      = 0;
 			$bbp->current_forum_id     = 0;
 			$bbp->current_topic_id     = 0;
 			$bbp->current_reply_id     = 0;
 			$bbp->current_topic_tag_id = 0;
 
-			// Reset the post data
+			// Reset the post data.
 			wp_reset_postdata();
 		}
 
@@ -148,16 +148,16 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		private function start( $query_name = '' ) {
 
-			// Set query name
+			// Set query name.
 			bbp_set_query_name( $query_name );
 
-			// Set shortcode query name
+			// Set shortcode query name.
 			set_query_var( '_bbp_shortcode_query', 'bbp_shortcodes' );
 
-			//call the enqueue script for shortcodes
+			// call the enqueue script for shortcodes
 			do_action( 'bbp_enqueue_scripts' );
 
-			// Start output buffer
+			// Start output buffer.
 			ob_start();
 		}
 
@@ -171,13 +171,13 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		private function end() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Reset the query name
+			// Reset the query name.
 			bbp_reset_query_name();
 
-			// Return and flush the output buffer
+			// Return and flush the output buffer.
 			return ob_get_clean();
 		}
 
@@ -197,15 +197,15 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_forum_index() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_forum_archive' );
 
 			bbp_get_template_part( 'content', 'archive-forum' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -223,32 +223,32 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_forum( $attr, $content = '' ) {
 
-			// Sanity check required info
+			// Sanity check required info.
 			if ( ! empty( $content ) || ( empty( $attr['id'] ) || ! is_numeric( $attr['id'] ) ) ) {
 				return $content;
 			}
 
-			// Set passed attribute to $forum_id for clarity
+			// Set passed attribute to $forum_id for clarity.
 			$forum_id = bbpress()->current_forum_id = $attr['id'];
 
-			// Bail if ID passed is not a forum
+			// Bail if ID passed is not a forum.
 			if ( ! bbp_is_forum( $forum_id ) ) {
 				return $content;
 			}
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_single_forum' );
 
-			// Check forum caps
+			// Check forum caps.
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'content', 'single-forum' );
 
-				// Forum is private and user does not have caps
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
 				bbp_get_template_part( 'feedback', 'no-access' );
 			}
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -262,13 +262,13 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_forum_form() {
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_forum_form' );
 
-			// Output templates
+			// Output templates.
 			bbp_get_template_part( 'form', 'forum' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -288,21 +288,21 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_topic_index() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Filter the query
+			// Filter the query.
 			if ( ! bbp_is_topic_archive() ) {
 				add_filter( 'bbp_before_has_topics_parse_args', array( $this, 'display_topic_index_query' ) );
 			}
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_topic_archive' );
 
-			// Output template
+			// Output template.
 			bbp_get_template_part( 'content', 'archive-topic' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -319,52 +319,53 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_topic( $attr, $content = '' ) {
 
-			// Sanity check required info
+			// Sanity check required info.
 			if ( ! empty( $content ) || ( empty( $attr['id'] ) || ! is_numeric( $attr['id'] ) ) ) {
 				return $content;
 			}
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Set passed attribute to $forum_id for clarity
+			// Set passed attribute to $forum_id for clarity.
 			$topic_id = bbpress()->current_topic_id = $attr['id'];
 			$forum_id = bbp_get_topic_forum_id( $topic_id );
 
-			// Bail if ID passed is not a topic
+			// Bail if ID passed is not a topic.
 			if ( ! bbp_is_topic( $topic_id ) ) {
 				return $content;
 			}
 
-			// Reset the queries if not in theme compat
+			// Reset the queries if not in theme compat.
 			if ( ! bbp_is_theme_compat_active() ) {
 
 				$bbp = bbpress();
 
-				// Reset necessary forum_query attributes for topics loop to function
+				// Reset necessary forum_query attributes for topics loop to function.
 				$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
 				$bbp->forum_query->in_the_loop             = true;
 				$bbp->forum_query->post                    = get_post( $forum_id );
 
-				// Reset necessary topic_query attributes for topics loop to function
+				// Reset necessary topic_query attributes for topics loop to function.
 				$bbp->topic_query->query_vars['post_type'] = bbp_get_topic_post_type();
 				$bbp->topic_query->in_the_loop             = true;
 				$bbp->topic_query->post                    = get_post( $topic_id );
 			}
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_single_topic' );
 
-			// Check forum caps
+			// Check forum caps.
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'content', 'single-topic' );
 
-				// Forum is private and user does not have caps
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
-			// Return contents of output buffer
+
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -385,43 +386,43 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_topic_form( $attr = array(), $content = '' ) {
 
-			// Sanity check supplied info
+			// Sanity check supplied info.
 			if ( ! empty( $content ) || ( ! empty( $attr['forum_id'] ) && ( ! is_numeric( $attr['forum_id'] ) || ! bbp_is_forum( $attr['forum_id'] ) ) ) ) {
 				return $content;
 			}
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// If forum id is set, use the 'bbp_single_forum' query name
+			// If forum id is set, use the 'bbp_single_forum' query name.
 			if ( ! empty( $attr['forum_id'] ) ) {
 
-				// Set the global current_forum_id for future requests
+				// Set the global current_forum_id for future requests.
 				bbpress()->current_forum_id = $forum_id = bbp_get_forum_id( $attr['forum_id'] );
 
-				// Start output buffer
+				// Start output buffer.
 				$this->start( 'bbp_single_forum' );
 
-				// No forum id was passed
+				// No forum id was passed.
 			} else {
 
-				// Set the $forum_id variable to satisfy checks below
+				// Set the $forum_id variable to satisfy checks below.
 				$forum_id = 0;
 
-				// Start output buffer
+				// Start output buffer.
 				$this->start( 'bbp_topic_form' );
 			}
 
-			// If the forum id is set, check forum caps else display normal topic form
+			// If the forum id is set, check forum caps else display normal topic form.
 			if ( empty( $forum_id ) || bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'form', 'topic' );
 
-				// Forum is private and user does not have caps
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+				bbp_get_template_part( 'feedback', 'no-access-topic' );
 			}
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -440,52 +441,52 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_reply( $attr, $content = '' ) {
 
-			// Sanity check required info
+			// Sanity check required info.
 			if ( ! empty( $content ) || ( empty( $attr['id'] ) || ! is_numeric( $attr['id'] ) ) ) {
 				return $content;
 			}
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Set passed attribute to $reply_id for clarity
+			// Set passed attribute to $reply_id for clarity.
 			$reply_id = bbpress()->current_reply_id = $attr['id'];
 			$forum_id = bbp_get_reply_forum_id( $reply_id );
 
-			// Bail if ID passed is not a reply
+			// Bail if ID passed is not a reply.
 			if ( ! bbp_is_reply( $reply_id ) ) {
 				return $content;
 			}
 
-			// Reset the queries if not in theme compat
+			// Reset the queries if not in theme compat.
 			if ( ! bbp_is_theme_compat_active() ) {
 
 				$bbp = bbpress();
 
-				// Reset necessary forum_query attributes for replys loop to function
+				// Reset necessary forum_query attributes for replys loop to function.
 				$bbp->forum_query->query_vars['post_type'] = bbp_get_forum_post_type();
 				$bbp->forum_query->in_the_loop             = true;
 				$bbp->forum_query->post                    = get_post( $forum_id );
 
-				// Reset necessary reply_query attributes for replys loop to function
+				// Reset necessary reply_query attributes for replys loop to function.
 				$bbp->reply_query->query_vars['post_type'] = bbp_get_reply_post_type();
 				$bbp->reply_query->in_the_loop             = true;
 				$bbp->reply_query->post                    = get_post( $reply_id );
 			}
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_single_reply' );
 
-			// Check forum caps
+			// Check forum caps.
 			if ( bbp_user_can_view_forum( array( 'forum_id' => $forum_id ) ) ) {
 				bbp_get_template_part( 'content', 'single-reply' );
 
-				// Forum is private and user does not have caps
-			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
-				bbp_get_template_part( 'feedback', 'no-access' );
+				// Forum is private/hidden and user does not have caps.
+			} elseif ( bbp_is_forum_private( $forum_id, false ) || bbp_is_forum_hidden( $forum_id, false ) ) {
+				bbp_get_template_part( 'feedback', 'no-access-reply' );
 			}
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -499,13 +500,13 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_reply_form() {
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_reply_form' );
 
-			// Output templates
+			// Output templates.
 			bbp_get_template_part( 'form', 'reply' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -521,13 +522,13 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_topic_tags() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_topic_tags' );
 
-			// Output the topic tags
+			// Output the topic tags.
 			wp_tag_cloud(
 				array(
 					'smallest' => 9,
@@ -537,7 +538,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 				)
 			);
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -554,29 +555,29 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_topics_of_tag( $attr, $content = '' ) {
 
-			// Sanity check required info
+			// Sanity check required info.
 			if ( ! empty( $content ) || ( empty( $attr['id'] ) || ! is_numeric( $attr['id'] ) ) ) {
 				return $content;
 			}
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Filter the query
+			// Filter the query.
 			if ( ! bbp_is_topic_tag() ) {
 				add_filter( 'bbp_before_has_topics_parse_args', array( $this, 'display_topics_of_tag_query' ) );
 			}
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_topic_tag' );
 
-			// Set passed attribute to $ag_id for clarity
+			// Set passed attribute to $ag_id for clarity.
 			bbpress()->current_topic_tag_id = $tag_id = $attr['id'];
 
-			// Output template
+			// Output template.
 			bbp_get_template_part( 'content', 'archive-topic' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -593,16 +594,16 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_topic_tag_form() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_topic_tag_edit' );
 
-			// Output template
+			// Output template.
 			bbp_get_template_part( 'content', 'topic-tag-edit' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -622,30 +623,30 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_view( $attr, $content = '' ) {
 
-			// Sanity check required info
+			// Sanity check required info.
 			if ( empty( $attr['id'] ) ) {
 				return $content;
 			}
 
-			// Set passed attribute to $view_id for clarity
+			// Set passed attribute to $view_id for clarity.
 			$view_id = $attr['id'];
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_single_view' );
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Set the current view ID
+			// Set the current view ID.
 			bbpress()->current_view_id = $view_id;
 
-			// Load the view
+			// Load the view.
 			bbp_view_query( $view_id );
 
-			// Output template
+			// Output template.
 			bbp_get_template_part( 'content', 'single-view' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -661,18 +662,18 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_search_form() {
 
-			// Bail if search is disabled
+			// Bail if search is disabled.
 			if ( ! bbp_allow_search() ) {
 				return;
 			}
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start( 'bbp_search_form' );
 
-			// Output templates
+			// Output templates.
 			bbp_get_template_part( 'form', 'search' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -689,37 +690,42 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_search( $attr, $content = '' ) {
 
-			// Sanity check required info
+			// Sanity check required info.
 			if ( ! empty( $content ) ) {
 				return $content;
 			}
 
-			// Bail if search is disabled
+			// Bail if search is disabled.
 			if ( ! bbp_allow_search() ) {
 				return;
 			}
 
-			// Trim search attribute if it's set
+			// Trim search attribute if it's set.
 			if ( isset( $attr['search'] ) ) {
 				$attr['search'] = trim( $attr['search'] );
 			}
 
 			// Set passed attribute to $search_terms for clarity
-			$search_terms = empty( $attr['search'] ) ? bbp_get_search_terms() : $attr['search'];
+			$search_terms = empty( $attr['search'] )
+				? bbp_get_search_terms()
+				: $attr['search'];
 
-			// Unset globals
+			// Get the rewrite ID (one time, to avoid repeated calls)
+			$rewrite_id = bbp_get_search_rewrite_id();
+
+			// Unset globals.
 			$this->unset_globals();
 
 			// Set terms for query
-			set_query_var( bbp_get_search_rewrite_id(), $search_terms );
+			set_query_var( $rewrite_id, $search_terms );
 
 			// Start output buffer
-			$this->start( bbp_get_search_rewrite_id() );
+			$this->start( $rewrite_id );
 
-			// Output template
+			// Output template.
 			bbp_get_template_part( 'content', 'search' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -734,16 +740,16 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_stats() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start();
 
-			// Output statistics
+			// Output statistics.
 			bbp_get_template_part( 'content', 'statistics' );
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 
@@ -756,16 +762,16 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 		 */
 		public function display_breadcrumb() {
 
-			// Unset globals
+			// Unset globals.
 			$this->unset_globals();
 
-			// Start output buffer
+			// Start output buffer.
 			$this->start();
 
-			// Output breadcrumb
+			// Output breadcrumb.
 			bbp_breadcrumb();
 
-			// Return contents of output buffer
+			// Return contents of output buffer.
 			return $this->end();
 		}
 

@@ -179,11 +179,12 @@ function bp_nouveau_ajax_joinleave_group() {
 				$group->is_member = '1';
 
 				$response = array(
-					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
-					'type'     => 'success',
-					'is_user'  => bp_is_user(),
-					'contents' => bp_get_group_join_button( $group ),
-					'is_group' => bp_is_group(),
+					'feedback'  => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite accepted.', 'buddyboss' ) ),
+					'type'      => 'success',
+					'is_user'   => bp_is_user(),
+					'contents'  => bp_get_group_join_button( $group ),
+					'is_group'  => bp_is_group(),
+					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
 			break;
@@ -199,6 +200,7 @@ function bp_nouveau_ajax_joinleave_group() {
 					'feedback' => sprintf( '<div class="bp-feedback success"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'Group invite rejected', 'buddyboss' ) ),
 					'type'     => 'success',
 					'is_user'  => bp_is_user(),
+					'group_url' => bp_get_group_permalink( $group ),
 				);
 			}
 			break;
@@ -244,11 +246,12 @@ function bp_nouveau_ajax_joinleave_group() {
                 // Request is pending
                 $group->is_pending = '1';
 
-                $response = array(
-                    'contents' => bp_get_group_join_button( $group ),
-                    'is_group' => bp_is_group(),
-                    'type'     => 'success',
-                );
+	            $response = array(
+		            'contents'  => bp_get_group_join_button( $group ),
+		            'is_group'  => bp_is_group(),
+		            'type'      => 'success',
+		            'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+	            );
             }
             break;
 
@@ -615,7 +618,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="load-more">
 			<div class="center">
-				<i class="dashicons dashicons-update animate-spin"></i>
+				<i class="bb-icons bb-icon-loader animate-spin"></i>
 			</div>
 		</li>
 		<?php
@@ -925,7 +928,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			?>
 			<li class="load-more">
 				<div class="center">
-					<i class="dashicons dashicons-update animate-spin"></i>
+					<i class="bb-icon-loader animate-spin"></i>
 				</div>
 			</li>
 			<?php
@@ -1014,6 +1017,14 @@ function bp_nouveau_ajax_groups_send_message() {
 
 	if ( isset( $_POST['media'] ) && '' !== $_POST['media'] ) {
 		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST['media'] ), true );
+	}
+
+	if ( isset( $_POST['document'] ) && '' !== $_POST['document'] ) {
+		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
+	}
+
+	if ( '' === $_POST['content'] && ( ! empty( $_POST['document'] ) || !empty( $_POST['media'] ) ) ) {
+		$_POST['content'] = '&nbsp;';
 	}
 
 	// Get Members list if "All Group Members" selected.

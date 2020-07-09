@@ -99,6 +99,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forums
 	 * @apiDescription Retrieve forums
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -272,6 +273,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forums
 	 * @apiDescription Retrieve a single forum
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the forum.
 	 */
 	public function get_item( $request ) {
@@ -379,6 +381,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forums
 	 * @apiDescription Subscribe/Unsubscribe forum for the user.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the forum.
 	 */
 	public function update_item( $request ) {
@@ -1119,7 +1122,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			} else {
 				$topic_id = bbp_get_forum_last_topic_id( $forum_id );
 				if ( ! empty( $topic_id ) ) {
-					$last_active = bbp_get_topic_last_active_time( $topic_id );
+					$last_active = $this->bbp_rest_get_topic_last_active_time( $topic_id );
 				} else {
 					$last_active = get_post_field( 'post_date', $forum_id );
 				}
@@ -1127,6 +1130,30 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 		}
 
 		return get_gmt_from_date( $last_active );
+	}
+
+	/**
+	 * Last active time for Topic.
+	 *
+	 * @param int $topic_id Topic ID.
+	 *
+	 * @return mixed|void
+	 */
+	public function bbp_rest_get_topic_last_active_time( $topic_id = 0 ) {
+		$topic_id = bbp_get_topic_id( $topic_id );
+
+		// Try to get the most accurate freshness time possible.
+		$last_active = get_post_meta( $topic_id, '_bbp_last_active_time', true );
+		if ( empty( $last_active ) ) {
+			$reply_id = bbp_get_topic_last_reply_id( $topic_id );
+			if ( ! empty( $reply_id ) ) {
+				$last_active = get_post_field( 'post_date', $reply_id );
+			} else {
+				$last_active = get_post_field( 'post_date', $topic_id );
+			}
+		}
+
+		return apply_filters( 'bbp_rest_get_topic_last_active_time', get_gmt_from_date( $last_active ), $topic_id );
 	}
 
 	/**

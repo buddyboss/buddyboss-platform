@@ -165,6 +165,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Signups
 	 * @apiDescription Retrieve Signup Form Fields.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  WithoutLoggedInUser
 	 */
 	public function signup_form_items( $request ) {
 		$fields = array();
@@ -185,6 +186,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					'type'        => $field['type'],
 					'required'    => $field['required'],
 					'options'     => '',
+					'member_type' => '',
 				);
 			}
 		}
@@ -244,6 +246,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
+							'member_type' => bp_xprofile_get_meta( $field['id'], 'field', 'member_type', false ),
 						);
 					}
 				}
@@ -569,6 +572,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Signups
 	 * @apiDescription Create signup
 	 * @apiVersion     1.0.0
+	 * @apiPermission  WithoutLoggedInUser
 	 * @apiParam {String} signup_email New user email address.
 	 * @apiParam {String} [signup_email_confirm] New user confirm email address.
 	 * @apiParam {String} signup_password New user account password.

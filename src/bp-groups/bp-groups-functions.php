@@ -346,12 +346,12 @@ function groups_edit_base_group_details( $args = array() ) {
  * @param int|bool    $parent_id Parent group ID.
  * @param string|bool $media_status Optional. Who is allowed to manage media
  *                                   to the group. 'members', 'mods', or 'admins'.
- * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support
+ * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support.
  *                                   to the group. 'members', 'mods', or 'admins'.
  *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $album_status = false, $message_status = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $document_status = false, $album_status = false, $message_status = false ) {
 
 	$group               = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -389,6 +389,11 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the media status.
 	if ( $media_status ) {
 		groups_update_groupmeta( $group->id, 'media_status', $media_status );
+	}
+
+	// Set the document status.
+	if ( $document_status ) {
+		groups_update_groupmeta( $group->id, 'document_status', $document_status );
 	}
 
 	// Set the album status.
@@ -1621,6 +1626,7 @@ function groups_post_update( $args = '' ) {
 			'content'    => false,
 			'user_id'    => bp_loggedin_user_id(),
 			'group_id'   => 0,
+			'privacy'    => 'public',
 			'error_type' => 'bool',
 		),
 		'groups_post_update'
@@ -1674,6 +1680,7 @@ function groups_post_update( $args = '' ) {
 			'content'    => $content_filtered,
 			'type'       => 'activity_update',
 			'item_id'    => $group_id,
+			'privacy'    => $privacy,
 			'error_type' => $error_type,
 		)
 	);
@@ -3277,12 +3284,21 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group->id );
+	//Check invitation is exists or not
+	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
 
+	if ( empty( $invite_id ) ) {
+		return false;
+	}
+	//Get invitation by id
+	$member 	= new BP_Invitation( $invite_id );
+
+	//$member = new BP_Groups_Member( $user_id, $group->id );
 	$inviter = array(
 		'id'   => $member->inviter_id,
 		'name' => bp_core_get_user_displayname( $member->inviter_id ),
 		'url'  => bp_core_get_user_domain( $member->inviter_id ),
+		'date_modified'  => $member->date_modified,
 	);
 
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
@@ -3959,6 +3975,86 @@ function bp_group_directory_page_content() {
 add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
 
 /**
+ * Check whether a user is allowed to manage albums in a given group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_folders( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status   = bp_group_get_document_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' === $status ) {
+		$is_allowed = true;
+	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' === $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
+ * Check whether a user is allowed to manage document in a given group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_document( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status   = bp_group_get_document_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod   = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' === $status ) {
+		$is_allowed = true;
+	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} elseif ( 'admins' === $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
  * Check whether a user is allowed to manage messages in a given group.
  *
  * @since BuddyBoss 1.2.9
@@ -3998,6 +4094,59 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+/**
+ * Mentions results for groups.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_groups_prime_mentions_results() {
+
+	// Stop here if user is not logged in.
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Bail if single group page.
+	if ( ! bp_is_group() ) {
+		return;
+	}
+
+	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id(), 'per_page' => 10, 'page' => 1 ) );
+	$results = array();
+
+	if ( ! empty( $members['members'] ) ) {
+		foreach ( $members['members'] as $user ) {
+			$result                = new stdClass();
+			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
+			$result->user_nicename = $user->user_nicename;
+			$result->image         = bp_core_fetch_avatar(
+					array(
+							'html'    => false,
+							'item_id' => $user->ID,
+					)
+			);
+			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			} else {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			}
+			$result->user_id = $user->ID;
+
+			$results[] = $result;
+		}
+
+		wp_localize_script(
+			'bp-mentions',
+			'BP_Suggestions',
+			array(
+				'members' => $results,
+			)
+		);
+	}
+}
+add_action( 'bp_activity_mentions_prime_results', 'bp_groups_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bp_groups_prime_mentions_results' );
 
 /**
  * Migrate invitations and requests from pre-5.0 group_members table to invitations table.

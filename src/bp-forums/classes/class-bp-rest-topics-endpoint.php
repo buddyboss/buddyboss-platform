@@ -107,6 +107,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forum Topics
 	 * @apiDescription Retrieve topics
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -141,7 +142,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = bbp_sanitize_search_request( $request['search'] );
+			$args['s'] = $this->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -493,6 +494,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forum Topics
 	 * @apiDescription Retrieve a single topic.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the topic.
 	 */
 	public function get_item( $request ) {
@@ -1855,7 +1857,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'total_reply_count'     => ( bbp_show_lead_topic() ? bbp_get_topic_reply_count( $topic->ID ) : bbp_get_topic_post_count( $topic->ID ) ),
 			'last_reply_id'         => bbp_get_topic_last_reply_id( $topic->ID ),
 			'last_active_author'    => bbp_get_topic_last_active_id( $topic->ID ),
-			'last_active_time'      => bbp_get_topic_last_active_time( $topic->ID ),
+			'last_active_time'      => $this->forum_endpoint->bbp_rest_get_topic_last_active_time( $topic->ID ),
 			'is_closed'             => bbp_is_topic_closed( $topic->ID ),
 			'voice_count'           => (int) get_post_meta( $topic->ID, '_bbp_voice_count', true ),
 			'forum_id'              => (int) bbp_get_topic_forum_id( $topic->ID ),
@@ -2410,6 +2412,16 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			),
 		);
 
+		$form_id = (int) bbp_get_topic_forum_id( $post->ID );
+
+		if ( ! empty( $form_id ) ) {
+			$form_base      = sprintf( '/%s/%s/', $this->forum_endpoint->namespace, $this->forum_endpoint->rest_base );
+			$links['forum'] = array(
+				'href'       => rest_url( $form_base . $form_id ),
+				'embeddable' => true,
+			);
+		}
+
 		/**
 		 * Filter links prepared for the REST response.
 		 *
@@ -2641,5 +2653,29 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		$super = array();
 
 		return $super;
+	}
+
+	/**
+	 * Sanitize a query argument used to pass some search terms.
+	 * Accepts a single parameter to be used for forums, topics, or replies.
+	 * - from bbp_sanitize_search_request();
+	 *
+	 * @since 2.6.0 bbPress (r6903)
+	 *
+	 * @param string $terms Search Term.
+	 *
+	 * @return mixed
+	 */
+	public function bbp_sanitize_search_request( $terms ) {
+		// Maybe implode if an array.
+		if ( is_array( $terms ) ) {
+			$terms = implode( ' ', $terms );
+		}
+
+		// Sanitize.
+		$retval = sanitize_title( trim( $terms ) );
+
+		// Filter & return.
+		return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
 	}
 }
