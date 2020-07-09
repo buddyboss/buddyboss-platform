@@ -310,7 +310,7 @@ class BP_Email_Tokens {
 							'item_id'    => $group_id,
 						)
 					);
-					echo "<tr><td colspan='100%'><img src='{$cover_image}'></td></tr>";
+					echo "<tr><td colspan='100%'><img src='{$cover_image}' alt='' /></td></tr>";
 				}
 				?>
 
@@ -380,7 +380,7 @@ class BP_Email_Tokens {
 											);
 
 											if ( ! empty( $avatar ) ) {
-												$output .= sprintf( "<img src='%s' alt='%s'>", $avatar, bp_core_get_user_displayname( $user_id ) );
+												$output .= sprintf( "<img src='%s' alt='%s' />", $avatar, bp_core_get_user_displayname( $user_id ) );
 											}
 										}
 										$output .= '</span>';
@@ -480,7 +480,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" border="0" />
+									<img alt="" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" border="0" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
@@ -600,7 +600,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+									<img alt="" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
@@ -750,7 +750,7 @@ class BP_Email_Tokens {
 												)
 											);
 											?>
-											<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+											<img alt="" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 										</a>
 									</td>
 									<td width="88%" style="vertical-align: middle;">
@@ -801,7 +801,7 @@ class BP_Email_Tokens {
 																?>
 																<div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
 																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-																		<img src="<?php echo esc_attr( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+																		<img src="<?php echo esc_attr( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>" />
 																	</a>
 																</div>
 																<?php
@@ -1206,7 +1206,7 @@ class BP_Email_Tokens {
 										)
 									);
 									?>
-									<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
+									<img alt="" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
 								</a>
 							</td>
 							<td width="88%" style="vertical-align: middle;">
