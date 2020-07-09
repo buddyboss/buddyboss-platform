@@ -52,6 +52,12 @@ add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_dat
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
+add_filter( 'bp_repair_list', 'bp_media_add_admin_repair_items' );
+
+// Download Media.
+add_action( 'init', 'bp_media_download_url_file' );
+
+add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
 /**
  * Add media theatre template for activity pages
@@ -84,13 +90,34 @@ function bp_media_activity_entry() {
 		'include'  => $media_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+		'user_id'  => false,
 	);
 
-	$args['privacy'] = bp_media_query_privacy( bp_get_activity_user_id(), 0, bp_get_activity_object_name() );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
+		if ( bp_is_group_media_support_enabled() ) {
+			$args['privacy'] = array( 'grouponly' );
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-media';
+		}
+	} else {
+		$args['privacy'] = bp_media_query_privacy( bp_get_activity_user_id(), 0, bp_get_activity_object_name() );
+		if ( ! bp_is_profile_media_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_albums_support_enabled() ) {
+			$args['album_id'] = 'existing-media';
+		}
+	}
+
 	$is_forum_activity = false;
 	if (
 		bp_is_active( 'forums' )
 		&& in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		&& bp_is_forums_media_support_enabled()
 	) {
 		$is_forum_activity = true;
 		$args['privacy'][] = 'forums';
@@ -134,12 +161,31 @@ function bp_media_activity_append_media( $content, $activity ) {
 			'sort'     => 'ASC',
 		);
 
-		$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			if ( bp_is_group_media_support_enabled() ) {
+				$args['privacy'] = array( 'grouponly' );
+				if ( ! bp_is_group_albums_support_enabled() ) {
+					$args['album_id'] = 'existing-media';
+				}
+			} else {
+				$args['privacy']  = array( '0' );
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+			if ( ! bp_is_profile_media_support_enabled() ) {
+				$args['user_id'] = 'null';
+			}
+			if ( ! bp_is_profile_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		}
 
 		$is_forum_activity = false;
 		if (
 			bp_is_active( 'forums' )
 			&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+			&& bp_is_forums_media_support_enabled()
 		) {
 			$is_forum_activity = true;
 			$args['privacy'][] = 'forums';
@@ -185,9 +231,38 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		'include'  => $media_ids,
 		'order_by' => 'menu_order',
 		'sort'     => 'ASC',
+        'user_id'  => false,
 	);
 
-	$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+		if ( bp_is_group_media_support_enabled() ) {
+			$args['privacy'] = array( 'grouponly' );
+			if ( ! bp_is_group_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy']  = array( '0' );
+			$args['album_id'] = 'existing-media';
+		}
+	} else {
+		$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+		if ( ! bp_is_profile_media_support_enabled() ) {
+			$args['user_id'] = 'null';
+		}
+		if ( ! bp_is_profile_albums_support_enabled() ) {
+			$args['album_id'] = 'existing-media';
+		}
+	}
+
+	$is_forum_activity = false;
+	if (
+		bp_is_active( 'forums' )
+		&& in_array( $activity->type, array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ), true )
+		&& bp_is_forums_media_support_enabled()
+	) {
+		$is_forum_activity = true;
+		$args['privacy'][] = 'forums';
+	}
 
 	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
@@ -286,7 +361,7 @@ function bp_media_groups_activity_update_media_meta( $content, $user_id, $group_
  */
 function bp_media_activity_comments_update_media_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
-	$bp_new_activity_comment = true;
+	$bp_new_activity_comment = $comment_id;
 	bp_media_update_activity_media_meta( false, false, $comment_id );
 }
 
@@ -826,18 +901,13 @@ function bp_media_activity_save_gif_data( $activity ) {
 }
 
 function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
-
+	
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-media-import',
-					'tab'  => 'bp-media-import',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-media-import',
+			'tab'  => 'bp-media-import',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Import Media', 'buddyboss' ),
 		'slug' => 'bp-media-import',
 	);
@@ -1082,12 +1152,13 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		$media_ids = explode( ',', $media_ids );
 
 		foreach ( $media_ids as $media_id ) {
-			$media          = new BP_Media( $media_id );
+			$media = new BP_Media( $media_id );
 			// Do not update the privacy if the media is added to forum.
-			if ( 'forums' !== $media->privacy ) {
+			if ( ! in_array( $media->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
 				$media->privacy = $activity->privacy;
+				$media->save();
 			}
-			$media->save();
+
 		}
 	}
 }
@@ -1214,8 +1285,8 @@ function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) 
 		'relation' => 'AND',
 		array(
 				'column'  => 'privacy',
-				'value'   => array( 'media' ),
-				'compare' => 'IN',
+				'value'   => 'media',
+				'compare' => '=',
 		),
 		array(
 				'column' => 'hide_sitewide',
@@ -1226,3 +1297,615 @@ function bp_activity_filter_media_scope( $retval = array(), $filter = array() ) 
 	return $retval;
 }
 add_filter( 'bp_activity_set_media_scope_args', 'bp_activity_filter_media_scope', 10, 2 );
+
+/**
+ * Add media repair list item.
+ *
+ * @param $repair_list
+ *
+ * @since BuddyBoss 1.4.4
+ * @return array Repair list items.
+ */
+function bp_media_add_admin_repair_items( $repair_list ) {
+	if ( bp_is_active( 'activity' ) ) {
+		$repair_list[] = array(
+				'bp-repair-media',
+				__( 'Repair media on the site.', 'buddyboss' ),
+				'bp_media_admin_repair_media',
+		);
+		$repair_list[] = array(
+				'bp-media-forum-privacy-repair',
+				__( 'Repair forum media privacy', 'buddyboss' ),
+				'bp_media_forum_privacy_repair',
+		);
+	}
+	return $repair_list;
+}
+
+/**
+ * Repair BuddyBoss media.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_media_admin_repair_media() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+
+	$media_query = "SELECT id, activity_id FROM {$bp->media->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
+	$medias 	= $wpdb->get_results( $media_query );
+
+	if ( ! empty( $medias ) ) {
+		foreach ( $medias as $media ) {
+			if ( ! empty( $media->id ) && ! empty( $media->activity_id ) ) {
+				$activity = new BP_Activity_Activity( $media->activity_id );
+				if ( ! empty( $activity->id ) ) {
+					if ( 'activity_comment' === $activity->type ) {
+						$activity = new BP_Activity_Activity( $activity->item_id );
+					}
+					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+						$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . " ";
+						$wpdb->query( $update_query );
+					}
+					if ( 'media' === $activity->privacy ) {
+						if ( ! empty( $activity->secondary_item_id ) ) {
+							$media_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+							if ( ! empty( $media_activity->id ) ) {
+								if ( 'activity_comment' === $media_activity->type ) {
+									$media_activity = new BP_Activity_Activity( $media_activity->item_id );
+								}
+								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $media_activity->component ) {
+									$update_query = "UPDATE {$bp->media->table_name} SET group_id=" . $media_activity->item_id . ", privacy='grouponly' WHERE id=" . $media->id . " ";
+									$wpdb->query( $update_query );
+									$activity->item_id   = $media_activity->item_id;
+									$activity->component = buddypress()->groups->id;
+								}
+							}
+						}
+						$activity->hide_sitewide = true;
+						$activity->save();
+					}
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		return array(
+				'status'  => 1,
+				'message' => __( 'Media update complete!', 'buddyboss' ),
+		);
+	}
+}
+
+/**
+ * Repair BuddyBoss media forums privacy.
+ *
+ * @since BuddyBoss 1.4.2
+ */
+function bp_media_forum_privacy_repair() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+
+	$squery  = "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
+	$records = $wpdb->get_col( $squery );
+	if ( ! empty( $records ) ) {
+		foreach ( $records as $record ) {
+			if ( ! empty( $record ) ) {
+				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
+				if ( $media_ids ) {
+					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ")";
+					$wpdb->query( $update_query );
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
+
+		return array(
+				'status'  => 1,
+				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
+	}
+}
+
+
+/**
+ * Set up media arguments for use with the 'public' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_media_filter_public_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+		$privacy[] = 'loggedin';
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column' => 'privacy',
+			'compare' => 'IN',
+			'value'  => $privacy,
+		),
+	);
+
+	if ( ! bp_is_profile_media_support_enabled() && ! bp_is_profile_albums_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		$args[] = array(
+			'column'  => 'title',
+			'compare' => 'LIKE',
+			'value'   => $filter['search_terms'],
+		);
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		$args
+	);
+
+	return $retval;
+}
+add_filter( 'bp_media_set_public_scope_args', 'bp_media_filter_public_scope', 10, 2 );
+
+/**
+ * Force download - this is the default method.
+ *
+ * @param string $file_path File path.
+ * @param string $filename  File name.
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_download_file_force( $file_path, $filename ) {
+	$parsed_file_path  = bp_media_parse_file_path( $file_path );
+	$download_range   = bp_media_get_download_range( @filesize( $parsed_file_path['file_path'] ) ); // @codingStandardsIgnoreLine.
+
+	bp_media_download_headers( $parsed_file_path['file_path'], $filename, $download_range );
+
+	$start  = isset( $download_range['start'] ) ? $download_range['start'] : 0;
+	$length = isset( $download_range['length'] ) ? $download_range['length'] : 0;
+	if ( ! bp_media_readfile_chunked( $parsed_file_path['file_path'], $start, $length ) ) {
+		if ( $parsed_file_path['remote_file'] ) {
+			bp_media_download_file_redirect( $file_path );
+		} else {
+			bp_media_download_error( __( 'File not found', 'buddyboss' ) );
+		}
+	}
+
+	exit;
+}
+
+/**
+ * Die with an error message if the download fails.
+ *
+ * @param string  $message Error message.
+ * @param string  $title   Error title.
+ * @param integer $status  Error status.
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_download_error( $message, $title = '', $status = 404 ) {
+	if ( ! strstr( $message, '<a ' ) ) {
+		$message .= ' <a href="' . esc_url( site_url() ) . '" class="bp-media-forward">' . esc_html__( 'Go to media', 'buddyboss' ) . '</a>';
+	}
+	wp_die( $message, $title, array( 'response' => $status ) ); // WPCS: XSS ok.
+}
+
+/**
+ * Redirect to a file to start the download.
+ *
+ * @param string $file_path File path.
+ * @param string $filename  File name.
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_download_file_redirect( $file_path, $filename = '' ) {
+	header( 'Location: ' . $file_path );
+	exit;
+}
+
+/**
+ * Read file chunked.
+ *
+ * Reads file in chunks so big downloads are possible without changing PHP.INI - http://codeigniter.com/wiki/Download_helper_for_large_files/.
+ *
+ * @param  string $file   File.
+ * @param  int    $start  Byte offset/position of the beginning from which to read from the file.
+ * @param  int    $length Length of the chunk to be read from the file in bytes, 0 means full file.
+ * @return bool Success or fail
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_readfile_chunked( $file, $start = 0, $length = 0 ) {
+	if ( ! defined( 'BP_MEDIA_CHUNK_SIZE' ) ) {
+		define( 'BP_MEDIA_CHUNK_SIZE', 1024 * 1024 );
+	}
+	$handle = @fopen( $file, 'r' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+
+	if ( false === $handle ) {
+		return false;
+	}
+
+	if ( ! $length ) {
+		$length = @filesize( $file ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+	}
+
+	$read_length = (int) BP_MEDIA_CHUNK_SIZE;
+
+	if ( $length ) {
+		$end = $start + $length - 1;
+
+		@fseek( $handle, $start ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+
+		while ( ! @feof( $handle ) && $p <= $end ) { // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			// Don't run past the end of file.
+			if ( $p + $read_length > $end ) {
+				$read_length = $end - $p + 1;
+			}
+
+			echo @fread( $handle, $read_length ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.XSS.EscapeOutput.OutputNotEscaped, WordPress.WP.AlternativeFunctions.file_system_read_fread
+			$p = @ftell( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+
+			if ( ob_get_length() ) {
+				ob_flush();
+				flush();
+			}
+		}
+	} else {
+		while ( ! @feof( $handle ) ) { // @codingStandardsIgnoreLine.
+			echo @fread( $handle, $read_length ); // @codingStandardsIgnoreLine.
+			if ( ob_get_length() ) {
+				ob_flush();
+				flush();
+			}
+		}
+	}
+
+	return @fclose( $handle ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fclose
+}
+
+/**
+ * Set headers for the download.
+ *
+ * @param string $file_path      File path.
+ * @param string $filename       File name.
+ * @param array  $download_range Array containing info about range download request (see {@see get_download_range} for structure).
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_download_headers( $file_path, $filename, $download_range = array() ) {
+	bp_media_check_server_config();
+	bp_media_clean_buffers();
+	bp_media_nocache_headers();
+
+	header( 'X-Robots-Tag: noindex, nofollow', true );
+	header( 'Content-Type: ' . bp_media_get_download_content_type( $file_path ) );
+	header( 'Content-Description: File Transfer' );
+	header( 'Content-Disposition: attachment; filename="' . $filename . '";' );
+	header( 'Content-Transfer-Encoding: binary' );
+
+	$file_size = @filesize( $file_path ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+	if ( ! $file_size ) {
+		return;
+	}
+
+	if ( isset( $download_range['is_range_request'] ) && true === $download_range['is_range_request'] ) {
+		if ( false === $download_range['is_range_valid'] ) {
+			header( 'HTTP/1.1 416 Requested Range Not Satisfiable' );
+			header( 'Content-Range: bytes 0-' . ( $file_size - 1 ) . '/' . $file_size );
+			exit;
+		}
+
+		$start  = $download_range['start'];
+		$end    = $download_range['start'] + $download_range['length'] - 1;
+		$length = $download_range['length'];
+
+		header( 'HTTP/1.1 206 Partial Content' );
+		header( "Accept-Ranges: 0-$file_size" );
+		header( "Content-Range: bytes $start-$end/$file_size" );
+		header( "Content-Length: $length" );
+	} else {
+		header( 'Content-Length: ' . $file_size );
+	}
+}
+
+/**
+ * Wrapper for set_time_limit to see if it is enabled.
+ *
+ * @since BuddyBoss 1.4.1
+ * @param int $limit Time limit.
+ */
+function bp_media_set_time_limit( $limit = 0 ) {
+	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+		@set_time_limit( $limit ); // @codingStandardsIgnoreLine
+	}
+}
+
+/**
+ * Check and set certain server config variables to ensure downloads work as intended.
+ *
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_check_server_config() {
+	bp_media_set_time_limit( 0 );
+	if ( function_exists( 'apache_setenv' ) ) {
+		@apache_setenv( 'no-gzip', 1 ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_apache_setenv
+	}
+	@ini_set( 'zlib.output_compression', 'Off' ); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
+	@session_write_close(); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged, WordPress.VIP.SessionFunctionsUsage.session_session_write_close
+}
+
+/**
+ * Clean all output buffers.
+ *
+ * Can prevent errors, for example: transfer closed with 3 bytes remaining to read.
+ *
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_clean_buffers() {
+	if ( ob_get_level() ) {
+		$levels = ob_get_level();
+		for ( $i = 0; $i < $levels; $i++ ) {
+			@ob_end_clean(); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		}
+	} else {
+		@ob_end_clean(); // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+	}
+}
+
+/**
+ * Set constants to prevent caching by some plugins.
+ *
+ * @param  mixed $return Value to return. Previously hooked into a filter.
+ * @return mixed
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_set_nocache_constants( $return = true ) {
+	bp_media_maybe_define_constant( 'DONOTCACHEPAGE', true );
+	bp_media_maybe_define_constant( 'DONOTCACHEOBJECT', true );
+	bp_media_maybe_define_constant( 'DONOTCACHEDB', true );
+	return $return;
+}
+
+/**
+ * Define a constant if it is not already defined.
+ *
+ * @since BuddyBoss 1.4.1
+ * @param string $name  Constant name.
+ * @param mixed  $value Value.
+ */
+function bp_media_maybe_define_constant( $name, $value ) {
+	if ( ! defined( $name ) ) {
+		define( $name, $value );
+	}
+}
+
+/**
+ * Wrapper for nocache_headers which also disables page caching.
+ *
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_nocache_headers() {
+	bp_media_set_nocache_constants();
+	nocache_headers();
+}
+
+/**
+ * Get content type of a download.
+ *
+ * @param  string $file_path File path.
+ * @return string
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_get_download_content_type( $file_path ) {
+	$file_extension = strtolower( substr( strrchr( $file_path, '.' ), 1 ) );
+	$ctype          = 'application/force-download';
+
+	foreach ( get_allowed_mime_types() as $mime => $type ) {
+		$mimes = explode( '|', $mime );
+		if ( in_array( $file_extension, $mimes, true ) ) {
+			$ctype = $type;
+			break;
+		}
+	}
+
+	return $ctype;
+}
+
+/**
+ * Parse the HTTP_RANGE request from iOS devices.
+ * Does not support multi-range requests.
+ *
+ * @param int $file_size Size of file in bytes.
+ * @return array {
+ *     Information about range download request: beginning and length of
+ *     file chunk, whether the range is valid/supported and whether the request is a range request.
+ *
+ *     @type int  $start            Byte offset of the beginning of the range. Default 0.
+ *     @type int  $length           Length of the requested file chunk in bytes. Optional.
+ *     @type bool $is_range_valid   Whether the requested range is a valid and supported range.
+ *     @type bool $is_range_request Whether the request is a range request.
+ * }
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_get_download_range( $file_size ) {
+	$start          = 0;
+	$download_range = array(
+			'start'            => $start,
+			'is_range_valid'   => false,
+			'is_range_request' => false,
+	);
+
+	if ( ! $file_size ) {
+		return $download_range;
+	}
+
+	$end                      = $file_size - 1;
+	$download_range['length'] = $file_size;
+
+	if ( isset( $_SERVER['HTTP_RANGE'] ) ) { // @codingStandardsIgnoreLine.
+		$http_range                         = sanitize_text_field( wp_unslash( $_SERVER['HTTP_RANGE'] ) ); // WPCS: input var ok.
+		$download_range['is_range_request'] = true;
+
+		$c_start = $start;
+		$c_end   = $end;
+		// Extract the range string.
+		list( , $range ) = explode( '=', $http_range, 2 );
+		// Make sure the client hasn't sent us a multibyte range.
+		if ( strpos( $range, ',' ) !== false ) {
+			return $download_range;
+		}
+
+		/*
+		 * If the range starts with an '-' we start from the beginning.
+		 * If not, we forward the file pointer
+		 * and make sure to get the end byte if specified.
+		 */
+		if ( '-' === $range[0] ) {
+			// The n-number of the last bytes is requested.
+			$c_start = $file_size - substr( $range, 1 );
+		} else {
+			$range   = explode( '-', $range );
+			$c_start = ( isset( $range[0] ) && is_numeric( $range[0] ) ) ? (int) $range[0] : 0;
+			$c_end   = ( isset( $range[1] ) && is_numeric( $range[1] ) ) ? (int) $range[1] : $file_size;
+		}
+
+		/*
+		 * Check the range and make sure it's treated according to the specs: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html.
+		 * End bytes can not be larger than $end.
+		 */
+		$c_end = ( $c_end > $end ) ? $end : $c_end;
+		// Validate the requested range and return an error if it's not correct.
+		if ( $c_start > $c_end || $c_start > $file_size - 1 || $c_end >= $file_size ) {
+			return $download_range;
+		}
+		$start  = $c_start;
+		$end    = $c_end;
+		$length = $end - $start + 1;
+
+		$download_range['start']          = $start;
+		$download_range['length']         = $length;
+		$download_range['is_range_valid'] = true;
+	}
+	return $download_range;
+}
+
+/**
+ * Parse file path and see if its remote or local.
+ *
+ * @param  string $file_path File path.
+ * @return array
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_parse_file_path( $file_path ) {
+	$wp_uploads     = wp_upload_dir();
+	$wp_uploads_dir = $wp_uploads['basedir'];
+	$wp_uploads_url = $wp_uploads['baseurl'];
+
+	/**
+	 * Replace uploads dir, site url etc with absolute counterparts if we can.
+	 * Note the str_replace on site_url is on purpose, so if https is forced
+	 * via filters we can still do the string replacement on a HTTP file.
+	 */
+	$replacements = array(
+			$wp_uploads_url                  => $wp_uploads_dir,
+			network_site_url( '/', 'https' ) => ABSPATH,
+			str_replace( 'https:', 'http:', network_site_url( '/', 'http' ) ) => ABSPATH,
+			site_url( '/', 'https' )         => ABSPATH,
+			str_replace( 'https:', 'http:', site_url( '/', 'http' ) ) => ABSPATH,
+	);
+
+	$file_path        = str_replace( array_keys( $replacements ), array_values( $replacements ), $file_path );
+	$parsed_file_path = wp_parse_url( $file_path );
+	$remote_file      = true;
+
+	// Paths that begin with '//' are always remote URLs.
+	if ( '//' === substr( $file_path, 0, 2 ) ) {
+		return array(
+				'remote_file' => true,
+				'file_path'   => is_ssl() ? 'https:' . $file_path : 'http:' . $file_path,
+		);
+	}
+
+	// See if path needs an abspath prepended to work.
+	if ( file_exists( ABSPATH . $file_path ) ) {
+		$remote_file = false;
+		$file_path   = ABSPATH . $file_path;
+
+	} elseif ( '/wp-content' === substr( $file_path, 0, 11 ) ) {
+		$remote_file = false;
+		$file_path   = realpath( WP_CONTENT_DIR . substr( $file_path, 11 ) );
+
+		// Check if we have an absolute path.
+	} elseif ( ( ! isset( $parsed_file_path['scheme'] ) || ! in_array( $parsed_file_path['scheme'], array( 'http', 'https', 'ftp' ), true ) ) && isset( $parsed_file_path['path'] ) && file_exists( $parsed_file_path['path'] ) ) {
+		$remote_file = false;
+		$file_path   = $parsed_file_path['path'];
+	}
+
+	return array(
+			'remote_file' => $remote_file,
+			'file_path'   => $file_path,
+	);
+}
+
+/**
+ * Added text on the email when replied on the activity.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param BP_Activity_Activity $activity Activity Object.
+ */
+function bp_media_activity_after_email_content( $activity ) {
+	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) ) {
+		$media_ids = explode( ',', $media_ids );
+		$content   = sprintf(
+		    /* translator: 1. Activity link, 2. Activity media count */
+			__( '<a href="%1$s" target="_blank">%2$s Media Uploaded.</a>', 'buddyboss' ),
+			bp_activity_get_permalink( $activity->id ),
+			count( $media_ids )
+		);
+		echo wpautop( $content );
+	}
+}

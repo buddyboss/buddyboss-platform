@@ -1325,8 +1325,7 @@ window.bp = window.bp || {};
 			// Check the value & if exists split the string to obtain the nonce string
 			// if no value, i.e false, null then the href attr is used.
 			if ( nonceUrl ) {
-				nonce = nonceUrl.split( '?_wpnonce=' );
-				nonce = nonce[1];
+				nonce = self.getLinkParams( nonceUrl, '_wpnonce' );
 			} else {
 				nonce = self.getLinkParams( target.prop( 'href' ), '_wpnonce' );
 			}
@@ -1379,7 +1378,11 @@ window.bp = window.bp || {};
 
 							// Group's header button
 							if ( undefined !== response.data.is_group && response.data.is_group ) {
-								  return window.location.reload();
+									if ( undefined !== response.data.group_url && response.data.group_url ) {
+										return window.location = response.data.group_url;
+									} else {
+										return window.location.reload();
+									}
 							}
 						}
 
@@ -1424,6 +1427,11 @@ window.bp = window.bp || {};
 							target.parent().html( response.data.feedback );
 							item.fadeOut( 1500 );
 							return;
+						}
+
+						// Reject invitation from group.
+						if ( undefined !== response.data.is_user && ! response.data.is_user && undefined !== response.data.group_url && response.data.group_url ) {
+							return window.location = response.data.group_url;
 						}
 
 						// Update count

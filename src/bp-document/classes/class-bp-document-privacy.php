@@ -120,9 +120,11 @@ class BP_Document_Privacy {
 
 				// Only group members.
 				case 'grouponly':
-					$group_is_user_member = groups_is_user_member( bp_loggedin_user_id(), $document->activity_id );
-					if ( ! $group_is_user_member ) {
-						$visible = false;
+					if ( bp_is_active( 'groups' ) ) {
+						$group_is_user_member = groups_is_user_member( bp_loggedin_user_id(), $document->activity_id );
+						if ( ! $group_is_user_member ) {
+							$visible = false;
+						}
 					}
 					break;
 

@@ -18,6 +18,7 @@ $height =  isset( $media_template->media->attachment_data->meta['height'] ) ? $m
 	<a href="#"
 	   class="bb-open-media-theatre entry-img"
 	   data-id="<?php bp_media_id(); ?>"
+	   data-attachment-id="<?php bp_media_attachment_id(); ?>"
 	   data-attachment-full="<?php bp_media_attachment_image(); ?>"
 	   data-activity-id="<?php bp_media_activity_id(); ?>"
 	   data-privacy="<?php bp_media_privacy(); ?>"

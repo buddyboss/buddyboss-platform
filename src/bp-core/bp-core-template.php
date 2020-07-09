@@ -2751,9 +2751,9 @@ function bp_is_user_media() {
 }
 
 /**
- * Is this a user's media page?
+ * Is this a user's document page?
  *
- * Eg http://example.com/members/joe/media/ (or a subpage thereof).
+ * Eg http://example.com/members/joe/documents/ (or a subpage thereof).
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3154,6 +3154,10 @@ function bp_is_group_albums() {
 function bp_is_group_document() {
 	$retval = false;
 
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
 		$retval = true;
 	}
@@ -3170,6 +3174,10 @@ function bp_is_group_document() {
  */
 function bp_is_group_folders() {
 	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
 		$retval = true;
@@ -3188,7 +3196,7 @@ function bp_is_group_folders() {
 function bp_is_user_folders() {
 	$retval = false;
 
-	if ( bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component') && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
 		$retval = true;
 	}
 

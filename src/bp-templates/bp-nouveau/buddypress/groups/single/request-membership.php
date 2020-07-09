@@ -6,9 +6,42 @@
  * @version 3.1.0
  */
 
-bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
+bp_nouveau_group_hook( 'before', 'request_membership_content' );
 
-<?php if ( ! bp_group_has_requested_membership() ) : ?>
+if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
+
+	?>
+
+	<aside class="bp-feedback bp-messages loading">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
+			<?php
+			$inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), bp_get_current_group_id() );
+			if ( ! empty( $inviter ) ) :
+				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
+				printf(
+					__( 'You are already invited to this group by %1$s %2$s. %3$s', 'buddyboss' ),
+					sprintf(
+						'<a href="%s">%s</a>',
+						$inviter['url'],
+						$inviter['name']
+					),
+					sprintf(
+						'<span class="last-activity">%s</span>',
+						bp_core_time_since( $inviter['date_modified'] )
+					),
+					sprintf(
+						'<a href="%s" >%s</a>',
+						esc_url( trailingslashit( $groups_link . 'invites' ) ),
+						__( 'View Invitation', 'buddyboss' )
+					)
+				);
+				?>
+			<?php endif; ?>
+		</p>
+	</aside>
+
+	<?php elseif ( ! bp_group_has_requested_membership() ) : ?>
 	<p>
 		<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
 	</p>

@@ -72,7 +72,15 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
-		return $retval;
+		$friends = array( 0 );
+	}
+
+	if ( $user_id !== bp_loggedin_user_id() ) {
+		array_push( $friends, bp_loggedin_user_id() );
+	}
+
+	if ( ! bp_is_profile_media_support_enabled() ) {
+		$friends = array( 0 );
 	}
 
 	$retval = array(
@@ -87,6 +95,14 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 			'value'  => 'friends',
 		),
 	);
+
+	if ( ! bp_is_profile_albums_support_enabled() ) {
+		$retval[] = array(
+			'column'  => 'album_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
 		$retval[] = array(
@@ -113,10 +129,6 @@ add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 
  */
 function bp_friends_filter_document_scope( $retval = array(), $filter = array() ) {
 
-	if ( ! bp_is_profile_document_support_enabled() ) {
-		return $retval;
-	}
-
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
@@ -126,40 +138,51 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 			: bp_loggedin_user_id();
 	}
 
+	$folder_id = 0;
+	$folders   = array();
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
-	array_push( $friends, bp_loggedin_user_id() );
+
+	if ( $user_id !== bp_loggedin_user_id() ) {
+		array_push( $friends, bp_loggedin_user_id() );
+	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$folder_ids = array();
-		if ( $friends ) {
-			foreach ( $friends as $friend ) {
-				$user_root_folder_ids = bp_document_get_user_root_folders( (int) $friend );
-				if ( $user_root_folder_ids ) {
-					foreach ( $user_root_folder_ids as $single_folder ) {
-						$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-						if ( $single_folder_ids ) {
-							array_merge( $folder_ids, $single_folder_ids );
-						}
-						array_push( $folder_ids, $single_folder );
+		if ( ! empty( $folder_id ) ) {
+			$folder_ids           = array();
+			$user_root_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+			if ( $user_root_folder_ids ) {
+				foreach ( $user_root_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
 					}
+					array_push( $folder_ids, $single_folder );
 				}
 			}
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'parent',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
 		}
-		$folder_ids[]   = 0;
-		$folders = array(
-			'column'  => 'folder_id',
-			'compare' => 'IN',
-			'value'   => $folder_ids,
-		);
 	} else {
 		$folders = array(
 			'column' => 'folder_id',
 			'value'  => 0,
 		);
+	}
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		$friends = array( 0 );
 	}
 
 	$args = array(
@@ -176,23 +199,7 @@ function bp_friends_filter_document_scope( $retval = array(), $filter = array() 
 		$folders,
 	);
 
-	if ( ! empty( $filter['search_terms'] ) ) {
-		$args[] = array(
-			'relation' => 'OR',
-			array(
-				'column'  => 'title',
-				'compare' => 'LIKE',
-				'value'   => $filter['search_terms'],
-			),
-		);
-	}
-
-	$retval = array(
-		'relation' => 'OR',
-		$args,
-	);
-
-	return $retval;
+	return $args;
 }
 add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_document_scope', 10, 2 );
 
@@ -209,10 +216,6 @@ add_filter( 'bp_document_set_document_friends_scope_args', 'bp_friends_filter_do
  */
 function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) {
 
-	if ( ! bp_is_profile_document_support_enabled() ) {
-		return $retval;
-	}
-
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = (int) $filter['user_id'];
@@ -222,40 +225,51 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 			: bp_loggedin_user_id();
 	}
 
+	$folder_id = 0;
+	$folders   = array();
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
-	array_push( $friends, bp_loggedin_user_id() );
+
+	if ( $user_id !== bp_loggedin_user_id() ) {
+		array_push( $friends, bp_loggedin_user_id() );
+	}
 
 	if ( ! empty( $filter['search_terms'] ) ) {
-		$folder_ids = array();
-		if ( $friends ) {
-			foreach ( $friends as $friend ) {
-				$user_root_folder_ids = bp_document_get_user_root_folders( (int) $friend );
-				if ( $user_root_folder_ids ) {
-					foreach ( $user_root_folder_ids as $single_folder ) {
-						$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
-						if ( $single_folder_ids ) {
-							array_merge( $folder_ids, $single_folder_ids );
-						}
-						array_push( $folder_ids, $single_folder );
+		if ( ! empty( $folder_id ) ) {
+			$folder_ids           = array();
+			$user_root_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+			if ( $user_root_folder_ids ) {
+				foreach ( $user_root_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
 					}
+					array_push( $folder_ids, $single_folder );
 				}
 			}
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'parent',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
 		}
-		$folder_ids[]   = 0;
-		$folders = array(
-			'column'  => 'parent',
-			'compare' => 'IN',
-			'value'   => $folder_ids,
-		);
 	} else {
 		$folders = array(
 			'column' => 'parent',
 			'value'  => 0,
 		);
+	}
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		$friends = array( 0 );
 	}
 
 	$args = array(
@@ -266,25 +280,13 @@ function bp_friends_filter_folder_scope( $retval = array(), $filter = array() ) 
 			'value'   => (array) $friends,
 		),
 		array(
-			'column' => 'privacy',
-			'value'  => 'friends',
+			'column'  => 'privacy',
+			'compare' => '=',
+			'value'   => 'friends',
 		),
 		$folders,
 	);
 
-	if ( ! empty( $filter['search_terms'] ) ) {
-		$args[] = array(
-			'column'  => 'title',
-			'compare' => 'LIKE',
-			'value'   => $filter['search_terms'],
-		);
-	}
-
-	$retval = array(
-		'relation' => 'OR',
-		$args
-	);
-
-	return $retval;
+	return $args;
 }
 add_filter( 'bp_document_set_folder_friends_scope_args', 'bp_friends_filter_folder_scope', 10, 2 );

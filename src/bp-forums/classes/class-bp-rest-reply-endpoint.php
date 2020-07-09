@@ -122,6 +122,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forum Replies
 	 * @apiDescription Retrieve Replies
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -147,7 +148,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		);
 
 		if ( ! empty( $request['search'] ) ) {
-			$args['s'] = bbp_sanitize_search_request( $request['search'] );
+			$args['s'] = $this->topic_endpoint->bbp_sanitize_search_request( $request['search'] );
 		}
 
 		if ( ! empty( $request['author'] ) ) {
@@ -370,6 +371,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Forum Replies
 	 * @apiDescription Retrieve a single reply.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the reply.
 	 */
 	public function get_item( $request ) {

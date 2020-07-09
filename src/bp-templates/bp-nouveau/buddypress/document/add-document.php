@@ -6,7 +6,7 @@
  * @package BuddyBoss\Core
  */
 
-if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) :
+if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_user_logged_in() ) ) :
 
 	$active_extensions = bp_document_get_allowed_extension();
 

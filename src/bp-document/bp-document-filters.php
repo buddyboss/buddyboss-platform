@@ -39,7 +39,7 @@ add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_atta
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
 
 // Download Document.
-add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
+add_action( 'init', 'bp_document_download_url_file' );
 
 // Sync Attachment data.
 //add_action( 'edit_attachment', 'bp_document_sync_document_data', 99, 1 );
@@ -54,8 +54,12 @@ add_filter( 'bp_get_folder_title', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_folder_title', 'stripslashes' );
 add_filter( 'bp_get_folder_title', 'convert_chars' );
 
+add_filter( 'bp_repair_list', 'bp_document_add_admin_repair_items' );
+
 // Change label for global search.
 add_filter( 'bp_search_label_search_type', 'bp_document_search_label_search' );
+
+add_action( 'bp_activity_after_email_content', 'bp_document_activity_after_email_content' );
 
 function bp_document_search_label_search( $type ) {
 
@@ -264,7 +268,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$_POST['bp_activity_id']     = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
 		if ( $parent_activity->component === 'groups' ) {
 			$_POST['privacy'] = 'grouponly';
@@ -316,7 +320,7 @@ function bp_document_groups_activity_update_document_meta( $content, $user_id, $
  */
 function bp_document_activity_comments_update_document_meta( $comment_id, $r, $activity ) {
 	global $bp_new_activity_comment;
-	$bp_new_activity_comment = true;
+	$bp_new_activity_comment = $comment_id;
 	bp_document_update_activity_document_meta( false, false, $comment_id );
 }
 
@@ -380,7 +384,7 @@ function bp_document_update_document_privacy( &$folder ) {
 			}
 		}
 
-		if ( ! empty( $activity_ids ) ) {
+		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids )  ) {
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
@@ -698,7 +702,7 @@ function bp_document_delete_attachment_document( $attachment_id ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_download_url_file() {
-	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+	if ( isset( $_GET['attachment'] ) && isset( $_GET['download_document_file'] ) && isset( $_GET['document_file'] ) && isset( $_GET['document_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['document_type'] ) {
 			$document_privacy = bp_document_user_can_manage_document( $_GET['document_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
@@ -707,9 +711,10 @@ function bp_document_download_url_file() {
 			$can_download_btn = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 		}
 		if ( $can_download_btn ) {
-			bp_document_download_file( $_GET['attachment_id'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			bp_document_download_file( $_GET['attachment'], $_GET['document_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		} else {
 			wp_safe_redirect( site_url() );
+			exit;
 		}
 	}
 }
@@ -747,12 +752,12 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		$document_ids = explode( ',', $document_ids );
 
 		foreach ( $document_ids as $document_id ) {
-			$document          = new BP_Document( $document_id );
+			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( 'forums' !== $document->privacy ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
 				$document->privacy = $activity->privacy;
+				$document->save();
 			}
-			$document->save();
 		}
 	}
 }
@@ -828,20 +833,10 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  * @since BuddyBoss 1.4.1
  */
 function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) {
-
 	if ( isset( $response['url'] ) && strstr( $response['url'], 'bb_documents/' ) ) {
-
-		$preview_attachment_id  = get_post_meta( $attachment->ID, 'document_preview_attachment_id', true );
-		if ( ! $preview_attachment_id ) {
-			$preview_attachment_id = $attachment->ID;
-		}
-
-		$response['full']['url'] = includes_url() . 'images/media/default.png';
-		if ( isset( $response['sizes'] ) ) {
-			foreach ( $response['sizes'] as $size => $value ) {
-				$response['sizes'][ $size ]['url'] = includes_url() . 'images/media/default.png';
-			}
-		}
+		$response['icon'] 	= includes_url() . 'images/media/default.png';
+		$response['type'] 	= 'text';
+		$response['sizes'] 	= array();
 	}
 
 	return $response;
@@ -1258,8 +1253,8 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 			'relation' => 'AND',
 			array(
 					'column'  => 'privacy',
-					'value'   => array( 'document' ),
-					'compare' => 'IN',
+					'value'   => 'document',
+					'compare' => '=',
 			),
 			array(
 					'column' => 'hide_sitewide',
@@ -1270,3 +1265,332 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 	return $retval;
 }
 add_filter( 'bp_activity_set_document_scope_args', 'bp_activity_filter_document_scope', 10, 2 );
+
+/**
+ * Shows default icon for media in wordpress media library list view.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param array   $attr       List of image attributes.
+ * @param WP_Post $attachment Attachment Post object.
+ * @param string  $size       Sizes for the image.
+ *
+ * @return mixed
+ */
+function bp_document_media_library_list_view_document_attachment_image( $attr, $attachment, $size ) {
+	if ( ! is_admin() ) {
+		return $attr;
+	}
+
+	global $current_screen;
+
+	if (
+		empty( $current_screen )
+		|| ! isset( $current_screen->parent_file )
+		|| $current_screen->parent_file !== 'upload.php'
+		|| empty( $attachment )
+		|| empty( $attachment->ID )
+	) {
+		return $attr;
+	}
+
+	$meta = get_post_meta( $attachment->ID, '_wp_attached_file', true );
+	if ( empty( $meta ) ) {
+		return $attr;
+	}
+
+	if ( strstr( $meta, 'bb_documents/' ) ) {
+		$attr['src']   = includes_url() . 'images/media/default.png';
+		$attr['style'] = "width:42px;height:60px;border:0;";
+	}
+
+	return $attr;
+}
+add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_list_view_document_attachment_image', 10, 3 );
+
+/**
+ * Add document repair list item.
+ *
+ * @param $repair_list
+ *
+ * @since BuddyBoss 1.4.4
+ * @return array Repair list items.
+ */
+function bp_document_add_admin_repair_items( $repair_list ) {
+	if ( bp_is_active( 'activity' ) ) {
+		$repair_list[] = array(
+				'bp-repair-document',
+				__( 'Repair document on the site.', 'buddyboss' ),
+				'bp_document_admin_repair_document',
+		);
+	}
+	return $repair_list;
+}
+
+/**
+ * Repair BuddyBoss document.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_document_admin_repair_document() {
+	global $wpdb;
+	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp 		= buddypress();
+
+	$document_query = "SELECT id, activity_id FROM {$bp->document->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
+	$documents 	= $wpdb->get_results( $document_query );
+
+	if ( ! empty( $documents ) ) {
+		foreach ( $documents as $document ) {
+			if ( ! empty( $document->id ) && ! empty( $document->activity_id ) ) {
+				$activity = new BP_Activity_Activity( $document->activity_id );
+				if ( ! empty( $activity->id ) ) {
+					if ( 'activity_comment' === $activity->type ) {
+						$activity = new BP_Activity_Activity( $activity->item_id );
+					}
+					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
+						$wpdb->query( $update_query );
+					}
+					if ( 'document' === $activity->privacy ) {
+						if ( ! empty( $activity->secondary_item_id ) ) {
+							$document_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+							if ( ! empty( $document_activity->id ) ) {
+								if ( 'activity_comment' === $document_activity->type ) {
+									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
+								}
+								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
+									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
+									$wpdb->query( $update_query );
+									$activity->item_id   = $document_activity->item_id;
+									$activity->component = buddypress()->groups->id;
+								}
+							}
+						}
+
+						$activity->hide_sitewide = true;
+						$activity->save();
+					}
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
+		);
+	} else {
+		return array(
+				'status'  => 1,
+				'message' => __( 'document update complete!', 'buddyboss' ),
+		);
+	}
+}
+
+/**
+ * Set up document arguments for use with the 'public' scope.
+ *
+ * @since BuddyBoss 1.4.4
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ *
+ * @return array
+ */
+function bp_members_filter_document_public_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$folder_id = 0;
+	$folders   = array();
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		if ( ! empty( $folder_id ) ) {
+			$folder_ids           = array();
+			$user_root_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+			if ( $user_root_folder_ids ) {
+				foreach ( $user_root_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
+					}
+					array_push( $folder_ids, $single_folder );
+				}
+			}
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'folder_id',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
+		}
+	} else {
+		$folders = array(
+			'column'  => 'folder_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	$privacy = array( 'public' );
+
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy
+		),
+		array(
+			'column'  => 'group_id',
+			'compare' => '=',
+			'value'   => '0',
+		),
+		$folders
+	);
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	return $args;
+}
+
+add_filter( 'bp_document_set_document_public_scope_args', 'bp_members_filter_document_public_scope', 10, 2 );
+
+
+/**
+ * Set up document arguments for use with the 'public' scope.
+ *
+ * @since BuddyBoss 1.4.4
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ *
+ * @return array
+ */
+function bp_members_filter_folder_public_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$folder_id = 0;
+	$folders   = array();
+	if ( ! empty( $filter['folder_id'] ) ) {
+		$folder_id = (int) $filter['folder_id'];
+	}
+
+	if ( ! empty( $filter['search_terms'] ) ) {
+		if ( ! empty( $folder_id ) ) {
+			$folder_ids           = array();
+			$user_root_folder_ids = bp_document_get_folder_children( (int) $folder_id );
+			if ( $user_root_folder_ids ) {
+				foreach ( $user_root_folder_ids as $single_folder ) {
+					$single_folder_ids = bp_document_get_folder_children( (int) $single_folder );
+					if ( $single_folder_ids ) {
+						array_merge( $folder_ids, $single_folder_ids );
+					}
+					array_push( $folder_ids, $single_folder );
+				}
+			}
+			$folder_ids[] = $folder_id;
+			$folders      = array(
+				'column'  => 'parent',
+				'compare' => 'IN',
+				'value'   => $folder_ids,
+			);
+		}
+	} else {
+		$folders = array(
+			'column'  => 'parent',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	$privacy = array( 'public' );
+
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+	}
+
+	$args = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy
+		),
+		array(
+			'column'  => 'group_id',
+			'compare' => '=',
+			'value'   => '0',
+		),
+		$folders
+	);
+
+	if ( ! bp_is_profile_document_support_enabled() ) {
+		$args[] = array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => '0',
+		);
+	}
+
+	return $args;
+}
+
+add_filter( 'bp_document_set_folder_public_scope_args', 'bp_members_filter_folder_public_scope', 10, 2 );
+
+/**
+ * Added text on the email when replied on the activity.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param BP_Activity_Activity $activity Activity Object.
+ */
+function bp_document_activity_after_email_content( $activity ) {
+	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
+
+	if ( ! empty( $document_ids ) ) {
+		$document_ids = explode( ',', $document_ids );
+		$document_text = sprintf(
+		        _n( '%s Document', '%s Documents', count( $document_ids) , 'buddyboss' ),
+                number_format_i18n( count( $document_ids ) )
+        );
+		$content   = sprintf(
+	    	/* translator: 1. Activity link, 2. Activity document count */
+			__( '<a href="%1$s" target="_blank">%2$s Uploaded.</a>', 'buddyboss' ),
+			bp_activity_get_permalink( $activity->id ),
+			$document_text
+		);
+		echo wpautop( $content );
+	}
+}

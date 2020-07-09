@@ -3284,12 +3284,21 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 		return false;
 	}
 
-	$member = new BP_Groups_Member( $user_id, $group->id );
+	//Check invitation is exists or not
+	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
 
+	if ( empty( $invite_id ) ) {
+		return false;
+	}
+	//Get invitation by id
+	$member 	= new BP_Invitation( $invite_id );
+
+	//$member = new BP_Groups_Member( $user_id, $group->id );
 	$inviter = array(
 		'id'   => $member->inviter_id,
 		'name' => bp_core_get_user_displayname( $member->inviter_id ),
 		'url'  => bp_core_get_user_domain( $member->inviter_id ),
+		'date_modified'  => $member->date_modified,
 	);
 
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
@@ -4085,6 +4094,59 @@ function groups_can_user_manage_messages( $user_id, $group_id ) {
 
 	return $is_allowed;
 }
+
+/**
+ * Mentions results for groups.
+ *
+ * @since BuddyBoss 1.4.4
+ */
+function bp_groups_prime_mentions_results() {
+
+	// Stop here if user is not logged in.
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+
+	// Bail if single group page.
+	if ( ! bp_is_group() ) {
+		return;
+	}
+
+	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id(), 'per_page' => 10, 'page' => 1 ) );
+	$results = array();
+
+	if ( ! empty( $members['members'] ) ) {
+		foreach ( $members['members'] as $user ) {
+			$result                = new stdClass();
+			$result->ID            = bp_activity_get_user_mentionname( $user->ID );
+			$result->user_nicename = $user->user_nicename;
+			$result->image         = bp_core_fetch_avatar(
+					array(
+							'html'    => false,
+							'item_id' => $user->ID,
+					)
+			);
+			if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			} else {
+				$result->name = bp_core_get_user_displayname( $user->ID );
+			}
+			$result->user_id = $user->ID;
+
+			$results[] = $result;
+		}
+
+		wp_localize_script(
+			'bp-mentions',
+			'BP_Suggestions',
+			array(
+				'members' => $results,
+			)
+		);
+	}
+}
+add_action( 'bp_activity_mentions_prime_results', 'bp_groups_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bp_groups_prime_mentions_results' );
 
 /**
  * Migrate invitations and requests from pre-5.0 group_members table to invitations table.

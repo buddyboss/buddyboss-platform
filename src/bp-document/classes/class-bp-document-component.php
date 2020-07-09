@@ -190,7 +190,7 @@ class BP_Document_Component extends BP_Component {
 		parent::setup_globals(
 			array(
 				'slug'            => 'documents',
-				'root_slug'       => isset( $bp->pages->document->slug ) ? $bp->pages->document->slug : 'documents',
+				'root_slug'       => isset( $bp->pages->document->slug ) ? $bp->pages->document->slug : BP_DOCUMENT_SLUG,
 				'has_directory'   => true,
 				'global_tables'   => $global_tables,
 				'directory_title' => isset( $bp->pages->document->title ) ? $bp->pages->document->title : $default_directory_title,
