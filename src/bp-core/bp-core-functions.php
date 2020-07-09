@@ -2763,6 +2763,20 @@ function bp_nav_menu_get_loggedin_pages() {
 		);
 
 		if ( 'messages' === $bp_item['slug'] ) {
+			$page_args[ 'compose-messages' ] =
+			(object) array(
+				'ID'               => hexdec(uniqid()),
+				'post_title'       => __( 'New Messages', 'buddyboss'),
+				'object_id'			=> hexdec(uniqid()),
+				'post_author'      => 0,
+				'post_date'        => 0,
+				'post_excerpt'     =>'compose-messages',
+				'post_type'        => 'page',
+				'post_status'      => 'publish',
+				'comment_status'   => 'closed',
+				'guid'             => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose',
+				'post_parent' => $nav_counter,
+			);
 
 			if ( bp_current_user_can( 'bp_moderate' ) ) {
 				$page_args['site-notice'] = (object) array(
@@ -2782,13 +2796,13 @@ function bp_nav_menu_get_loggedin_pages() {
 		}
 
 		if ( 'groups' === $bp_item['slug'] && bp_user_can_create_groups() ) {
-			$page_args['group-create'] = (object) array(
+			$page_args['groups-create'] = (object) array(
 				'ID'             => hexdec( uniqid() ),
 				'post_title'     => __( 'Create Group', 'buddyboss' ),
 				'object_id'      => hexdec( uniqid() ),
 				'post_author'    => 0,
 				'post_date'      => 0,
-				'post_excerpt'   => 'create-group',
+				'post_excerpt'   => 'groups-create',
 				'post_type'      => 'page',
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
@@ -2840,6 +2854,22 @@ function bp_nav_menu_get_loggedin_pages() {
 						'post_parent' => $nav_counter,
 					);
 			}
+		}
+
+		if ( 'settings' === $bp_item['slug'] && ! bp_disable_account_deletion() ) {
+			$page_args['delete-account'] = (object) array(
+					'ID'             => hexdec( uniqid() ),
+					'post_title'     => __( 'Delete Account', 'buddyboss' ),
+					'object_id'      => hexdec( uniqid() ),
+					'post_author'    => 0,
+					'post_date'      => 0,
+					'post_excerpt'   => 'delete-account',
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() . '/delete-account' ),
+					'post_parent'    => $nav_counter,
+			);
 		}
 
 	}
