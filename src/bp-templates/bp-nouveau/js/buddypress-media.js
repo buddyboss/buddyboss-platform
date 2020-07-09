@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind( this ) );
 			$( document ).on( 'click', '#bp-edit-folder-open', this.openEditFolderChildModal.bind( this ) );
 
-			$( document ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
+			$( document ).one( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( document ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
 			$( document ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
@@ -659,7 +659,11 @@ window.bp = window.bp || {};
 		},
 
 		bp_ajax_media_request: function (event, data) {
-			if (typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0) {
+			if ( BP_Nouveau.media.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups === 0 ) {
+				$( '.bb-photos-actions' ).hide();
+			} else if ( BP_Nouveau.media.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups !== 0 ) {
+				$( '.bb-photos-actions' ).show();
+			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0 ) {
 				$( '.bb-photos-actions' ).hide();
 			}
 		},
@@ -3404,8 +3408,7 @@ window.bp = window.bp || {};
 				privacy.removeClass( 'error' );
 			}
 
-			target.prop( 'disabled', true );
-
+			target.attr( 'disabled', true );
 			var data = {
 				'action'	: 'media_album_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,

@@ -13558,7 +13558,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   align-items: flex-end;
   background-color: #fff;
   border-radius: 4px 4px 5px 4px;
-  position: relative;
+  position: initial;
 }
 
 .bb-document-theater .bb-media-section .document-preview {
@@ -13707,7 +13707,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   top: 0;
   right: 0;
   padding: 6px;
-  left: 0;
+  left: 375px;
   text-align: center;
   border-bottom: 1px solid #ecedee;
   font-size: 16px;
