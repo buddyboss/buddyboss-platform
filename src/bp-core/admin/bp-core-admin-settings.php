@@ -555,14 +555,14 @@ function bp_admin_setting_callback_group_hierarchies() {
 }
 
 /**
- * 'Hide subgroups from the main Groups Directory' field markup.
+ * 'Hide subgroups from the groups directories field markup.
  *
  * @since BuddyBoss 1.4.7
  */
 function bp_admin_setting_callback_group_hide_subgroups() {
 	?>
     <input id="bp-enable-group-hide-subgroups" name="bp-enable-group-hide-subgroups" type="checkbox" value="1" <?php checked( bp_enable_group_hide_subgroups() ); ?> />
-    <label for="bp-enable-group-hide-subgroups"><?php _e( 'Hide subgroups from the main Groups Directory', 'buddyboss' ); ?></label>
+    <label for="bp-enable-group-hide-subgroups"><?php _e( 'Hide subgroups from groups directories', 'buddyboss' ); ?></label>
 	<?php
 }
 
