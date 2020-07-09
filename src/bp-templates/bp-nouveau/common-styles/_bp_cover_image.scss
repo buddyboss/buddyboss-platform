@@ -34,11 +34,13 @@
 		min-width: 100%;
 		-o-object-fit: cover;
 		object-fit: cover;
-		min-height: 100%;
+		min-height: 101%; //Fixed 1px white line issue at top
 		height: auto;
 		position: absolute;
-		top: 0;
+		top: 50%;
 		left: 0;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
 		display: none;
 	}
 

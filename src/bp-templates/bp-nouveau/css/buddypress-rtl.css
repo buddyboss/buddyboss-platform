@@ -4054,11 +4054,13 @@ body.no-js .single-item-header .js-self-profile-button {
   min-width: 100%;
   -o-object-fit: cover;
   object-fit: cover;
-  min-height: 100%;
+  min-height: 101%;
   height: auto;
   position: absolute;
-  top: 0;
+  top: 50%;
   right: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
   display: none;
 }
 
