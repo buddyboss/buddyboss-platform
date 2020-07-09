@@ -105,23 +105,30 @@ add_filter( 'bp_user_can', 'bp_xprofile_grant_bp_xprofile_change_field_visibilit
  */
 function bp_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability ) {
 
-	$field_id             = bp_get_the_profile_field_id();
-	$first_name_id        = bp_xprofile_firstname_field_id();
-	$last_name_id        = bp_xprofile_lastname_field_id();
-	$nick_name_id        = bp_xprofile_nickname_field_id();
-	$display_name_format = bp_core_display_name_format();
-
-	if ( $field_id === $nick_name_id ) {
-		$user_can = false;
+	if ( empty( $GLOBALS['profile_template'] ) ) {
+		return $user_can;
 	}
 
-	if ( 'first_last_name' === $display_name_format ) {
-		if ( $field_id && in_array( $field_id, array( $first_name_id, $last_name_id ) ) ) {
+	$field_id = bp_get_the_profile_field_id();
+
+	if ( $field_id ) {
+		$first_name_id        = bp_xprofile_firstname_field_id();
+		$last_name_id        = bp_xprofile_lastname_field_id();
+		$nick_name_id        = bp_xprofile_nickname_field_id();
+		$display_name_format = bp_core_display_name_format();
+
+		if ( $field_id === $nick_name_id ) {
 			$user_can = false;
 		}
-	} elseif ( 'first_name' === $display_name_format ) {
-		if ( $field_id && in_array( $field_id, array( $first_name_id ) ) ) {
-			$user_can = false;
+
+		if ( 'first_last_name' === $display_name_format ) {
+			if ( $field_id && in_array( $field_id, array( $first_name_id, $last_name_id ) ) ) {
+				$user_can = false;
+			}
+		} elseif ( 'first_name' === $display_name_format ) {
+			if ( $field_id && in_array( $field_id, array( $first_name_id ) ) ) {
+				$user_can = false;
+			}
 		}
 	}
 
