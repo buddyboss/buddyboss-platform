@@ -703,7 +703,7 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
  */
 function bp_setup_nav_menu_item( $menu_item ) {
 
-	if ( isset( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
+	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
 		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
 	}
 

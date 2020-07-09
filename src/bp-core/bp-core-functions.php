@@ -2743,7 +2743,7 @@ function bp_nav_menu_get_loggedin_pages() {
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
-		$page_args[] = (object) array(
+		$page_args[ $bp_item['slug'] ] = (object) array(
 			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
 			'post_author'    => 0,
@@ -2767,7 +2767,14 @@ function bp_nav_menu_get_loggedin_pages() {
 				$sub_name = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
 				$sub_name = trim( $sub_name );
 				$nav_counter_child = hexdec(uniqid());
-				$page_args[] =
+
+				$key = $s_nav['slug'];
+
+				if ( 'profile' === $key ) {
+					$key = 'view';
+				}
+
+				$page_args[ $key ] =
 					(object) array(
 						'ID'               => $nav_counter_child,
 						'post_title'       => $sub_name,
