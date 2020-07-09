@@ -53,7 +53,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 		$htmlDom = new DOMDocument;
 
 		// Parse the HTML of the page using DOMDocument::loadHTML
-		$htmlDom->loadHTML($link['settings']);
+		@$htmlDom->loadHTML($link['settings']);
 
 		// Extract the links from the HTML.
 		$links = $htmlDom->getElementsByTagName('a');
