@@ -4052,6 +4052,9 @@ body.no-js .single-item-header .js-self-profile-button {
 #buddypress #header-cover-image .header-cover-img {
   max-width: 100%;
   min-width: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  min-height: 100%;
   height: auto;
   position: absolute;
   top: 0;

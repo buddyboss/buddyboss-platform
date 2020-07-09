@@ -32,6 +32,9 @@
 	.header-cover-img {
 		max-width: 100%;
 		min-width: 100%;
+		-o-object-fit: cover;
+		object-fit: cover;
+		min-height: 100%;
 		height: auto;
 		position: absolute;
 		top: 0;
@@ -49,11 +52,11 @@
 		.drag-element-helper {
 			position: absolute;
 			left: 50%;
-			transform: translate(-50%,-50%);
+			transform: translate(-50%, -50%);
 			z-index: 119;
 			top: 50%;
 			color: #fff;
-			background-color: rgba(134, 132, 132, 0.60);
+			background-color: rgba(134, 132, 132, 0.6);
 			padding: 10px 15px;
 			border-radius: 5px;
 			pointer-events: none;
