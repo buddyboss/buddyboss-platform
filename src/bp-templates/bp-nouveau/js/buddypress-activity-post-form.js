@@ -964,105 +964,105 @@ window.bp = window.bp || {};
 		loadURLAjax : null,
 		loadedURLs : [],
 
-			initialize: function() {
-				this.on( 'ready', this.adjustContent, this );
-				this.on( 'ready', this.activateTinyMce, this );
-				this.options.activity.on( 'change:content', this.resetContent, this );
-				this.linkTimeout = null;
+		initialize: function() {
+			this.on( 'ready', this.adjustContent, this );
+			this.on( 'ready', this.activateTinyMce, this );
+			this.options.activity.on( 'change:content', this.resetContent, this );
+			this.linkTimeout = null;
 
-				if ( _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
-					this.$el.off( 'keyup' );
-				}
-			},
+			if ( _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+				this.$el.off( 'keyup' );
+			}
+		},
 
-			adjustContent: function() {
+		adjustContent: function() {
 
-				// this.$el.toTextarea({
-				// allowHTML: true,//allow HTML formatting with CTRL+b, CTRL+i, etc.
-				// allowImg: true,//allow drag and drop images
-				// pastePlainText: false,//paste text without styling as source
-				// placeholder: false
-				// });
+			// this.$el.toTextarea({
+			// allowHTML: true,//allow HTML formatting with CTRL+b, CTRL+i, etc.
+			// allowImg: true,//allow drag and drop images
+			// pastePlainText: false,//paste text without styling as source
+			// placeholder: false
+			// });
 
-				// First adjust layout.
-				this.$el.css(
-					{
-						resize: 'none',
-						height: '50px'
-						}
-				);
-
-				// Check for mention.
-				var	mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
-
-				if ( ! _.isNull( mention ) ) {
-					this.$el.text( '@' + _.escape( mention ) + ' ' );
-					this.$el.focus();
-				}
-			},
-
-			resetContent: function( activity ) {
-				if ( _.isUndefined( activity ) ) {
-					return;
-				}
-
-				this.$el.html( activity.get( 'content' ) );
-			},
-
-			handlePaste: function ( event ) {
-				// Get user's pasted data.
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data          = clipboardData.getData( 'text/plain' );
-
-				// Insert the filtered content.
-				document.execCommand( 'insertHTML', false, data );
-
-				// Prevent the standard paste behavior.
-				event.preventDefault();
-			},
-
-			handleKeyUp: function( event ) {
-				var self = this;
-
-				if ( this.linkTimeout != null ) {
-					clearTimeout( this.linkTimeout );
-				}
-
-				this.linkTimeout = setTimeout(
-					function() {
-							this.linkTimeout = null;
-							self.scrapURL( event.target.textContent );
-					},
-					500
-				);
-			},
-
-			scrapURL: function(urlText) {
-				var urlString = '';
-				if ( urlText.indexOf( 'http://' ) >= 0 ) {
-					urlString = this.getURL( 'http://', urlText );
-				} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
-					urlString = this.getURL( 'https://', urlText );
-				} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
-					urlString = this.getURL( 'www', urlText );
-				}
-
-				if ( urlString !== '' ) {
-					// check if the url of any of the excluded video oembeds.
-					var url_a    = document.createElement( 'a' );
-					url_a.href   = urlString;
-					var hostname = url_a.hostname;
-					if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
-						urlString = '';
+			// First adjust layout.
+			this.$el.css(
+				{
+					resize: 'none',
+					height: '50px'
 					}
-				}
+			);
 
-				if ( '' !== urlString ) {
-					this.loadURLPreview( urlString );
-				} else {
-					$( '#activity-close-link-suggestion' ).click();
+			// Check for mention.
+			var	mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
+
+			if ( ! _.isNull( mention ) ) {
+				this.$el.text( '@' + _.escape( mention ) + ' ' );
+				this.$el.focus();
+			}
+		},
+
+		resetContent: function( activity ) {
+			if ( _.isUndefined( activity ) ) {
+				return;
+			}
+
+			this.$el.html( activity.get( 'content' ) );
+		},
+
+		handlePaste: function ( event ) {
+			// Get user's pasted data.
+			var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+				data          = clipboardData.getData( 'text/plain' );
+
+			// Insert the filtered content.
+			document.execCommand( 'insertHTML', false, data );
+
+			// Prevent the standard paste behavior.
+			event.preventDefault();
+		},
+
+		handleKeyUp: function( event ) {
+			var self = this;
+
+			if ( this.linkTimeout != null ) {
+				clearTimeout( this.linkTimeout );
+			}
+
+			this.linkTimeout = setTimeout(
+				function() {
+						this.linkTimeout = null;
+						self.scrapURL( window.group_messages_editor.getContent() );
+				},
+				500
+			);
+		},
+
+		scrapURL: function(urlText) {
+			var urlString = '';
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
+
+			if ( urlString !== '' ) {
+				// check if the url of any of the excluded video oembeds.
+				var url_a    = document.createElement( 'a' );
+				url_a.href   = urlString;
+				var hostname = url_a.hostname;
+				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
+					urlString = '';
 				}
-			},
+			}
+
+			if ( '' !== urlString ) {
+				this.loadURLPreview( urlString );
+			} else {
+				$( '#activity-close-link-suggestion' ).click();
+			}
+		},
 
 		getURL: function( prefix, urlText ) {
 			var urlString = '';
@@ -1096,97 +1096,97 @@ window.bp = window.bp || {};
 			return responseUrl;
 		},
 
-			loadURLPreview: function (url) {
-				var self = this;
+		loadURLPreview: function (url) {
+			var self = this;
 
-				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
-				url = $.trim(url);
-				if (regexp.test(url)) {
+			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+			url = $.trim(url);
+			if (regexp.test(url)) {
 
-					if (typeof self.options.activity.get( 'link_success' ) !== 'undefined' && self.options.activity.get( 'link_success' ) == true) {
-						return false;
-					}
-
-					var urlResponse = false;
-					if ( self.loadedURLs.length ) {
-						$.each(
-							self.loadedURLs,
-							function( index, urlObj ) {
-								if ( urlObj.url == url ) {
-									urlResponse = urlObj.response;
-									return false;
-								}
-							}
-						);
-					}
-
-					if (self.loadURLAjax != null) {
-						self.loadURLAjax.abort();
-					}
-
-					self.options.activity.set(
-						{
-							link_scrapping: true,
-							link_loading: true,
-							link_error: false,
-							link_url: url,
-							link_embed: false
-							}
-					);
-
-					if ( ! urlResponse ) {
-						self.loadURLAjax = bp.ajax.post( 'bp_activity_parse_url', {url: url} ).always(
-							function (response) {
-								self.setURLResponse( response, url );
-							}
-						);
-					} else {
-						self.setURLResponse( urlResponse, url );
-					}
-				}
-			},
-
-			setURLResponse : function( response, url ) {
-				var self = this;
-
-				self.options.activity.set( 'link_loading', false );
-
-				if (response.title === '' && response.images === '') {
-					self.options.activity.set( 'link_scrapping', false );
-					return;
+				if (typeof self.options.activity.get( 'link_success' ) !== 'undefined' && self.options.activity.get( 'link_success' ) == true) {
+					return false;
 				}
 
-				if (response.error === '') {
-					self.options.activity.set(
-						{
-							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
-							link_images: response.images,
-							link_image_index: 0,
-							link_embed: typeof response.wp_embed !== 'undefined' && response.wp_embed
+				var urlResponse = false;
+				if ( self.loadedURLs.length ) {
+					$.each(
+						self.loadedURLs,
+						function( index, urlObj ) {
+							if ( urlObj.url == url ) {
+								urlResponse = urlObj.response;
+								return false;
 							}
-					);
-
-					$( '#whats-new-attachments' ).removeClass( 'empty' );
-
-					if ($( '#whats-new-attachments' ).hasClass( 'activity-video-preview' )) {
-						$( '#whats-new-attachments' ).removeClass( 'activity-video-preview' );
-					}
-
-					if ($( '#whats-new-attachments' ).hasClass( 'activity-link-preview' )) {
-						$( '#whats-new-attachments' ).removeClass( 'activity-link-preview' );
-					}
-
-					if ($( '.activity-media-container' ).length) {
-						if (response.description.indexOf( 'iframe' ) > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
-							$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
-						} else {
-							$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );
 						}
-					}
+					);
+				}
 
-					self.loadedURLs.push( {'url': url, 'response': response} );
+				if (self.loadURLAjax != null) {
+					self.loadURLAjax.abort();
+				}
+
+				self.options.activity.set(
+					{
+						link_scrapping: true,
+						link_loading: true,
+						link_error: false,
+						link_url: url,
+						link_embed: false
+						}
+				);
+
+				if ( ! urlResponse ) {
+					self.loadURLAjax = bp.ajax.post( 'bp_activity_parse_url', {url: url} ).always(
+						function (response) {
+							self.setURLResponse( response, url );
+						}
+					);
+				} else {
+					self.setURLResponse( urlResponse, url );
+				}
+			}
+		},
+
+		setURLResponse : function( response, url ) {
+			var self = this;
+
+			self.options.activity.set( 'link_loading', false );
+
+			if (response.title === '' && response.images === '') {
+				self.options.activity.set( 'link_scrapping', false );
+				return;
+			}
+
+			if (response.error === '') {
+				self.options.activity.set(
+					{
+						link_success: true,
+						link_title: response.title,
+						link_description: response.description,
+						link_images: response.images,
+						link_image_index: 0,
+						link_embed: typeof response.wp_embed !== 'undefined' && response.wp_embed
+						}
+				);
+
+				$( '#whats-new-attachments' ).removeClass( 'empty' );
+
+				if ($( '#whats-new-attachments' ).hasClass( 'activity-video-preview' )) {
+					$( '#whats-new-attachments' ).removeClass( 'activity-video-preview' );
+				}
+
+				if ($( '#whats-new-attachments' ).hasClass( 'activity-link-preview' )) {
+					$( '#whats-new-attachments' ).removeClass( 'activity-link-preview' );
+				}
+
+				if ($( '.activity-media-container' ).length) {
+					if (response.description.indexOf( 'iframe' ) > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
+						$( '#whats-new-attachments' ).addClass( 'activity-video-preview' );
+					} else {
+						$( '#whats-new-attachments' ).addClass( 'activity-link-preview' );
+					}
+				}
+
+				self.loadedURLs.push( {'url': url, 'response': response} );
 
 			} else {
 				self.options.activity.set({
@@ -1200,7 +1200,7 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-					window.activity_editor = new window.MediumEditor(
+					window.group_messages_editor = new window.MediumEditor(
 						'#whats-new',
 						{
 							placeholder: {
