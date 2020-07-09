@@ -36,12 +36,6 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 				$field_id = bp_get_the_profile_field_id();
 			}
 
-			// Visibility on the fullname field is not editable.
-			if ( 1 == $field_id ) {
-				$caps[] = 'do_not_allow';
-				break;
-			}
-
 			// Has the admin disabled visibility modification for this field?
 			if ( 'disabled' == bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' ) ) {
 				$caps[] = 'do_not_allow';
