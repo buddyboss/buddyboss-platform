@@ -1376,32 +1376,44 @@ ul.bb-albums-list {
 
 @media (max-width: 480px) {
 
-	div#buddypress {
+	#buddypress {
+		
+		.bb-media-container.member-media {
+			
+			#bp-media-single-album {
+				
+				.bb-single-album-header {
+					
+					input[type="text"] {
+						display: block;
+						width: 100%;
+						max-width: 100%;
+						margin-bottom: 10px;
+					}
 
-		div.bb-single-album-header {
+				}
 
-			input[type="text"] {
-				display: block;
-				width: 100%;
-				max-width: 100% !important;
-				margin-bottom: 10px;
 			}
+
+			.bb-album-actions {
+				flex-wrap: wrap;
+				justify-content: space-around;
+
+				.button {
+					margin: 0 0 10px 0;
+				}
+
+				select {
+					width: 100%;
+					direction: ltr;
+				}
+
+			}
+
 		}
-
-		div.bb-album-actions {
-			flex-wrap: wrap;
-			justify-content: space-around;
-
-			.button {
-				margin: 0 0 10px 0;
-			}
-
-			select {
-				width: 100%;
-				direction: ltr;
-			}
-		}
+		
 	}
+
 }
 
 .bb-custom-check {

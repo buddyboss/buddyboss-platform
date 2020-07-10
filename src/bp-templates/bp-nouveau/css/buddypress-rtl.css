@@ -12907,20 +12907,20 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 @media (max-width: 480px) {
-  div#buddypress div.bb-single-album-header input[type="text"] {
+  #buddypress .bb-media-container.member-media #bp-media-single-album .bb-single-album-header input[type="text"] {
     display: block;
     width: 100%;
-    max-width: 100% !important;
+    max-width: 100%;
     margin-bottom: 10px;
   }
-  div#buddypress div.bb-album-actions {
+  #buddypress .bb-media-container.member-media .bb-album-actions {
     flex-wrap: wrap;
     justify-content: space-around;
   }
-  div#buddypress div.bb-album-actions .button {
+  #buddypress .bb-media-container.member-media .bb-album-actions .button {
     margin: 0 0 10px 0;
   }
-  div#buddypress div.bb-album-actions select {
+  #buddypress .bb-media-container.member-media .bb-album-actions select {
     width: 100%;
     direction: rtl;
   }
