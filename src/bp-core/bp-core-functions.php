@@ -2811,7 +2811,21 @@ function bp_nav_menu_get_loggedin_pages() {
 			);
 		}
 
-
+		if ( 'activity' === $bp_item['slug'] ) {
+			$page_args['activity-posts'] = (object) array(
+					'ID'             => hexdec( uniqid() ),
+					'post_title'     => __( 'Posts', 'buddyboss' ),
+					'object_id'      => hexdec( uniqid() ),
+					'post_author'    => 0,
+					'post_date'      => 0,
+					'post_excerpt'   => 'activity-posts',
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'guid'           => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
+					'post_parent'    => $nav_counter,
+			);
+		}
 
 		if ( ! empty( $nav_sub ) ) {
 			foreach ( $nav_sub as $s_nav ) {
