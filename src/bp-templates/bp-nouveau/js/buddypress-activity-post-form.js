@@ -1081,15 +1081,15 @@ window.bp = window.bp || {};
 				urlString = prefix + urlString;
 			}
 
-			var div = document.createElement('div');
+			var div = document.createElement( 'div' );
 			div.innerHTML = urlString;
-			var elements = div.getElementsByTagName('*');
+			var elements = div.getElementsByTagName( '*' );
 
-			while (elements[0]) {
-				elements[0].parentNode.removeChild(elements[0]);
+			while ( elements[ 0 ] ) {
+				elements[ 0 ].parentNode.removeChild( elements[ 0 ] );
 			}
 
-			if( div.innerHTML.length > 0 ){
+			if ( div.innerHTML.length > 0 ) {
 				responseUrl = div.innerHTML;
 			}
 
