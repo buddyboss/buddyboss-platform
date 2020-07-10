@@ -147,7 +147,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				// create field for each of custom post type.
 				$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 				// Activity commenting on post and comments.
-				$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
+				$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Type Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
 			} else {
 				if ( 0 === $description ) {
 					$fields['args']['description'] = true;

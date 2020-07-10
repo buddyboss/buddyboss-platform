@@ -251,6 +251,14 @@ function bp_core_activation_notice() {
 
 	// Only components with 'has_directory' require a WP page to function.
 	foreach ( array_keys( $bp->loaded_components ) as $component_id ) {
+		if ( 'photos' === $component_id ) {
+			$component_id = 'media';
+		}
+		if ( 'documents' === $component_id ) {
+			if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+				$component_id = 'document';
+			}
+		}
 		if ( ! empty( $bp->{$component_id}->has_directory ) ) {
 			$wp_page_components[] = array(
 				'id'   => $component_id,
@@ -516,9 +524,9 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
 		$tab_class  = $is_current ? $active_class : $idle_class;
 		if ( $i === $count ) {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+			$tabs_html .= '<li class="' . $tab_data['slug'] . ' "><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
 		} else {
-			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+			$tabs_html .= '<li class="' . $tab_data['slug'] . ' "><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
 		}
 
 		$i = $i + 1;
@@ -856,7 +864,18 @@ function bp_core_get_admin_integration_active_tab() {
 function bp_core_get_admin_integration_active_tab_object() {
 	global $bp_admin_integration_tabs;
 
-	return $bp_admin_integration_tabs[ bp_core_get_admin_integration_active_tab() ];
+	$active_tab = bp_core_get_admin_integration_active_tab();
+	if ( isset( $bp_admin_integration_tabs[ $active_tab ] ) ) {
+		return $bp_admin_integration_tabs[ $active_tab ];
+	}
+
+	if ( ! empty( $bp_admin_integration_tabs ) ) {
+		$tabs = array_keys( $bp_admin_integration_tabs );
+
+		return $bp_admin_integration_tabs[ $tabs[0] ];
+	}
+
+	return false;
 }
 
 /**
@@ -1311,8 +1330,8 @@ function bp_admin_email_add_codex_notice() {
 			bp_get_admin_url(
 				add_query_arg(
 					array(
-						'page' 		=> 'bp-help',
-						'article' 	=> 62844,
+						'page'    => 'bp-help',
+						'article' => 62844,
 					),
 					'admin.php'
 				)
@@ -1535,7 +1554,7 @@ function bp_core_admin_user_manage_spammers() {
 
 		$redirect = add_query_arg( array( 'updated' => 'marked-' . $status ), $redirect );
 
-		wp_redirect( $redirect );
+		wp_safe_redirect( $redirect );
 	}
 
 	// Display feedback.
@@ -2359,6 +2378,10 @@ function bp_member_type_import_submenu_page() {
 
 	if ( isset( $_POST['bp-member-type-import-submit'] ) ) {
 
+		if( is_multisite() && bp_is_network_activated() ){
+			switch_to_blog( bp_get_root_blog_id() );
+		}
+
 		$registered_member_types = bp_get_member_types();
 		$created_member_types    = bp_get_active_member_types();
 		$active_member_types     = array();
@@ -2409,6 +2432,10 @@ function bp_member_type_import_submenu_page() {
 				<?php
 			}
 		}
+
+		if( is_multisite() && bp_is_network_activated() ) {
+			restore_current_blog();
+		}
 	}
 
 }
@@ -2448,7 +2475,7 @@ add_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_create_background_page() {
-	if ( ! current_user_can( 'install_plugins' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_send_json_error();
 	}
 
@@ -2799,16 +2826,11 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 	// Tabs for the BuddyBoss > Tools
 	$tabs = array(
 		'0' => array(
-			'href' => get_admin_url(
-				'',
-				add_query_arg(
-					array(
-						'page' => 'bp-tools',
-						'tab'  => 'bp-tools',
-					),
-					'admin.php'
-				)
+			'href' => bp_get_admin_url( add_query_arg( array(
+				'page' => 'bp-tools',
+				'tab'  => 'bp-tools',
 			),
+				'admin.php' ) ),
 			'name' => __( 'Default Data', 'buddyboss' ),
 			'slug' => 'bp-tools',
 		),
@@ -2827,16 +2849,11 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-member-type-import',
-					'tab'  => 'bp-member-type-import',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-member-type-import',
+			'tab'  => 'bp-member-type-import',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Import Profile Types', 'buddyboss' ),
 		'slug' => 'bp-member-type-import',
 	);
@@ -2848,16 +2865,11 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_p
 function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-repair-community',
-					'tab'  => 'bp-repair-community',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-repair-community',
+			'tab'  => 'bp-repair-community',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Repair Community', 'buddyboss' ),
 		'slug' => 'bp-repair-community',
 	);
@@ -2890,6 +2902,27 @@ function bp_import_profile_types_admin_menu() {
 		'bp-member-type-import',
 		'bp_member_type_import_submenu_page'
 	);
+
+	if ( current_user_can( 'bbp_tools_page' ) && current_user_can( 'bbp_tools_repair_page' ) ) {
+		add_submenu_page(
+			'buddyboss-platform',
+			__( 'Repair Forums', 'buddyboss' ),
+			__( 'Forum Repair', 'buddyboss' ),
+			'manage_options',
+			'bbp-repair',
+			'bbp_admin_repair'
+		);
+
+		add_submenu_page(
+			'buddyboss-platform',
+			__( 'Import Forums', 'buddyboss' ),
+			__( 'Forum Import', 'buddyboss' ),
+			'manage_options',
+			'bbp-converter',
+			'bbp_converter_settings'
+		);
+	}
+
 
 }
 add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
@@ -2954,7 +2987,7 @@ function bp_block_category( $categories = array(), $post = null ) {
 	 *
 	 * @param array $value The list of supported post types. Defaults to WordPress built-in ones.
 	 */
-	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page', 'sfwd-courses' ) );
+	$post_types = apply_filters( 'bp_block_category_post_types', array( 'post', 'page' ) );
 
 	if ( ! $post_types ) {
 		return $categories;
@@ -2979,3 +3012,22 @@ function bp_block_category( $categories = array(), $post = null ) {
 	);
 }
 add_filter( 'block_categories', 'bp_block_category', 30, 2 );
+
+function bp_document_ajax_check_file_mime_type() {
+	$response = array();
+	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'bp_document_check_file_mime_type' === $_POST['action'] && ! empty( $_FILES ) ) {
+		$files = $_FILES;
+		foreach ( $files as $input => $info_arr ) {
+
+			$finfo            = finfo_open( FILEINFO_MIME_TYPE );
+			$real_mime        = finfo_file( $finfo, $info_arr['tmp_name'] );
+			$info_arr['type'] = $real_mime;
+			foreach ( $info_arr as $key => $value_arr ) {
+				$response[ $key ] = $value_arr;
+			}
+		}
+	}
+	wp_send_json_success( $response );
+}
+
+add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_file_mime_type' );

@@ -25,4 +25,4 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Support ticket links**
-If applicable, add Zendesk link or ticket number where the issue was originally reported.
+If applicable, add HelpScout link or ticket number where the issue was originally reported.

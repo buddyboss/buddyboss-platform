@@ -956,7 +956,6 @@ function bbp_hide_forum( $forum_id = 0, $current_visibility = '' ) {
  * @return array An array of the status code and the message
  */
 function bbp_repair_forum_visibility() {
-
 	// First, delete everything.
 	delete_option( '_bbp_private_forums' );
 	delete_option( '_bbp_hidden_forums' );
@@ -971,6 +970,10 @@ function bbp_repair_forum_visibility() {
 			'fields'           => 'ids',
 		)
 	);
+
+	// Reset the $post global
+	wp_reset_postdata();
+
 	$hidden_forums  = new WP_Query(
 		array(
 			'suppress_filters' => true,
@@ -1863,6 +1866,19 @@ function bbp_exclude_forum_ids( $type = 'string' ) {
 
 		// There are forums that need to be excluded
 		if ( ! empty( $forum_ids ) ) {
+
+			// check the user is the member of group or not while rendering the shortcode with group.
+			if ( bp_is_active( 'groups' ) ) {
+				foreach ( $forum_ids as $k => $forum_id ) {
+					$group_id  = bbp_forum_recursive_group_id( $forum_id );
+					if ( ! empty( $group_id ) ) {
+						$is_member = groups_is_user_member( bbp_get_current_user_id(), $group_id );
+						if ( ! empty( $is_member ) ) {
+							unset( $forum_ids[ $k ] );
+						}
+					}
+				}
+			}
 
 			switch ( $type ) {
 

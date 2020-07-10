@@ -53,9 +53,7 @@ jQuery( document ).ready(
 			jQuery('body #bbp_topic_tags').val(tags);
 
 			jQuery( 'body .select2-search__field' ).trigger( 'click' );
-			console.log('1');
 			jQuery( 'body .select2-search__field' ).trigger( 'click' );
-			console.log('111');
 		});
 
 		// Remove element into the Arrdata array.
@@ -141,7 +139,7 @@ jQuery( document ).ready(
 		}
 
 		//Add Click event to show / hide text formatting Toolbar
-		
+
 		jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar, .bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
 			e.preventDefault();
 			var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
