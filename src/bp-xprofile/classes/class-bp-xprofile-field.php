@@ -1661,7 +1661,7 @@ class BP_XProfile_Field {
 			}
 
 			if ( 'first_last_name' === $display_name_format ) {
-				if ( $this->id && in_array( $this->id, array( $first_name_id, $last_name_id ) ) ) {
+				if ( $this->id && in_array( $this->id, array( $first_name_id ) ) ) {
 					return;
 				}
 			} elseif ( 'first_name' === $display_name_format ) {

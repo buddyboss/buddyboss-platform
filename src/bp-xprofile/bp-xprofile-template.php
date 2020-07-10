@@ -998,7 +998,7 @@ function bp_get_the_profile_field_visibility_level_label() {
 	$display_name_format = bp_core_display_name_format();
 
 	if ( 'first_last_name' === $display_name_format ) {
-		if ( $field->id && in_array( $field->id, array( $first_name_id, $last_name_id ) ) ) {
+		if ( $field->id && in_array( $field->id, array( $first_name_id ) ) ) {
 			$level = 'public';
 		}
 	} elseif ( 'first_name' === $display_name_format ) {

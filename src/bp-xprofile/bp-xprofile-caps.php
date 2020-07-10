@@ -116,7 +116,7 @@ function bp_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $use
 		}
 
 		if ( 'first_last_name' === $display_name_format ) {
-			if ( $field_id && in_array( $field_id, array( $first_name_id, $last_name_id ) ) ) {
+			if ( $field_id && in_array( $field_id, array( $first_name_id ) ) ) {
 				$user_can = false;
 			}
 		} elseif ( 'first_name' === $display_name_format ) {
