@@ -26,6 +26,8 @@
 
 			<?php bbp_get_template_part( 'loop', 'forums' ); ?>
 
+			<?php bbp_get_template_part( 'pagination', 'forums'    ); ?>
+
 		<?php endif; ?>
 
 		<?php if ( ! bbp_is_forum_category() && bbp_has_topics() ) : ?>
