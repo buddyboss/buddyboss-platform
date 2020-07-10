@@ -1657,6 +1657,16 @@ window.bp = window.bp || {};
 				page         : self.getLinkParams( navLink.prop( 'href' ), pagArg ) || 1
 			};
 
+			// Set group type with pagination.
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				queryData['group_type'] = $( '#buddypress [data-bp-group-type-filter]' ).val();
+			}
+
+			// Set member type with pagination.
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				queryData['member_type_id'] = $( '#buddypress [data-bp-member-type-filter]' ).val();
+			}
+
 			// Request the page
 			self.objectRequest( queryData );
 		},
