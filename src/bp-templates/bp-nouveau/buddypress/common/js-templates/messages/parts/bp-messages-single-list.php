@@ -58,6 +58,7 @@
 				<div class="bb-activity-media-elem">
 					<a class="bb-open-media-theatre bb-photo-cover-wrap"
 					   data-id="{{data.media[i].id}}"
+					   data-attachment-id="{{data.media[i].attachment_id}}"
 					   data-attachment-full="{{data.media[i].full}}"
 					   data-privacy="{{data.media[i].privacy}}"
 					   href="#">
@@ -80,6 +81,8 @@
 							   class="document-detail-wrap bb-open-document-theatre"
 							   data-id="{{data.document[i].id}}"
 							   data-activity-id=""
+							   data-icon-class={{data.document[i].svg_icon}}"
+							   data-attachment-id="{{data.document[i].attachment_id}}"
 							   data-attachment-full=""
 							   data-privacy="{{data.document[i].privacy}}"
 							   data-extension="{{data.document[i].extension}}"

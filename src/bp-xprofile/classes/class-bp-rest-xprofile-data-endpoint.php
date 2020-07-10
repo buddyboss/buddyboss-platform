@@ -103,6 +103,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Field data for the user.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} field_id The ID of the field the data is from.
 	 * @apiParam {Number} user_id The ID of user the field data is from.
 	 */

@@ -1705,24 +1705,13 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 
 		// User name must pass WP's validity check.
 		if ( ! validate_username( $user_name ) ) {
-			$errors->add( 'user_name', __( 'Usernames can contain only letters, numbers, ., -, and @', 'buddyboss' ) );
+			$field_name = xprofile_get_field( bp_xprofile_nickname_field_id() )->name;
+			$errors->add( 'user_name', sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name ) );
 		}
 
 		// Minimum of 4 characters.
 		if ( strlen( $user_name ) < 3 ) {
 			$errors->add( 'user_name', __( 'Username must be at least 3 characters', 'buddyboss' ) );
-		}
-
-		// No underscores. @todo Why not?
-		if ( false !== strpos( ' ' . $user_name, '_' ) ) {
-			$errors->add( 'user_name', __( 'Sorry, usernames may not contain the character "_"!', 'buddyboss' ) );
-		}
-
-		// No usernames that are all numeric. @todo Why?
-		$match = array();
-		preg_match( '/[0-9]*/', $user_name, $match );
-		if ( $match[0] == $user_name ) {
-			$errors->add( 'user_name', __( 'Sorry, usernames must have letters too!', 'buddyboss' ) );
 		}
 
 		// Check into signups.
@@ -2955,12 +2944,12 @@ function bp_register_member_type_section() {
 			array(
 				'description'        => __( 'BuddyBoss profile type', 'buddyboss' ),
 				'labels'             => bp_get_member_type_post_type_labels(),
-				'public'             => true,
-				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+				'public'             => false,
+				'publicly_queryable' => false,
 				'query_var'          => false,
 				'rewrite'            => false,
 				'show_in_admin_bar'  => false,
-				'show_in_menu'       => '',
+				'show_in_menu'       => false,
 				'map_meta_cap'       => true,
 				'show_in_rest'       => true,
 				'show_ui'            => bp_current_user_can( 'bp_moderate' ),
@@ -3874,7 +3863,14 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 				$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 			} else {
 				$split_value    = explode( '_', $gender );
-				$gender_pronoun = $split_value[0];
+				if ( 'his' === $split_value[0] ) {
+					$gender_pronoun = esc_html__( 'his', 'buddyboss' );
+				} elseif ( 'her' === $split_value[0] ) {
+					$gender_pronoun = esc_html__( 'her', 'buddyboss' );
+				} else {
+					$gender_pronoun = esc_html__( 'their', 'buddyboss' );
+				}
+
 			}
 		} else {
 			$gender_pronoun = esc_html__( 'their', 'buddyboss' );

@@ -105,6 +105,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Media
 	 * @apiDescription Retrieve Albums.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -237,6 +238,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Media
 	 * @apiDescription Retrieve a single Album.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the Album.
 	 */
 	public function get_item( $request ) {

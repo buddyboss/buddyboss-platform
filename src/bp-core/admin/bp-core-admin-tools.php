@@ -420,14 +420,6 @@ function bp_admin_repair_list() {
 		'bp_admin_invitations_table',
 	);
 
-	if ( bp_is_active( 'media' ) ) {
-		$repair_list[111] = array(
-				'bp-media-forum-privacy-repair',
-				__( 'Repair forum media privacy', 'buddyboss' ),
-				'bp_media_forum_privacy_repair',
-		);
-	}
-
 	ksort( $repair_list );
 
 	/**
@@ -1101,15 +1093,18 @@ function bp_admin_repair_nickname_value() {
  * @since BuddyBoss 1.1.8
  */
 function bp_admin_repair_tools_wrapper_function() {
-
-	$type = isset( $_POST['type'] ) ? $_POST['type'] : '';
-
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
+			'feedback' => sprintf(
+					'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+					esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			),
 	);
+
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+
+	if ( empty( $type ) ) {
+		wp_send_json_error( $response );
+	}
 
 	// Bail if not a POST action.
 	if ( ! bp_is_post_request() ) {
@@ -1129,35 +1124,45 @@ function bp_admin_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
-	if ( 'bp-user-friends' === $type ) {
-		$status = bp_admin_repair_friend_count();
-	} elseif ( 'bp-group-count' === $type ) {
-		$status = bp_admin_repair_group_count();
-	} elseif ( 'bp-total-member-count' === $type ) {
-		$status = bp_admin_repair_count_members();
-	} elseif ( 'bp-last-activity' === $type ) {
-		$status = bp_admin_repair_last_activity();
-	} elseif ( 'bp-xprofile-fields' === $type ) {
-		$status = repair_default_profiles_fields();
-	} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-		$status = resync_xprofile_wordpress_fields();
-	} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-		$status = resync_wordpress_xprofile_fields();
-	} elseif ( 'bp-wordpress-update-display-name' === $type ) {
-		$status = xprofile_update_display_names();
-	} elseif ( 'bp-blog-records' === $type ) {
-		$status = bp_admin_repair_blog_records();
-	} elseif ( 'bp-reinstall-emails' === $type ) {
-		$status = bp_admin_reinstall_emails();
-	} elseif ( 'bp-assign-member-type' === $type ) {
-		$status = bp_admin_assign_member_type();
-	} elseif ( 'bp-sync-activity-favourite' === $type ) {
-		$status = bp_admin_update_activity_favourite();
-	} elseif ( 'bp-invitations-table' === $type ) {
-		$status = bp_admin_invitations_table();
-	} elseif ( 'bp-media-forum-privacy-repair' === $type ) {
-		$status = bp_media_forum_privacy_repair();
+	$repair_list = bp_admin_repair_list();
+
+	$status = array();
+	foreach ( $repair_list as $repair_item ) {
+		if ( $repair_item[0] === $type && is_callable( $repair_item[2] ) ) {
+			$status = call_user_func( $repair_item[2] );
+			break;
+		}
 	}
+
+//	if ( 'bp-user-friends' === $type ) {
+//		$status = bp_admin_repair_friend_count();
+//	} elseif ( 'bp-group-count' === $type ) {
+//		$status = bp_admin_repair_group_count();
+//	} elseif ( 'bp-total-member-count' === $type ) {
+//		$status = bp_admin_repair_count_members();
+//	} elseif ( 'bp-last-activity' === $type ) {
+//		$status = bp_admin_repair_last_activity();
+//	} elseif ( 'bp-xprofile-fields' === $type ) {
+//		$status = repair_default_profiles_fields();
+//	} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
+//		$status = resync_xprofile_wordpress_fields();
+//	} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
+//		$status = resync_wordpress_xprofile_fields();
+//	} elseif ( 'bp-wordpress-update-display-name' === $type ) {
+//		$status = xprofile_update_display_names();
+//	} elseif ( 'bp-blog-records' === $type ) {
+//		$status = bp_admin_repair_blog_records();
+//	} elseif ( 'bp-reinstall-emails' === $type ) {
+//		$status = bp_admin_reinstall_emails();
+//	} elseif ( 'bp-assign-member-type' === $type ) {
+//		$status = bp_admin_assign_member_type();
+//	} elseif ( 'bp-sync-activity-favourite' === $type ) {
+//		$status = bp_admin_update_activity_favourite();
+//	} elseif ( 'bp-invitations-table' === $type ) {
+//		$status = bp_admin_invitations_table();
+//	} elseif ( 'bp-media-forum-privacy-repair' === $type ) {
+//		$status = bp_media_forum_privacy_repair();
+//	}
 	wp_send_json_success( $status );
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );
@@ -1302,41 +1307,4 @@ function bp_admin_invitations_table() {
 		'status'  => 0,
 		'message' => sprintf( $statement, $result ),
 	);
-}
-
-/**
- * Resync BuddyBoss Forum media privacy.
- *
- * @since BuddyBoss 1.4.2
- */
-function bp_media_forum_privacy_repair() {
-	global $wpdb;
-	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$bp 		= buddypress();
-	$squery 	= "SELECT p.ID as post_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != '' LIMIT 20 OFFSET $offset ";
-	$records 	= $wpdb->get_col( $squery );
-	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
-		foreach ( $records as $record ) {
-			if ( !empty( $record ) ) {
-				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
-				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ")";
-					$wpdb->query( $update_query );
-				}
-			}
-			$offset++;
-		}
-		$records_updated = sprintf( __( '%s Forums media privacy updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
-		return array(
-				'status'  => 'running',
-				'offset'  => $offset,
-				'records' => $records_updated,
-		);
-	} else {
-		$statement = __( 'Forums media privacy updated %s', 'buddyboss' );
-		return array(
-				'status'  => 1,
-				'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
-		);
-	}
 }

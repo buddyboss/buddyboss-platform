@@ -124,7 +124,7 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve group Members.
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
@@ -1141,78 +1141,59 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 		// check if subgroup.
 		$parent_group_id = $group->parent_id;
 
-		if ( isset( $parent_group_id ) && $parent_group_id > 0 ) {
-			$check_admin = groups_is_user_admin( $user_id, $parent_group_id );
-			$check_moder = groups_is_user_mod( $user_id, $parent_group_id );
+		if ( 'invite' === $request['scope'] ) {
 
-			// Check role of current logged in user for this group.
-			if (
-				( false === $check_admin && false === $check_moder )
-				|| ( false !== $user_id && ! bp_user_can( $user_id, 'bp_moderate' ) )
-			) {
-				return new WP_Error(
-					'bp_rest_group_invites_cannot_get_items',
-					__( 'You are not authorized to send invites to other users.', 'buddyboss' ),
-					array(
-						'status' => rest_authorization_required_code(),
-					)
-				);
+			$group_type = bp_groups_get_group_type( $args['group_id'] );
+
+			// Include profile type if in Group Types > E.g Team > Group Invites ( Meta Box ) specific profile type selected.
+			if ( false !== $group_type && function_exists( 'bp_group_get_group_type_id' ) ) {
+				$group_type_id             = bp_group_get_group_type_id( $group_type );
+				$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_group_invites', true );
+				if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
+					$args['member_type'] = implode( ',', $get_selected_member_types );
+				}
 			}
-		}
 
-		$group_type = bp_groups_get_group_type( $group->id );
-
-		// Include profile type if in Group Types > E.g Team > Group Invites ( Meta Box ) specific profile type selected.
-		if ( false !== $group_type ) {
-			$group_type_id             = bp_group_get_group_type_id( $group_type );
-			$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_group_invites', true );
-			if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
-				$args['member_type'] = implode( ',', $get_selected_member_types );
-			}
-		}
-
-		// Include users ( Restrict group invites to only members of who already exists in parent group ) in BuddyBoss > Settings > Social Groups > Group Hierarchies.
-		if ( true === bp_enable_group_hierarchies() ) {
-			if ( true === bp_enable_group_restrict_invites() ) {
-				$parent_group_id = bp_get_parent_group_id( $group->id );
-				if ( $parent_group_id > 0 ) {
-					$members_query   = groups_get_group_members(
-						array(
-							'group_id' => $parent_group_id,
-						)
-					);
-					$members         = wp_list_pluck( $members_query['members'], 'ID' );
-					$args['include'] = implode( ',', $members );
-
-					if ( empty( $args['include'] ) ) {
-
-						return new WP_Error(
-							'bp_rest_group_invites_cannot_get_items',
-							__( 'No members found in parent group.', 'buddyboss' ),
+			// Include users ( Restrict group invites to only members of who already exists in parent group ) in BuddyBoss > Settings > Social Groups > Group Hierarchies.
+			if ( function_exists( 'bp_enable_group_hierarchies' ) && true === bp_enable_group_hierarchies() ) {
+				if ( true === bp_enable_group_restrict_invites() ) {
+					$parent_group_id = bp_get_parent_group_id( $args['group_id'] );
+					if ( $parent_group_id > 0 ) {
+						$members_query   = groups_get_group_members(
 							array(
-								'status' => 202,
+								'group_id' => $parent_group_id,
 							)
 						);
+						$members         = wp_list_pluck( $members_query['members'], 'ID' );
+						$args['include'] = implode( ',', $members );
+
+						if ( empty( $args['include'] ) ) {
+							return new WP_Error(
+								'bp_rest_group_invites_no_member_found_in_parent',
+								__( 'No members found in parent group.', 'buddyboss' ),
+								array(
+									'status' => 202,
+								)
+							);
+						}
 					}
 				}
 			}
-		}
 
-		// Exclude users if ( Restrict invites if user already in other same group type ) is checked.
-		if ( false !== $group_type ) {
-			$group_type_id                         = bp_group_get_group_type_id( $group_type );
-			$meta                                  = get_post_custom( $group_type_id );
-			$get_restrict_invites_same_group_types = isset( $meta['_bp_group_type_restrict_invites_user_same_group_type'] ) ? intval( $meta['_bp_group_type_restrict_invites_user_same_group_type'][0] ) : 0;
-			if ( 1 === $get_restrict_invites_same_group_types ) {
-				$group_arr = bp_get_group_ids_by_group_types( $group_type );
-				if ( isset( $group_arr ) && ! empty( $group_arr ) ) {
-					$group_arr = wp_list_pluck( $group_arr, 'id' );
-					$key       = array_search( $group->id, $group_arr, true );
-					if ( false !== $key ) {
-						unset( $group_arr[ $key ] );
-					}
-					$member_arr = array();
-					if ( ! empty( $group_arr ) ) {
+			// Exclude users if ( Restrict invites if user already in other same group type ) is checked.
+			if ( false !== $group_type && function_exists( 'bp_group_get_group_type_id' ) ) {
+				$group_type_id                         = bp_group_get_group_type_id( $group_type );
+				$meta                                  = get_post_custom( $group_type_id );
+				$get_restrict_invites_same_group_types = isset( $meta['_bp_group_type_restrict_invites_user_same_group_type'] ) ? intval( $meta['_bp_group_type_restrict_invites_user_same_group_type'][0] ) : 0;
+				if ( 1 === $get_restrict_invites_same_group_types ) {
+					$group_arr = bp_get_group_ids_by_group_types( $group_type );
+					if ( isset( $group_arr ) && ! empty( $group_arr ) ) {
+						$group_arr = wp_list_pluck( $group_arr, 'id' );
+						$key       = array_search( $args['group_id'], $group_arr, true );
+						if ( false !== $key ) {
+							unset( $group_arr[ $key ] );
+						}
+						$member_arr = array();
 						foreach ( $group_arr as $group_id ) {
 							$members_query = groups_get_group_members(
 								array(
@@ -1220,21 +1201,30 @@ class BP_REST_Group_Membership_Endpoint extends WP_REST_Controller {
 								)
 							);
 							$members_list  = wp_list_pluck( $members_query['members'], 'ID' );
-							if ( ! empty( $members_list ) ) {
-								foreach ( $members_list as $id ) {
-									$member_arr[] = $id;
-								}
+							foreach ( $members_list as $id ) {
+								$member_arr[] = $id;
 							}
 						}
+						$member_arr = array_unique( $member_arr );
+						if ( isset( $members ) && ! empty( $members ) ) {
+							$members         = array_diff( $members, $member_arr );
+							$args['include'] = implode( ',', $members );
+						}
+						$args['exclude'] = implode( ',', $member_arr );
 					}
-					$member_arr = array_unique( $member_arr );
-					if ( isset( $members ) && ! empty( $members ) ) {
-						$members         = array_diff( $members, $member_arr );
-						$args['include'] = implode( ',', $members );
-					}
-					$args['exclude'] = implode( ',', $member_arr );
 				}
 			}
+		}
+
+		// Check role of current logged in user for this group.
+		if ( ! bp_groups_user_can_send_invites( $args['group_id'] ) ) {
+			return new WP_Error(
+				'bp_rest_group_invites_cannot_get_items',
+				__( 'You are not authorized to send invites to other users.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
 		}
 
 		$bp->groups->invites_scope = 'members';
