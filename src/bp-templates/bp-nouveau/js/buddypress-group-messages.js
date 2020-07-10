@@ -529,6 +529,10 @@ window.bp = window.bp || {};
 									feedbackSelector.hide();
 									feedbackSelector.after( feedbackHtmlSuccess );
 
+									// Reset formatting of editor
+									window.group_messages_editor.execAction('selectAll');
+									window.group_messages_editor.execAction('removeFormate');
+									
 									window.group_messages_editor.setContent( '' );
 									if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 

@@ -2764,6 +2764,9 @@ window.bp = window.bp || {};
 					tinyMCE.activeEditor.setContent( '' );
 					jQuery( tinyMCE.activeEditor.formElement ).removeClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
+					// Reset Formatting
+					bp.Nouveau.Messages.mediumEditor.execAction('selectAll');
+					bp.Nouveau.Messages.mediumEditor.execAction('removeFormate');
 					bp.Nouveau.Messages.mediumEditor.setContent( '' );
 					jQuery( '#message_content' ).removeClass( 'loading' );
 				}

@@ -2351,6 +2351,10 @@ window.bp = window.bp || {};
 							self.model.set( 'document',documents );
 						}
 
+							// Reset formatting of editor
+							window.group_messages_editor.execAction('selectAll');
+							window.group_messages_editor.execAction('removeFormate');
+
 							// Reset the form.
 							self.resetForm();
 
