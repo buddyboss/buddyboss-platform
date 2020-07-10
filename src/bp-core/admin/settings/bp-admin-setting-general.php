@@ -57,7 +57,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'child-no-padding-first registration-form-main-select';
-			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
+			$this->add_field( 'allow-custom-registration', __( 'Registration Form', 'buddyboss' ), 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
 			$args          = array();
 			$args['class'] = 'child-no-padding register-text-box';
@@ -75,7 +75,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'registration-form-main-select';
-			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
+			$this->add_field( 'allow-custom-registration', __( 'Registration Form', 'buddyboss' ), 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
 			$args          = array();
 			$args['class'] = 'child-no-padding register-text-box';

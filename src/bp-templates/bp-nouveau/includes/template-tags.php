@@ -2371,8 +2371,9 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 	}
 
 	foreach ( $fields as $name => $attributes ) {
-		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes );
-
+		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes ); ?>
+		<div class="bb-signup-field <?php echo esc_attr( $name ); ?>">
+		<?php
 		// Text fields are using strings, radios are using their inputs
 		$label_output = '<label for="%1$s">%2$s</label>';
 		$id           = $name;
@@ -2480,7 +2481,17 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		// Not a radio, let's output the field
 		if ( 'radio' !== $type ) {
 			if ( 'signup_blog_url' !== $name ) {
+
+				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
+					echo '<div class="bb-password-wrap">';
+					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>';
+				}
+
 				print( $field_output );  // Constructed safely above.
+
+				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
+					echo '</div>';
+				}
 
 				// If it's the signup blog url, it's specific to Multisite config.
 			} elseif ( is_subdomain_install() ) {
@@ -2508,8 +2519,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		}
 
 		// Password strength is restricted to the signup_password field
-		if ( 'signup_password' === $name ) :
-			?>
+		if ( 'signup_password' === $name ) : ?>
 			<div id="pass-strength-result"></div>
 			<?php
 		endif;
@@ -2519,7 +2529,9 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			?>
 			<div id="email-strength-result"></div>
 			<?php
-		endif;
+		endif; ?>
+
+		</div><?php
 	}
 
 	/**

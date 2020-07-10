@@ -56,6 +56,9 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
+			// Toggle password text
+			this.togglePassword();
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -1696,6 +1699,19 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+		togglePassword: function() {
+                    $( document ).on( 'click', '.bb-toggle-password', function ( e ) {
+                        e.preventDefault();
+                        var $this = $( this );
+                        var $input = $this.next( 'input' );
+                        $this.toggleClass( 'bb-show-pass' );
+                        if ( $this.hasClass( 'bb-show-pass' ) ) {
+                                $input.attr( 'type', 'text' );
+                        } else {
+                                $input.attr( 'type', 'password' );
+                        }
+                    } );
 		},
 
 		/**
