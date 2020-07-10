@@ -31,7 +31,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: ['meta','div','section','button','svg','canvas','figure','input','textarea','form' ],
+								cleanTags: [ 'meta', 'div', 'section', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'tr', 'td', 'th' ],
 								unwrapTags: []
 							}
 						}
@@ -72,7 +72,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: ['meta','div','section','button','svg','canvas','figure','input','textarea','form' ],
+								cleanTags: [ 'meta', 'div', 'section', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'tr', 'td', 'th' ],
 								unwrapTags: []
 							}
 						}
@@ -113,7 +113,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: ['meta','div','section','button','svg','canvas','figure','input','textarea','form' ],
+								cleanTags: [ 'meta', 'div', 'section', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'tr', 'td', 'th' ],
 								unwrapTags: []
 							}
 						}
