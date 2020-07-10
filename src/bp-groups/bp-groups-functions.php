@@ -3620,7 +3620,7 @@ function bp_group_type_short_code_callback( $atts ) {
 					unset( $atts['type'] );
 					$bp_group_type_query = build_query( $atts );
 					if ( ! empty( $bp_group_type_query ) ) {
-						$bp_group_type_query = '&' . $bp_group_type_query;
+						$bp_group_type_query = '&' . $bp_group_type_query . '&show_hidden=true';
 					}
 					update_option( 'bp_group_type_short_code_query_build', $bp_group_type_query );
 
