@@ -19,7 +19,7 @@ add_filter( 'bp_core_wpsignup_redirect', 'bp_ld_popup_register_redirect', 10 );
 /* Actions *******************************************************************/
 add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
-add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 9999999999999 );
+add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 99 );
 
 /** Functions *****************************************************************/
 
