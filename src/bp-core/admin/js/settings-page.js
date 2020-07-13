@@ -667,6 +667,9 @@
 			if ( $( '#bp-tools-submit' ).length ) {
 
 					var bp_admin_repair_tools_wrapper_function = function( offset, currentAction ) {
+						if ( typeof BbToolsCommunityRepairActions[currentAction] === 'undefined' ) {
+							return false;
+						}
 						$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<div class="loader-repair-tools"></div>' );
 						$.ajax(
 							{
@@ -679,20 +682,25 @@
 									'nonce' : $( 'body .section-repair_community .settings fieldset .submit input[name="_wpnonce"]' ).val()
 								},
 								'success' : function( response ) {
-									if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
-										if ( 'running' === response.data.status ) {
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools' ).remove();
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code' ).remove();
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<code>' + response.data.records + '</code>' );
-											bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
+									if ( typeof response.success !== 'undefined' ) {
+										if ( response.success && typeof response.data !== 'undefined' ) {
+											if ('running' === response.data.status) {
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code').remove();
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]').append('<code>' + response.data.records + '</code>');
+												bp_admin_repair_tools_wrapper_function(response.data.offset, currentAction);
+											} else {
+												$('body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+												$('.section-repair_community .settings fieldset').append('<div class="updated"><p>' + response.data.message + '</p></div>');
+												currentAction = currentAction + 1;
+												bp_admin_repair_tools_wrapper_function(response.data.offset, currentAction);
+											}
+											if (BbToolsCommunityRepairActions.length === currentAction) {
+												$('body .section-repair_community .settings fieldset .submit a').removeClass('disable-btn');
+											}
 										} else {
-											$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools' ).remove();
-											$( '.section-repair_community .settings fieldset' ).append( '<div class="updated"><p>' + response.data.message + '</p></div>' );
-											currentAction = currentAction + 1;
-											bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
-										}
-										if ( BbToolsCommunityRepairActions.length === currentAction ) {
 											$( 'body .section-repair_community .settings fieldset .submit a' ).removeClass( 'disable-btn' );
+											return false;
 										}
 									}
 								},
@@ -747,6 +755,7 @@
 									'action': 'bp_admin_forum_repair_tools_wrapper_function',
 									'type': BbToolsForumsRepairActions[currentAction],
 									'offset': offset,
+									'site_id': $('body .section-repair_forums #bbp-network-site').val(),
 									'nonce': $( 'body .section-repair_forums .settings fieldset .submit input[name="_wpnonce"]' ).val()
 								},
 								'success': function (response) {
@@ -787,6 +796,12 @@
 						e.preventDefault();
 
 						BbToolsForumsRepairActions = [];
+						var $bbp_network_site = $('body .section-repair_forums #bbp-network-site');
+
+						if ($bbp_network_site.length && '0' === $bbp_network_site.val() ) {
+							alert(BP_ADMIN.tools.repair_forums.validate_site_id_message);
+							return false;
+						}
 
 						setTimeout(
 							function () {

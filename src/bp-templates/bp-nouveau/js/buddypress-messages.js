@@ -692,29 +692,27 @@ window.bp = window.bp || {};
 			activateTinyMce: function() {
 				if ( ! _.isUndefined( window.MediumEditor ) ) {
 
-					bp.Nouveau.Messages.mediumEditor = new window.MediumEditor(
-						'#message_content',
-						{
-							placeholder: {
-								text: BP_Nouveau.messages.type_message,
-								hideOnClick: true
-							},
-							toolbar: {
-								buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-								relativeContainer: document.getElementById( 'whats-new-messages-toolbar' ),
-								static: true,
-								updateOnEmptySelection: true
-							},
-							paste: {
-								forcePlainText: false,
-								cleanPastedHTML: true,
-								cleanReplacements: [],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
-								unwrapTags: []
-							}
-							}
-					);
+				bp.Nouveau.Messages.mediumEditor = new window.MediumEditor('#message_content',{
+					placeholder: {
+						text: BP_Nouveau.messages.type_message,
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-messages-toolbar'),
+						static: true,
+						updateOnEmptySelection: true
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: true,
+						cleanReplacements: [],
+						cleanAttrs: ['class', 'style', 'dir'],
+						cleanTags: ['meta'],
+						unwrapTags: []
+					},
+					imageDragging: false
+				});
 
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 						! _.isUndefined( BP_Nouveau.media.emoji ) &&

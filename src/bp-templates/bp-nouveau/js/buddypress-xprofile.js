@@ -25,13 +25,22 @@ window.bp = window.bp || {};
             var title = '';
             $set.find('.editfield').each( function(){
                 var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
-                if ( $.trim( field_val ) !== '' ) {
+                var field_name = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).attr('name' );
+				var name_split = ( field_name ? field_name.split('_') : '' );
+				var arrayContainsVisibility = (name_split.indexOf('visibility') > -1);
+                if ( $.trim( field_val ) !== '' && ! arrayContainsVisibility ) {
                     title = $.trim( field_val );
                     return false;
                 }
             });
 
-            $set.find('.repeater_set_title').html( title );
+            if ( '' === title ) {
+				$set.find('.repeater_set_title').addClass( 'repeater_set_title_empty' );
+				$set.find('.repeater_set_title').html( BP_Nouveau.empty_field );
+			} else {
+				$set.find('.repeater_set_title').html( title );
+			}
+
         });
 
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
@@ -56,6 +65,11 @@ window.bp = window.bp || {};
         $(this).parents('.repeater_group_outer').toggleClass('active');
     });
 
+    if (window.location.href.indexOf('#bpxpro') > -1) {
+        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
+        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
+      }
+
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
@@ -68,16 +82,17 @@ window.bp = window.bp || {};
         if ( r ) {
             var deleted_field_ids = [];
 
-            $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function(){
-                var $field = $(this);
-                var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
-				if( 'undefined' !== typeof field_id ) {
-					field_id = field_id.replace( 'field_', '' );
-					field_id = field_id.replace( '_day', '' );
-					field_id = field_id.replace( '[]', '' );
-					deleted_field_ids.push( field_id );
-				}
-            });
+	        $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function () {
+		        var $field = $( this );
+		        var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
+		        field_id = ( typeof field_id !== 'undefined' ) ? field_id : $field.find( 'textarea.wp-editor-area' ).attr( 'name' );
+		        if ( 'undefined' !== typeof field_id ) {
+			        field_id = field_id.replace( 'field_', '' );
+			        field_id = field_id.replace( '_day', '' );
+			        field_id = field_id.replace( '[]', '' );
+			        deleted_field_ids.push( field_id );
+		        }
+	        } );
 
             // Remove field set
             $delete_button.closest( '.repeater_group_outer' ).remove();
@@ -149,6 +164,8 @@ window.bp = window.bp || {};
             },
             'success' : function() {
                 //$button.closest('form').submit();
+                history.pushState('', document.title, window.location.pathname);
+                window.location.href += '#bpxpro';
                 window.location.reload();
             }
         });

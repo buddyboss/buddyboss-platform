@@ -39,15 +39,6 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 * Register the component routes.
 	 *
 	 * @since 0.1.0
-	 *
-	 * @api {POST} /wp-json/buddyboss/v1/members/action/:user_id Member Action
-	 * @apiName GetBBMembers-UpdateMembersAction
-	 * @apiGroup Members
-	 * @apiDescription Update members action
-	 * @apiVersion 1.0.0
-	 * @apiPermission LoggedInUser
-	 * @apiParam {Number} user_id A unique numeric ID for the member.
-	 * @apiParam {String=follow,unfollow} action Action name which you want to perform for the member.
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -83,6 +74,15 @@ class BP_REST_Members_Actions_Endpoint extends WP_REST_Users_Controller {
 	 *
 	 * @return bool|WP_Error
 	 * @since 0.1.0
+	 *
+	 * @api {POST} /wp-json/buddyboss/v1/members/action/:user_id Member Action
+	 * @apiName GetBBMembers-UpdateMembersAction
+	 * @apiGroup Members
+	 * @apiDescription Update members action
+	 * @apiVersion 1.0.0
+	 * @apiPermission LoggedInUser
+	 * @apiParam {Number} user_id A unique numeric ID for the member.
+	 * @apiParam {String=follow,unfollow} action Action name which you want to perform for the member.
 	 */
 	public function update_item( $request ) {
 		// Setting context.

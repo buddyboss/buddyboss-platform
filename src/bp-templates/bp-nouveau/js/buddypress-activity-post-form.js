@@ -943,26 +943,26 @@ window.bp = window.bp || {};
 		}
 	);
 
-	// The content of the activity.
-	bp.Views.WhatsNew = bp.View.extend(
-		{
-			tagName   : 'div',
-			className : 'bp-suggestions',
-			id        : 'whats-new',
-			events: {
-				'paste': 'handlePaste',
-				'keyup': 'handleKeyUp'
-			},
-			attributes: {
-				name         : 'whats-new',
-				cols         : '50',
-				rows         : '4',
-				placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
-				'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
-				contenteditable: true
-			},
-			loadURLAjax : null,
-			loadedURLs : [],
+	// The content of the activity
+	bp.Views.WhatsNew = bp.View.extend( {
+		tagName   : 'div',
+		className : 'bp-suggestions',
+		id        : 'whats-new',
+		events: {
+			'paste': 'handlePaste',
+			'keyup': 'handleKeyUp'
+		},
+		attributes: {
+			name         : 'whats-new',
+			cols         : '50',
+			rows         : '4',
+			placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
+			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
+			contenteditable: true,
+			'data-suggestions-group-id': ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'group' === BP_Nouveau.activity.params.object ? BP_Nouveau.activity.params.item_id : false,
+		},
+		loadURLAjax : null,
+		loadedURLs : [],
 
 			initialize: function() {
 				this.on( 'ready', this.adjustContent, this );
@@ -1084,9 +1084,9 @@ window.bp = window.bp || {};
 			loadURLPreview: function (url) {
 				var self = this;
 
-				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-				url        = $.trim( url );
-				if (regexp.test( url )) {
+				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?$/;
+				url = $.trim(url);
+				if (regexp.test(url)) {
 
 					if (typeof self.options.activity.get( 'link_success' ) !== 'undefined' && self.options.activity.get( 'link_success' ) == true) {
 						return false;
@@ -1185,21 +1185,19 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-					window.group_messages_editor = new window.MediumEditor(
-						'#whats-new',
-						{
-							placeholder: {
-								text: '',
-								hideOnClick: true
-							},
-							toolbar: {
-								buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-								relativeContainer: document.getElementById( 'whats-new-content' ),
-								static: true,
-								updateOnEmptySelection: true
-							}
-							}
-					);
+				window.group_messages_editor = new window.MediumEditor('#whats-new',{
+					placeholder: {
+						text: '',
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-content'),
+						static: true,
+						updateOnEmptySelection: true
+					},
+					imageDragging: false
+				});
 
 					// check for mentions in the url, if set any then focus to editor.
 					var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
@@ -2262,7 +2260,7 @@ window.bp = window.bp || {};
 				if ( this.model.get( 'link_success' ) ) {
 					var images = this.model.get( 'link_images' ),
 						index  = this.model.get( 'link_image_index' );
-					if ( images.length ) {
+					if ( images && images.length ) {
 						data = _.extend(
 							data,
 							{
