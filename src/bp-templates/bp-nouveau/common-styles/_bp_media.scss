@@ -3233,6 +3233,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 }
 
+.modal-container,
 #bp-media-create-folder {
 
 	.error-box {
@@ -3241,6 +3242,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		margin-top: 5px;
 	}
 
+	#bb-album-child-title.error + .error-box,
 	#bb-album-title.error + .error-box {
 		display: block;
 	}

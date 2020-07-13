@@ -3559,7 +3559,12 @@ window.bp = window.bp || {};
 		saveChildFolder: function (event) {
 			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' );
 			event.preventDefault();
-			if ($.trim( title.val() ) === '') {
+
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -3612,7 +3617,11 @@ window.bp = window.bp || {};
 				privacy = $( '#bp-media-edit-child-folder #bb-folder-privacy' ),
 				id	    = this.currentTargetParent;
 
-			if ($.trim( title.val() ) === '') {
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
