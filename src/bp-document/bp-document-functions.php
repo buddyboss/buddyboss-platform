@@ -1936,10 +1936,10 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			$link     = '';
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
-				$link = bp_displayed_user_domain() . bp_get_document_root_slug() . '/folders/' . $element['id'];
+				$link = bp_displayed_user_domain() . bp_get_document_slug() . '/folders/' . $element['id'];
 			} else {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
-				$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug() . '/folders/' . $element['id'];
+				$link  = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folders/' . $element['id'];
 			}
 			$html .= '<li> <a href=" ' . $link . ' ">' . stripslashes( $element['title'] ) . '</a></li>';
 		}

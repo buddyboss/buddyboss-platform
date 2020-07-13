@@ -901,18 +901,13 @@ function bp_media_activity_save_gif_data( $activity ) {
 }
 
 function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
-
+	
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-media-import',
-					'tab'  => 'bp-media-import',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-media-import',
+			'tab'  => 'bp-media-import',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Import Media', 'buddyboss' ),
 		'slug' => 'bp-media-import',
 	);

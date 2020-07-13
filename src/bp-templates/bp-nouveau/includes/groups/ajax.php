@@ -246,11 +246,12 @@ function bp_nouveau_ajax_joinleave_group() {
                 // Request is pending
                 $group->is_pending = '1';
 
-                $response = array(
-                    'contents' => bp_get_group_join_button( $group ),
-                    'is_group' => bp_is_group(),
-                    'type'     => 'success',
-                );
+	            $response = array(
+		            'contents'  => bp_get_group_join_button( $group ),
+		            'is_group'  => bp_is_group(),
+		            'type'      => 'success',
+		            'group_url' => ( bp_is_group() ? bp_get_group_permalink( $group ) : '' ),
+	            );
             }
             break;
 
