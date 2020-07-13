@@ -19,6 +19,8 @@ add_filter( 'bp_core_wpsignup_redirect', 'bp_ld_popup_register_redirect', 10 );
 /* Actions *******************************************************************/
 add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
+add_action( 'admin_bar_menu', 'bb_group_wp_admin_bar_updates_menu', 9999999999999 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -276,5 +278,28 @@ function bp_activity_add_meta_boxes() {
 		) {
 			bp_activity_post_type_publish( $post_ID, $post );
 		}
+	}
+}
+
+/**
+ * Learndash Plugin changing the Edit page link to homepage instead of the platform groups page.
+ *
+ * @since BuddyBoss 1.4.7
+ */
+function bb_group_wp_admin_bar_updates_menu() {
+	global $wp_admin_bar;
+
+	$page_ids = bp_core_get_directory_page_ids();
+	if ( bp_is_groups_directory() && is_array( $page_ids ) && isset( $page_ids['groups'] ) && !empty( $page_ids['groups'] ) ) {
+
+		//Get a reference to the edit node to modify.
+		$new_content_node = $wp_admin_bar->get_node('edit');
+
+		//Change href
+		$new_content_node->href = get_edit_post_link( $page_ids['groups'] );
+
+		//Update Node.
+		$wp_admin_bar->add_node($new_content_node);
+
 	}
 }
