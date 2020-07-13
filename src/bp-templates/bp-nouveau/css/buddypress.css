@@ -3719,6 +3719,10 @@ form.ac-form .ac-reply-content input {
   width: 100%;
 }
 
+.bp-profile-search-widget .bp-heading-field-wrap {
+  border-radius: 0;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 4.0 - Directories
@@ -3902,6 +3906,27 @@ body.register .registration-popup .mfp-close:hover {
   background-color: #ef3e46;
   border-color: #ef3e46;
   color: #fff;
+}
+
+.bb-password-wrap {
+  position: relative;
+}
+
+.bb-password-wrap a.bb-toggle-password {
+  color: rgba(18, 43, 70, 0.5);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+}
+
+.bb-password-wrap .bb-show-pass .bb-icon-eye:before {
+  content: "\e8fc";
 }
 
 /**
@@ -13558,7 +13583,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   align-items: flex-end;
   background-color: #fff;
   border-radius: 4px 4px 4px 5px;
-  position: relative;
+  position: initial;
 }
 
 .bb-document-theater .bb-media-section .document-preview {
@@ -13707,7 +13732,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   top: 0;
   left: 0;
   padding: 6px;
-  right: 0;
+  right: 375px;
   text-align: center;
   border-bottom: 1px solid #ecedee;
   font-size: 16px;

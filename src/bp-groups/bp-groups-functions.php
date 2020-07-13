@@ -3620,7 +3620,7 @@ function bp_group_type_short_code_callback( $atts ) {
 					unset( $atts['type'] );
 					$bp_group_type_query = build_query( $atts );
 					if ( ! empty( $bp_group_type_query ) ) {
-						$bp_group_type_query = '&' . $bp_group_type_query;
+						$bp_group_type_query = '&' . $bp_group_type_query . '&show_hidden=true';
 					}
 					update_option( 'bp_group_type_short_code_query_build', $bp_group_type_query );
 
@@ -4112,7 +4112,7 @@ function bp_groups_prime_mentions_results() {
 		return;
 	}
 
-	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id() ) );
+	$members = groups_get_group_members( array( 'exclude_admins_mods' => false, 'exclude' => get_current_user_id(), 'per_page' => 10, 'page' => 1 ) );
 	$results = array();
 
 	if ( ! empty( $members['members'] ) ) {

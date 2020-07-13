@@ -2751,9 +2751,9 @@ function bp_is_user_media() {
 }
 
 /**
- * Is this a user's media page?
+ * Is this a user's document page?
  *
- * Eg http://example.com/members/joe/media/ (or a subpage thereof).
+ * Eg http://example.com/members/joe/documents/ (or a subpage thereof).
  *
  * @since BuddyBoss 1.0.0
  *
