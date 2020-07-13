@@ -73,6 +73,28 @@ function groups_register_activity_actions() {
 add_action( 'bp_register_activity_actions', 'groups_register_activity_actions' );
 
 /**
+ * Get the group object the activity belongs to.
+ *
+ * @since BuddyBoss 1.3.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param integer $group_id The group ID the activity is linked to.
+ * @return BP_Groups_Group  The group object the activity belongs to.
+ */
+function bp_groups_get_activity_group( $group_id = 0 ) {
+	// If displaying a specific group, check the activity belongs to it.
+	if ( bp_is_group() && bp_get_current_group_id() === (int) $group_id ) {
+		$group = groups_get_current_group();
+
+		// Otherwise get the group the activity belongs to.
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	return $group;
+}
+
+/**
  * Format 'created_group' activity actions.
  *
  * @since BuddyPress 2.0.0
@@ -179,7 +201,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 function bp_groups_format_activity_action_group_details_updated( $action, $activity ) {
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
-	$group      = groups_get_group( $activity->item_id );
+	$group      = bp_groups_get_activity_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
 	/*
@@ -292,37 +314,98 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			: bp_loggedin_user_id();
 	}
 
+	// Fetch public groups.
+	$public_groups = groups_get_groups(
+		array(
+			'fields'   => 'ids',
+			'status'   => 'public',
+			'per_page' => - 1,
+			'user_id'  => $user_id,
+		)
+	);
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = array();
+	}
+
 	// Determine groups of user.
 	$groups = groups_get_user_groups( $user_id );
 	if ( empty( $groups['groups'] ) ) {
-		$groups = array( 'groups' => 0 );
+		$groups = array( 'groups' => array() );
 	}
+
+	$groups = $groups['groups'];
+
+	$private_group = array_diff( $groups, $public_groups );
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
+	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) && is_user_logged_in() ) {
+
+		// Determine groups of user.
+		$logged_in_user_groups = groups_get_user_groups( bp_loggedin_user_id() );
+		if ( ! empty( $logged_in_user_groups['groups'] ) ) {
+			$private_group = array_intersect( $private_group, $logged_in_user_groups['groups'] );
+		} else {
+			$show_hidden = array(
+				'column' => 'hide_sitewide',
+				'value'  => 0,
+			);
+		}
+	} else if ( ! is_user_logged_in() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
 		);
 	}
 
-	$retval = array(
+	if ( empty( $public_groups ) ) {
+		$public_groups = array( 0 );
+	}
+
+	if ( empty( $private_group ) ) {
+		$private_group = array( 0 );
+	}
+
+	$data = array(
 		'relation' => 'AND',
 		array(
-			'relation' => 'AND',
+			'column' => 'component',
+			'value'  => buddypress()->groups->id,
+		),
+		array(
+			'relation' => 'OR',
 			array(
-				'column' => 'component',
-				'value'  => buddypress()->groups->id,
+				'column'  => 'item_id',
+				'compare' => 'IN',
+				'value'   => (array) $public_groups,
 			),
 			array(
 				'column'  => 'item_id',
 				'compare' => 'IN',
-				'value'   => (array) $groups['groups'],
+				'value'   => (array) $private_group,
 			),
 		),
-		$show_hidden,
+		array(
+			'column'  => 'privacy',
+			'compare' => '=',
+			'value'   => 'public',
+		),
+	);
 
+	if ( bp_is_user() ) {
+		$data[] = array(
+			'column'  => 'user_id',
+			'compare' => '=',
+			'value'   => $user_id,
+		);
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		$data,
+		$show_hidden,
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),
@@ -365,11 +448,7 @@ function groups_record_activity( $args = '' ) {
 	// Set the default for hide_sitewide by checking the status of the group.
 	$hide_sitewide = false;
 	if ( ! empty( $args['item_id'] ) ) {
-		if ( bp_get_current_group_id() == $args['item_id'] ) {
-			$group = groups_get_current_group();
-		} else {
-			$group = groups_get_group( $args['item_id'] );
-		}
+		$group = bp_groups_get_activity_group( $args['item_id'] );
 
 		if ( isset( $group->status ) && 'public' != $group->status ) {
 			$hide_sitewide = true;

@@ -289,6 +289,11 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 		return false;
 	}
 
+	// Check the current user's access to the group.
+	if ( ! bp_groups_user_can_send_invites( $r['group_id'] ) ) {
+		return false;
+	}
+
 	/*
 	 * If it's not a friend request and users can restrict invites to friends,
 	 * make sure they are not displayed in results.
@@ -449,6 +454,8 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'item_id'    => $item->id,
 		'object'     => 'group',
 		'type'       => 'thumb',
+		'width'      => 100,
+		'height'     => 100,
 		'html'       => false
 	) );
 
@@ -844,6 +851,18 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			) );
 	}
 
+	if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+		$options['photos'] = __( 'Photos', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) {
+		$options['albums'] = __( 'Albums', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+		$options['documents'] = __( 'Documents', 'buddyboss' );
+	}
+
 	return array_merge( $controls,
 		array(
 			'group_nav_display' => array(
@@ -926,7 +945,7 @@ function bp_nouveau_group_locate_template_part( $template = '' ) {
 	// Use a global to avoid requesting the hierarchy for each template
 	if ( ! isset( $bp_nouveau->groups->current_group_hierarchy ) ) {
 		$bp_nouveau->groups->current_group_hierarchy = array(
-			'groups/single/%s-id-' . sanitize_file_name( $current_group->id ) . '.php',
+			'groups/single/%s-id-' . (int) $current_group->id . '.php',
 			'groups/single/%s-slug-' . sanitize_file_name( $current_group->slug ) . '.php',
 		);
 
