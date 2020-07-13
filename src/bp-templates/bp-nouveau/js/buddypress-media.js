@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind( this ) );
 			$( document ).on( 'click', '#bp-edit-folder-open', this.openEditFolderChildModal.bind( this ) );
 
-			$( document ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
+			$( document ).one( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( document ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
 			$( document ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
@@ -659,7 +659,11 @@ window.bp = window.bp || {};
 		},
 
 		bp_ajax_media_request: function (event, data) {
-			if (typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0) {
+			if ( BP_Nouveau.media.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups === 0 ) {
+				$( '.bb-photos-actions' ).hide();
+			} else if ( BP_Nouveau.media.group_id && typeof data !== 'undefined' && typeof data.response.scopes.groups !== 'undefined' && data.response.scopes.groups !== 0 ) {
+				$( '.bb-photos-actions' ).show();
+			} else if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0 ) {
 				$( '.bb-photos-actions' ).hide();
 			}
 		},
@@ -3404,8 +3408,7 @@ window.bp = window.bp || {};
 				privacy.removeClass( 'error' );
 			}
 
-			target.prop( 'disabled', true );
-
+			target.attr( 'disabled', true );
 			var data = {
 				'action'	: 'media_album_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,
@@ -4444,13 +4447,50 @@ window.bp = window.bp || {};
 			self.setCurrentMedia( id );
 			self.showMedia();
 			self.navigationCommands();
-			self.getActivity();
+
+			if (typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' && self.current_media.activity_id != 0 && ! self.current_media.is_forum ) {
+				self.getActivity();
+			} else {
+				self.getMediasDescription();
+			}
 
 			$( '.bb-media-model-wrapper.document' ).hide();
 			$( '.bb-media-model-wrapper.media' ).show();
 			self.is_open_media = true;
 
 			//document.addEventListener( 'keyup', self.checkPressedKey.bind( self ) );
+		},
+
+		getMediasDescription: function () {
+			var self = this;
+
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+
+			if (self.activity_ajax != false) {
+				self.activity_ajax.abort();
+			}
+
+			self.activity_ajax = $.ajax(
+				{
+					type	: 'POST',
+					url		: BP_Nouveau.ajaxurl,
+					data	: {
+						action		: 'media_get_media_description',
+						id			: self.current_media.id,
+						id1			: self.current_media.attachment_id,
+						nonce		: BP_Nouveau.nonces.media
+					},
+					success: function (response) {
+						if (response.success) {
+							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
+							$( '.bb-media-info-section:visible' ).show();
+							$( window ).scroll();
+						} else {
+							$( '.bb-media-info-section.media' ).hide();
+						}
+					}
+				}
+			);
 		},
 
 		openDocumentTheatre: function (event) {
@@ -4471,7 +4511,12 @@ window.bp = window.bp || {};
 			self.setCurrentDocument( id );
 			self.showDocument();
 			self.navigationDocumentCommands();
-			self.getDocumentsActivity();
+
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_document && typeof self.current_document.activity_id !== 'undefined' && self.current_document.activity_id != 0 && ! self.current_document.is_forum ) {
+				self.getDocumentsActivity();
+			} else {
+				self.getDocumentsDescription();
+			}
 
 			//Stop audio if it is playing before opening theater
 			if( $.inArray( self.current_document.extension, BP_Nouveau.document.mp3_preview_extension.split(',') ) !== -1 ) {
@@ -4612,6 +4657,7 @@ window.bp = window.bp || {};
 							id					: media_element.data( 'id' ),
 							attachment			: media_element.data( 'attachment-full' ),
 							activity_id			: media_element.data( 'activity-id' ),
+							attachment_id		: media_element.data( 'attachment-id' ),
 							privacy				: media_element.data( 'privacy' ),
 							parent_activity_id	: media_element.data( 'parent-activity-id' ),
 							album_id			: media_element.data( 'album-id' ),
@@ -4654,6 +4700,7 @@ window.bp = window.bp || {};
 							id					: document_element.data( 'id' ),
 							attachment			: document_element.data( 'attachment-full' ),
 							activity_id			: document_element.data( 'activity-id' ),
+							attachment_id		: document_element.data( 'attachment-id' ),
 							privacy				: document_element.data( 'privacy' ),
 							parent_activity_id	: document_element.data( 'parent-activity-id' ),
 							album_id			: document_element.data( 'album-id' ),
@@ -4758,7 +4805,6 @@ window.bp = window.bp || {};
 			var target_icon_class	= self.current_document.target_icon_class;
 			var document_elements 	= $( document ).find( '.document-theatre' );
 			var extension 			= self.current_document.extension;
-			var download 			= self.current_document.download;
 			var mirror_text_display = self.current_document.mirror_text;
 			if( $.inArray( self.current_document.extension, [ 'css', 'txt', 'js', 'html', 'htm', 'csv' ]) !== -1) {
 				document_elements.find( '.bb-document-section .document-preview' ).html('<i class="bb-icon-loader animate-spin"></i>');
@@ -4780,11 +4826,11 @@ window.bp = window.bp || {};
 				if ( self.current_document.preview ) {
 					document_elements.find( '.bb-document-section' ).removeClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<h3>' + target_text + '</h3><div class="img-section"><div class="img-block-wrap"> <img src="' + self.current_document.preview + '" /></div></div>' );
 				} else {
 					document_elements.find( '.bb-document-section' ).addClass( 'bb-media-no-preview' );
 					document_elements.find( '.bb-document-section .document-preview' ).html( '' );
-					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p><a class="download-button" href=" ' + download + ' ">' + BP_Nouveau.media.download_button + '</a></div>' );
+					document_elements.find( '.bb-document-section .document-preview' ).html( '<div class="img-section"> <i class="' + target_icon_class + '"></i><p>' + target_text + '</p></div>' );
 				}
 			}
 
@@ -4829,6 +4875,8 @@ window.bp = window.bp || {};
 				self.showMedia();
 				if (activity_id != self.current_media.activity_id) {
 					self.getActivity();
+				} else {
+					self.getMediasDescription();
 				}
 			} else {
 				self.nextLink.hide();
@@ -4846,6 +4894,8 @@ window.bp = window.bp || {};
 				self.showMedia();
 				if (activity_id != self.current_media.activity_id) {
 					self.getActivity();
+				} else {
+					self.getMediasDescription();
 				}
 			} else {
 				self.previousLink.hide();
@@ -4860,10 +4910,12 @@ window.bp = window.bp || {};
 			if (typeof self.documents[self.current_document_index + 1] !== 'undefined') {
 				self.current_document_index = self.current_document_index + 1;
 				activity_id        			= self.current_document.activity_id;
-				self.current_document = self.documents[self.current_document_index];
+				self.current_document 		= self.documents[self.current_document_index];
 				self.showDocument();
 				if (activity_id != self.current_document.activity_id) {
 					self.getDocumentsActivity();
+				} else {
+					self.getDocumentsDescription();
 				}
 			} else {
 				self.nextDocumentLink.hide();
@@ -4881,6 +4933,8 @@ window.bp = window.bp || {};
 				self.showDocument();
 				if (activity_id != self.current_document.activity_id) {
 					self.getDocumentsActivity();
+				} else {
+					self.getDocumentsDescription();
 				}
 			} else {
 				self.previousDocumentLink.hide();
@@ -5013,6 +5067,38 @@ window.bp = window.bp || {};
 			} else {
 				$( '.bb-media-info-section.document' ).hide();
 			}
+		},
+
+		getDocumentsDescription: function () {
+			var self = this;
+
+			$( '.bb-media-info-section .activity-list' ).addClass( 'loading' ).html( '<i class="bb-icon-loader animate-spin"></i>' );
+
+			if (self.activity_ajax != false) {
+				self.activity_ajax.abort();
+			}
+
+			self.activity_ajax = $.ajax(
+				{
+					type	: 'POST',
+					url		: BP_Nouveau.ajaxurl,
+					data	: {
+						action	: 'document_get_document_description',
+						id		: self.current_document.id,
+						id1		: self.current_document.attachment_id,
+						nonce	: BP_Nouveau.nonces.media
+					},
+					success: function (response) {
+						if (response.success) {
+							$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.description );
+							$( '.bb-media-info-section:visible' ).show();
+							$( window ).scroll();
+						} else {
+							$( '.bb-media-info-section.document' ).hide();
+						}
+					}
+				}
+			);
 		},
 
 		activityDeleted: function (event, data) {

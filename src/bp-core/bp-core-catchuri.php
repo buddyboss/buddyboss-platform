@@ -1133,7 +1133,7 @@ function bp_private_network_template_redirect() {
 
 	if ( ! is_user_logged_in() ) {
 
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+		$enable_private_network = bp_enable_private_network();
 
 		$page_ids            = bp_core_get_directory_page_ids();
 		$terms               = false;
@@ -1143,20 +1143,16 @@ function bp_private_network_template_redirect() {
 		$id                  = ( ! empty( $id ) ) ? $id : 0;
 		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
 
-		if ( '0' === $enable_private_network ) {
+		if ( ! $enable_private_network ) {
 
 			if ( apply_filters( 'bp_private_network_pre_check', false ) ) {
 				return;
 			}
 
 			$allow_custom_registration = bp_allow_custom_registration();
-			$actual_link                = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$actual_link               = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			if ( $allow_custom_registration ) {
-
-				$link_array = explode( '/', untrailingslashit( $actual_link ) );
-				$page       = end( $link_array );
-
-				if ( strpos( untrailingslashit( bp_custom_register_page_url() ), $page ) !== false ) {
+				if ( untrailingslashit( $actual_link ) === untrailingslashit( bp_custom_register_page_url() ) ) {
 					return;
 				}
 
@@ -1426,9 +1422,9 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 
 	if ( ! is_user_logged_in() ) {
 
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+		$enable_private_network = bp_enable_private_network();
 
-		if ( '0' === $enable_private_network ) {
+		if ( ! $enable_private_network ) {
 
 			$args = array( 'action' => 'lostpassword' );
 			if ( ! empty( $redirect ) ) {
@@ -1460,9 +1456,9 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 
 	if ( ! is_user_logged_in() ) {
 
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+		$enable_private_network = bp_enable_private_network();
 
-		if ( '0' === $enable_private_network ) {
+		if ( ! $enable_private_network ) {
 
 			$privacy_policy_url = get_privacy_policy_url();
 			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );

@@ -85,9 +85,11 @@ function bp_profile_search_register_post_type() {
 	$form_caps = apply_filters( 'bp_ps_form_caps', $form_caps );
 	foreach ( $form_caps as $key => $caps ) {
 		$role = get_role( $key );
-		foreach ( $caps as $cap ) {
-			if ( ! $role->has_cap( $cap ) ) {
-				$role->add_cap( $cap );
+		if ( ! empty( $role ) ) {
+			foreach ( $caps as $cap ) {
+				if ( ! $role->has_cap( $cap ) ) {
+					$role->add_cap( $cap );
+				}
 			}
 		}
 	}

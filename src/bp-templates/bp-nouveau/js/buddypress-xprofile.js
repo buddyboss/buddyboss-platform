@@ -25,13 +25,22 @@ window.bp = window.bp || {};
             var title = '';
             $set.find('.editfield').each( function(){
                 var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
-                if ( $.trim( field_val ) !== '' ) {
+                var field_name = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).attr('name' );
+				var name_split = ( field_name ? field_name.split('_') : '' );
+				var arrayContainsVisibility = (name_split.indexOf('visibility') > -1);
+                if ( $.trim( field_val ) !== '' && ! arrayContainsVisibility ) {
                     title = $.trim( field_val );
                     return false;
                 }
             });
 
-            $set.find('.repeater_set_title').html( title );
+            if ( '' === title ) {
+				$set.find('.repeater_set_title').addClass( 'repeater_set_title_empty' );
+				$set.find('.repeater_set_title').html( BP_Nouveau.empty_field );
+			} else {
+				$set.find('.repeater_set_title').html( title );
+			}
+
         });
 
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
@@ -55,6 +64,11 @@ window.bp = window.bp || {};
         $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideToggle();
         $(this).parents('.repeater_group_outer').toggleClass('active');
     });
+
+    if (window.location.href.indexOf('#bpxpro') > -1) {
+        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).find('.repeater_group_inner').slideToggle();
+        $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
+      }
 
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
@@ -149,6 +163,8 @@ window.bp = window.bp || {};
             },
             'success' : function() {
                 //$button.closest('form').submit();
+                history.pushState('', document.title, window.location.pathname);
+                window.location.href += '#bpxpro';
                 window.location.reload();
             }
         });

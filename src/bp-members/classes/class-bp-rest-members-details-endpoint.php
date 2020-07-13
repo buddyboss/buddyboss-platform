@@ -152,6 +152,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @apiGroup       Members
 	 * @apiDescription Retrieve Member detail tabs.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the member.
 	 */
 	public function get_item( $request ) {
