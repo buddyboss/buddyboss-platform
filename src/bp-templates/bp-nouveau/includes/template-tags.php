@@ -2371,8 +2371,9 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 	}
 
 	foreach ( $fields as $name => $attributes ) {
-		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes );
-
+		list( $label, $required, $value, $attribute_type, $type, $class ) = array_values( $attributes ); ?>
+		<div class="bb-signup-field <?php echo esc_attr( $name ); ?>">
+		<?php
 		// Text fields are using strings, radios are using their inputs
 		$label_output = '<label for="%1$s">%2$s</label>';
 		$id           = $name;
@@ -2480,7 +2481,17 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		// Not a radio, let's output the field
 		if ( 'radio' !== $type ) {
 			if ( 'signup_blog_url' !== $name ) {
+
+				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
+					echo '<div class="bb-password-wrap">';
+					echo '<a href="#" class="bb-toggle-password"><i class="bb-icon-eye"></i></a>';
+				}
+
 				print( $field_output );  // Constructed safely above.
+
+				if ( ( 'signup_password' === $name ) || ( 'signup_password_confirm' === $name ) ) {
+					echo '</div>';
+				}
 
 				// If it's the signup blog url, it's specific to Multisite config.
 			} elseif ( is_subdomain_install() ) {
@@ -2508,8 +2519,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		}
 
 		// Password strength is restricted to the signup_password field
-		if ( 'signup_password' === $name ) :
-			?>
+		if ( 'signup_password' === $name ) : ?>
 			<div id="pass-strength-result"></div>
 			<?php
 		endif;
@@ -2519,7 +2529,9 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			?>
 			<div id="email-strength-result"></div>
 			<?php
-		endif;
+		endif; ?>
+
+		</div><?php
 	}
 
 	/**
@@ -2559,9 +2571,10 @@ function bp_nouveau_signup_terms_privacy() {
 	}
 
 	if ( $terms && ! $privacy ) {
+		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ). '</a>';
 		?>
 		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ) ); ?>
+			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $terms_link ); ?>
 		</p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
@@ -2575,9 +2588,10 @@ function bp_nouveau_signup_terms_privacy() {
 	}
 
 	if ( ! $terms && $privacy ) {
+		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
 		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $privacy ) ); ?>
+			<?php printf( __( 'By creating an account you are agreeing to the %s.', 'buddyboss' ), $privacy_link ); ?>
 		</p>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
@@ -2591,9 +2605,11 @@ function bp_nouveau_signup_terms_privacy() {
 	}
 
 	if ( $terms && $privacy ) {
+		$terms_link = '<a class="popup-modal-register popup-terms" href="#terms-modal">' . get_the_title( $terms ). '</a>';
+		$privacy_link = '<a class="popup-modal-register popup-privacy" href="#privacy-modal">' . get_the_title( $privacy ) . '</a>';
 		?>
 		<p class="register-privacy-info">
-			<?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%1$s</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">%2$s</a>.', 'buddyboss' ), get_the_title( $terms ), get_the_title( $privacy ) ); ?>
+			<?php printf( __( 'By creating an account you are agreeing to the %1$s and %2$s.', 'buddyboss' ), $terms_link, $privacy_link ); ?>
 		</p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>

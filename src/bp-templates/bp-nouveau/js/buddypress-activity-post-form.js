@@ -1200,21 +1200,19 @@ window.bp = window.bp || {};
 
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-					window.group_messages_editor = new window.MediumEditor(
-						'#whats-new',
-						{
-							placeholder: {
-								text: '',
-								hideOnClick: true
-							},
-							toolbar: {
-								buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-								relativeContainer: document.getElementById( 'whats-new-content' ),
-								static: true,
-								updateOnEmptySelection: true
-							}
-							}
-					);
+				window.group_messages_editor = new window.MediumEditor('#whats-new',{
+					placeholder: {
+						text: '',
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-content'),
+						static: true,
+						updateOnEmptySelection: true
+					},
+					imageDragging: false
+				});
 
 					// check for mentions in the url, if set any then focus to editor.
 					var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
