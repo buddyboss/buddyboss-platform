@@ -210,6 +210,13 @@ jQuery( document ).ready(
 
 				});
 			}
+			jQuery( document ).on('input', '.bbp-the-content', function(e) {
+				var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
+				setTimeout(function(){
+					medium_editor.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
+				},0);
+			});
 		}
 
 			/* Use backticks instead of <code> for the Code button in the editor */

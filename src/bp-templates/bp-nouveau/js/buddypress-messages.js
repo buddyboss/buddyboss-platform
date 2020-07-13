@@ -684,6 +684,17 @@ window.bp = window.bp || {};
 	bp.Views.messageEditor = bp.Nouveau.Messages.View.extend(
 		{
 			template  : bp.template( 'bp-messages-editor' ),
+			events: {
+				'input #message_content': 'focusEditorOnChange'
+			},
+
+			focusEditorOnChange: function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
+				setTimeout(function(){
+					medium_editor_toolbar.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				},0);
+			},
 
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
@@ -1312,7 +1323,7 @@ window.bp = window.bp || {};
 				'click #messages-document-button': 'toggleDocumentSelector',
 				'click #messages-gif-button': 'toggleGifSelector',
 				'click #show-toolbar-button': 'toggleToolbarSelector',
-				'click .medium-editor-toolbar-actions': 'focusEditor',
+				'click .medium-editor-toolbar-actions': 'focusEditor'
 			},
 
 			initialize: function() {

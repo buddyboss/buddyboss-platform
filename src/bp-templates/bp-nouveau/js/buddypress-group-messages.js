@@ -715,6 +715,17 @@ window.bp = window.bp || {};
 					}
 				}
 			);
+			$( document ).on(
+				'input',
+				'#group_message_content',
+				function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+					var medium_editor = $( e.currentTarget ).closest( '#bp-group-message-content' ).find( '.medium-editor-toolbar' );
+					setTimeout(function(){
+						medium_editor.addClass('medium-editor-toolbar-active');
+						$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+					},0);
+				}
+			);
 		},
 
 		/**
