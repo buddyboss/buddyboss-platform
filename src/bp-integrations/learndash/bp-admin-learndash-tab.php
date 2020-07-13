@@ -80,7 +80,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function form_html() {
 		// Check Group component active.
-		if ( ! bp_is_active( 'groups' ) && is_plugin_active( $this->required_plugin) ) {
+		if ( ! bp_is_active( 'groups' ) && is_plugin_active( $this->required_plugin) && class_exists( 'SFWD_LMS' ) ) {
 			if ( is_file( $this->intro_template ) ) {
 				require $this->intro_template;
 			}

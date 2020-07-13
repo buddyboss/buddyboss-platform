@@ -22,7 +22,7 @@ class BP_Learndash_Integration extends BP_Integration {
 			__( 'LearnDash', 'buddyboss' ),
 			'learndash',
 			array(
-				'required_plugin' => 'sfwd-lms/sfwd_lms.php',
+				'required_plugin' => ( class_exists( 'SFWD_LMS' ) ? 'sfwd-lms/sfwd_lms.php' : '' ),
 			)
 		);
 	}
