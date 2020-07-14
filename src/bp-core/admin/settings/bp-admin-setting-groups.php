@@ -45,6 +45,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Group Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 		}
 
+		// Allow Group Message.
+		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) ) {
+			$this->add_field( 'bp-disable-group-messages', __( 'Group Messages', 'buddyboss' ), 'bp_admin_setting_callback_group_messages', 'intval' );
+		}
+
 		// Group Settings Tutorial
 		$this->add_field( 'bp-group-setting-tutorial', '', 'bp_group_setting_tutorial' );
 
@@ -93,6 +98,15 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 		// Group Directories Tutorial
 		$this->add_field( 'bp-group-directories-tutorial', '', 'bp_group_directories_tutorial' );
+
+		/**
+		 * Fires to register Groups tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Groups.
+		 */
+		do_action( 'bp_admin_setting_groups_register_fields', $this );
 	}
 }
 

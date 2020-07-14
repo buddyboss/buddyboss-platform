@@ -150,7 +150,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				// create field for each of custom post type.
 				$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 				// Activity commenting on post and comments.
-				$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
+				$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Type Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
 			} else {
 				if ( 0 === $description ) {
 					$fields['args']['description'] = true;
@@ -171,6 +171,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Posts in Activity Tutorial
 		$this->add_field( 'bp-posts-in-activity-tutorial', '', 'bp_posts_in_activity_tutorial' );
+
+		/**
+		 * Fires to register Activity tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Activity.
+		 */
+		do_action( 'bp_admin_setting_activity_register_fields', $this );
 	}
 
 }

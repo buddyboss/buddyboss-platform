@@ -367,8 +367,8 @@ function bp_search_items() {
 	// forums?
 
 	$items['forum'] = __( 'Forums', 'buddyboss' );
-	$items['topic'] = __( 'Forums Discussions', 'buddyboss' );
-	$items['reply'] = __( 'Forums Replies', 'buddyboss' );
+	$items['topic'] = __( 'Forum Discussions', 'buddyboss' );
+	$items['reply'] = __( 'Forum Replies', 'buddyboss' );
 
 	// other buddypress components
 	$bp_components = array(
@@ -521,12 +521,12 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 	$default = array(
 		'product'            => buddypress()->plugin_url . 'bp-core/images/search/product.svg',
 		'sfwd-courses'       => buddypress()->plugin_url . 'bp-core/images/search/course.svg',
-		'sfwd-lessons'       => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'sfwd-topic'         => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'sfwd-quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
+		'sfwd-lessons'       => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'sfwd-topic'         => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'sfwd-quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quiz.svg',
 		'post'               => buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg',
 		'forum'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
-		'topic'              => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'topic'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
 		'reply'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
 		'bp-member-type'     => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
 		'memberpressproduct' => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
@@ -535,6 +535,14 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 		'wp-parser-hook'     => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
 		'wp-parser-method'   => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
 		'command'            => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'course'          	 => buddypress()->plugin_url . 'bp-core/images/search/course.svg',
+		'llms_membership'	 => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
+		'lesson'          	 => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_certificate'   => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_my_certificate'=> buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quiz.svg'
 	);
 
 	return isset( $default[ $post_type ] ) ?
@@ -662,4 +670,59 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_o
 
 		return apply_filters( 'bps_directory_data', $data );
 	}
+}
+
+/**
+ * Function to prevent to show the restricted content by third part plugins.
+ *
+ * @param int $post_id post id to check that it is restricted or not
+ * @param int $user_id user id to check that it is restricted or not
+ * @param string $type component type
+ *
+ * @return array
+ */
+function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post' ) {
+
+	$restricted_post_data = array();
+
+	if ( empty( $post_id ) ) {
+		return $restricted_post_data;
+	}
+
+	if ( class_exists( 'PMPro_Members_List_Table' ) ) {
+
+		$user_has_post_access = pmpro_has_membership_access( $post_id, $user_id );
+
+		// check for the default post.
+		if ( $user_has_post_access && 'post' === $type ) {
+			$restricted_post_data['post_class']     = 'has-access';
+			$restricted_post_data['post_thumbnail'] = get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default( get_post_type() );
+			$restricted_post_data['post_content']   = make_clickable( get_the_excerpt() );
+		} elseif ( 'post' === $type ) {
+			$restricted_post_data['post_class']     = 'has-no-access';
+			$restricted_post_data['post_thumbnail'] = bp_search_get_post_thumbnail_default( get_post_type() );
+			$restricted_post_data['post_content']   = pmpro_membership_content_filter( apply_filters( 'bp_post_restricted_message',
+				'This post has restricted content' ),
+				false );
+		}
+
+		// Check for the forums.
+		if ( $user_has_post_access && 'forum' === $type ) {
+			$restricted_post_data['post_class']     = 'has-access';
+			$restricted_post_data['post_thumbnail'] = bbp_get_forum_thumbnail_src( $post_id ) ?: bp_search_get_post_thumbnail_default( get_post_type() );
+			$restricted_post_data['post_content']   = wp_trim_words( bbp_get_forum_content( $post_id ), 30, '...' );
+		} elseif ( 'forum' === $type ) {
+			$restricted_post_data['post_class']     = 'has-no-access';
+			$restricted_post_data['post_thumbnail'] = bp_search_get_post_thumbnail_default( get_post_type() );
+			$restricted_post_data['post_content']   = pmpro_membership_content_filter( apply_filters( 'bp_post_restricted_message',
+				'This post has restricted content' ),
+				false );
+		}
+	} else {
+		$restricted_post_data['post_class']     = 'has-access';
+		$restricted_post_data['post_thumbnail'] = get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default( get_post_type() );
+		$restricted_post_data['post_content']   = make_clickable( get_the_excerpt() );
+	}
+
+	return $restricted_post_data;
 }

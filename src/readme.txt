@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.3.0
+Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.2.1
+Stable tag: 1.4.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,8 @@ BuddyBoss Platform helps site builders & developers add community features to th
 
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
 - [Code Reference](https://www.buddyboss.com/resources/reference/)
+- [Github](https://github.com/buddyboss/buddyboss-platform/wiki)
+- [Roadmap](https://www.buddyboss.com/roadmap/)
 
 == Requirements ==
 
@@ -26,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform.zip'
+3. Upload the file 'buddyboss-platform-pro.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -54,6 +56,304 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.6 =
+* Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
+* Media - Fixed photo attachments in messages not always displaying for recipients
+* Messages - Fixed unable to delete a conversation if Notifications is disabled
+* Activity - Fixed very long URLs unable to be entered into activity feed posts
+* Private Network - Fixed homepage being visible when using 'Custom URL' for Registration
+* REST API - Fixed conflict on some servers, with creating and editing posts and pages
+* LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
+* LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
+* Translations - Fixed 'his, her, their' text not translatable for 'Gender' profile field
+* Translations - Fixed layout issues on profile page when language set to Hungarian
+
+= 1.4.5 =
+* Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
+* Activity - Fixed small images in activity feed getting scaled up and distorted
+* Media - Fixed certain document types not always uploading into Forum replies
+* Media - Improved the formatting of media popups in Forum replies
+* REST API - Fixed API issues in private messages, activity privacy, and site permissions
+* Compatibility - Fixed conflicts with Private Network settings on Memcached servers
+
+= 1.4.4 =
+* Profiles - Improved the user experience when adding a new Repeater field on frontend
+* Profiles - Fixed certain profile fields types preventing Repeater fields from saving
+* Forums - Fixed disabling 'Subscriptions' should remove Subscriptions from member profile
+* Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
+* Forums - Restrict @mentions dropdown to list only members who have access to the forum
+* Groups - Restrict @mentions dropdown to list only members who have joined the group
+* Groups - When viewing group invitations page, fixed invitations showing incorrect dates
+* Groups - Improved the experience for accepting an invite into a private group
+* Media - Added media popups for all Documents and Photos posted into Forums and Messages
+* Media - Added 'Download' link to media popups for all Document types and Photos
+* Media - Fixed private group Documents visibility, when uploading to profiles is disabled
+* Activity - Fixed comments not displaying in activity feed for blog posts and custom post types
+* Activity - Fixed media attachments not displaying when commenting on a group update
+* Compatibility - Fixed default Profile Type not being assigned when registering via MemberPress
+* Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
+* Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
+* Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
+* Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
+* Translations - Fixed text 'Invited by' for group invites not available for translation
+
+= 1.4.3 =
+* Activity - Fixed some activity posts hidden from logged out users, and new members
+* Activity - Fixed 'All Updates' tab not displaying updates from joined private groups
+* Documents - Fixed 404 error on profile breadcrumbs when Documents directory is custom page
+* Documents - Fixed download links not working when using various SEO plugins
+* Documents - Fixed issues with playing and downloading MP3 file uploads
+* Documents - Added media popups for documents uploaded into forums and messages
+* Documents - Improved the styling of media popups when Activity component is disabled
+* Documents - When clicking 'Edit Folder Privacy' we now auto-display the Edit Folder popup
+* Documents - When opening the Edit Folder popup, privacy dropdown now displays correct privacy
+* Documents - Improved the file upload previews in the WordPress Media Library
+* Photos - In Photos directory, fixed group photos displaying when performing any search query
+* Emails - Added option to 'Skip Cropping' for logo, to display any logo dimension
+* Compatibility - Fixed PHP 7.4 errors when using WP Engine hosting
+
+= 1.4.2 =
+* Documents - Added 'Download' link to Image and PDF file preview popups
+* Documents - Fixed search results for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed timeline of followers for content set to 'Only Me' and 'My Connections'
+* Documents - Fixed content set to 'Only Me' being hidden from my sitewide activity feed
+* Documents - Newly added Image and PDF protected files display an icon in Media Library
+* Security - Added index.html into 'uploads/bb_documents' for enhanced file protection
+* WC Vendors - Fixed products added from Vendor Dashboard not showing in activity feed
+* WC Vendors - Fixed products displayed in activity feed not showing featured image
+
+= 1.4.1 =
+* Forums - Fixed attached images getting removed after editing forum replies
+* Media - Set maximum amount of files uploaded per batch at 10 files
+* Security - Preventing executable file uploads from running in browser
+* Security - New file uploads go into 'uploads/bb_documents' with .htaccess protection
+
+= 1.4.0 =
+* Documents - Added documents for Activity, Profiles, Groups, Messages, Forums
+* Documents - Added central Documents page for showing all site documents
+* Documents - Added live previews for PDF, MP3, CSS, JS, HTML, Text, Image
+* Documents - Added functionality to move and organized Documents into Folders
+* Documents - Added settings page for customizable Document File Extensions
+* Media - Added enhanced privacy controls for uploaded Photos and Documents
+* Media - Added functionality to enter 'Description' in Photo and Document popups
+* Media - Comments in single Photo and Document popups now sync with activity comments
+* Activity - Added enhanced privacy controls for user-created activity posts
+* REST API - New endpoints added for Activity privacy changes
+* Groups - Improved performance for groups with many thousands of members
+* Groups - Fixed 'Send Message' and 'Edit Group Discussion' not translatable
+* Forums - Fixed pagination when using shortcode [bbp-topic-index]
+* Forums - Fixed issues when using many levels of threaded replies
+* Forums - Fixed empty Forums page displaying with Private Network enabled
+* Forums - Fixed HTML elements displaying when pasting content as subscriber
+* Forums - Merged in security patches from bbPress 2.6.5
+* Profiles - Fixed 'Nickname' field privacy when set as other than 'Public'
+* Network Search - Fixed results title when using apostrophe or blank entry
+* Emails - Fixed email not sending for site admin changing a user's password
+* Icons - Switched the default font iconset from 'dashicons' to 'bb-icons'
+* Icons - Added new font icons to represent all common file types
+* LearnDash - Fixed 'Hidden' social groups not appearing in backend for LD groups
+* MemberPress - Fixed JavaScript conflicts with Stripe credit card field
+* WPML - Fixed menu links missing when viewing Groups, Photos, Forums in profile
+
+= 1.3.5 =
+* REST API - Added official BuddyBoss REST API
+* Activity - Fixed website link previews not all using the same formatting
+* Activity - Fixed some websites not properly fetching link preview content
+* Text Editor - Fixed text formatting buttons overlapping with media uploader
+* Forums - When viewing another user's forums, fixed 'My' text displaying in subtabs
+* WooCommerce - Fixed 'Lost Password' link redirecting to WooCommerce 'My Account' area
+* Compatibility - Fixed deprecated code errors when using PHP 7.4
+* Translations - Updated German (formal) language files
+
+= 1.3.4 =
+* Activity - Fixed certain link previews displaying doubled in activity posts
+* Profiles - Fixed 'Profile Type' filter not working when any Profile Type is hidden
+* Widgets - Improved formatting structure of activities in '(BB) Latest Activities' widget
+* Tools - Added 'Repair Community' tool for running 'Update activity favorites data'
+* Performance - Optimized code when activating plugin on site with 60,000 or more users
+* Translations - Updated German (formal) language files
+
+= 1.3.3 =
+* Text Editor - Fixed content formatting reset issues when switching edit buttons
+* Forums - Fixed 404 error when paginating 'My Discussions' on user profile page
+* Forums - Fixed URL conflict between 'Subscriptions' tab and plugin 'WooCommerce Subscriptions'
+* Groups - Fixed 'New Group' and 'Delete Group' not working from admin in multisite
+* Groups - Fixed organizer of sub-group unable to send invites if not organizer of parent group
+* Groups - Fixed subgroups not in 'Subgroups' tab if group type is hidden from Groups Directory
+* LearnDash - Fixed creating a LearnDash group with a social group with Messages disabled
+
+= 1.3.2 =
+* Text Editor - New text formatting interface in Messages, Activity, Forums
+* Text Editor - New text formatting option for adding a code block
+* Profiles - Added 'Telegram' and 'WhatsApp' as options in 'Social Networks' field
+* Activity - Allow for commenting on activity posts from custom post types
+* Activity - Improved formatting of images in activity posts from custom post types
+* Activity - Fixed @mentions moving the cursor position when no results are found
+* Activity - Fixed link embeds from Chinese websites displaying broken text characters
+* Activity - Fixed link embeds not always fetching the best image and description
+* Activity - Fixed group members without access posting into group from sitewide activity
+* Notifications - Fixed notification for rejected group join request not clearing
+* LearnDash - Fixed alignment of Certificate banner for group with single course
+* LearnDash - Code optimization and performance improvements for Grid View ajax
+* Multisite - Fixed duplicate BuddyBoss menus when enabling 'BP_ENABLE_MULTIBLOG'
+* Translations - Added French language files, credits to Jean-Pierre Michaud
+* Translations - Updated German (formal) language files
+
+= 1.3.1 =
+* Compatibility - Updated a file that was causing false alerts from Windows Defender
+
+= 1.3.0 =
+* Messages - New dropdown option to 'Mark unread' in inbox
+* Messages - New dropdown option to 'Hide Conversation' in inbox
+* Messages - New dropdown option to 'Delete Conversation' for admins only
+* Messages - Display number bubble for conversations with 2+ other people
+* Group Messages - Hiding bulk sent messages in inbox, until recipients reply back
+* Group Messages - Improved the sent message confirmation screen
+* Activity - Fixed photo popup not opening on single activity permalink
+* Profiles - Added 'VK' as option in 'Social Networks' profile field
+* Translations - Added German (formal) language files
+
+= 1.2.9.1 =
+* Groups - Fixed emoji in message content
+* Forums - Fixed forum/topic create/edit screen issue
+
+= 1.2.9 =
+* Groups - Added new option to send messages to group members from the group
+* Messages - Improved the logic for deleting your messages from a conversation
+* Messages - When a member is deleted, notifications about their messages are removed
+* Profiles - Added 'Twitch' as option in 'Social Networks' profile field
+* Profiles - Fixed issue when saving 'Date' field to the date January 1, 1970
+* Forums - Fixed minor issues when @mentioning other members in forums
+* Forums - Fixed settings for 'Disallow editing after' time limit not working
+* Activity - Fixed link preview image not always displaying in activity posts
+* Activity - Fixed video embeds not displaying after editing the post in admin
+* Connections - Display 'More' button on Connections widget when list is maxed out
+* Connections - Fixed inconsistent display of Connections based on profile type 
+* Widgets - Fixed the member counts showing incorrect in 'Who's Online' widget
+* Email Invites - Added ability to invite between 1 to 20 members at once
+* Emails - Now sending emails through the WordPress core wp_mail function
+* Admin - Fixed 'Screen Options > Pagination' not saving in admin for Activity and Groups
+* Developers - Added code filter to extend DropzoneJS image resize options
+* Compatibility - Fixed minor code issues with PHP 7.4
+
+= 1.2.8 =
+* Registration - New option to use any Custom URL as your registration form
+* Forums - New feature to support @mentions in forums, with notifications
+* Forums - Fixed video URL embeds not displaying as playable videos in forum replies
+* Forums - Fixed forum reply popup not displaying when 'Post Formatting' is disabled
+* Forums - Fixed searching for GIFs in GIPHY panel not working in forum reply popup
+* Groups - Fixed groups with & symbol displaying as &amp; in activity feed dropdown
+* Groups - Fixed 'a' vs 'an' logic for displaying your group role in English language sites
+* Profiles - Fixed 'Dropdown' field type not saving when adding hundreds of options
+* Profiles - Fixed 'Profile Type' field type not saving when WordPress role is set to (none)
+* Activity - Fixed occasional double posting of Youtube videos with embed URLs
+* Messages - Fixed new photos attached to messages displaying in member's Photos tab
+* Messages - Fixed maintaining formatting when copying and pasting text into the editor
+* Compatibility - Fixed incorrect message URLs with LearnDash and WPML both activated
+* Compatibility - Fixed conflict with plugin 'LearnDash Ratings, Reviews and Feedback'
+* Translations - Fixed text instances that could not be translated
+
+= 1.2.7 =
+* Activity - Fixed error on Mentions tab, when 'Activity tabs' option is enabled
+* Registration - Fixed false validation on registration page, when using required fields
+
+= 1.2.6 =
+* Widgets - Added option to hide '(BB) Profile Completion' widget when progress hits 100%
+* Activity - Fixed issue with deleted users leaving 'Unknown' likes in activity
+* Notifications - Fixed certain notifications not clearing after clicking in Notifications dropdown
+* Network Search - Added icons for search results coming from plugin LifterLMS
+* Developers - Added hooks for adding your own options into all Component Settings pages
+
+= 1.2.5 =
+* Messages - Fixed message list not loading more after scrolling down on mobile devices
+* Messages - Fixed the conversation start date not matching WordPress timezone settings
+* Notifications - Fixed issues with toggling Bulk selection of Notifications
+* Groups - Fixed links in group description set to 'open in a new tab' loading in the same tab
+* Groups - Fixed buttons for Join/Leave Group not working in Group Type shortcodes
+* Groups - When posting a photo from sitewide activity into a group, fixed photo not appearing in group
+* Forums - Fixed issues on Forums index page when Gutenberg content is added into the page editor
+* Forums - Fixed non-admins not seeing their own replies for Hidden groups, in 'My Discussions' tab
+* Forums - Fixed 'Unsubscribe' link in forum subscription emails redirecting to 'Email Preferences'
+* Forums - Fixed 'Description' input not displaying correctly for 'Create New Forum' shortcode
+* Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
+* Forums - Fixed text in forum replies displaying as HTML markup in certain situations
+* Activity - Consistent styling for default WordPress embeds and our custom preview embeds
+* Activity - Fixed the setting to allow activity stream commenting on forum discussions and replies
+* Profiles - Fixed assigning 'Photos' as the default profile tab resulting in 404 error
+* Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
+* Emails - Fixed formatting of BuddyBoss emails when viewed in Microsoft Outlook
+* Registration - Fixed incorrect 'Mismatch' notice appearing on registration page in certain situations
+* Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
+* Widgets - Fixed logic for '(BB) Members Following Me' widget when displayed on other member profiles
+* Widgets - Fixed logic for '(BB) Members I'm Following' widget when displayed on other member profiles
+* Widgets - Fixed logic for '(BB) My Connections' widget when displayed on other member profiles
+* Multisite - Fixed PHP errors displaying while creating a new site in WordPress Multisite dashboard
+* Multisite - Fixed Forum Discussions, Tags, Replies links not working in WordPress Multisite dashboard
+* Compatibility - Global fix for all radio and checkbox conflicts with various plugins
+* Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
+* Compatibility - Fixed membership rules for page restriction not working correctly in 'MemberPress'
+* Compatibility - Fixed errors in BuddyBoss > Pages, with plugin 'WPML' (WordPress Multilingual)
+* Compatibility - Fixed errors in WordPress dashboard when activating 'WP Mail Logging by MailPoet'
+* Translations - Fixed text instances in JavaScript files that could not be translated
+
+= 1.2.4 =
+* Errors - Fixed PHP fatal error in certain situations
+
+= 1.2.3 =
+* Groups - Updated the 'Send Invites' interface to be more intuitive
+* Groups - Added proper formatting for ordered and bulleted lists added into group description
+* Groups - Added pagination to Manage Members screen when there are more than 15 group members
+* Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly
+* Groups - Fixed 'Restrict Invitations' logic for invites into subgroups before joining the parent group
+* Groups - Fixed issues with not being able to select a group type when editing a group
+* Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
+* Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
+* Activity - Fixed clicking 'Comment' or 'Reply' on an activity post not scrolling down to the comment box
+* Profiles - Fixed issue when trying to follow multiple members in a row on Members directory
+* Profiles - Fixed extra space when adding a profile type shortcode to a page while BuddyPanel is disabled
+* Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
+* Profiles - Fixed incorrect date ranges when 'Date' profile field type is added to Profile Search form
+* Profiles - Fixed issues with selecting 'Profile Type' profile field and getting incorrect error notices
+* Profiles - Fixed 'First Name' and 'Last Name' appearing in Account Privacy settings when they are disabled
+* Profiles - Fixed 'Last Name' visibility options when Display Name Format is set to 'First Name & Last Name'
+* Profiles - Added proper formatting for lists and underline when using 'Paragraph Text' profile field type
+* Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
+* Forums - When receiving a notification about a forum reply, the link now scrolls down to the specific reply
+* Messages - Fixed the Back button not working right after composing a message, on mobile devices
+* Media - Fixed GIF not working when replying to a single activity post on its permalink screen
+* Network Search - Added an option to search forums based on their Discussion Tags
+* Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
+* Email Invites - Fixed 404 error when trying to log out right after sending email invites
+* Widgets - Fixed '(BB) Connections' widget sorting members incorrectly when added to Activity Feed
+* Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
+* LearnDash - Fixed scheduled courses, lessons and topics incorrectly posting into Activity Feed
+* LearnDash - Fixed emails not sending to users registering to the site via enrollment into a Free course
+* Compatibility - Fixed conflict when enabling 'Private Network' while allowing account creation in 'WooCommerce'
+* Compatibility - Fixed conflict with Email Invites email link when using plugin 'Paid Memberships Pro'
+* Compatibility - Fixed Network Search displaying results that are restricted via plugin 'Paid Memberships Pro'
+* Compatibility - Fixed verified badge not showing in forums with plugin 'Verified Member for BuddyPress'
+* Compatibility - Fixed redirect issues for Forums, Photos and Groups tabs with plugin 'WPML'
+* Compatibility - Fixed conficts with plugin 'WordPress SEO Plugin - Rank Math'
+* Compatibility - Fixed conficts with plugin 'Hide My WP'
+* Translations - Fixed text instances that could not be translated
+
+= 1.2.2 =
+* Activity - Fixed certain link embeds URLs not rendering proper results
+* Profiles - Fixed member type not displaying in profile cards in 'My Connections' tab
+* Profiles - Fixed the 'Mutual Connections' tab incorrectly showing all members
+* Profiles - Fixed pagination of members when using [profile type=""] shortcode
+* Groups - Fixed pagination of groups when using [group type=""] shortcode
+* Groups - Fixed 'Read more' in group activity feed not working when Media component is disabled
+* Groups - Added ability to re-order Photos and Albums tabs in customizer
+* Forums - Fixed issue when posting a forum reply using only a GIF, with no text
+* Forums - Fixed issue with pagination through forums in Forums index
+* Notices - Fixed site notices not clearing after closing them, for non-admin members
+* Registration - Fixed data not saving on register form when validating incomplete fields
+* Widgets - Changed 'More' link in 'Users I'm Following' widget to redirect to 'Following' tab
+* Compatibility - Fixed conflict with WP Ultimo while Network Search is enabled
+* Compatibility - Added support for 'bp_embed_oembed_html' filter in code
+* Documentation - Now syncing all docs in real time from BuddyBoss Resources website
 
 = 1.2.1 =
 * Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled

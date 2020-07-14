@@ -1158,6 +1158,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			'reply.url'        => $reply_url,
 			'reply.content'    => $reply_content,
 			'poster.name'      => $reply_author_name,
+			'unsubscribe'      => $topic_url,
 		),
 	);
 
@@ -1281,6 +1282,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 			'discussion.url'     => $topic_url,
 			'discussion.content' => $topic_content,
 			'poster.name'        => $topic_author_name,
+			'unsubscribe'        => $forum_url,
 		),
 	);
 

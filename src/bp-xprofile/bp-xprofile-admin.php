@@ -528,7 +528,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 	if ( isset( $_POST['saveField'] ) ) {
 
 		// Check nonce
-		check_admin_referer( 'bp_xprofile_admin_field', 'bp_xprofile_admin_field' );
+		wp_verify_nonce( $_POST['bp_xprofile_admin_field'], 'bp_xprofile_admin_field' );
 
 		if ( BP_XProfile_Field::admin_validate() ) {
 			$field->is_required = $_POST['required'];
@@ -619,6 +619,11 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 					}
 
 					$field->set_member_types( $member_types );
+				}
+
+				// Set position of Gender fields option.
+				if ( isset( $_POST['gender-option-order'] ) && ! empty( $_POST['gender-option-order'] ) ) {
+					bp_xprofile_update_field_meta( $field_id, 'gender-option-order', $_POST['gender-option-order'] );
 				}
 
 				// Validate default visibility.

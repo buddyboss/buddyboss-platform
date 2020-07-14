@@ -81,6 +81,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			add_action( 'bbp_ajax_favorite', array( $this, 'ajax_favorite' ) ); // Handles the topic ajax favorite/unfavorite
 			add_action( 'bbp_ajax_subscription', array( $this, 'ajax_subscription' ) ); // Handles the topic ajax subscribe/unsubscribe
 			add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe
+			add_action( 'bbp_enqueue_scripts', array( $this, 'mentions_script' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'mentions_script' ) );
 
 			/** Template Wrappers */
 
@@ -151,9 +153,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				wp_enqueue_script( 'bp-medium-editor' );
 				wp_enqueue_style( 'bp-medium-editor' );
 				wp_enqueue_style( 'bp-medium-editor-beagle' );
-				wp_enqueue_script( 'bp-select2' );
-				wp_enqueue_style( 'bp-select2' );
 			}
+
+			wp_enqueue_script( 'bp-select2' );
+			if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
+				wp_enqueue_script( 'bp-select2-local' );
+			}
+			wp_enqueue_style( 'bp-select2' );
 
 			// Forum-specific scripts
 			if ( bbp_is_single_forum() ) {
@@ -254,6 +260,51 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 		}
 
 		/**
+		 * Enqueue @mentions JS.
+		 *
+		 * @since BuddyBoss 1.2.8
+		 */
+		public function mentions_script() {
+
+			// Special handling for New/Edit screens in wp-admin.
+			if ( is_admin() ) {
+				if (
+					! get_current_screen() ||
+					! in_array( get_current_screen()->base, array( 'page', 'post' ) ) ||
+					! post_type_supports( get_current_screen()->post_type, 'editor' ) ) {
+					return;
+				}
+			}
+
+			$min = bp_core_get_minified_asset_suffix();
+
+			if ( ! wp_script_is( 'bp-mentions' ) ) {
+				wp_enqueue_script( 'bp-mentions', buddypress()->plugin_url . "bp-core/js/mentions{$min}.js", array(
+					'jquery',
+					'jquery-atwho'
+				), bp_get_version(), true );
+				wp_enqueue_style( 'bp-mentions-css', buddypress()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bp_get_version() );
+
+				wp_style_add_data( 'bp-mentions-css', 'rtl', true );
+				if ( $min ) {
+					wp_style_add_data( 'bp-mentions-css', 'suffix', $min );
+				}
+
+				wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bp_at_mention_default_options() );
+
+				/**
+				 * Fires at the end of the Mentions script.
+				 *
+				 * This is the hook where BP components can add their own prefetched results
+				 * friends to the page for quicker @mentions lookups.
+				 *
+				 * @since BuddyBoss 1.2.8
+				 */
+				do_action( 'bbp_forums_mentions_prime_results' );
+			}
+		}
+
+		/**
 		 * Localize scripts for Media component for forums
 		 *
 		 * @since BuddyBoss 1.1.5
@@ -272,28 +323,63 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_topic_edit() ) {
 					$params['bbp_is_topic_edit'] = true;
 
-					$media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
-					if ( ! empty( $media_ids ) && bp_has_media(
-						array(
-							'include'  => $media_ids,
-							'order_by' => 'menu_order',
-							'sort'     => 'ASC',
-						)
-					) ) {
-						$params['topic_edit_media'] = array();
-						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+					$media_type = get_post_meta( bbp_get_topic_id(), 'bp_media_type', true );
 
-							$params['topic_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
-								'menu_order'    => $index,
-							);
-							$index ++;
+					if ( 'document' === $media_type ) {
+
+						$document_ids  = get_post_meta( bbp_get_topic_id(), 'bp_document_ids', true );
+
+						if ( ! empty( $document_ids ) && bp_has_document(
+								array(
+									'include'  => $document_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['topic_edit_document'] = array();
+							$index                      = 0;
+							while ( bp_document() ) {
+								bp_the_document();
+
+								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
+								$params['topic_edit_document'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
+									'thumb'         => '',
+									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
+									'size'          => $size,
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					} else {
+
+						$media_ids  = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
+
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['topic_edit_media'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['topic_edit_media'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
 						}
 					}
 
@@ -315,28 +401,63 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_reply_edit() ) {
 					$params['bbp_is_reply_edit'] = true;
 
-					$media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
-					if ( ! empty( $media_ids ) && bp_has_media(
-						array(
-							'include'  => $media_ids,
-							'order_by' => 'menu_order',
-							'sort'     => 'ASC',
-						)
-					) ) {
-						$params['reply_edit_media'] = array();
-						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+					$media_type = get_post_meta( bbp_get_reply_id(), 'bp_media_type', true );
 
-							$params['reply_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
-								'menu_order'    => $index,
-							);
-							$index ++;
+					if ( 'document' === $media_type ) {
+
+						$document_ids  = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
+
+						if ( ! empty( $document_ids ) && bp_has_document(
+								array(
+									'include'  => $document_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['reply_edit_document'] = array();
+							$index                      = 0;
+							while ( bp_document() ) {
+								bp_the_document();
+
+								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
+								$params['reply_edit_document'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
+									'thumb'         => '',
+									'size'          => $size,
+									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					} else {
+
+						$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
+
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['reply_edit_media'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['reply_edit_media'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
 						}
 					}
 
@@ -358,28 +479,64 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_forum_edit() ) {
 					$params['bbp_is_forum_edit'] = true;
 
-					$media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
-					if ( ! empty( $media_ids ) && bp_has_media(
-						array(
-							'include'  => $media_ids,
-							'order_by' => 'menu_order',
-							'sort'     => 'ASC',
-						)
-					) ) {
-						$params['forum_edit_media'] = array();
-						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
 
-							$params['forum_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
-								'menu_order'    => $index,
-							);
-							$index ++;
+					$media_type = get_post_meta( bbp_get_forum_id(), 'bp_media_type', true );
+
+					if ( 'document' === $media_type ) {
+
+						$document_ids  = get_post_meta( bbp_get_forum_id(), 'bp_document_ids', true );
+
+						if ( ! empty( $document_ids ) && bp_has_document(
+								array(
+									'include'  => $document_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['forum_edit_document'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
+								$params['forum_edit_document'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
+									'thumb'         => '',
+									'size'          => $size,
+									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					}  else {
+
+						$media_ids  = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['forum_edit_media'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['forum_edit_media'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
 						}
 					}
 

@@ -20,7 +20,7 @@
 
 	<div id="new-reply-<?php bbp_topic_id(); ?>" class="bbp-reply-form">
 
-		<form id="new-post" name="new-post" method="post" action="<?php the_permalink(); ?>">
+		<form id="new-post" name="new-post" method="post" action="<?php bbp_is_reply_edit() ? bbp_reply_edit_url() : the_permalink(); ?>">
 
 			<?php do_action( 'bbp_theme_before_reply_form' ); ?>
 
@@ -78,9 +78,9 @@
 
 						<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
 
-						<p>
+						<p class="checkbox bp-checkbox-wrap">
 
-							<input name="bbp_topic_subscription" id="bbp_topic_subscription" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe"<?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
 							<?php if ( bbp_is_reply_edit() && ( bbp_get_reply_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
@@ -103,10 +103,10 @@
 						<?php do_action( 'bbp_theme_before_reply_form_revisions' ); ?>
 
 						<fieldset class="bbp-form">
-							<legend>
-								<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" type="checkbox" value="1" <?php bbp_form_reply_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_log_reply_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss' ); ?></label><br />
-							</legend>
+							<div class="bp-checkbox-wrap">
+								<input name="bbp_log_reply_edit" id="bbp_log_reply_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_reply_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+								<label for="bbp_log_reply_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss' ); ?></label>
+							</div>
 
 							<div>
 								<label for="bbp_reply_edit_reason"><?php printf( __( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />

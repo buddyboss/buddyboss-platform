@@ -189,7 +189,7 @@ class BP_Core extends BP_Component {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action( 'bp_core_inetegrations_included' );
+		do_action( 'bp_core_integrations_included' );
 	}
 
 	/**
@@ -375,20 +375,23 @@ class BP_Core extends BP_Component {
 			// Register Group Types custom post type.
 			register_post_type(
 				bp_groups_get_group_type_post_type(),
-				apply_filters('bp_register_group_type_post_type', array(
-					'description' => __('BuddyBoss group type', 'buddyboss'),
-					'labels' => bp_groups_get_group_type_post_type_labels(),
-					'public' => true,
-					'publicly_queryable' => bp_current_user_can('bp_moderate'),
-					'query_var' => false,
-					'rewrite' => false,
-					'show_in_admin_bar' => false,
-					'show_in_menu' => '',
-					'map_meta_cap' => true,
-					'show_in_rest' => true,
-					'show_ui' => bp_current_user_can('bp_moderate'),
-					'supports' => bp_groups_get_group_type_post_type_supports(),
-				))
+				apply_filters(
+					'bp_register_group_type_post_type',
+					array(
+						'description'        => __( 'BuddyBoss group type', 'buddyboss' ),
+						'labels'             => bp_groups_get_group_type_post_type_labels(),
+						'public'             => false,
+						'publicly_queryable' => false,
+						'query_var'          => false,
+						'rewrite'            => false,
+						'show_in_admin_bar'  => false,
+						'show_in_menu'       => false,
+						'map_meta_cap'       => true,
+						'show_in_rest'       => true,
+						'show_ui'            => bp_current_user_can( 'bp_moderate' ),
+						'supports'           => bp_groups_get_group_type_post_type_supports(),
+					)
+				)
 			);
 		}
 

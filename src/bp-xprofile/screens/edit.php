@@ -80,34 +80,38 @@ function xprofile_screen_edit_profile() {
 				// Get selected profile type role.
 				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
-				if (
-					!empty( $selected_member_type_wp_roles )
-					&& 'none' !== $selected_member_type_wp_roles[0]
-				) {
-
-					if ( 'administrator' !== $selected_member_type_wp_roles[0] && current_user_can( 'administrator' ) ) {
+				if ( bp_current_user_can( 'administrator' ) ) {
+					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+						bp_set_member_type( bp_displayed_user_id(), '' );
+						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+					} elseif ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
 						$errors                  = true;
 						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;
-					} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) ) && current_user_can( 'editor' ) ) {
+					}
+				} elseif ( bp_current_user_can( 'editor' ) ) {
+					if ( 'none' === $selected_member_type_wp_roles[0] ) {
+						bp_set_member_type( bp_displayed_user_id(), '' );
+						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+					} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) ) ) {
 						$errors                  = true;
 						$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;
-					} else {
-						bp_set_member_type( bp_displayed_user_id(), '' );
-						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+					}
+				} else {
+					bp_set_member_type( bp_displayed_user_id(), '' );
+					bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
-						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-							$bp_current_user = new WP_User( bp_displayed_user_id() );
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+						$bp_current_user = new WP_User( bp_displayed_user_id() );
 
-							foreach ( $bp_current_user->roles as $role ) {
-								// Remove role
-								$bp_current_user->remove_role( $role );
-							}
-
-							// Add role
-							$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+						foreach ( $bp_current_user->roles as $role ) {
+							// Remove role
+							$bp_current_user->remove_role( $role );
 						}
+
+						// Add role
+						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				}
 			}

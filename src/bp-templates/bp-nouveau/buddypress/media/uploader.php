@@ -21,7 +21,7 @@
                         <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 
                         <a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
-							<span class="dashicons dashicons-no-alt"></span>
+							<span class="bb-icon bb-icon-close"></span>
 						</a>
                     </header>
 
@@ -77,11 +77,10 @@
 
 	                    <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
                             <div class="bb-dropdown-wrap">
-			                    <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
                                 <select id="bb-media-privacy">
-				                    <?php foreach ( $privacy_options as $k => $option ) {
+				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
 					                    ?>
-                                        <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
+                                        <option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
 					                    <?php
 				                    } ?>
                                 </select>

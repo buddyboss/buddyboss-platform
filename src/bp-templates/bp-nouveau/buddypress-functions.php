@@ -182,6 +182,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'bp_enqueue_scripts', array( $this, 'register_scripts' ), 2 ); // Register theme JS
 		remove_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
+		add_action( 'bp_admin_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
 		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), 99999 );
@@ -234,8 +235,13 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function bbp_set_forum_selected_menu_class( $classes = array(), $item = false ) {
 
+		// Return if forums not active.
+		if ( ! bp_is_active( 'forums' ) ) {
+			return $classes;
+		}
+
 		// Protocol
-		$url = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 		// Get current URL
 		$current_url = trailingslashit( $url );
@@ -244,15 +250,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$homepage_url = trailingslashit( get_bloginfo( 'url' ) );
 
 		// Exclude 404 and homepage
-		if( is_404() or $item->url == $homepage_url )
+		if ( is_404() || ( isset( $item->url ) && $item->url == $homepage_url ) ) {
 			return $classes;
+		}
 
-		if ( 'forum' === get_post_type() || 'topic' === get_post_type() ) {
-			unset($classes[array_search('current_page_parent',$classes)]);
-			if ( isset($item->url) ) {
-				if ( isset( $current_url ) && isset( $item->url ) && strstr( $current_url, $item->url ) ) {
-					$classes[] = 'current-menu-item';
-				}
+		if ( bbp_get_forum_post_type() === get_post_type() || bbp_get_topic_post_type() === get_post_type() ) {
+			// Unset current_page_parent class if exists.
+			if ( in_array( 'current_page_parent', $classes ) ) {
+				unset( $classes[ array_search( 'current_page_parent', $classes ) ] );
+			}
+			if ( ! empty( $item->url ) && ! empty( $current_url ) && strstr( $current_url, $item->url ) ) {
+				$classes[] = 'current-menu-item';
 			}
 		}
 
@@ -363,6 +371,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'bp-nouveau' => array(
 				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
 			),
+			'bp-nouveau-icons' => array(
+				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+			)
 		) );
 
 		if ( $styles ) {
@@ -451,6 +462,22 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'dependencies' => array(),
 			'footer'       => true,
 		);
+
+		if ( bp_is_active( 'media' ) ) {
+
+			$scripts['bp-nouveau-codemirror'] = array(
+				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
+				'dependencies' => array(),
+				'footer'       => true,
+			);
+
+			$scripts['bp-nouveau-codemirror-css'] = array(
+				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/css%s.js',
+				'dependencies' => array(),
+				'footer'       => true,
+			);
+
+		}
 
 		foreach ( $scripts as $handle => $script ) {
 			if ( ! isset( $script['file'] ) ) {
@@ -554,15 +581,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function localize_scripts() {
+
 		$params = array(
-			'ajaxurl'             => bp_core_ajax_url(),
-			'only_admin_notice'   => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'   => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'             => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set'  => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'     => __( 'View previous comments', 'buddyboss' ),
-			'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
-			'object_nav_parent'   => '#buddypress',
+			'ajaxurl'             	=> bp_core_ajax_url(),
+			'only_admin_notice'   	=> __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'   	=> __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'             	=> __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set'  	=> __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'     	=> __( 'View previous comments', 'buddyboss' ),
+			'unsaved_changes'     	=> __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'object_nav_parent'   	=> '#buddypress',
+			'empty_field' 			=> __( 'New Field', 'buddyboss' ),
 		);
 
 		// If the Object/Item nav are in the sidebar
@@ -597,6 +626,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( true === $group_sub_objects ) {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 		}
+
+//		if ( bp_is_active( 'media' ) ) {
+//			$supported_objects = array_merge( $supported_objects, array( 'document' ) );
+//		}
 
 		// Add components & nonces
 		$params['objects'] = $supported_objects;
@@ -732,6 +765,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
 		} elseif ( bp_is_media_directory() ) {
 			$nav_items = bp_nouveau_get_media_directory_nav_items();
+		} elseif ( bp_is_document_directory() ) {
+			$nav_items = bp_nouveau_get_document_directory_nav_items();
 		}
 
 		if ( empty( $nav_items ) ) {

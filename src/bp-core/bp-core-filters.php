@@ -1274,8 +1274,8 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
  */
 function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
 
-	if ( ! empty( $group_id ) ) {
-		if ( 'group-avatars' == $avatar_dir ) {
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		if ( 'group-avatars' === $avatar_dir ) {
 			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );
@@ -1377,4 +1377,43 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 	}
 
 	return $src;
+}
+
+/**
+ * Removed the non-component pages from $bp->pages from bp_core_set_uri_globals function.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_pages_terms_and_privacy_exclude( $pages ) {
+
+	if ( !empty( $pages ) ) {
+
+		// Removed terms page as non component page.
+		if ( property_exists( $pages, 'terms' ) ) {
+			unset( $pages->terms );
+		}
+
+		// Removed privacy policy page as non component page.
+		if ( property_exists( $pages, 'privacy' ) ) {
+			unset( $pages->privacy );
+		}
+	}
+
+	return $pages;
+}
+add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+
+/**
+ * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.
+ */
+if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
+	function buddyboss_platform_plugin_update_notice() {
+		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+			$class   = 'notice notice-error';
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		}
+	}
+	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
 }

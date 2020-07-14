@@ -23,7 +23,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function initialize() {
-		$this->tab_order      = 20;
+		$this->tab_order      = 30;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 
@@ -80,7 +80,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function form_html() {
 		// Check Group component active.
-		if ( ! bp_is_active( 'groups' ) ) {
+		if ( ! bp_is_active( 'groups' ) && is_plugin_active( $this->required_plugin) ) {
 			if ( is_file( $this->intro_template ) ) {
 				require $this->intro_template;
 			}
@@ -224,20 +224,28 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			)
 		);
 
-		// Register View Tutorial button.
-		$this->add_field( 'bp-privacy-tutorial-bb-to-ld-sync', '', array( $this, 'bp_privacy_tutorial_bb_to_ld_sync' ) );
+		// Social Group Sync View Tutorial button.
+		$this->add_field( 'bp-tutorial-social-group-sync', '', array( $this, 'bp_tutorial_social_group_sync' ) );
 	}
 
 	/**
-	 * Register View Tutorial button.
+	 * Social Group Sync View Tutorial button.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function bp_privacy_tutorial_bb_to_ld_sync() {
+	public function bp_tutorial_social_group_sync() {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/courses-with-social-groups.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62877,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -359,20 +367,28 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			)
 		);
 
-		// Register View Tutorial button.
-		$this->add_field( 'bp-privacy-tutorial-ld-to-bb-sync', '', array( $this, 'bp_privacy_tutorial_ld_to_bb_sync' ) );
+		// LearnDash Group Sync View Tutorial button.
+		$this->add_field( 'bp-tutorial-learndash-group-sync', '', array( $this, 'bp_tutorial_learndash_group_sync' ) );
 	}
 
 	/**
-	 * Register View Tutorial button.
+	 * LearnDash Group Sync View Tutorial button.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function bp_privacy_tutorial_ld_to_bb_sync() {
+	public function bp_tutorial_learndash_group_sync() {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/courses-with-social-groups.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62877,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -444,6 +460,32 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'input_description' => __( 'Adds a tab to the logged in member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates the member has earned.', 'buddyboss' ),
 			]
 		);
+
+		// My Courses Tab View Tutorial button.
+		$this->add_field( 'bp-tutorial-my-courses-tab', '', array( $this, 'bp_profiles_tutorial_my_courses' ) );
+	}
+
+	/**
+	 * My Courses Tab View Tutorial button.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 */
+	public function bp_profiles_tutorial_my_courses() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 83110,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 
 	/**

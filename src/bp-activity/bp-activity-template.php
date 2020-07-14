@@ -193,6 +193,8 @@ function bp_get_activity_directory_permalink() {
 function bp_has_activities( $args = '' ) {
 	global $activities_template;
 
+	$args = bp_parse_args( $args );
+
 	// Get BuddyPress.
 	$bp = buddypress();
 
@@ -205,45 +207,28 @@ function bp_has_activities( $args = '' ) {
 		? bp_displayed_user_id()
 		: false;
 
-	$privacy = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
+	// The default scope should recognize custom slugs.
+	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
+			? $bp->loaded_components[ bp_current_action() ]
+			: (
+				( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
+				? bp_current_action()
+				: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+			);
 
-		if ( bp_is_active( 'friends' ) ) {
-			if ( ! bp_is_group() && ! bp_is_activity_directory() ) {
-			    if ( bp_is_my_profile() ) {
-				    $privacy[] = 'friends';
-                } else {
-				    $is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-				    if ( $is_friend ) {
-					    $privacy[] = 'friends';
-				    }
-			    }
-			} else if ( bp_is_activity_directory() ) {
-				$privacy[] = 'friends';
-			}
-		}
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
-		}
-	}
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {
-		$object      = $bp->groups->id;
-		$primary_id  = bp_get_current_group_id();
-		$show_hidden = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
+		$object          = $bp->groups->id;
+		$args['privacy'] = ( isset( $args['privacy'] ) ? $args['privacy'] : array( 'public' ) );
+		$primary_id      = bp_get_current_group_id();
+		$show_hidden     = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
 	} else {
 		$object      = false;
 		$primary_id  = false;
 		$show_hidden = false;
 	}
-
-	// The default scope should recognize custom slugs.
-	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
-		? $bp->loaded_components[ bp_current_action() ]
-		: bp_current_action();
 
 	// Support for permalinks on single item pages: /groups/my-group/activity/124/.
 	$include = bp_is_current_action( bp_get_activity_slug() )
@@ -282,7 +267,7 @@ function bp_has_activities( $args = '' ) {
 		// Scope - pre-built activity filters for a user (friends/groups/favorites/mentions).
 			'scope'             => $scope,
 
-			// Filtering
+			// Filtering.
 			'user_id'           => $user_id,     // user_id to filter on.
 			'object'            => $object,      // Object to filter on e.g. groups, profile, status, friends.
 			'action'            => false,        // Action to filter on e.g. activity_update, profile_updated.
@@ -290,7 +275,7 @@ function bp_has_activities( $args = '' ) {
 			'secondary_id'      => false,        // Secondary object ID to filter on e.g. a post_id.
 			'offset'            => false,        // Return only items >= this ID.
 			'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
-			'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, media.
+			'privacy'           => false,        // privacy to filter on - public, onlyme, loggedin, friends, media, document.
 
 			'meta_query'        => false,        // Filter on activity meta. See WP_Meta_Query for format.
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
@@ -692,6 +677,11 @@ function bp_activity_id() {
 function bp_get_activity_id() {
 	global $activities_template;
 
+	$activity_id = 0;
+	if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id  ) ) {
+		$activity_id = $activities_template->activity->id ;
+	}
+
 	/**
 	 * Filters the activity ID being displayed.
 	 *
@@ -699,7 +689,7 @@ function bp_get_activity_id() {
 	 *
 	 * @param int $id The activity ID.
 	 */
-	return apply_filters( 'bp_get_activity_id', $activities_template->activity->id );
+	return apply_filters( 'bp_get_activity_id', $activity_id );
 }
 
 /**
@@ -2699,6 +2689,10 @@ function bp_get_activity_css_class() {
 		$class .= ' has-comments';
 	}
 
+	if ( '0' !== bp_activity_get_meta( bp_get_activity_id(), '_link_embed', true ) ) {
+		$class .= ' wp-link-embed';
+	}
+
 	/**
 	 * Filters the determined classes to add to the HTML element.
 	 *
@@ -3052,22 +3046,22 @@ function bp_activity_can_comment_reply( $comment = false ) {
 		$comment = bp_activity_current_comment();
 	}
 
-	if ( ! empty( $comment ) ) {
-
-		// Fall back on current comment in activity loop.
-		$comment_depth = isset( $comment->depth )
-			? intval( $comment->depth )
-			: bp_activity_get_comment_depth( $comment );
-
-		// Threading is turned on, so check the depth.
-		if ( get_option( 'thread_comments' ) ) {
-			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
-
-			// No threading for comment replies if no threading for comments.
-		} else {
-			$can_comment = false;
-		}
-	}
+//	if ( ! empty( $comment ) ) {
+//
+//		// Fall back on current comment in activity loop.
+//		$comment_depth = isset( $comment->depth )
+//			? intval( $comment->depth )
+//			: bp_activity_get_comment_depth( $comment );
+//
+//		// Threading is turned on, so check the depth.
+//		if ( get_option( 'thread_comments' ) ) {
+//			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
+//
+//			// No threading for comment replies if no threading for comments.
+//		} else {
+//			$can_comment = false;
+//		}
+//	}
 
 	/**
 	 * Filters whether a comment can be made on an activity reply item.

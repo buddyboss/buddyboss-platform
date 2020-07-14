@@ -5,7 +5,7 @@
  * @since BuddyBoss 1.0.0
  */
 ?>
-<div class="bb-media-model-wrapper bb-internal-model" style="display: none;">
+<div class="bb-media-model-wrapper bb-internal-model media media-theatre" style="display: none;">
 
     <a data-balloon-pos="left" data-balloon="<?php _e( 'Close', 'buddyboss' ); ?>" class="bb-close-media-theatre bb-close-model" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><path fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1L1 13m12 0L1 1" opacity=".7"/></svg></a>
 
@@ -24,19 +24,19 @@
                     <img src="" alt="" />
                 </figure>
 
-	            <div class="bb-dropdown-wrap">
-		            <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
-		            <select id="bb-media-theatre-privacy">
-			            <?php foreach ( $privacy_options as $k => $option ) {
-				            ?>
-				            <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
-				            <?php
-			            } ?>
-		            </select>
+	            <div class="bb-dropdown-wrap bb-media-only-privacy">
+		            <div class="bb-media-privacy-wrap" style="display: none;">
+			            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="left" data-bp-tooltip=""><span class="privacy selected"></span></span>
+			            <ul class="media-privacy">
+				            <?php foreach( bp_media_get_visibility_levels() as $item_key => $privacy_item ) {
+					            ?><li data-value="<?php echo esc_attr( $item_key ); ?>" class="<?php echo esc_attr( $item_key ); ?>"><?php echo esc_attr( $privacy_item ); ?></li><?php
+				            } ?>
+			            </ul>
+		            </div>
 	            </div>
 
             </div>
-            <div class="bb-media-info-section">
+            <div class="bb-media-info-section media">
                 <ul class="activity-list item-list bp-list"><span><i class="bb-icon-spin5 animate-spin"></i></span></ul>
             </div>
         </div>

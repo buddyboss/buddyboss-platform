@@ -407,7 +407,12 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 		if ( ! empty( $timezone_string ) ) {
 			$timezone_object = timezone_open( $timezone_string );
 			$datetime_object = date_create( "@{$time}" );
-			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+
+			if ( false !== $timezone_object && false !== $datetime_object ) {
+				$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+			} else {
+				$timezone_offset = bp_get_option( 'gmt_offset' );
+			}
 
 			// Fall back on less reliable gmt_offset.
 		} else {
@@ -1105,26 +1110,27 @@ add_filter( 'bp_create_excerpt', 'force_balance_tags' );
 function bp_total_member_count() {
 	echo bp_get_total_member_count();
 }
-	/**
-	 * Return the total member count in your BP instance.
-	 *
-	 * Since BuddyBoss 1.0.0, members directory lists all members, even if they have never been active.
-	 * So, this function also uses bp_core_get_total_member_count, again.
-	 *
-	 * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
-	 * which counts non-spam, non-deleted users who have last_activity.
-	 * This value will correctly match the total member count number used
-	 * for pagination on member directories.
-	 *
-	 * Before BuddyPress 1.6, this function used bp_core_get_total_member_count(),
-	 * which did not take into account last_activity, and thus often
-	 * resulted in higher counts than shown by member directory pagination.
-	 *
-	 * @since BuddyPress 1.2.0
-	 * @since BuddyBoss 1.0.0 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
-	 *
-	 * @return int Member count.
-	 */
+
+/**
+ * Return the total member count in your BP instance.
+ *
+ * Since BuddyBoss 1.0.0, members directory lists all members, even if they have never been active.
+ * So, this function also uses bp_core_get_total_member_count, again.
+ *
+ * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
+ * which counts non-spam, non-deleted users who have last_activity.
+ * This value will correctly match the total member count number used
+ * for pagination on member directories.
+ *
+ * Before BuddyPress 1.6, this function used bp_core_get_total_member_count(),
+ * which did not take into account last_activity, and thus often
+ * resulted in higher counts than shown by member directory pagination.
+ *
+ * @since BuddyPress 1.2.0
+ * @since BuddyBoss 1.0.0 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
+ *
+ * @return int Member count.
+ */
 function bp_get_total_member_count() {
 
 	/**
@@ -1136,7 +1142,7 @@ function bp_get_total_member_count() {
 	 */
 	return apply_filters( 'bp_get_total_member_count', bp_core_get_total_member_count() );
 }
-	add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
+add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
 
 /**
  * Output whether blog signup is allowed.
@@ -2277,6 +2283,17 @@ function bp_is_media_component() {
 }
 
 /**
+ * Check whether the current page is part of the Document component.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is part of the Media component.
+ */
+function bp_is_document_component() {
+	return (bool) bp_is_current_component( 'document' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2734,6 +2751,20 @@ function bp_is_user_media() {
 }
 
 /**
+ * Is this a user's document page?
+ *
+ * Eg http://example.com/members/joe/documents/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a user's media page.
+ */
+function bp_is_user_document() {
+	return (bool) ( bp_is_user() && bp_is_document_component() );
+}
+
+
+/**
  * Is the current page the media directory?
  *
  * @since BuddyBoss 1.0.0
@@ -2742,6 +2773,21 @@ function bp_is_user_media() {
  */
 function bp_is_media_directory() {
 	if ( ! bp_displayed_user_id() && bp_is_media_component() && ! bp_current_action() ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Is the current page the media directory?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is the media directory.
+ */
+function bp_is_document_directory() {
+	if ( ! bp_displayed_user_id() && bp_is_document_component() && ! bp_current_action() ) {
 		return true;
 	}
 
@@ -2762,6 +2808,39 @@ function bp_is_single_album() {
 	}
 
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+/**
+ * Is the current page a single folder item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single album item permalink.
+ */
+function bp_is_single_folder() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && is_numeric( bp_action_variable( 1 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_document_component() && 'folders' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+
+/**
+ * Is the current page a single document item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single document item permalink.
+ */
+function bp_is_single_document() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document() && is_numeric( bp_action_variable( 0 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_media_component() && 'my-document' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 
@@ -2951,7 +3030,7 @@ function bp_is_group_leaders() {
  * @return bool True if the current page is a group's Send Invites page.
  */
 function bp_is_group_invites() {
-	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'send-invites' ) );
+	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'invite' ) );
 }
 
 /**
@@ -3059,6 +3138,65 @@ function bp_is_group_albums() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's document page?
+ *
+ * @since BuddyPress 1.2.3
+ *
+ * @return bool True if the current page is a group's document page.
+ */
+function bp_is_group_document() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's folder page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's folder page.
+ */
+function bp_is_group_folders() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_group_document_support_enabled') && ! bp_is_group_document_support_enabled() ) {
+		return $retval;
+	}
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a user's folder page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's folder page.
+ */
+function bp_is_user_folders() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_document_component') && bp_is_document_component() && bp_is_current_action( 'folders' ) ) {
 		$retval = true;
 	}
 
@@ -3222,7 +3360,9 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 		if ( ! empty( $bp->members->nav ) ) {
 			$primary_nav_item = $bp->members->nav->get_primary( array( 'slug' => $component_id ), false );
-			$primary_nav_item = reset( $primary_nav_item );
+			if ( is_array( $primary_nav_item ) ) {
+				$primary_nav_item = reset( $primary_nav_item );
+			}
 		}
 
 		// Use the component nav name.
@@ -3534,6 +3674,14 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 
 	if ( bp_is_group_invites() ) {
 		$bp_classes[] = 'group-invites';
+
+		if ( 'send-invites' === bp_get_group_current_invite_tab() ) {
+			$bp_classes[] = 'send-invites';
+		}
+
+		if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
+			$bp_classes[] = 'pending-invites';
+		}
 	}
 
 	if ( bp_is_group_members() ) {
@@ -3936,7 +4084,7 @@ function bp_email_the_salutation( $settings = array() ) {
 	 * @return string The Recipient Salutation.
 	 */
 function bp_email_get_salutation( $settings = array() ) {
-	$token = '{{recipient.name}}<img src="{{recipient.avatar}}" style="border: 1px solid #b9babc;border-radius: 50%;margin-left: 12px;width: 34px;max-width: 34px;height: 34px;vertical-align: middle;" />';
+	$token = '<table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="vertical-align: middle;font-family:sans-serif;font-weight:normal;color:#7f868f;font-size:14px;padding-right: 12px;">{{recipient.name}} </td><td style="vertical-align: middle;"><img src="{{recipient.avatar}}" height="34" width="34" style="border: 1px solid #b9babc;border-radius: 50%;max-width: 34px;vertical-align: middle;" /></td></tr></tbody></table>';
 
 	/**
 	 * Filters The Recipient Salutation inside the Email Template.
@@ -3947,5 +4095,22 @@ function bp_email_get_salutation( $settings = array() ) {
 	 * @param array  $settings Email Settings.
 	 * @param string $token    The Recipient token.
 	 */
-	return apply_filters( 'bp_email_get_salutation', sprintf( '%s' , $token ), $settings, $token );
+	return apply_filters( 'bp_email_get_salutation', sprintf( '%s', $token ), $settings, $token );
+}
+
+/**
+ * Is the current page a group's message page?
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @return bool True if the current page is a group's message page.
+ */
+function bp_is_group_messages() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
 }

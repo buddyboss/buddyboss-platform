@@ -31,6 +31,38 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 					<?php bbp_topic_freshness_link( $topic_id ) ?>
 				</span>
 			</div>
+			<?php
+			$discussion_tags = get_the_terms( $topic_id, bbpress()->topic_tag_tax_id );
+
+			if ( ! empty( $discussion_tags ) ) {
+				?>
+				<div class="item-tags">
+					<span class="item-tag-cap">
+						<?php
+						esc_html_e( 'Tags:', 'buddyboss' );
+						?>
+					</span>
+					<?php
+					$tags_count = ( is_array( $discussion_tags ) || is_object( $discussion_tags ) ) ? count( $discussion_tags ) : 0;
+					$loop_count = 1;
+					foreach ( $discussion_tags as $key => $discussion_tag ) {
+						?>
+						<span class="discussion-tag">
+							<?php
+							echo esc_html( $discussion_tag->name );
+							if( $tags_count != $loop_count ){
+								echo ", ";
+							}
+							?>
+						</span>
+						<?php
+						$loop_count++;
+					}
+					?>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 	</div>
 </li>

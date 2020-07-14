@@ -28,12 +28,23 @@ function bp_core_admin_pages_settings() {
 			settings_fields( 'bp-pages' );
 			bp_custom_pages_do_settings_sections( 'bp-pages' );
 
-			printf(
-				'<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="%s" />
-			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
-			);
+			// Check WPML Active.
+			if ( class_exists( 'SitePress' ) ) {
+				$wpml_options = get_option( 'icl_sitepress_settings' );
+				$default_lang = $wpml_options['default_language'];
+				$current_lang = ICL_LANGUAGE_CODE;
+
+				if ( $current_lang === $default_lang ) {
+					// Show the "Save Settings" button only if the current language is the default language.
+					printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+				} else {
+					// Show a disabled "Save Settings" button if the current language is not the default language.
+					printf( '<div class="submit"><p class="button-primary disabled">%s</p></div>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+					printf( '<p class="description">%s</p>', esc_attr__( 'You need to switch to your Default language in WPML to save these settings.', 'buddyboss' ) );
+				}
+			} else {
+				printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+			}
 			?>
 		</form>
 	</div>
@@ -54,7 +65,7 @@ function bp_custom_pages_do_settings_sections( $page ) {
 	}
 
 	foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
-		echo "<div class='bp-admin-card section-{$section['id']}'>";
+		echo "<div id='{$section['id']}' class='bp-admin-card section-{$section['id']}'>";
 		if ( $section['title'] ) {
 			echo "<h2>{$section['title']}</h2>\n";
 		}
@@ -128,15 +139,17 @@ function bp_core_admin_register_page_fields() {
 	foreach ( $directory_pages as $name => $label ) {
 
 		if ( 'members' === $name ) {
-			$description = 'This directory shows a listing of all members.';
+			$description = esc_html__( 'This directory shows a listing of all members.', 'buddyboss' );
 		} elseif ( 'groups' === $name ) {
-			$description = 'This directory shows a listing of all groups.';
+			$description = esc_html__( 'This directory shows a listing of all groups.', 'buddyboss' );
 		} elseif ( 'new_forums_page' === $name ) {
-			$description = 'This directory shows a listing of all forums.';
+			$description = esc_html__( 'This directory shows a listing of all forums.', 'buddyboss' );
 		} elseif ( 'activity' === $name ) {
-			$description = 'This directory shows all sitewide activity.';
+			$description = esc_html__( 'This directory shows all sitewide activity.', 'buddyboss' );
 		} elseif ( 'media' === $name ) {
-			$description = 'This directory shows all photos uploaded by members.';
+			$description = esc_html__( 'This directory shows all photos uploaded by members.', 'buddyboss' );
+		} elseif ( 'document' === $name ) {
+			$description = esc_html__( 'This directory shows all documents uploaded by members.', 'buddyboss' );
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact( 'existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, array() );
@@ -151,14 +164,32 @@ add_action( 'admin_init', 'bp_core_admin_register_page_fields' );
  */
 function bp_core_admin_register_registration_page_fields() {
 
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( $allow_custom_registration ) {
+		return;
+	}
+
+	if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) ) {
+		return;
+	}
+
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages   = bp_core_admin_get_static_pages();
 
-	// add view tutorial button
+	// add view tutorial button.
 	$static_pages['button'] = array(
-		'link'  => bp_core_help_docs_link( 'components/registration/registration-pages.md' ),
+		'link'  => bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62795,
+				),
+				'admin.php'
+			)
+		),
 		'label' => __( 'View Tutorial', 'buddyboss' ),
 	);
 	$description            = '';
@@ -166,13 +197,13 @@ function bp_core_admin_register_registration_page_fields() {
 	foreach ( $static_pages as $name => $label ) {
 		$title = $label;
 		if ( 'register' === $name ) {
-			$description = 'New users fill out this form to register their accounts.';
+			$description = esc_html__( 'New users fill out this form to register their accounts.', 'buddyboss' );
 		} elseif ( 'terms' === $name ) {
-			$description = 'If a page is added, its contents will display in a popup on the register form.';
+			$description = esc_html__( 'If a page is added, its contents will display in a popup on the register form.', 'buddyboss' );
 		} elseif ( 'privacy' === $name ) {
-			$description = 'If a page is added, its contents will display in a popup on the register form.';
+			$description = esc_html__( 'If a page is added, its contents will display in a popup on the register form.', 'buddyboss' );
 		} elseif ( 'activate' === $name ) {
-			$description = 'After registering, users are sent to this page to activate their accounts.';
+			$description = esc_html__( 'After registering, users are sent to this page to activate their accounts.', 'buddyboss' );
 		}
 
 		if ( 'button' === $name ) {
@@ -208,7 +239,10 @@ function bp_core_admin_registration_pages_description() {
 		$invite_text = '';
 		if ( bp_is_active( 'invites' ) ) {
 			$invite_text = sprintf(
-				'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+				__(
+					'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+					'buddyboss'
+				),
 				add_query_arg(
 					array(
 						'page' => 'bp-settings',
@@ -249,11 +283,11 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 		switch_to_blog( bp_get_root_blog_id() );
 	}
 
-	// For the button
+	// For the button.
 	if ( 'button' === $name ) {
 
 		printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );
-		// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
+		// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`.
 	} elseif ( 'new_forums_page' === $name ) {
 
 		// Get the page id from the options.
@@ -282,7 +316,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 			);
 		} else {
 			printf(
-				'<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'<a href="%s" class="button-secondary create-background-page" data-name="%s">%s</a>',
 				'javascript:void(0);',
 				esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' )
@@ -316,7 +350,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 			);
 		} else {
 			printf(
-				'<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'<a href="%s" class="button-secondary create-background-page" data-name="%s">%s</a>',
 				'javascript:void(0);',
 				esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' )

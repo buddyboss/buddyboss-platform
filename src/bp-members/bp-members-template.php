@@ -348,20 +348,44 @@ function bp_has_members( $args = array() ) {
 		$type    = 'alphabetical';
 	}
 
-	$member_type = bp_get_current_member_type();
-	if ( ! $member_type && ! empty( $_GET['member_type'] ) ) {
-		if ( is_array( $_GET['member_type'] ) ) {
-			$member_type = $_GET['member_type'];
+	$member_type = '';
+
+	if ( isset( $_REQUEST['member_type'] ) && ! empty( $_REQUEST['member_type'] ) ) {
+		if ( is_array( $_REQUEST['member_type'] ) ) {
+			$member_type = $_REQUEST['member_type'];
 		} else {
 			// Can be a comma-separated list.
-			$member_type = explode( ',', $_GET['member_type'] );
+			$member_type = explode( ',', $_REQUEST['member_type'] );
 		}
 	}
+
+	if ( empty( $member_type ) ) {
+		$member_type = bp_get_current_member_type();
+    } elseif ( is_array( $member_type ) ) {
+	    $member_type = array_merge( $member_type, bp_get_current_member_type() );
+    } elseif ( '' !== $member_type ) {
+		$member_type = explode( ',', $member_type );
+		$member_type = array_merge( $member_type, bp_get_current_member_type() );
+    }
 
 	$search_terms_default = null;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'members' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
+	}
+
+	$member_type__not_in = array();
+
+	$args = bp_parse_args( $args, array() );
+	// Exclude Member Types
+	if ( ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && ( ! bp_is_user() && empty( $member_type ) && empty( $args['member_type'] ) ) ) {
+	    // get all excluded member types.
+	    $bp_member_type_ids = bp_get_removed_member_types();
+	    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+		    foreach ( $bp_member_type_ids as $single ) {
+			    $member_type__not_in[] = $single['name'];
+		    }
+	    }
 	}
 
 	// Type: active ( default ) | random | newest | popular | online | alphabetical.
@@ -381,7 +405,7 @@ function bp_has_members( $args = array() ) {
 			'user_id'             => $user_id, // Pass a user_id to only show friends of this user.
 			'member_type'         => $member_type,
 			'member_type__in'     => '',
-			'member_type__not_in' => '',
+			'member_type__not_in' => $member_type__not_in,
 			'search_terms'        => $search_terms_default,
 
 			'meta_key'            => false,    // Only return users with this usermeta.
@@ -1380,7 +1404,7 @@ function bp_displayed_user_get_front_template( $displayed_user = null ) {
 
 	// Init the hierarchy
 	$template_names = array(
-		'members/single/front-id-' . sanitize_file_name( $displayed_user->id ) . '.php',
+		'members/single/front-id-' . (int) $displayed_user->id . '.php',
 		'members/single/front-nicename-' . sanitize_file_name( $displayed_user->userdata->user_nicename ) . '.php',
 	);
 
@@ -2030,8 +2054,12 @@ function bp_signup_page() {
 	 * @return string
 	 */
 function bp_get_signup_page() {
-	if ( bp_has_custom_signup_page() ) {
+	if ( bp_has_custom_signup_page() && ! bp_allow_custom_registration() ) {
 		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
+	} else if ( bp_has_custom_signup_page() && bp_allow_custom_registration() && '' === bp_custom_register_page_url() ) {
+		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
+	} else if ( bp_allow_custom_registration() && '' !== bp_custom_register_page_url() ) {
+	    $page = bp_custom_register_page_url();
 	} else {
 		$page = bp_get_root_domain() . '/wp-signup.php';
 	}
@@ -2717,78 +2745,6 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	 * @param string $button HTML markup for follow button.
 	 */
 	return bp_get_button( apply_filters( 'bp_get_add_switch_button', $button ) );
-}
-
-/**
- * Output the latest update of the current member in the loop.
- *
- * @since 1.2.0
- *
- * @param array|string $args {@see bp_get_member_latest_update()}.
- */
-function bp_member_latest_update( $args = '' ) {
-	echo bp_get_member_latest_update( $args );
-}
-
-	/**
-	 * Get the latest update from the current member in the loop.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @param array|string $args {
-	 *     Array of optional arguments.
-	 *     @type int  $length    Truncation length. Default: 225.
-	 *     @type bool $view_link Whether to provide a 'View' link for
-	 *                           truncated entries. Default: false.
-	 * }
-	 * @return string
-	 */
-function bp_get_member_latest_update( $args = '' ) {
-	global $members_template;
-
-	$defaults = array(
-		'length'    => 225,
-		'view_link' => true,
-	);
-
-	$r = wp_parse_args( $args, $defaults );
-	extract( $r );
-
-	if ( ! bp_is_active( 'activity' ) || empty( $members_template->member->latest_update ) || ! $update = maybe_unserialize( $members_template->member->latest_update ) ) {
-		return false;
-	}
-
-	/**
-	 * Filters the excerpt of the latest update for current member in the loop.
-	 *
-	 * @since 1.2.5
-	 * @since 2.6.0 Added the `$r` parameter.
-	 *
-	 * @param string $value Excerpt of the latest update for current member in the loop.
-	 * @param array  $r     Array of parsed arguments.
-	 */
-	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
-
-	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
-
-	// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
-	// been truncated), add the "View" link.
-	if ( $view_link && ( $update_content != $update['content'] ) ) {
-		$view = __( 'View', 'buddyboss' );
-
-		$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
-	}
-
-	/**
-	 * Filters the latest update from the current member in the loop.
-	 *
-	 * @since 1.2.0
-	 * @since 2.6.0 Added the `$r` parameter.
-	 *
-	 * @param string $update_content Formatted latest update for current member.
-	 * @param array  $r              Array of parsed arguments.
-	 */
-	return apply_filters( 'bp_get_member_latest_update', $update_content, $r );
 }
 
 /**

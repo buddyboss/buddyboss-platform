@@ -798,12 +798,13 @@ function bp_friends_prime_mentions_results() {
 		return;
 	}
 
-	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
+	// Bail out if the site has a ton of users.
+	if ( bp_is_large_install() ) {
 		return;
 	}
 
-	// Bail out if the site has a ton of users.
-	if ( bp_is_large_install() ) {
+	// Bail if single group page.
+	if ( bp_is_group() ) {
 		return;
 	}
 
@@ -824,7 +825,7 @@ function bp_friends_prime_mentions_results() {
 
 	foreach ( $friends_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = get_user_meta( $user->ID, 'nickname', true ) ?: $user->user_nicename;
+		$result->ID    = bp_activity_get_user_mentionname( $user->ID );
 		$result->image = bp_core_fetch_avatar(
 			array(
 				'html'    => false,
@@ -833,10 +834,11 @@ function bp_friends_prime_mentions_results() {
 		);
 
 		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = bp_core_get_member_display_name( $user->display_name, $user->ID );
+			$result->name = bp_core_get_user_displayname( $user->ID );
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}
+		$result->user_id = $user->ID;
 
 		$results[] = $result;
 	}
@@ -850,6 +852,7 @@ function bp_friends_prime_mentions_results() {
 	);
 }
 add_action( 'bp_activity_mentions_prime_results', 'bp_friends_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bp_friends_prime_mentions_results' );
 
 /** Emails ********************************************************************/
 

@@ -45,6 +45,15 @@ class BP_RankMath_Title implements IPaper {
 	}
 
 	/**
+	 * Retrieves the Advanced Robots.
+	 *
+	 * @return string
+	 */
+	public function advanced_robots() {
+		return array();
+	}
+
+	/**
 	 * Retrieves the robots.
 	 *
 	 * @return string
@@ -77,6 +86,10 @@ class BP_RankMath_Title implements IPaper {
  * Add Page Title on Platform Group Page in Rank Math Plugin
  */
 function bp_helper_rankmath_group_page_support( $title ) {
+
+	if ( bp_is_current_component( 'activate' ) || bp_is_current_component( 'register' ) ) {
+		return;
+	}
 
 	if (
 		bp_is_active( 'groups' ) && ! empty( buddypress()->groups->current_group )

@@ -52,6 +52,15 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 				}
 			}
 		}
+
+		/**
+		 * Fires to register Search tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Search.
+		 */
+		do_action( 'bp_admin_setting_search_register_fields', $this );
 	}
 
 }

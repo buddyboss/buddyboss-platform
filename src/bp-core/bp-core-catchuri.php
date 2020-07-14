@@ -50,6 +50,17 @@ function bp_core_set_uri_globals() {
 		$bp->pages = bp_core_get_directory_pages();
 	}
 
+	/**
+	 * Filters the BuddyPress global pages
+	 *
+	 * - This filter is documented in bp-core/bp-core-filters.php
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param object
+	 */
+	$bp->pages = apply_filters( 'bp_pages', $bp->pages );
+
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
@@ -246,7 +257,7 @@ function bp_core_set_uri_globals() {
 	}
 
 	// Search doesn't have an associated page, so we check for it separately.
-	if ( ! empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
+	if ( isset( $_POST['search-terms'] ) && ! empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
 		$matches[]   = 1;
 		$match       = new stdClass();
 		$match->key  = 'search';
@@ -1122,19 +1133,29 @@ function bp_private_network_template_redirect() {
 
 	if ( ! is_user_logged_in() ) {
 
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+		$enable_private_network = bp_enable_private_network();
 
 		$page_ids            = bp_core_get_directory_page_ids();
 		$terms               = false;
 		$privacy             = false;
 		$current_page_object = $wp_query->get_queried_object();
 		$id                  = isset( $current_page_object->ID ) ? $current_page_object->ID : get_the_ID();
+		$id                  = ( ! empty( $id ) ) ? $id : 0;
 		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
 
-		if ( '0' === $enable_private_network ) {
+		if ( ! $enable_private_network ) {
 
 			if ( apply_filters( 'bp_private_network_pre_check', false ) ) {
 				return;
+			}
+
+			$allow_custom_registration = bp_allow_custom_registration();
+			$actual_link               = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			if ( $allow_custom_registration ) {
+				if ( untrailingslashit( $actual_link ) === untrailingslashit( bp_custom_register_page_url() ) ) {
+					return;
+				}
+
 			}
 
 			// Redirect to MemberPress custom login page.
@@ -1149,39 +1170,48 @@ function bp_private_network_template_redirect() {
 			// Get excluded list from the settings
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
-
 				// Convert string to URL array
 				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
-				foreach ( $exclude_arr_url as $url ) {
-					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
-					$request_url              = home_url( add_query_arg( array(), $wp->request ) );
-					$un_trailing_slash_it_url = untrailingslashit( $url );
 
-					// Check if strict match
-					if ( false !== $check_is_full_url && $request_url === $un_trailing_slash_it_url ) {
-						return;
-					} elseif ( false === $check_is_full_url && isset( $request_url ) && isset( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+				if ( ! empty( $exclude_arr_url ) && is_array( $exclude_arr_url ) ) {
+					$request_url = home_url( add_query_arg( array(), $wp->request ) );
 
-						$fragments = explode( '/', $request_url );
+					foreach ( $exclude_arr_url as $url ) {
+						$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+						$un_trailing_slash_it_url = untrailingslashit( $url );
 
-						foreach ( $fragments as $fragment ) {
-							if ( $fragment === trim( $url, '/' ) ) {
-								return;
+						// Check if strict match
+						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+							return;
+						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+							$fragments = explode( '/', $request_url );
+
+							foreach ( $fragments as $fragment ) {
+								if ( $fragment === trim( $url, '/' ) ) {
+									return;
+								}
 							}
 						}
 					}
 				}
 			}
+
 			if ( get_option( 'users_can_register' ) ) {
 				if ( isset( $id ) ) {
 					if ( ! bp_is_register_page() && ! $activate && $terms !== $id && $privacy !== $id ) {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
-							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+							$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
-								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+								if (
+									'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
+									|| (
+										'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
+										&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+									)
+								) {
 
 									$redirect_url  = is_ssl() ? 'https://' : 'http://';
 									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1232,10 +1262,15 @@ function bp_private_network_template_redirect() {
 				} else {
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
+						$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 						if ( $actual_link !== wc_lostpassword_url() ) {
-							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+							if (
+								'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
+								|| (
+									'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
+									&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+								)
+							) {
 
 								$redirect_url  = is_ssl() ? 'https://' : 'http://';
 								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1273,7 +1308,7 @@ function bp_private_network_template_redirect() {
 
 				if ( class_exists( 'woocommerce' ) ) {
 
-					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+					$actual_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
 						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
@@ -1387,9 +1422,9 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 
 	if ( ! is_user_logged_in() ) {
 
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+		$enable_private_network = bp_enable_private_network();
 
-		if ( '0' === $enable_private_network ) {
+		if ( ! $enable_private_network ) {
 
 			$args = array( 'action' => 'lostpassword' );
 			if ( ! empty( $redirect ) ) {
@@ -1421,9 +1456,9 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 
 	if ( ! is_user_logged_in() ) {
 
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+		$enable_private_network = bp_enable_private_network();
 
-		if ( '0' === $enable_private_network ) {
+		if ( ! $enable_private_network ) {
 
 			$privacy_policy_url = get_privacy_policy_url();
 			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
