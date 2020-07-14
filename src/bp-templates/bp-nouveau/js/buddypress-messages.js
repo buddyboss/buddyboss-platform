@@ -715,7 +715,7 @@ window.bp = window.bp || {};
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'section', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'tr', 'td', 'th' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
 							}
 						}
