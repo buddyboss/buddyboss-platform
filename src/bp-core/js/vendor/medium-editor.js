@@ -6637,9 +6637,9 @@ MediumEditor.extensions = {};
                 }
 
                 var li = this.options.ownerDocument.createElement('li');
-                wrap.appendChild(li);
+                var newWrap = wrap.appendChild(li);
                 elementsContainer.appendChild(wrap);
-                MediumEditor.selection.moveCursor(this.options.ownerDocument, wrap); 
+                MediumEditor.selection.moveCursor(this.options.ownerDocument, newWrap);
             }
         }
     }
