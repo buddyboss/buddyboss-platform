@@ -2762,7 +2762,7 @@ function bp_nav_menu_get_loggedin_pages() {
 			)
 		);
 
-		if ( 'messages' === $bp_item['slug'] ) {
+		if ( 'messages' === $bp_item['slug'] && bp_is_active( 'messages' ) ) {
 			$page_args['compose-messages'] =
 			(object) array(
 				'ID'             => hexdec( uniqid() ),
@@ -2785,7 +2785,7 @@ function bp_nav_menu_get_loggedin_pages() {
 					'object_id'      => hexdec( uniqid() ),
 					'post_author'    => 0,
 					'post_date'      => 0,
-					'post_excerpt'   => 'email-preference',
+					'post_excerpt'   => 'site-notice',
 					'post_type'      => 'page',
 					'post_status'    => 'publish',
 					'comment_status' => 'closed',
@@ -2795,7 +2795,7 @@ function bp_nav_menu_get_loggedin_pages() {
 			}
 		}
 
-		if ( 'groups' === $bp_item['slug'] && bp_user_can_create_groups() ) {
+		if ( 'groups' === $bp_item['slug'] && bp_is_active( 'groups' ) && bp_user_can_create_groups() ) {
 			$page_args['groups-create'] = (object) array(
 				'ID'             => hexdec( uniqid() ),
 				'post_title'     => __( 'Create Group', 'buddyboss' ),
@@ -2822,13 +2822,14 @@ function bp_nav_menu_get_loggedin_pages() {
 				'post_type'      => 'page',
 				'post_status'    => 'publish',
 				'comment_status' => 'closed',
-				'guid'           => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() ),
 				'post_parent'    => $nav_counter,
 			);
 		}
 
 		if ( ! empty( $nav_sub ) ) {
 			foreach ( $nav_sub as $s_nav ) {
+
 				$sub_name          = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
 				$sub_name          = trim( $sub_name );
 				$nav_counter_child = hexdec( uniqid() );
@@ -2845,13 +2846,15 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'profile' === $key ) {
 					$key = 'view';
-				} elseif ( 'invites' === $key ) {
+				} elseif ( 'groups' === $bp_item['slug'] && 'invites' === $key ) {
 					$key = 'group-invites';
 				}
 
 				if ( 'my-friends' === $s_nav['slug'] ) {
 					$sub_name = __( 'My Connections', 'buddyboss' );
 				}
+
+				$link = $s_nav['link'];
 
 				$page_args[ $key ] =
 					(object) array(
@@ -2860,11 +2863,11 @@ function bp_nav_menu_get_loggedin_pages() {
 						'object_id'      => $nav_counter_child,
 						'post_author'    => 0,
 						'post_date'      => 0,
-						'post_excerpt'   => $s_nav['slug'],
+						'post_excerpt'   => $key,
 						'post_type'      => 'page',
 						'post_status'    => 'publish',
 						'comment_status' => 'closed',
-						'guid'           => $s_nav['link'],
+						'guid'           => $link,
 						'post_parent'    => $nav_counter,
 					);
 			}
