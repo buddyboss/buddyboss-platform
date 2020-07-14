@@ -116,7 +116,7 @@ class BP_REST_Attachments_Group_Cover_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve group cover
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
 	 */
 	public function get_item( $request ) {

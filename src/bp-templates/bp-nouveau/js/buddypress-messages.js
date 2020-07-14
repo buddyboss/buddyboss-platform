@@ -692,34 +692,32 @@ window.bp = window.bp || {};
 			activateTinyMce: function() {
 				if ( ! _.isUndefined( window.MediumEditor ) ) {
 
-					bp.Nouveau.Messages.mediumEditor = new window.MediumEditor(
-						'#message_content',
-						{
-							placeholder: {
-								text: BP_Nouveau.messages.type_message,
-								hideOnClick: true
-							},
-							toolbar: {
-								buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-								relativeContainer: document.getElementById( 'whats-new-messages-toolbar' ),
-								static: true,
-								updateOnEmptySelection: true
-							},
-							paste: {
-								forcePlainText: false,
-								cleanPastedHTML: true,
-								cleanReplacements: [
-									[new RegExp(/<div/gi), '<p'],
-									[new RegExp(/<\/div/gi), '</p'],
-									[new RegExp(/<h[1-6]/gi), '<b'],
-									[new RegExp(/<\/h[1-6]/gi), '</b'],
-								],
-								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-								unwrapTags: []
-							}
-						}
-					);
+				bp.Nouveau.Messages.mediumEditor = new window.MediumEditor('#message_content',{
+					placeholder: {
+						text: BP_Nouveau.messages.type_message,
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-messages-toolbar'),
+						static: true,
+						updateOnEmptySelection: true
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: true,
+						cleanReplacements: [
+							[new RegExp(/<div/gi), '<p'],
+							[new RegExp(/<\/div/gi), '</p'],
+							[new RegExp(/<h[1-6]/gi), '<b'],
+							[new RegExp(/<\/h[1-6]/gi), '</b'],
+						],
+						cleanAttrs: ['class', 'style', 'dir', 'id'],
+						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+						unwrapTags: []
+					},
+					imageDragging: false
+				});
 
 					if ( ! _.isUndefined( BP_Nouveau.media ) &&
 						! _.isUndefined( BP_Nouveau.media.emoji ) &&

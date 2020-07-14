@@ -33,7 +33,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -74,7 +75,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -115,7 +117,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 

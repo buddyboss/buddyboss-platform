@@ -317,7 +317,9 @@ function bp_email_get_customizer_controls() {
 				'section'  => 'section_bp_mailtpl_header',
 				'settings' => 'bp_email_options[logo]',
 				'width'    => 180,
-				'height'   => 41,
+				'height'   => 45,
+				'flex_width' => true,
+				'flex_height' => true,
 			),
 
 			'bp_mailtpl_site_title_logo_size'      => array(

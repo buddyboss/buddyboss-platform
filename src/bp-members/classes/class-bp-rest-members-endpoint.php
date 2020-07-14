@@ -144,7 +144,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiGroup       Members
 	 * @apiDescription Retrieve Members
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
