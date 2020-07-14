@@ -1297,16 +1297,13 @@ function bp_admin_email_maybe_add_translation_notice() {
 		return;
 	}
 
-	if ( bp_core_do_network_admin() ) {
-		$admin_page = 'admin.php';
-	} else {
-		$admin_page = 'tools.php';
-	}
-
 	bp_core_add_admin_notice(
 		sprintf(
 			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
-			esc_url( add_query_arg( 'page', 'bp-tools', bp_get_admin_url( $admin_page ) ) )
+			esc_url( add_query_arg( array(
+				'page' => 'bp-repair-community',
+				'tab'  => 'bp-repair-community',
+			), bp_get_admin_url( 'admin.php' ) ) )
 		),
 		'updated'
 	);
