@@ -716,21 +716,19 @@ window.bp = window.bp || {};
 		activateTinyMce: function() {
 			if ( ! _.isUndefined( window.MediumEditor ) ) {
 
-				window.group_messages_editor = new window.MediumEditor(
-					'#group_message_content',
-					{
-						placeholder: {
-							text: BP_Nouveau.group_messages.type_message,
-							hideOnClick: true
-						},
-						toolbar: {
-							buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-							relativeContainer: document.getElementById( 'whats-new-toolbar' ),
-							static: true,
-							updateOnEmptySelection: true
-						}
-					}
-				);
+				window.group_messages_editor = new window.MediumEditor('#group_message_content',{
+					placeholder: {
+						text: BP_Nouveau.group_messages.type_message,
+						hideOnClick: true
+					},
+					toolbar: {
+						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+						relativeContainer: document.getElementById('whats-new-toolbar'),
+						static: true,
+						updateOnEmptySelection: true
+					},
+					imageDragging: false
+				});
 
 				window.group_messages_editor.subscribe(
 					'editableInput',

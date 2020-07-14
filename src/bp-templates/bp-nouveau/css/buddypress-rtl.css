@@ -3719,6 +3719,10 @@ form.ac-form .ac-reply-content input {
   width: 100%;
 }
 
+.bp-profile-search-widget .bp-heading-field-wrap {
+  border-radius: 0;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 4.0 - Directories
@@ -3902,6 +3906,27 @@ body.register .registration-popup .mfp-close:hover {
   background-color: #ef3e46;
   border-color: #ef3e46;
   color: #fff;
+}
+
+.bb-password-wrap {
+  position: relative;
+}
+
+.bb-password-wrap a.bb-toggle-password {
+  color: rgba(18, 43, 70, 0.5);
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+}
+
+.bb-password-wrap .bb-show-pass .bb-icon-eye:before {
+  content: "\e8fc";
 }
 
 /**

@@ -26,7 +26,7 @@ window.bp = window.bp || {};
             $set.find('.editfield').each( function(){
                 var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
                 var field_name = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).attr('name' );
-                var name_split = field_name.split('_');
+				var name_split = ( field_name ? field_name.split('_') : '' );
 				var arrayContainsVisibility = (name_split.indexOf('visibility') > -1);
                 if ( $.trim( field_val ) !== '' && ! arrayContainsVisibility ) {
                     title = $.trim( field_val );
@@ -82,16 +82,17 @@ window.bp = window.bp || {};
         if ( r ) {
             var deleted_field_ids = [];
 
-            $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function(){
-                var $field = $(this);
-                var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
-				if( 'undefined' !== typeof field_id ) {
-					field_id = field_id.replace( 'field_', '' );
-					field_id = field_id.replace( '_day', '' );
-					field_id = field_id.replace( '[]', '' );
-					deleted_field_ids.push( field_id );
-				}
-            });
+	        $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function () {
+		        var $field = $( this );
+		        var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
+		        field_id = ( typeof field_id !== 'undefined' ) ? field_id : $field.find( 'textarea.wp-editor-area' ).attr( 'name' );
+		        if ( 'undefined' !== typeof field_id ) {
+			        field_id = field_id.replace( 'field_', '' );
+			        field_id = field_id.replace( '_day', '' );
+			        field_id = field_id.replace( '[]', '' );
+			        deleted_field_ids.push( field_id );
+		        }
+	        } );
 
             // Remove field set
             $delete_button.closest( '.repeater_group_outer' ).remove();
