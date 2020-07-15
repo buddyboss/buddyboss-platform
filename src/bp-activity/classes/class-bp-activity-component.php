@@ -146,6 +146,11 @@ class BP_Activity_Component extends BP_Component {
 			// Theme compatibility.
 			new BP_Activity_Theme_Compat();
 		}
+
+		if ( bp_is_activity_follow_active() && bp_is_user() ) {
+			require $this->path . 'bp-activity/screens/follow-following.php';
+			require $this->path . 'bp-activity/screens/follow-followers.php';
+		}
 	}
 
 	/**
@@ -226,12 +231,16 @@ class BP_Activity_Component extends BP_Component {
 			}
 
 			// locally cache total count values for displayed user.
-			if ( bp_is_user() && ( bp_loggedin_user_id() !== bp_displayed_user_id() ) ) {
-				$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
-					array(
-						'user_id' => bp_displayed_user_id(),
-					)
-				);
+			if ( bp_is_user() ) {
+				if ( bp_loggedin_user_id() !== bp_displayed_user_id() ) {
+					$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
+						array(
+							'user_id' => bp_displayed_user_id(),
+						)
+					);
+				} else if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
+					$bp->displayed_user->total_follow_counts = $bp->loggedin_user->total_follow_counts;
+				}
 			}
 		}
 	}
@@ -247,6 +256,7 @@ class BP_Activity_Component extends BP_Component {
 	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
+		global $bp;
 
 		// Stop if there is no user displayed or logged in.
 		if ( ! is_user_logged_in() && ! bp_displayed_user_id() ) {
@@ -381,6 +391,42 @@ class BP_Activity_Component extends BP_Component {
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
+
+		if ( bp_is_activity_follow_active() ) {
+			parent::setup_nav(
+				array(
+					'name'                    => __( 'Followers', 'buddyboss' ) .
+					                             sprintf(
+						                             ' <span class="%s">%s</span>',
+						                             esc_attr( ( ( 0 === $bp->displayed_user->total_follow_counts['followers'] ) ? 'no-count' : 'count' ) ),
+						                             bp_core_number_format( $bp->displayed_user->total_follow_counts['followers'] )
+					                             ),
+					'slug'                    => 'followers',
+					'position'                => 30,
+					'screen_function'         => 'bp_activity_screen_display_followers',
+					'default_subnav_slug'     => 'followers',
+					'item_css_id'             => 'followers',
+					'show_for_displayed_user' => ( $bp->displayed_user->total_follow_counts['followers'] > 0 ? true : false ),
+				)
+			);
+
+			parent::setup_nav(
+				array(
+					'name'                    => __( 'Following', 'buddyboss' ) .
+					                             sprintf(
+						                             ' <span class="%s">%s</span>',
+						                             esc_attr( ( ( 0 === $bp->displayed_user->total_follow_counts['following'] ) ? 'no-count' : 'count' ) ),
+						                             bp_core_number_format( $bp->displayed_user->total_follow_counts['following'] )
+					                             ),
+					'slug'                    => 'following',
+					'position'                => 35,
+					'screen_function'         => 'bp_activity_screen_display_following',
+					'default_subnav_slug'     => 'following',
+					'item_css_id'             => 'following',
+					'show_for_displayed_user' => ( $bp->displayed_user->total_follow_counts['following'] > 0 ? true : false ),
+				)
+			);
+		}
 	}
 
 	/**

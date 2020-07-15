@@ -1311,24 +1311,23 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 	}
 
 	// members directory
-	if ( ! bp_is_user() && bp_is_members_directory() ) {
-		$qs_args = wp_parse_args( $qs );
-		// check if members scope is following before manipulating.
-		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
-			$qs .= '&include=' . bp_get_following_ids(
-				array(
-					'user_id' => bp_loggedin_user_id(),
-				)
-			);
-		}
+	$qs_args = wp_parse_args( $qs );
 
-		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
-			$qs .= '&include=' . bp_get_follower_ids(
-				array(
-					'user_id' => bp_loggedin_user_id(),
-				)
-			);
-		}
+	// check if members scope is following before manipulating.
+	if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
+		$qs .= '&include=' . bp_get_following_ids(
+			array(
+				'user_id' => ( bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id() ),
+			)
+		);
+	}
+
+	if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
+		$qs .= '&include=' . bp_get_follower_ids(
+			array(
+				'user_id' => ( bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id() ),
+			)
+		);
 	}
 
 	return $qs;

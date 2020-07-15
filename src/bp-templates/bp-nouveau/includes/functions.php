@@ -90,7 +90,10 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	}
 
 	// Activity feed scope only on activity directory.
-	if ( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() ) {
+	if (
+		( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() )
+		|| ( 'members' === $object && ! empty( $post_query['scope'] ) ) // added scope for following/followers.
+	) {
 		$qs[] = 'scope=' . $post_query['scope'];
 	}
 
@@ -144,7 +147,6 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	// Now pass the querystring to override default values.
 	$query_string = empty( $qs ) ? '' : join( '&', (array) $qs );
-
 
 	// List the variables for the filter
 	list( $filter, $scope, $page, $search_terms, $extras ) = array_values( $post_query );
@@ -479,6 +481,14 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 
 			if ( 'friends' === $component ) {
 				$context   = 'friends';
+				$component = 'members';
+			}
+			if ( 'following' === $component ) {
+				$context   = 'following';
+				$component = 'members';
+			}
+			if ( 'followers' === $component ) {
+				$context   = 'followers';
 				$component = 'members';
 			}
 		} elseif ( 'group' === $context && bp_is_group_activity() ) {
@@ -991,6 +1001,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'directory-media-document-loading'  => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
+		),
+		'member-following-loading'            => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading member\'s following. Please wait.', 'buddyboss' ),
+		),
+		'member-followers-loading'            => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading member\'s followers. Please wait.', 'buddyboss' ),
 		),
 	) );
 
