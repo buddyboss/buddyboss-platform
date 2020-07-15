@@ -2855,15 +2855,15 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				$link = $s_nav['link'];
-
-				$page_args[ $key ] =
+				$arr_key = $key . '-sub';
+				$page_args[ $arr_key ] =
 					(object) array(
 						'ID'             => $nav_counter_child,
 						'post_title'     => $sub_name,
 						'object_id'      => $nav_counter_child,
 						'post_author'    => 0,
 						'post_date'      => 0,
-						'post_excerpt'   => $key,
+						'post_excerpt'   => $arr_key,
 						'post_type'      => 'page',
 						'post_status'    => 'publish',
 						'comment_status' => 'closed',
