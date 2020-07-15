@@ -393,20 +393,22 @@ class BP_Activity_Component extends BP_Component {
 		parent::setup_nav( $main_nav, $sub_nav );
 
 		if ( bp_is_activity_follow_active() ) {
+			$followers_count = ( isset( $bp->displayed_user->total_follow_counts ) && isset( $bp->displayed_user->total_follow_counts['followers'] ) ) ? $bp->displayed_user->total_follow_counts['followers'] : 0;
+			$following_count = ( isset( $bp->displayed_user->total_follow_counts ) && isset( $bp->displayed_user->total_follow_counts['following'] ) ) ? $bp->displayed_user->total_follow_counts['following'] : 0;
 			parent::setup_nav(
 				array(
 					'name'                    => __( 'Followers', 'buddyboss' ) .
 					                             sprintf(
 						                             ' <span class="%s">%s</span>',
-						                             esc_attr( ( ( 0 === $bp->displayed_user->total_follow_counts['followers'] ) ? 'no-count' : 'count' ) ),
-						                             bp_core_number_format( $bp->displayed_user->total_follow_counts['followers'] )
+						                             esc_attr( ( ( 0 === $followers_count ) ? 'no-count' : 'count' ) ),
+						                             bp_core_number_format( $followers_count )
 					                             ),
 					'slug'                    => 'followers',
 					'position'                => 30,
 					'screen_function'         => 'bp_activity_screen_display_followers',
 					'default_subnav_slug'     => 'followers',
 					'item_css_id'             => 'followers',
-					'show_for_displayed_user' => ( $bp->displayed_user->total_follow_counts['followers'] > 0 ? true : false ),
+					'show_for_displayed_user' => ( $followers_count > 0 ? true : false ),
 				)
 			);
 
@@ -415,15 +417,15 @@ class BP_Activity_Component extends BP_Component {
 					'name'                    => __( 'Following', 'buddyboss' ) .
 					                             sprintf(
 						                             ' <span class="%s">%s</span>',
-						                             esc_attr( ( ( 0 === $bp->displayed_user->total_follow_counts['following'] ) ? 'no-count' : 'count' ) ),
-						                             bp_core_number_format( $bp->displayed_user->total_follow_counts['following'] )
+						                             esc_attr( ( ( 0 === $following_count ) ? 'no-count' : 'count' ) ),
+						                             bp_core_number_format( $following_count )
 					                             ),
 					'slug'                    => 'following',
 					'position'                => 35,
 					'screen_function'         => 'bp_activity_screen_display_following',
 					'default_subnav_slug'     => 'following',
 					'item_css_id'             => 'following',
-					'show_for_displayed_user' => ( $bp->displayed_user->total_follow_counts['following'] > 0 ? true : false ),
+					'show_for_displayed_user' => ( $following_count > 0 ? true : false ),
 				)
 			);
 		}
