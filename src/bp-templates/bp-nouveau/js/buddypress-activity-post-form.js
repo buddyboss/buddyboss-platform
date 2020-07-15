@@ -82,26 +82,21 @@ window.bp = window.bp || {};
 		displayEditActivity: function ( activity_data ) {
 			var self = this;
 
-			// Do not carry on if the main element is not available.
-			if ( !$( '#bp-nouveau-activity-form' ).length ) {
-				return;
-			}
-
 			// reset post form before editing
-			self.postForm.$el.trigger( 'reset' );
+			self.postEditForm.$el.trigger( 'reset' );
 
 			// set edit activity data
 			self.editActivityData = activity_data;
 
-			self.postForm.$el.addClass( 'bp-activity-edit' );
-			self.postForm.$el.find( '#whats-new' ).trigger( 'focus' );
-			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
-			self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
+			self.postEditForm.$el.addClass( 'bp-activity-edit' );
+			self.postEditForm.$el.find( '#whats-new' ).trigger( 'focus' );
+			self.postEditForm.$el.find( '#whats-new' ).html( activity_data.content );
+			self.postEditForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 
 			// set object of activity and item id when group activity
 			if ( typeof activity_data.object !== 'undefined' && typeof activity_data.item_id !== 'undefined' && 'groups' === activity_data.object ) {
-				self.postForm.model.set( 'item_id', activity_data.item_id );
-				self.postForm.model.set( 'object', 'group' );
+				self.postEditForm.model.set( 'item_id', activity_data.item_id );
+				self.postEditForm.model.set( 'object', 'group' );
 			}
 
 			var bpActivityEvent = new Event( 'bp_activity_edit' );
@@ -153,6 +148,43 @@ window.bp = window.bp || {};
 					self.createThumbnailFromUrl( mock_file );
 				}
 			}
+		},
+
+		displayEditActivityPopup : function (activity_data){
+
+			if ( ! $('.edit-activity-modal').length) {
+				$('body').append(' <div class="edit-activity-modal">\n' +
+					'        <div class="edit-activity-modal-content">\n' +
+					'            <span class="edit-activity-modal-close-button">&times;</span>\n' +
+					'            <div class="edit-activity-modal-body"></div>\n' +
+					'        </div>\n' +
+					'    </div>');
+			}
+
+			$('.edit-activity-modal').addClass('show-modal');
+			this.postActivityEditFormView();
+			this.displayEditActivity(activity_data);
+
+			$(document).on('click', '.edit-activity-modal-close-button', function(){
+				$('.edit-activity-modal').removeClass('show-modal');
+			});
+
+
+			console.log(activity_data);
+		},
+
+		postActivityEditFormView: function () {
+			// Create the BuddyPress Uploader
+			this.postEditForm = new bp.Views.ActivityEditForm();
+
+			// Add it to views
+			this.views.add( { id: 'post_form', view: this.postEditForm } );
+
+			// Display it
+			this.postEditForm.inject( '.edit-activity-modal-body' );
+
+
+
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
@@ -2518,6 +2550,8 @@ window.bp = window.bp || {};
 			}
 		}
 	);
+
+	bp.Views.ActivityEditForm = bp.Views.PostForm;
 
 	bp.Nouveau.Activity.postForm.start();
 
