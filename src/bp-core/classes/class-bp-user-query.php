@@ -300,6 +300,7 @@ class BP_User_Query {
 				$sql['where'][]  = ' a.component = "members" ';
 				$sql['where'][]  = ' a.type = "last_activity"';
 				$sql['where'][]  = ' u.user_status = 0 ';
+
 				if ( 'newest' == $type ) {
 					$sql['orderby'] = 'ORDER BY u.ID';
 					$sql['order']   = 'DESC';
