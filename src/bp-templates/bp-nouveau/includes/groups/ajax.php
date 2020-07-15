@@ -1857,6 +1857,7 @@ function bp_groups_messages_new_message( $args = '' ) {
 			'is_hidden'     => false,
 			'mark_visible'  => false,
 			'error_type'    => 'wp_error',
+			'group_thread'  => true,
 		),
 		'bp_groups_messages_new_message'
 	);

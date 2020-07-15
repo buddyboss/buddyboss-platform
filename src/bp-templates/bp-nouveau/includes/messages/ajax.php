@@ -1705,6 +1705,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
+			unset($thread->feedback_error);
 		}
 	}
 
