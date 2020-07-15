@@ -163,7 +163,7 @@ $settings = bp_email_get_appearance_settings();
 		}
 
 		/* Remove links underline */
-		a, .ii a[href] {
+		a:not(.ab-item), .ii a[href] {
 			color: <?php echo esc_attr( $settings['highlight_color'] ); ?> !important;
 			text-decoration: none !important;
 		}
@@ -171,6 +171,10 @@ $settings = bp_email_get_appearance_settings();
 		/* What it does: Forces Outlook.com to display emails full width. */
 		.ExternalClass {
 			width: 100%;
+		}
+
+		.recipient_text_color table {
+			display: inline-table;
 		}
 
 		/* MOBILE STYLES */
@@ -285,9 +289,9 @@ $settings = bp_email_get_appearance_settings();
 						$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 						if ( !empty( $attachment_id ) ) {
-							$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
-							if ( !empty( $image_src ) ) {
-								echo "<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>";
+							$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 45 ) );
+							if ( !empty( $image_src ) ) { ?>
+								<img src="<?php echo esc_attr( $image_src[ 0 ] ); ?>" alt="<?php echo esc_attr( $blogname ); ?>" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:<?php echo esc_attr( $settings['site_title_logo_size'] ); ?>px;" border="0" /><?php
 							} else {
 								echo $blogname;
 							}

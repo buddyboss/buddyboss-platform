@@ -28,7 +28,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -60,11 +61,17 @@ jQuery( document ).ready(
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
-								cleanReplacements: [],
+								cleanReplacements: [
+									[new RegExp(/<div>/gi), '<p>'],
+									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+								],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -96,11 +103,17 @@ jQuery( document ).ready(
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
-								cleanReplacements: [],
+								cleanReplacements: [
+									[new RegExp(/<div>/gi), '<p>'],
+									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+								],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 

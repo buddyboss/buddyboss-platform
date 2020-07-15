@@ -5,37 +5,37 @@
  * @since BuddyBoss 1.0.0
  */
 
-bp_nouveau_before_loop(); ?>
+bp_nouveau_before_loop();
 
-<?php if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) : ?>
+if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) :
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+		<ul class="media-list item-list bp-list bb-photo-list grid">
+		<?php
+	endif;
 
-	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-        <ul class="media-list item-list bp-list bb-photo-list grid">
-	<?php endif; ?>
-
-	<?php while ( bp_media() ) :
+	while ( bp_media() ) :
 		bp_the_media();
 
-		bp_get_template_part( 'media/entry' ); ?>
+		bp_get_template_part( 'media/entry' );
 
-	<?php endwhile; ?>
+	endwhile;
 
-	<?php if ( bp_media_has_more_items() ) : ?>
+	if ( bp_media_has_more_items() ) : ?>
+		<li class="load-more">
+			<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+		</li>
+	<?php
+	endif;
 
-        <li class="load-more">
-            <a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-        </li>
+	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+		</ul>
+		<?php
+	endif;
 
-	<?php endif; ?>
+else :
 
-	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-        </ul>
-	<?php endif; ?>
+	bp_nouveau_user_feedback( 'media-loop-none' );
 
-<?php else : ?>
+endif;
 
-	<?php bp_nouveau_user_feedback( 'media-loop-none' ); ?>
-
-<?php endif; ?>
-
-<?php bp_nouveau_after_loop(); ?>
+bp_nouveau_after_loop();

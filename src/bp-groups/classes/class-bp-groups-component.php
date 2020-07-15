@@ -192,8 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				$list_actions = array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'messages' );
-				if ( in_array( bp_current_action(), $list_actions, true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'messages', 'documents', 'folders' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -477,7 +476,12 @@ class BP_Groups_Component extends BP_Component {
 		if ( function_exists( 'bp_nouveau_get_temporary_setting' ) && function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
 			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
 		}
-		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
+
+		if ( 'photos' === $default_tab || 'albums' === $default_tab || 'documents' === $default_tab ) {
+			$default_tab = bp_is_active( 'media' ) ? $default_tab : 'members';
+		} else {
+			$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
+		}
 
 		/**
 		 * Filters the default groups extension.
@@ -548,15 +552,11 @@ class BP_Groups_Component extends BP_Component {
 		// Only grab count if we're on a user page.
 		if ( bp_is_user() ) {
 			$class = ( 0 === groups_total_groups_for_user( bp_displayed_user_id() ) ) ? 'no-count' : 'count';
-
-			$nav_name = sprintf(
-				/* translators: %s: Group count for the current user */
-				__( 'Groups %s', 'buddyboss' ),
-				sprintf(
-					'<span class="%s">%s</span>',
-					esc_attr( $class ),
-					bp_get_total_group_count_for_user()
-				)
+			$nav_name = __( 'Groups', 'buddyboss' );
+			$nav_name .= sprintf(
+				' <span class="%s">%s</span>',
+				esc_attr( $class ),
+				bp_get_total_group_count_for_user()
 			);
 		} else {
 			$nav_name = __( 'Groups', 'buddyboss' );
@@ -792,6 +792,20 @@ class BP_Groups_Component extends BP_Component {
 						'no_access_url'   => $group_link,
 					);
 				}
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+				$sub_nav[] = array(
+					'name'            => __( 'Documents', 'buddyboss' ),
+					'slug'            => 'documents',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_document',
+					'position'        => 85,
+					'user_has_access' => $this->current_group->user_has_access,
+					'item_css_id'     => 'documents',
+					'no_access_url'   => $group_link,
+				);
 			}
 
 			$message_status = bp_group_get_message_status( $this->current_group->id );
@@ -1106,5 +1120,32 @@ class BP_Groups_Component extends BP_Component {
 				'public' => false,
 			)
 		);
+	}
+
+	/**
+	 * Init the BuddyBoss REST API.
+	 *
+	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+	 *
+	 * @since BuddyBoss 1.3.5
+	 */
+	public function rest_api_init( $controllers = array() ) {
+		$controllers = array(
+			'BP_REST_Groups_Endpoint',
+			'BP_REST_Groups_Details_Endpoint',
+			'BP_REST_Group_Membership_Endpoint',
+			'BP_REST_Group_Settings_Endpoint',
+			'BP_REST_Group_Invites_Endpoint',
+			'BP_REST_Group_Membership_Request_Endpoint',
+			'BP_REST_Groups_Types_Endpoint',
+			'BP_REST_Attachments_Group_Avatar_Endpoint',
+		);
+
+		// Support to Group Cover.
+		if ( bp_is_active( 'groups', 'cover_image' ) ) {
+			$controllers[] = 'BP_REST_Attachments_Group_Cover_Endpoint';
+		}
+
+		parent::rest_api_init( $controllers );
 	}
 }

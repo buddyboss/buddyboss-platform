@@ -262,10 +262,23 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 			: bp_loggedin_user_id();
 	}
 
+	if ( bp_is_single_activity() ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
+	}
+
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( ! empty( $friends ) ) {
+			$privacy[] = 'friends';
+		}
 	}
 
 	$retval = array(
@@ -274,6 +287,11 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 			'column'  => 'user_id',
 			'compare' => 'IN',
 			'value'   => (array) $friends,
+		),
+		array(
+			'column'  => 'privacy',
+			'compare' => 'IN',
+			'value'   => $privacy
 		),
 
 		// We should only be able to view sitewide activity content for friends.
@@ -285,7 +303,6 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),
-			'show_hidden' => true,
 		),
 	);
 
@@ -316,7 +333,7 @@ function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = 
 	}
 
 	// Get the requested action.
-	$action = $filter['filter']['action'];
+	$action = isset( $filter['filter']['action'] ) ? $filter['filter']['action'] : array();
 
 	// Make sure actions are listed in an array.
 	if ( ! is_array( $action ) ) {
@@ -437,3 +454,32 @@ function bp_friends_delete_activity_on_friendship_delete( $friendship_id ) {
 	);
 }
 add_action( 'friends_friendship_deleted', 'bp_friends_delete_activity_on_friendship_delete' );
+
+/**
+ * Stop sending notification when user mentioned in activity and not in friend list.
+ *
+ * @since BuddyBoss 1.4.3
+ *
+ * @param bool                 $send      Whether or not BuddyBoss should send a notification to the mentioned users.
+ * @param array                $usernames Array of users potentially notified.
+ * @param int                  $user_id   ID of the current user being notified.
+ * @param BP_Activity_Activity $activity  Activity object.
+ *
+ * @return bool
+ */
+function bp_friends_activity_at_name_do_notifications( $send, $usernames, $user_id, $activity ) {
+
+	if ( 'friends' !== $activity->privacy ) {
+		return $send;
+	}
+
+	$friends = friends_get_friend_user_ids( $activity->user_id );
+
+
+	if ( ! empty( $friends ) && in_array( $user_id, $friends ) ) {
+		return $send;
+	}
+
+	return false;
+}
+add_filter( 'bp_activity_at_name_do_notifications', 'bp_friends_activity_at_name_do_notifications', 10, 4 );

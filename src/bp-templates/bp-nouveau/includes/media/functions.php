@@ -27,7 +27,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 			'file'         => 'js/buddypress-media%s.js',
 			'dependencies' => array( 'bp-nouveau' ),
 			'footer'       => true,
-		),
+		)
 	) );
 }
 
@@ -38,6 +38,8 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
+	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
+
 	if ( bp_is_user_media() ||
 	     bp_is_single_album() ||
 	     bp_is_media_directory() ||
@@ -45,6 +47,8 @@ function bp_nouveau_media_enqueue_scripts() {
 	     bp_is_group_activity() ||
 	     bp_is_group_media() ||
 	     bp_is_group_albums() ||
+	     bp_is_group_document() ||
+	     bp_is_group_folders() ||
 	     bp_is_group_messages() ||
 	     bp_is_messages_component()
 	) {
@@ -62,12 +66,15 @@ function bp_nouveau_media_enqueue_scripts() {
 			$emoji = true;
 		}
 
-		if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji || bp_is_group_messages() ) {
+		if ( bp_is_profile_media_support_enabled() || bp_is_group_document_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji || bp_is_group_messages() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_script( 'bp-nouveau-codemirror' );
+			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
 			wp_enqueue_script( 'bp-nouveau-media' );
 			wp_enqueue_script( 'bp-exif' );
 		}
 	}
+
 }
 
 /**
@@ -82,16 +89,28 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	//initialize media vars because it is used globally
 	$params['media'] = array(
-		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
-		'profile_media'   => bp_is_profile_media_support_enabled(),
-		'profile_album'   => bp_is_profile_albums_support_enabled(),
-		'group_media'     => bp_is_group_media_support_enabled(),
-		'group_album'     => bp_is_group_albums_support_enabled(),
-		'messages_media'  => bp_is_messages_media_support_enabled(),
+		'max_upload_size'              => bp_media_file_upload_max_size( false, 'MB' ),
+		'profile_media'                 => bp_is_profile_media_support_enabled(),
+		'profile_album'                 => bp_is_profile_albums_support_enabled(),
+		'group_media'                  => bp_is_group_media_support_enabled(),
+		'group_album'                  => bp_is_group_albums_support_enabled(),
+		'messages_media'               => bp_is_messages_media_support_enabled(),
+		'dropzone_media_message'       => __( 'Drop images here to upload', 'buddyboss' ),
+		'media_select_error'           => __( 'This file type is not supported for photo uploads.', 'buddyboss' ),
+		'empty_media_type'             => __( 'Empty media file will not be uploaded.', 'buddyboss' ),
+		'invalid_media_type'           => __( 'Unable to upload the file', 'buddyboss' ),
+		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
+		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
+		'dictFileTooBig'               => __( "File is too big: {{filesize}} MB. Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
+		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
 	);
 
 	if ( bp_is_single_album() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
+	}
+
+	if ( bp_is_single_folder() ) {
+		$params['document']['folder_id'] = (int) bp_action_variable( 0 );
 	}
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
@@ -103,6 +122,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'groups'   => bp_is_groups_emoji_support_enabled(),
 		'messages' => bp_is_messages_emoji_support_enabled(),
 		'forums'   => bp_is_forums_emoji_support_enabled(),
+		'document' => bp_is_forums_document_support_enabled(),
 	);
 	$params['media']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
 
@@ -111,6 +131,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'groups'   => bp_is_groups_gif_support_enabled(),
 		'messages' => bp_is_messages_gif_support_enabled(),
 		'forums'   => bp_is_forums_gif_support_enabled(),
+		'document' => bp_is_forums_document_support_enabled(),
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
@@ -140,9 +161,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 function bp_nouveau_get_media_directory_nav_items() {
 	$nav_items = array();
 
+
 	$nav_items['all'] = array(
 		'component' => 'media',
-		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope.
 		'li_class'  => array(),
 		'link'      => bp_get_media_directory_permalink(),
 		'text'      => __( 'All Photos', 'buddyboss' ),
@@ -150,14 +172,26 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'position'  => 5,
 	);
 
-	if ( is_user_logged_in() ) {
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 		$nav_items['personal'] = array(
 			'component' => 'media',
-			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope.
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
 			'text'      => __( 'My Photos', 'buddyboss' ),
 			'count'     => bp_media_get_total_media_count(),
+			'position'  => 15,
+		);
+	}
+
+	if ( is_user_logged_in() && bp_is_group_media_support_enabled() ) {
+		$nav_items['group'] = array(
+			'component' => 'media',
+			'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope.
+			'li_class'  => array(),
+			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-media/',
+			'text'      => __( 'My Groups', 'buddyboss' ),
+			'count'     => bp_media_get_user_total_group_media_count(),
 			'position'  => 15,
 		);
 	}
@@ -170,4 +204,28 @@ function bp_nouveau_get_media_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+}
+
+function bp_media_download_file( $attachment_id, $type = 'media' ) {
+
+	// Add action to prevent issues in IE.
+	add_action( 'nocache_headers', 'bp_media_ie_nocache_headers_fix' );
+
+	if ( 'media' === $type ) {
+
+		$the_file = wp_get_attachment_url( $attachment_id );
+
+		if ( ! $the_file ) {
+			return;
+		}
+
+		// clean the file url.
+		$file_url = stripslashes( trim( $the_file ) );
+
+		// get filename.
+		$file_name = basename( $the_file );
+
+		bp_media_download_file_force( $the_file, $file_name );
+	}
+
 }
