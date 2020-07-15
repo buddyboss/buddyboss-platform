@@ -272,6 +272,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				if ( array_filter( $thread_extra_content ) ) {
 					$response = array_merge( $response, $thread_extra_content );
 				}
+
+				$response['avatars'] = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
 			}
 		}
 
