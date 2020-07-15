@@ -39,7 +39,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 
 		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || ! bp_is_activity_follow_active() ) {
 			return;
 		}
 
