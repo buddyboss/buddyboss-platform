@@ -1254,6 +1254,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			$output = $right_now_text;
 
 		} else {
+			$output = '';
 
 			// Set output var.
 			switch ( $seconds ) {
@@ -1316,7 +1317,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) $count && ! (int) $count2 ) {
+			if ( ! (int) trim( $output ) ) {
 				$output = $right_now_text;
 			}
 		}
