@@ -13,7 +13,7 @@
 
 <?php bp_nouveau_member_hook( 'before', 'followers_content' ); ?>
 
-<div class="members followers" data-bp-scope="followers" data-bp-list="members_followers">
+<div class="members followers" data-bp-follow="followers" data-bp-list="members_followers">
 
     <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-followers-loading' ); ?></div>
 

@@ -377,8 +377,8 @@ window.bp = window.bp || {};
 
 			// Set session's data
 			if ( null !== data.scope ) {
-				if ( $( '#buddypress [data-bp-list="' + data.object + '"]' ).length && ! _.isUndefined( $( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-scope' ) ) ) {
-					data.scope = $( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-scope' );
+				if ( $( '#buddypress [data-bp-list="' + data.object + '"]' ).length && ! _.isUndefined( $( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-follow' ) ) ) {
+					data.scope = $( '#buddypress [data-bp-list="' + data.object + '"]' ).data( 'bp-follow' );
 					this.setStorage( 'bp-' + data.object, 'scope', data.scope );
 				} else {
 					this.setStorage( 'bp-' + data.object, 'scope', data.scope );

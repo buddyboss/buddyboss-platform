@@ -402,6 +402,11 @@ function bp_nouveau_pagination( $position ) {
 		$pagination_type = 'groups';
 	}
 
+	if ( 'followers' === $pagination_type || 'following' === $pagination_type ) {
+		$pagination_type = 'members';
+	}
+
+
 	switch ( $pagination_type ) {
 		case 'blogs':
 			$pag_count   = bp_get_blogs_pagination_count();
