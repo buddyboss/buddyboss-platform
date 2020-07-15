@@ -98,13 +98,13 @@ class BP_Activity_List_Table extends WP_List_Table {
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
 		// Check if we're on the "Spam" view.
-		if ( ! empty( $_REQUEST['activity_status'] ) && 'spam' == $_REQUEST['activity_status'] ) {
+		if ( ! empty( $_REQUEST['activity_status'] ) && 'spam' === $_REQUEST['activity_status'] ) {
 			$spam       = 'spam_only';
 			$this->view = 'spam';
 		}
 
 		// Sort order.
-		if ( ! empty( $_REQUEST['order'] ) && 'desc' != $_REQUEST['order'] ) {
+		if ( ! empty( $_REQUEST['order'] ) && 'desc' !== $_REQUEST['order'] ) {
 			$sort = 'ASC';
 		}
 
@@ -339,18 +339,8 @@ class BP_Activity_List_Table extends WP_List_Table {
 		</h2>
 
 		<ul class="subsubsub">
-			<li class="all"><a href="<?php echo esc_url( $url_base ); ?>" class="
-												<?php
-												if ( 'spam' != $this->view ) {
-													echo 'current';}
-												?>
-			"><?php _e( 'All', 'buddyboss' ); ?></a> |</li>
-			<li class="spam"><a href="<?php echo esc_url( add_query_arg( array( 'activity_status' => 'spam' ), $url_base ) ); ?>" class="
-												 <?php
-													if ( 'spam' == $this->view ) {
-														echo 'current';}
-													?>
-			"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( $this->spam_count ) ); ?></a></li>
+			<li class="all"><a href="<?php echo esc_url( $url_base ); ?>" class="<?php echo ( 'spam' !== $this->view ) ? 'current' : ''; ?>"><?php _e( 'All', 'buddyboss' ); ?></a> |</li>
+			<li class="spam"><a href="<?php echo esc_url( add_query_arg( array( 'activity_status' => 'spam' ), $url_base ) ); ?>" class="<?php echo ( 'spam' === $this->view ) ? 'current' : ''; ?>"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( $this->spam_count ) ); ?></a></li>
 
 			<?php
 
@@ -474,12 +464,12 @@ class BP_Activity_List_Table extends WP_List_Table {
 				<?php foreach ( $activity_actions as $component => $actions ) : ?>
 					<?php
 					// Older avatar activity items use 'profile' for component. See r4273.
-					if ( $component === 'profile' ) {
+					if ( 'profile' === $component ) {
 						$component = 'xprofile';
 					}
 
 					if ( bp_is_active( $component ) ) {
-						if ( $component === 'xprofile' ) {
+						if ( 'xprofile' === $component ) {
 							$component_name = buddypress()->profile->name;
 						} else {
 							$component_name = buddypress()->$component->name;
@@ -545,8 +535,8 @@ class BP_Activity_List_Table extends WP_List_Table {
 		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
 		foreach ( $actions as $action => $link ) {
 			++$i;
-			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
-			$out                          .= "<span class='$action'>$link$sep</span>";
+			( $i === $action_count ) ? $sep = '' : $sep = ' | ';
+			$out                           .= "<span class='$action'>$link$sep</span>";
 		}
 		$out .= '</div>';
 
@@ -660,7 +650,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 		// Rollover actions.
 		// Reply - JavaScript only; implemented by AJAX.
-		if ( 'spam' != $item_status ) {
+		if ( 'spam' !== $item_status ) {
 			if ( $this->can_comment( $item ) ) {
 				$actions['reply'] = sprintf( '<a href="#" class="reply hide-if-no-js">%s</a>', __( 'Reply', 'buddyboss' ) );
 			} else {
@@ -672,7 +662,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		}
 
 		// Spam/unspam.
-		if ( 'spam' == $item_status ) {
+		if ( 'spam' === $item_status ) {
 			$actions['unspam'] = sprintf( '<a href="%s">%s</a>', $ham_url, __( 'Not Spam', 'buddyboss' ) );
 		} else {
 			$actions['spam'] = sprintf( '<a href="%s">%s</a>', $spam_url, __( 'Spam', 'buddyboss' ) );

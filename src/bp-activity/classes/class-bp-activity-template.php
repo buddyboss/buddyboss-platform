@@ -185,7 +185,7 @@ class BP_Activity_Template {
 			'update_meta_cache' => true,
 		);
 		$r        = wp_parse_args( $args, $defaults );
-		extract( $r );
+		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
@@ -270,7 +270,7 @@ class BP_Activity_Template {
 
 		// Fetch parent content for activity comments so we do not have to query in the loop.
 		foreach ( (array) $this->activities as $activity ) {
-			if ( 'activity_comment' != $activity->type ) {
+			if ( 'activity_comment' !== $activity->type ) {
 				continue;
 			}
 
@@ -365,7 +365,7 @@ class BP_Activity_Template {
 	public function user_activities() {
 		if ( ( $this->current_activity + 1 ) < $this->activity_count ) {
 			return true;
-		} elseif ( ( $this->current_activity + 1 ) == $this->activity_count ) {
+		} elseif ( ( $this->current_activity + 1 ) === $this->activity_count ) {
 
 			/**
 			 * Fires right before the rewinding of activity posts.
@@ -404,7 +404,7 @@ class BP_Activity_Template {
 		}
 
 		// Loop has just started.
-		if ( $this->current_activity == 0 ) {
+		if ( 0 === $this->current_activity ) {
 
 			/**
 			 * Fires if the current activity item is the first in the activity loop.

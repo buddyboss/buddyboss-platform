@@ -5266,18 +5266,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 				$new_scope[] = 'media';
 				$new_scope[] = 'document';
 			}
-
-		} else if ( bp_is_user_activity() ) {
+		} elseif ( bp_is_user_activity() ) {
 			if ( empty( bp_current_action() ) ) {
 				$new_scope[] = 'just-me';
 			} else {
 				$new_scope[] = bp_current_action();
 			}
-		} else if ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
+		} elseif ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
 			$new_scope[] = 'groups';
 		}
-
-	} else if( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+	} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'public';
 	}
 

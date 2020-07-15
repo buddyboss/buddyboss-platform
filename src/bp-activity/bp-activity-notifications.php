@@ -90,7 +90,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			break;
 	}
 
-	if ( 'string' == $format ) {
+	if ( 'string' === $format ) {
 
 		/**
 		 * Filters the activity notification for the string format.
@@ -244,7 +244,7 @@ add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment
  */
 function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 	// Only mark read if the current user is looking at his own mentions.
-	if ( empty( $user_id ) || (int) $user_id !== (int) bp_loggedin_user_id() ) {
+	if ( empty( $user_id ) || (int) bp_loggedin_user_id() !== (int) $user_id ) {
 		return;
 	}
 
@@ -402,12 +402,15 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
  */
 function bp_activity_screen_notification_settings() {
 	if ( bp_activity_do_mentions() ) {
-		if ( ! $mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true ) ) {
+		$mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true );
+		if ( ! $mention ) {
 			$mention = 'yes';
 		}
 	}
 
-	if ( ! $reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true ) ) {
+	$reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true );
+
+	if ( ! $reply ) {
 		$reply = 'yes';
 	}
 
@@ -432,7 +435,7 @@ function bp_activity_screen_notification_settings() {
 					<td class="yes">
 						<div class="bp-radio-wrap">
 							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio" value="yes" <?php checked( $mention, 'yes', true ); ?> />
-							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php  _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 						</div>
 					</td>
 					<td class="no">

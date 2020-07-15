@@ -8,12 +8,14 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+// phpcs:disable PEAR.NamingConventions.ValidClassName.Invalid
 /**
  * oEmbed handler to respond and render single activity items.
  *
  * @since BuddyPress 2.6.0
  */
 class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
+// phpcs:enable PEAR.NamingConventions.ValidClassName.Invalid
 	/**
 	 * Custom oEmbed slug endpoint.
 	 *

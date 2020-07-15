@@ -211,7 +211,7 @@ function bp_has_activities( $args = '' ) {
 	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
 			? $bp->loaded_components[ bp_current_action() ]
 			: (
-				( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
+				( ! empty( bp_current_action() ) && ! is_numeric( bp_current_action() ) )
 				? bp_current_action()
 				: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
 			);
@@ -678,8 +678,8 @@ function bp_get_activity_id() {
 	global $activities_template;
 
 	$activity_id = 0;
-	if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id  ) ) {
-		$activity_id = $activities_template->activity->id ;
+	if ( isset( $activities_template ) && isset( $activities_template->activity ) && isset( $activities_template->activity->id ) ) {
+		$activity_id = $activities_template->activity->id;
 	}
 
 	/**
@@ -1041,20 +1041,20 @@ function bp_get_activity_avatar( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 	if ( ! isset( $height ) && ! isset( $width ) ) {
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->height ) || isset( $bp->avatar->thumb->height ) ) {
-			$height = ( 'full' == $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
+			$height = ( 'full' === $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
 		} else {
 			$height = 20;
 		}
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->width ) || isset( $bp->avatar->thumb->width ) ) {
-			$width = ( 'full' == $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
+			$width = ( 'full' === $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
 		} else {
 			$width = 20;
 		}
@@ -1084,7 +1084,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$item_id = apply_filters( 'bp_get_activity_avatar_item_id', $item_id );
 
 	// If this is a user object pass the users' email address for Gravatar so we don't have to prefetch it.
-	if ( 'user' == $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
+	if ( 'user' === $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
 		$email = $current_activity_item->user_email;
 	}
 
@@ -1161,7 +1161,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			'email'      => false,
 		)
 	);
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
@@ -1627,7 +1627,7 @@ function bp_activity_user_can_delete( $activity = false ) {
 		// Users are allowed to delete their own activity. This is actually
 		// quite powerful, because doing so also deletes all comments to that
 		// activity item. We should revisit this eventually.
-		if ( isset( $activity->user_id ) && ( $activity->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $activity->user_id ) && ( bp_loggedin_user_id() === $activity->user_id ) ) {
 			$can_delete = true;
 		}
 
@@ -2447,7 +2447,7 @@ function bp_activity_comment_form_nojs_display() {
 function bp_get_activity_comment_form_nojs_display() {
 	global $activities_template;
 
-	if ( isset( $_GET['ac'] ) && ( $_GET['ac'] === ( $activities_template->activity->id . '/' ) ) ) {
+	if ( isset( $_GET['ac'] ) && ( ( $activities_template->activity->id . '/' ) === $_GET['ac'] ) ) {
 		return 'style="display: block"';
 	}
 
@@ -2701,23 +2701,25 @@ function bp_get_activity_css_class() {
 	 * @param string $value Classes to be added to the HTML element.
 	 */
 	return apply_filters( 'bp_get_activity_css_class', $activities_template->activity->component . ' ' . $activities_template->activity->type . $class );
-}/**
-  *
-  * Output the activity comment CSS class.
-  *
-  * @since BuddyBoss 1.0.0
-  */
+}
+
+/**
+ *
+ * Output the activity comment CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_activity_comment_css_class() {
 	echo bp_get_activity_comment_css_class();
 }
 
-	/**
-	 * Return the current activity comment's CSS class.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @return string The activity comment's CSS class.
-	 */
+/**
+ * Return the current activity comment's CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string The activity comment's CSS class.
+ */
 function bp_get_activity_comment_css_class() {
 
 	$class = ' comment-item';
@@ -2846,7 +2848,8 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
 		return false;
 	}
 
-	if ( ! $update = bp_get_user_meta( $user_id, 'bp_latest_update', true ) ) {
+	$update = bp_get_user_meta( $user_id, 'bp_latest_update', true );
+	if ( ! $update ) {
 		return false;
 	}
 
@@ -2927,11 +2930,11 @@ function bp_get_activity_filter_links( $args = false ) {
 	foreach ( (array) $components as $component ) {
 
 		// Skip the activity comment filter.
-		if ( 'activity' == $component ) {
+		if ( 'activity' === $component ) {
 			continue;
 		}
 
-		if ( isset( $_GET['afilter'] ) && $component == $_GET['afilter'] ) {
+		if ( isset( $_GET['afilter'] ) && $component === $_GET['afilter'] ) {
 			$selected = ' class="selected"';
 		} else {
 			$selected = '';
@@ -3046,22 +3049,22 @@ function bp_activity_can_comment_reply( $comment = false ) {
 		$comment = bp_activity_current_comment();
 	}
 
-//	if ( ! empty( $comment ) ) {
-//
-//		// Fall back on current comment in activity loop.
-//		$comment_depth = isset( $comment->depth )
-//			? intval( $comment->depth )
-//			: bp_activity_get_comment_depth( $comment );
-//
-//		// Threading is turned on, so check the depth.
-//		if ( get_option( 'thread_comments' ) ) {
-//			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
-//
-//			// No threading for comment replies if no threading for comments.
-//		} else {
-//			$can_comment = false;
-//		}
-//	}
+	//  if ( ! empty( $comment ) ) {
+	//
+	//      // Fall back on current comment in activity loop.
+	//      $comment_depth = isset( $comment->depth )
+	//          ? intval( $comment->depth )
+	//          : bp_activity_get_comment_depth( $comment );
+	//
+	//      // Threading is turned on, so check the depth.
+	//      if ( get_option( 'thread_comments' ) ) {
+	//          $can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
+	//
+	//          // No threading for comment replies if no threading for comments.
+	//      } else {
+	//          $can_comment = false;
+	//      }
+	//  }
 
 	/**
 	 * Filters whether a comment can be made on an activity reply item.

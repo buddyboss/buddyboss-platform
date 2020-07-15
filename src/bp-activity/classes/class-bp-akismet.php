@@ -80,7 +80,7 @@ class BP_Akismet {
 		$user_result    = bp_activity_get_meta( $activity['id'], '_bp_akismet_user_result' );
 		$desc           = '';
 
-		if ( ! $user_result || $user_result == $akismet_result ) {
+		if ( ! $user_result || $user_result === $akismet_result ) {
 			// Show the original Akismet result if the user hasn't overridden it, or if their decision was the same.
 			if ( 'true' == $akismet_result && $activity['is_spam'] ) {
 				$desc = __( 'Flagged as spam by Akismet', 'buddyboss' );
