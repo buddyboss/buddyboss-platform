@@ -1021,7 +1021,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 		},
 
-		handleKeyUp: function( event ) {
+		handleKeyUp: function() {
 			var self = this;
 
 			if ( this.linkTimeout != null ) {
