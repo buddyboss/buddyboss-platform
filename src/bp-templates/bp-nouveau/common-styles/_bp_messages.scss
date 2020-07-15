@@ -198,7 +198,14 @@
 				}
 			}
 		}
+	}
 
+	.bp-message-link:hover,
+	.current .bp-message-link {
+
+		.thread-multiple-avatar img.avatar {
+			border-color: #f5f6f7;
+		}
 	}
 
 	// close li

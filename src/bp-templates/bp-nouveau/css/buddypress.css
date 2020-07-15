@@ -5519,6 +5519,11 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   left: auto;
 }
 
+#message-threads .bp-message-link:hover .thread-multiple-avatar img.avatar,
+#message-threads .current .bp-message-link .thread-multiple-avatar img.avatar {
+  border-color: #f5f6f7;
+}
+
 #message-form-submit-wrapper,
 #message-reply-form-submit-wrapper {
   display: flex;
