@@ -62,6 +62,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve Groups Types.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 */
 	public function get_items( $request ) {
 		$registered_types = bp_groups_get_group_types( array(), 'objects' );

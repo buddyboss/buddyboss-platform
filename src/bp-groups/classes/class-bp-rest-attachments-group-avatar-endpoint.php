@@ -115,6 +115,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve group avatar
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
 	 * @apiParam {Boolean} [html=false] Whether to return an <img> HTML element, vs a raw URL to a group avatar.
 	 * @apiParam {String} [alt] The alt attribute for the <img> element.

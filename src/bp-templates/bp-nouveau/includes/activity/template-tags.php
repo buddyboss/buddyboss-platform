@@ -968,9 +968,9 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		 * If post comment / Activity comment sync is on, it's safer
 		 * to unset the comment button just before returning it.
 		 */
-//		if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
-//			unset( $return['activity_comment_reply'] );
-//		}
+		if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
+			unset( $return['activity_comment_reply'] );
+		}
 
 		/**
 		 * If there was an activity of the user before one af another
@@ -1159,11 +1159,13 @@ function bp_nouveau_activity_privacy() {
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[ $privacy ] ) ? $privacy_items[ $privacy ] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 				<ul class="activity-privacy">
-					<?php if ( $folder_id && ! empty( $folder_url ) ) : ?>
-						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy">
+					<?php if ( $folder_id && ! empty( $folder_url ) ) :
+						$folder_url = $folder_url . '#openEditFolder';
+					?>
+						<li data-value="<?php echo $folder_url; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
 							<a data-value="<?php echo $folder_url; ?>" href="<?php echo $folder_url; ?>"><?php _e( 'Edit Folder Privacy', 'buddyboss' ); ?></a></li>
 					<?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
-						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy">
+						<li data-value="<?php echo $parent_activity_permalink; ?>" class="bb-edit-privacy <?php echo $privacy; ?>">
 							<a data-value="<?php echo $parent_activity_permalink; ?>" href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 						</li>
 					<?php endif; ?>
@@ -1208,7 +1210,8 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$attachment_id = BP_Media::get_activity_attachment_id( $activity_id );
+	$attachment_id 	= BP_Media::get_activity_attachment_id( $activity_id );
+	$media_id 		= BP_Media::get_activity_media_id( $activity_id );
 
 	if ( empty( $attachment_id ) ) {
 		return;
@@ -1224,6 +1227,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
 		   href="#">
+		   	<span class="bb-icon-edit-thin"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1250,6 +1254,21 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
+	if ( ! empty( $media_id ) ) {
+		$media_privacy  = bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
+		$can_download_btn  = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+		if ( $can_download_btn ) {
+			$download_url      = bp_media_download_link( $attachment_id, $media_id );
+			if ( $download_url ) {
+				?>
+				<a class="download-media"
+				   href="<?php echo esc_url( $download_url ); ?>">
+					<?php _e( 'Download', 'buddyboss' ); ?>
+				</a>
+				<?php
+			}
+		}
+	}
 }
 
 /**
@@ -1268,7 +1287,8 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 		return;
 	}
 
-	$attachment_id = BP_Document::get_activity_attachment_id( $activity_id );
+	$attachment_id 	= BP_Document::get_activity_attachment_id( $activity_id );
+	$document_id 	= BP_Document::get_activity_document_id( $activity_id );
 
 	if ( empty( $attachment_id ) ) {
 		return;
@@ -1284,6 +1304,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
 		   href="#">
+		   	<span class="bb-icon-edit-thin"></span>
 			<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 			<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
 		</a>
@@ -1310,6 +1331,21 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	}
 
 	echo '</div>';
+	if ( ! empty( $document_id ) ) {
+		$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+		$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+		if ( $can_download_btn ) {
+			$download_url      = bp_document_download_link( $attachment_id, $document_id );
+			if ( $download_url ) {
+				?>
+				<a class="download-document"
+					href="<?php echo esc_url( $download_url ); ?>">
+					<?php _e( 'Download', 'buddyboss' ); ?>
+				</a>
+				<?php
+			}
+		}
+	}
 }
 
 /**

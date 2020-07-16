@@ -84,7 +84,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'sort_order=' . $post_query['extras'];
 	}
 
-	if ( 'personal' === $post_query['scope'] ) {
+	if ( 'personal' === $post_query['scope'] && 'document' !== $object  ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 		$qs[]    = 'user_id=' . $user_id;
 	}
@@ -633,7 +633,9 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  *
  */
 function bp_nouveau_sanitize_nav_order( $option = '' ) {
-	$option = explode( ',', $option );
+	if ( ! is_array( $option ) ) {
+		$option = explode( ',', $option );
+	}
 
 	return array_map( 'sanitize_key', $option );
 }

@@ -211,15 +211,17 @@ function bp_has_activities( $args = '' ) {
 	$scope = array_key_exists( bp_current_action(), (array) $bp->loaded_components )
 			? $bp->loaded_components[ bp_current_action() ]
 			: (
-			( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
-					? bp_current_action()
-					: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
+				( ! empty( bp_current_action() ) && ! is_numeric(  bp_current_action() ) )
+				? bp_current_action()
+				: ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' )
 			);
+
+	$scope = bp_activity_default_scope( $scope );
 
 	// Group filtering.
 	if ( bp_is_group() ) {
 		$object          = $bp->groups->id;
-		$args['privacy'] = array( 'public' );
+		$args['privacy'] = ( isset( $args['privacy'] ) ? $args['privacy'] : array( 'public' ) );
 		$primary_id      = bp_get_current_group_id();
 		$show_hidden     = (bool) ( groups_is_user_member( bp_loggedin_user_id(), $primary_id ) || bp_current_user_can( 'bp_moderate' ) );
 	} else {
@@ -273,7 +275,7 @@ function bp_has_activities( $args = '' ) {
 			'secondary_id'      => false,        // Secondary object ID to filter on e.g. a post_id.
 			'offset'            => false,        // Return only items >= this ID.
 			'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
-			'privacy'           => false,        // privacy to filter on - public, onlyme, loggedin, friends, media.
+			'privacy'           => false,        // privacy to filter on - public, onlyme, loggedin, friends, media, document.
 
 			'meta_query'        => false,        // Filter on activity meta. See WP_Meta_Query for format.
 			'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
@@ -3044,22 +3046,22 @@ function bp_activity_can_comment_reply( $comment = false ) {
 		$comment = bp_activity_current_comment();
 	}
 
-	if ( ! empty( $comment ) ) {
-
-		// Fall back on current comment in activity loop.
-		$comment_depth = isset( $comment->depth )
-			? intval( $comment->depth )
-			: bp_activity_get_comment_depth( $comment );
-
-		// Threading is turned on, so check the depth.
-		if ( get_option( 'thread_comments' ) ) {
-			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
-
-			// No threading for comment replies if no threading for comments.
-		} else {
-			$can_comment = false;
-		}
-	}
+//	if ( ! empty( $comment ) ) {
+//
+//		// Fall back on current comment in activity loop.
+//		$comment_depth = isset( $comment->depth )
+//			? intval( $comment->depth )
+//			: bp_activity_get_comment_depth( $comment );
+//
+//		// Threading is turned on, so check the depth.
+//		if ( get_option( 'thread_comments' ) ) {
+//			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
+//
+//			// No threading for comment replies if no threading for comments.
+//		} else {
+//			$can_comment = false;
+//		}
+//	}
 
 	/**
 	 * Filters whether a comment can be made on an activity reply item.

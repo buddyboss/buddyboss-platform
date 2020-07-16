@@ -85,7 +85,8 @@ function bp_core_screen_signup() {
 
 		// If there are errors with account details, set them for display.
 		if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
-			$bp->signup->errors['signup_username'] = $account_details['errors']->errors['user_name'][0];
+			$nickname_field                        = 'field_' . bp_xprofile_nickname_field_id();
+			$bp->signup->errors[ $nickname_field ] = $account_details['errors']->errors['user_name'][0];
 		}
 
 		if ( ! empty( $account_details['errors']->errors['user_email'] ) ) {

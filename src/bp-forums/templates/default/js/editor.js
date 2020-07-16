@@ -28,7 +28,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -69,7 +70,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -110,7 +112,8 @@ jQuery( document ).ready(
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 

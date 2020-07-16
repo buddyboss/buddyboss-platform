@@ -154,15 +154,37 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					}
 
 					if ( ! empty( $selected_xprofile_fields ) ) {
-						// u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s )
-						$clause_xprofile_table  = "u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-						$clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
-						$clause_xprofile_table .= ') ) ) ';
 
-						$where_fields[]      = $clause_xprofile_table;
-						$query_placeholder[] = '%' . $search_term . '%';
+						$data_clause_xprofile_table  = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
+						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
+						$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
+						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+						$data_clause_xprofile_table .= ') ) )';
+
+						$sql_xprofile = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+						$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+
+						$user_ids = array();
+
+						// check visiblity for field id with current user.
+						if ( !empty( $sql_xprofile_result ) ) {
+							foreach ( $sql_xprofile_result as $field_data ) {
+								$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+
+								if (
+									!empty( $hidden_fields )
+									&& !in_array( $field_data->field_id, $hidden_fields )
+								) {
+									$user_ids[] = $field_data->user_id;
+								}
+							}
+						}
+
+						// Added user when visbility matched.
+						if ( !empty( $user_ids ) ) {
+							$user_ids = array_unique( $user_ids );
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids )  ." )";
+						}
 					}
 				}
 			}
@@ -315,4 +337,3 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 	// End class Bp_Search_Members
 
 endif;
-

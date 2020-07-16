@@ -643,7 +643,22 @@ class BP_Email_Tokens {
 											<tr>
 												<td>
 													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ); ?>;">
-														<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) ); ?>
+														<?php
+														/**
+														 * Display text before activity comment.
+														 */
+														do_action( 'bp_activity_before_email_content', $activity_comment );
+
+														if ( in_array( $activity_comment->content, array( '&nbsp;', '&#8203;' ) ) ) {
+															$activity_comment->content = '';
+														}
+														echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) );
+
+                                                        /**
+														 * Display text after activity comment.
+														 */
+														do_action( 'bp_activity_after_email_content', $activity_comment );
+														?>
 													</div>
 												</td>
 											</tr>

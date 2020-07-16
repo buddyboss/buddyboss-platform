@@ -155,6 +155,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve groups detail tabs.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the Group.
 	 */
 	public function get_item( $request ) {

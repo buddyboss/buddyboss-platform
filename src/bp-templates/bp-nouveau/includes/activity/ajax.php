@@ -417,7 +417,8 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'hide_spam'        => false,
 			'show_hidden'      => true,
 			'include'          => $comment_id,
-			'scope'            => $activity->privacy . ',just-me',
+			'privacy'          => (array) $activity->privacy,
+			'scope'            => false,
 		)
 	);
 
@@ -760,9 +761,10 @@ function bp_nouveau_ajax_activity_update_privacy() {
 	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
 
 	if ( bp_activity_user_can_delete( $activity ) ) {
-
+		remove_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 		$activity->privacy = $_POST['privacy'];
 		$activity->save();
+		add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2 );
 
 		wp_send_json_success( array() );
 	} else {
