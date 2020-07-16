@@ -5501,6 +5501,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 #message-threads .bp-message-link .thread-multiple-avatar {
   min-height: 45px;
   min-width: 45px;
+  margin: 0 -2px;
   position: relative;
 }
 
