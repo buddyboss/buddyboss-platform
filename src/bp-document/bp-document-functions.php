@@ -1468,7 +1468,7 @@ function bp_document_extension( $attachment_id ) {
 	$extension = trim( $file_type['ext'] );
 
 	if ( '' === $extension ) {
-		$file       = pathinfo( $file_url );
+		$file      = pathinfo( $file_url );
 		$extension = ( isset( $file['extension'] ) ) ? $file['extension'] : '';
 	}
 
@@ -1507,7 +1507,6 @@ function bp_document_multi_array_search( $array, $search ) {
 			if ( ! isset( $value[ $k ] ) || $value[ $k ] != $v ) {
 				continue 2;
 			}
-
 		}
 
 		// Add the array element's key to the result array.
@@ -1532,13 +1531,16 @@ function bp_document_multi_array_search( $array, $search ) {
 function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 
 	if ( $attachment_id > 0 && '' !== $extension ) {
-		$mime_type = bp_document_mime_type( $attachment_id );
+		$mime_type     = bp_document_mime_type( $attachment_id );
 		$existing_list = bp_document_extensions_list();
 		$new_extension = '.' . $extension;
-		$result_array = bp_document_multi_array_search( $existing_list, array(
-			'extension' => $new_extension,
-			'mime_type' => $mime_type
-		) );
+		$result_array  = bp_document_multi_array_search(
+			$existing_list,
+			array(
+				'extension' => $new_extension,
+				'mime_type' => $mime_type,
+			)
+		);
 		if ( $result_array && isset( $result_array[0] ) && ! empty( $result_array[0] ) ) {
 			$icon = $existing_list[ $result_array[0] ]['icon'];
 			if ( '' !== $icon ) {
@@ -1595,7 +1597,7 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		case 'gz':
 			$svg = 'bb-icon-file-zip';
 			break;
-			case 'gzip':
+		case 'gzip':
 			$svg = 'bb-icon-file-zip';
 			break;
 		case 'hlam':
@@ -1758,45 +1760,45 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 function bp_document_svg_icon_list() {
 
 	$icons = array(
-		'default_1' => array(
-			'icon' => 'bb-icon-file',
-			'title' =>  __( 'Default', 'buddyboss' )
+		'default_1'  => array(
+			'icon'  => 'bb-icon-file',
+			'title' => __( 'Default', 'buddyboss' ),
 		),
-		'default_2' => array(
-			'icon' => 'bb-icon-file-zip',
-			'title' => __( 'Archive', 'buddyboss' )
+		'default_2'  => array(
+			'icon'  => 'bb-icon-file-zip',
+			'title' => __( 'Archive', 'buddyboss' ),
 		),
-		'default_3' => array(
-			'icon' => 'bb-icon-file-mp3',
-			'title' => __( 'Audio', 'buddyboss' )
+		'default_3'  => array(
+			'icon'  => 'bb-icon-file-mp3',
+			'title' => __( 'Audio', 'buddyboss' ),
 		),
-		'default_4' => array(
-			'icon' => 'bb-icon-file-html',
-			'title' => __( 'Code', 'buddyboss' )
+		'default_4'  => array(
+			'icon'  => 'bb-icon-file-html',
+			'title' => __( 'Code', 'buddyboss' ),
 		),
-		'default_5' => array(
-			'icon' => 'bb-icon-file-psd',
-			'title' => __( 'Design', 'buddyboss' )
+		'default_5'  => array(
+			'icon'  => 'bb-icon-file-psd',
+			'title' => __( 'Design', 'buddyboss' ),
 		),
-		'default_6' => array(
-			'icon' => 'bb-icon-file-png',
-			'title' => __( 'Image', 'buddyboss' )
+		'default_6'  => array(
+			'icon'  => 'bb-icon-file-png',
+			'title' => __( 'Image', 'buddyboss' ),
 		),
-		'default_7' => array(
-			'icon' => 'bb-icon-file-pptx',
-			'title' => __( 'Presentation', 'buddyboss' )
+		'default_7'  => array(
+			'icon'  => 'bb-icon-file-pptx',
+			'title' => __( 'Presentation', 'buddyboss' ),
 		),
-		'default_8' => array(
-			'icon' => 'bb-icon-file-xlsx',
-			'title' => __( 'Spreadsheet', 'buddyboss' )
+		'default_8'  => array(
+			'icon'  => 'bb-icon-file-xlsx',
+			'title' => __( 'Spreadsheet', 'buddyboss' ),
 		),
-		'default_9' => array(
-			'icon' => 'bb-icon-file-txt',
-			'title' => __( 'Text', 'buddyboss' )
+		'default_9'  => array(
+			'icon'  => 'bb-icon-file-txt',
+			'title' => __( 'Text', 'buddyboss' ),
 		),
 		'default_10' => array(
-			'icon' => 'bb-icon-file-video',
-			'title' => __( 'Video', 'buddyboss' )
+			'icon'  => 'bb-icon-file-video',
+			'title' => __( 'Video', 'buddyboss' ),
 		),
 	);
 
@@ -1823,7 +1825,6 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 	}
 
 	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
-
 
 	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
@@ -2206,20 +2207,19 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	}
 
 	// Change the attachment post.
-//	$post_changes = array();
-//	$post_changes['ID']         = $post->ID;
-//	$post_changes['guid']       = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $post->guid );
-//	$post_changes['post_title'] = ( true ) ? bp_document_filename_to_title( $new_filename_unsanitized ) : $post->post_title;
-//	$post_changes['post_name']  = wp_unique_post_slug( $new_filename, $post->ID, $post->post_status, $post->post_type, $post->post_parent );
-//	wp_update_post( $post_changes );
-//	unset( $post_changes );
-
+	//  $post_changes = array();
+	//  $post_changes['ID']         = $post->ID;
+	//  $post_changes['guid']       = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $post->guid );
+	//  $post_changes['post_title'] = ( true ) ? bp_document_filename_to_title( $new_filename_unsanitized ) : $post->post_title;
+	//  $post_changes['post_name']  = wp_unique_post_slug( $new_filename, $post->ID, $post->post_status, $post->post_type, $post->post_parent );
+	//  wp_update_post( $post_changes );
+	//  unset( $post_changes );
 
 	$my_post = array(
-		'ID'         => $post->ID,
-		'post_title' => bp_document_filename_to_title( $new_filename_unsanitized ),
-//		'post_name'  => $new_filename,
-		'guid'       => preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $post->guid ),
+		'ID'               => $post->ID,
+		'post_title'       => bp_document_filename_to_title( $new_filename_unsanitized ),
+		//      'post_name'  => $new_filename,
+					'guid' => preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $post->guid ),
 	);
 
 	$post_id = wp_update_post( $my_post );
@@ -2339,7 +2339,7 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 		}
 	}
 
-	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
 		return false;
 	}
 
@@ -2717,20 +2717,20 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 
 				if ( $manage ) {
 					if ( $folder->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
+						$can_manage = true;
+						$can_add    = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
+					} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+						$can_manage = true;
+						$can_add    = false;
+					} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+						$can_manage = true;
+						$can_add    = false;
+					} elseif ( 'admins' === $status && $is_admin ) {
+						$can_manage = true;
+						$can_add    = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2854,20 +2854,20 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 
 				if ( $manage ) {
 					if ( $document->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
+						$can_manage = true;
+						$can_add    = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
+					} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+						$can_manage = true;
+						$can_add    = false;
+					} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+						$can_manage = true;
+						$can_add    = false;
+					} elseif ( 'admins' === $status && $is_admin ) {
+						$can_manage = true;
+						$can_add    = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2901,7 +2901,6 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'friends':
-
 			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $document->user_id, $user_id ) : false;
 			if ( $document->user_id === $user_id ) {
 				$can_manage   = true;
@@ -2939,7 +2938,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_manage   = true;
+					$can_manage = true;
 				}
 				$can_view     = true;
 				$can_download = true;
@@ -3233,7 +3232,6 @@ function bp_document_default_scope( $scope = 'all' ) {
 		if ( bp_is_active( 'groups' ) ) {
 			$new_scope[] = 'groups';
 		}
-
 	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'personal';
 	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {

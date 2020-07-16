@@ -822,9 +822,7 @@ function bp_document_user_can_edit( $document = false ) {
 					$can_edit = true;
 				}
 			}
-
 		}
-
 	}
 
 	/**
@@ -1765,14 +1763,13 @@ function bp_folder_user_can_edit( $folder = false ) {
 		// Users are allowed to edit their own folder.
 		if ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
 			$can_edit = true;
-		// Community moderators can always edit folder (at least for now).
+			// Community moderators can always edit folder (at least for now).
 		} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
 			$can_edit = true;
-		// Groups documents have their own access.
+			// Groups documents have their own access.
 		} elseif ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_edit = true;
 		}
-
 	}
 
 	/**

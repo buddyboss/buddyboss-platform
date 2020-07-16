@@ -180,7 +180,6 @@ class BP_Document_Component extends BP_Component {
 			'document_folder' => $bp->table_prefix . 'bp_document_folder_meta',
 		);
 
-
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
 		$default_directory_title  = $default_directory_titles[ $this->id ];

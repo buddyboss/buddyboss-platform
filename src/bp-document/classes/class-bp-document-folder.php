@@ -178,7 +178,7 @@ class BP_Document_Folder {
 
 		$args = array(
 			'in'     => $id,
-			'fields'  => 'ids'
+			'fields' => 'ids',
 		);
 
 		$folders = self::get( $args );
@@ -510,7 +510,7 @@ class BP_Document_Folder {
 
 			$group_name = '';
 			$visibility = '';
-			if ( bp_is_active( 'groups') && $folder->group_id > 0 ) {
+			if ( bp_is_active( 'groups' ) && $folder->group_id > 0 ) {
 				$group      = groups_get_group( $folder->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );
@@ -803,14 +803,14 @@ class BP_Document_Folder {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_document_id_before_save', array( $this->id, &$this ) );
-		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this, ) );
-		$this->blog_id       = apply_filters_ref_array( 'bp_document_blog_id_before_save', array( $this->blog_id, &$this, ) );
-		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this, ) );
-		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this, ) );
-		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this, ) );
-		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this, ) );
-		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this, ) );
-		$this->parent        = apply_filters_ref_array( 'bp_document_parent_before_save', array( $this->parent, &$this, ) );
+		$this->user_id       = apply_filters_ref_array( 'bp_document_user_id_before_save', array( $this->user_id, &$this ) );
+		$this->blog_id       = apply_filters_ref_array( 'bp_document_blog_id_before_save', array( $this->blog_id, &$this ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_document_group_id_before_save', array( $this->group_id, &$this ) );
+		$this->title         = apply_filters_ref_array( 'bp_document_title_before_save', array( $this->title, &$this ) );
+		$this->privacy       = apply_filters_ref_array( 'bp_document_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->date_created  = apply_filters_ref_array( 'bp_document_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->date_modified = apply_filters_ref_array( 'bp_document_date_modified_before_save', array( $this->date_modified, &$this ) );
+		$this->parent        = apply_filters_ref_array( 'bp_document_parent_before_save', array( $this->parent, &$this ) );
 
 		/**
 		 * Fires before the current folder gets saved.
