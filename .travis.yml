@@ -124,6 +124,7 @@ before_install:
   - node --version
   - npm install -g grunt-cli
   - npm --version
+  - npm rebuild node-sass
   - mysql --version
   - phpenv versions
   - php --version
