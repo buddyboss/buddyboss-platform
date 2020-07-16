@@ -284,3 +284,38 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	return http_build_query( $querystring );
 }
+
+add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
+/**
+ * Save Cover image position for group and member.
+ *
+ * @since BuddyBoss 1.4.7
+ */
+function bp_nouveau_ajax_save_cover_position() {
+
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['position'] ) ) {
+		wp_send_json_error();
+	}
+
+	$position = floatval( $_POST['position'] );
+	$updated  = false;
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$updated = groups_update_groupmeta( bp_get_current_group_id(), 'bp_cover_position', $position );
+	} else if ( bp_is_user() ) {
+		$updated = bp_update_user_meta( bp_displayed_user_id(), 'bp_cover_position', $position );
+	}
+
+	if ( empty( $updated ) ) {
+		wp_send_json_error();
+	}
+
+	$result['content'] = $position;
+
+	wp_send_json_success( $result );
+}
+

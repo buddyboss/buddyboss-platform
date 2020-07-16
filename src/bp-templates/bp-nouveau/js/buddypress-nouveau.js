@@ -1828,6 +1828,19 @@ window.bp = window.bp || {};
 				coverImage.css( { 'top' : coverImage.attr('data-top') + 'px'} );
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				// ajax call to save photo position
+
+				$.post(
+					BP_Nouveau.ajaxurl,
+					{
+						'action': 'save_cover_position',
+						'position': coverImage.attr( 'data-top' ),
+					}
+				).done( function ( $response ) {
+					if ( $response.success && $response.data && $response.data.content ) {
+						coverImage.css( { 'top': $response.data.content + 'px' } );
+					}
+				} );
+
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-cancel' ) ){
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).attr( 'data-top', '' );
