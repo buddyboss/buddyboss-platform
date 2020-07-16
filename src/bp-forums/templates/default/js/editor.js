@@ -14,7 +14,7 @@ jQuery( document ).ready(
 				jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
-					if ( jQuery( element ).parents( '.elementor-popup-modal' ) ) {
+					if ( jQuery( element ).parents( '.elementor-popup-modal' ).length > 0 ) {
 						return;
 					}
 
@@ -57,7 +57,7 @@ jQuery( document ).ready(
 				jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
-					if ( jQuery( element ).parents( '.elementor-popup-modal' ) ) {
+					if ( jQuery( element ).parents( '.elementor-popup-modal' ).length > 0 ) {
 						return;
 					}
 
@@ -105,7 +105,7 @@ jQuery( document ).ready(
 				jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 					// added support for shortcode in elementor popup.
-					if ( jQuery( element ).parents( '.elementor-popup-modal' ) ) {
+					if ( jQuery( element ).parents( '.elementor-location-popup' ).length > 0 ) {
 						return;
 					}
 
@@ -224,7 +224,7 @@ jQuery( document ).ready(
 						jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
-							if ( ! jQuery( element ).parents( '.elementor-popup-modal' ) ) {
+							if ( jQuery( element ).parents( '.elementor-location-popup' ).length < 1 ) {
 								return;
 							}
 
@@ -267,7 +267,7 @@ jQuery( document ).ready(
 						jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
-							if ( ! jQuery( element ).parents( '.elementor-popup-modal' ) ) {
+							if ( jQuery( element ).parents( '.elementor-location-popup' ).length < 1 ) {
 								return;
 							}
 
@@ -315,7 +315,7 @@ jQuery( document ).ready(
 						jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
 
 							// added support for shortcode in elementor popup.
-							if ( ! jQuery( element ).parents( '.elementor-popup-modal' ) ) {
+							if ( jQuery( element ).parents( '.elementor-location-popup' ).length < 1 ) {
 								return;
 							}
 

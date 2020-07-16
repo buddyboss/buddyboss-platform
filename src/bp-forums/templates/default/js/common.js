@@ -1,73 +1,82 @@
 jQuery( document ).ready(
 	function() {
 
-		var $tagsSelect = jQuery( 'body' ).parents( 'div:not(.elementor-popup-modal)' ).find( '.bbp_topic_tags_dropdown' );
+		var $tagsSelect = jQuery( 'body' ).find( '.bbp_topic_tags_dropdown' );
 		var tagsArrayData = [];
 
 		if ( $tagsSelect.length ) {
-			$tagsSelect.select2({
-				placeholder: $tagsSelect.attr('placeholder'),
-				minimumInputLength: 1,
-				closeOnSelect: true,
-				tags: true,
-				language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
-				dropdownCssClass: 'bb-select-dropdown',
-				containerCssClass: 'bb-select-container',
-				tokenSeparators: [',', ' '],
-				ajax: {
-					url: bbpCommonJsData.ajax_url,
-					dataType: 'json',
-					delay: 1000,
-					data: function (params) {
-						return jQuery.extend({}, params, {
-							_wpnonce: bbpCommonJsData.nonce,
-							action: 'search_tags',
-						});
-					},
-					cache: true,
-					processResults: function (data) {
 
-						// Removed the element from results if already selected.
-						if (false === jQuery.isEmptyObject(tagsArrayData)) {
-							jQuery.each(tagsArrayData, function (index, value) {
-								for (var i = 0; i < data.data.results.length; i++) {
-									if (data.data.results[i].id === value) {
-										data.data.results.splice(i, 1);
+			$tagsSelect.each( function ( i, element ) {
+
+				// added support for shortcode in elementor popup.
+				if ( jQuery( element ).parents( '.elementor-location-popup' ).length > 0 ) {
+					return;
+				}
+
+				jQuery( element ).select2( {
+					placeholder: jQuery( element ).attr( 'placeholder' ),
+					minimumInputLength: 1,
+					closeOnSelect: true,
+					tags: true,
+					language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
+					dropdownCssClass: 'bb-select-dropdown',
+					containerCssClass: 'bb-select-container',
+					tokenSeparators: [ ',', ' ' ],
+					ajax: {
+						url: bbpCommonJsData.ajax_url,
+						dataType: 'json',
+						delay: 1000,
+						data: function ( params ) {
+							return jQuery.extend( {}, params, {
+								_wpnonce: bbpCommonJsData.nonce,
+								action: 'search_tags',
+							} );
+						},
+						cache: true,
+						processResults: function ( data ) {
+
+							// Removed the element from results if already selected.
+							if ( false === jQuery.isEmptyObject( tagsArrayData ) ) {
+								jQuery.each( tagsArrayData, function ( index, value ) {
+									for ( var i = 0; i < data.data.results.length; i++ ) {
+										if ( data.data.results[ i ].id === value ) {
+											data.data.results.splice( i, 1 );
+										}
 									}
-								}
-							});
+								} );
+							}
+
+							return {
+								results: data && data.success ? data.data.results : []
+							};
 						}
-
-						return {
-							results: data && data.success ? data.data.results : []
-						};
 					}
-				}
-			});
+				} );
 
-			// Add element into the Arrdata array.
-			$tagsSelect.on('select2:select', function (e) {
-				var data = e.params.data;
-				tagsArrayData.push(data.id);
-				var tags = tagsArrayData.join(',');
-				jQuery('body #bbp_topic_tags').val(tags);
+				// Add element into the Arrdata array.
+				jQuery( element ).on( 'select2:select', function ( e ) {
+					var data = e.params.data;
+					tagsArrayData.push( data.id );
+					var tags = tagsArrayData.join( ',' );
+					jQuery( 'body #bbp_topic_tags' ).val( tags );
 
-				jQuery( 'body .select2-search__field' ).trigger( 'click' );
-				jQuery( 'body .select2-search__field' ).trigger( 'click' );
-			});
+					jQuery( 'body .select2-search__field' ).trigger( 'click' );
+					jQuery( 'body .select2-search__field' ).trigger( 'click' );
+				} );
 
-			// Remove element into the Arrdata array.
-			$tagsSelect.on('select2:unselect', function (e) {
-				var data = e.params.data;
-				tagsArrayData = jQuery.grep(tagsArrayData, function (value) {
-					return value !== data.id;
-				});
-				var tags = tagsArrayData.join(',');
-				jQuery('body #bbp_topic_tags').val(tags);
-				if (tags.length === 0) {
-					jQuery(window).scrollTop(jQuery(window).scrollTop() + 1);
-				}
-			});
+				// Remove element into the Arrdata array.
+				jQuery( element ).on( 'select2:unselect', function ( e ) {
+					var data = e.params.data;
+					tagsArrayData = jQuery.grep( tagsArrayData, function ( value ) {
+						return value !== data.id;
+					} );
+					var tags = tagsArrayData.join( ',' );
+					jQuery( 'body #bbp_topic_tags' ).val( tags );
+					if ( tags.length === 0 ) {
+						jQuery( window ).scrollTop( jQuery( window ).scrollTop() + 1 );
+					}
+				} );
+			} );
 
 		}
 
@@ -162,7 +171,7 @@ jQuery( document ).ready(
 		// Added support for elementor popup.
 		if ( window.elementorFrontend ) {
 			jQuery( document ).on( 'elementor/popup/show', function () {
-				var $tagsSelect   = jQuery( 'body' ).find( 'div.elementor-popup-modal' ).find( '.bbp_topic_tags_dropdown' );
+				var $tagsSelect   = jQuery( 'body' ).find( 'div.elementor-location-popup' ).find( '.bbp_topic_tags_dropdown' );
 				if ( $tagsSelect.length ) {
 					$tagsSelect.select2({
 						placeholder: $tagsSelect.attr('placeholder'),
