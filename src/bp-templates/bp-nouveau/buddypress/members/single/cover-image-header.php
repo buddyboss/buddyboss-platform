@@ -5,7 +5,7 @@
  * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
-
+$has_cover_image_position = '';
 $displayed_user = bp_get_displayed_user();
 $cover_image_url = bp_attachments_get_attachment(
 	'url',
@@ -18,12 +18,19 @@ $cover_image_url = bp_attachments_get_attachment(
 
 <div id="cover-image-container">
 
-	<div id="header-cover-image">
-		<?php
+	<?php
 		if ( ! empty( $cover_image_url ) ) {
 			$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
+			if ( ! empty( $cover_image_position ) ) {
+				$has_cover_image_position = 'has-position';
+			}
+		}
+	?>
 
-			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '" data-top="'  . ( ! empty( $cover_image_position ) ? $cover_image_position : '0' )  . '" />';
+	<div id="header-cover-image" class="<?php echo $has_cover_image_position; ?>">
+		<?php
+		if ( ! empty( $cover_image_url ) ) {
+			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '" data-top="'  . ( ! empty( $cover_image_position ) && $cover_image_position !== 0  ? $cover_image_position : '0' )  . '"  style="top: '  . ( ! empty( $cover_image_position && $cover_image_position !== 0 ) ? $cover_image_position.'px' : '0' )  . '" alt="" />';
 		}
 		?>
 		<?php if ( bp_is_my_profile() ) { ?>

@@ -4159,6 +4159,11 @@ body.no-js .single-item-header .js-self-profile-button {
   display: none;
 }
 
+#buddypress #header-cover-image.has-position .header-cover-img {
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
 #buddypress #header-cover-image .header-cover-reposition-wrap {
   overflow: hidden;
   height: 100%;

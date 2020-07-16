@@ -44,6 +44,11 @@
 		display: none;
 	}
 
+	&.has-position .header-cover-img {
+		-webkit-transform: translateY(0);
+		transform: translateY(0);
+	}
+
 	.header-cover-reposition-wrap {
 		overflow: hidden;
 		height: 100%;
