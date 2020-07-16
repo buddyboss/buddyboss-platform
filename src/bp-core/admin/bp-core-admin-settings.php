@@ -280,7 +280,7 @@ function bp_admin_setting_callback_enable_activity_follow() {
 	?>
 
 	<input id="_bp_enable_activity_follow" name="_bp_enable_activity_follow" type="checkbox" value="1" <?php checked( bp_is_activity_follow_active( false ) ); ?> />
-	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your users to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -294,7 +294,7 @@ function bp_admin_setting_callback_enable_activity_like() {
 	?>
 
 	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php _e( 'Allow your users to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_like"><?php _e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
 
 	<?php
 }
