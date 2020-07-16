@@ -2172,9 +2172,12 @@ window.bp = window.bp || {};
 					event.preventDefault();
 				}
 
+				// unset all errors before submit.
+				self.model.unset( 'errors' );
+
 				// Set the content and meta.
 				_.each(
-					this.$el.serializeArray(),
+					self.$el.serializeArray(),
 					function( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
 						if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
@@ -2192,7 +2195,7 @@ window.bp = window.bp || {};
 				);
 
 				// Post content.
-				var $whatsNew = this.$el.find( '#whats-new' );
+				var $whatsNew = self.$el.find( '#whats-new' );
 
 				var atwho_query = $whatsNew.find( 'span.atwho-query' );
 				for ( var i = 0; i < atwho_query.length; i++ ) {
@@ -2213,7 +2216,7 @@ window.bp = window.bp || {};
 				self.model.set( 'content', content, { silent: true } );
 
 				// Silently add meta.
-				this.model.set( meta, { silent: true } );
+				self.model.set( meta, { silent: true } );
 
 				var medias = self.model.get( 'media' );
 				if ( 'group' == self.model.get( 'object' ) && typeof medias !== 'undefined' && medias.length ) {
@@ -2231,8 +2234,17 @@ window.bp = window.bp || {};
 					self.model.set( 'document',document );
 				}
 
+				// validation for content editor.
+				if ( $( content ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && !self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && !self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && !Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+					self.model.set( 'errors', {
+						type: 'error',
+						value: BP_Nouveau.activity.params.errors.empty_post_update
+					} );
+					return false;
+				}
+
 				// update posting status true.
-				this.model.set( 'posting', true );
+				self.model.set( 'posting', true );
 
 				var data = {
 					'_wpnonce_post_update': BP_Nouveau.activity.params.post_nonce
@@ -2259,9 +2271,9 @@ window.bp = window.bp || {};
 				);
 
 				// Form link preview data to pass in request if available.
-				if ( this.model.get( 'link_success' ) ) {
-					var images = this.model.get( 'link_images' ),
-						index  = this.model.get( 'link_image_index' );
+				if ( self.model.get( 'link_success' ) ) {
+					var images = self.model.get( 'link_images' ),
+						index  = self.model.get( 'link_image_index' );
 					if ( images.length ) {
 						data = _.extend(
 							data,
@@ -2370,10 +2382,8 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function( response ) {
-
-							self.model.set( 'posting', false );
-
-							self.model.set( 'errors', { type: 'error', value: response.message } );
+						self.model.set( 'posting', false );
+						self.model.set( 'errors', { type: 'error', value: response.message } );
 					}
 				);
 			}
