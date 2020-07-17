@@ -627,11 +627,11 @@ function bp_activity_link_preview( $content, $activity ) {
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
 		$content  .= '<div class="activity-link-preview-image">';
-		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" title="' . esc_html( $preview_data['title'] ) . '"><img src="' . esc_url( $image_url ) . '" alt="' . esc_html( $preview_data['title'] ) . '" /></a>';
 		$content  .= '</div>';
 	} else if ( ! empty( $preview_data['image_url'] ) ) {
 		$content  .= '<div class="activity-link-preview-image">';
-		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" title="' . esc_html( $preview_data['title'] ) . '"><img src="' . esc_url( $preview_data['image_url'] ) . '" alt="' . esc_html( $preview_data['title'] ) . '" /></a>';
 		$content  .= '</div>';
 	}
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
