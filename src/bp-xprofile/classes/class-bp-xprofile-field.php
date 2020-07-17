@@ -1816,7 +1816,7 @@ class BP_XProfile_Field {
 		}
 
 		$synced_fields = array(
-			bp_xprofile_firstname_field_id(),
+			//bp_xprofile_firstname_field_id(),
 			bp_xprofile_nickname_field_id(),
 			// bp_xprofile_lastname_field_id()
 		);

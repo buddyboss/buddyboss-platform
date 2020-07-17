@@ -1530,10 +1530,10 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	// Never allow the fullname field to be excluded.
-	if ( in_array( 1, $field_ids ) ) {
-		$key = array_search( 1, $field_ids );
-		unset( $field_ids[ $key ] );
-	}
+//	if ( in_array( 1, $field_ids ) ) {
+//		$key = array_search( 1, $field_ids );
+//		unset( $field_ids[ $key ] );
+//	}
 
 	return $field_ids;
 }
