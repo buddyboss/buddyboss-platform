@@ -1803,6 +1803,7 @@ window.bp = window.bp || {};
 
 			if($( e.currentTarget ).hasClass( 'position-change-cover-image' )){
 				var imageHeight  = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).height();
+				var imageCenter = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2;
 				if(imageHeight < 300){
 					alert('To reposition the image, Image height must be larger then 300px');
 					e.preventDefault();
@@ -1819,15 +1820,14 @@ window.bp = window.bp || {};
 					width: guillotineWidth,
 					height: guillotineHeight,
 					eventOnChange: 'guillotinechange',
-					init: { scale: guillotineScale, y: guillotineTop ? -guillotineTop : 0, w: guillotineWidth, h: guillotineHeight }
+					init: { scale: guillotineScale, y: guillotineTop ? -guillotineTop : imageCenter, w: guillotineWidth, h: guillotineHeight }
 				});
 				// picture.guillotine('fit');
 				picture.on('guillotinechange', function(e, data) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y); });
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-save' ) ){
+				var saveButton = $( e.currentTarget );
 				var coverImage = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' );
-				coverImage.css( { 'top' : coverImage.attr('data-top') + 'px'} );
-				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
-				// ajax call to save photo position
+				saveButton.addClass('loading');
 
 				$.post(
 					BP_Nouveau.ajaxurl,
@@ -1837,6 +1837,9 @@ window.bp = window.bp || {};
 					}
 				).done( function ( $response ) {
 					if ( $response.success && $response.data && $response.data.content ) {
+						saveButton.removeClass('loading');
+						saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+						saveButton.closest('#header-cover-image:not(.has-position)').addClass('has-position');
 						coverImage.css( { 'top': $response.data.content + 'px' } );
 					}
 				} );

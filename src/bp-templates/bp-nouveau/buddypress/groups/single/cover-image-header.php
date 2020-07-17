@@ -31,7 +31,7 @@ $has_cover_image_position = '';
 		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) {
 
 			if ( ! empty( $group_cover_image ) ) {
-				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '" data-top="'  . ( ! empty( $group_cover_position && $group_cover_position !== 0 ) ? $group_cover_position : '0' )  . '"  style="top: '  . ( ! empty( $group_cover_position && $group_cover_position !== 0 ) ? $group_cover_position.'px' : '0' )  . '" alt="" />';
+				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '"' . ( ! empty( $group_cover_position ) ? ' data-top="' . $group_cover_position . '"' : '' )  . ' style="'  . ( ! empty( $group_cover_position ) ? 'top: ' . $group_cover_position.'px' : '' )  . '" alt="" />';
 			}
 			?>
 			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">

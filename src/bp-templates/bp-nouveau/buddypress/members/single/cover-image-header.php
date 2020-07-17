@@ -30,7 +30,7 @@ $cover_image_url = bp_attachments_get_attachment(
 	<div id="header-cover-image" class="<?php echo $has_cover_image_position; ?>">
 		<?php
 		if ( ! empty( $cover_image_url ) ) {
-			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '" data-top="'  . ( ! empty( $cover_image_position ) && $cover_image_position !== 0  ? $cover_image_position : '0' )  . '"  style="top: '  . ( ! empty( $cover_image_position && $cover_image_position !== 0 ) ? $cover_image_position.'px' : '0' )  . '" alt="" />';
+			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( ! empty( $cover_image_position ) ? ' data-top="' . $cover_image_position . '"' : '' )  . ' style="'  . ( ! empty( $cover_image_position ) ? 'top: ' . $cover_image_position.'px' : '' )  . '" alt="" />';
 		}
 		?>
 		<?php if ( bp_is_my_profile() ) { ?>

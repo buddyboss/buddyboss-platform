@@ -4202,6 +4202,19 @@ body.no-js .single-item-header .js-self-profile-button {
   padding: 6px 10px;
 }
 
+#buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
+}
+
 #buddypress #header-cover-image .header-cover-reposition-wrap > .button:hover, #buddypress #header-cover-image .header-cover-reposition-wrap > .button:focus {
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: none;

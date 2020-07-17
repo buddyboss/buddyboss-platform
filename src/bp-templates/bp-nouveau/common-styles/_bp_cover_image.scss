@@ -85,6 +85,19 @@
 			line-height: 1.6;
 			padding: 6px 10px;
 
+			&.loading:after {
+				content: "\e838";
+				font-family: "bb-icons";/* stylelint-disable-line */
+				font-size: 18px;
+				line-height: 1;
+				margin-left: 10px;
+				text-align: center;
+				display: inline-block;
+				-webkit-animation: spin 3s infinite linear;
+				animation: spin 3s infinite linear;
+				vertical-align: middle;
+			}
+
 			&:hover,
 			&:focus {
 				background-color: rgba(255, 255, 255, 0.9);
