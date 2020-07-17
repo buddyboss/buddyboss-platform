@@ -53,21 +53,21 @@ class BP_Compatibility_Integration extends BP_Integration {
 		$htmlDom = new DOMDocument;
 
 		// Parse the HTML of the page using DOMDocument::loadHTML
-		$htmlDom->loadHTML($link['settings']);
+		$htmlDom->loadHTML( htmlentities( $link['settings'] ) );
 
 		// Extract the links from the HTML.
-		$links = $htmlDom->getElementsByTagName('a');
+		$links = $htmlDom->getElementsByTagName( 'a' );
 
 		$extractedLinks = array();
 
-		if ( !empty( $links ) ) {
+		if ( ! empty( $links ) ) {
 			foreach ( $links as $link_obj ) {
-				$extractedLinks[] = $link_obj->getAttribute('href');
+				$extractedLinks[] = $link_obj->getAttribute( 'href' );
 			}
 		}
 
 		if (
-			!empty( $extractedLinks )
+			! empty( $extractedLinks )
 			&& in_array( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ), $extractedLinks )
 		) {
 			// Add a few links to the existing links array.
