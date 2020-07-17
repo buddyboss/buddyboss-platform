@@ -132,7 +132,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	}
 
 	// Validate subject and message content.
-	if ( empty( $_POST['message_content'] ) || ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ) ) ) ) ) {
+	if ( empty( $_POST['message_content'] ) || ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['message_content'] ) ) ) ) ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 
 		wp_send_json_error( $response );
