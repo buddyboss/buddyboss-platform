@@ -21,7 +21,7 @@ $cover_image_url = bp_attachments_get_attachment(
 	<?php
 		if ( ! empty( $cover_image_url ) ) {
 			$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
-			if ( ! empty( $cover_image_position ) ) {
+			if ( '' !== $cover_image_position ) {
 				$has_cover_image_position = 'has-position';
 			}
 		}
@@ -30,7 +30,7 @@ $cover_image_url = bp_attachments_get_attachment(
 	<div id="header-cover-image" class="<?php echo $has_cover_image_position; ?>">
 		<?php
 		if ( ! empty( $cover_image_url ) ) {
-			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( ! empty( $cover_image_position ) ? ' data-top="' . $cover_image_position . '"' : '' )  . ' style="'  . ( ! empty( $cover_image_position ) ? 'top: ' . $cover_image_position.'px' : '' )  . '" alt="" />';
+			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( '' !== $cover_image_position ? ' data-top="' . $cover_image_position . '"' : '' ) . ( '' !== $cover_image_position ? ' style="top: ' . $cover_image_position . 'px"' : '' ) . ' alt="" />';
 		}
 		?>
 		<?php if ( bp_is_my_profile() ) { ?>

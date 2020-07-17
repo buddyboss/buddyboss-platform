@@ -1836,12 +1836,18 @@ window.bp = window.bp || {};
 						'position': coverImage.attr( 'data-top' ),
 					}
 				).done( function ( $response ) {
-					if ( $response.success && $response.data && $response.data.content ) {
+					if ( $response.success && $response.data && '' !== $response.data.content ) {
 						saveButton.removeClass('loading');
 						saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 						saveButton.closest('#header-cover-image:not(.has-position)').addClass('has-position');
 						coverImage.css( { 'top': $response.data.content + 'px' } );
-					}
+					} else {
+						saveButton.removeClass('loading');
+						saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+				}
+				} ).fail( function ( $response ) {
+					saveButton.removeClass('loading');
+					saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				} );
 
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-cancel' ) ){
