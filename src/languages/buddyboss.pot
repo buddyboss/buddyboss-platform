@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-15 14:07:39+00:00\n"
+"POT-Creation-Date: 2020-07-17 04:07:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -520,7 +520,7 @@ msgstr ""
 #: bp-core/classes/class-bp-email-tokens.php:867
 #: bp-forums/admin/metaboxes.php:109 bp-forums/admin/settings.php:329
 #: bp-forums/replies/template.php:50 bp-forums/replies/template.php:1679
-#: bp-forums/topics/template.php:3095
+#: bp-forums/replies/template.php:1722 bp-forums/topics/template.php:3095
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:401
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:873
 #. translators: accessibility text
