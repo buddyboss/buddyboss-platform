@@ -124,7 +124,6 @@ before_install:
   - node --version
   - npm install -g grunt-cli
   - npm --version
-  - npm rebuild node-sass
   - mysql --version
   - phpenv versions
   - php --version
@@ -145,6 +144,7 @@ before_script:
   - mkdir -p /tmp/node/node_modules
   - ln -s /tmp/node/node_modules $plugin_dir/node_modules
   - npm install
+  - npm rebuild node-sass
 
 # Run tests
 script: grunt $BP_TRAVISCI
