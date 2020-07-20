@@ -272,6 +272,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				if ( array_filter( $thread_extra_content ) ) {
 					$response = array_merge( $response, $thread_extra_content );
 				}
+
+				$response['avatars'] = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
 			}
 		}
 
@@ -966,6 +968,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false;
+		$threads->threads[ $i ]['avatars'] = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
 
 		$i += 1;
 	endwhile;
