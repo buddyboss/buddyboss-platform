@@ -174,7 +174,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** Discussion Title */
 
 	if ( ! empty( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = esc_attr( strip_tags( $_POST['bbp_topic_title'] ) );
+		$topic_title = sanitize_text_field( $_POST['bbp_topic_title'] );
 	}
 
 	// Filter and sanitize.
