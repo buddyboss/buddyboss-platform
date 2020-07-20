@@ -1960,3 +1960,18 @@ function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old
 	bp_xprofile_update_display_name( $user_id );
 }
 add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
+
+/**
+ * Reset cover image position while uploading/deleting profile cover photo.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int $user_id User ID.
+ */
+function bp_xprofile_cover_image_position_reset( $user_id ) {
+	if ( ! empty( (int) $user_id ) ) {
+		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
+	}
+}
+add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_cover_image_position_reset', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_cover_image_position_reset', 10, 1 );
