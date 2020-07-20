@@ -132,7 +132,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	}
 
 	// Validate subject and message content.
-	if ( empty( $_POST['message_content'] ) ) {
+	if ( empty( $_POST['message_content'] ) || ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['message_content'] ) ) ) ) ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 
 		wp_send_json_error( $response );
@@ -313,7 +313,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['content'] ) || empty( $_POST['thread_id'] ) ) {
+	if ( empty( $_POST['content'] ) || ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ) ) ) ) || empty( $_POST['thread_id'] ) ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
 
 		wp_send_json_error( $response );
@@ -1708,6 +1708,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
+			unset($thread->feedback_error);
 		}
 	}
 
