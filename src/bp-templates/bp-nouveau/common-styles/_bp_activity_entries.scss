@@ -321,6 +321,10 @@
 				color: #0061ac;
 			}
 
+			.edit-activity:before {
+				content: "\e80c";
+			}
+
 			.delete-activity:before {
 				content: "\eaea";
 			}

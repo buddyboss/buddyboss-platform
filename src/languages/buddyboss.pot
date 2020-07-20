@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-15 08:24:26+00:00\n"
+"POT-Creation-Date: 2020-07-20 07:02:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -405,7 +405,7 @@ msgstr ""
 #: bp-forums/topics/template.php:54 bp-forums/topics/template.php:2575
 #: bp-groups/classes/class-bp-groups-list-table.php:570
 #: bp-invites/bp-invites-admin.php:268
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:586
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:497
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1257
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1334
 #: bp-templates/bp-nouveau/includes/document/ajax.php:411
@@ -551,8 +551,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
 #: bp-core/admin/settings/bp-admin-setting-activity.php:79
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:581
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:585
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:492
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:496
 msgid "Edit Activity"
 msgstr ""
 
@@ -972,8 +972,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:148
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:266
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:12
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:553
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:554
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:912
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
@@ -2983,7 +2983,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:255
-msgid "Allow your users to edit their activity after posting"
+msgid "Allow your members to edit their activity after posting"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:269
@@ -2991,11 +2991,11 @@ msgid "Display activity in separate tabs based on activity type"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:283
-msgid "Allow your users to follow the activity of each other on their timeline"
+msgid "Allow your members to follow the activity of each other on their timeline"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:297
-msgid "Allow your users to \"Like\" each other's activity posts"
+msgid "Allow your members to \"Like\" each other's activity posts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:312

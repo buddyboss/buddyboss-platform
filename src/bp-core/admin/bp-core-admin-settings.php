@@ -249,10 +249,25 @@ function bp_admin_setting_callback_enable_activity_autoload() {
  * @since BuddyBoss 1.2.1
  */
 function bp_admin_setting_callback_enable_activity_edit() {
+	$edit_times = bp_activity_edit_times();
+	$edit_time = bp_get_activity_edit_time();
 	?>
 
 	<input id="_bp_enable_activity_edit" name="_bp_enable_activity_edit" type="checkbox" value="1" <?php checked( bp_is_activity_edit_enabled( false ) ); ?> />
-	<label for="_bp_enable_activity_edit"><?php _e( 'Allow your members to edit their activity after posting', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_edit"><?php _e( 'Allow members to edit their activity posts for', 'buddyboss' ); ?></label>
+
+	<select name="_bp_activity_edit_time">
+		<option value="-1"> <?php _e('Anytime', 'buddyboss'); ?> </option>
+
+		<?php foreach ( $edit_times as $time ) {
+
+			$value = isset( $time['value'] ) ? $time['value'] : 0;
+			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
+
+			echo "<option value='{$value}' " .selected( $edit_time, $value, false ). " > {$time_level} </option>";
+		} ?>
+
+	</select>
 
 	<?php
 }

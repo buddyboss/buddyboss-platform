@@ -2151,6 +2151,10 @@ input.search-query-input {
   color: #0061ac;
 }
 
+.activity-list .activity-item .bp-generic-meta.action .edit-activity:before {
+  content: "\e80c";
+}
+
 .activity-list .activity-item .bp-generic-meta.action .delete-activity:before {
   content: "\eaea";
 }
@@ -3506,6 +3510,7 @@ form.ac-form .ac-reply-content input {
   margin-right: 0;
 }
 
+/** Modal **/
 .edit-activity-modal {
   position: fixed;
   right: 0;

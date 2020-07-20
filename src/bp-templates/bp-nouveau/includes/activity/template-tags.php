@@ -478,6 +478,30 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				),
 			);
 
+			if ( bp_is_activity_edit_enabled( false ) ) {
+
+				$buttons['activity_edit'] = array(
+					'id' => 'activity_edit',
+					'position' => 30,
+					'component' => 'activity',
+					'parent_element' => $parent_element,
+					'parent_attr' => $parent_attr,
+					'must_be_logged_in' => true,
+					'button_element' => $button_element,
+					'button_attr' => array(
+						'href' => '#',
+						'class' => 'button edit-activity bp-secondary-action bp-tooltip',
+						'title' => __('Edit Activity', 'buddyboss'),
+					),
+					'link_text' => sprintf(
+						'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+						__('Edit Activity', 'buddyboss'),
+						__('Edit', 'buddyboss')
+					),
+				);
+
+			}
+
 			// If button element set add href link to data-attr
 			if ( 'button' === $button_element ) {
 				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
@@ -564,26 +588,6 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
 				esc_html( $delete_args['data_bp_tooltip'] ),
 				esc_html( $delete_args['data_bp_tooltip'] )
-			),
-		);
-
-		$buttons['activity_edit'] = array(
-			'id'                => 'activity_edit',
-			'position'          => 55,
-			'component'         => 'activity',
-			'parent_element'    => $parent_element,
-			'parent_attr'       => $parent_attr,
-			'must_be_logged_in' => true,
-			'button_element'    => $button_element,
-			'button_attr'       => array(
-				'href'            => '#',
-				'class'           => 'button edit bp-secondary-action bp-tooltip',
-				'title'           => __( 'Edit Activity', 'buddyboss' ),
-			),
-			'link_text' => sprintf(
-				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-				__( 'Edit Activity', 'buddyboss' ),
-				__( 'Edit', 'buddyboss' )
 			),
 		);
 

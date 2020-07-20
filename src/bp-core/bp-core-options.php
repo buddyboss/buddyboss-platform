@@ -926,6 +926,49 @@ function bp_is_activity_edit_enabled( $default = false ) {
 }
 
 /**
+ * @param null $time Return single time slot by time key
+ * @return mixed|void
+ */
+
+function bp_activity_edit_times( $time = null ){
+
+	$times = apply_filters(
+		'bp_activity_edit_times',
+		array(
+			'ten_minutes' 	=> array( 'value' => ( 60 * 10), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+			'one_hour' 		=> array( 'value' => ( 60 * 60), 'label' => __( '1 Hour', 'buddyboss' ) ),
+			'three_hours' 	=> array( 'value' => ( 60 * 60 * 3), 'label' => __( '1 Hours', 'buddyboss' ) ),
+			'one_day'     	=> array( 'value' => ( 60 * 60 * 24), 'label' => __( '1 Day', 'buddyboss' ) ),
+			'seven_days' 	=> array( 'value' => ( 60 * 60 * 24 * 7), 'label' => __( '7 Days', 'buddyboss' ) ),
+			'thirty_days' 	=> array( 'value' => ( 60 * 60 * 24 * 30), 'label' => __( '30 Days', 'buddyboss' ) ),
+		)
+	);
+
+	if ( $time && isset( $times[ $time ] ) ){
+		return $times[ $time ];
+	}
+
+	return $times;
+}
+
+if ( ! function_exists( 'bp_get_activity_edit_time' ) ) {
+
+	/**
+	 * @param bool $default when option not found, function will return $default value
+	 * @return mixed|void
+	 *
+	 * Get BuddyBoss Activity Time option
+	 *
+	 * @since BuddyBoss @todo: required version number
+	 */
+
+	function bp_get_activity_edit_time( $default = false )
+	{
+		return apply_filters('_bp_activity_edit_time', bp_get_option('_bp_activity_edit_time', $default));
+	}
+
+}
+/**
  * Check whether Activity Tabs are enabled.
  *
  * @since BuddyBoss 1.1.6

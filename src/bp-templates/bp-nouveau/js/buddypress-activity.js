@@ -1186,7 +1186,7 @@ window.bp = window.bp || {};
 			}
 
 			// Edit the activity
-			if ( target.hasClass( 'edit' ) ) {
+			if ( target.hasClass( 'edit-activity' ) ) {
 				// Stop event propagation
 				event.preventDefault();
 

@@ -21,6 +21,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$this->tab_label = __( 'Activity', 'buddyboss' );
 		$this->tab_name  = 'bp-activity';
 		$this->tab_order = 40;
+
+		$this->update_extra_settings();
 	}
 
 	public function is_active() {
@@ -180,6 +182,22 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		 * @param Object $this BP_Admin_Setting_Activity.
 		 */
 		do_action( 'bp_admin_setting_activity_register_fields', $this );
+	}
+
+	public function update_extra_settings(){
+
+		if ( isset( $_POST['_bp_activity_edit_time'] ) ){
+
+			$time = sanitize_text_field( $_POST['_bp_activity_edit_time'] );
+
+			if ( $time !== '-1' ){
+				bp_update_option( '_bp_activity_edit_time', $time );
+			}else{
+				bp_delete_option( '_bp_activity_edit_time' );
+			}
+
+		}
+
 	}
 
 }
