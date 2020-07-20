@@ -528,6 +528,11 @@ window.bp = window.bp || {};
 			$.each(
 				this.objects,
 				function( o, object ) {
+					// Continue when ajax is blocked for object request.
+					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+						return;
+					}
+
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );

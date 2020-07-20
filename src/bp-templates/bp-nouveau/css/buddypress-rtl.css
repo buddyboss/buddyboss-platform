@@ -14728,6 +14728,20 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   text-align: left !important;
 }
 
+.modal-container .error-box,
+#bp-media-create-folder .error-box {
+  display: none;
+  line-height: 1.3;
+  margin-top: 5px;
+}
+
+.modal-container #bb-album-child-title.error + .error-box,
+.modal-container #bb-album-title.error + .error-box,
+#bp-media-create-folder #bb-album-child-title.error + .error-box,
+#bp-media-create-folder #bb-album-title.error + .error-box {
+  display: block;
+}
+
 .modal-container.has-folderlocationUI .bb-model-footer a.saving, .modal-container.has-folderlocationUI .bb-model-footer a.loading {
   pointer-events: none;
 }

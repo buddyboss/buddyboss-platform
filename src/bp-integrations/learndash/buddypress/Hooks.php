@@ -44,6 +44,7 @@ class Hooks {
 
 		add_action( 'groups_member_after_save', array( $this, 'groupMemberAdded' ) );
 		add_action( 'groups_member_after_remove', array( $this, 'groupMemberRemoved' ) );
+		add_action( 'bp_groups_member_after_delete', array( $this, 'groupMemberDeleted' ), 999, 2 );
 	}
 
 	/**
@@ -128,5 +129,26 @@ class Hooks {
 		}
 
 		return do_action( 'bp_ld_sync/buddypress_group_member_removed', $groupId, $memberId, $groupMemberObject );
+	}
+
+	/**
+	 * Hook on user group deleted.
+	 *
+	 * @param $user_id
+	 * @param $group_id
+	 */
+	public function groupMemberDeleted( $user_id, $group_id ) {
+		$groupId  = $group_id;
+		$memberId = $user_id;
+		$group    = groups_get_group( $groupId );
+
+		if ( $group->is_admin ) {
+			return do_action( 'bp_ld_sync/buddypress_group_admin_removed', $groupId, $memberId, $group );
+		}
+		if ( $group->is_mod ) {
+			return do_action( 'bp_ld_sync/buddypress_group_mod_removed', $groupId, $memberId, $group );
+		}
+
+		return do_action( 'bp_ld_sync/buddypress_group_member_removed', $groupId, $memberId, $group );
 	}
 }
