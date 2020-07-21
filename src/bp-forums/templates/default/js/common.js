@@ -110,7 +110,6 @@ jQuery( document ).ready(
 							events: {
 								ready: function () {
 									if (typeof window.forums_medium_topic_editor !== 'undefined' && typeof window.forums_medium_topic_editor[key] !== 'undefined') {
-										window.forums_medium_topic_editor[key].setContent( jQuery('#'+elem_id).closest('form').find( '#bbp_topic_content' ).val() );
 										window.forums_medium_topic_editor[key].resetContent();
 									}
 									if (typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[key] !== 'undefined') {
