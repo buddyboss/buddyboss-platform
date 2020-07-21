@@ -56,6 +56,7 @@ function messages_new_message( $args = '' ) {
 			'append_thread' => true,
 			'is_hidden'     => false,
 			'mark_visible'  => false,
+			'group_thread'  => false,
 			'error_type'    => 'bool',
 		),
 		'messages_new_message'
