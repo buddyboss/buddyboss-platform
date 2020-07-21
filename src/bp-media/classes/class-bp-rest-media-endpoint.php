@@ -28,6 +28,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		add_filter( 'bp_rest_activity_create_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
 		add_filter( 'bp_rest_activity_update_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
+		add_filter( 'bp_rest_activity_comment_create_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
 
 		add_filter( 'bp_rest_topic_create_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
 		add_filter( 'bp_rest_topic_update_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
@@ -1502,7 +1503,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				$media_activity_id = false;
 
 				// make an activity for the media.
-				if ( bp_is_active( 'activity' ) ) {
+				if ( bp_is_active( 'activity' ) && ( count( $upload_ids ) > 1 || empty( $activity_id ) ) ) {
 					$media_activity_id = bp_activity_post_update(
 						array(
 							'hide_sitewide' => true,
@@ -1513,6 +1514,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						// update activity meta.
 						bp_activity_update_meta( $media_activity_id, 'bp_media_activity', '1' );
 					}
+				} else {
+					$media_activity_id = $activity_id;
 				}
 
 				// extract the nice title name.
@@ -1593,6 +1596,34 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		bp_rest_register_field(
 			'activity',      // Id of the BuddyPress component the REST field is about.
+			'media_gif', // Used into the REST response/request.
+			array(
+				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),
+				'update_callback' => array( $this, 'bp_gif_data_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
+				'schema'          => array(
+					'description' => 'Topic Gifs.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		register_rest_field(
+			'activity_comments',      // Id of the BuddyPress component the REST field is about.
+			'bp_media_ids', // Used into the REST response/request.
+			array(
+				'get_callback'    => array( $this, 'bp_media_ids_get_rest_field_callback' ),    // The function to use to get the value of the REST Field.
+				'update_callback' => array( $this, 'bp_media_ids_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
+				'schema'          => array(                                // The example_field REST schema.
+					'description' => 'Activity Medias.',
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+			)
+		);
+
+		register_rest_field(
+			'activity_comments',      // Id of the BuddyPress component the REST field is about.
 			'media_gif', // Used into the REST response/request.
 			array(
 				'get_callback'    => array( $this, 'bp_gif_data_get_rest_field_callback' ),

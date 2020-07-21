@@ -348,9 +348,39 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 				'bp_rest_friends_create_item_failed',
 				__( 'There was a problem confirming if user is a valid one.', 'buddyboss' ),
 				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		// Check if users are friends or if there is a friendship request.
+		if ( 'not_friends' !== friends_check_friendship_status( $initiator_id->ID, $friend_id->ID ) ) {
+			return new WP_Error(
+				'bp_rest_friends_create_item_failed',
+				__( 'Those users are already friends or have sent friendship request(s) recently.', 'buddyboss' ),
+				array(
 					'status' => 500,
 				)
 			);
+		}
+
+		$is_moderator = bp_current_user_can( 'bp_moderate' );
+
+		// Only admins can create friendship requests for other people.
+		if ( ! in_array( bp_loggedin_user_id(), array( $initiator_id->ID, $friend_id->ID ), true ) && ! $is_moderator ) {
+			return new WP_Error(
+				'bp_rest_friends_create_item_failed',
+				__( 'You are not allowed to perform this action.', 'buddyboss' ),
+				array(
+					'status' => 403,
+				)
+			);
+		}
+
+		// Only admins can force a friendship request.
+		$force = false;
+		if ( true === $request->get_param( 'force' ) && $is_moderator ) {
+			$force = true;
 		}
 
 		// Adding friendship.
@@ -359,7 +389,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 				'bp_rest_friends_create_item_failed',
 				__( 'There was an error trying to create the friendship.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 404,
 				)
 			);
 		}
@@ -368,6 +398,16 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 		$friendship = $this->get_friendship_object(
 			BP_Friends_Friendship::get_friendship_id( $initiator_id->ID, $friend_id->ID )
 		);
+
+		if ( ! $friendship || empty( $friendship->id ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_id',
+				__( 'Friendship does not exist.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $friendship, $request )
@@ -449,7 +489,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 				'bp_rest_friends_cannot_update_item',
 				__( 'Could not accept friendship.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 404,
 				)
 			);
 		}

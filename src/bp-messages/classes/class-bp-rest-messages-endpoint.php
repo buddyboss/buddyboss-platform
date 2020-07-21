@@ -183,8 +183,12 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 */
 		$args = apply_filters( 'bp_rest_messages_get_items_query_args', $args, $request );
 
+		add_filter( 'bp_messages_default_per_page', array( $this, 'bp_rest_messages_default_per_page' ) );
+
 		// Actually, query it.
 		$messages_box = new BP_Messages_Box_Template( $args );
+
+		remove_filter( 'bp_messages_default_per_page', array( $this, 'bp_rest_messages_default_per_page' ) );
 
 		$retval = array();
 		if ( ! empty( $messages_box->threads ) ) {
@@ -392,6 +396,16 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function create_item( $request ) {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
+
+		if( empty( $request['id'] ) && empty( $request['recipients'] ) ) {
+			return new WP_Error(
+				'bp_rest_empty_recipients',
+				__( 'Please, enter recipients user IDs.', 'buddyboss' ),
+				array(
+					'status' => 400,
+				)
+			);
+		}
 
 		$message_object = $this->prepare_item_for_database( $request );
 		// Create the message or the reply.
@@ -840,8 +854,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		// Get the thread before it's deleted.
-		$thread   = $this->get_thread_object( $request['id'] );
-		$previous = $this->prepare_item_for_response( $thread, $request );
+		$thread             = $this->get_thread_object( $request['id'] );
+		$thread->recipients = $thread->get_recipients( $thread->thread_id );
+		$previous           = $this->prepare_item_for_response( $thread, $request );
 
 		$user_id = bp_loggedin_user_id();
 		if ( ! empty( $request['user_id'] ) ) {
@@ -977,6 +992,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function prepare_message_for_response( $message, $request ) {
 		global $wpdb;
 
+		$group_name = '';
 		$group_id                  = bp_messages_get_meta( $message->id, 'group_id', true );
 		$group_message_users       = bp_messages_get_meta( $message->id, 'group_message_users', true );
 		$group_message_type        = bp_messages_get_meta( $message->id, 'group_message_type', true );
@@ -989,8 +1005,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$message_unbanned          = bp_messages_get_meta( $message->id, 'group_message_group_un_ban', true );
 		$message_deleted           = bp_messages_get_meta( $message->id, 'bp_messages_deleted', true );
 
-		if ( ! empty( $group_id ) && ! empty( $message_from ) && 'group' === $message_from ) {
-
+		if ( ! empty( $group_id ) ) {
 			// Get Group Name.
 			if ( bp_is_active( 'groups' ) ) {
 				$group_name = bp_get_group_name( groups_get_group( $group_id ) );
@@ -1002,30 +1017,34 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				$group_name = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 				$group_link = '';
 			}
+		}
+
+
+		if ( ! empty( $group_id ) && ! empty( $message_from ) && 'group' === $message_from ) {
 
 			if ( empty( $group_name ) ) {
 				$group_name = '"' . __( 'Deleted Group', 'buddyboss' ) . '"';
 				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: %s: Group name */
+					/* translators: %s: Group name */
 						__( 'Sent from group %s to all group members.', 'buddyboss' ),
 						$group_name
 					);
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: %s: Group name */
+					/* translators: %s: Group name */
 						__( 'Sent from group %s to the people in this conversation.', 'buddyboss' ),
 						$group_name
 					);
 				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: %s: Group name */
+					/* translators: %s: Group name */
 						__( 'Sent from group %s individually to all group members.', 'buddyboss' ),
 						$group_name
 					);
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: %s: Group name */
+					/* translators: %s: Group name */
 						__( 'Sent from group %s to individual members.', 'buddyboss' ),
 						$group_name
 					);
@@ -1033,28 +1052,28 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			} else {
 				if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: 1: Group link. 2: Group name. */
+					/* translators: 1: Group link. 2: Group name. */
 						__( 'Sent from group <a href="%1$s">%2$s</a> to all group members.', 'buddyboss' ),
 						$group_link,
 						$group_name
 					);
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: 1: Group link. 2: Group name. */
+					/* translators: 1: Group link. 2: Group name. */
 						__( 'Sent from group <a href="%1$s">%2$s</a> to the people in this conversation.', 'buddyboss' ),
 						$group_link,
 						$group_name
 					);
 				} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: 1: Group link. 2: Group name. */
+					/* translators: 1: Group link. 2: Group name. */
 						__( 'Sent from group <a href="%1$s">%2$s</a> individually to all group members.', 'buddyboss' ),
 						$group_link,
 						$group_name
 					);
 				} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
 					$group_text = sprintf(
-						/* translators: 1: Group link. 2: Group name. */
+					/* translators: 1: Group link. 2: Group name. */
 						__( 'Sent from group <a href="%1$s">%2$s</a> to individual members.', 'buddyboss' ),
 						$group_link,
 						$group_name
@@ -1307,11 +1326,11 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$recepients     = $thread->recipients;
 			$curren_user_id = ( isset( $request['user_id'] ) && ! empty( $request['user_id'] ) ? $request['user_id'] : bp_current_user_id() );
 
-			if ( array_key_exists( $curren_user_id, $recepients ) ) {
+			if ( ! empty( $recepients ) && array_key_exists( $curren_user_id, $recepients ) ) {
 				unset( $recepients[ $curren_user_id ] );
 			}
 
-			if ( count( $recepients ) > 1 ) {
+			if ( ! empty( $recepients ) && count( $recepients ) > 1 ) {
 				$avatar = array(
 					'full'  => bp_core_fetch_avatar(
 						array(
@@ -1330,7 +1349,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					),
 				);
 			} else {
-				$avatar_user = ! empty( reset( $recepients ) ) ? reset( $recepients )->user_id : $curren_user_id;
+				$avatar_user = ! empty( $recepients ) && ! empty( reset( $recepients ) ) ? reset( $recepients )->user_id : $curren_user_id;
 				$avatar      = array(
 					'full'  => bp_core_fetch_avatar(
 						array(
@@ -1403,6 +1422,8 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				$data['recipients'][ $recipient->user_id ] = $this->prepare_recipient_for_response( $recipient, $request );
 			}
 		}
+
+		$data['avatar'] = $this->bp_rest_messages_get_avatars( $thread->thread_id );
 
 		// Pluck starred message ids.
 		$data['starred_message_ids'] = array_keys( array_filter( wp_list_pluck( $data['messages'], 'is_starred', 'id' ) ) );
@@ -1478,7 +1499,10 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	 * @since 0.1.0
 	 */
 	public function get_thread_object( $thread_id ) {
-		return new BP_Messages_Thread( $thread_id );
+		add_filter( 'bp_messages_default_per_page', array( $this, 'bp_rest_messages_default_per_page' ) );
+		$thread = new BP_Messages_Thread( $thread_id );
+		remove_filter( 'bp_messages_default_per_page', array( $this, 'bp_rest_messages_default_per_page' ) );
+		return $thread;
 	}
 
 	/**
@@ -1533,7 +1557,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			$args['message']['description'] = __( 'Content of the Message to add to the Thread.', 'buddyboss' );
 
 			// Edit recipients properties.
-			$args['recipients']['required']          = true;
+			$args['recipients']['required']          = false;
 			$args['recipients']['items']             = array( 'type' => 'integer' );
 			$args['recipients']['sanitize_callback'] = 'wp_parse_id_list';
 			$args['recipients']['validate_callback'] = 'rest_validate_request_arg';
@@ -1976,5 +2000,142 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		}
 
 		return $result;
+	}
+
+	public function bp_rest_messages_get_avatars( $thread_id, $user_id = 0 ) {
+		global $wpdb;
+
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		$avatar_urls      = array();
+		$avatars_user_ids = array();
+		$thread_messages  = BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
+		$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+
+		if ( count( $recepients ) > 2 ) {
+			foreach ( $thread_messages as $message ) {
+				if ( $message->sender_id !== $user_id ) {
+
+					if ( count( $avatars_user_ids ) >= 2 ) {
+						continue;
+					}
+
+					if ( ! in_array( $message->sender_id, $avatars_user_ids ) ) {
+						$avatars_user_ids[] = $message->sender_id;
+					}
+				}
+			}
+		} else {
+			unset( $recepients[ $user_id ] );
+			$avatars_user_ids[] = current( $recepients )->user_id;
+		}
+
+		if ( count( $recepients ) > 2 && count( $avatars_user_ids ) < 2 ) {
+			unset( $recepients[ $user_id ] );
+			if ( count( $avatars_user_ids ) === 0 ) {
+				$avatars_user_ids = array_slice( array_keys( $recepients ), 0, 2 );
+			} else {
+				unset( $recepients[ $avatars_user_ids[0] ] );
+				$avatars_user_ids = array_merge( $avatars_user_ids, array_slice( array_keys( $recepients ), 0, 1 ) );
+			}
+		}
+
+		if ( ! empty( $avatars_user_ids ) ) {
+			$avatars_user_ids = array_reverse( $avatars_user_ids );
+			foreach ( (array) $avatars_user_ids as $avatar_user_id ) {
+				$avatar_urls[] = array(
+					'full'  => bp_core_fetch_avatar(
+						array(
+							'item_id' => $avatar_user_id,
+							'html'    => false,
+							'type'    => 'full',
+							'object'  => 'user',
+						)
+					),
+					'thumb' => bp_core_fetch_avatar(
+						array(
+							'item_id' => $avatar_user_id,
+							'html'    => false,
+							'object'  => 'user',
+						)
+					),
+				);
+			}
+		}
+
+
+		$first_message    = end( $thread_messages );
+		$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
+		$group_id         = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
+		if ( ! empty( $first_message_id ) && ! empty( $group_id ) ) {
+			$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group
+			$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual
+			$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private
+
+			if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
+				if ( bp_is_active( 'groups' ) ) {
+					$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+					$group_avatar = array(
+						'thumb' => bp_core_fetch_avatar(
+							array(
+								'html'    => false,
+								'object'  => 'group',
+								'item_id' => $group_id,
+								'type'    => 'thumb',
+							)
+						),
+						'full'  => bp_core_fetch_avatar(
+							array(
+								'html'    => false,
+								'object'  => 'group',
+								'item_id' => $group_id,
+								'type'    => 'full',
+							)
+						),
+					);
+				} else {
+					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+					$groups_table             = $prefix . 'bp_groups';
+					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+					$legacy_group_avatar_name = '-groupavatar-full';
+					$legacy_user_avatar_name  = '-avatar2';
+
+					if ( ! empty( $group_name ) ) {
+						$directory         = 'group-avatars';
+						$avatar_size       = '-bpfull';
+						$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+						$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+						$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
+						if ( '' !== $avatar ) {
+							$group_avatar = array(
+								'thumb' => $avatar,
+								'full'  => $avatar,
+							);
+						}
+					}
+				}
+
+				if ( ! empty( $group_avatar ) ) {
+					$avatar_urls = array( $group_avatar );
+				}
+			}
+		}
+
+		return apply_filters( 'bp_rest_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+	}
+
+	/**
+	 * Removed Pagination from Messages.
+	 *
+	 * @param int $count Message Per Page.
+	 *
+	 * @return int
+	 */
+	public function bp_rest_messages_default_per_page( $count ) {
+		return 99999999;
 	}
 }

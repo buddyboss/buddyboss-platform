@@ -1436,6 +1436,22 @@ define({ "api": [
     "groupTitle": "Email_Invites"
   },
   {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/invites/profile-type",
+    "title": "Invites Profile Type",
+    "name": "GetBBInvitesProfileType",
+    "group": "Email_Invites",
+    "description": "<p>Retrieve Sent Invites Profile Type.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "groupTitle": "Email_Invites"
+  },
+  {
     "type": "POST",
     "url": "/wp-json/buddyboss/v1/reply/action/:id",
     "title": "Reply Actions",
@@ -4042,6 +4058,20 @@ define({ "api": [
             "optional": true,
             "field": "types",
             "description": "<p>Set type(s) for a group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "append_types",
+            "description": "<p>Append type(s) for a group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "remove_types",
+            "description": "<p>Remove type(s) for a group.</p>"
           }
         ]
       }
@@ -7379,7 +7409,7 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Array",
             "optional": true,
             "field": "value",
             "description": "<p>The list of values for the field data.</p>"
