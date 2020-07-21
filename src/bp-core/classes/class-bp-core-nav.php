@@ -306,6 +306,10 @@ class BP_Core_Nav {
 			// Default position
 			$position = 99;
 
+			if ( ! is_admin() && isset( $item->is_hidden ) && true === $item->is_hidden ) {
+				continue;
+			}
+
 			if ( isset( $item->position ) ) {
 				$position = (int) $item->position;
 			}

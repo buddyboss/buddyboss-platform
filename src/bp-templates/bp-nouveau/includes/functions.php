@@ -565,9 +565,11 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
  *
  */
 function bp_nouveau_get_appearance_settings( $option = '' ) {
+
 	$default_args = array(
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
 		'user_nav_order'     => array(),
+		'user_nav_hide'      => array(),
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
@@ -591,6 +593,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'group_front_description' => 0,
 			'group_nav_display'       => 0,       // O is default (horizontally). 1 is vertically.
 			'group_nav_order'         => array(),
+			'group_nav_hide'          => array(),
 			'groups_layout'           => 4,
 			'members_group_layout'    => 4,
 			'groups_dir_layout'       => 0,
@@ -633,6 +636,23 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  *
  */
 function bp_nouveau_sanitize_nav_order( $option = '' ) {
+	if ( ! is_array( $option ) ) {
+		$option = explode( ',', $option );
+	}
+
+	return array_map( 'sanitize_key', $option );
+}
+
+/**
+ * Sanitize a list of slugs to save it as an array
+ *
+ * @param string $option A comma separated list of nav items slugs.
+ *
+ * @return array An array of nav items slugs.
+ * @since BuddyPress 3.0.0
+ *
+ */
+function bp_nouveau_sanitize_nav_hide( $option = '' ) {
 	if ( ! is_array( $option ) ) {
 		$option = explode( ',', $option );
 	}
@@ -1495,6 +1515,12 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 		return false;
 	}
 
+
+	$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
+	if ( empty( $parent_slug ) ){
+		$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
+	}
+
 	$position = 0;
 
 	foreach ( $order as $slug ) {
@@ -1509,6 +1535,10 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 
 		if ( ! $item_nav ) {
 			continue;
+		}
+
+		if ( is_array( $hidden_tabs ) && ! empty( $hidden_tabs ) && in_array( $slug, $hidden_tabs, true ) ) {
+			$nav->edit_nav( array( 'is_hidden' => true ), $slug, $parent_slug );
 		}
 
 		if ( (int) $item_nav->position !== (int) $position ) {
