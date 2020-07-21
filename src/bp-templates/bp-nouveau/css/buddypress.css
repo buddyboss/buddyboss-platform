@@ -4205,6 +4205,7 @@ body.no-js .single-item-header .js-self-profile-button {
 #buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
   content: "\e838";
   font-family: "bb-icons";
+  /* stylelint-disable-line */
   font-size: 18px;
   line-height: 1;
   margin-left: 10px;
@@ -5367,7 +5368,7 @@ body.register .buddypress-wrap .page ul {
   #buddypress #item-header .header-cover-img {
     display: block;
   }
-  #buddypress #item-header #header-cover-image {
+  #buddypress #item-header #header-cover-image.has-cover-image {
     background-image: none;
   }
 }

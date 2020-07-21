@@ -5,6 +5,7 @@
  * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
+$has_cover_image = '';
 $has_cover_image_position = '';
 $displayed_user = bp_get_displayed_user();
 $cover_image_url = bp_attachments_get_attachment(
@@ -21,13 +22,14 @@ $cover_image_url = bp_attachments_get_attachment(
 	<?php
 		if ( ! empty( $cover_image_url ) ) {
 			$cover_image_position = bp_get_user_meta( bp_displayed_user_id(), 'bp_cover_position', true );
+			$has_cover_image = ' has-cover-image';
 			if ( '' !== $cover_image_position ) {
 				$has_cover_image_position = 'has-position';
 			}
 		}
 	?>
 
-	<div id="header-cover-image" class="<?php echo $has_cover_image_position; ?>">
+	<div id="header-cover-image" class="<?php echo $has_cover_image_position; echo $has_cover_image; ?>">
 		<?php
 		if ( ! empty( $cover_image_url ) ) {
 			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '"' . ( '' !== $cover_image_position ? ' data-top="' . $cover_image_position . '"' : '' ) . ( '' !== $cover_image_position ? ' style="top: ' . $cover_image_position . 'px"' : '' ) . ' alt="" />';

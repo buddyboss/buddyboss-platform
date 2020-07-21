@@ -12,6 +12,7 @@ $group_avatar = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 
 $group_cover_image = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups','item_id' => bp_get_group_id() ) );
+$has_cover_image = '';
 $has_cover_image_position = '';
 
 ?>
@@ -21,13 +22,14 @@ $has_cover_image_position = '';
 	<?php
 		if ( ! empty( $group_cover_image ) ) {
 			$group_cover_position = groups_get_groupmeta( bp_get_current_group_id(), 'bp_cover_position', true );
+			$has_cover_image = ' has-cover-image';
 			if ( '' !== $group_cover_position ) {
 				$has_cover_image_position = 'has-position';
 			}
 		}
 	?>
 
-	<div id="header-cover-image" class="<?php echo $has_cover_image_position; ?>">
+	<div id="header-cover-image" class="<?php echo $has_cover_image_position; echo $has_cover_image; ?>">
 		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) {
 
 			if ( ! empty( $group_cover_image ) ) {
