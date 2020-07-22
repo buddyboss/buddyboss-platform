@@ -341,7 +341,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_styles( $page ) {
 
-		if ( $page == 'plugin-editor.php' || $page == 'theme-editor.php' ) {
+		if ( $page === 'plugin-editor.php' || $page === 'theme-editor.php' ) {
 			return;
 		}
 
