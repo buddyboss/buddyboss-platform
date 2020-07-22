@@ -2712,6 +2712,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity {
   position: relative;
+  /* smartphones, touchscreens */
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity.is-visible .media-action-wrap, .bb-activity-media-wrap .bb-activity-media-elem.media-activity:hover .media-action-wrap {
@@ -2867,6 +2868,16 @@ span.dashicons.dashicons-admin-file:before {
   z-index: 101;
   opacity: 1;
   visibility: visible;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap {
+    opacity: 1;
+    visibility: visible;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.media-activity.hideact-grid-1-2 .media-action-wrap {
+    display: none;
+  }
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity {
@@ -14918,8 +14929,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   color: #a5a7ab;
 }
 
-.bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder,
-.bp-media-move-folder .bb-model-footer a.bp-document-open-create-popup-folder {
+.bp-media-move-file .bb-model-footer a.bp-document-open-create-popup-folder, .bp-media-move-file .bb-model-footer a.bp-media-open-create-popup-folder,
+.bp-media-move-folder .bb-model-footer a.bp-document-open-create-popup-folder,
+.bp-media-move-folder .bb-model-footer a.bp-media-open-create-popup-folder {
   float: left;
   margin-top: 7px;
 }

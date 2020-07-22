@@ -125,6 +125,7 @@ function bp_media_activity_entry() {
 			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
 			echo true === $is_forum_activity ? esc_attr( ' forums-media-wrap' ) : ''; ?>">
 			<?php
+			bp_get_template_part( 'media/media-move' );
 			while ( bp_media() ) {
 				bp_the_media();
 				bp_get_template_part( 'media/activity-entry' );

@@ -17,7 +17,7 @@ $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 
 <div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
 	<div class="media-action-wrap">
-		<a href="<?php echo $download_url; ?>" class="media-action_download" data-id="45" data-activity-id="194912" data-balloon-pos="up" data-balloon="Download">
+		<a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="194912" data-balloon-pos="up" data-balloon="Download">
 			<i class="bb-icon-download"></i>
 		</a>
 
@@ -33,7 +33,7 @@ $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 					<a href="#" data-action="media" data-type="profile" id="2" class="ac-media-move">Move</a>
 				</li>
 				<li class="delete_file">
-					<a class="media-file-delete" data-item-activity-id="194912" data-item-from="activity" data-item-preview-attachment-id="5106" data-item-attachment-id="5106" data-item-id="45" data-type="media" href="#">Delete</a>
+					<a class="media-file-delete" data-item-activity-id="194912" data-item-from="activity" data-item-preview-attachment-id="5106" data-item-attachment-id="5106" data-item-id="<?php bp_document_id(); ?>" data-type="media" href="#">Delete</a>
 				</li>
 			</ul>
 		</div>

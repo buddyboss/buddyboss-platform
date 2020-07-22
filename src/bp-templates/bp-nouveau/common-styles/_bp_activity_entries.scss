@@ -914,7 +914,7 @@ span.dashicons.dashicons-admin-file:before {
 
 		&.is-visible,
 		&:hover {
-		
+
 			.media-action-wrap {
 				opacity: 1;
 				visibility: visible;
@@ -923,7 +923,7 @@ span.dashicons.dashicons-admin-file:before {
 		}
 
 		&.is-visible {
-		
+
 			.media-action-wrap .media-action_list {
 				opacity: 1;
 				visibility: visible;
@@ -1084,6 +1084,20 @@ span.dashicons.dashicons-admin-file:before {
 				}
 			}
 		}
+
+		/* smartphones, touchscreens */
+		@media (hover: none) and (pointer: coarse) {
+
+			.media-action-wrap {
+				opacity: 1;
+				visibility: visible;
+			}
+
+			&.hideact-grid-1-2 .media-action-wrap {
+				display: none;
+			}
+		}
+
 	}
 
 	.bb-activity-media-elem.document-activity {

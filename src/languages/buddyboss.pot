@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-02 07:39:41+00:00\n"
+"POT-Creation-Date: 2020-07-22 13:36:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -538,6 +538,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:24
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:133
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
+#: bp-templates/bp-nouveau/buddypress/media/media-create-folder.php:24
+#: bp-templates/bp-nouveau/buddypress/media/media-move.php:28
 #: bp-templates/bp-nouveau/includes/activity/functions.php:188
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1249
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1326
@@ -587,7 +589,7 @@ msgid "Load Newest"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:1659
-#: bp-activity/bp-activity-filters.php:1861
+#: bp-activity/bp-activity-filters.php:1872
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1655
 #: cli/components/activity.php:763
 msgid "%1$s posted an update in the group %2$s"
@@ -678,7 +680,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:533
 #: bp-core/classes/class-bp-admin.php:534 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:970
+#: bp-media/bp-media-filters.php:985
 msgid "Tools"
 msgstr ""
 
@@ -1233,7 +1235,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:278
 #: bp-forums/classes/class-bp-forums-component.php:329
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:1021 bp-media/bp-media-settings.php:208
+#: bp-media/bp-media-filters.php:1036 bp-media/bp-media-settings.php:208
 #: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
 #: bp-media/bp-media-settings.php:229 bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
@@ -2671,7 +2673,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2369
-#: bp-media/bp-media-filters.php:1062
+#: bp-media/bp-media-filters.php:1077
 msgid "Run Migration"
 msgstr ""
 
@@ -3263,7 +3265,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
-#: bp-media/bp-media-filters.php:1027
+#: bp-media/bp-media-filters.php:1042
 #: bp-templates/bp-nouveau/includes/groups/classes.php:300
 msgid "Discussions"
 msgstr ""
@@ -3280,7 +3282,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:1033
+#: bp-media/bp-media-filters.php:1048
 msgid "Replies"
 msgstr ""
 
@@ -3418,7 +3420,7 @@ msgstr ""
 #: bp-forums/admin/tools.php:1522 bp-forums/admin/tools.php:1524
 #: bp-forums/admin/tools.php:1598 bp-forums/admin/tools.php:1600
 #: bp-forums/admin/tools.php:1672 bp-forums/admin/tools.php:1674
-#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1423
+#: bp-forums/core/capabilities.php:608 bp-media/bp-media-filters.php:1438
 msgid "Complete!"
 msgstr ""
 
@@ -3749,7 +3751,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:1015
+#: bp-media/bp-media-filters.php:1030
 msgid "Media"
 msgstr ""
 
@@ -4630,7 +4632,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:267
 #: bp-media/classes/class-bp-media-component.php:330
 #: bp-media/classes/class-bp-media-theme-compat.php:166
-#: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
+#: bp-templates/bp-nouveau/buddypress/groups/single/photos.php:20
 #: bp-templates/bp-nouveau/includes/customizer.php:176
 #: bp-templates/bp-nouveau/includes/groups/classes.php:281
 #: bp-templates/bp-nouveau/includes/groups/classes.php:361
@@ -7382,13 +7384,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -8285,23 +8287,23 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1010 bp-media/bp-media-filters.php:1515
+#: bp-document/bp-document-filters.php:1024 bp-media/bp-media-filters.php:1530
 msgid "File not found"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1027
+#: bp-document/bp-document-filters.php:1041
 msgid "Go to document"
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1321
+#: bp-document/bp-document-filters.php:1335
 msgid "Repair document on the site."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1376
+#: bp-document/bp-document-filters.php:1390
 msgid "%s document updated successfully."
 msgstr ""
 
-#: bp-document/bp-document-filters.php:1386
+#: bp-document/bp-document-filters.php:1400
 msgid "document update complete!"
 msgstr ""
 
@@ -12849,6 +12851,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:135
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:303
+#: bp-templates/bp-nouveau/buddypress/media/media-move.php:29
 msgid "Move"
 msgstr ""
 
@@ -15322,9 +15325,10 @@ msgid "Pending Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:784
-#: bp-media/bp-media-filters.php:1009
+#: bp-media/bp-media-filters.php:1024
 #: bp-media/classes/class-bp-media-component.php:295
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
+#: bp-templates/bp-nouveau/buddypress/media/albums.php:22
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
 #: bp-templates/bp-nouveau/includes/groups/classes.php:368
 #: bp-templates/bp-nouveau/includes/groups/functions.php:859
@@ -17546,43 +17550,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:912 bp-media/bp-media-filters.php:928
-#: bp-media/bp-media-filters.php:929 bp-media/bp-media-filters.php:982
-#: bp-media/bp-media-filters.php:1109
+#: bp-media/bp-media-filters.php:927 bp-media/bp-media-filters.php:943
+#: bp-media/bp-media-filters.php:944 bp-media/bp-media-filters.php:997
+#: bp-media/bp-media-filters.php:1124
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:987
+#: bp-media/bp-media-filters.php:1002
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1004
+#: bp-media/bp-media-filters.php:1019
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1006
+#: bp-media/bp-media-filters.php:1021
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1011 bp-media/bp-media-filters.php:1017
-#: bp-media/bp-media-filters.php:1023 bp-media/bp-media-filters.php:1029
-#: bp-media/bp-media-filters.php:1035
+#: bp-media/bp-media-filters.php:1026 bp-media/bp-media-filters.php:1032
+#: bp-media/bp-media-filters.php:1038 bp-media/bp-media-filters.php:1044
+#: bp-media/bp-media-filters.php:1050
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1045 bp-media/bp-media-filters.php:1056
+#: bp-media/bp-media-filters.php:1060 bp-media/bp-media-filters.php:1071
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1052 bp-media/bp-media-functions.php:2150
+#: bp-media/bp-media-filters.php:1067 bp-media/bp-media-functions.php:2150
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1061
+#: bp-media/bp-media-filters.php:1076
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -17590,7 +17594,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1107
+#: bp-media/bp-media-filters.php:1122
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -17599,31 +17603,31 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1314
+#: bp-media/bp-media-filters.php:1329
 msgid "Repair media on the site."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1319
+#: bp-media/bp-media-filters.php:1334
 msgid "Repair forum media privacy"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1373
+#: bp-media/bp-media-filters.php:1388
 msgid "%s media updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1383
+#: bp-media/bp-media-filters.php:1398
 msgid "Media update complete!"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1411
+#: bp-media/bp-media-filters.php:1426
 msgid "%s Forums media privacy updated successfully."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1419
+#: bp-media/bp-media-filters.php:1434
 msgid "Forums media privacy updated %s"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1532
+#: bp-media/bp-media-filters.php:1547
 msgid "Go to media"
 msgstr ""
 
@@ -20638,7 +20642,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/document/document-loop.php:74
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
-#: bp-templates/bp-nouveau/buddypress/media/albums.php:43
+#: bp-templates/bp-nouveau/buddypress/media/albums.php:47
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:59
 #: bp-templates/bp-nouveau/includes/document/ajax.php:900
@@ -21069,6 +21073,7 @@ msgid "Enter Folder Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:25
+#: bp-templates/bp-nouveau/buddypress/media/media-create-folder.php:25
 msgid "Create"
 msgstr ""
 
@@ -21444,11 +21449,11 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:33
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:56
 msgid "More Photos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/add-media.php:14
+#: bp-templates/bp-nouveau/buddypress/media/add-media.php:11
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:45
 msgid "Add Photos"
 msgstr ""
@@ -21467,7 +21472,32 @@ msgid "Create Album"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:22
+#: bp-templates/bp-nouveau/buddypress/media/media-create-folder.php:16
 msgid "Enter Album Title"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/location-move.php:22
+msgid "You have not created any album yet to move this photo into."
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/location-move.php:24
+msgid "Select Album"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/location-move.php:30
+msgid "Album"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/media-create-folder.php:15
+msgid "Album Title"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/media-move.php:17
+msgid "Move Photo to..."
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/media-move.php:27
+msgid "Create new album"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:28

@@ -3289,7 +3289,8 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 				color: #a5a7ab;
 			}
 
-			&.bp-document-open-create-popup-folder {
+			&.bp-document-open-create-popup-folder,
+			&.bp-media-open-create-popup-folder {
 				float: left;
 				margin-top: 7px;
 			}
