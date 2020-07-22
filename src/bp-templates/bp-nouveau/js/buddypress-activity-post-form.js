@@ -173,6 +173,10 @@ window.bp = window.bp || {};
 			console.log(activity_data);
 		},
 
+		postActivityEditHideModal : function(){
+			$('.edit-activity-modal').removeClass('show-modal');
+		},
+
 		postActivityEditFormView: function () {
 			// Create the BuddyPress Uploader
 			this.postEditForm = new bp.Views.ActivityEditForm();
@@ -182,9 +186,6 @@ window.bp = window.bp || {};
 
 			// Display it
 			this.postEditForm.inject( '.edit-activity-modal-body' );
-
-
-
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
@@ -2457,6 +2458,10 @@ window.bp = window.bp || {};
 				}
 
 				bp.ajax.post( 'post_update', data ).done( function ( response ) {
+
+					//At first, hide the modal
+					bp.Nouveau.Activity.postForm.postActivityEditHideModal();
+
 					var store = bp.Nouveau.getStorage( 'bp-activity' ),
 						searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
 						toPrepend = false;
