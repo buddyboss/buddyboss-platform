@@ -384,7 +384,7 @@ function bp_document_update_document_privacy( &$folder ) {
 			}
 		}
 
-		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids )  ) {
+		if ( bp_is_active( 'activity' ) && ! empty( $activity_ids ) ) {
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 
@@ -581,7 +581,7 @@ function bp_document_attach_document_to_message( &$message ) {
 		foreach ( $document_list as $document_index => $document ) {
 			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
 			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
-			$menu_order	   = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
+			$menu_order    = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
 
 			$attachment_data = get_post( $document['id'] );
 			$file            = get_attached_file( $document['id'] );
@@ -734,7 +734,7 @@ function bp_document_sync_document_data( $attachment_id ) {
 	$document = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE attachment_id = %d", $attachment_id ) ); // db call ok; no-cache ok;
 	if ( $document ) {
 		$document_post = get_post( $attachment_id );
-		$document = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, true );
+		$document      = bp_document_rename_file( $document->id, $attachment_id, $document_post->post_title, true );
 	}
 }
 
@@ -754,7 +754,7 @@ function bp_document_activity_update_document_privacy( $activity ) {
 		foreach ( $document_ids as $document_id ) {
 			$document = new BP_Document( $document_id );
 			// Do not update the privacy if the document is added to forum.
-			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly') ) ) {
+			if ( ! in_array( $document->privacy, array( 'forums', 'message', 'media', 'document', 'grouponly' ) ) ) {
 				$document->privacy = $activity->privacy;
 				$document->save();
 			}
@@ -787,17 +787,17 @@ add_filter( 'mod_rewrite_rules', 'bp_document_protect_download_rewite_rules' );
 
 function bp_document_check_download_folder_protection() {
 
-	$upload_dir     = wp_get_upload_dir();
-	$files = array(
-			array(
-					'base'    => $upload_dir['basedir'] . '/bb_documents',
-					'file'    => 'index.html',
-					'content' => '',
-			),
-			array(
-					'base'    => $upload_dir['basedir'] . '/bb_documents',
-					'file'    => '.htaccess',
-					'content' => 'deny from all
+	$upload_dir = wp_get_upload_dir();
+	$files      = array(
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb_documents',
+			'file'    => 'index.html',
+			'content' => '',
+		),
+		array(
+			'base'    => $upload_dir['basedir'] . '/bb_documents',
+			'file'    => '.htaccess',
+			'content' => 'deny from all
 
 # BEGIN BuddyBoss code execution protection
 <IfModule mod_php5.c>
@@ -810,7 +810,7 @@ php_flag engine 0
 AddHandler cgi-script .php .phtml .php3 .pl .py .jsp .asp .htm .shtml .sh .cgi
 Options -ExecCGI
 # END BuddyBoss code execution protection',
-			),
+		),
 	);
 
 	foreach ( $files as $file ) {
@@ -834,9 +834,9 @@ add_action( 'bp_init', 'bp_document_check_download_folder_protection', 9999 );
  */
 function bp_document_prepare_attachment_for_js( $response, $attachment, $meta ) {
 	if ( isset( $response['url'] ) && strstr( $response['url'], 'bb_documents/' ) ) {
-		$response['icon'] 	= includes_url() . 'images/media/default.png';
-		$response['type'] 	= 'text';
-		$response['sizes'] 	= array();
+		$response['icon']  = includes_url() . 'images/media/default.png';
+		$response['type']  = 'text';
+		$response['sizes'] = array();
 	}
 
 	return $response;
@@ -998,7 +998,7 @@ function bp_document_download_headers( $file_path, $filename, $download_range = 
  * @since BuddyBoss 1.4.1
  */
 function bp_document_download_file_force( $file_path, $filename ) {
-	$parsed_file_path  = bp_document_parse_file_path( $file_path );
+	$parsed_file_path = bp_document_parse_file_path( $file_path );
 	$download_range   = bp_document_get_download_range( @filesize( $parsed_file_path['file_path'] ) ); // @codingStandardsIgnoreLine.
 
 	bp_document_download_headers( $parsed_file_path['file_path'], $filename, $download_range );
@@ -1061,11 +1061,11 @@ function bp_document_parse_file_path( $file_path ) {
 	 * via filters we can still do the string replacement on a HTTP file.
 	 */
 	$replacements = array(
-			$wp_uploads_url                  => $wp_uploads_dir,
-			network_site_url( '/', 'https' ) => ABSPATH,
-			str_replace( 'https:', 'http:', network_site_url( '/', 'http' ) ) => ABSPATH,
-			site_url( '/', 'https' )         => ABSPATH,
-			str_replace( 'https:', 'http:', site_url( '/', 'http' ) ) => ABSPATH,
+		$wp_uploads_url                  => $wp_uploads_dir,
+		network_site_url( '/', 'https' ) => ABSPATH,
+		str_replace( 'https:', 'http:', network_site_url( '/', 'http' ) ) => ABSPATH,
+		site_url( '/', 'https' )         => ABSPATH,
+		str_replace( 'https:', 'http:', site_url( '/', 'http' ) ) => ABSPATH,
 	);
 
 	$file_path        = str_replace( array_keys( $replacements ), array_values( $replacements ), $file_path );
@@ -1075,8 +1075,8 @@ function bp_document_parse_file_path( $file_path ) {
 	// Paths that begin with '//' are always remote URLs.
 	if ( '//' === substr( $file_path, 0, 2 ) ) {
 		return array(
-				'remote_file' => true,
-				'file_path'   => is_ssl() ? 'https:' . $file_path : 'http:' . $file_path,
+			'remote_file' => true,
+			'file_path'   => is_ssl() ? 'https:' . $file_path : 'http:' . $file_path,
 		);
 	}
 
@@ -1096,8 +1096,8 @@ function bp_document_parse_file_path( $file_path ) {
 	}
 
 	return array(
-			'remote_file' => $remote_file,
-			'file_path'   => $file_path,
+		'remote_file' => $remote_file,
+		'file_path'   => $file_path,
 	);
 }
 
@@ -1120,9 +1120,9 @@ function bp_document_parse_file_path( $file_path ) {
 function bp_document_get_download_range( $file_size ) {
 	$start          = 0;
 	$download_range = array(
-			'start'            => $start,
-			'is_range_valid'   => false,
-			'is_range_request' => false,
+		'start'            => $start,
+		'is_range_valid'   => false,
+		'is_range_request' => false,
 	);
 
 	if ( ! $file_size ) {
@@ -1250,16 +1250,16 @@ function bp_document_readfile_chunked( $file, $start = 0, $length = 0 ) {
  */
 function bp_activity_filter_document_scope( $retval = array(), $filter = array() ) {
 	$retval = array(
-			'relation' => 'AND',
-			array(
-					'column'  => 'privacy',
-					'value'   => 'document',
-					'compare' => '=',
-			),
-			array(
-					'column' => 'hide_sitewide',
-					'value'  => 1,
-			),
+		'relation' => 'AND',
+		array(
+			'column'  => 'privacy',
+			'value'   => 'document',
+			'compare' => '=',
+		),
+		array(
+			'column' => 'hide_sitewide',
+			'value'  => 1,
+		),
 	);
 
 	return $retval;
@@ -1267,7 +1267,7 @@ function bp_activity_filter_document_scope( $retval = array(), $filter = array()
 add_filter( 'bp_activity_set_document_scope_args', 'bp_activity_filter_document_scope', 10, 2 );
 
 /**
- * Shows default icon for media in wordpress media library list view.
+ * Shows default icon for media in WordPress media library list view.
  *
  * @since BuddyBoss 1.4.3
  *
@@ -1301,7 +1301,7 @@ function bp_document_media_library_list_view_document_attachment_image( $attr, $
 
 	if ( strstr( $meta, 'bb_documents/' ) ) {
 		$attr['src']   = includes_url() . 'images/media/default.png';
-		$attr['style'] = "width:42px;height:60px;border:0;";
+		$attr['style'] = 'width:42px;height:60px;border:0;';
 	}
 
 	return $attr;
@@ -1319,9 +1319,9 @@ add_filter( 'wp_get_attachment_image_attributes', 'bp_document_media_library_lis
 function bp_document_add_admin_repair_items( $repair_list ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$repair_list[] = array(
-				'bp-repair-document',
-				__( 'Repair document on the site.', 'buddyboss' ),
-				'bp_document_admin_repair_document',
+			'bp-repair-document',
+			__( 'Repair document on the site.', 'buddyboss' ),
+			'bp_document_admin_repair_document',
 		);
 	}
 	return $repair_list;
@@ -1334,11 +1334,11 @@ function bp_document_add_admin_repair_items( $repair_list ) {
  */
 function bp_document_admin_repair_document() {
 	global $wpdb;
-	$offset 	= isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
-	$bp 		= buddypress();
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp     = buddypress();
 
 	$document_query = "SELECT id, activity_id FROM {$bp->document->table_name} WHERE activity_id != 0 LIMIT 50 OFFSET $offset ";
-	$documents 	= $wpdb->get_results( $document_query );
+	$documents      = $wpdb->get_results( $document_query );
 
 	if ( ! empty( $documents ) ) {
 		foreach ( $documents as $document ) {
@@ -1349,7 +1349,7 @@ function bp_document_admin_repair_document() {
 						$activity = new BP_Activity_Activity( $activity->item_id );
 					}
 					if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
-						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
+						$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . ' ';
 						$wpdb->query( $update_query );
 					}
 					if ( 'document' === $activity->privacy ) {
@@ -1360,7 +1360,7 @@ function bp_document_admin_repair_document() {
 									$document_activity = new BP_Activity_Activity( $document_activity->item_id );
 								}
 								if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $document_activity->component ) {
-									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . " ";
+									$update_query = "UPDATE {$bp->document->table_name} SET group_id=" . $document_activity->item_id . ", privacy='grouponly' WHERE id=" . $document->id . ' ';
 									$wpdb->query( $update_query );
 									$activity->item_id   = $document_activity->item_id;
 									$activity->component = buddypress()->groups->id;
@@ -1378,14 +1378,14 @@ function bp_document_admin_repair_document() {
 		$records_updated = sprintf( __( '%s document updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
 
 		return array(
-				'status'  => 'running',
-				'offset'  => $offset,
-				'records' => $records_updated,
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
 		);
 	} else {
 		return array(
-				'status'  => 1,
-				'message' => __( 'document update complete!', 'buddyboss' ),
+			'status'  => 1,
+			'message' => __( 'document update complete!', 'buddyboss' ),
 		);
 	}
 }
@@ -1456,14 +1456,14 @@ function bp_members_filter_document_public_scope( $retval = array(), $filter = a
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy
+			'value'   => $privacy,
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders
+		$folders,
 	);
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
@@ -1546,14 +1546,14 @@ function bp_members_filter_folder_public_scope( $retval = array(), $filter = arr
 		array(
 			'column'  => 'privacy',
 			'compare' => 'IN',
-			'value'   => $privacy
+			'value'   => $privacy,
 		),
 		array(
 			'column'  => 'group_id',
 			'compare' => '=',
 			'value'   => '0',
 		),
-		$folders
+		$folders,
 	);
 
 	if ( ! bp_is_profile_document_support_enabled() ) {
@@ -1580,13 +1580,13 @@ function bp_document_activity_after_email_content( $activity ) {
 	$document_ids = bp_activity_get_meta( $activity->id, 'bp_document_ids', true );
 
 	if ( ! empty( $document_ids ) ) {
-		$document_ids = explode( ',', $document_ids );
+		$document_ids  = explode( ',', $document_ids );
 		$document_text = sprintf(
-		        _n( '%s Document', '%s Documents', count( $document_ids) , 'buddyboss' ),
-                number_format_i18n( count( $document_ids ) )
-        );
-		$content   = sprintf(
-	    	/* translator: 1. Activity link, 2. Activity document count */
+			_n( '%s Document', '%s Documents', count( $document_ids ), 'buddyboss' ),
+			number_format_i18n( count( $document_ids ) )
+		);
+		$content       = sprintf(
+			/* translator: 1. Activity link, 2. Activity document count */
 			__( '<a href="%1$s" target="_blank">%2$s Uploaded.</a>', 'buddyboss' ),
 			bp_activity_get_permalink( $activity->id ),
 			$document_text

@@ -153,7 +153,7 @@ class BP_Document_Template {
 			'user_directory'      => true,
 			'meta_query_document' => false,
 			'meta_query_folder'   => false,
-			'meta_query'          => false
+			'meta_query'          => false,
 		);
 
 		$r = wp_parse_args( $args, $defaults );
@@ -206,7 +206,7 @@ class BP_Document_Template {
 					'folder'              => $folder,
 					'user_directory'      => $user_directory,
 					'meta_query_document' => $meta_query_document,
-					'meta_query_folder'   => $meta_query_folder
+					'meta_query_folder'   => $meta_query_folder,
 				)
 			);
 		}
