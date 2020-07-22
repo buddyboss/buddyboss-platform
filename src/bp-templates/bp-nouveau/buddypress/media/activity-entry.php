@@ -9,12 +9,35 @@
 <?php
 global $media_template;
 
-$width  =  isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : 0;
-$height =  isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : 0;
-
+$width  	   =  isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : 0;
+$height 	   = isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : 0;
+$attachment_id = bp_get_media_attachment_id();
+$download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 ?>
 
-<div class="bb-activity-media-elem <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
+<div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
+	<div class="media-action-wrap">
+		<a href="<?php echo $download_url; ?>" class="media-action_download" data-id="45" data-activity-id="194912" data-balloon-pos="up" data-balloon="Download">
+			<i class="bb-icon-download"></i>
+		</a>
+
+		<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="More actions">
+			<i class="bb-icon-menu-dots-v"></i>
+		</a>
+		<div class="media-action_list">
+			<ul>
+				<li class="copy_download_file_url">
+					<a href="<?php echo $download_url; ?>">Copy Download Link</a>
+				</li>
+				<li class="move_file">
+					<a href="#" data-action="media" data-type="profile" id="2" class="ac-media-move">Move</a>
+				</li>
+				<li class="delete_file">
+					<a class="media-file-delete" data-item-activity-id="194912" data-item-from="activity" data-item-preview-attachment-id="5106" data-item-attachment-id="5106" data-item-id="45" data-type="media" href="#">Delete</a>
+				</li>
+			</ul>
+		</div>
+	</div> <!--.media-action-wrap-->
 	<a href="#"
 	   class="bb-open-media-theatre entry-img"
 	   data-id="<?php bp_media_id(); ?>"
