@@ -193,8 +193,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			}
 			/* _____________________________ */
 
-						/*
-						 ++++++++++++++++++++++++++++++++
+			/*
+			 ++++++++++++++++++++++++++++++++
 			 * Search from search string
 			 +++++++++++++++++++++++++++++++ */
 
@@ -221,7 +221,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			}
 
-						/* _____________________________ */
+			/* _____________________________ */
 
 			if ( ! empty( $where_fields ) ) {
 				$WHERE[] = '(' . implode( ' OR ', $where_fields ) . ')';
@@ -236,7 +236,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$sql .= ' GROUP BY u.id ';
 			}
 
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			if ( ! empty( $query_placeholder ) ) {
+				$sql = $wpdb->prepare( $sql, $query_placeholder );
+			}
 
 			return apply_filters(
 				'Bp_Search_Members_sql',
