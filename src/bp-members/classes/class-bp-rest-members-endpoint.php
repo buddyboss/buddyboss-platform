@@ -554,7 +554,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_current_user_can( 'delete_users' ) ) {
+		$user_id = (int) $request['id'];
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		if ( true === $retval && bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_user_cannot_delete',
 				__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),

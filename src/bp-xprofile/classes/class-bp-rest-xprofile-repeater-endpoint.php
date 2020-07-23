@@ -447,7 +447,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Pass Field IDs which you want to delete it.', 'buddyboss' ),
 			'type'              => 'array',
 			'required'          => true,
-			'items'             => array( 'type' => 'int' ),
+			'items'             => array( 'type' => 'integer' ),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 

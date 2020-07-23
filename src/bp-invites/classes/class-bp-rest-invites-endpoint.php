@@ -70,6 +70,19 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/profile-type',
+			array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_invite_profile_type' ),
+					'permission_callback' => array( $this, 'get_invite_profile_type_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -436,7 +449,6 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_invites_create_item_permissions_check', $retval, $request );
 	}
 
-
 	/**
 	 * Delete a invites.
 	 *
@@ -550,6 +562,111 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_invites_delete_item_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Sent Invites Profile Type.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error List of bp-invite profile types
+	 * @since 0.1.0
+	 *
+	 * @api            {GET} /wp-json/buddyboss/v1/invites/profile-type Invites Profile Type
+	 * @apiName        GetBBInvitesProfileType
+	 * @apiGroup       Email Invites
+	 * @apiDescription Retrieve Sent Invites Profile Type.
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 */
+	public function get_invite_profile_type( $request ) {
+
+		$member_types = array();
+
+		if ( function_exists( 'bp_check_member_send_invites_tab_member_type_allowed' ) && true === bp_check_member_send_invites_tab_member_type_allowed() ) {
+			$current_user              = bp_loggedin_user_id();
+			$member_type               = bp_get_member_type( $current_user );
+			$member_type_post_id       = bp_member_type_post_by_type( $member_type );
+			$get_selected_member_types = get_post_meta( $member_type_post_id, '_bp_member_type_allowed_member_type_invite', true );
+			if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
+				$member_types = $get_selected_member_types;
+			} else {
+				$member_types = bp_get_active_member_types();
+			}
+		}
+
+		$retval = array();
+
+		if ( ! empty( $member_types ) ) {
+			foreach ( $member_types as $type ) {
+				$name     = bp_get_member_type_key( $type );
+				$type_obj = bp_get_member_type_object( $name );
+				if ( ! empty( $type_obj ) ) {
+					$member_type = $type_obj->labels['singular_name'];
+				}
+
+				$retval[] = array(
+					'value' => $name,
+					'label' => esc_html( $member_type ),
+				);
+			}
+		}
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after a list of sent invites profile type is fetched via the REST API.
+		 *
+		 * @param WP_REST_Response $response     The response data.
+		 * @param WP_REST_Request  $request      The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		do_action( 'bp_rest_invites_get_invite_profile_type', $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to invites profile type items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function get_invite_profile_type_permissions_check( $request ) {
+		$retval = true;
+
+		if ( ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you need to be logged in to view invites profile type.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && ! ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you don\'t have permission to view invites profile type.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		/**
+		 * Filter the invites `get_invite_profile_type` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_invites_get_invite_profile_type_permissions_check', $retval, $request );
 	}
 
 	/**
