@@ -98,7 +98,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( 'user_meta' === $user_field ) {
 						// Search in user meta table for terms
-						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
+						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s AND meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
 						$query_placeholder[]        = '%' . $search_term . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . ' LIKE %s ';
