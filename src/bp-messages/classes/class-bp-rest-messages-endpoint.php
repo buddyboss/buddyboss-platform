@@ -77,6 +77,30 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 			)
 		);
 
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/search-thread',
+			array(
+				'args'   => array(
+					'user_id'      => array(
+						'description' => __( 'Sender users ID.', 'buddyboss' ),
+						'type'        => 'integer',
+					),
+					'recipient_id' => array(
+						'description' => __( 'Thread recipient ID.', 'buddyboss' ),
+						'type'        => 'integer',
+						'required'    => true,
+					),
+				),
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'search_thread_items' ),
+					'permission_callback' => array( $this, 'search_thread_items_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
+
 		// Attention: (?P<id>[\d]+) is the placeholder for **Thread** ID, not the Message ID one.
 		$thread_endpoint = '/' . $this->rest_base . '/(?P<id>[\d]+)';
 
@@ -397,7 +421,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		// Setting context.
 		$request->set_param( 'context', 'edit' );
 
-		if( empty( $request['id'] ) && empty( $request['recipients'] ) ) {
+		if ( empty( $request['id'] ) && empty( $request['recipients'] ) ) {
 			return new WP_Error(
 				'bp_rest_empty_recipients',
 				__( 'Please, enter recipients user IDs.', 'buddyboss' ),
@@ -600,6 +624,93 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_messages_search_recipients_items_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Search Existing thread by user and recipient for the message.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api            {GET} /wp-json/buddyboss/v1/messages/search-thread Search Thread
+	 * @apiName        SearchBBThread
+	 * @apiGroup       Messages
+	 * @apiDescription Search Existing thread by user and recipient for the message.
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 * @apiParam {number} user_id Sender users ID.
+	 * @apiParam {number} recipient_id Thread recipient ID.
+	 */
+	public function search_thread_items( $request ) {
+		$user_id      = $request->get_param( 'user_id' );
+		$recipient_id = (array) $request->get_param( 'recipient_id' );
+
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		$retval = array();
+
+		if ( class_exists( 'BP_Messages_Message' ) && method_exists( 'BP_Messages_Message', 'get_existing_thread' ) ) {
+			$thread_id = BP_Messages_Message::get_existing_thread( $recipient_id, $user_id );
+
+			if ( ! empty( $thread_id ) ) {
+				$thread = $this->get_thread_object( $thread_id );
+
+				$retval = $this->prepare_response_for_collection(
+					$this->prepare_item_for_response( $thread, $request )
+				);
+			}
+		}
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after a thread id is fetched via the REST API.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 *
+		 * @param WP_REST_Response $response The response data.
+		 */
+		do_action( 'bp_rest_messages_search_thread_items', $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to search thread.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|bool
+	 * @since 0.1.0
+	 */
+	public function search_thread_items_permissions_check( $request ) {
+		$retval = true;
+
+		if ( ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to search thread.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		/**
+		 * Filter the messages `search_thread_items` permissions check.
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @since 0.1.0
+		 */
+		return apply_filters( 'bp_rest_messages_search_thread_items_permissions_check', $retval, $request );
 	}
 
 	/**
@@ -992,7 +1103,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function prepare_message_for_response( $message, $request ) {
 		global $wpdb;
 
-		$group_name = '';
+		$group_name                = '';
 		$group_id                  = bp_messages_get_meta( $message->id, 'group_id', true );
 		$group_message_users       = bp_messages_get_meta( $message->id, 'group_message_users', true );
 		$group_message_type        = bp_messages_get_meta( $message->id, 'group_message_type', true );
@@ -1018,7 +1129,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				$group_link = '';
 			}
 		}
-
 
 		if ( ! empty( $group_id ) && ! empty( $message_from ) && 'group' === $message_from ) {
 
@@ -2064,7 +2174,6 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 				);
 			}
 		}
-
 
 		$first_message    = end( $thread_messages );
 		$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );

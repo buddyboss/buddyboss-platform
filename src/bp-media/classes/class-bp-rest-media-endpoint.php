@@ -388,6 +388,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [activity_id] A unique numeric ID for the activity.
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Media Album.
+	 * @apiParam {string} [content] Media Content.
 	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly,message} [privacy=public] Privacy of the media.
 	 */
 	public function create_item( $request ) {
@@ -419,6 +420,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['activity_id'] ) && ! empty( $request['activity_id'] ) ) {
 			$args['activity_id'] = $request['activity_id'];
+		}
+
+		if ( isset( $request['content'] ) && ! empty( $request['content'] ) ) {
+			$args['content'] = $request['content'];
 		}
 
 		/**
@@ -510,6 +515,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} id A unique numeric ID for the media photo.
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Album.
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
+	 * @apiParam {string} [content] Media Content.
 	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly,message} [privacy] Privacy of the media.
 	 */
 	public function update_item( $request ) {
@@ -547,6 +553,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ) {
 			$args['album_id'] = $request['album_id'];
+		}
+
+		if ( isset( $request['content'] ) && ! empty( $request['content'] ) ) {
+			$args['content'] = $request['content'];
 		}
 
 		/**
@@ -1434,8 +1444,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$media_privacy = ( ! empty( $args['privacy'] ) ? $args['privacy'] : 'public' );
 		$upload_ids    = ( ! empty( $args['upload_ids'] ) ? $args['upload_ids'] : '' );
 		$activity_id   = ( ! empty( $args['activity_id'] ) ? $args['activity_id'] : false );
+		$content       = ( ! empty( $args['content'] ) ? $args['content'] : false );
 		$user_id       = ( ! empty( $args['user_id'] ) ? $args['user_id'] : get_current_user_id() );
 		$id            = ( ! empty( $args['id'] ) ? $args['id'] : '' );
+
+		$group_id = ( ! empty( $args['group_id'] ) ? $args['group_id'] : false );
+		$album_id = ( ! empty( $args['album_id'] ) ? $args['album_id'] : false );
 
 		// Override the privacy if album ID is given.
 		if ( ! empty( $args['album_id'] ) ) {
@@ -1492,6 +1506,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		// created Medias.
 		if ( ! empty( $upload_ids ) ) {
+			$valid_upload_ids = array();
 			foreach ( $upload_ids as $wp_attachment_id ) {
 				$wp_attachment_url = wp_get_attachment_url( $wp_attachment_id );
 
@@ -1500,53 +1515,82 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					continue;
 				}
 
-				$media_activity_id = false;
+				$valid_upload_ids[] = $wp_attachment_id;
+			}
 
-				// make an activity for the media.
-				if ( bp_is_active( 'activity' ) && ( count( $upload_ids ) > 1 || empty( $activity_id ) ) ) {
-					$media_activity_id = bp_activity_post_update(
+			if ( ! empty( $valid_upload_ids ) ) {
+				foreach ( $valid_upload_ids as $wp_attachment_id ) {
+
+					$media_activity_id = false;
+
+					// make an activity for the media.
+					if ( bp_is_active( 'activity' ) ) {
+
+						if ( empty( $activity_id ) ) {
+							if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+								$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $group_id, 'privacy' => 'public' ) );
+							} else {
+								$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+							}
+						}
+
+						if ( count( $valid_upload_ids ) > 1 ) {
+							if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+								$media_activity_id = groups_post_update(
+									array(
+										'group_id'      => $group_id,
+										'hide_sitewide' => true,
+										'privacy'       => 'media',
+									)
+								);
+							} else {
+								$media_activity_id = bp_activity_post_update(
+									array(
+										'hide_sitewide' => true,
+										'privacy'       => 'media',
+									)
+								);
+							}
+
+							if ( $media_activity_id ) {
+								// update activity meta.
+								bp_activity_update_meta( $media_activity_id, 'bp_media_activity', '1' );
+							}
+						} else {
+							$media_activity_id = $activity_id;
+						}
+					}
+
+					// extract the nice title name.
+					$title = get_the_title( $wp_attachment_id );
+
+					$media_id = bp_media_add(
 						array(
-							'hide_sitewide' => true,
-							'privacy'       => 'media',
+							'attachment_id' => $wp_attachment_id,
+							'title'         => $title,
+							'activity_id'   => $media_activity_id,
+							'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
+							'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
+							'privacy'       => $media_privacy,
+							'user_id'       => $user_id,
+							'error_type'    => 'wp_error',
 						)
 					);
-					if ( $media_activity_id ) {
-						// update activity meta.
-						bp_activity_update_meta( $media_activity_id, 'bp_media_activity', '1' );
+
+					if ( is_int( $media_id ) ) {
+
+						// save media is saved in attachment.
+						update_post_meta( $wp_attachment_id, 'bp_media_saved', true );
+
+						// save media meta for activity.
+						if ( ! empty( $activity_id ) ) {
+							update_post_meta( $wp_attachment_id, 'bp_media_parent_activity_id', $activity_id );
+							if ( $media_activity_id !== $activity_id ) {
+								update_post_meta( $wp_attachment_id, 'bp_media_activity_id', $media_activity_id );
+							}
+						}
+						$created_media_ids[] = $media_id;
 					}
-				} else {
-					$media_activity_id = $activity_id;
-				}
-
-				// extract the nice title name.
-				$title = get_the_title( $wp_attachment_id );
-
-				$media_id = bp_media_add(
-					array(
-						'attachment_id' => $wp_attachment_id,
-						'title'         => $title,
-						'activity_id'   => $media_activity_id,
-						'album_id'      => ( ! empty( $args['album_id'] ) ? $args['album_id'] : false ),
-						'group_id'      => ( ! empty( $args['group_id'] ) ? $args['group_id'] : false ),
-						'privacy'       => $media_privacy,
-						'user_id'       => $user_id,
-						'error_type'    => 'wp_error',
-					)
-				);
-
-				if ( is_int( $media_id ) ) {
-
-					// save media is saved in attachment.
-					update_post_meta( $wp_attachment_id, 'bp_media_saved', true );
-
-					// save media meta for activity.
-					if ( ! empty( $activity_id ) ) {
-						update_post_meta( $wp_attachment_id, 'bp_media_parent_activity_id', $activity_id );
-						update_post_meta( $wp_attachment_id, 'bp_media_activity_id', $media_activity_id );
-					}
-
-					$created_media_ids[] = $media_id;
-
 				}
 			}
 		}
@@ -1567,7 +1611,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', $created_media_ids_joined );
 
 			$main_activity = new BP_Activity_Activity( $activity_id );
-			if ( ! empty( $main_activity ) ) {
+			if ( ! empty( $main_activity ) && empty( $group_id ) ) {
 				$main_activity->privacy = $media_privacy;
 				$main_activity->save();
 			}

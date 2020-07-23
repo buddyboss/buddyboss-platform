@@ -160,7 +160,7 @@ class BP_REST_Friends_Endpoint extends WP_REST_Controller {
 
 		// null is the default values.
 		foreach ( $args as $key => $value ) {
-			if ( empty( $value ) ) {
+			if ( empty( $value ) && 'is_confirmed' !== $key ) {
 				$args[ $key ] = null;
 			}
 		}

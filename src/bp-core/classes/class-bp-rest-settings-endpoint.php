@@ -414,6 +414,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
+		$results['enable_messages']               = bp_is_active( 'messages' );
 
 		return $results;
 	}
@@ -453,6 +454,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
+		$results['enable_messages']               = bp_is_active( 'messages' );
 
 		return $results;
 	}

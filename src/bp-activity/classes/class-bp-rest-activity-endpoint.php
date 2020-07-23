@@ -1883,7 +1883,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			$new_scope[] = 'public';
 
-			if ( empty( $user_id ) ) {
+			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'groups';
+			} else {
 				$new_scope[] = 'just-me';
 
 				if ( empty( $user_id ) ) {
@@ -1910,8 +1912,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					$new_scope[] = 'media';
 					$new_scope[] = 'document';
 				}
-			} elseif ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
-				$new_scope[] = 'groups';
 			}
 		} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 			$new_scope[] = 'public';
