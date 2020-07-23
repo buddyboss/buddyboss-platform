@@ -4,11 +4,34 @@
  *
  * @since BuddyBoss 1.0.0
  */
-
+$attachment_id = bp_get_media_attachment_id();
+$download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
     <div class="bb-photo-thumb">
+        <div class="media-action-wrap">
+            <a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="194912" data-balloon-pos="up" data-balloon="Download">
+                <i class="bb-icon-download"></i>
+            </a>
+
+            <a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="More actions">
+                <i class="bb-icon-menu-dots-v"></i>
+            </a>
+            <div class="media-action_list">
+                <ul>
+                    <li class="copy_download_file_url">
+                        <a href="<?php echo $download_url; ?>">Copy Download Link</a>
+                    </li>
+                    <li class="move_file">
+                        <a href="#" data-action="media" data-type="profile" id="2" class="ac-media-move">Move</a>
+                    </li>
+                    <li class="delete_file">
+                        <a class="media-file-delete" data-item-activity-id="194912" data-item-from="activity" data-item-preview-attachment-id="5106" data-item-attachment-id="5106" data-item-id="<?php bp_document_id(); ?>" data-type="media" href="#">Delete</a>
+                    </li>
+                </ul>
+            </div>
+        </div> <!--.media-action-wrap-->
         <a class="bb-open-media-theatre bb-photo-cover-wrap"
            data-id="<?php bp_media_id(); ?>"
            data-attachment-full="<?php bp_media_attachment_image(); ?>"

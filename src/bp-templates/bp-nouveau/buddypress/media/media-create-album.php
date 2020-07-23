@@ -12,8 +12,8 @@
 <div class="create-popup-folder-wrap popup-on-fly-create-folder" style="display: none;">
 
 	<div class="bb-field-wrap">
-		<label for="new_folder_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
-		<input class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
+		<label for="new_album_name_input" class="bb-label"><?php esc_attr_e( 'Album Title', 'buddyboss' ); ?></label>
+		<input id="new_album_name_input" class="popup-on-fly-create-folder-title" value="" type="text" placeholder="<?php esc_attr_e( 'Enter Album Title', 'buddyboss' ); ?>">
 	</div>
 	<?php
 	if ( ! bp_is_group() ) :

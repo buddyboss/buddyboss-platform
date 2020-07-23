@@ -21,7 +21,7 @@
 					?>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'media/location-move' ); ?>
-						<?php bp_get_template_part( 'media/media-create-folder' ); ?>
+						<?php bp_get_template_part( 'media/media-create-album' ); ?>
 					</div>
 					<footer class="bb-model-footer">
 						<a href="#" class="bp-media-open-create-popup-folder"><?php esc_html_e( 'Create new album', 'buddyboss' ); ?></a>
