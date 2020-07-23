@@ -64,7 +64,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb, $bp;
 
-			$bp_prefix = bp_core_get_table_prefix();
 
 			$query_placeholder = array();
 
@@ -99,7 +98,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( 'user_meta' === $user_field ) {
 						// Search in user meta table for terms
-						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s ) ";
+						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
 						$query_placeholder[]        = '%' . $search_term . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . ' LIKE %s ';
@@ -167,13 +166,15 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						$user_ids = array();
 
 						// check visiblity for field id with current user.
-						if ( !empty( $sql_xprofile_result ) ) {
+						if ( ! empty( $sql_xprofile_result ) ) {
 							foreach ( $sql_xprofile_result as $field_data ) {
 								$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
 
 								if (
-									!empty( $hidden_fields )
-									&& !in_array( $field_data->field_id, $hidden_fields )
+									( ! empty( $hidden_fields )
+									  && ! in_array( $field_data->field_id, $hidden_fields )
+									)
+									|| empty( $hidden_fields )
 								) {
 									$user_ids[] = $field_data->user_id;
 								}
@@ -184,6 +185,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						if ( !empty( $user_ids ) ) {
 							$user_ids = array_unique( $user_ids );
 							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids )  ." )";
+						} else {
+							$where_fields[] = "u.id = 0";
 						}
 					}
 				}
@@ -195,7 +198,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			 * Search from search string
 			 +++++++++++++++++++++++++++++++ */
 
-							$split_search_term = explode( ' ', $search_term );
+			$split_search_term = explode( ' ', $search_term );
 
 			if ( count( $split_search_term ) > 1 ) {
 
@@ -235,14 +238,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
-						return apply_filters(
-							'Bp_Search_Members_sql',
-							$sql,
-							array(
-								'search_term'         => $search_term,
-								'only_totalrow_count' => $only_totalrow_count,
-							)
-						);
+			return apply_filters(
+				'Bp_Search_Members_sql',
+				$sql,
+				array(
+					'search_term'         => $search_term,
+					'only_totalrow_count' => $only_totalrow_count,
+				)
+			);
 		}
 
 		protected function generate_html( $template_type = '' ) {
