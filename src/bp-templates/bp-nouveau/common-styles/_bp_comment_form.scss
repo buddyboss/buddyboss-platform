@@ -109,37 +109,45 @@ form.ac-form {
 	visibility: hidden;
 	transform: scale(1.1);
 	transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
-}
 
-.edit-activity-modal-content {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	background-color: #fff;
-	padding: 10px 15px;
-	width: 700px;
-	border-radius: 5px;
-	max-width: 90%;
-}
+	.edit-activity-modal-content {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background-color: #fff;
+		padding: 10px 15px;
+		width: 700px;
+		border-radius: 5px;
+		max-width: 90%;
+	}
 
-.edit-activity-modal-close-button {
-	float: right;
-	width: 15px;
-	line-height: 15px;
-	text-align: center;
-	cursor: pointer;
-	border-radius: 3px;
-	background-color: #d3d3d3;
-}
+	.edit-activity-modal-close-button {
+		float: right;
+		width: 15px;
+		line-height: 15px;
+		text-align: center;
+		cursor: pointer;
+		border-radius: 3px;
+		background-color: #d3d3d3;
+		position: relative;
+		z-index: 1;
+	}
 
-.edit-activity-modal-close-button:hover {
-	background-color: #a9a9a9;
-}
+	.edit-activity-modal-close-button:hover {
+		background-color: #a9a9a9;
+	}
 
-.show-modal {
-	opacity: 1;
-	visibility: visible;
-	transform: scale(1);
-	transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+	&.show-modal {
+		opacity: 1;
+		visibility: visible;
+		transform: scale(1);
+		transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+
+		.activity-update-form #whats-new-content .medium-editor-toolbar {
+			display: block;
+		}
+
+	}
+
 }

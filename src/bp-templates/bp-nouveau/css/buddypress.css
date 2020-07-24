@@ -1025,7 +1025,7 @@ a.layout-grid-view {
 }
 
 .activity-update-form #whats-new-post-in-box {
-  margin: 17px 0;
+  margin: 16px 0;
 }
 
 .activity-update-form {
@@ -3532,7 +3532,7 @@ form.ac-form .ac-reply-content input {
   transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
 }
 
-.edit-activity-modal-content {
+.edit-activity-modal .edit-activity-modal-content {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -3544,7 +3544,7 @@ form.ac-form .ac-reply-content input {
   max-width: 90%;
 }
 
-.edit-activity-modal-close-button {
+.edit-activity-modal .edit-activity-modal-close-button {
   float: right;
   width: 15px;
   line-height: 15px;
@@ -3552,17 +3552,23 @@ form.ac-form .ac-reply-content input {
   cursor: pointer;
   border-radius: 3px;
   background-color: #d3d3d3;
+  position: relative;
+  z-index: 1;
 }
 
-.edit-activity-modal-close-button:hover {
+.edit-activity-modal .edit-activity-modal-close-button:hover {
   background-color: #a9a9a9;
 }
 
-.show-modal {
+.edit-activity-modal.show-modal {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
   transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+}
+
+.edit-activity-modal.show-modal .activity-update-form #whats-new-content .medium-editor-toolbar {
+  display: block;
 }
 
 /**

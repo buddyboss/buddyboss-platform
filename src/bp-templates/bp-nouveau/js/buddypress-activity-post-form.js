@@ -154,7 +154,7 @@ window.bp = window.bp || {};
 
 			if ( ! $('.edit-activity-modal').length) {
 				$('body').append(' <div class="edit-activity-modal">\n' +
-					'        <div class="edit-activity-modal-content">\n' +
+					'        <div class="edit-activity-modal-content activity-update-form">\n' +
 					'            <span class="edit-activity-modal-close-button">&times;</span>\n' +
 					'            <div class="edit-activity-modal-body"></div>\n' +
 					'        </div>\n' +
@@ -164,6 +164,24 @@ window.bp = window.bp || {};
 			$('.edit-activity-modal').addClass('show-modal');
 			this.postActivityEditFormView();
 			this.displayEditActivity(activity_data);
+
+			var edit_activity_editor_popup = jQuery('.edit-activity-modal');
+			var edit_activity_editor = edit_activity_editor_popup.find('#whats-new')[0];
+			var edit_activity_editor_content = edit_activity_editor_popup.find('#whats-new-content')[0];
+
+			window.activity_edit_editor = new window.MediumEditor( edit_activity_editor, {
+				placeholder: {
+					text: '',
+					hideOnClick: true
+				},
+				toolbar: {
+					buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+					relativeContainer: edit_activity_editor_content,
+					static: true,
+					updateOnEmptySelection: true
+				},
+				imageDragging: false
+			});	
 
 			$(document).on('click', '.edit-activity-modal-close-button', function(){
 				$('.edit-activity-modal').removeClass('show-modal');
@@ -1337,20 +1355,28 @@ window.bp = window.bp || {};
 
 				if ( !_.isUndefined( window.MediumEditor ) ) {
 
-					window.group_messages_editor = new window.MediumEditor( '#whats-new', {
-						placeholder: {
-							text: '',
-							hideOnClick: true
-						},
-						toolbar: {
-							buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
-							relativeContainer: document.getElementById( 'whats-new-content' ),
-							static: true,
-							updateOnEmptySelection: true
-						},
-						imageDragging: false
-					} );
+					$('#whats-new').each( function() {
+						var $this = $(this);
+						var whatsnewcontent = $this.closest('#whats-new-content')[0];
 
+						if ( !$(this).closest('.edit-activity-modal-body').length ) {
+
+							window.group_messages_editor = new window.MediumEditor( $this, {
+								placeholder: {
+									text: '',
+									hideOnClick: true
+								},
+								toolbar: {
+									buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+									relativeContainer: whatsnewcontent,
+									static: true,
+									updateOnEmptySelection: true
+								},
+								imageDragging: false
+							});	
+						}
+					});
+				
 					// check for mentions in the url, if set any then focus to editor.
 					var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
 
