@@ -1024,12 +1024,20 @@ a.layout-grid-view {
   padding: 0;
 }
 
+.activity-update-form #whats-new-post-in-box {
+  margin: 17px 0;
+}
+
 .activity-update-form {
   border: 1px solid #ccc;
   -webkit-box-shadow: inset 0 0 6px #eee;
   -moz-box-shadow: inset 0 0 6px #eee;
   box-shadow: inset 0 0 6px #eee;
   margin: 15px 0;
+}
+
+.activity-update-form #whats-new-form.activity-form {
+  position: relative;
 }
 
 .activity-update-form #whats-new-avatar {

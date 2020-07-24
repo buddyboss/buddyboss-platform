@@ -12,12 +12,20 @@
 	}
 }
 
+.activity-update-form #whats-new-post-in-box{
+	margin: 17px 0;
+}
+
 .activity-update-form {
 	border: 1px solid $bp-border-dark;
 
 	@include box-shadow(inset 0 0 6px #eee);
 
 	margin: $marg-med 0;
+
+	#whats-new-form.activity-form {
+		position: relative;
+	}
 
 	#whats-new-avatar {
 		border-bottom: 1px solid #ddd;
