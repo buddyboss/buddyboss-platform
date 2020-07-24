@@ -150,13 +150,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			$replace_admin_ajax = ! empty( $options['replace_admin_ajax'] ) ? $options['replace_admin_ajax'] : '';
 
 			if ( '' !== $new_admin_path ) {
-				$plugins_path = '/' . $new_admin_path . '/plugins.php';
+				$plugins_path = apply_filters( 'bp_admin_plugins_path', '/' . $new_admin_path . '/plugins.php' );
 			}
 
 			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
-				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', '/' . $new_admin_path . '/' . $replace_admin_ajax );
 			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
-				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', '/' . $new_admin_path . '/admin-ajax.php' );
 			}
 		}
 
