@@ -646,6 +646,11 @@ class BP_Email_Tokens {
 														<?php
 														/**
 														 * Display text before activity comment.
+														 * 
+														 * @since BuddyBoss 1.4.7
+														 *
+														 * @param object $activity_comment BP_Activity_Activity object,
+														 * 
 														 */
 														do_action( 'bp_activity_before_email_content', $activity_comment );
 
@@ -656,6 +661,11 @@ class BP_Email_Tokens {
 
                                                         /**
 														 * Display text after activity comment.
+														 * 
+														 * @since BuddyBoss 1.4.7
+														 *
+														 * @param object $activity_comment BP_Activity_Activity object,
+														 * 
 														 */
 														do_action( 'bp_activity_after_email_content', $activity_comment );
 														?>
