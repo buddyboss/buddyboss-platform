@@ -150,34 +150,43 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			$replace_admin_ajax = ! empty( $options['replace_admin_ajax'] ) ? $options['replace_admin_ajax'] : '';
 
 			if ( '' !== $new_admin_path ) {
+				$plugins_path = '/' . $new_admin_path . '/plugins.php';
 
 				/**
 				 * Admin plugins directory path.
 				 *
 				 * @since BuddyBoss 1.4.7
 				 *
+				 * @param string $plugins_path Admin plugins directory path.
+				 *
 				 */
-				$plugins_path = apply_filters( 'bp_admin_plugins_path', '/' . $new_admin_path . '/plugins.php' );
+				$plugins_path = apply_filters( 'bp_admin_plugins_path', $plugins_path );
 			}
 
 			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
+				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
 
 				/**
-				 * Admin admin-ajax.php path.
+				 * admin-ajax.php path.
 				 *
 				 * @since BuddyBoss 1.4.7
 				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
 				 */
-				$ajax_path = apply_filters( 'bp_admin_ajax_path', '/' . $new_admin_path . '/' . $replace_admin_ajax );
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
+				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
 
 				/**
-				 * Admin admin-ajax.php path.
+				 * admin-ajax.php path.
 				 *
 				 * @since BuddyBoss 1.4.7
 				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
 				 */
-				$ajax_path = apply_filters( 'bp_admin_ajax_path', '/' . $new_admin_path . '/admin-ajax.php' );
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			}
 		}
 
