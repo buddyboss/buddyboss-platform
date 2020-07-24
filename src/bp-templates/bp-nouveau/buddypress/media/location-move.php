@@ -7,13 +7,15 @@
  */
 
 $ul  = '';
-if ( bp_is_group_document() || bp_is_group_folders() ) {
+if ( bp_is_group_media() || bp_is_group_albums() ) {
 	$group_id         = bp_get_current_group_id();
-	$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
-} elseif ( bp_is_user_document() || bp_is_user_folders() ) {
-	$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-} elseif ( bp_is_document_directory() ) {
-	$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+	$ul = bp_media_user_media_folder_tree_view_li_html( 0, $group_id );
+} elseif ( bp_is_user_media() ) {
+	$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() );
+} elseif ( bp_is_media_directory() ) {
+	$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() );
+} else {
+	$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() ); // Temporary fix for Activity page
 }
 
 ?>
@@ -40,7 +42,7 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 		<div class="ac_document_search_folder_list" style="display: none;">
 			<ul class="location-folder-list"></ul>
 		</div>
-		<input type="hidden" class="bb-folder-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-folder-selected-id" value="0" readonly/>
+		<input type="hidden" class="bb-media-create-from" value="profile" readonly/>
+		<input type="hidden" class="bb-media-selected-id" value="0" readonly/>
 	</div>
 </div>

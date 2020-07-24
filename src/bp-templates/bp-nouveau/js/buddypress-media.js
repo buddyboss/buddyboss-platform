@@ -2509,11 +2509,46 @@ window.bp = window.bp || {};
 		openMediaMove: function( event ) {
 			event.preventDefault();
 
+			var media_move_popup, media_parent_id, media_id;
+
 			if( $( event.currentTarget ).closest('.activity-inner').length > 0 ) {
-				$( event.currentTarget ).closest('.activity-inner').find('.bp-media-move-file').show();
+				media_move_popup = $( event.currentTarget ).closest('.activity-inner');
 			} else if( $( event.currentTarget ).closest('#media-stream.media').length > 0 ) {
-				$( event.currentTarget ).closest('#media-stream.media').find('.bp-media-move-file').show();
+				media_move_popup = $( event.currentTarget ).closest('#media-stream.media');
 			}
+
+			$( media_move_popup ).find('.bp-media-move-file').addClass('open').show();
+			media_id = $( event.currentTarget ).closest('.media-action-wrap').siblings('a').data('id');
+			media_parent_id = $( event.currentTarget ).closest('.media-action-wrap').siblings('a').data('album-id');
+
+			media_move_popup.find('.location-folder-list li').removeClass('is_active').children('span').removeClass('selected');
+			media_move_popup.find('.location-folder-list li[data-id="'+ media_parent_id +'"]').addClass('is_active').children('span').addClass('selected');
+
+			media_move_popup.find('.bp-media-move').attr( 'id', media_id );
+			media_move_popup.find('.bb-model-footer .bp-media-move').addClass('is-disabled');
+
+			$( document ).on( 'click', '.bp-media-move-photo.open .location-folder-list li span' , function( e ) {
+				e.preventDefault();
+
+				if( $(this).parent().hasClass('is_active') ){
+					return;
+				}
+
+				$(this).addClass('selected').parent().addClass('is_active').siblings().removeClass('is_active').children('span').removeClass('selected');
+
+				
+
+				if( media_parent_id == $(this).data('id') ){
+					media_move_popup.find('.bb-model-footer .bp-media-move').addClass('is-disabled');
+					return; //return if parent album is same.
+				} else {
+					media_move_popup.find('.bb-model-footer .bp-media-move').removeClass('is-disabled');
+				}
+
+				media_move_popup.find('.bb-media-selected-id').val( $(this).data('id') );
+
+			});
+			
 
 		},
 

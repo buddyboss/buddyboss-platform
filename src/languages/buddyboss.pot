@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-23 13:37:22+00:00\n"
+"POT-Creation-Date: 2020-07-24 12:48:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21476,15 +21476,15 @@ msgstr ""
 msgid "Enter Album Title"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/location-move.php:22
+#: bp-templates/bp-nouveau/buddypress/media/location-move.php:24
 msgid "You have not created any album yet to move this photo into."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/location-move.php:24
+#: bp-templates/bp-nouveau/buddypress/media/location-move.php:26
 msgid "Select Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/location-move.php:30
+#: bp-templates/bp-nouveau/buddypress/media/location-move.php:32
 msgid "Album"
 msgstr ""
 

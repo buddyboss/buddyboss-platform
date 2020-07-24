@@ -2659,3 +2659,89 @@ function bp_media_get_forum_id( $media_id ) {
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
 }
+
+
+/**
+ * Return the breadcrumbs.
+ *
+ * @param int $user_id
+ * @param int $group_id
+ *
+ * @return string
+ * @since BuddyBoss 1.4.0
+ */
+function bp_media_user_media_folder_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
+
+	global $wpdb, $bp;
+
+	$media_album_table = $bp->media->table_name_albums;
+
+	if ( 0 === $group_id ) {
+		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
+	}
+
+	if ( $group_id > 0 ) {
+		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
+	} else {
+		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+	}
+
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A ); // db call ok; no-cache ok;
+
+	// Build array of item references:
+	foreach ( $data as $key => &$item ) {
+		$itemsByReference[ $item['id'] ] = &$item;
+		// Children array:
+		$itemsByReference[ $item['id'] ]['children'] = array();
+		// Empty data class (so that json_encode adds "data: {}" )
+		$itemsByReference[ $item['id'] ]['data'] = new StdClass();
+	}
+
+	// Set items as children of the relevant parent item.
+	foreach ( $data as $key => &$item ) {
+		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+			$itemsByReference [ $item['parent'] ]['children'][] = &$item;
+		}
+	}
+
+	// Remove items that were added to parents elsewhere:
+	foreach ( $data as $key => &$item ) {
+		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+			unset( $data[ $key ] );
+		}
+	}
+
+	return bp_media_album_recursive_li_list( $data, false );
+
+}
+
+/**
+ * This function will give the breadcrumbs ul li html.
+ *
+ * @param      $array
+ * @param bool  $first
+ *
+ * @return string
+ * @since BuddyBoss 1.4.0
+ */
+function bp_media_album_recursive_li_list( $array, $first = false ) {
+
+	// Base case: an empty array produces no list.
+	if ( empty( $array ) ) {
+		return '';
+	}
+
+	// Recursive Step: make a list with child lists.
+	if ( $first ) {
+		$output = '<ul class="">';
+	} else {
+		$output = '<ul class="location-folder-list">';
+	}
+
+	foreach ( $array as $item ) {
+		$output .= '<li data-id="' . $item['id'] . '"><span id="' . $item['id'] . '" data-id="' . $item['id'] . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+	}
+	$output .= '</ul>';
+
+	return $output;
+}
