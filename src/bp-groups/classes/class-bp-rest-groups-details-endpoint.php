@@ -205,6 +205,7 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
 		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
 		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
+		remove_all_actions( 'bp_actions' );
 
 		do_action( 'bp_init' );
 		// phpcs:ignore
@@ -242,6 +243,10 @@ class BP_REST_Groups_Details_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $nav_items ) ) {
 			foreach ( $nav_items as $nav ) {
 				$nav = $nav->getArrayCopy();
+
+				if ( 'public' !== $group->status && $nav['slug'] === 'courses' && ( ! groups_is_user_member( bp_loggedin_user_id(), $group->id ) && ! bp_current_user_can( 'bp_moderate' ) ) ) {
+					continue;
+				}
 
 				$name = $nav['name'];
 				$id   = $nav['slug'];

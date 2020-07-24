@@ -1069,24 +1069,28 @@ window.bp = window.bp || {};
 			var startIndex = urlText.indexOf( prefix );
 			var responseUrl = '';
 
-			for ( var i = startIndex; i < urlText.length; i ++ ) {
-				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
-					break;
-				} else {
-					urlString += urlText[i];
+			if ( typeof $( urlText ).attr( 'href' ) !== 'undefined' ) {
+				urlString = $( urlText ).attr( 'href' );
+			} else {
+				for ( var i = startIndex; i < urlText.length; i++ ) {
+					if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+						break;
+					} else {
+						urlString += urlText[i];
+					}
 				}
-			}
-			if ( prefix === 'www' ) {
-				prefix = 'http://';
-				urlString = prefix + urlString;
+				if ( prefix === 'www' ) {
+					prefix = 'http://';
+					urlString = prefix + urlString;
+				}
 			}
 
 			var div = document.createElement( 'div' );
 			div.innerHTML = urlString;
 			var elements = div.getElementsByTagName( '*' );
 
-			while ( elements[ 0 ] ) {
-				elements[ 0 ].parentNode.removeChild( elements[ 0 ] );
+			while ( elements[0] ) {
+				elements[0].parentNode.removeChild( elements[0] );
 			}
 
 			if ( div.innerHTML.length > 0 ) {
@@ -1210,6 +1214,19 @@ window.bp = window.bp || {};
 						relativeContainer: document.getElementById('whats-new-content'),
 						static: true,
 						updateOnEmptySelection: true
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: true,
+						cleanReplacements: [
+							[new RegExp(/<div/gi), '<p'],
+							[new RegExp(/<\/div/gi), '</p'],
+							[new RegExp(/<h[1-6]/gi), '<b'],
+							[new RegExp(/<\/h[1-6]/gi), '</b'],
+						],
+						cleanAttrs: ['class', 'style', 'dir', 'id'],
+						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+						unwrapTags: []
 					},
 					imageDragging: false
 				});

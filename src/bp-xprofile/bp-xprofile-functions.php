@@ -869,7 +869,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
 /**
- * Syncs Xprofile data to the standard built in WordPress profile data.
+ * Sync xprofile data to the standard built in WordPress profile data.
  *
  * @since BuddyPress 1.0.0
  *
@@ -1896,10 +1896,13 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 }
 
 /**
- * Syncs the standard built in WordPress profile data to XProfile data.
+ * Sync the standard built in WordPress profile data to xprofile data.
  *
  * @since BuddyBoss 1.4.7
- *
+ * 
+ * @param int $user_id sync specified user id first name, last name and nickname.
+ * 
+ * @return void 
  */
 function bp_xprofile_sync_bp_profile( $user_id ) {
 
@@ -1925,11 +1928,19 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
 
 /**
- * Syncs the standard built in Xprofile data to WordPress data.
+ * Sync the standard built in xprofile data to WordPress data.
  *
  * @since BuddyBoss 1.4.7
  *
+ * @param int   $user_id          ID for the user whose profile is being saved.
+ * @param array $posted_field_ids Array of field IDs that were edited.
+ * @param bool  $errors           Whether or not any errors occurred.
+ * @param array $old_values       Array of original values before update.
+ * @param array $new_values       Array of newly saved values after update.
+ * 
+ * @return void 
  */
+
 function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
 
 	if ( ! empty( $errors ) ) {

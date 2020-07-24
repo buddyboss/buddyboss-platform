@@ -56,7 +56,7 @@ class Admin {
 		$missingDepencencies = bp_ld_sync()->dependencies->getMissingDepencencies();
 
 		$message = sprintf(
-			__( 'The following required plugin is missing: %s' ),
+			__( 'The following required plugin is missing: %s', 'buddyboss' ),
 			'<b>' . implode( ',', $missingDepencencies ) . '</b>'
 		);
 
