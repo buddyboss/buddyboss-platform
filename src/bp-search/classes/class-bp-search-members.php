@@ -135,19 +135,42 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						'char_search' => array( 0 ), // Search for character in field of type textbox, textarea and etc
 					);
 
+					$selected_xprofile_repeater_fields = array();
+
 					$word_search_field_type = array( 'radio', 'checkbox' );
 
 					foreach ( $groups as $group ) {
 						if ( ! empty( $group->fields ) ) {
 							foreach ( $group->fields as $field ) {
 								if ( bp_is_search_xprofile_enable( $field->id ) ) {
+									$repeater_enabled = bp_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true );
 
-									if ( in_array( $field->type, $word_search_field_type ) ) {
-										$selected_xprofile_fields['word_search'][] = $field->id;
+									if ( empty( $repeater_enabled ) || 'on' === $repeater_enabled ) {
+										$selected_xprofile_repeater_fields = array_unique( array_merge(
+											$selected_xprofile_repeater_fields,
+											bp_get_repeater_clone_field_ids_all( $field->group_id )
+										) );
 									} else {
-										$selected_xprofile_fields['char_search'][] = $field->id;
+										if ( in_array( $field->type, $word_search_field_type ) ) {
+											$selected_xprofile_fields['word_search'][] = $field->id;
+										} else {
+											$selected_xprofile_fields['char_search'][] = $field->id;
+										}
 									}
 								}
+							}
+						}
+					}
+
+					// added repeater support based on privacy.
+					if ( ! empty( $selected_xprofile_repeater_fields ) ) {
+						$selected_xprofile_repeater_fields = array_unique( $selected_xprofile_repeater_fields );
+						foreach ( $selected_xprofile_repeater_fields as $field_id ) {
+							$field_object = new BP_XProfile_Field( $field_id );
+							if ( in_array( $field_object->type, $word_search_field_type ) ) {
+								$selected_xprofile_fields['word_search'][] = $field_object->id;
+							} else {
+								$selected_xprofile_fields['char_search'][] = $field_object->id;
 							}
 						}
 					}
