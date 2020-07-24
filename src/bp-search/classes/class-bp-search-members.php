@@ -125,7 +125,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
 				$groups = bp_xprofile_get_groups(
 					array(
-						'fetch_fields' => true,
+						'fetch_fields'                   => true,
+						'repeater_show_main_fields_only' => true,
 					)
 				);
 
