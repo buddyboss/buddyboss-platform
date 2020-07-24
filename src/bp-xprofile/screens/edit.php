@@ -50,6 +50,10 @@ function xprofile_screen_edit_profile() {
 
 		// Check we have field ID's.
 		if ( empty( $_POST['field_ids'] ) ) {
+			if ( isset( $_POST['repeater_set_sequence'] ) && (int) bp_action_variable( 1 ) > 0 ) {
+				$field_set_sequence = wp_parse_id_list( $_POST['repeater_set_sequence'] );
+				bp_set_profile_field_set_count( (int) bp_action_variable( 1 ), bp_displayed_user_id(), count( (array) $field_set_sequence ) );
+			}
 			bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );
 		}
 

@@ -70,6 +70,8 @@ window.bp = window.bp || {};
         $( '#profile-edit-form .repeater_group_outer:last-of-type' ).toggleClass('active');
       }
 
+	var deleted_field_ids = [];
+
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
@@ -80,8 +82,6 @@ window.bp = window.bp || {};
 
         var r = confirm( BP_Nouveau.confirm_delete_set );
         if ( r ) {
-            var deleted_field_ids = [];
-
 	        $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function () {
 		        var $field = $( this );
 		        var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
