@@ -233,6 +233,20 @@ function bp_media_get_settings_fields() {
 		);
 	}
 
+	$fields['bp_media_settings_photos']['bp_media_allowed_size'] = array(
+		'title'             => __( 'Allowed Max File Size', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_media_allowed_size',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
+	$fields['bp_media_settings_documents']['bp_document_allowed_size'] = array(
+		'title'             => __( 'Allowed Max File Size', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_document_allowed_size',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
 	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
 		'title'    => __( 'File Extensions', 'buddyboss' ),
 		'callback' => 'bp_media_settings_callback_extension_link',
@@ -1343,4 +1357,84 @@ function bp_document_settings_callback_extension_section() {
 	?>
 	<p><?php esc_html_e( 'Check which file extensions are allowed to be uploaded. Add custom extensions at the bottom of the table.', 'buddyboss' ); ?></p>
 	<?php
+}
+
+/**
+ * Setting > Media > Photos > Allowed Mac File Size
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_media_settings_callback_media_allowed_size() {
+	$max_size = bp_core_upload_max_size();
+
+	?>
+	<input type="number"
+		   name="bp_media_allowed_size"
+		   id="bp_media_allowed_size"
+		   value="<?php echo esc_attr( bp_media_allowed_upload_media_size() ); ?>"
+	/>
+	<p class="description">
+		<?php
+		printf(
+				'%1$s %2$s %3$s',
+				__( 'Your server allowed memory is ', 'buddyboss' ),
+				bp_media_format_size_units( $max_size, false, 'MB' ),
+				'MB.'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Allowed upload file size for the media.
+ *
+ * @return int Allowed upload file size for the media.
+ * @since BuddyBoss 1.4.8
+ */
+function bp_media_allowed_upload_media_size() {
+
+	$max_size = bp_core_upload_max_size();
+	$default  =  bp_media_format_size_units( $max_size, false, 'MB' );
+	return (int) apply_filters( 'bp_media_allowed_upload_media_size', (int) get_option( 'bp_media_allowed_size', $default ) );
+}
+
+/**
+ * Setting > Media > Documents > Allowed Max File Size
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_media_settings_callback_document_allowed_size() {
+	$max_size = bp_core_upload_max_size();
+
+	?>
+	<input type="number"
+		   name="bp_document_allowed_size"
+		   id="bp_document_allowed_size"
+		   value="<?php echo esc_attr( bp_media_allowed_upload_document_size() ); ?>"
+	/>
+	<p class="description">
+		<?php
+		printf(
+				'%1$s %2$s %3$s',
+				__( 'Your server allowed memory is ', 'buddyboss' ),
+				bp_document_format_size_units( $max_size, false, 'MB' ),
+				'MB.'
+		);
+		?>
+	</p>
+	<?php
+}
+
+/**
+ * Allowed upload file size for the document.
+ *
+ * @return int Allowed upload file size for the document.
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_media_allowed_upload_document_size() {
+	$max_size = bp_core_upload_max_size();
+	$default  =  bp_document_format_size_units( $max_size, false, 'MB' );
+	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
 }
