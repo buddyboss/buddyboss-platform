@@ -14343,6 +14343,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   font-size: 16px;
 }
 
+.bp-document-listing {
+  display: flex;
+}
+
 .bp-document-listing .media-search-form {
   float: right;
 }
@@ -14356,13 +14360,18 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   padding: 4px;
   height: auto;
   z-index: 112;
+  opacity: 0;
 }
 
 .bp-document-listing .media-search-form .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 10px 6px 2rem;
+  padding: 6px 10px 6px 32px;
   height: auto;
   font-size: 14px;
+}
+
+.bp-document-listing .bp-media-header-wrap {
+  width: 100%;
 }
 
 .bp-document-listing .bp-media-header-wrap .bb-title {
@@ -14463,9 +14472,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   border: 0;
 }
 
+#bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form .nouveau-search-submit {
+  opacity: 0;
+}
+
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .bp-dir-search-form #group-document-search {
   background-image: none;
-  padding: 6px 10px 6px 2rem;
+  padding: 6px 10px 6px 32px;
   height: auto;
   font-size: 14px;
 }
@@ -14534,6 +14547,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   list-style: none;
   margin: 10px 0 0;
   text-align: left;
+  padding: 0;
 }
 
 #bp-media-single-folder .bp-media-header-wrap .document-breadcrumb li {
