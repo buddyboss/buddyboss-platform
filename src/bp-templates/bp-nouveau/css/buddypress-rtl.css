@@ -6648,12 +6648,14 @@ ul.bbp-stats .bbp-count {
   font-size: 30px;
 }
 
+#customize-control-group_nav_order .item-title .checkbox-wrap,
 #customize-control-user_nav_order .item-title .checkbox-wrap {
   display: flex;
   align-items: center;
   float: left;
 }
 
+#customize-control-group_nav_order .item-title .checkbox-wrap .visible-checkboxes,
 #customize-control-user_nav_order .item-title .checkbox-wrap .visible-checkboxes {
   margin: 0 0 0 5px;
 }
