@@ -118,9 +118,15 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 						$checked = 'checked="checked"';
 					}
 
-					$default_tab = 'profile';
-					$tab         = bp_nouveau_get_appearance_settings( 'user_default_tab' );
-					$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+					if ( 'user' === $this->type ) {
+						$default_tab = 'profile';
+						$tab         = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+						$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+					} else {
+						$default_tab = 'members';
+						$tab 		 = bp_nouveau_get_appearance_settings( 'group_default_tab' );
+						$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+					}
 
 					// Check if theme is BuddyBoss
 					if ( strpos( $name, 'BuddyBoss' ) !== false && 'user' === $type ) {
