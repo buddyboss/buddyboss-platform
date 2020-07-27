@@ -2721,7 +2721,7 @@ function bp_media_get_forum_id( $media_id ) {
  * @param int $user_id
  *
  * @return mixed|void
- * @since BuddyBoss 1.4.5
+ * @since BuddyBoss 1.4.7
  */
 function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
