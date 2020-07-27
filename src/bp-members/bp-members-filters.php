@@ -184,19 +184,23 @@ function bp_members_filter_media_personal_scope( $retval = array(), $filter = ar
 			: bp_loggedin_user_id();
 	}
 
-	$privacy = array( 'public', 'loggedin' );
+	$privacy = array( 'public' );
 
-	if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
-		$privacy[] = 'onlyme';
-	}
+	if ( bp_loggedin_user_id() ) {
+		$privacy[] = 'loggedin';
 
-	if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
 		if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
-			$privacy[] = 'friends';
-		} else {
-			$friends = friends_get_friend_user_ids( $user_id );
-			if ( ! empty( $friends ) && in_array( (int) bp_loggedin_user_id(), $friends, true ) ) {
+			$privacy[] = 'onlyme';
+		}
+
+		if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
+			if ( (int) $user_id === (int) bp_loggedin_user_id() ) {
 				$privacy[] = 'friends';
+			} else {
+				$friends = friends_get_friend_user_ids( $user_id );
+				if ( ! empty( $friends ) && in_array( (int) bp_loggedin_user_id(), $friends, true ) ) {
+					$privacy[] = 'friends';
+				}
 			}
 		}
 	}
