@@ -82,7 +82,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'post_nonce'     => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
 		'excluded_hosts' => array(),
 		'errors'         => array(
-			'empty_post_update' => __( 'Please enter some content to post.', 'buddyboss' )
+			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )
 		),
 	);
 
