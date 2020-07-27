@@ -1238,6 +1238,9 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		 */
 	} else {
 
+		/**
+		 * Initializing the count variable to avoid undefined notice
+		 */
 		$count = 0;
 		$count2 = 0;
 
