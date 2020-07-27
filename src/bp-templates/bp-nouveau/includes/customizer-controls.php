@@ -118,6 +118,10 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 						$checked = 'checked="checked"';
 					}
 
+					$default_tab = 'profile';
+					$tab         = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$default_tab = bp_is_active( $tab ) ? $tab : $default_tab;
+
 					// Check if theme is BuddyBoss
 					if ( strpos( $name, 'BuddyBoss' ) !== false && 'user' === $type ) {
 
@@ -132,12 +136,14 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 									<div class="menu-item-handle ui-sortable-handle">
 									<span class="item-title" aria-hidden="true">
 										<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+										<?php if ( $default_tab !== $item->slug ) { ?>
 										<?php if ( $hide ) { ?>
 											<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
 											<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
 										<?php } else { ?>
 											<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
 											<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+										<?php } ?>
 										<?php } ?>
 									</span>
 									</div>
@@ -155,12 +161,14 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 								<div class="menu-item-handle ui-sortable-handle">
 									<span class="item-title" aria-hidden="true">
 										<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+										<?php if ( $default_tab !== $item->slug ) { ?>
 										<?php if ( $hide ) { ?>
 											<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
 											<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
 										<?php } else { ?>
 											<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
 											<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+										<?php } ?>
 										<?php } ?>
 									</span>
 								</div>
