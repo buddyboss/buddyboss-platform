@@ -145,9 +145,31 @@ class Hooks {
 		$group    = groups_get_group( $groupId );
 
 		if ( $group->is_admin ) {
+			
+			/**
+			 * 
+			 * Fires when Social Group Organizer is removed.
+			 * 
+			 * @param int $groupId group id
+			 * @param int $memberId member id
+			 * @param object $group group object
+			 * 
+			 * @since BuddyBoss 1.4.7
+			 */
 			return do_action( 'bp_ld_sync/buddypress_group_admin_removed', $groupId, $memberId, $group );
 		}
 		if ( $group->is_mod ) {
+			
+			/**
+			 * 
+			 * Fires when Social Group Moderator is removed.
+			 * 
+			 * @param int $groupId group id
+			 * @param int $memberId member id
+			 * @param object $group group object
+			 * 
+			 * @since BuddyBoss 1.4.7
+			 */
 			return do_action( 'bp_ld_sync/buddypress_group_mod_removed', $groupId, $memberId, $group );
 		}
 
