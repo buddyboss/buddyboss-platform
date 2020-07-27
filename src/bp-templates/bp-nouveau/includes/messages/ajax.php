@@ -1464,9 +1464,6 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			'only_friends' => $friends
 	);
 
-	error_log( $friends );
-	error_log( print_r( $args, 1 ) );
-
 	$results = bp_core_get_suggestions($args);
 
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
