@@ -262,7 +262,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// check if force friendship is enabled and check recipients
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
+	if ( ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) || ! bp_current_user_can( 'bp_moderate' ) ) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
@@ -996,13 +996,13 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'name' => $group_name
 				);
 			} else {
-				
+
 				/**
-				* 
+				*
 				* Filters table prefix.
-				* 
+				*
 				* @param int $wpdb->base_prefix table prefix
-				* 
+				*
 				* @since BuddyBoss 1.4.7
 				*/
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
@@ -1033,15 +1033,15 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 			}
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Filters the avatar url array to be applied in message thread.
-	 * 
-	 * @param array $avatar_urls avatar urls in 
+	 *
+	 * @param array $avatar_urls avatar urls in
 	 * @param int $thread_id Message thread id
 	 * @param int $user_id user id
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.7
 	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );

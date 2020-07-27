@@ -277,6 +277,10 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		}
 
 		$bp_force_friendship_to_message = bp_force_friendship_to_message();
+		if ( $bp_force_friendship_to_message && bp_current_user_can( 'bp_moderate' ) ) {
+			$bp_force_friendship_to_message = false;
+		}
+
 
 		if ( bp_is_active( 'friends' ) ) {
 			// It's the member's connection requests screen
