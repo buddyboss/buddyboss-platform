@@ -133,6 +133,8 @@ class Hooks {
 
 	/**
 	 * Hook on user group deleted.
+	 * 
+	 * @since BuddyBoss 1.4.7
 	 *
 	 * @param $user_id
 	 * @param $group_id
