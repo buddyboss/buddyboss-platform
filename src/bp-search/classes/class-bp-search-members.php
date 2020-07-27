@@ -144,9 +144,14 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						if ( ! empty( $group->fields ) ) {
 							foreach ( $group->fields as $field ) {
 								if ( bp_is_search_xprofile_enable( $field->id ) ) {
+
+									if ( true === bp_core_hide_display_name_field( $field->id ) ) {
+										continue;
+									}
+
 									$repeater_enabled = bp_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true );
 
-									if ( empty( $repeater_enabled ) || 'on' === $repeater_enabled ) {
+									if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled ) {
 										$selected_xprofile_repeater_fields = array_unique( array_merge(
 											$selected_xprofile_repeater_fields,
 											bp_get_repeater_clone_field_ids_all( $field->group_id )
