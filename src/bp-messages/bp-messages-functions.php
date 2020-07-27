@@ -996,6 +996,15 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 					'name' => $group_name
 				);
 			} else {
+				
+				/**
+				* 
+				* Filters table prefix.
+				* 
+				* @param int $wpdb->base_prefix table prefix
+				* 
+				* @since BuddyBoss 1.4.7
+				*/
 				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
 				$groups_table             = $prefix . 'bp_groups';
 				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
@@ -1024,6 +1033,16 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 			}
 		}
 	}
-
+	
+	/**
+	 * 
+	 * Filters the avatar url array to be applied in message thread.
+	 * 
+	 * @param array $avatar_urls avatar urls in 
+	 * @param int $thread_id Message thread id
+	 * @param int $user_id user id
+	 * 
+	 * @since BuddyBoss 1.4.7
+	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
 }
