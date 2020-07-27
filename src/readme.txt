@@ -58,24 +58,24 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.7 =
-* Profiles - Fixed profile field 'Gender' default options unable to re-order.
-* Profiles - Fixed profile completion widget does not update with object caching.
-* Profiles - Fixed profile repeater fieldset, delete field not working.
+* Profiles - Fixed profile field type Gender default options unable to re-order.
+* Profiles - Fixed profile completion widget does not update with object caching ON.
+* Profiles - Fixed profile repeater fieldset, delete repeater field not working.
 * Groups - Fixed documents and folders add/edit/delete/move permissions for group organizer/moderator/member.
 * Groups - Fixed performance issue when group members increases.
-* Groups - Fixed hidden groups are not showing for group type shortcode.
-* Forums - Fixed discussion replies text formatting validation.
+* Groups - Fixed hidden groups not showing for group type shortcode.
+* Forums - Fixed discussion reply text formatting validation.
 * Activity - Fixed photo comment email notification on the activity feed.
-* Activity - Fixed Privacy for activity update with a photo.
+* Activity - Fixed Privacy for activity attached photo.
 * Activity - Fixed activity preview to allow German characters.
 * Activity - Fixed activity post update formatting issues.
 * Documents - Fixed document rename does not allow non-English characters.
 * Messages - Improved the avatar display for multi-user message threads.
-* Network Search - Fixed search members based on members profile field privacy.
-* Multisite - Fixed repair and import tools inaccessible/broken.
+* Network Search - Fixed search members based on members profile field-specific privacy.
+* Multisite - Fixed repair and import tools inaccessible/broken in multi-site.
 * Compatibility - Fixed register and activate page title when RankMath plugin is active.
 * Compatibility - Fixed social groups and Learndash group slug conflict.
-* Compatibility - Fixed courses privacy based on membership expiry from MemberPress.
+* Compatibility - Fixed courses access based on membership expiry from MemberPress plugin.
 * Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit.
 * Translations - Fixed text for document file extension descriptions not available for translation.
 * Translations - Fixed admin dashboard text not translatable.
