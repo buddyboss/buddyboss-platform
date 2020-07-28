@@ -460,6 +460,10 @@ ul.bbp-stats {
 	align-items: center;
 	float: right;
 
+	&.bp-hide {
+		display: none;
+	}
+
 	.visible-checkboxes {
 		margin: 0 5px 0 0;
 	}
