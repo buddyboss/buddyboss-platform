@@ -4798,3 +4798,53 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 
 	return $bytes;
 }
+
+/**
+ * Whether or not profile field is hidden.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int $field_id ID for the profile field.
+ *
+ * @return bool Whether or not profile field is hidden.
+ */
+function bp_core_hide_display_name_field( $field_id = 0 ) {
+	if (
+		! function_exists( 'bp_is_active' )
+		|| ! bp_is_active( 'xprofile' )
+		|| empty( $field_id )
+	) {
+		return false;
+	}
+
+	$retval = false;
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+			$retval = true;
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+			$retval = true;
+		}
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_firstname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+			$retval = true;
+		}
+	}
+
+	/**
+	 * Filters Hide Display name field.
+	 *
+	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param bool $retval   Return value.
+	 * @param int  $field_id ID for the profile field.
+	 */
+	return ( bool ) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
+}

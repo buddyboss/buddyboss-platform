@@ -1900,11 +1900,15 @@ function bp_media_activity_after_email_content( $activity ) {
 
 	if ( ! empty( $media_ids ) ) {
 		$media_ids = explode( ',', $media_ids );
+		$photo_text = sprintf(
+		        _n( '%s photo', '%s photos', count( $media_ids) , 'buddyboss' ),
+                number_format_i18n( count( $media_ids ) )
+        );
 		$content   = sprintf(
-		    /* translator: 1. Activity link, 2. Activity media count */
-			__( '<a href="%1$s" target="_blank">%2$s Media Uploaded.</a>', 'buddyboss' ),
+		    /* translator: 1. Activity link, 2. Activity photo count */
+			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
 			bp_activity_get_permalink( $activity->id ),
-			count( $media_ids )
+			$photo_text
 		);
 		echo wpautop( $content );
 	}
