@@ -937,7 +937,7 @@ function bp_activity_edit_times( $time = null ){
 		array(
 			'ten_minutes' 	=> array( 'value' => ( 60 * 10), 'label' => __( '10 Minutes', 'buddyboss' ) ),
 			'one_hour' 		=> array( 'value' => ( 60 * 60), 'label' => __( '1 Hour', 'buddyboss' ) ),
-			'three_hours' 	=> array( 'value' => ( 60 * 60 * 3), 'label' => __( '1 Hours', 'buddyboss' ) ),
+			'three_hours' 	=> array( 'value' => ( 60 * 60 * 3), 'label' => __( '3 Hours', 'buddyboss' ) ),
 			'one_day'     	=> array( 'value' => ( 60 * 60 * 24), 'label' => __( '1 Day', 'buddyboss' ) ),
 			'seven_days' 	=> array( 'value' => ( 60 * 60 * 24 * 7), 'label' => __( '7 Days', 'buddyboss' ) ),
 			'thirty_days' 	=> array( 'value' => ( 60 * 60 * 24 * 30), 'label' => __( '30 Days', 'buddyboss' ) ),
