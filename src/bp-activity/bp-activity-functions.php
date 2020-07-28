@@ -2327,9 +2327,17 @@ function bp_activity_post_update( $args = '' ) {
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $activity->privacy,
-					'error_type'        => $r['error_type'],
+					'error_type'        => $r[ 'error_type' ],
 				)
 			);
+
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+
+			bp_activity_update_meta( $activity->id, '_is_edited', current_time( 'mysql' ) );
+
 		}
 	} else {
 		// Now write the values.
