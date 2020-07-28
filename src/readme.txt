@@ -73,6 +73,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Improved the avatar display for multi-user message threads
 * Network Search - Fixed search members based on members profile field-specific privacy
 * Multisite - Fixed repair and import tools inaccessible/broken in multi-site
+* REST API - Fixed API issues in activity, private messages, connection, and site permissions
+* REST API - New endpoints added for Email invites profile types changes
 * Compatibility - Fixed register and activate page title when RankMath plugin is active
 * Compatibility - Fixed social groups and LearnDash group slug conflict
 * Compatibility - Fixed courses access based on membership expiry from MemberPress plugin
