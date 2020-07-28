@@ -284,7 +284,8 @@ function bp_activity_add_meta_boxes() {
 }
 
 /**
- * Learndash Plugin changing the Edit page link to homepage instead of the platform groups page.
+ * Learndash Plugin updates Group Page admin bar Edit link to dashboard home page instead of the platform groups page.
+ * Filter fix the issue and making sure platform group page is being edited.
  *
  * @since BuddyBoss 1.4.7
  */
@@ -309,9 +310,14 @@ function bb_group_wp_admin_bar_updates_menu() {
 }
 
 /**
- * Learndash Plugin fix conflict with groups directory page.
+ * Filter to fix conflict between Learndash Plugin groups archive page and Platform Groups page.
  *
  * @since BuddyBoss 1.4.7
+ * 
+ * @param array  $post_options An array of post options.
+ * @param string $post_type    Post type slug.
+ * 
+ * @return array $post_options
  */
 function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
 	$page_ids = bp_core_get_directory_page_ids();
@@ -324,9 +330,15 @@ function bb_ld_group_archive_slug_change( $post_options, $post_type ) {
 }
 
 /**
- * Learndash Plugin fix conflict with groups directory page and show the proper label on  http://localhost/platform/wp-admin/admin.php?page=groups-options page.
+ * Filter to fix conflict between Learndash Plugin groups archive page and Platform Groups page.
+ * Show the proper archive page link on LD domain.com/wp-admin/admin.php?page=groups-options page.
  *
  * @since BuddyBoss 1.4.7
+ * 
+ * @param array  $setting_option_fields Associative array of Setting field details like name,type,label,value.
+ * @param string $settings_section_key Used within the Settings API to uniquely identify this section.
+ * 
+ * @return array $setting_option_fields
  */
 function bb_ld_group_archive_backend_slug_print( $setting_option_fields, $settings_section_key) {
 
