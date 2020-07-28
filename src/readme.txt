@@ -74,7 +74,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Network Search - Fixed search members based on members profile field-specific privacy.
 * Multisite - Fixed repair and import tools inaccessible/broken in multi-site.
 * Compatibility - Fixed register and activate page title when RankMath plugin is active.
-* Compatibility - Fixed social groups and Learndash group slug conflict.
+* Compatibility - Fixed social groups and LearnDash group slug conflict.
 * Compatibility - Fixed courses access based on membership expiry from MemberPress plugin.
 * Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit.
 * Translations - Fixed text for document file extension descriptions not available for translation.
