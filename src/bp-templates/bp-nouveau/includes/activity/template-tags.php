@@ -1231,6 +1231,47 @@ function bp_nouveau_activity_privacy() {
 }
 
 /**
+ * @param int $activity_id
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * Get log is edited activity.
+ *
+ * @since BuddyBoss TODO: Version Number.
+ */
+
+function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
+
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$activity_id = bp_get_activity_id();
+	$is_edited   = bp_activity_get_meta( $activity_id, '_is_edited', true );
+
+	if ( $is_edited ) {
+		$activity_text = '<span class="bb-activity-edited-text"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
+
+	} else {
+		$activity_text = null;
+	}
+
+	$rendered_text = apply_filters( 'bp_nouveau_activity_is_edited', $activity_text, $activity_id );
+
+	if ( $echo ) {
+		echo $rendered_text;
+	} else {
+		return $rendered_text;
+	}
+
+}
+
+/**
  * Fetch and update the media description.
  *
  * @param int $activity_id The current activity ID.

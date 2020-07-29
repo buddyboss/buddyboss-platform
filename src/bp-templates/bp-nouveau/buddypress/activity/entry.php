@@ -31,6 +31,7 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 			<?php bp_nouveau_activity_privacy(); ?>
 
+			<?php bp_nouveau_activity_is_edited(); ?>
 		</div>
 
 		<?php bp_nouveau_activity_hook( 'before', 'activity_content' ); ?>
