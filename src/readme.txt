@@ -81,7 +81,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit
 * Translations - Fixed text for document file extension descriptions not available for translation
 * Translations - Fixed admin dashboard text not translatable
-* Translations - Added Hungarian language files, credits to Dufka Gábor
+* Translations - Added Hungarian language files
 
 = 1.4.6 =
 * Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
