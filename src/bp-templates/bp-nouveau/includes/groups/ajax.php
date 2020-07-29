@@ -289,7 +289,7 @@ function bp_nouveau_ajax_joinleave_group() {
 			break;
 	}
 
-	$response = apply_filters( 'bp_nouveau_ajax_joinleave_group', $response );
+	$response = apply_filters( 'bp_nouveau_ajax_joinleave_group', $response, $group_id );
 
 	if ( 'error' === $response['type'] ) {
 		wp_send_json_error( $response );

@@ -179,7 +179,14 @@ class Sync {
 		$generator->syncBpMember( $memberId );
 	}
 
-	public function bp_ld_sync_error_join_change_message( $feedback ) {
+	/**
+	 * Set the error message when user cam't join the group due to the group membership of ld.
+	 * @param $feedback
+	 * @param $group_id
+	 *
+	 * @return mixed
+	 */
+	public function bp_ld_sync_error_join_change_message( $feedback, $group_id) {
 		if ( ! empty( $feedback ) && isset( $feedback['type'] ) && 'error' == $feedback['type'] ) {
 			$feedback['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You need to buy a learndash group membership first to join this group.', 'buddyboss' ) );
 		}
@@ -199,7 +206,7 @@ class Sync {
 		$groupMemberObject = $generator->syncBeforeBpMember( $groupMemberObject );
 
 		if ( empty( $groupMemberObject->group_id ) ) {
-			add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bp_ld_sync_error_join_change_message' ), 99, 1 );
+			add_filter( 'bp_nouveau_ajax_joinleave_group', array( $this, 'bp_ld_sync_error_join_change_message' ), 99, 2 );
 		}
 
 		return $groupMemberObject;
