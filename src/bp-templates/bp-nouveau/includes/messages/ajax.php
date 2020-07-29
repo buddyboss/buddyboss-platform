@@ -1706,7 +1706,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
 		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
 
-		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id  && 'open' === $message_type ) {
 			$is_group_thread = 1;
 			unset($thread->feedback_error);
 		}
