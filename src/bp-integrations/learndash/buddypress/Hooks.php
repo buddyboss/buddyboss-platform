@@ -42,6 +42,7 @@ class Hooks {
 		// admin
 		add_action( 'bp_group_admin_edit_after', array( $this, 'groupUpdated' ) );
 
+		add_action( 'groups_member_before_save', array( $this, 'check_user_can_join_if_ld_sync' ) );
 		add_action( 'groups_member_after_save', array( $this, 'groupMemberAdded' ) );
 		add_action( 'groups_member_after_remove', array( $this, 'groupMemberRemoved' ) );
 		add_action( 'bp_groups_member_after_delete', array( $this, 'groupMemberDeleted' ), 999, 2 );
@@ -112,6 +113,28 @@ class Hooks {
 	}
 
 	/**
+	 * Sub action before save when a member is added to bp group, based on type
+	 *
+	 * @since BuddyBoss 1.4.7
+	 */
+	public function check_user_can_join_if_ld_sync( $groupMemberObject ) {
+
+		if ( $groupMemberObject->is_banned ) {
+			return do_action( 'bp_ld_sync/bb_ld_before_group_member_banned', $groupMemberObject );
+		}
+
+		if ( $groupMemberObject->is_admin ) {
+			return do_action( 'bp_ld_sync/bb_ld_before_group_admin_added', $groupMemberObject );
+		}
+
+		if ( $groupMemberObject->is_mod ) {
+			return do_action( 'bp_ld_sync/bb_ld_before_group_mod_added', $groupMemberObject );
+		}
+
+		return do_action( 'bp_ld_sync/bb_ld_before_group_member_added', $groupMemberObject );
+	}
+
+	/**
 	 * Sub action when a member is deleted to bp group, based on type
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -133,7 +156,7 @@ class Hooks {
 
 	/**
 	 * Hook on user group deleted.
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.7
 	 *
 	 * @param $user_id
@@ -145,29 +168,29 @@ class Hooks {
 		$group    = groups_get_group( $groupId );
 
 		if ( $group->is_admin ) {
-			
+
 			/**
-			 * 
+			 *
 			 * Fires when Social Group Organizer is removed.
-			 * 
+			 *
 			 * @param int $groupId group id
 			 * @param int $memberId member id
 			 * @param object $group group object
-			 * 
+			 *
 			 * @since BuddyBoss 1.4.7
 			 */
 			return do_action( 'bp_ld_sync/buddypress_group_admin_removed', $groupId, $memberId, $group );
 		}
 		if ( $group->is_mod ) {
-			
+
 			/**
-			 * 
+			 *
 			 * Fires when Social Group Moderator is removed.
-			 * 
+			 *
 			 * @param int $groupId group id
 			 * @param int $memberId member id
 			 * @param object $group group object
-			 * 
+			 *
 			 * @since BuddyBoss 1.4.7
 			 */
 			return do_action( 'bp_ld_sync/buddypress_group_mod_removed', $groupId, $memberId, $group );
