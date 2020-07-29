@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,33 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.7 =
+* Profiles - Fixed profile field type Gender default options unable to re-order
+* Profiles - Fixed profile completion widget does not update with object caching ON
+* Profiles - Fixed profile repeater fieldset, delete repeater field not working
+* Groups - Fixed documents and folders add/edit/delete/move permissions for group organizer/moderator/member
+* Groups - Fixed performance issue when group members increases
+* Groups - Fixed hidden groups not showing for group type shortcode
+* Forums - Fixed discussion reply text formatting validation
+* Activity - Fixed photo comment email notification on the activity feed
+* Activity - Fixed Privacy for activity attached photo
+* Activity - Fixed activity preview to allow German characters
+* Activity - Fixed activity post update formatting issues
+* Documents - Fixed document rename does not allow non-English characters
+* Messages - Improved the avatar display for multi-user message threads
+* Network Search - Fixed search members based on members profile field-specific privacy
+* Multisite - Fixed repair and import tools inaccessible/broken in multi-site
+* REST API - Fixed API issues in activity, private messages, connection, and site permissions
+* REST API - New endpoints added for Email invites profile types changes
+* Compatibility - Fixed register and activate page title when RankMath plugin is active
+* Compatibility - Fixed social groups and LearnDash group slug conflict
+* Compatibility - Fixed courses access based on membership expiry from MemberPress plugin
+* Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit
+* Translations - Fixed text for document file extension descriptions not available for translation
+* Translations - Fixed admin dashboard text not translatable
+* Translations - Added Hungarian language files
+* Translations - Updated German (formal) language files
 
 = 1.4.6 =
 * Groups - Fixed 'Pending Invites' page unable to display more than 20 invites

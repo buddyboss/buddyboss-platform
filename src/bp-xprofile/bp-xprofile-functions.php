@@ -869,7 +869,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
 /**
- * Syncs Xprofile data to the standard built in WordPress profile data.
+ * Sync xprofile data to the standard built in WordPress profile data.
  *
  * @since BuddyPress 1.0.0
  *
@@ -917,38 +917,6 @@ add_action( 'bp_core_signup_user', 'xprofile_sync_wp_profile' );
 add_action( 'bp_core_activated_user', 'xprofile_sync_wp_profile' );
 
 /**
- * Syncs the standard built in WordPress profile data to XProfile.
- *
- * @since BuddyPress 1.2.4
- *
- * @param object $errors Array of errors. Passed by reference.
- * @param bool   $update Whether or not being upated.
- * @param object $user   User object whose profile is being synced. Passed by reference.
- */
-function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
-
-	// Bail if profile syncing is disabled.
-	if ( bp_disable_profile_sync() || ! $update || $errors->get_error_codes() ) {
-		return;
-	}
-
-	if ( isset( $user->first_name ) ) {
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
-	}
-
-	if ( isset( $user->last_name ) ) {
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
-	}
-
-	if ( isset( $user->nickname ) ) {
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
-	}
-
-	$user->display_name = bp_core_get_user_displayname( $user->ID );
-}
-add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
-
-/**
  * Update display_name in user database.
  *
  * @since BuddyBoss 1.0.0
@@ -961,53 +929,6 @@ function bp_xprofile_update_display_name( $user_id ) {
 		)
 	);
 }
-
-/**
- * Validate nickname when updated and return error if invalid.
- *
- * @since BuddyBoss 1.0.0
- */
-function user_profile_update_validate_nickname( &$errors, $update, &$user ) {
-	// Bail if not updating or already has error
-	if ( ! $update || $errors->get_error_codes() ) {
-		return;
-	}
-
-	$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $user->nickname, $user->ID );
-
-	if ( $invalid ) {
-		$errors->add(
-			'nickname_invalid',
-			$invalid,
-			array( 'form-field' => 'nickname' )
-		);
-	}
-}
-add_action( 'user_profile_update_errors', 'user_profile_update_validate_nickname', 10, 3 );
-
-/**
- * Update the WP display, last, and first name fields when the xprofile display name field is updated.
- *
- * @since BuddyPress 3.0.0
- *
- * @param BP_XProfile_ProfileData $data Current instance of the profile data being saved.
- */
-function xprofile_sync_wp_profile_on_single_field_set( $data ) {
-	$synced_fields = array_filter(
-		array(
-			bp_xprofile_firstname_field_id(),
-			bp_xprofile_lastname_field_id(),
-			bp_xprofile_nickname_field_id(),
-		)
-	);
-
-	if ( ! in_array( $data->field_id, $synced_fields ) ) {
-		return;
-	}
-
-	xprofile_sync_wp_profile( $data->user_id, $data->field_id );
-}
-add_action( 'xprofile_data_after_save', 'xprofile_sync_wp_profile_on_single_field_set' );
 
 /**
  * When a user is deleted, we need to clean up the database and remove all the
@@ -1973,3 +1894,80 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
+
+/**
+ * Sync the standard built in WordPress profile data to xprofile data.
+ *
+ * @since BuddyBoss 1.4.7
+ * 
+ * @param int $user_id sync specified user id first name, last name and nickname.
+ * 
+ * @return void 
+ */
+function bp_xprofile_sync_bp_profile( $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		return;
+	}
+
+	$user = get_user_by( 'id', $user_id );
+
+	if ( isset( $user->first_name ) ) {
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+	}
+
+	if ( isset( $user->last_name ) ) {
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
+	}
+
+	if ( isset( $user->nickname ) ) {
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
+	}
+
+}
+add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
+
+/**
+ * Sync the standard built in xprofile data to WordPress data.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int   $user_id          ID for the user whose profile is being saved.
+ * @param array $posted_field_ids Array of field IDs that were edited.
+ * @param bool  $errors           Whether or not any errors occurred.
+ * @param array $old_values       Array of original values before update.
+ * @param array $new_values       Array of newly saved values after update.
+ * 
+ * @return void 
+ */
+
+function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+
+	if ( ! empty( $errors ) ) {
+		return;
+	}
+
+	foreach ( $new_values as $field_id => $new_value ) {
+
+		// Get First, Last and Nickname field id from DB.
+		$firstname_id = bp_xprofile_firstname_field_id();
+		$lastname_id  = bp_xprofile_lastname_field_id();
+		$nickname_id  = bp_xprofile_nickname_field_id();
+
+		if ( ! $field_id || $field_id == $firstname_id ) {
+			bp_update_user_meta( $user_id, 'first_name', $new_value['value'] );
+		}
+
+		if ( ! $field_id || $field_id == $lastname_id ) {
+			bp_update_user_meta( $user_id, 'last_name', $new_value['value'] );
+		}
+
+		if ( ! $field_id || $field_id == $nickname_id ) {
+			bp_update_user_meta( $user_id, 'nickname', $new_value['value'] );
+		}
+
+	}
+
+	bp_xprofile_update_display_name( $user_id );
+}
+add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );

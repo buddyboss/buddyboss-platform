@@ -609,21 +609,26 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
 
-	if ( ! is_user_logged_in() ) {
-		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
 	// save media.
 	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = $_POST['title'];
+	$title     = wp_strip_all_tags( $_POST['title'] );
 	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
 	$parent    = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
 	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
@@ -664,8 +669,10 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -717,7 +724,6 @@ function bp_nouveau_ajax_document_child_folder_save() {
 
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
-
 		wp_send_json_error( $response );
 	}
 
@@ -726,10 +732,15 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	// save folder.
 	$id        = 0;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = $_POST['title'];
+	$title     = wp_strip_all_tags( $_POST['title'] );
 	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
 	$privacy   = '';
 
@@ -761,8 +772,10 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -988,6 +1001,11 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
+		if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+			$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
 		if ( (int) $document_id > 0 ) {
 			$has_access = bp_folder_user_can_edit( $document_id );
 			if ( ! $has_access ) {
@@ -1054,6 +1072,14 @@ function bp_nouveau_ajax_document_edit_folder() {
 			esc_html__( 'Please enter title of folder.', 'buddyboss' )
 		);
 
+		wp_send_json_error( $response );
+	}
+
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'Invalid folder name', 'buddyboss' )
+		);
 		wp_send_json_error( $response );
 	}
 
@@ -1378,9 +1404,9 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
 	} else {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
 	$first_text = '';
