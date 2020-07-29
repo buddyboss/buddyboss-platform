@@ -46,6 +46,7 @@ class Sync {
 		add_action( 'bp_ld_sync/buddypress_group_admin_added', array( $this, 'onAdminAdded' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_mod_added', array( $this, 'onModAdded' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_member_added', array( $this, 'onMemberAdded' ), 10, 3 );
+		add_action( 'bp_ld_sync/bb_ld_before_group_member_added', array( $this, 'beforeMemberAdded' ), 10, 1 );
 
 		add_action( 'bp_ld_sync/buddypress_group_admin_removed', array( $this, 'onAdminRemoved' ), 10, 3 );
 		add_action( 'bp_ld_sync/buddypress_group_mod_removed', array( $this, 'onModRemoved' ), 10, 3 );
@@ -176,6 +177,19 @@ class Sync {
 		}
 
 		$generator->syncBpMember( $memberId );
+	}
+
+	/**
+	 * Sync before when a member is added to the group
+	 *
+	 * @since BuddyBoss 1.4.7
+	 */
+	public function beforeMemberAdded( $groupMemberObject ) {
+		if ( ! $generator = $this->groupUserEditCheck( 'user', $groupMemberObject->group_id ) ) {
+			return false;
+		}
+
+		return $generator->syncBeforeBpMember( $groupMemberObject );
 	}
 
 	/**

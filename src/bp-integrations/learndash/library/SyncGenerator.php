@@ -391,6 +391,38 @@ class SyncGenerator {
 	}
 
 	/**
+	 * Check before Sync a bp member to ld
+	 *
+	 * @since BuddyBoss 1.4.7
+	 */
+	public function syncBeforeBpMember( $group_object ) {
+
+		// If no ld group sync.
+		if ( empty( $this->ldGroupId ) ) {
+			return $group_object;
+		}
+
+		$post_label_prefix = 'group';
+		$meta              = learndash_get_setting( $this->ldGroupId );
+		$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
+		$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
+
+		// format the Course price to be proper XXX.YY no leading dollar signs or other values.
+		if ( ( 'paynow' === $post_price_type ) || ( 'subscribe' === $post_price_type ) ) {
+			if ( '' !== $post_price ) {
+				$post_price = preg_replace( '/[^0-9.]/', '', $post_price );
+				$post_price = number_format( floatval( $post_price ), 2, '.', '' );
+			}
+		}
+
+		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( $this->ldGroupId, $group_object->group_id )  ) {
+			$group_object->group_id = null;
+		}
+
+		return $group_object;
+	}
+
+	/**
 	 * Sync a ld admin to bp
 	 *
 	 * @since BuddyBoss 1.0.0
