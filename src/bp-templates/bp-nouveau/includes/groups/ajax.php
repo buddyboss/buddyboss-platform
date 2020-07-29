@@ -289,6 +289,8 @@ function bp_nouveau_ajax_joinleave_group() {
 			break;
 	}
 
+	$response = apply_filters( 'bp_nouveau_ajax_joinleave_group', $response );
+
 	if ( 'error' === $response['type'] ) {
 		wp_send_json_error( $response );
 	}
