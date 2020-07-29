@@ -302,11 +302,18 @@ class BP_Core_Nav {
 	public function sort_nav( $items ) {
 		$sorted = array();
 
+		$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
+		if ( empty( $parent_slug ) ){
+			$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
+		}
+
 		foreach ( $items as $item ) {
 			// Default position
 			$position = 99;
 
-			if ( ! is_admin() && isset( $item->is_hidden ) && true === $item->is_hidden ) {
+			$slug = $item->slug;
+
+			if ( ! is_admin() && is_array( $hidden_tabs ) && ! empty( $hidden_tabs ) && in_array( $slug, $hidden_tabs, true ) ) {
 				continue;
 			}
 

@@ -1515,12 +1515,6 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 		return false;
 	}
 
-
-	$hidden_tabs = bp_nouveau_get_appearance_settings( 'group_nav_hide' );
-	if ( empty( $parent_slug ) ){
-		$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
-	}
-
 	$position = 0;
 
 	foreach ( $order as $slug ) {
@@ -1535,10 +1529,6 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 
 		if ( ! $item_nav ) {
 			continue;
-		}
-
-		if ( is_array( $hidden_tabs ) && ! empty( $hidden_tabs ) && in_array( $slug, $hidden_tabs, true ) ) {
-			$nav->edit_nav( array( 'is_hidden' => true ), $slug, $parent_slug );
 		}
 
 		if ( (int) $item_nav->position !== (int) $position ) {
