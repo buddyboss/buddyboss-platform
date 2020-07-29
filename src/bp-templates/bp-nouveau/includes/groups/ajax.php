@@ -289,6 +289,14 @@ function bp_nouveau_ajax_joinleave_group() {
 			break;
 	}
 
+	/**
+	 * Filters change the success/fail message.
+	 *
+	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param array $response Array of response message.
+	 * @param int   $group_id Group id.
+	 */
 	$response = apply_filters( 'bp_nouveau_ajax_joinleave_group', $response, $group_id );
 
 	if ( 'error' === $response['type'] ) {

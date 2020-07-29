@@ -181,10 +181,13 @@ class Sync {
 
 	/**
 	 * Set the error message when user cam't join the group due to the group membership of ld.
+	 *
 	 * @param $feedback
 	 * @param $group_id
 	 *
 	 * @return mixed
+	 *
+	 * @since BuddyBoss 1.4.8
 	 */
 	public function bp_ld_sync_error_join_change_message( $feedback, $group_id) {
 		if ( ! empty( $feedback ) && isset( $feedback['type'] ) && 'error' == $feedback['type'] ) {
