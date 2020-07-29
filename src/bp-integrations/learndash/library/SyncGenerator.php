@@ -415,7 +415,7 @@ class SyncGenerator {
 			}
 		}
 
-		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( $this->ldGroupId, $group_object->group_id )  ) {
+		if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $this->ldGroupId )  ) {
 			$group_object->group_id = null;
 		}
 
