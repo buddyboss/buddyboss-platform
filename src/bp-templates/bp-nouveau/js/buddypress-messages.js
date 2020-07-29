@@ -706,9 +706,14 @@ window.bp = window.bp || {};
 					paste: {
 						forcePlainText: false,
 						cleanPastedHTML: true,
-						cleanReplacements: [],
-						cleanAttrs: ['class', 'style', 'dir'],
-						cleanTags: ['meta'],
+						cleanReplacements: [
+							[new RegExp(/<div/gi), '<p'],
+							[new RegExp(/<\/div/gi), '</p'],
+							[new RegExp(/<h[1-6]/gi), '<b'],
+							[new RegExp(/<\/h[1-6]/gi), '</b'],
+						],
+						cleanAttrs: ['class', 'style', 'dir', 'id'],
+						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 						unwrapTags: []
 					},
 					imageDragging: false
@@ -1753,7 +1758,8 @@ window.bp = window.bp || {};
 				}
 
 				// check message content empty.
-				if ( this.model.get( 'message_content' ) === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
+				this.model.set('message_content', this.model.get('message_content').replace(/&nbsp;/g, '').trim(), { silent: true });
+				if ( $(this.model.get('message_content')).text().trim() === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -2707,7 +2713,8 @@ window.bp = window.bp || {};
 				}
 
 				// check message content empty.
-				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				content = content.replace(/&nbsp;/g,'').trim();
+				if ( $(content).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					errors.push( 'message_content' );
 				}
 

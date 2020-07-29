@@ -1125,6 +1125,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				'append_thread' => false,
 				'is_hidden'     => false,
 				'mark_visible'  => false,
+				'group_thread'  => true,
 				'error_type'    => 'wp_error',
 			),
 			'bp_groups_messages_new_message'

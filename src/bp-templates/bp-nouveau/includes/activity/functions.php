@@ -80,7 +80,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'object'         => 'user',
 		'backcompat'     => (bool) has_action( 'bp_activity_post_form_options' ),
 		'post_nonce'     => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
-		'excluded_hosts' => array()
+		'excluded_hosts' => array(),
+		'errors'         => array(
+			'empty_post_update' => __( 'Sorry, Your update cannot be empty.', 'buddyboss' )
+		),
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();

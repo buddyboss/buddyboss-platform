@@ -465,7 +465,7 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
-	} elseif ( ! empty( $media->folder_id ) ) {
+	} elseif ( ! empty( $media->album_id ) ) {
 		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
 			$media->privacy = $album->privacy;
@@ -2721,7 +2721,7 @@ function bp_media_get_forum_id( $media_id ) {
  * @param int $user_id
  *
  * @return mixed|void
- * @since BuddyBoss 1.4.5
+ * @since BuddyBoss 1.4.7
  */
 function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
