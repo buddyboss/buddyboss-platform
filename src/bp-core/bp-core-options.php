@@ -1043,7 +1043,7 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
 function bp_force_friendship_to_message( $default = false ) {
 
 	$value = (bool) bp_get_option( 'bp-force-friendship-to-message', $default );
-	if ( ! is_admin() && bp_current_user_can( 'bp_moderate' ) ) {
+	if ( ( ! is_admin() && bp_current_user_can( 'bp_moderate' ) ) || ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && bp_current_user_can( 'bp_moderate' ) ) ) {
 		$value = false;
 	}
 
