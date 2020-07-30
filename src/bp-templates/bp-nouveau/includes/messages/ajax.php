@@ -1458,8 +1458,6 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		)
 	);
 
-	$results = bp_core_get_suggestions($args);
-
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
 
 	wp_send_json_success(
