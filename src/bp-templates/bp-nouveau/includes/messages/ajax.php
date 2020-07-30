@@ -1450,18 +1450,12 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
-
-	// Allow Admin to message even if not a friend.
-	if ( bp_current_user_can( 'bp_moderate' ) ) {
-		$friends = false;
-	} else {
-		$friends = bp_is_active( 'friends' ) && bp_force_friendship_to_message();
-	}
-
-	$args = array(
+	$results = bp_core_get_suggestions(
+		array(
 			'term'         => sanitize_text_field( $_GET['term'] ),
 			'type'         => 'members',
-			'only_friends' => $friends
+			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message()
+		)
 	);
 
 	$results = bp_core_get_suggestions($args);
@@ -1469,17 +1463,17 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
 
 	wp_send_json_success(
-		array(
+		[
 			'results' => array_map(
 				function ( $result ) {
-					return array(
+					return [
 						'id'   => "@{$result->ID}",
 						'text' => $result->name,
-					);
+					];
 				},
 				$results
 			),
-		)
+		]
 	);
 }
 
@@ -1508,7 +1502,7 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
  */
 function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
 
-	if ( true === bp_force_friendship_to_message() && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( true === bp_force_friendship_to_message() ) {
 		$new_users = array();
 		foreach ( $results as $user ) {
 			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );
@@ -1559,12 +1553,6 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 
 		foreach ( $recipients as $recipient ) {
-
-			// Allow Admin to message even if not a friend.
-			if ( bp_current_user_can( 'bp_moderate' ) ) {
-				continue;
-			}
-
 			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
 				if ( sizeof( $recipients ) > 1 ) {
 					$thread->feedback_error = array(
