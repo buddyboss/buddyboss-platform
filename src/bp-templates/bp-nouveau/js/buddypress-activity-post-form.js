@@ -153,9 +153,9 @@ window.bp = window.bp || {};
 		displayEditActivityPopup : function (activity_data){
 
 			if ( ! $('.edit-activity-modal').length) {
-				$('body').append(' <div class="edit-activity-modal">\n' +
+				$('body').append(' <div class="edit-activity-modal" id="buddypress">\n' +
 					'        <div class="edit-activity-modal-content activity-update-form">\n' +
-					'            <span class="edit-activity-modal-close-button">&times;</span>\n' +
+					'            <span class="edit-activity-modal-close-button"><span class="bb-icon bb-icon-close"></span></span>\n' +
 					'            <div class="edit-activity-modal-body"></div>\n' +
 					'        </div>\n' +
 					'    </div>');
