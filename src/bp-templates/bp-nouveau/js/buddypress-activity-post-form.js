@@ -181,14 +181,12 @@ window.bp = window.bp || {};
 					updateOnEmptySelection: true
 				},
 				imageDragging: false
-			});	
+			});
 
 			$(document).on('click', '.edit-activity-modal-close-button', function(){
 				$('.edit-activity-modal').removeClass('show-modal');
 			});
 
-
-			console.log(activity_data);
 		},
 
 		postActivityEditHideModal : function(){
@@ -1373,10 +1371,10 @@ window.bp = window.bp || {};
 									updateOnEmptySelection: true
 								},
 								imageDragging: false
-							});	
+							});
 						}
 					});
-				
+
 					// check for mentions in the url, if set any then focus to editor.
 					var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
 
