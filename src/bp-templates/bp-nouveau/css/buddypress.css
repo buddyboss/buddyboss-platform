@@ -2161,6 +2161,7 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .edit-activity:before {
   content: "\e80c";
+  font-size: 17px !important;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .delete-activity:before {
@@ -3591,10 +3592,6 @@ form.ac-form .ac-reply-content input {
 
 .edit-activity-modal.show-modal .activity-update-form #whats-new-content .medium-editor-toolbar {
   display: block;
-}
-
-.activity-list .activity-item .bp-generic-meta.action .button.edit-activity span.edit-label {
-  vertical-align: middle;
 }
 
 /**
