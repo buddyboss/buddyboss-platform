@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-29 15:42:39+00:00\n"
+"POT-Creation-Date: 2020-07-31 06:25:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20556,7 +20556,7 @@ msgstr[1] ""
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:842
+#: bp-search/classes/class-bp-search.php:837
 msgid "All Results"
 msgstr ""
 
