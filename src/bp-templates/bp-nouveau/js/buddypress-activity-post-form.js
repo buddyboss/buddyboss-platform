@@ -183,7 +183,7 @@ window.bp = window.bp || {};
 				imageDragging: false
 			});
 
-			$(document).on('click', '.edit-activity-modal-close-button', function(){
+			$(document).on('click', '.edit-activity-modal-close-button, .edit-activity-modal-body #aw-whats-new-reset', function(){
 				$('.edit-activity-modal').removeClass('show-modal');
 			});
 
