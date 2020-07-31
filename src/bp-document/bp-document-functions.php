@@ -1529,7 +1529,7 @@ function bp_document_multi_array_search( $array, $search ) {
  * @return mixed|void
  * @since BuddyBoss 1.4.0
  */
-function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
+function bp_document_svg_icon( $extension, $attachment_id = 0, $type = 'font' ) {
 
 	if ( $attachment_id > 0 && '' !== $extension ) {
 		$mime_type = bp_document_mime_type( $attachment_id );
@@ -1542,211 +1542,351 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 		if ( $result_array && isset( $result_array[0] ) && ! empty( $result_array[0] ) ) {
 			$icon = $existing_list[ $result_array[0] ]['icon'];
 			if ( '' !== $icon ) {
+
+				// added svg icon support.
+				if ( 'svg' === $type ) {
+					$svg_icons = array_column( bp_document_svg_icon_list(), 'svg', 'icon' );
+					$icon      = $svg_icons[ $icon ];
+				}
+
 				return apply_filters( 'bp_document_svg_icon', $icon, $extension );
 			}
 		}
 	}
 
-	$svg = '';
+	$svg = array(
+		'font' => '',
+		'svg'  => ''
+	);
 
 	switch ( $extension ) {
 		case '7z':
-			$svg = 'bb-icon-file-7z';
+			$svg = array(
+				'font' => 'bb-icon-file-7z',
+				'svg'  => ''
+			);
 			break;
 		case 'abw':
-			$svg = 'bb-icon-file-abw';
+			$svg = array(
+				'font' => 'bb-icon-file-abw',
+				'svg'  => ''
+			);
 			break;
 		case 'ace':
-			$svg = 'bb-icon-file-ace';
+			$svg = array(
+				'font' => 'bb-icon-file-ace',
+				'svg'  => ''
+			);
 			break;
 		case 'ai':
-			$svg = 'bb-icon-file-ai';
+			$svg = array(
+				'font' => 'bb-icon-file-ai',
+				'svg'  => ''
+			);
 			break;
 		case 'apk':
-			$svg = 'bb-icon-file-apk';
+			$svg = array(
+				'font' => 'bb-icon-file-apk',
+				'svg'  => ''
+			);
 			break;
 		case 'css':
-			$svg = 'bb-icon-file-css';
+			$svg = array(
+				'font' => 'bb-icon-file-css',
+				'svg'  => ''
+			);
 			break;
 		case 'csv':
-			$svg = 'bb-icon-file-csv';
+			$svg = array(
+				'font' => 'bb-icon-file-csv',
+				'svg'  => ''
+			);
 			break;
 		case 'doc':
-			$svg = 'bb-icon-file-doc';
+			$svg = array(
+				'font' => 'bb-icon-file-doc',
+				'svg'  => ''
+			);
 			break;
 		case 'docm':
-			$svg = 'bb-icon-file-docm';
+			$svg = array(
+				'font' => 'bb-icon-file-docm',
+				'svg'  => ''
+			);
 			break;
 		case 'docx':
-			$svg = 'bb-icon-file-docx';
+			$svg = array(
+				'font' => 'bb-icon-file-docx',
+				'svg'  => ''
+			);
 			break;
 		case 'dotm':
-			$svg = 'bb-icon-file-dotm';
+			$svg = array(
+				'font' => 'bb-icon-file-dotm',
+				'svg'  => ''
+			);
 			break;
 		case 'dotx':
-			$svg = 'bb-icon-file-dotx';
+			$svg = array(
+				'font' => 'bb-icon-file-dotx',
+				'svg'  => ''
+			);
 			break;
 		case 'eps':
-			$svg = 'bb-icon-file-svg';
+		case 'svg':
+			$svg = array(
+				'font' => 'bb-icon-file-svg',
+				'svg'  => ''
+			);
 			break;
 		case 'gif':
-			$svg = 'bb-icon-file-gif';
+			$svg = array(
+				'font' => 'bb-icon-file-gif',
+				'svg'  => ''
+			);
 			break;
 		case 'gz':
-			$svg = 'bb-icon-file-zip';
-			break;
-			case 'gzip':
-			$svg = 'bb-icon-file-zip';
+		case 'gzip':
+		case 'zip':
+			$svg = array(
+				'font' => 'bb-icon-file-zip',
+				'svg'  => ''
+			);
 			break;
 		case 'hlam':
-			$svg = 'bb-icon-file-hlam';
+			$svg = array(
+				'font' => 'bb-icon-file-hlam',
+				'svg'  => ''
+			);
 			break;
 		case 'hlsb':
-			$svg = 'bb-icon-file-hlsb';
+			$svg = array(
+				'font' => 'bb-icon-file-hlsb',
+				'svg'  => ''
+			);
 			break;
 		case 'hlsm':
-			$svg = 'bb-icon-file-hlsm';
+			$svg = array(
+				'font' => 'bb-icon-file-hlsm',
+				'svg'  => ''
+			);
 			break;
 		case 'htm':
-			$svg = 'bb-icon-file-html';
-			break;
 		case 'html':
-			$svg = 'bb-icon-file-html';
+			$svg = array(
+				'font' => 'bb-icon-file-html',
+				'svg'  => ''
+			);
 			break;
 		case 'ics':
-			$svg = 'bb-icon-file-ics';
+			$svg = array(
+				'font' => 'bb-icon-file-ics',
+				'svg'  => ''
+			);
 			break;
 		case 'ico':
-			$svg = 'bb-icon-file-ico';
+			$svg = array(
+				'font' => 'bb-icon-file-ico',
+				'svg'  => ''
+			);
 			break;
 		case 'ipa':
-			$svg = 'bb-icon-file-ipa';
-			break;
-		case 'jpg':
-			$svg = 'bb-icon-file-jpg';
-			break;
-		case 'jpeg':
-			$svg = 'bb-icon-file-jpg';
+			$svg = array(
+				'font' => 'bb-icon-file-ipa',
+				'svg'  => ''
+			);
 			break;
 		case 'js':
-			$svg = 'bb-icon-file-js';
+			$svg = array(
+				'font' => 'bb-icon-file-js',
+				'svg'  => ''
+			);
 			break;
 		case 'jar':
-			$svg = 'bb-icon-file-jar';
+			$svg = array(
+				'font' => 'bb-icon-file-jar',
+				'svg'  => ''
+			);
 			break;
 		case 'mp3':
-			$svg = 'bb-icon-file-mp3';
+			$svg = array(
+				'font' => 'bb-icon-file-mp3',
+				'svg'  => ''
+			);
 			break;
 		case 'ods':
-			$svg = 'bb-icon-file-ods';
+			$svg = array(
+				'font' => 'bb-icon-file-ods',
+				'svg'  => ''
+			);
 			break;
 		case 'odt':
-			$svg = 'bb-icon-file-odt';
+			$svg = array(
+				'font' => 'bb-icon-file-odt',
+				'svg'  => ''
+			);
 			break;
 		case 'pdf':
-			$svg = 'bb-icon-file-pdf';
+			$svg = array(
+				'font' => 'bb-icon-file-pdf',
+				'svg'  => ''
+			);
 			break;
 		case 'png':
-			$svg = 'bb-icon-file-png';
+			$svg = array(
+				'font' => 'bb-icon-file-png',
+				'svg'  => ''
+			);
 			break;
 		case 'psd':
-			$svg = 'bb-icon-file-psd';
+			$svg = array(
+				'font' => 'bb-icon-file-psd',
+				'svg'  => ''
+			);
 			break;
 		case 'potm':
-			$svg = 'bb-icon-file-pptm';
+		case 'pptm':
+			$svg = array(
+				'font' => 'bb-icon-file-pptm',
+				'svg'  => ''
+			);
 			break;
 		case 'potx':
-			$svg = 'bb-icon-file-pptx';
+		case 'pptx':
+			$svg = array(
+				'font' => 'bb-icon-file-pptx',
+				'svg'  => ''
+			);
 			break;
 		case 'pps':
-			$svg = 'bb-icon-file-pps';
+			$svg = array(
+				'font' => 'bb-icon-file-pps',
+				'svg'  => ''
+			);
 			break;
 		case 'ppsx':
-			$svg = 'bb-icon-file-ppsx';
+			$svg = array(
+				'font' => 'bb-icon-file-ppsx',
+				'svg'  => ''
+			);
 			break;
 		case 'ppt':
-			$svg = 'bb-icon-file-ppt';
-			break;
-		case 'pptm':
-			$svg = 'bb-icon-file-pptm';
-			break;
-		case 'pptx':
-			$svg = 'bb-icon-file-pptx';
+			$svg = array(
+				'font' => 'bb-icon-file-ppt',
+				'svg'  => ''
+			);
 			break;
 		case 'rar':
-			$svg = 'bb-icon-file-rar';
+			$svg = array(
+				'font' => 'bb-icon-file-rar',
+				'svg'  => ''
+			);
 			break;
 		case 'rtf':
-			$svg = 'bb-icon-file-rtf';
+			$svg = array(
+				'font' => 'bb-icon-file-rtf',
+				'svg'  => ''
+			);
 			break;
 		case 'rss':
-			$svg = 'bb-icon-file-rss';
+			$svg = array(
+				'font' => 'bb-icon-file-rss',
+				'svg'  => ''
+			);
 			break;
 		case 'sketch':
-			$svg = 'bb-icon-file-sketch';
-			break;
-		case 'svg':
-			$svg = 'bb-icon-file-svg';
+			$svg = array(
+				'font' => 'bb-icon-file-sketch',
+				'svg'  => ''
+			);
 			break;
 		case 'tar':
-			$svg = 'bb-icon-file-tar';
+			$svg = array(
+				'font' => 'bb-icon-file-tar',
+				'svg'  => ''
+			);
 			break;
 		case 'tif':
-			$svg = 'bb-icon-file-jpg';
-			break;
 		case 'tiff':
-			$svg = 'bb-icon-file-jpg';
+		case 'jpg':
+		case 'jpeg':
+			$svg = array(
+				'font' => 'bb-icon-file-jpg',
+				'svg'  => ''
+			);
 			break;
 		case 'txt':
-			$svg = 'bb-icon-file-txt';
+			$svg = array(
+				'font' => 'bb-icon-file-txt',
+				'svg'  => ''
+			);
 			break;
 		case 'vcf':
-			$svg = 'bb-icon-file-vcf';
+			$svg = array(
+				'font' => 'bb-icon-file-vcf',
+				'svg'  => ''
+			);
 			break;
 		case 'wav':
-			$svg = 'bb-icon-file-wav';
+			$svg = array(
+				'font' => 'bb-icon-file-wav',
+				'svg'  => ''
+			);
 			break;
 		case 'xlam':
-			$svg = 'bb-icon-file-xls';
-			break;
 		case 'xls':
-			$svg = 'bb-icon-file-xls';
-			break;
 		case 'xlsb':
-			$svg = 'bb-icon-file-xls';
-			break;
 		case 'xlsm':
-			$svg = 'bb-icon-file-xls';
-			break;
 		case 'xlsx':
-			$svg = 'bb-icon-file-xlsx';
+			$svg = array(
+				'font' => 'bb-icon-file-xlsx',
+				'svg'  => ''
+			);
 			break;
 		case 'xltm':
-			$svg = 'bb-icon-file-xltm';
+			$svg = array(
+				'font' => 'bb-icon-file-xltm',
+				'svg'  => ''
+			);
 			break;
 		case 'xltx':
-			$svg = 'bb-icon-file-xltx';
+			$svg = array(
+				'font' => 'bb-icon-file-xltx',
+				'svg'  => ''
+			);
 			break;
 		case 'xml':
-			$svg = 'bb-icon-file-xml';
+			$svg = array(
+				'font' => 'bb-icon-file-xml',
+				'svg'  => ''
+			);
 			break;
 		case 'yaml':
-			$svg = 'bb-icon-file-yaml';
-			break;
-		case 'zip':
-			$svg = 'bb-icon-file-zip';
+			$svg = array(
+				'font' => 'bb-icon-file-yaml',
+				'svg'  => ''
+			);
 			break;
 		case 'folder':
-			$svg = 'bb-icon-folder-stacked';
+			$svg = array(
+				'font' => 'bb-icon-folder-stacked',
+				'svg'  => ''
+			);
 			break;
 		case 'download':
-			$svg = 'bb-icon-download';
+			$svg = array(
+				'font' => 'bb-icon-download',
+				'svg'  => ''
+			);
 			break;
 		default:
-			$svg = 'bb-icon-file';
+			$svg = array(
+				'font' => 'bb-icon-file',
+				'svg'  => ''
+			);
 	}
 
-	return apply_filters( 'bp_document_svg_icon', $svg, $extension );
+	return apply_filters( 'bp_document_svg_icon', $svg[$type], $extension );
 }
 
 /**
@@ -1758,45 +1898,55 @@ function bp_document_svg_icon( $extension, $attachment_id = 0 ) {
 function bp_document_svg_icon_list() {
 
 	$icons = array(
-		'default_1' => array(
-			'icon' => 'bb-icon-file',
-			'title' =>  __( 'Default', 'buddyboss' )
+		'default_1'  => array(
+			'icon'  => 'bb-icon-file',
+			'title' => __( 'Default', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_2' => array(
-			'icon' => 'bb-icon-file-zip',
-			'title' => __( 'Archive', 'buddyboss' )
+		'default_2'  => array(
+			'icon'  => 'bb-icon-file-zip',
+			'title' => __( 'Archive', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_3' => array(
-			'icon' => 'bb-icon-file-mp3',
-			'title' => __( 'Audio', 'buddyboss' )
+		'default_3'  => array(
+			'icon'  => 'bb-icon-file-mp3',
+			'title' => __( 'Audio', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_4' => array(
-			'icon' => 'bb-icon-file-html',
-			'title' => __( 'Code', 'buddyboss' )
+		'default_4'  => array(
+			'icon'  => 'bb-icon-file-html',
+			'title' => __( 'Code', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_5' => array(
-			'icon' => 'bb-icon-file-psd',
-			'title' => __( 'Design', 'buddyboss' )
+		'default_5'  => array(
+			'icon'  => 'bb-icon-file-psd',
+			'title' => __( 'Design', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_6' => array(
-			'icon' => 'bb-icon-file-png',
-			'title' => __( 'Image', 'buddyboss' )
+		'default_6'  => array(
+			'icon'  => 'bb-icon-file-png',
+			'title' => __( 'Image', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_7' => array(
-			'icon' => 'bb-icon-file-pptx',
-			'title' => __( 'Presentation', 'buddyboss' )
+		'default_7'  => array(
+			'icon'  => 'bb-icon-file-pptx',
+			'title' => __( 'Presentation', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_8' => array(
-			'icon' => 'bb-icon-file-xlsx',
-			'title' => __( 'Spreadsheet', 'buddyboss' )
+		'default_8'  => array(
+			'icon'  => 'bb-icon-file-xlsx',
+			'title' => __( 'Spreadsheet', 'buddyboss' ),
+			'svg'   => ''
 		),
-		'default_9' => array(
-			'icon' => 'bb-icon-file-txt',
-			'title' => __( 'Text', 'buddyboss' )
+		'default_9'  => array(
+			'icon'  => 'bb-icon-file-txt',
+			'title' => __( 'Text', 'buddyboss' ),
+			'svg'   => ''
 		),
 		'default_10' => array(
-			'icon' => 'bb-icon-file-video',
-			'title' => __( 'Video', 'buddyboss' )
+			'icon'  => 'bb-icon-file-video',
+			'title' => __( 'Video', 'buddyboss' ),
+			'svg'   => ''
 		),
 	);
 
