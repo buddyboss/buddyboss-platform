@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-07-31 13:35:49+00:00\n"
+"POT-Creation-Date: 2020-07-31 16:10:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5805,27 +5805,23 @@ msgid "Name"
 msgstr ""
 
 #: bp-core/bp-core-options.php:938
-msgid "10 Minutes"
+msgid "30 Days"
 msgstr ""
 
 #: bp-core/bp-core-options.php:939
-msgid "1 Hour"
-msgstr ""
-
-#: bp-core/bp-core-options.php:940
-msgid "3 Hours"
-msgstr ""
-
-#: bp-core/bp-core-options.php:941
-msgid "1 Day"
-msgstr ""
-
-#: bp-core/bp-core-options.php:942
 msgid "7 Days"
 msgstr ""
 
-#: bp-core/bp-core-options.php:943
-msgid "30 Days"
+#: bp-core/bp-core-options.php:940
+msgid "1 Day"
+msgstr ""
+
+#: bp-core/bp-core-options.php:941
+msgid "1 Hour"
+msgstr ""
+
+#: bp-core/bp-core-options.php:942
+msgid "10 Minutes"
 msgstr ""
 
 #: bp-core/bp-core-rest-api.php:89

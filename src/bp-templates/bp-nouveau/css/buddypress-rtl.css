@@ -3529,8 +3529,6 @@ form.ac-form .ac-reply-content input {
   background-color: rgba(250, 251, 253, 0.9);
   opacity: 0;
   visibility: hidden;
-  transform: scale(1.1);
-  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
   z-index: 999901;
 }
 
@@ -3586,8 +3584,6 @@ form.ac-form .ac-reply-content input {
 .edit-activity-modal.show-modal {
   opacity: 1;
   visibility: visible;
-  transform: scale(1);
-  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 }
 
 .edit-activity-modal.show-modal .activity-update-form #whats-new-content .medium-editor-toolbar {

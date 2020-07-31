@@ -107,8 +107,6 @@ form.ac-form {
 	background-color: rgba(250, 251, 253, 0.9);
 	opacity: 0;
 	visibility: hidden;
-	transform: scale(1.1);
-	transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
 	z-index: 999901;
 
 	.activity-update-form #whats-new-form.activity-form {
@@ -163,8 +161,6 @@ form.ac-form {
 	&.show-modal {
 		opacity: 1;
 		visibility: visible;
-		transform: scale(1);
-		transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
 
 		.activity-update-form #whats-new-content .medium-editor-toolbar {
 			display: block;
