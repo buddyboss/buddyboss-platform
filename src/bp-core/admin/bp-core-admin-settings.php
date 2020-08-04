@@ -257,7 +257,7 @@ function bp_admin_setting_callback_enable_activity_edit() {
 	<label for="_bp_enable_activity_edit"><?php _e( 'Allow members to edit their activity posts for a duration of', 'buddyboss' ); ?></label>
 
 	<select name="_bp_activity_edit_time">
-		<option value="-1"> <?php _e('No Limit', 'buddyboss'); ?> </option>
+		<option value="-1"> <?php _e('Forever', 'buddyboss'); ?> </option>
 
 		<?php foreach ( $edit_times as $time ) {
 
