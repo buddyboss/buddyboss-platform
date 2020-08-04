@@ -415,7 +415,7 @@ class BP_Messages_Thread {
 
 		if ( false === $messages || static::$noCache ) {
 			// if current user isn't the recpient, then return empty array
-			if ( ! static::is_thread_recipient( $thread_id ) ) {
+			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
 				return array();
 			}
@@ -643,10 +643,12 @@ class BP_Messages_Thread {
 		 */
 		do_action( 'bp_messages_thread_messages_before_update', $thread_id, $message_ids, $user_id, $update_message_ids );
 
-		foreach ( $update_message_ids as $message_id ) {
-			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
-			$wpdb->query( $query ); // db call ok; no-cache ok;
-			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+		if ( ! empty( $update_message_ids ) ) {
+			foreach ( $update_message_ids as $message_id ) {
+				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+				$wpdb->query( $query ); // db call ok; no-cache ok;
+				bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+			}
 		}
 
 		/**
@@ -663,11 +665,14 @@ class BP_Messages_Thread {
 
 		// If there is no any messages in thread then delete the complete thread.
 		$thread_delete = true;
-		foreach ( $message_ids as $message_id ) {
-			$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
-			if ( '' === $is_deleted ) {
-				$thread_delete = false;
-				break;
+
+		if ( ! empty( $message_ids ) ) {
+			foreach ( $message_ids as $message_id ) {
+				$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
+				if ( '' === $is_deleted ) {
+					$thread_delete = false;
+					break;
+				}
 			}
 		}
 

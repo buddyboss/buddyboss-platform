@@ -1520,6 +1520,9 @@ add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients
 /**
  * messages for each thread.
  *
+ * @param int 	$thread_id 		thread id.
+ * @param array $post			$_POST data.
+ *
  * @since BuddyBoss 1.3.0
  */
 function bp_nouveau_get_thread_messages( $thread_id, $post ) {
