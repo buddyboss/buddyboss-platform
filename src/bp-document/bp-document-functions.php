@@ -899,8 +899,9 @@ function bp_folder_get( $args = '' ) {
 			'per_page'     => false,                    // results per page.
 			'sort'         => 'DESC',                   // sort ASC or DESC.
 
-			'search_terms' => false,           // Pass search terms as a string.
-			'exclude'      => false,           // Comma-separated list of activity IDs to exclude.
+			'search_terms' => false,                    // Pass search terms as a string.
+			'exclude'      => false,                    // Comma-separated list of folder IDs to exclude.
+			'include'      => false,                    // Comma-separated list of folder IDs to include.
 			// want to limit the query.
 			'user_id'      => false,
 			'group_id'     => false,
@@ -921,6 +922,7 @@ function bp_folder_get( $args = '' ) {
 			'sort'         => $r['sort'],
 			'search_terms' => $r['search_terms'],
 			'exclude'      => $r['exclude'],
+			'in'           => $r['include'],
 			'count_total'  => $r['count_total'],
 			'fields'       => $r['fields'],
 		)
@@ -2353,10 +2355,6 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	// sanitizing file name (using sanitize_title because sanitize_file_name doesn't remove accents).
 	$new_filename = sanitize_file_name( $new_filename );
-
-	$file_abs_path     = get_attached_file( $post->ID );
-	$file_abs_dir      = dirname( $file_abs_path );
-	$new_file_abs_path = preg_replace( '~[^/]+$~', $new_filename . '.' . $file_parts['extension'], $file_abs_path );
 
 	$file_abs_path     = get_attached_file( $post->ID );
 	$file_abs_dir      = dirname( $file_abs_path );
