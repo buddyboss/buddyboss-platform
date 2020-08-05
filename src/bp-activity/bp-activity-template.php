@@ -4145,3 +4145,44 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 	 */
 	return bp_get_button( apply_filters( 'bp_get_add_follow_button', $button ) );
 }
+/**
+ * Output the activity entry CSS class.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_activity_entry_css_class() {
+	echo bp_get_activity_entry_css_class();
+}
+
+	/**
+	 * Return the current activity entry item's CSS class.
+	 *
+	 * @since BuddyBoss 1.4.9
+	 *
+	 * @global object $activities_template {@link BP_Activity_Template}
+	 *
+	 * @return string The activity entry item's CSS class.
+	 */
+	function bp_get_activity_entry_css_class() {
+		global $activities_template;
+
+		$class = '';
+
+		if ( bp_is_active( 'media' )  ) {
+			// $document_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_activity', true );
+			$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
+			if( ! empty( $document_ids ) ){
+				$class .= ' documemt-activity';
+			}
+		}
+
+		/**
+		 * Filters the determined classes to add to the HTML element.
+		 *
+		 * @since BuddyBoss 1.4.9
+		 *
+		 * @param string $value Classes to be added to the HTML element.
+		 */
+		return apply_filters( 'bp_get_activity_entry_css_class', $class );
+	}
+

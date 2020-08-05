@@ -23,7 +23,7 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 	</div>
 
-	<div class="activity-content">
+	<div class="activity-content <?php bp_activity_entry_css_class(); ?>">
 
 		<div class="activity-header">
 
