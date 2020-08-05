@@ -260,6 +260,14 @@ function bp_document_folder_add_meta( $folder_id, $meta_key, $meta_value, $uniqu
  * @since BuddyBoss 1.4.0
  */
 function bp_document_file_upload_max_size() {
+
+	/**
+	 * Filters doucment file upload max limit.
+	 * 
+	 * @param mixed $max_size document upload max limit.
+	 * 
+	 * @since BuddyBoss 1.4.0
+	 */
 	return apply_filters( 'bp_document_file_upload_max_size', bp_media_allowed_upload_document_size() );
 }
 

@@ -4890,6 +4890,13 @@ function bp_core_upload_max_size() {
 		}
 	}
 
+	/**
+	 * Filters file upload max limit.
+	 * 
+	 * @param mixed $max_size file upload max limit.
+	 * 
+	 * @since BuddyBoss 1.4.8
+	 */
 	return apply_filters( 'bp_core_upload_max_size', $max_size );
 
 }
