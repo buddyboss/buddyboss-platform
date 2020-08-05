@@ -15043,24 +15043,39 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   padding-left: 35px;
 }
 
+.location-album-list-wrap-main .bb-album-destination,
+.location-album-list-wrap-main .bb-folder-destination,
+.location-folder-list-wrap-main .bb-album-destination,
 .location-folder-list-wrap-main .bb-folder-destination {
   cursor: pointer;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list h4,
+.location-album-list-wrap-main .location-folder-list-wrap h4,
+.location-album-list-wrap-main .location-album-list-wrap h4,
 .location-folder-list-wrap-main .ac_document_search_folder_list h4,
-.location-folder-list-wrap-main .location-folder-list-wrap h4 {
+.location-folder-list-wrap-main .location-folder-list-wrap h4,
+.location-folder-list-wrap-main .location-album-list-wrap h4 {
   margin: 0 !important;
   font-size: 17px;
   font-weight: 500;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list.has-error,
+.location-album-list-wrap-main .location-folder-list-wrap.has-error,
+.location-album-list-wrap-main .location-album-list-wrap.has-error,
 .location-folder-list-wrap-main .ac_document_search_folder_list.has-error,
-.location-folder-list-wrap-main .location-folder-list-wrap.has-error {
+.location-folder-list-wrap-main .location-folder-list-wrap.has-error,
+.location-folder-list-wrap-main .location-album-list-wrap.has-error {
   border-color: #f00;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item,
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item,
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item,
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item {
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item,
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item {
   padding: 8px 0;
   display: inline-block;
   vertical-align: middle;
@@ -15068,8 +15083,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   white-space: nowrap;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:before,
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before,
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:before,
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:before,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before {
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before,
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:before {
   content: "\e827";
   font-family: "bb-icons";
   /* stylelint-disable-line */
@@ -15079,15 +15098,23 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   line-height: 1;
 }
 
-[dir="rtl"] .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:before, [dir="rtl"]
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before {
+[dir="rtl"] .location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:before, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:before, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:before {
   content: "\e8ab";
   float: left;
   margin-top: 4px;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span,
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span,
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span,
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span {
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span,
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span {
   display: inline-block !important;
   max-width: 210px;
   overflow: hidden;
@@ -15097,37 +15124,61 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 @media screen and (max-width: 520px) {
+  .location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span,
+  .location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span,
+  .location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span,
   .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span,
-  .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span {
+  .location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span,
+  .location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span {
     max-width: 120px;
   }
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:not(.more_options):hover,
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:not(.more_options):hover,
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:not(.more_options):hover,
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:not(.more_options):hover,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:not(.more_options):hover {
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:not(.more_options):hover,
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:not(.more_options):hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:first-child:before,
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:first-child:before,
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:first-child:before,
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span:first-child:before,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:first-child:before {
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span:first-child:before,
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span:first-child:before {
   display: none;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span.hidden,
+.location-album-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span.hidden,
+.location-album-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span.hidden,
 .location-folder-list-wrap-main .ac_document_search_folder_list .breadcrumbs-append-ul-li .item span.hidden,
-.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span.hidden {
+.location-folder-list-wrap-main .location-folder-list-wrap .breadcrumbs-append-ul-li .item span.hidden,
+.location-folder-list-wrap-main .location-album-list-wrap .breadcrumbs-append-ul-li .item span.hidden {
   display: none !important;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-back,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-back,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-back,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-back,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-back {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-back,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-back {
   display: none;
   cursor: pointer;
   vertical-align: middle;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-back i,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-back i,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-back i,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-back i,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-back i {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-back i,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-back i {
   display: inline-block;
   vertical-align: middle;
   font-size: 22px;
@@ -15138,8 +15189,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   color: #939597;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list {
   overflow: auto;
   max-height: 230px;
   min-height: 230px;
@@ -15150,39 +15211,99 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   border-radius: 4px;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list.is-loading,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list.is-loading,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list.is-loading,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list.is-loading,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list.is-loading,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list.is-loading,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.is-loading,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list.is-loading,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list.is-loading,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list.is-loading {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list.is-loading .bb-icon-loader,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list.is-loading .bb-icon-loader,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list.is-loading .bb-icon-loader,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading .bb-icon-loader,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list.is-loading .bb-icon-loader,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list.is-loading .bb-icon-loader,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list.is-loading .bb-icon-loader,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.is-loading .bb-icon-loader,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading .bb-icon-loader {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list.is-loading .bb-icon-loader,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.is-loading .bb-icon-loader,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list.is-loading .bb-icon-loader,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list.is-loading .bb-icon-loader {
   font-size: 20px;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list.has-error,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list.has-error,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list.has-error,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list.has-error,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list.has-error,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list.has-error,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list.has-error,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.has-error,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.has-error {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list.has-error,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.has-error,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list.has-error,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list.has-error {
   border-color: #f00;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li {
   position: relative;
   margin: 0;
   padding: 0;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li.is-disabled,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li.is-disabled,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li.is-disabled,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li.is-disabled,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li.is-disabled,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li.is-disabled,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li.is-disabled,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li.is-disabled,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li.is-disabled {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li.is-disabled,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li.is-disabled,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li.is-disabled,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li.is-disabled {
   cursor: auto;
   opacity: 0.5;
   pointer-events: none;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li span,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li span,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li span,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li span,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li span,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li span,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li span,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span {
   padding: 8px 15px;
   border-bottom: 1px solid #e7e9ec;
   display: block;
@@ -15194,8 +15315,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   text-overflow: ellipsis;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li span:before,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:before,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li span:before,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li span:before,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li span:before,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:before,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li span:before,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span:before,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span:before {
   content: "\e959";
   font-family: bb-icons;
   /* stylelint-disable-line */
@@ -15204,29 +15335,79 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   font-size: 16px;
 }
 
-[dir="rtl"] .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:before, [dir="rtl"]
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before {
+[dir="rtl"] .location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li span:before, [dir="rtl"]
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:before, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li span:before, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li span:before, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li span:before, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li span:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span:before {
   float: left;
   margin-left: 0;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li span:hover,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:hover,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li span:hover,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:hover,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li span:hover,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li span:hover,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span:hover,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li span:hover,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span:hover,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span:hover {
   background-color: #fbfbfc;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li span.selected,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li span.selected,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li span.selected,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span.selected,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li span.selected,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li span.selected,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span.selected,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li span.selected,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span.selected,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span.selected {
   background-color: #f7fafe;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li span.disabled,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li span.disabled,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li span.disabled,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li span.disabled,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span.disabled,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li span.disabled,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li span.disabled,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li span.disabled,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.disabled {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li span.disabled,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.disabled,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li span.disabled,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li span.disabled {
   pointer-events: none;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li .sub-menu-anchor,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li .sub-menu-anchor,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li .sub-menu-anchor,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li .sub-menu-anchor,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li .sub-menu-anchor,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li .sub-menu-anchor,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li .sub-menu-anchor,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li .sub-menu-anchor {
   position: absolute;
   right: 5px;
   top: 50%;
@@ -15240,41 +15421,102 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   transition: all ease 0.3s;
 }
 
-[dir="rtl"] .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor, [dir="rtl"]
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor {
+[dir="rtl"] .location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li .sub-menu-anchor, [dir="rtl"]
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li .sub-menu-anchor, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li .sub-menu-anchor, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li .sub-menu-anchor, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li .sub-menu-anchor, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li .sub-menu-anchor, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li .sub-menu-anchor, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li .sub-menu-anchor {
   right: initial;
   left: 5px;
 }
 
-[dir="rtl"] .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor:before, [dir="rtl"]
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor:before {
+[dir="rtl"] .location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li .sub-menu-anchor:before, [dir="rtl"]
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li .sub-menu-anchor:before {
   content: "\e8ab";
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li ul,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li ul,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li ul,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li ul,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li ul,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li ul,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li ul,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li ul,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li ul {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li ul,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li ul,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li ul,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li ul {
   display: none;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list li:last-child > span,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list li:last-child > span,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list li:last-child > span,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list li:last-child > span,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li:last-child > span,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list li:last-child > span,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list li:last-child > span,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li:last-child > span,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li:last-child > span {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list li:last-child > span,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li:last-child > span,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list li:last-child > span,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list li:last-child > span {
   border-bottom: 0;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list::-webkit-scrollbar,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list::-webkit-scrollbar,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list::-webkit-scrollbar,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list::-webkit-scrollbar,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list::-webkit-scrollbar,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list::-webkit-scrollbar,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list::-webkit-scrollbar,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list::-webkit-scrollbar,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list::-webkit-scrollbar {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list::-webkit-scrollbar,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list::-webkit-scrollbar,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list::-webkit-scrollbar,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list::-webkit-scrollbar {
   width: 5px;
 }
 
+.location-album-list-wrap-main .ac_document_search_folder_list .location-album-list::-webkit-scrollbar-thumb,
+.location-album-list-wrap-main .ac_document_search_folder_list .location-folder-list::-webkit-scrollbar-thumb,
+.location-album-list-wrap-main .location-folder-list-wrap .location-album-list::-webkit-scrollbar-thumb,
+.location-album-list-wrap-main .location-folder-list-wrap .location-folder-list::-webkit-scrollbar-thumb,
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list::-webkit-scrollbar-thumb,
+.location-album-list-wrap-main .location-album-list-wrap .location-folder-list::-webkit-scrollbar-thumb,
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-album-list::-webkit-scrollbar-thumb,
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list::-webkit-scrollbar-thumb,
-.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list::-webkit-scrollbar-thumb {
+.location-folder-list-wrap-main .location-folder-list-wrap .location-album-list::-webkit-scrollbar-thumb,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list::-webkit-scrollbar-thumb,
+.location-folder-list-wrap-main .location-album-list-wrap .location-album-list::-webkit-scrollbar-thumb,
+.location-folder-list-wrap-main .location-album-list-wrap .location-folder-list::-webkit-scrollbar-thumb {
   background-color: #a4acb4;
   border-radius: 10px;
 }
 
+.location-album-list-wrap-main.is-mobile .location-folder-list-wrap .location-folder-list li .sub-menu-anchor,
 .location-folder-list-wrap-main.is-mobile .location-folder-list-wrap .location-folder-list li .sub-menu-anchor {
   visibility: visible;
   opacity: 1;

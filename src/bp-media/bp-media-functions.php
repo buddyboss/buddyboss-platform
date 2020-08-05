@@ -2735,7 +2735,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	if ( $first ) {
 		$output = '<ul class="">';
 	} else {
-		$output = '<ul class="location-folder-list">';
+		$output = '<ul class="location-album-list">';
 	}
 
 	foreach ( $array as $item ) {

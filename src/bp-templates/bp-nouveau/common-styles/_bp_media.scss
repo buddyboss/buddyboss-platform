@@ -3380,14 +3380,17 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 }
 
+.location-album-list-wrap-main,
 .location-folder-list-wrap-main {
 
+	.bb-album-destination,
 	.bb-folder-destination {
 		cursor: pointer;
 	}
 
 	.ac_document_search_folder_list,
-	.location-folder-list-wrap {
+	.location-folder-list-wrap,
+	.location-album-list-wrap {
 
 		h4 {
 			margin: 0 !important;
@@ -3466,6 +3469,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			}
 		}
 
+		.location-album-list,
 		.location-folder-list {
 			overflow: auto;
 			max-height: 230px;

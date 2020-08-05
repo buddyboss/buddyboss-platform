@@ -4114,3 +4114,20 @@ function bp_is_group_messages() {
 
 	return $retval;
 }
+
+/**
+ * Is the current page a user's album page?
+ *
+ * @since BuddyBoss 1.4.9
+ *
+ * @return bool True if the current page is a album page.
+ */
+function bp_is_user_albums() {
+	$retval = false;
+
+	if ( bp_is_active( 'media' ) && function_exists( 'bp_is_media_component') && bp_is_media_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}

@@ -261,6 +261,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bp-document-open-create-popup-folder', this.createFolderInPopup.bind( this ) );
 			$( document ).on( 'click', '.bp-media-open-create-popup-folder', this.createAlbumInPopup.bind( this ) );
 			$( document ).on( 'click', '.close-create-popup-folder', this.closeCreateFolderInPopup.bind( this ) );
+			$( document ).on( 'click', '.close-create-popup-album', this.closeCreateAlbumInPopup.bind( this ) );
 			$( document ).on( 'click', '.bp-document-create-popup-folder-submit', this.submitCreateFolderInPopup.bind( this ) );
 
 			// Group Messages.
@@ -437,6 +438,18 @@ window.bp = window.bp || {};
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header p' ).hide();
 		},
 
+		closeCreateAlbumInPopup: function( event ) {
+			event.preventDefault();
+
+			$( '.modal-container .bb-model-footer' ).show();
+			$( '.bb-field-wrap-search' ).show();
+			$( '.bp-document-open-create-popup-folder' ).show();
+			$( '.location-album-list-wrap-main' ).show();
+			$( '.create-popup-album-wrap' ).hide();
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().show();
+			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header p' ).hide();
+		},
+
 		createFolderInPopup: function( event ) {
 			event.preventDefault();
 
@@ -471,8 +484,8 @@ window.bp = window.bp || {};
 			$( '.modal-container .bb-model-footer' ).hide();
 			$( '.bb-field-wrap-search' ).hide();
 			$( '.bp-document-open-create-popup-folder' ).hide();
-			$( '.location-folder-list-wrap-main' ).hide();
-			$( '.create-popup-folder-wrap' ).show();
+			$( '.location-album-list-wrap-main' ).hide();
+			$( '.create-popup-album-wrap' ).show();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().hide();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).append('<p>Create Album</p>');
 			$( '.modal-container #bb-folder-privacy' ).addClass( 'new-folder-create-privacy' );
@@ -2521,13 +2534,13 @@ window.bp = window.bp || {};
 			media_id = $( event.currentTarget ).closest('.media-action-wrap').siblings('a').data('id');
 			media_parent_id = $( event.currentTarget ).closest('.media-action-wrap').siblings('a').data('album-id');
 
-			media_move_popup.find('.location-folder-list li').removeClass('is_active').children('span').removeClass('selected');
-			media_move_popup.find('.location-folder-list li[data-id="'+ media_parent_id +'"]').addClass('is_active').children('span').addClass('selected');
+			media_move_popup.find('.location-album-list li').removeClass('is_active').children('span').removeClass('selected');
+			media_move_popup.find('.location-album-list li[data-id="'+ media_parent_id +'"]').addClass('is_active').children('span').addClass('selected');
 
 			media_move_popup.find('.bp-media-move').attr( 'id', media_id );
 			media_move_popup.find('.bb-model-footer .bp-media-move').addClass('is-disabled');
 
-			$( document ).on( 'click', '.bp-media-move-photo.open .location-folder-list li span' , function( e ) {
+			$( document ).on( 'click', '.bp-media-move-photo.open .location-album-list li span' , function( e ) {
 				e.preventDefault();
 
 				if( $(this).parent().hasClass('is_active') ){
@@ -4352,7 +4365,7 @@ window.bp = window.bp || {};
 			//Close popup if it's open
 			if( event.keyCode == 27 ) {
 				//Close Move popup
-				$('.bp-media-move-folder.open-popup .ac-folder-close-button:visible, .bp-media-move-file .ac-media-close-button:visible, .bp-media-move-folder.open-popup  .close-create-popup-folder:visible,.bp-media-move-file.open-popup .ac-document-close-button:visible, .bp-media-move-file .close-create-popup-folder:visible').trigger('click');
+				$('.bp-media-move-folder.open-popup .ac-folder-close-button:visible, .bp-media-move-file .ac-media-close-button:visible, .bp-media-move-folder.open-popup .close-create-popup-folder:visible,.bp-media-move-file.open-popup .ac-document-close-button:visible, .bp-media-move-file .close-create-popup-folder:visible, .bp-media-move-photo.open .close-create-popup-album:visible').trigger('click');
 
 				//Close create folder popup
 				$('#bp-media-create-folder #bp-media-create-folder-close:visible, #bp-media-create-child-folder #bp-media-create-folder-close:visible').trigger('click');
