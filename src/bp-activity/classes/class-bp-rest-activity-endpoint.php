@@ -441,7 +441,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_create_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -623,7 +623,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_update_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -715,7 +715,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -1883,7 +1883,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			$new_scope[] = 'public';
 
-			if ( empty( $user_id ) ) {
+			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'groups';
+			} else {
 				$new_scope[] = 'just-me';
 
 				if ( empty( $user_id ) ) {
@@ -1910,8 +1912,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					$new_scope[] = 'media';
 					$new_scope[] = 'document';
 				}
-			} elseif ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
-				$new_scope[] = 'groups';
 			}
 		} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 			$new_scope[] = 'public';

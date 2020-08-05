@@ -793,8 +793,9 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 			}
 		}
 
-		// Update Forums' internal private and forum ID variables.
+		// Update Forums' internal private and forum ID variables
 		bbp_repair_forum_visibility();
+
 	}
 }
 

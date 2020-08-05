@@ -501,7 +501,7 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
 	// Extract URL from href
 	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
 
-	$url_host      = parse_url( $match[0][0], PHP_URL_HOST );
+	$url_host      = ( isset( $match[0] ) && isset( $match[0][0] ) ? parse_url( $match[0][0], PHP_URL_HOST ) : '' );
 	$base_url_host = parse_url( site_url(), PHP_URL_HOST );
 
 	// If site link then nothing to do.
@@ -570,7 +570,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * been truncated), add the "Read More" link. Note that bp_create_excerpt() is stripping
 	 * shortcodes, so we have strip them from the $text before the comparison.
 	 */
-	if ( strlen( $excerpt ) < strlen( strip_shortcodes( $text ) ) ) {
+	if ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, '&hellip;</p>' ) ) {
 		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 
 		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );

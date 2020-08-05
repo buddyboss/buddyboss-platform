@@ -259,40 +259,8 @@ function bp_document_folder_add_meta( $folder_id, $meta_key, $meta_value, $uniqu
  * @return string
  * @since BuddyBoss 1.4.0
  */
-function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
-	static $max_size = - 1;
-
-	if ( $max_size < 0 ) {
-		// Start with post_max_size.
-		$size = @ini_get( 'post_max_size' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size );      // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$post_max_size = round( $size );
-		}
-
-		if ( $post_max_size > 0 ) {
-			$max_size = $post_max_size;
-		}
-
-		// If upload_max_size is less, then reduce. Except if upload_max_size is
-		// zero, which indicates no limit.
-		$size = @ini_get( 'upload_max_filesize' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size );      // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$upload_max = round( $size );
-		}
-		if ( $upload_max > 0 && $upload_max < $max_size ) {
-			$max_size = $upload_max;
-		}
-	}
-
-	return apply_filters( 'bp_document_file_upload_max_size', bp_document_format_size_units( $max_size, $post_string, $type ) );
+function bp_document_file_upload_max_size() {
+	return apply_filters( 'bp_document_file_upload_max_size', bp_media_allowed_upload_document_size() );
 }
 
 /**
@@ -1399,8 +1367,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size( true ),
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size( true ),
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size(),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
@@ -1822,11 +1789,8 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id = 0, $grou
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
 	}
 
-	if ( $group_id > 0 ) {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} else {
-		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
-	}
+	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
+
 
 	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
@@ -1939,10 +1903,10 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 			$link     = '';
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
-				$link = bp_displayed_user_domain() . bp_get_document_root_slug() . '/folders/' . $element['id'];
+				$link = bp_displayed_user_domain() . bp_get_document_slug() . '/folders/' . $element['id'];
 			} else {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
-				$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug() . '/folders/' . $element['id'];
+				$link  = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folders/' . $element['id'];
 			}
 			$html .= '<li> <a href=" ' . $link . ' ">' . stripslashes( $element['title'] ) . '</a></li>';
 		}
@@ -2169,7 +2133,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	$new_filename_unsanitized = $new_filename;
 
 	// sanitizing file name (using sanitize_title because sanitize_file_name doesn't remove accents).
-	$new_filename = sanitize_file_name( remove_accents( $new_filename ) );
+	$new_filename = sanitize_file_name( $new_filename );
 
 	$file_abs_path     = get_attached_file( $post->ID );
 	$file_abs_dir      = dirname( $file_abs_path );
@@ -2198,7 +2162,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	if ( ! $new_filename ) {
 		return __( 'The document name is empty!', 'buddyboss' );
 	}
-	if ( $new_filename != sanitize_file_name( remove_accents( $new_filename ) ) ) {
+	if ( $new_filename != sanitize_file_name( $new_filename ) ) {
 		return __( 'Bad characters or invalid document name!', 'buddyboss' );
 	}
 	if ( file_exists( $new_file_abs_path ) ) {
@@ -2341,6 +2305,12 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 			return false;
 		}
 	}
+
+	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+		return false;
+	}
+
+	$title = wp_strip_all_tags( $title );
 
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
@@ -2680,6 +2650,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$folder       = new BP_Document_Folder( $folder_id );
 	$data         = array();
 
@@ -2690,6 +2661,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2700,10 +2677,28 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_document( $user_id, $folder->group_id );
+				$manage   = groups_can_user_manage_document( $user_id, $folder->group_id );
+				$status   = bp_group_get_media_status( $folder->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $folder->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $folder->group_id );
 
 				if ( $manage ) {
-					$can_manage   = true;
+					if ( $folder->user_id === $user_id ) {
+						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
+					}
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2722,6 +2717,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2735,6 +2736,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2747,6 +2754,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 
@@ -2755,6 +2768,7 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $folder_id, $user_id );
 }
@@ -2773,6 +2787,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$document     = new BP_Document( $document_id );
 	$data         = array();
 
@@ -2783,6 +2798,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2793,10 +2814,28 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_document( $user_id, $document->group_id );
+				$manage   = groups_can_user_manage_document( $user_id, $document->group_id );
+				$status   = bp_group_get_document_status( $document->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $document->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $document->group_id );
 
 				if ( $manage ) {
-					$can_manage   = true;
+					if ( $document->user_id === $user_id ) {
+						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
+					}
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2815,6 +2854,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2829,6 +2874,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2847,6 +2898,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_manage   = true;
@@ -2871,6 +2928,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access > 0 ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2883,6 +2946,12 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 
@@ -2891,6 +2960,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_document_user_can_manage_folder', $data, $document_id, $user_id );
 }
@@ -3152,4 +3222,52 @@ function bp_document_default_scope( $scope = 'all' ) {
 
 	return implode( ',', $new_scope );
 
+}
+
+/**
+ * Convert number of bytes largest unit bytes will fit into.
+ *
+ * It is easier to read 1 KB than 1024 bytes and 1 MB than 1048576 bytes. Converts
+ * number of bytes to human readable number by taking the number of that unit
+ * that the bytes will go into it. Supports TB value.
+ *
+ * Please note that integers in PHP are limited to 32 bits, unless they are on
+ * 64 bit architecture, then they have 64 bit size. If you need to place the
+ * larger size then what PHP integer type will hold, then use a string. It will
+ * be converted to a double, which should always have 64 bit length.
+ *
+ * Technically the correct unit names for powers of 1024 are KiB, MiB etc.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int|string $bytes    Number of bytes. Note max integer size for integers.
+ * @param int        $decimals Optional. Precision of number of decimal places. Default 0.
+ * @return string|false False on failure. Number string on success.
+ */
+function bp_document_size_format( $bytes, $decimals = 0 ) {
+	$quant = array(
+		/* translators: Memory unit for terabyte. */
+		_x( 'TB', 'memory unit', 'buddyboss' ) => TB_IN_BYTES,
+		/* translators: Memory unit for gigabyte. */
+		_x( 'GB', 'memory unit', 'buddyboss' ) => GB_IN_BYTES,
+		/* translators: Memory unit for megabyte. */
+		_x( 'MB', 'memory unit', 'buddyboss' ) => MB_IN_BYTES,
+		/* translators: Memory unit for kilobyte. */
+		_x( 'KB', 'memory unit', 'buddyboss' ) => KB_IN_BYTES,
+		/* translators: Memory unit for byte. */
+		_x( 'B', 'memory unit', 'buddyboss' )  => 1,
+	);
+
+	if ( 0 === $bytes ) {
+		/* translators: Memory unit for byte. */
+		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
+	}
+
+	foreach ( $quant as $unit => $mag ) {
+		if ( doubleval( $bytes ) >= $mag ) {
+			return number_format_i18n( $bytes / $mag, $decimals ) . ' ' . $unit;
+		}
+	}
+
+	return false;
 }

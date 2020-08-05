@@ -177,14 +177,15 @@ class BP_Document_Folder {
 		}
 
 		$args = array(
-			'in' => $id,
+			'in'     => $id,
+			'fields'  => 'ids'
 		);
 
 		$folders = self::get( $args );
 
 		$folder_id = false;
 		if ( ! empty( $folders['folders'] ) ) {
-			$folder_id = current( $folders['folders'] )->id;
+			$folder_id = current( $folders['folders'] );
 		}
 
 		return $folder_id;
@@ -509,7 +510,7 @@ class BP_Document_Folder {
 
 			$group_name = '';
 			$visibility = '';
-			if ( $folder->group_id > 0 ) {
+			if ( bp_is_active( 'groups') && $folder->group_id > 0 ) {
 				$group      = groups_get_group( $folder->group_id );
 				$group_name = bp_get_group_name( $group );
 				$status     = bp_get_group_status( $group );

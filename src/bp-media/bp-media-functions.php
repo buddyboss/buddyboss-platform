@@ -112,8 +112,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size(),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
@@ -184,40 +183,8 @@ function bp_media_compress_image( $source, $destination, $quality = 90 ) {
  *
  * @return string
  */
-function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
-	static $max_size = - 1;
-
-	if ( $max_size < 0 ) {
-		// Start with post_max_size.
-		$size = @ini_get( 'post_max_size' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$post_max_size = round( $size );
-		}
-
-		if ( $post_max_size > 0 ) {
-			$max_size = $post_max_size;
-		}
-
-		// If upload_max_size is less, then reduce. Except if upload_max_size is
-		// zero, which indicates no limit.
-		$size = @ini_get( 'upload_max_filesize' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$upload_max = round( $size );
-		}
-		if ( $upload_max > 0 && $upload_max < $max_size ) {
-			$max_size = $upload_max;
-		}
-	}
-
-	return apply_filters( 'bp_media_file_upload_max_size', bp_media_format_size_units( $max_size, $post_string, $type ) );
+function bp_media_file_upload_max_size() {
+	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
 }
 
 /**
@@ -465,7 +432,7 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
-	} elseif ( ! empty( $media->folder_id ) ) {
+	} elseif ( ! empty( $media->album_id ) ) {
 		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
 			$media->privacy = $album->privacy;
@@ -2310,7 +2277,7 @@ function bp_media_default_scope( $scope ) {
 			$new_scope[] = 'personal';
 		}
 
-	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
+	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
 
@@ -2347,6 +2314,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 	$can_manage   = false;
 	$can_view     = false;
 	$can_download = false;
+	$can_add      = false;
 	$media        = new BP_Media( $media_id );
 	$data         = array();
 
@@ -2357,6 +2325,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} else {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2367,10 +2341,28 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage = groups_can_user_manage_media( $user_id, $media->group_id );
+				$manage   = groups_can_user_manage_media( $user_id, $media->group_id );
+				$status   = bp_group_get_media_status( $media->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $media->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $media->group_id );
 
 				if ( $manage ) {
-					$can_manage   = true;
+					if ( $media->user_id === $user_id ) {
+						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
+					}
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2389,6 +2381,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( bp_loggedin_user_id() === $user_id ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2403,6 +2401,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $is_friend ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2422,6 +2426,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
 					$can_manage   = true;
@@ -2446,6 +2456,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			} elseif ( $has_access > 0 ) {
 				$can_manage   = false;
 				$can_view     = true;
@@ -2458,6 +2474,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
+				$can_add      = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
 			}
 			break;
 
@@ -2466,6 +2488,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 	$data['can_manage']   = $can_manage;
 	$data['can_view']     = $can_view;
 	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
 
 	return apply_filters( 'bp_media_user_can_manage_media', $data, $media_id, $user_id );
 }
@@ -2527,11 +2550,9 @@ function bp_media_download_link( $attachment_id, $media_id ) {
 function bp_media_download_url_file() {
 	if ( isset( $_GET['attachment_id'] ) && isset( $_GET['download_media_file'] ) && isset( $_GET['media_file'] ) && isset( $_GET['media_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		if ( 'folder' !== $_GET['media_type'] ) {
-			error_log( 'come' );
 			$media_privacy = bp_media_user_can_manage_media( $_GET['media_file'], bp_loggedin_user_id() ); // phpcs:ignore WordPress.Security.NonceVerification
 
 			$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
-			error_log( $can_download_btn );
 		}
 		if ( $can_download_btn ) {
 			bp_media_download_file( $_GET['attachment_id'], $_GET['media_type'] ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -2658,6 +2679,142 @@ function bp_media_get_forum_id( $media_id ) {
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
+}
+
+/**
+ * Check user have a permission to manage the album.
+ *
+ * @param int $album_id
+ * @param int $user_id
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.4.7
+ */
+function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
+
+	$can_manage   = false;
+	$can_view     = false;
+	$can_download = false;
+	$can_add      = false;
+	$album        = new BP_Media_Album( $album_id );
+	$data         = array();
+
+	switch ( $album->privacy ) {
+
+		case 'public':
+			if ( $album->user_id === $user_id ) {
+				$can_add      = true;
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
+			} else {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'grouponly':
+			if ( bp_is_active( 'groups' ) ) {
+
+				$manage   = groups_can_user_manage_media( $user_id, $album->group_id );
+				$status   = bp_group_get_media_status( $album->group_id );
+				$is_admin = groups_is_user_admin( $user_id, $album->group_id );
+				$is_mod   = groups_is_user_mod( $user_id, $album->group_id );
+				if ( $manage ) {
+					if ( $album->user_id === $user_id ) {
+						$can_manage   = true;
+						$can_add      = true;
+					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+						$can_manage   = true;
+						$can_add      = false;
+					} elseif ( 'admins' == $status && $is_admin ) {
+						$can_manage   = true;
+						$can_add      = false;
+					}
+					$can_view     = true;
+					$can_download = true;
+				} else {
+					$the_group = groups_get_group( absint( $album->group_id ) );
+					if ( $the_group->id > 0 && $the_group->user_has_access ) {
+						$can_view     = true;
+						$can_download = true;
+					}
+				}
+			}
+
+			break;
+
+		case 'loggedin':
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_add      = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
+			} elseif ( bp_loggedin_user_id() === $user_id ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'friends':
+			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $album->user_id, $user_id ) : false;
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_add      = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
+			} elseif ( $is_friend ) {
+				$can_manage   = false;
+				$can_view     = true;
+				$can_download = true;
+			}
+			break;
+
+		case 'onlyme':
+			if ( $album->user_id === $user_id ) {
+				$can_manage   = true;
+				$can_add      = true;
+				$can_view     = true;
+				$can_download = true;
+			} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+				$can_manage   = true;
+				$can_view     = true;
+				$can_download = true;
+				$can_add      = false;
+			}
+			break;
+
+	}
+
+	$data['can_manage']   = $can_manage;
+	$data['can_view']     = $can_view;
+	$data['can_download'] = $can_download;
+	$data['can_add']      = $can_add;
+
+	return apply_filters( 'bp_media_user_can_manage_album', $data, $album_id, $user_id );
 }
 
 
