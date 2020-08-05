@@ -550,13 +550,17 @@ function bp_document_add( $args = '' ) {
 /**
  * Document add handler function
  *
- * @param array $documents
+ * @param array  $documents
+ * @param string $privacy
+ * @param string $content
+ * @param int    $group_id
+ * @param int    $folder_id
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
  */
-function bp_document_add_handler( $documents = array() ) {
-	global $bp_document_upload_count;
+function bp_document_add_handler( $documents = array(), $privacy = 'public', $content = '', $group_id = false, $folder_id = false ) {
+	global $bp_document_upload_count, $bp_document_upload_activity_content;
 	$document_ids = array();
 
 	if ( ! is_user_logged_in() ) {
@@ -567,12 +571,15 @@ function bp_document_add_handler( $documents = array() ) {
 		$documents = $_POST['document'];
 	}
 
-	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_document_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
+	$privacy = in_array( $privacy, array_keys( bp_document_get_visibility_levels() ) ) ? $privacy : 'public';
 
 	if ( ! empty( $documents ) && is_array( $documents ) ) {
 
 		// update count of documents for later use.
 		$bp_document_upload_count = count( $documents );
+
+		// update the content of medias for later use.
+		$bp_document_upload_activity_content = $content;
 
 		// save  document.
 		foreach ( $documents as $document ) {
@@ -586,8 +593,8 @@ function bp_document_add_handler( $documents = array() ) {
 				array(
 					'attachment_id' => $document['id'],
 					'title'         => $document['name'],
-					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
-					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
+					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
+					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
 					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 					'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
 					'error_type'    => 'wp_error',

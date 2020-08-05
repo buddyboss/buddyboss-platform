@@ -259,6 +259,7 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 
+	global $bp_activity_post_update, $bp_activity_post_update_id;
 	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
 		return false;
 	}
@@ -277,9 +278,8 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 		}
 	}
 
-	$_POST['documents']          = $_POST['document'];
-	$_POST['bp_activity_update'] = true;
-	$_POST['bp_activity_id']     = $activity_id;
+	$bp_activity_post_update    = true;
+	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
 	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
@@ -296,7 +296,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler();
+	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
