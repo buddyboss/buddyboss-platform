@@ -1710,7 +1710,7 @@ function bp_activity_media_add( $media ) {
 function bp_activity_create_parent_media_activity( $media_ids ) {
 	global $bp_media_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content;
 
-	if ( ! empty( $media_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
+	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) ) {
 
 		$added_media_ids = $media_ids;
 		$content         = false;
