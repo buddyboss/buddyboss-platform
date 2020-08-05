@@ -1098,6 +1098,20 @@ span.dashicons.dashicons-admin-file:before {
 
 }
 
+@media screen and ( max-width: 799px ) {
+
+	#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list {
+		right: -53px;
+		width: 185px;
+
+		&:after {
+			right: 68px;
+		}
+	}
+
+}
+
+
 .bb-activity-media-wrap {
 	width: 100%;
 

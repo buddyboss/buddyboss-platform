@@ -508,6 +508,11 @@
 
 .bb-photo-thumb {
 	position: relative;
+	z-index: 1;
+
+	&.is-visible {
+		z-index: 11;
+	}
 
 	&.selected,
 	&:hover {
@@ -3312,6 +3317,12 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		}
 	}
 
+	.close-create-popup-album {
+		display: inline-block;
+		vertical-align: middle;
+		margin: 0 20px 0 0;
+	}
+
 	.bb-model-header p {
 		font-size: 17px;
 		font-weight: 500;
@@ -3328,6 +3339,12 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		}
 
 	}
+
+	.ac-media-close-button,
+	.close-create-popup-album {
+		color: #a5a7ab;
+	}
+
 }
 
 .bp-media-document-uploader .bb-model-header > p {
@@ -3335,6 +3352,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 	margin: 0;
 }
 
+.popup-on-fly-create-album .bb-field-wrap .bb-dropdown-wrap select,
 .popup-on-fly-create-folder .bb-field-wrap .bb-dropdown-wrap select {
 	width: 100%;
 }
