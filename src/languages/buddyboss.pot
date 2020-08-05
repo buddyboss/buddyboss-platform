@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-08-05 12:02:23+00:00\n"
+"POT-Creation-Date: 2020-08-05 12:19:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -952,7 +952,7 @@ msgid ""
 "more details."
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2766
+#: bp-activity/bp-activity-template.php:2765
 #: bp-core/bp-core-attachments.php:810 bp-forums/replies/template.php:2120
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
@@ -987,7 +987,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2869
+#: bp-activity/bp-activity-template.php:2868
 #: bp-core/admin/bp-core-admin-functions.php:1509
 #: bp-core/admin/bp-core-admin-pages.php:315
 #: bp-core/admin/bp-core-admin-pages.php:349
@@ -1004,30 +1004,30 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2980
+#: bp-activity/bp-activity-template.php:2979
 msgid "Clear Filter"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3285
+#: bp-activity/bp-activity-template.php:3284
 msgid "a user"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3878
+#: bp-activity/bp-activity-template.php:3877
 msgid "Site Wide Activity RSS Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4106
-#: bp-activity/bp-activity-template.php:4112
+#: bp-activity/bp-activity-template.php:4105
+#: bp-activity/bp-activity-template.php:4111
 #: bp-templates/bp-nouveau/includes/activity/functions.php:318
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4111
+#: bp-activity/bp-activity-template.php:4110
 msgid "Unfollow"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4128
+#: bp-activity/bp-activity-template.php:4127
 #: bp-core/admin/settings/bp-admin-setting-activity.php:88
 msgid "Follow"
 msgstr ""

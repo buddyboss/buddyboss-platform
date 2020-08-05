@@ -4169,11 +4169,17 @@ function bp_activity_entry_css_class() {
 		$class = '';
 
 		if ( bp_is_active( 'media' )  ) {
-			// $document_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_activity', true );
+
 			$document_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_ids', true );
 			if( ! empty( $document_ids ) ){
 				$class .= ' documemt-activity';
 			}
+
+			$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+			if( ! empty( $media_ids ) ){
+				$class .= ' media-activity-wrap';
+			}
+
 		}
 
 		/**
