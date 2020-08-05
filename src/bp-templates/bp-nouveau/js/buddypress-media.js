@@ -141,12 +141,7 @@ window.bp = window.bp || {};
 
 			$( window ).on(
 				'scroll resize',
-				function(){
-					
-					//Check if any Media activity is on page and add Media class
-					if ( ! $( '.bb-activity-media-elem.media-activity' ).closest( '.activity-content' ).hasClass( 'media-activity-wrap' )) {
-						$( '.bb-activity-media-elem.media-activity' ).closest( '.activity-content' ).addClass( 'media-activity-wrap' );
-					}
+				function() {
 
 					bp.Nouveau.Media.documentCodeMirror();
 					
