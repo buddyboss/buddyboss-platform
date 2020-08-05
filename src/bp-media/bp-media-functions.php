@@ -2830,7 +2830,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  * @return string
  * @since BuddyBoss 1.4.0
  */
-function bp_media_user_media_folder_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
+function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 

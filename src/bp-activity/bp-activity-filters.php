@@ -1842,7 +1842,7 @@ function bp_activity_document_add( $document ) {
 	if ( ! empty( $document ) ) {
 		$parent_activity_id = false;
 		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
-			$parent_activity_id = (int) $_POST['bp_activity_id'];
+			$parent_activity_id = $bp_activity_post_update_id;
 		}
 
 		if ( $bp_document_upload_count > 1 || ! empty( $bp_new_activity_comment ) ) {
@@ -1886,8 +1886,7 @@ function bp_activity_document_add( $document ) {
 				// save attachment meta for activity.
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
-				if ( ! empty( $parent_activity_id ) ) {
-
+				if ( $parent_activity_id ) {
 					$document_activity = new BP_Activity_Activity( $activity_id );
 					$document_activity->secondary_item_id = $parent_activity_id;
 					$document_activity->save();

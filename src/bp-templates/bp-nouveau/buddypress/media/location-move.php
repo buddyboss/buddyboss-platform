@@ -7,17 +7,14 @@
  */
 
 $ul  = '';
-if ( bp_is_group_media() || bp_is_group_albums() ) {
-	$group_id         = bp_get_current_group_id();
-	$ul = bp_media_user_media_folder_tree_view_li_html( 0, $group_id );
-} elseif ( bp_is_user_media() ) {
-	$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() );
-} elseif ( bp_is_media_directory() ) {
-	$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() );
-} else {
-	$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() ); // Temporary fix for Activity page
-}
-
+//if ( bp_is_group_media() || bp_is_group_albums() ) {
+//	$group_id         = bp_get_current_group_id();
+//	$ul = bp_media_user_media_album_tree_view_li_html( 0, $group_id );
+//} elseif ( bp_is_user_media() ) {
+//	$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id() );
+//} elseif ( bp_is_media_directory() ) {
+//	$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id() );
+//}
 ?>
 <div class="bb-dropdown-wrap">
 	<div class="location-album-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">

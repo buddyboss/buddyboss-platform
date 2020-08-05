@@ -17,7 +17,7 @@
 						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss' ); ?></span></h4>
 					</header>
 					<?php
-						$ul = bp_media_user_media_folder_tree_view_li_html( bp_loggedin_user_id() );
+						//$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id() );
 					?>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'media/location-move' ); ?>
