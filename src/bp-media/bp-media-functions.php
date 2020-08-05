@@ -480,23 +480,26 @@ function bp_media_add( $args = '' ) {
  *
  * @since BuddyBoss 1.2.0
  * @param array $medias
+ * @param string $privacy
+ * @param string $content
+ * @param int $group_id
+ * @param int $album_id
  *
  * @return mixed|void
  */
-function bp_media_add_handler( $medias = array() ) {
-	global $bp_media_upload_count;
+function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
+	global $bp_media_upload_count, $bp_media_upload_activity_content;
 	$media_ids = array();
 
-	if ( empty( $medias ) && ! empty( $_POST['medias'] ) ) {
-		$medias = $_POST['medias'];
-	}
-
-	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_media_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
+	$privacy = in_array( $privacy, array_keys( bp_media_get_visibility_levels() ) ) ? $privacy : 'public';
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 
 		// update count of media for later use.
 		$bp_media_upload_count = count( $medias );
+
+		// update the content of medias for later use.
+		$bp_media_upload_activity_content = $content;
 
 		// save  media.
 		foreach ( $medias as $media ) {
@@ -504,8 +507,8 @@ function bp_media_add_handler( $medias = array() ) {
 			$media_id = bp_media_add( array(
 				'attachment_id' => $media['id'],
 				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
 				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 			) );
 
