@@ -4416,10 +4416,10 @@ window.bp = window.bp || {};
 		 * Submit popup on ENTER.
 		 */
 		submitPopup: function( event ) {
-			//Close popup if it's open
+			//Submit popup if it's open
 			if( event.keyCode == 13 ) {
-				//Close Move popup
-				$('.bp-media-move-folder.open-popup .bp-document-move:not(.is-disabled):visible, .bp-media-move-folder.open-popup  .bp-folder-move:not(.is-disabled):visible,.bp-media-move-file.open-popup .bp-document-move:not(.is-disabled):visible, .bp-media-move-file.open-popup .bp-document-create-popup-folder-submit:visible, .bp-media-move-folder.open-popup .bp-document-create-popup-folder-submit:visible ').trigger('click');
+				//Submit Move popup
+				$('.bp-media-move-folder.open-popup .bp-document-move:not(.is-disabled):visible, .bp-media-move-folder.open-popup  .bp-folder-move:not(.is-disabled):visible,.bp-media-move-file.open-popup .bp-document-move:not(.is-disabled):visible, .bp-media-move-file.open-popup .bp-document-create-popup-folder-submit:visible, .bp-media-move-folder.open-popup .bp-document-create-popup-folder-submit:visible, .bp-media-move-file.open .bp-media-move:not(.is-disabled):visible, .bp-media-move-file.open .bp-media-create-popup-album-submit:visible').trigger('click');
 
 				//Submit create folder popup
 				$('#bp-media-create-folder #bp-media-create-folder-submit:visible, #bp-media-create-child-folder #bp-media-create-child-folder-submit:visible').trigger('click');
