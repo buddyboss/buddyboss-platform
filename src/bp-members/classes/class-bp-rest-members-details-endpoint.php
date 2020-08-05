@@ -90,7 +90,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$retval = array();
 
 		$retval['tabs']          = $this->get_members_tabs();
-		$retval['order_options'] = bp_nouveau_get_component_filters( '', 'members' );
+		$retval['order_options'] = function_exists( 'bp_nouveau_get_component_filters' ) ? bp_nouveau_get_component_filters( '', 'members' ) : $this->bp_rest_legacy_get_members_component_filters();
 
 		$response = rest_ensure_response( $retval );
 
@@ -369,7 +369,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_members_tabs() {
 		$tabs = array();
 
-		$tabs_items = bp_nouveau_get_members_directory_nav_items();
+		$tabs_items = function_exists( 'bp_nouveau_get_members_directory_nav_items' ) ? bp_nouveau_get_members_directory_nav_items() : $this->bp_rest_legacy_get_members_directory_nav_items();
 
 		if ( ! empty( $tabs_items ) ) {
 			foreach ( $tabs_items as $key => $item ) {
@@ -446,6 +446,53 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		 * @param array $nav_item The current nav item array.
 		 */
 		return (bool) apply_filters( 'bp_rest_nouveau_nav_has_count', false !== $count, $nav );
+	}
+
+	/**
+	 * Legacy template members directory navigation support added.
+	 *
+	 * @return mixed|void
+	 */
+	public function bp_rest_legacy_get_members_directory_nav_items() {
+		$nav_items = array();
+
+		$nav_items['all'] = array(
+			'text'     => __( 'All Members', 'buddyboss' ),
+			'position' => 5,
+			'count'    => bp_get_total_member_count(),
+		);
+
+		if ( is_user_logged_in() ) {
+			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+				$nav_items['friends'] = array(
+					'text'     => __( 'My Friends', 'buddyboss' ),
+					'position' => 15,
+					'count'    => bp_get_total_friend_count( bp_loggedin_user_id() ),
+				);
+			}
+		}
+
+		return apply_filters( 'bp_rest_legacy_get_members_directory_nav_items', $nav_items );
+	}
+
+	/**
+	 * Legacy template members directory filter support added.
+	 *
+	 * @return mixed
+	 */
+	public function bp_rest_legacy_get_members_component_filters() {
+
+		$filters_data = array();
+
+		$filters_data['active'] = __( 'Last Active', 'buddyboss' );
+		$filters_data['newest'] = __( 'Newest Registered', 'buddyboss' );
+		if ( is_user_logged_in() ) {
+			if ( bp_is_active( 'xprofile' ) ) {
+				$filters_data['alphabetical'] = __( 'Alphabetical', 'buddyboss' );
+			}
+		}
+
+		return apply_filters( 'bp_rest_legacy_get_members_component_filters', $filters_data );
 	}
 
 }

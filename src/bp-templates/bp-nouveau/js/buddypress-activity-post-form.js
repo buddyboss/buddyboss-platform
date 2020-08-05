@@ -3,7 +3,7 @@
 window.wp = window.wp || {};
 window.bp = window.bp || {};
 
-( function ( exports, $ ) {
+( function( exports, $ ) {
 	bp.Nouveau = bp.Nouveau || {};
 
 	// Bail if not set.
@@ -23,24 +23,21 @@ window.bp = window.bp || {};
 	 * @type {Object}
 	 */
 	bp.Nouveau.Activity.postForm = {
-		start: function () {
-			this.views = new Backbone.Collection();
+		start: function() {
+			this.views           = new Backbone.Collection();
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
-			this.buttons = new Backbone.Collection();
-			this.postForm = false;
-			this.activityAttachments = false;
-			this.editActivityData = false;
+			this.buttons         = new Backbone.Collection();
 
-			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
+			if ( ! _.isUndefined( window.Dropzone ) && ! _.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
 			}
 
 			this.postFormView();
 		},
 
-		postFormView: function () {
+		postFormView: function() {
 			// Do not carry on if the main element is not available.
-			if ( !$( '#bp-nouveau-activity-form' ).length ) {
+			if ( ! $( '#bp-nouveau-activity-form' ).length ) {
 				return;
 			}
 
@@ -61,16 +58,16 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url: BP_Nouveau.ajaxurl,
-				timeout: 3 * 60 * 60 * 1000,
-				dictFileTooBig: BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage: BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles: 'image/*',
-				autoProcessQueue: true,
-				addRemoveLinks: true,
-				uploadMultiple: false,
-				maxFiles: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				url						: BP_Nouveau.ajaxurl,
+				timeout					: 3 * 60 * 60 * 1000,
+				dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage 		: BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles			: 'image/*',
+				autoProcessQueue		: true,
+				addRemoveLinks			: true,
+				uploadMultiple			: false,
+				maxFiles				: typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize				: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 			};
 
 			// if defined, add custom dropzone options.
@@ -300,10 +297,10 @@ window.bp = window.bp || {};
 	bp.Models.ActivityObject = Backbone.Model.extend(
 		{
 			defaults: {
-				id: 0,
-				name: '',
-				avatar_url: '',
-				object_type: 'group'
+				id          : 0,
+				name        : '',
+				avatar_url  : '',
+				object_type : 'group'
 			}
 		}
 	);
@@ -428,7 +425,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'sending',
-					function ( file, xhr, formData ) {
+					function(file, xhr, formData) {
 						formData.append( 'action', 'media_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
@@ -447,32 +444,32 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'success',
-					function ( file, response ) {
+					function(file, response) {
 						if ( response.data.id ) {
-							file.id = response.data.id;
-							response.data.uuid = file.upload.uuid;
-							response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-							response.data.saved = false;
+							file.id                  = response.data.id;
+							response.data.uuid       = file.upload.uuid;
+							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							this.removeFile( file );
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
 						}
 					}
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
-					function ( file, response ) {
+					function(file,response) {
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							this.removeFile( file );
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
 						}
 					}
 				);
@@ -555,7 +552,7 @@ window.bp = window.bp || {};
 				$( '#whats-new-attachments' ).addClass( 'empty' );
 			},
 
-			open_document_uploader: function () {
+			open_document_uploader: function() {
 				var self = this;
 
 				if ( self.$el.find( '#activity-post-document-uploader' ).hasClass( 'open' ) ) {
@@ -564,25 +561,25 @@ window.bp = window.bp || {};
 				self.destroyDocument();
 
 				var dropzone_options = {
-					url: BP_Nouveau.ajaxurl,
-					timeout: 3 * 60 * 60 * 1000,
-					dictFileTooBig: BP_Nouveau.media.dictFileTooBig,
-					acceptedFiles: BP_Nouveau.media.document_type,
-					createImageThumbnails: false,
-					dictDefaultMessage: BP_Nouveau.media.dropzone_document_message,
-					autoProcessQueue: true,
-					addRemoveLinks: true,
-					uploadMultiple: false,
-					maxFiles: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
-					dictInvalidFileType: BP_Nouveau.document.dictInvalidFileType,
+					url						: BP_Nouveau.ajaxurl,
+					timeout					: 3 * 60 * 60 * 1000,
+					dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
+					acceptedFiles			: BP_Nouveau.media.document_type,
+					createImageThumbnails 	: false,
+					dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
+					autoProcessQueue		: true,
+					addRemoveLinks			: true,
+					uploadMultiple			: false,
+					maxFiles				: typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
+					maxFilesize				: typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
+					dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-document-uploader', dropzone_options );
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'sending',
-					function ( file, xhr, formData ) {
+					function(file, xhr, formData) {
 						formData.append( 'action', 'document_document_upload' );
 						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
 
@@ -601,12 +598,12 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'success',
-					function ( file, response ) {
+					function(file, response) {
 						if ( response.data.id ) {
-							file.id = response.data.id;
-							response.data.uuid = file.upload.uuid;
-							response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-							response.data.saved = false;
+							file.id                  = response.data.id;
+							response.data.uuid       = file.upload.uuid;
+							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
@@ -614,10 +611,10 @@ window.bp = window.bp || {};
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
 							file.previewElement.classList.add( 'dz-error' );
-							_ref = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+							_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
 							_results = [];
 							for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-								node = _ref[_i];
+								node                            = _ref[_i];
 								_results.push( node.textContent = message );
 							}
 							return _results;
@@ -627,8 +624,8 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'accept',
-					function ( file, done ) {
-						if ( file.size == 0 ) {
+					function( file, done ) {
+						if (file.size == 0) {
 							done( BP_Nouveau.media.empty_document_type );
 						} else {
 							done();
@@ -638,25 +635,25 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'error',
-					function ( file, response ) {
+					function(file,response) {
 						if ( file.accepted ) {
 							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
 								$( file.previewElement ).find( '.dz-error-message span' ).text( response.data.feedback );
 							}
 						} else {
-							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
-							this.removeFile( file );
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							this.removeFile(file);
 						}
 					}
 				);
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'removedfile',
-					function ( file ) {
+					function(file) {
 						if ( self.document.length ) {
 							for ( var i in self.document ) {
 								if ( file.id === self.document[i].id ) {
-									if ( typeof self.document[i].saved !== 'undefined' && !self.document[i].saved ) {
+									if ( typeof self.document[i].saved !== 'undefined' && ! self.document[i].saved ) {
 										bp.Nouveau.Media.removeAttachment( file.id );
 									}
 									self.document.splice( i, 1 );
@@ -665,7 +662,7 @@ window.bp = window.bp || {};
 							}
 						}
 
-						if ( !_.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-media-button' ) ) {
 								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
@@ -701,7 +698,7 @@ window.bp = window.bp || {};
 				'click #activity-close-link-suggestion': 'destroy'
 			},
 
-			initialize: function () {
+			initialize: function() {
 				this.model.set( 'link_scrapping', false );
 				this.model.set( 'link_embed', false );
 				this.listenTo( this.model, 'change', this.render );
@@ -709,7 +706,7 @@ window.bp = window.bp || {};
 				document.addEventListener( 'activity_link_preview_close', this.destroy.bind( this ) );
 			},
 
-			render: function () {
+			render: function() {
 				// do not re render if post form is submitting.
 				if ( this.model.get( 'posting' ) == true ) {
 					return;
@@ -737,7 +734,7 @@ window.bp = window.bp || {};
 				return this;
 			},
 
-			prev: function () {
+			prev: function() {
 				var imageIndex = this.model.get( 'link_image_index' );
 				if ( imageIndex > 0 ) {
 					this.model.set( 'link_image_index', imageIndex - 1 );
@@ -746,20 +743,20 @@ window.bp = window.bp || {};
 
 			next: function () {
 				var imageIndex = this.model.get( 'link_image_index' );
-				var images = this.model.get( 'link_images' );
+				var images     = this.model.get( 'link_images' );
 				if ( imageIndex < images.length - 1 ) {
 					this.model.link_image_index++;
 					this.model.set( 'link_image_index', imageIndex + 1 );
 				}
 			},
 
-			open: function ( e ) {
+			open: function(e) {
 				e.preventDefault();
 				this.model.set( 'link_scrapping', true );
 				this.$el.addClass( 'open' );
 			},
 
-			close: function ( e ) {
+			close: function(e) {
 				e.preventDefault();
 				this.model.set(
 					{
@@ -1222,16 +1219,20 @@ window.bp = window.bp || {};
 				var startIndex = urlText.indexOf( prefix );
 				var responseUrl = '';
 
-				for ( var i = startIndex; i < urlText.length; i++ ) {
-					if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
-						break;
-					} else {
-						urlString += urlText[i];
+				if ( typeof $( urlText ).attr( 'href' ) !== 'undefined' ) {
+					urlString = $( urlText ).attr( 'href' );
+				} else {
+					for ( var i = startIndex; i < urlText.length; i++ ) {
+						if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+							break;
+						} else {
+							urlString += urlText[i];
+						}
 					}
-				}
-				if ( prefix === 'www' ) {
-					prefix = 'http://';
-					urlString = prefix + urlString;
+					if ( prefix === 'www' ) {
+						prefix = 'http://';
+						urlString = prefix + urlString;
+					}
 				}
 
 				var div = document.createElement( 'div' );
@@ -1353,26 +1354,31 @@ window.bp = window.bp || {};
 
 				if ( !_.isUndefined( window.MediumEditor ) ) {
 
-					$('#whats-new').each( function() {
-						var $this = $(this);
-						var whatsnewcontent = $this.closest('#whats-new-content')[0];
-
-						if ( !$(this).closest('.edit-activity-modal-body').length ) {
-
-							window.group_messages_editor = new window.MediumEditor( $this, {
-								placeholder: {
-									text: '',
-									hideOnClick: true
-								},
-								toolbar: {
-									buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
-									relativeContainer: whatsnewcontent,
-									static: true,
-									updateOnEmptySelection: true
-								},
-								imageDragging: false
-							});
-						}
+					window.group_messages_editor = new window.MediumEditor('#whats-new',{
+						placeholder: {
+							text: '',
+							hideOnClick: true
+						},
+						toolbar: {
+							buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+							relativeContainer: document.getElementById('whats-new-content'),
+							static: true,
+							updateOnEmptySelection: true
+						},
+						paste: {
+							forcePlainText: false,
+							cleanPastedHTML: true,
+							cleanReplacements: [
+								[new RegExp(/<div/gi), '<p'],
+								[new RegExp(/<\/div/gi), '</p'],
+								[new RegExp(/<h[1-6]/gi), '<b'],
+								[new RegExp(/<\/h[1-6]/gi), '</b'],
+							],
+							cleanAttrs: ['class', 'style', 'dir', 'id'],
+							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+							unwrapTags: []
+						},
+						imageDragging: false
 					});
 
 					// check for mentions in the url, if set any then focus to editor.
@@ -2356,9 +2362,12 @@ window.bp = window.bp || {};
 					event.preventDefault();
 				}
 
+				// unset all errors before submit.
+				self.model.unset( 'errors' );
+
 				// Set the content and meta.
 				_.each(
-					this.$el.serializeArray(),
+					self.$el.serializeArray(),
 					function ( pair ) {
 						pair.name = pair.name.replace( '[]', '' );
 						if ( -1 === _.indexOf( [ 'aw-whats-new-submit', 'whats-new-post-in' ], pair.name ) ) {
@@ -2376,7 +2385,7 @@ window.bp = window.bp || {};
 				);
 
 				// Post content.
-				var $whatsNew = this.$el.find( '#whats-new' );
+				var $whatsNew = self.$el.find( '#whats-new' );
 
 				var atwho_query = $whatsNew.find( 'span.atwho-query' );
 				for ( var i = 0; i < atwho_query.length; i++ ) {
@@ -2397,7 +2406,7 @@ window.bp = window.bp || {};
 				self.model.set( 'content', content, { silent: true } );
 
 				// Silently add meta.
-				this.model.set( meta, { silent: true } );
+				self.model.set( meta, { silent: true } );
 
 				var medias = self.model.get( 'media' );
 				if ( 'group' == self.model.get( 'object' ) && typeof medias !== 'undefined' && medias.length ) {
@@ -2415,8 +2424,17 @@ window.bp = window.bp || {};
 					self.model.set( 'document', document );
 				}
 
+				// validation for content editor.
+				if ( $( content ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && !self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && !self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && !Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+					self.model.set( 'errors', {
+						type: 'error',
+						value: BP_Nouveau.activity.params.errors.empty_post_update
+					} );
+					return false;
+				}
+
 				// update posting status true.
-				this.model.set( 'posting', true );
+				self.model.set( 'posting', true );
 
 				var data = {
 					'_wpnonce_post_update': BP_Nouveau.activity.params.post_nonce
@@ -2443,9 +2461,9 @@ window.bp = window.bp || {};
 				);
 
 				// Form link preview data to pass in request if available.
-				if ( this.model.get( 'link_success' ) ) {
-					var images = this.model.get( 'link_images' ),
-						index = this.model.get( 'link_image_index' );
+				if ( self.model.get( 'link_success' ) ) {
+					var images = self.model.get( 'link_images' ),
+						index  = self.model.get( 'link_image_index' );
 					if ( images && images.length ) {
 						data = _.extend(
 							data,
@@ -2483,96 +2501,96 @@ window.bp = window.bp || {};
 
 				bp.ajax.post( 'post_update', data ).done( function ( response ) {
 
-					//At first, hide the modal
-					bp.Nouveau.Activity.postForm.postActivityEditHideModal();
+						//At first, hide the modal
+						bp.Nouveau.Activity.postForm.postActivityEditHideModal();
 
-					var store = bp.Nouveau.getStorage( 'bp-activity' ),
-						searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-						toPrepend = false;
+						var store = bp.Nouveau.getStorage('bp-activity'),
+							searchTerms = $('[data-bp-search="activity"] input[type="search"]').val(), matches = {},
+							toPrepend = false;
 
-					// Look for matches if the stream displays search results.
-					if ( searchTerms ) {
-						searchTerms = new RegExp( searchTerms, 'im' );
-						matches = response.activity.match( searchTerms );
-					}
-
-					/**
-					 * Before injecting the activity into the stream, we need to check the filter
-					 * and search terms are consistent with it when posting from a single item or
-					 * from the Activity directory.
-					 */
-					if ( ( !searchTerms || matches ) ) {
-						toPrepend = !store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
-					}
-
-					/**
-					 * In the Activity directory, we also need to check the active scope.
-					 * eg: An update posted in a private group should only show when the
-					 * "My Groups" tab is active.
-					 */
-					if ( toPrepend && response.is_directory ) {
-						toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
-					}
-
-					var medias = self.model.get( 'media' );
-					if ( typeof medias !== 'undefined' && medias.length ) {
-						for ( var k = 0; k < medias.length; k++ ) {
-							medias[k].saved = true;
-						}
-						self.model.set( 'media', medias );
-					}
-
-					var link_embed = false;
-					if ( self.model.get( 'link_embed' ) == true ) {
-						link_embed = true;
-					}
-
-					var documents = self.model.get( 'document' );
-					if ( typeof documents !== 'undefined' && documents.length ) {
-						for ( var d = 0; d < documents.length; d++ ) {
-							documents[d].saved = true;
-						}
-						self.model.set( 'document', documents );
-					}
-
-					// Reset the form.
-					self.resetForm();
-
-					// Display a successful feedback if the acticity is not consistent with the displayed stream.
-					if ( !toPrepend ) {
-						self.views.add( new bp.Views.activityFeedback( { value: response.message, type: 'updated' } ) );
-
-						// Edit activity
-					} else if ( edit ) {
-						$( '#activity-' + response.id ).replaceWith( response.activity );
-
-						// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
-					} else if ( !$( '#activity-' + response.id ).length ) {
-
-						// It's the very first activity, let's make sure the container can welcome it!
-						if ( !$( '#activity-stream ul.activity-list' ).length ) {
-							$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
+						// Look for matches if the stream displays search results.
+						if (searchTerms) {
+							searchTerms = new RegExp(searchTerms, 'im');
+							matches = response.activity.match(searchTerms);
 						}
 
-						// Prepend the activity.
-						bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+						/**
+						 * Before injecting the activity into the stream, we need to check the filter
+						 * and search terms are consistent with it when posting from a single item or
+						 * from the Activity directory.
+						 */
+						if ((!searchTerms || matches)) {
+							toPrepend = !store.filter || 0 === parseInt(store.filter, 10) || 'activity_update' === store.filter;
+						}
 
-						//replace dummy image with original image by faking scroll event
-						jQuery( window ).scroll();
+						/**
+						 * In the Activity directory, we also need to check the active scope.
+						 * eg: An update posted in a private group should only show when the
+						 * "My Groups" tab is active.
+						 */
+						if (toPrepend && response.is_directory) {
+							toPrepend = ('all' === store.scope && ('user' === self.model.get('object') || false === response.is_private)) || (self.model.get('object') + 's' === store.scope);
+						}
 
-						if ( link_embed ) {
-							if ( typeof window.instgrm !== 'undefined' ) {
-								window.instgrm.Embeds.process();
+						var medias = self.model.get('media');
+						if (typeof medias !== 'undefined' && medias.length) {
+							for (var k = 0; k < medias.length; k++) {
+								medias[k].saved = true;
 							}
-							if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
-								window.FB.XFBML.parse( $( document ).find( '#activity-' + response.id ).get( 0 ) );
+							self.model.set('media', medias);
+						}
+
+						var link_embed = false;
+						if (self.model.get('link_embed') == true) {
+							link_embed = true;
+						}
+
+						var documents = self.model.get('document');
+						if (typeof documents !== 'undefined' && documents.length) {
+							for (var d = 0; d < documents.length; d++) {
+								documents[d].saved = true;
+							}
+							self.model.set('document', documents);
+						}
+
+						// Reset the form.
+						self.resetForm();
+
+						// Display a successful feedback if the acticity is not consistent with the displayed stream.
+						if (!toPrepend) {
+							self.views.add(new bp.Views.activityFeedback({value: response.message, type: 'updated'}));
+
+							// Edit activity
+						} else if (edit) {
+							$('#activity-' + response.id).replaceWith(response.activity);
+
+							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
+						} else if (!$('#activity-' + response.id).length) {
+
+							// It's the very first activity, let's make sure the container can welcome it!
+							if (!$('#activity-stream ul.activity-list').length) {
+								$('#activity-stream').html($('<ul></ul>').addClass('activity-list item-list bp-list'));
+							}
+
+							// Prepend the activity.
+							bp.Nouveau.inject('#activity-stream ul.activity-list', response.activity, 'prepend');
+
+							//replace dummy image with original image by faking scroll event
+							jQuery(window).scroll();
+
+							if (link_embed) {
+								if (typeof window.instgrm !== 'undefined') {
+									window.instgrm.Embeds.process();
+								}
+								if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
+									window.FB.XFBML.parse($(document).find('#activity-' + response.id).get(0));
+								}
 							}
 						}
 					}
-				} ).fail( function ( response ) {
-
+				).fail(
+					function( response ) {
 						self.model.set( 'posting', false );
-
 						self.model.set( 'errors', { type: 'error', value: response.message } );
 					}
 				);

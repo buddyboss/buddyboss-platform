@@ -178,7 +178,7 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_activities_tabs() {
-		$nav_items = bp_nouveau_get_activity_directory_nav_items();
+		$nav_items = function_exists( 'bp_nouveau_get_activity_directory_nav_items' ) ? bp_nouveau_get_activity_directory_nav_items() : $this->bp_rest_legacy_get_activity_directory_nav_items();
 		$nav       = array();
 
 		if ( ! empty( $nav_items ) ) {
@@ -203,7 +203,14 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 			bp_docs_load_activity_filter_options();
 		}
 
-		$filters = array( '-1' => __( '-- Everything --', 'buddyboss' ) ) + bp_nouveau_get_activity_filters();
+		// BuddyPress legacy template support added.
+		if ( function_exists( 'bp_nouveau_get_activity_filters' ) ) {
+			$activity_filters = bp_nouveau_get_activity_filters();
+		} else {
+			$activity_filters = $this->bp_rest_legacy_get_activity_filters();
+		}
+
+		$filters = array( '-1' => __( '-- Everything --', 'buddyboss' ) ) + $activity_filters;
 		return $filters;
 	}
 
@@ -231,5 +238,76 @@ class BP_REST_Activity_Details_Endpoint extends WP_REST_Controller {
 		}
 
 		return $post_in;
+	}
+
+	/**
+	 * Legacy template activity directory navigation support added.
+	 *
+	 * @return mixed|void
+	 */
+	public function bp_rest_legacy_get_activity_directory_nav_items() {
+		$nav_items = array();
+
+		$nav_items['all'] = array(
+			'text'     => __( 'All Members', 'buddyboss' ),
+			'position' => 5,
+		);
+
+		if ( is_user_logged_in() ) {
+
+			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+				$nav_items['friends'] = array(
+					'text'     => __( 'My Friends', 'buddyboss' ),
+					'position' => 15,
+				);
+			}
+
+			if ( bp_is_active( 'groups' ) && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
+				$nav_items['groups'] = array(
+					'text'     => __( 'My Groups', 'buddyboss' ),
+					'position' => 25,
+				);
+			}
+
+			if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
+				$nav_items['favorites'] = array(
+					'text'     => __( 'My Favorites', 'buddyboss' ),
+					'position' => 35,
+				);
+			}
+
+			if ( bp_activity_do_mentions() ) {
+				if ( bp_get_total_mention_count_for_user( bp_loggedin_user_id() ) ) {
+					$nav_items['mentions'] = array(
+						'text'     => __( 'Mentions', 'buddyboss' ),
+						'position' => 45,
+					);
+				}
+			}
+		}
+
+		return apply_filters( 'bp_rest_legacy_get_activity_directory_nav_items', $nav_items );
+	}
+
+	/**
+	 * Legacy template activity directory filter support added.
+	 *
+	 * @return mixed
+	 */
+	public function bp_rest_legacy_get_activity_filters() {
+		$filters_data = bp_get_activity_show_filters();
+		$filters      = array();
+
+		preg_match_all( '/<option value="(.*?)"\s*>(.*?)<\/option>/', $filters_data, $matches );
+
+		if ( ! empty( $matches[1] ) && ! empty( $matches[2] ) ) {
+			foreach ( $matches[1] as $ik => $key_action ) {
+				if ( ! empty( $matches[2][ $ik ] ) && ! isset( $filters[ $key_action ] ) ) {
+					$filters[ $key_action ] = $matches[2][ $ik ];
+				}
+			}
+		}
+
+		return apply_filters( 'bp_rest_legacy_get_activity_filters', $filters );
 	}
 }

@@ -3279,21 +3279,21 @@ function bp_document_default_scope( $scope = 'all' ) {
  */
 function bp_document_size_format( $bytes, $decimals = 0 ) {
 	$quant = array(
-		/* translators: Unit symbol for terabyte. */
-		_x( 'TB', 'unit symbol', 'buddyboss' ) => TB_IN_BYTES,
-		/* translators: Unit symbol for gigabyte. */
-		_x( 'GB', 'unit symbol', 'buddyboss' ) => GB_IN_BYTES,
-		/* translators: Unit symbol for megabyte. */
-		_x( 'MB', 'unit symbol', 'buddyboss' ) => MB_IN_BYTES,
-		/* translators: Unit symbol for kilobyte. */
-		_x( 'KB', 'unit symbol', 'buddyboss' ) => KB_IN_BYTES,
-		/* translators: Unit symbol for byte. */
-		_x( 'B', 'unit symbol', 'buddyboss' )  => 1,
+		/* translators: Memory unit for terabyte. */
+		_x( 'TB', 'memory unit', 'buddyboss' ) => TB_IN_BYTES,
+		/* translators: Memory unit for gigabyte. */
+		_x( 'GB', 'memory unit', 'buddyboss' ) => GB_IN_BYTES,
+		/* translators: Memory unit for megabyte. */
+		_x( 'MB', 'memory unit', 'buddyboss' ) => MB_IN_BYTES,
+		/* translators: Memory unit for kilobyte. */
+		_x( 'KB', 'memory unit', 'buddyboss' ) => KB_IN_BYTES,
+		/* translators: Memory unit for byte. */
+		_x( 'B', 'memory unit', 'buddyboss' )  => 1,
 	);
 
 	if ( 0 === $bytes ) {
-		/* translators: Unit symbol for byte. */
-		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'unit symbol', 'buddyboss' );
+		/* translators: Memory unit for byte. */
+		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
 	}
 
 	foreach ( $quant as $unit => $mag ) {
