@@ -296,28 +296,13 @@ function bp_media_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
-
+	global $bp_activity_post_update, $bp_activity_post_update_id;
 	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
 		return false;
 	}
 
-	// Add in description in attachment when only one media uploaded.
-	if ( is_array( $_POST['media'] ) && 1 === count( $_POST['media'] ) ) {
-		if ( '' === trim( $content ) && ! empty( $activity_id ) ) {
-			$get_content = new BP_Activity_Activity( $activity_id );
-			$content = $get_content->content;
-		}
-		foreach ( $_POST['media'] as $media ) {
-			$media_attachment_post = array();
-			$media_attachment_post['ID']           = $media['id'];
-			$media_attachment_post['post_content'] = wp_strip_all_tags( $content );
-			wp_update_post( $media_attachment_post );
-		}
-	}
-
-	$_POST['medias']             = $_POST['media'];
-	$_POST['bp_activity_update'] = true;
-	$_POST['bp_activity_id']     = $activity_id;
+	$bp_activity_post_update    = true;
+	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
 	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
@@ -334,7 +319,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 
-	$media_ids = bp_media_add_handler();
+	$media_ids = bp_media_add_handler( $_POST['media'], $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
@@ -696,7 +681,7 @@ function bp_media_attach_media_to_message( &$message ) {
 		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
-		$media_ids = bp_media_add_handler( $_POST['media'] );
+		$media_ids = bp_media_add_handler( $_POST['media'], 'message' );
 
 		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
@@ -916,7 +901,7 @@ function bp_media_activity_save_gif_data( $activity ) {
 }
 
 function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
-	
+
 	$tabs[] = array(
 		'href' => bp_get_admin_url( add_query_arg( array(
 			'page' => 'bp-media-import',
