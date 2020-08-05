@@ -1826,12 +1826,11 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
  * @since BuddyBoss 1.2.0
  */
 function bp_activity_document_add( $document ) {
-	global $bp_document_upload_count, $bp_new_activity_comment;
+	global $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
 
 	if ( ! empty( $document ) ) {
-
 		$parent_activity_id = false;
-		if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
+		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
 			$parent_activity_id = (int) $_POST['bp_activity_id'];
 		}
 
@@ -1910,14 +1909,14 @@ function bp_activity_document_add( $document ) {
  *
  */
 function bp_activity_create_parent_document_activity( $document_ids ) {
-	global $bp_document_upload_count;
+	global $bp_document_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content;
 
-	if ( ! empty( $document_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
+	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) ) {
 
 		$added_document_ids = $document_ids;
 		$content            = false;
 
-		if ( ! empty( $_POST['content'] ) ) {
+		if ( ! empty( $bp_document_upload_activity_content ) ) {
 
 			/**
 			 * Filters the content provided in the activity input field.
@@ -1927,7 +1926,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			 * @since BuddyPress 1.2.0
 			 *
 			 */
-			$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
+			$content = apply_filters( 'bp_activity_post_update_content', $bp_document_upload_activity_content );
 		}
 
 		$group_id  = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
