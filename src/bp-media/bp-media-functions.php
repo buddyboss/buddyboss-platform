@@ -479,6 +479,7 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
+ * 
  * @param array $medias
  * @param string $privacy
  * @param string $content
