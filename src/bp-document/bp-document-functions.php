@@ -259,40 +259,8 @@ function bp_document_folder_add_meta( $folder_id, $meta_key, $meta_value, $uniqu
  * @return string
  * @since BuddyBoss 1.4.0
  */
-function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
-	static $max_size = - 1;
-
-	if ( $max_size < 0 ) {
-		// Start with post_max_size.
-		$size = @ini_get( 'post_max_size' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size );      // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$post_max_size = round( $size );
-		}
-
-		if ( $post_max_size > 0 ) {
-			$max_size = $post_max_size;
-		}
-
-		// If upload_max_size is less, then reduce. Except if upload_max_size is
-		// zero, which indicates no limit.
-		$size = @ini_get( 'upload_max_filesize' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size );      // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$upload_max = round( $size );
-		}
-		if ( $upload_max > 0 && $upload_max < $max_size ) {
-			$max_size = $upload_max;
-		}
-	}
-
-	return apply_filters( 'bp_document_file_upload_max_size', bp_document_format_size_units( $max_size, $post_string, $type ) );
+function bp_document_file_upload_max_size() {
+	return apply_filters( 'bp_document_file_upload_max_size', bp_media_allowed_upload_document_size() );
 }
 
 /**
@@ -1399,8 +1367,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size( true ),
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size( true ),
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size(),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
