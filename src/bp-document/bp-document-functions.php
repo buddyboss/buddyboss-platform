@@ -902,6 +902,7 @@ function bp_folder_get( $args = '' ) {
 			'search_terms' => false,                    // Pass search terms as a string.
 			'exclude'      => false,                    // Comma-separated list of folder IDs to exclude.
 			'include'      => false,                    // Comma-separated list of folder IDs to include.
+			'parent'       => null,                    // Parent folder ID.
 			// want to limit the query.
 			'user_id'      => false,
 			'group_id'     => false,
@@ -923,6 +924,7 @@ function bp_folder_get( $args = '' ) {
 			'search_terms' => $r['search_terms'],
 			'exclude'      => $r['exclude'],
 			'in'           => $r['include'],
+			'parent'       => $r['parent'],
 			'count_total'  => $r['count_total'],
 			'fields'       => $r['fields'],
 		)

@@ -697,7 +697,6 @@ class BP_Document {
 				$document->group_id      = (int) $document->group_id;
 				$document->menu_order    = (int) $document->menu_order;
 				$document->parent        = (int) $document->folder_id;
-				$document->is_folder     = false;
 			}
 
 			$group_name = '';
@@ -1344,7 +1343,6 @@ class BP_Document {
 				$document->privacy      = $document->privacy;
 				$document->parent       = $document->parent;
 				$document->folder_id    = (int) $document->id;
-				$document->is_folder    = true;
 
 				if ( (int) $document->group_id > 0 ) {
 					$document->folder = 'group';
