@@ -1625,12 +1625,12 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
  * @param $media
  */
 function bp_activity_media_add( $media ) {
-	global $bp_media_upload_count, $bp_new_activity_comment;
+	global $bp_media_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
 
 	if ( ! empty( $media ) ) {
 		$parent_activity_id = false;
-		if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
-			$parent_activity_id = (int) $_POST['bp_activity_id'];
+		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
+			$parent_activity_id = (int) $bp_activity_post_update_id;
 		}
 
 		if ( $bp_media_upload_count > 1 || ! empty( $bp_new_activity_comment ) ) {
@@ -1708,14 +1708,14 @@ function bp_activity_media_add( $media ) {
  * @return mixed
  */
 function bp_activity_create_parent_media_activity( $media_ids ) {
-	global $bp_media_upload_count;
+	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content;
 
-	if ( ! empty( $media_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
+	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) ) {
 
 		$added_media_ids = $media_ids;
 		$content         = false;
 
-		if ( ! empty( $_POST['content'] ) ) {
+		if ( ! empty( $bp_media_upload_activity_content ) ) {
 
 			/**
 			 * Filters the content provided in the activity input field.
@@ -1725,7 +1725,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			 * @since BuddyPress 1.2.0
 			 *
 			 */
-			$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
+			$content = apply_filters( 'bp_activity_post_update_content', $bp_media_upload_activity_content );
 		}
 
 		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
