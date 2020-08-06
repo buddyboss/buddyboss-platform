@@ -2541,6 +2541,24 @@ window.bp = window.bp || {};
 			media_move_popup.find('.bp-media-move').attr( 'id', media_id );
 			media_move_popup.find('.bb-model-footer .bp-media-move').addClass('is-disabled');
 
+			// For Activity Feed.
+			if( $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest('li.comment-item').length ) {
+				currentTarget = '#' + $( event.currentTarget ).closest( '.conflict-activity-ul-li-comment' ).closest( 'li' ).attr( 'id' ) + '.comment-item .bp-media-move-file';
+			} else {
+				currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bp-media-move-file';
+			}
+
+			$( currentTarget ).find( '.bp-document-move' ).attr( 'id',$( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
+			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );
+
+			// Change if this is not from Activity Page.
+			if ($( event.currentTarget ).closest( '.media-list' ).length > 0) {
+				currentTarget = '.bp-media-move-file';	
+			}
+
+			$( currentTarget ).find( '.location-album-list-wrap .location-folder-list' ).remove();
+			$( currentTarget ).find( '.location-album-list-wrap' ).append( '<ul class="location-album-list is-loading"><li><i class="bb-icon-loader animate-spin"></i></li></ul>' );
+
 			var parentsOpen = this.currentTargetParent;
 			var getFrom 	= this.moveToTypePopup;
 			if ( '' !== this.moveToIdPopup ) {
