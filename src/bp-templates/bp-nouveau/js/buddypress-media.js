@@ -144,7 +144,7 @@ window.bp = window.bp || {};
 				function() {
 
 					bp.Nouveau.Media.documentCodeMirror();
-					
+
 				}
 			);
 		},
@@ -2521,7 +2521,10 @@ window.bp = window.bp || {};
 		openMediaMove: function( event ) {
 			event.preventDefault();
 
-			var media_move_popup, media_parent_id, media_id;
+			var media_move_popup, media_parent_id, media_id, currentTarget;
+
+			this.moveToIdPopup    = $( event.currentTarget ).attr( 'id' );
+			this.moveToTypePopup  = $( event.currentTarget ).attr( 'data-type' );
 
 			if( $( event.currentTarget ).closest('.activity-inner').length > 0 ) {
 				media_move_popup = $( event.currentTarget ).closest('.activity-inner');
@@ -2535,32 +2538,65 @@ window.bp = window.bp || {};
 
 			media_move_popup.find('.location-album-list li').removeClass('is_active').children('span').removeClass('selected');
 			media_move_popup.find('.location-album-list li[data-id="'+ media_parent_id +'"]').addClass('is_active').children('span').addClass('selected');
-
 			media_move_popup.find('.bp-media-move').attr( 'id', media_id );
 			media_move_popup.find('.bb-model-footer .bp-media-move').addClass('is-disabled');
 
+			var parentsOpen = this.currentTargetParent;
+			var getFrom 	= this.moveToTypePopup;
+			if ( '' !== this.moveToIdPopup ) {
+				$.ajax(
+					{
+						url : BP_Nouveau.ajaxurl,
+						type : 'post',
+						data : {
+							action: 'media_get_album_view',
+							id: this.moveToIdPopup,
+							type: this.moveToTypePopup,
+						},success : function( response ) {
+							$( document ).find( '.location-album-list-wrap h4 span.where-to-move-profile-or-group-media' ).html( response.data.first_span_text );
+							if ( '' === response.data.html ) {
+								$( document ).find( '.open-popup .location-album-list-wrap' ).hide();
+								$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).show();
+							} else {
+								$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).hide();
+								$( document ).find( '.open-popup .location-album-list-wrap' ).show();
+							}
+							if ( 'group' === getFrom ) {
+								$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show').hide();
+								$( document ).find( '.open-popup .bb-album-create-from' ).val( 'group' );
+							} else {
+								$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show').show();
+								$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
+							}
+							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
+							$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
+							if (bp.Nouveau.Media.folderLocationUI) {
+								bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
+								$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
+							}
+						}
+					}
+				);
+			}
+
+
 			$( document ).on( 'click', '.bp-media-move-photo.open .location-album-list li span' , function( e ) {
 				e.preventDefault();
-
 				if( $(this).parent().hasClass('is_active') ){
 					return;
 				}
-
 				$(this).addClass('selected').parent().addClass('is_active').siblings().removeClass('is_active').children('span').removeClass('selected');
-
-				
-
 				if( media_parent_id == $(this).data('id') ){
 					media_move_popup.find('.bb-model-footer .bp-media-move').addClass('is-disabled');
 					return; //return if parent album is same.
 				} else {
 					media_move_popup.find('.bb-model-footer .bp-media-move').removeClass('is-disabled');
 				}
-
 				media_move_popup.find('.bb-media-selected-id').val( $(this).data('id') );
-
 			});
-			
+
+
+
 
 		},
 
@@ -2793,7 +2829,7 @@ window.bp = window.bp || {};
 				document_edit.addClass( 'error' );
 			}
 
-			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) { 
+			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
 
 				if( document_name_val.indexOf('\\\\') != -1 || matchStatus) { //Also check if filename has "\\"
 					document_edit.addClass( 'error' );

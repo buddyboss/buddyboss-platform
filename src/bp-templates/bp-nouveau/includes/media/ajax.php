@@ -91,6 +91,12 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'media_get_album_view' => array(
+					'function' => 'bp_nouveau_ajax_media_get_album_view',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -984,6 +990,36 @@ function bp_nouveau_ajax_media_get_media_description() {
 	wp_send_json_success(
 		array(
 			'description' => $media_description,
+		)
+	);
+}
+
+function bp_nouveau_ajax_media_get_album_view() {
+
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
+
+	if ( 'profile' === $type ) {
+		$ul = bp_media_user_media_album_tree_view_li_html( $id, 0 );
+	} else {
+		$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id(), $id );
+	}
+
+	$first_text = '';
+	if ( 'profile' === $type ) {
+		$first_text = esc_html__( ' Medias', 'buddyboss' );
+	} else {
+		if ( bp_is_active( 'groups') ) {
+			$group      = groups_get_group( (int) $id );
+			$first_text = bp_get_group_name( $group );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'message'         => 'success',
+			'html'            => $ul,
+			'first_span_text' => stripslashes( $first_text ),
 		)
 	);
 }
