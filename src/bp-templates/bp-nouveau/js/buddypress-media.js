@@ -2556,7 +2556,7 @@ window.bp = window.bp || {};
 				currentTarget = '.bp-media-move-file';	
 			}
 
-			$( currentTarget ).find( '.location-album-list-wrap .location-folder-list' ).remove();
+			$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
 			$( currentTarget ).find( '.location-album-list-wrap' ).append( '<ul class="location-album-list is-loading"><li><i class="bb-icon-loader animate-spin"></i></li></ul>' );
 
 			var parentsOpen = this.currentTargetParent;
