@@ -56,6 +56,7 @@ function messages_new_message( $args = '' ) {
 			'append_thread' => true,
 			'is_hidden'     => false,
 			'mark_visible'  => false,
+			'group_thread'  => false,
 			'error_type'    => 'bool',
 		),
 		'messages_new_message'
@@ -90,6 +91,7 @@ function messages_new_message( $args = '' ) {
 	$message->mark_visible = $r['mark_visible'];
 
 	$new_reply = false;
+	$is_group_thread = isset( $r['group_thread'] ) ? $r['group_thread'] : false;
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
@@ -116,6 +118,12 @@ function messages_new_message( $args = '' ) {
 
 		$new_reply = true;
 
+		if ( isset( $thread->messages[0]->id ) ) {
+			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id
+			if ( !empty( $group ) ) {
+				$is_group_thread = true;
+			}
+		}
 		// ...otherwise use the recipients passed
 	} else {
 
@@ -254,7 +262,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// check if force friendship is enabled and check recipients
-	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) && true !== $is_group_thread ) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
@@ -889,3 +897,152 @@ function bp_messages_show_sites_notices() {
 	}
 }
 add_action( 'wp_footer', 'bp_messages_show_sites_notices' );
+
+/**
+ * Get Message thread avatars by thread id.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param integer $thread_id Message thread id.
+ * @param integer $user_id user id.
+ *
+ * @return array
+ */
+function bp_messages_get_avatars( $thread_id, $user_id ) {
+	global $wpdb;
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$avatar_urls      = array();
+	$avatars_user_ids = array();
+	$thread_messages  = BP_Messages_Thread::get_messages( $thread_id, null, 99999999 );
+	$recepients       = BP_Messages_Thread::get_recipients_for_thread( $thread_id );
+
+	if ( count( $recepients ) > 2 ) {
+		foreach ( $thread_messages as $message ) {
+			if ( $message->sender_id !== $user_id ) {
+
+				if ( count( $avatars_user_ids ) >= 2 ) {
+					continue;
+				}
+
+				if ( ! in_array( $message->sender_id, $avatars_user_ids ) ) {
+					$avatars_user_ids[] = $message->sender_id;
+				}
+			}
+		}
+	} else {
+		unset( $recepients[ $user_id ] );
+		$avatars_user_ids[] = current( $recepients )->user_id;
+	}
+
+	if ( count( $recepients ) > 2 && count( $avatars_user_ids ) < 2 ) {
+		unset( $recepients[ $user_id ] );
+		if ( count( $avatars_user_ids ) === 0 ) {
+			$avatars_user_ids = array_slice( array_keys( $recepients ), 0, 2 );
+		} else {
+			unset( $recepients[ $avatars_user_ids[0] ] );
+			$avatars_user_ids = array_merge( $avatars_user_ids, array_slice( array_keys( $recepients ), 0, 1 ) );
+		}
+	}
+
+	if ( ! empty( $avatars_user_ids ) ) {
+		$avatars_user_ids = array_reverse( $avatars_user_ids );
+		foreach ( (array) $avatars_user_ids as $avatar_user_id ) {
+			$avatar_urls[] = array(
+				'url'  => esc_url(
+					bp_core_fetch_avatar(
+						array(
+							'item_id' => $avatar_user_id,
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'width'   => BP_AVATAR_THUMB_WIDTH,
+							'height'  => BP_AVATAR_THUMB_HEIGHT,
+							'html'    => false,
+						)
+					)
+				),
+				'name' => esc_attr( bp_core_get_user_displayname( $avatar_user_id ) )
+			);
+		}
+	}
+
+
+	$first_message    = end( $thread_messages );
+	$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
+	$group_id         = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
+	if ( ! empty( $first_message_id ) && ! empty( $group_id ) ) {
+		$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group
+		$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual
+		$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private
+
+		if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
+			if ( bp_is_active( 'groups' ) ) {
+				$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+				$group_avatar = array(
+					'url'  => bp_core_fetch_avatar(
+						array(
+							'item_id'    => $group_id,
+							'object'     => 'group',
+							'type'       => 'full',
+							'avatar_dir' => 'group-avatars',
+							'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+							'title'      => $group_name,
+							'html'       => false,
+						)
+					),
+					'name' => $group_name
+				);
+			} else {
+				
+				/**
+				* 
+				* Filters table prefix.
+				* 
+				* @param int $wpdb->base_prefix table prefix
+				* 
+				* @since BuddyBoss 1.4.7
+				*/
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( ! empty( $group_name ) ) {
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					$avatar = bp_core_get_group_avatar( $legacy_user_avatar_name, $legacy_group_avatar_name, $avatar_size, $avatar_folder_dir, $avatar_folder_url );
+					if ( '' !== $avatar ) {
+						$group_avatar = array(
+							'url'  => $avatar,
+							'name' => $group_name
+						);
+					}
+				}
+			}
+
+			if ( ! empty( $group_avatar ) ) {
+				$avatar_urls = array( $group_avatar );
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * Filters the avatar url array to be applied in message thread.
+	 * 
+	 * @param array $avatar_urls avatar urls in 
+	 * @param int $thread_id Message thread id
+	 * @param int $user_id user id
+	 * 
+	 * @since BuddyBoss 1.4.7
+	 */
+	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
+}

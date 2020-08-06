@@ -207,7 +207,7 @@ function bp_ps_update_meta( $form, $post ) {
 			if ( empty( $fields[ $code ] ) ) {
 				continue;
 			}
-			if ( in_array( $code, $codes ) ) {
+			if ( in_array( $code, $codes ) && $code != 'heading' ) {
 				continue;
 			}
 

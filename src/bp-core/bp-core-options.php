@@ -1216,7 +1216,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 
 	/**
-	 * Filters whether or not the feed enable or not.
+	 * Filters whether specified $activity_type should be enabled or no.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -1283,9 +1283,9 @@ function bp_member_type_default_on_registration( $default = '' ) {
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 
 	/**
-	 * Filters whether or not allow member type invitations.
+	 * Filters whether specified $member_type should be allowed to send invites.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value whether or not allow member type invitations.
 	 */
@@ -1306,7 +1306,7 @@ function bp_enable_private_network_public_content( $default = '' ) {
 	/**
 	 * Filters private network's public content.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Private network's public content.
 	 */
@@ -1497,7 +1497,7 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
 	/**
 	 * Filters profile layout format.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param bool $value Profile layout format.
 	 */
@@ -1519,7 +1519,7 @@ function bp_group_layout_default_format( $default = 'grid' ) {
 	/**
 	 * Filters group layout format.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param bool $value Group layout format.
 	 */

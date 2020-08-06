@@ -89,7 +89,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	//initialize media vars because it is used globally
 	$params['media'] = array(
-		'max_upload_size'              => bp_media_file_upload_max_size( false, 'MB' ),
+		'max_upload_size'              => bp_media_file_upload_max_size(),
 		'profile_media'                 => bp_is_profile_media_support_enabled(),
 		'profile_album'                 => bp_is_profile_albums_support_enabled(),
 		'group_media'                  => bp_is_group_media_support_enabled(),
@@ -101,7 +101,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'invalid_media_type'           => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'               => __( "File is too big: {{filesize}} MB. Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
+		'dictFileTooBig'               => __( "File is too large ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
 		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
 	);
 

@@ -528,6 +528,11 @@ window.bp = window.bp || {};
 			$.each(
 				this.objects,
 				function( o, object ) {
+					// Continue when ajax is blocked for object request.
+					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+						return;
+					}
+
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
@@ -1661,12 +1666,16 @@ window.bp = window.bp || {};
 
 			// Set group type with pagination.
 			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				/* jshint ignore:start */
 				queryData['group_type'] = $( '#buddypress [data-bp-group-type-filter]' ).val();
+				/* jshint ignore:end */
 			}
 
 			// Set member type with pagination.
 			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				/* jshint ignore:start */
 				queryData['member_type_id'] = $( '#buddypress [data-bp-member-type-filter]' ).val();
+				/* jshint ignore:end */
 			}
 
 			// Request the page

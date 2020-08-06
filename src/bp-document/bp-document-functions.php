@@ -259,40 +259,16 @@ function bp_document_folder_add_meta( $folder_id, $meta_key, $meta_value, $uniqu
  * @return string
  * @since BuddyBoss 1.4.0
  */
-function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
-	static $max_size = - 1;
+function bp_document_file_upload_max_size() {
 
-	if ( $max_size < 0 ) {
-		// Start with post_max_size.
-		$size = @ini_get( 'post_max_size' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size );      // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$post_max_size = round( $size );
-		}
-
-		if ( $post_max_size > 0 ) {
-			$max_size = $post_max_size;
-		}
-
-		// If upload_max_size is less, then reduce. Except if upload_max_size is
-		// zero, which indicates no limit.
-		$size = @ini_get( 'upload_max_filesize' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size );      // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$upload_max = round( $size );
-		}
-		if ( $upload_max > 0 && $upload_max < $max_size ) {
-			$max_size = $upload_max;
-		}
-	}
-
-	return apply_filters( 'bp_document_file_upload_max_size', bp_document_format_size_units( $max_size, $post_string, $type ) );
+	/**
+	 * Filters doucment file upload max limit.
+	 * 
+	 * @param mixed $max_size document upload max limit.
+	 * 
+	 * @since BuddyBoss 1.4.0
+	 */
+	return apply_filters( 'bp_document_file_upload_max_size', bp_media_allowed_upload_document_size() );
 }
 
 /**
@@ -1399,8 +1375,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size( true ),
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size( true ),
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_document_file_upload_max_size(),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
@@ -2166,7 +2141,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	$new_filename_unsanitized = $new_filename;
 
 	// sanitizing file name (using sanitize_title because sanitize_file_name doesn't remove accents).
-	$new_filename = sanitize_file_name( remove_accents( $new_filename ) );
+	$new_filename = sanitize_file_name( $new_filename );
 
 	$file_abs_path     = get_attached_file( $post->ID );
 	$file_abs_dir      = dirname( $file_abs_path );
@@ -2195,7 +2170,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	if ( ! $new_filename ) {
 		return __( 'The document name is empty!', 'buddyboss' );
 	}
-	if ( $new_filename != sanitize_file_name( remove_accents( $new_filename ) ) ) {
+	if ( $new_filename != sanitize_file_name( $new_filename ) ) {
 		return __( 'Bad characters or invalid document name!', 'buddyboss' );
 	}
 	if ( file_exists( $new_file_abs_path ) ) {
@@ -2338,6 +2313,12 @@ function bp_document_rename_folder( $folder_id = 0, $title = '', $privacy = '' )
 			return false;
 		}
 	}
+
+	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+		return false;
+	}
+
+	$title = wp_strip_all_tags( $title );
 
 	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folder} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
@@ -3273,21 +3254,21 @@ function bp_document_default_scope( $scope = 'all' ) {
  */
 function bp_document_size_format( $bytes, $decimals = 0 ) {
 	$quant = array(
-		/* translators: Unit symbol for terabyte. */
-		_x( 'TB', 'unit symbol', 'buddyboss' ) => TB_IN_BYTES,
-		/* translators: Unit symbol for gigabyte. */
-		_x( 'GB', 'unit symbol', 'buddyboss' ) => GB_IN_BYTES,
-		/* translators: Unit symbol for megabyte. */
-		_x( 'MB', 'unit symbol', 'buddyboss' ) => MB_IN_BYTES,
-		/* translators: Unit symbol for kilobyte. */
-		_x( 'KB', 'unit symbol', 'buddyboss' ) => KB_IN_BYTES,
-		/* translators: Unit symbol for byte. */
-		_x( 'B', 'unit symbol', 'buddyboss' )  => 1,
+		/* translators: Memory unit for terabyte. */
+		_x( 'TB', 'memory unit', 'buddyboss' ) => TB_IN_BYTES,
+		/* translators: Memory unit for gigabyte. */
+		_x( 'GB', 'memory unit', 'buddyboss' ) => GB_IN_BYTES,
+		/* translators: Memory unit for megabyte. */
+		_x( 'MB', 'memory unit', 'buddyboss' ) => MB_IN_BYTES,
+		/* translators: Memory unit for kilobyte. */
+		_x( 'KB', 'memory unit', 'buddyboss' ) => KB_IN_BYTES,
+		/* translators: Memory unit for byte. */
+		_x( 'B', 'memory unit', 'buddyboss' )  => 1,
 	);
 
 	if ( 0 === $bytes ) {
-		/* translators: Unit symbol for byte. */
-		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'unit symbol', 'buddyboss' );
+		/* translators: Memory unit for byte. */
+		return number_format_i18n( 0, $decimals ) . ' ' . _x( 'B', 'memory unit', 'buddyboss' );
 	}
 
 	foreach ( $quant as $unit => $mag ) {
