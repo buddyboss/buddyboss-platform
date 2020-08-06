@@ -1854,7 +1854,7 @@ window.bp = window.bp || {};
 						saveButton.removeClass('loading');
 						saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				}
-				} ).fail( function ( $response ) {
+				} ).fail( function () {
 					saveButton.removeClass('loading');
 					saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
 				} );
