@@ -2530,6 +2530,8 @@ window.bp = window.bp || {};
 				media_move_popup = $( event.currentTarget ).closest('.activity-inner');
 			} else if( $( event.currentTarget ).closest('#media-stream.media').length > 0 ) {
 				media_move_popup = $( event.currentTarget ).closest('#media-stream.media');
+			} else if( $( event.currentTarget ).closest('.comment-item').length > 0 ) {
+				media_move_popup = $( event.currentTarget ).closest('.comment-item');
 			}
 
 			$( media_move_popup ).find('.bp-media-move-file').addClass('open').show();
@@ -2547,6 +2549,8 @@ window.bp = window.bp || {};
 			} else {
 				currentTarget = '#' + $( event.currentTarget ).closest( 'li.activity-item' ).attr( 'id' ) + ' > .activity-content .bp-media-move-file';
 			}
+
+			console.log(currentTarget);
 
 			$( currentTarget ).find( '.bp-document-move' ).attr( 'id',$( event.currentTarget ).closest( '.document-activity' ).attr( 'data-id' ) );
 			this.currentTargetParent = $( event.currentTarget ).closest( '.bb-activity-media-elem' ).attr( 'data-parent-id' );

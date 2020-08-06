@@ -25,7 +25,7 @@ $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 			<i class="bb-icon-menu-dots-v"></i>
 		</a>
 		<div class="media-action_list">
-			<ul>
+			<ul class="conflict-activity-ul-li-comment">
 				<li class="copy_download_file_url">
 					<a href="<?php echo $download_url; ?>">Copy Download Link</a>
 				</li>
