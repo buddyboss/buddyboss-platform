@@ -461,7 +461,7 @@ class BP_Media_Album {
 	 * @param array $album_ids Array of media IDs.
 	 * @return array
 	 */
-	protected static function get_album_data( $album_ids = array() ) {
+	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.

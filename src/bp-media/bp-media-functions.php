@@ -2905,3 +2905,149 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 
 	return $output;
 }
+
+/**
+ * This function will document into the folder.
+ *
+ * @param int $media_id
+ * @param int $album_id
+ * @param int $group_id
+ *
+ * @return bool|int
+ * @since BuddyBoss 1.4.0
+ */
+function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id = 0 ) {
+
+	global $wpdb, $bp;
+
+	if ( 0 === $media_id ) {
+		return false;
+	}
+
+	if ( (int) $media_id > 0 ) {
+		$has_access = bp_media_user_can_edit( $media_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
+	if ( (int) $album_id > 0 ) {
+		$has_access = bp_album_user_can_edit( $album_id );
+		if ( ! $has_access ) {
+			return false;
+		}
+	}
+
+	if ( ! $group_id ) {
+		$get_media = new BP_Media( $media_id );
+		if ( $get_media->group_id > 0 ) {
+			$group_id = $get_media->group_id;
+		}
+	}
+
+
+	if ( $group_id > 0 ) {
+		$destination_privacy = 'grouponly';
+	} elseif ( $album_id > 0 ) {
+		$destination_album  = BP_Media_Album::get_album_data( array( $album_id ) );
+		$destination_privacy = $destination_album[0]->privacy;
+		// Update modify date for destination album.
+		$destination_album_update                = new BP_Media_Album( $album_id );
+		$destination_album_update->date_created = bp_core_current_time();
+		$destination_album_update->save();
+	} else {
+		// Keep the destination privacy same as the previous privacy.
+		$media_object = new BP_Media( $media_id );
+		$destination_privacy = $media_object->privacy;
+	}
+
+	if ( empty( $destination_privacy ) ) {
+		$destination_privacy = 'loggedin';
+	}
+
+	$media                = new BP_Media( $media_id );
+	$media->album_id     = $album_id;
+	$media->group_id      = $group_id;
+	$media->date_created = bp_core_current_time();
+	$media->save();
+
+	// Update document activity privacy.
+	if ( ! $group_id ) {
+		if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
+			$post_attachment = $media->attachment_id;
+			$parent_activity_id     = get_post_meta( $post_attachment, 'bp_media_parent_activity_id', true );
+			$child_activity_id      = get_post_meta( $post_attachment, 'bp_media_activity_id', true );
+			$activity_album_id     = bp_activity_get_meta(  $media->activity_id, 'bp_media_album_activity', true );
+			if ( bp_is_active( 'activity' ) ) {
+				// Single media upload.
+				if ( empty( $child_activity_id ) ) {
+					$activity = new BP_Activity_Activity( (int) $parent_activity_id );
+					// Update activity data.
+					if ( bp_activity_user_can_delete( $activity ) ) {
+						// Make the activity media own.
+						$activity->hide_sitewide        = 0;
+						$activity->secondary_item_id    = 0;
+						$activity->privacy              = $destination_privacy;
+						$activity->save();
+					}
+
+					if ( $album_id > 0 ) {
+						bp_activity_update_meta( (int) $parent_activity_id, 'bp_media_album_activity', (int) $activity_album_id );
+					} else {
+						bp_activity_delete_meta( (int) $parent_activity_id, 'bp_media_album_activity', $activity_album_id );
+					}
+					// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
+				} else {
+					$activity = new BP_Activity_Activity( (int) $child_activity_id );
+					// Update activity data.
+					if ( bp_activity_user_can_delete( $activity ) ) {
+						// Make the activity media own.
+						$activity->hide_sitewide        = 0;
+						$activity->secondary_item_id    = 0;
+						$activity->privacy              = $destination_privacy;
+						$activity->save();
+
+						bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );
+
+						// Update attachment meta.
+						delete_post_meta( $post_attachment, 'bp_media_activity_id', $child_activity_id );
+						update_post_meta( $post_attachment, 'bp_media_parent_activity_id', $child_activity_id );
+
+						// Make the child activity as parent activity.
+						bp_activity_delete_meta( $child_activity_id, 'bp_document_activity', '1' );
+
+						if ( $album_id > 0 ) {
+							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_album_activity', (int) $activity_album_id );
+						} else {
+							bp_activity_delete_meta( (int) $child_activity_id, 'bp_media_album_activity', $activity_album_id );
+						}
+					}
+
+					// Remove the media from the parent activity.
+					$parent_activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+					if ( ! empty( $parent_activity_media_ids ) ) {
+						// Separate string to array.
+						$activity_media_ids = explode( ',', $parent_activity_media_ids );
+						// Remove the media id from the parent activity meta.
+						if (($key = array_search($media_id, $activity_media_ids)) !== false) {
+							unset($activity_media_ids[$key]);
+						}
+						// Update the activity meta.
+						if ( ! empty( $activity_media_ids ) ) {
+							$activity_media_ids = implode( ',', $activity_media_ids );
+							bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $activity_media_ids );
+						} else {
+							bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', '' );
+						}
+					}
+				}
+				//
+				if ( $album_id > 0 ) {
+
+				}
+
+			}
+		}
+	}
+	return $media_id;
+}

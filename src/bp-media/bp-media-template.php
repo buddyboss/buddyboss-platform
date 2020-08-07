@@ -1524,3 +1524,127 @@ function bp_album_user_can_delete( $album = false ) {
 	 */
 	return (bool) apply_filters( 'bp_album_user_can_delete', $can_delete, $album );
 }
+
+/**
+ * Determine if the current user can edit an media item.
+ *
+ * @since BuddyBoss 1.4.9
+ *
+ * @param int|BP_Document $document BP_Media object or ID of the media.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_media_user_can_edit( $media = false ) {
+
+	// Assume the user cannot edit the document item.
+	$can_edit = false;
+
+	if ( empty( $media ) ) {
+		return $can_edit;
+	}
+
+	if ( ! is_object( $media ) ) {
+		$media = new BP_Media( $media );
+	}
+
+	if ( empty( $media ) ) {
+		return $can_edit;
+	}
+
+	// Only logged in users can edit media.
+	if ( is_user_logged_in() ) {
+
+		// Community moderators can always edit media (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+		}
+
+		// Users are allowed to edit their own media.
+		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
+			$can_edit = true;
+		}
+
+		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
+
+			$manage   = groups_can_user_manage_media( bp_loggedin_user_id(), $media->group_id );
+			$status   = bp_group_get_media_status( $media->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
+
+			if ( $manage ) {
+				if ( $media->user_id === bp_loggedin_user_id() ) {
+					$can_edit = true;
+				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'admins' == $status && $is_admin ) {
+					$can_edit = true;
+				}
+			}
+
+		}
+
+	}
+
+	/**
+	 * Filters whether the current user can edit an media item.
+	 *
+	 * @since BuddyBoss 1.4.9
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $media   Current media item object.
+	 */
+	return (bool) apply_filters( 'bp_media_user_can_edit', $can_edit, $media );
+}
+
+/**
+ * Determine if the current user can edit an album item.
+ *
+ * @since BuddyBoss 1.4.9
+ *
+ * @param int|BP_Media_Album $album BP_Media_Album object or ID of the album.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_album_user_can_edit( $album = false ) {
+
+	// Assume the user cannot edit the album item.
+	$can_edit = false;
+
+	if ( empty( $album ) ) {
+		return $can_edit;
+	}
+
+	if ( ! is_object( $album ) ) {
+		$album = new BP_Media_Album( $album );
+	}
+
+	if ( empty( $album ) ) {
+		return $can_edit;
+	}
+
+	// Only logged in users can edit folder.
+	if ( is_user_logged_in() ) {
+
+		// Users are allowed to edit their own album.
+		if ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
+			$can_edit = true;
+			// Community moderators can always edit album (at least for now).
+		} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+			// Groups medias have their own access.
+		} elseif ( ! empty( $album->group_id ) && groups_can_user_manage_media( bp_loggedin_user_id(), $album->group_id ) ) {
+			$can_edit = true;
+		}
+
+	}
+
+	/**
+	 * Filters whether the current user can edit an album item.
+	 *
+	 * @since BuddyBoss 1.4.9
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $album   Current album item object.
+	 */
+	return (bool) apply_filters( 'bp_folder_user_can_delete', $can_edit, $album );
+}

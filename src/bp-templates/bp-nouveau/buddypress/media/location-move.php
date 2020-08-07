@@ -23,7 +23,7 @@
 				</div>
 			</div>
 		</div> <!-- .location-album-list-wrap -->
-		<input type="hidden" class="bb-media-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-media-selected-id" value="0" readonly/>
+		<input type="hidden" class="bb-album-create-from" value="profile" readonly/>
+		<input type="hidden" class="bb-album-selected-id" value="0" readonly/>
 	</div>
 </div>

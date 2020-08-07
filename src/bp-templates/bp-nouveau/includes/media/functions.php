@@ -87,6 +87,25 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
+	$album_id        = 0;
+	$type             = '';
+	$user_id          = bp_loggedin_user_id();
+	$group_id         = 0;
+	$move_to_id_popup = $user_id;
+	if ( bp_is_group_media() || bp_is_group_albums() ) {
+		$album_id        = (int) bp_action_variable( 1 );
+		$type             = 'group';
+		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
+		$move_to_id_popup = $group_id;
+	} elseif ( bp_is_user_media() || bp_is_user_albums() ) {
+		$album_id        = (int) bp_action_variable( 0 );
+		$type             = 'profile';
+		$move_to_id_popup = $user_id;
+	} elseif ( bp_is_media_directory() ) {
+		$album_id = 0;
+		$type      = 'profile';
+	}
+
 	//initialize media vars because it is used globally
 	$params['media'] = array(
 		'max_upload_size'              => bp_media_file_upload_max_size(),
@@ -103,6 +122,9 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
 		'dictFileTooBig'               => __( "File is too big: {{filesize}} MB. Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
 		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
+		'is_media_directory'           => ( bp_is_media_directory() ) ? 'yes' : 'no',
+		'create_album_error_title'     => __( 'Please enter title of album', 'buddyboss' ),
+		'current_album'                => $album_id,
 	);
 
 	if ( bp_is_single_album() ) {
