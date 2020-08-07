@@ -101,7 +101,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'invalid_media_type'           => __( 'Unable to upload the file', 'buddyboss' ),
 		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
-		'dictFileTooBig'               => __( "File is too large ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
+		'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
 		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
 	);
 
