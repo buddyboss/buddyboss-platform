@@ -234,14 +234,14 @@ function bp_media_get_settings_fields() {
 	}
 
 	$fields['bp_media_settings_photos']['bp_media_allowed_size'] = array(
-		'title'             => __( 'Upload Limit', 'buddyboss' ),
+		'title'             => __( 'Upload Size', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_media_allowed_size',
 		'sanitize_callback' => 'absint',
 		'args'              => array(),
 	);
 
 	$fields['bp_media_settings_documents']['bp_document_allowed_size'] = array(
-		'title'             => __( 'Upload Limit', 'buddyboss' ),
+		'title'             => __( 'Upload Size', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_document_allowed_size',
 		'sanitize_callback' => 'absint',
 		'args'              => array(),
@@ -1372,12 +1372,12 @@ function bp_media_settings_callback_media_allowed_size() {
 		   name="bp_media_allowed_size"
 		   id="bp_media_allowed_size"
 		   value="<?php echo esc_attr( bp_media_allowed_upload_media_size() ); ?>"
-	/>
+	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
 				'%1$s %2$s %3$s',
-				__( 'specify photo max upload size in MB. server existing upload limit is ', 'buddyboss' ),
+				__( 'Set a maximum file size for photo uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
 				bp_media_format_size_units( $max_size, false, 'MB' ),
 				'MB.'
 		);
@@ -1412,12 +1412,12 @@ function bp_media_settings_callback_document_allowed_size() {
 		   name="bp_document_allowed_size"
 		   id="bp_document_allowed_size"
 		   value="<?php echo esc_attr( bp_media_allowed_upload_document_size() ); ?>"
-	/>
+	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
 				'%1$s %2$s %3$s',
-				__( 'specify document max upload size in MB. server existing upload limit is ', 'buddyboss' ),
+				__( 'Set a maximum file size for document uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
 				bp_document_format_size_units( $max_size, false, 'MB' ),
 				'MB.'
 		);
