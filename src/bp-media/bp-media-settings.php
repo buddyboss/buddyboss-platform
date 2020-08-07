@@ -1377,11 +1377,12 @@ function bp_media_settings_callback_media_allowed_size() {
 		   max="<?php echo esc_attr( $max_size_mb ) ?>"
 		   required
 		   value="<?php echo esc_attr( bp_media_allowed_upload_media_size() ); ?>"
+		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
-				'%1$s %2$s %3$s',
+				'%1$s <strong>%2$s %3$s</strong>',
 				__( 'Set a maximum file size for photo uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
 				$max_size_mb,
 				'MB.'
@@ -1422,11 +1423,12 @@ function bp_media_settings_callback_document_allowed_size() {
 		   max="<?php echo esc_attr( $max_size_mb ) ?>"
 		   required
 		   value="<?php echo esc_attr( bp_media_allowed_upload_document_size() ); ?>"
+		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
 		printf(
-				'%1$s %2$s %3$s',
+				'%1$s <strong>%2$s %3$s</strong>',
 				__( 'Set a maximum file size for document uploads, in megabytes. Your server\'s maximum upload size is ', 'buddyboss' ),
 				$max_size_mb,
 				'MB.'
