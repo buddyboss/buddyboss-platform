@@ -53,6 +53,7 @@ window.bp = window.bp || {};
 			this.moveToTypePopup	     	 = BP_Nouveau.media.current_type;
 			this.privacySelectorSelect		 = '';
 			this.privacySelectorSpan		 = '';
+			this.currentAlbum				 = BP_Nouveau.media.current_album;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			if ( typeof window.Dropzone !== 'undefined' ) {
@@ -917,9 +918,11 @@ window.bp = window.bp || {};
 									$( document ).find( 'li#media-all' ).trigger( 'click' );
 								}
 							} else {
-								var mediaStream = $( '#media-stream' );
-								mediaStream.html( '' );
-								mediaStream.html( response.data.html );
+								if ( parseInt( BP_Nouveau.media.current_album ) > 0 ) {
+									$( '#media-stream ul.media-list li[data-id="'+media_id+'"]').remove();
+								} else if ( $( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="'+media_id+'"]').length ) {
+									$( '#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="'+media_id+'"]').remove();
+								}
 								$( document ).find( '.open-popup .error' ).hide();
 								$( document ).find( '.open-popup .error' ).html( '' );
 								target.removeClass( 'loading' );

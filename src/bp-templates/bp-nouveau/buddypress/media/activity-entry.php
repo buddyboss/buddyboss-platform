@@ -15,7 +15,7 @@ $attachment_id = bp_get_media_attachment_id();
 $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 ?>
 
-<div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
+<div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>" data-id="<?php echo esc_attr( bp_get_media_id() ); ?>">
 	<div class="media-action-wrap">
 		<a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="194912" data-balloon-pos="up" data-balloon="Download">
 			<i class="bb-icon-download"></i>
