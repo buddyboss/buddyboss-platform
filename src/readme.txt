@@ -58,7 +58,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.4.8 =
-
+* Media - Provided settings to specify Photos and Documents upload size limit
+* Media - Improved the logic to support BuddyBoss API
+* Compatibility - Fixed broken popup layout on Elementor activity widget
 
 = 1.4.7 =
 * Profiles - Fixed profile field type Gender default options unable to re-order
