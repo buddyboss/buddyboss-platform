@@ -30,7 +30,13 @@
 
 		<?php endif; ?>
 
-		<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+		<div class="media-options">
+			<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+			<a class="bb-add-photos button small" id="bp-add-media" href="#" ><i class="bb-icon-upload"></i><?php _e( 'Add Photos', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-album" class="bb-create-album button small"><i class="bb-icon-plus"></i><?php _e( 'Create Album', 'buddyboss' ); ?></a>
+			<?php bp_get_template_part( 'media/uploader' ); ?>
+			<?php bp_get_template_part( 'media/create-album' ); ?>
+		</div>
 
 		<?php bp_get_template_part( 'media/theatre' ); ?>
 

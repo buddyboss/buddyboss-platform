@@ -15673,6 +15673,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   }
 }
 
+.directory.media .media-options,
 .directory.document .document-options {
   position: absolute;
   left: 0;
@@ -15680,44 +15681,66 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   margin: 0;
 }
 
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search,
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-media-search,
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search {
+  border: 0;
+  background-color: transparent;
+  padding-right: 32px;
+  font-size: 14px;
+  height: 34px;
+}
+
+.directory.media .media-options a.button > i,
 .directory.document .document-options a.button > i {
   margin-left: 6px;
 }
 
+.directory.media .media-options > *,
 .directory.document .document-options > * {
   margin-right: 6px;
 }
 
 @media screen and (max-width: 1024px) {
+  .directory.media .media-options,
   .directory.document .document-options {
     position: static;
     margin: 0;
   }
+  .directory.media .media-options > *,
   .directory.document .document-options > * {
     margin-bottom: 15px;
     width: 100% !important;
   }
+  .directory.media .media-options .subnav-filters .subnav-search,
   .directory.document .document-options .subnav-filters .subnav-search {
     width: 100%;
   }
+  .directory.media .media-options .subnav-filters .subnav-search .bp-search,
   .directory.document .document-options .subnav-filters .subnav-search .bp-search {
     width: 100%;
   }
+  .directory.media .media-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form,
   .directory.document .document-options .subnav-filters .subnav-search .bp-search .bp-dir-search-form {
     width: 100%;
   }
 }
 
-.directory.document .subnav-filters {
+.directory.media .media-options .subnav-filters,
+.directory.document .document-options .subnav-filters {
   display: inline-block;
   vertical-align: middle;
 }
 
-.directory.document .subnav-filters .subnav-search {
+.directory.media .media-options .subnav-filters .subnav-search,
+.directory.document .document-options .subnav-filters .subnav-search {
   margin: 0;
+  position: initial;
 }
 
-.directory.document .subnav-filters .subnav-search .bp-dir-search-form {
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form,
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form {
   background-color: #fff;
   border: 1px solid #dedfe2;
   box-shadow: none;
@@ -15726,20 +15749,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   position: relative;
 }
 
-.directory.document .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"] {
+.directory.media .media-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"],
+.directory.document .document-options .subnav-filters .subnav-search .bp-dir-search-form button[type="submit"] {
   position: absolute;
   opacity: 0;
   visibility: hidden;
   width: 0;
   height: 0;
-}
-
-.directory.document .subnav-filters .subnav-search .bp-dir-search-form #dir-document-search {
-  border: 0;
-  background-color: transparent;
-  padding-right: 32px;
-  font-size: 14px;
-  height: 34px;
 }
 
 #media-stream.document-parent {
