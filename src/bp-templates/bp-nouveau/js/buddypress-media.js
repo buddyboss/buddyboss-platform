@@ -2751,10 +2751,7 @@ window.bp = window.bp || {};
 							}
 							$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
 							$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
-							// if (bp.Nouveau.Media.folderLocationUI) {
-								// bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
-								$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
-							// }
+							$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
 						}
 					}
 				);
@@ -2770,7 +2767,7 @@ window.bp = window.bp || {};
 					$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).remove();
 				}
 
-				$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item' ).append( '<span data-id="'+ $( this ).attr( 'id' ) +'">'+ $( this ).text() +'</span>' );
+				$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item' ).append( '<span class="is-disabled" data-id="'+ $( this ).attr( 'id' ) +'">'+ $( this ).text() +'</span>' );
 
 				$(this).addClass('selected').parent().addClass('is_active').siblings().removeClass('is_active').children('span').removeClass('selected');
 				if( parentsOpen == $( e.currentTarget ).data('id') ){
@@ -2783,6 +2780,28 @@ window.bp = window.bp || {};
 				}
 				$( e.currentTarget ).closest( '.bp-media-move-file' ).find('.bb-album-selected-id').val( $(e.currentTarget).data('id') );
 			});
+
+			$( document ).on( 'click', currentTarget + ' .breadcrumb .item > span' , function( e ) {
+
+				if( $( this ).hasClass( 'is-disabled' ) ){
+					return;
+				}
+
+				$( e.currentTarget ).closest( '.bp-media-move-file' ).find( '.bb-album-selected-id' ).val( 0 );
+				$( e.currentTarget ).closest( '.bp-media-move-file' ).find( '.location-album-list li span' ).removeClass( 'selected' ).parent().removeClass( 'is_active' );
+
+				if( $( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).hasClass( 'is-disabled' ) ) {
+					$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).remove();
+				}
+
+				if( parentsOpen == $( e.currentTarget ).data('id') ){
+					$( e.currentTarget ).closest( '.bp-media-move-file' ).find('.bb-model-footer .bp-media-move').addClass('is-disabled');
+				} else {
+					$( e.currentTarget ).closest( '.bp-media-move-file' ).find('.bb-model-footer .bp-media-move').removeClass('is-disabled');
+				}
+
+			});
+
 		},
 
 		/**
