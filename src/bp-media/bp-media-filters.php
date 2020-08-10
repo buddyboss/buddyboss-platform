@@ -399,7 +399,7 @@ function bp_media_delete_activity_media( $activities ) {
 /**
  * Delete media gif when related activity is deleted.
  *
- * @since BuddyBoss 1.4.8
+ * @since BuddyBoss 1.4.9
  *
  * @param array $activities Array of activities.
  */
@@ -802,7 +802,7 @@ function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
 /**
  * Delete gif attached to messages.
  *
- * @since BuddyBoss 1.4.8
+ * @since BuddyBoss 1.4.9
  *
  * @param int   $thread_id          ID of the thread being deleted.
  * @param array $message_ids        IDs of messages being deleted.
