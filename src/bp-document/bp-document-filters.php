@@ -361,7 +361,7 @@ function bp_document_delete_activity_document( $activities ) {
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_update_document_privacy( &$folder ) {
+function bp_document_update_document_privacy( $folder ) {
 
 	if ( ! empty( $folder->id ) ) {
 
