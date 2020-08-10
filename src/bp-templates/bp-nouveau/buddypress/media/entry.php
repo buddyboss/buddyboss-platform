@@ -4,31 +4,43 @@
  *
  * @since BuddyBoss 1.0.0
  */
+
 $attachment_id = bp_get_media_attachment_id();
 $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
+$group_id      = bp_get_media_group_id();
+$move_id       = '';
+$move_type     = '';
+
+if ( $group_id > 0 ) {
+	$move_id   = $group_id;
+	$move_type = 'group';
+} else {
+	$move_id   = bp_get_media_user_id();
+	$move_type = 'profile';
+}
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
     <div class="bb-photo-thumb">
         <div class="media-action-wrap">
-            <a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="194912" data-balloon-pos="up" data-balloon="Download">
+            <a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
                 <i class="bb-icon-download"></i>
             </a>
 
-            <a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="More actions">
+            <a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
                 <i class="bb-icon-menu-dots-v"></i>
             </a>
             <div class="media-action_list">
                 <ul>
                     <li class="copy_download_file_url">
-                        <a href="<?php echo $download_url; ?>">Copy Download Link</a>
+                        <a href="<?php echo $download_url; ?>"><?php _e( 'Copy Download Link', 'buddyboss' ); ?></a>
                     </li>
                     <li class="move_file">
-                        <a href="#" data-action="media" data-type="profile" id="2" class="ac-media-move">Move</a>
+                        <a href="#" data-action="media" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
                     </li>
-                    <li class="delete_file">
-                        <a class="media-file-delete" data-item-activity-id="194912" data-item-from="activity" data-item-preview-attachment-id="5106" data-item-attachment-id="5106" data-item-id="<?php bp_document_id(); ?>" data-type="media" href="#">Delete</a>
-                    </li>
+<!--                    <li class="delete_file">-->
+<!--                        <a class="media-file-delete" data-item-activity-id="--><?php //bp_media_activity_id(); ?><!--" data-item-from="media" data-item-id="--><?php //bp_media_id(); ?><!--" data-type="media" href="#">--><?php //_e( 'Delete', 'buddyboss' ); ?><!--</a>-->
+<!--                    </li>-->
                 </ul>
             </div>
         </div> <!--.media-action-wrap-->

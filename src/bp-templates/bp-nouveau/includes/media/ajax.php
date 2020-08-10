@@ -346,9 +346,16 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
+	$media_activity_ids = '';
+	if ( bp_is_active( 'activity' ) ) {
+		$activity_id = $_POST['activity_id'];
+		$media_activity_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+	}
+
 	wp_send_json_success(
 		array(
 			'media' => $media,
+			'media_ids' => $media_activity_ids,
 		)
 	);
 }
