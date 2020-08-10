@@ -2179,7 +2179,7 @@ window.bp = window.bp || {};
 				}
 
 				// activity privacy dropdown for profile
-				if ( bp.Nouveau.Activity.postForm.editActivityData === false && ( ( !_.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( !_.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) ) {
+				if ( ( !_.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( !_.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
 					var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
 					this.views.add( privacy );
 				}
