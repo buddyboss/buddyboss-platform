@@ -59,7 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.4.8 =
 * Media - New settings to set maximum file upload size for Photos and Documents
-* Media - Improved media popup code to work inside our new Elementor Activity widget
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
 * Media - Improved the logic to support BuddyBoss REST API
 
 = 1.4.7 =
