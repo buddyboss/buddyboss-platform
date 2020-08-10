@@ -1787,6 +1787,8 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 	}
 
 	$format = bp_get_option( 'bp-display-name-format' );
+	
+	$display_name = '';
 
 	switch ( $format ) {
 		case 'first_name':

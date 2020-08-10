@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.8 =
+* Media - New settings to set maximum file upload size for Photos and Documents
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
+* Media - Improved the logic to support BuddyBoss REST API
 
 = 1.4.7 =
 * Profiles - Fixed profile field type Gender default options unable to re-order
