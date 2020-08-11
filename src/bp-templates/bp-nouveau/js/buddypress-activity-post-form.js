@@ -1039,8 +1039,6 @@ window.bp = window.bp || {};
 
 		scrapURL: function(urlText) {
 			var urlString = '';
-			urlText = urlText.replace( /<img .*?>/g, '' );
-
 			if ( urlText.indexOf( 'http://' ) >= 0 ) {
 				urlString = this.getURL( 'http://', urlText );
 			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
