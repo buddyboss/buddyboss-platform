@@ -91,7 +91,7 @@ add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_a
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 
-add_filter( 'bp_repair_list', 'bp_messages_unread_count_repair_items' );
+add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 /**
  * Enforce limitations on viewing private message contents
@@ -663,9 +663,9 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
  * @since BuddyBoss 1.4.8
  * @return array Repair list items.
  */
-function bp_messages_unread_count_repair_items( $repair_list ) {
+function bp_messages_repair_items_unread_count( $repair_list ) {
 	$repair_list[] = array(
-		'bp-repair-unread-count',
+		'bp-repair-messages-unread-count',
 		__( 'Repair unread messages count on the site.', 'buddyboss' ),
 		'bp_messages_admin_repair_unread_messages_count',
 	);
