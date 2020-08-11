@@ -2902,6 +2902,11 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
+  content: "\e8a8";
+  font-size: 17px;
+}
+
 @media screen and (max-width: 799px) {
   #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list {
     left: -53px;
@@ -15631,6 +15636,11 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-folder-list-wrap-main.is-mobile .location-folder-list-wrap .location-folder-list li .sub-menu-anchor {
   visibility: visible;
   opacity: 1;
+}
+
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
+  content: "\e8a8";
+  font-size: 17px;
 }
 
 .modal-container .bb-field-steps {

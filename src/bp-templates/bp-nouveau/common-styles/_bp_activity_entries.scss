@@ -1098,6 +1098,11 @@ span.dashicons.dashicons-admin-file:before {
 
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
+	content: "\e8a8";
+	font-size: 17px;
+}
+
 @media screen and ( max-width: 799px ) {
 
 	#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list {

@@ -3639,6 +3639,11 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 	}
 }
 
+.location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
+	content: "\e8a8";
+	font-size: 17px;
+}
+
 .modal-container .bb-field-steps {
 	display: none;
 
