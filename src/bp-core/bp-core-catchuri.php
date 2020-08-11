@@ -1183,6 +1183,10 @@ function bp_private_network_template_redirect() {
 						// Check if strict match
 						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 							return;
+
+						}elseif( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $url ) &&  substr($url , -1) === '/'  &&  strpos( $request_url, $url ) !== false ) ){
+							//Check if match with last charecter slash
+							return;
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );
 
