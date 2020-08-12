@@ -1181,10 +1181,10 @@ function bp_private_network_template_redirect() {
 						$un_trailing_slash_it_url = untrailingslashit( $url );
 
 						// Check if strict match
-						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
+						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $url ) && substr($url , -1) !== '/'  && strpos( $request_url, $url ) !== false ) ) {
 							return;
 
-						}elseif( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $url ) &&  substr($url , -1) === '/'  &&  strpos( $request_url, $url ) !== false ) ){
+						}elseif( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $url ) &&  substr($url , -1) === '/'  &&  $request_url === $un_trailing_slash_it_url ) ){
 							//Check if match with last charecter slash
 							return;
 						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
