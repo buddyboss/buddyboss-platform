@@ -82,8 +82,8 @@ function groups_screen_group_admin_settings() {
 			// Set group types.
 			bp_groups_set_group_type( bp_get_current_group_id(), $current_types );
 
-			// No group types checked, so this means we want to wipe out all group types.
-		} else {
+			// Group types disabled, so this means we want to wipe out all group types.
+		} elseif ( false === bp_disable_group_type_creation() ) {
 			/*
 			 * Passing a blank string will wipe out all types for the group.
 			 *
