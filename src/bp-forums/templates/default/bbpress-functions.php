@@ -401,65 +401,59 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_reply_edit() ) {
 					$params['bbp_is_reply_edit'] = true;
 
-					$media_type = get_post_meta( bbp_get_reply_id(), 'bp_media_type', true );
+					$document_ids  = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
 
-					if ( 'document' === $media_type ) {
+					if ( ! empty( $document_ids ) && bp_has_document(
+                            array(
+                                'include'  => $document_ids,
+                                'order_by' => 'menu_order',
+                                'sort'     => 'ASC',
+                            )
+                        ) ) {
+                        $params['reply_edit_document'] = array();
+                        $index                      = 0;
+                        while ( bp_document() ) {
+                            bp_the_document();
 
-						$document_ids  = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
+                            $size = filesize( get_attached_file(  bp_get_document_attachment_id() ) );
+                            $params['reply_edit_document'][] = array(
+                                'id'            => bp_get_document_id(),
+                                'attachment_id' => bp_get_document_attachment_id(),
+                                'name'          => basename( get_attached_file( bp_get_document_attachment_id() ) ),
+                                'thumb'         => '',
+                                'size'          => $size,
+                                'url'           => wp_get_attachment_url( bp_get_document_attachment_id() ),
+                                'menu_order'    => $index,
+                            );
+                            $index ++;
+                        }
+                    }
 
-						if ( ! empty( $document_ids ) && bp_has_document(
-								array(
-									'include'  => $document_ids,
-									'order_by' => 'menu_order',
-									'sort'     => 'ASC',
-								)
-							) ) {
-							$params['reply_edit_document'] = array();
-							$index                      = 0;
-							while ( bp_document() ) {
-								bp_the_document();
+					$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
 
-								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
-								$params['reply_edit_document'][] = array(
-									'id'            => bp_get_media_id(),
-									'attachment_id' => bp_get_media_attachment_id(),
-									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
-									'thumb'         => '',
-									'size'          => $size,
-									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
-									'menu_order'    => $index,
-								);
-								$index ++;
-							}
-						}
-					} else {
+                    if ( ! empty( $media_ids ) && bp_has_media(
+                            array(
+                                'include'  => $media_ids,
+                                'order_by' => 'menu_order',
+                                'sort'     => 'ASC',
+                            )
+                        ) ) {
+                        $params['reply_edit_media'] = array();
+                        $index                      = 0;
+                        while ( bp_media() ) {
+                            bp_the_media();
 
-						$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
-
-						if ( ! empty( $media_ids ) && bp_has_media(
-								array(
-									'include'  => $media_ids,
-									'order_by' => 'menu_order',
-									'sort'     => 'ASC',
-								)
-							) ) {
-							$params['reply_edit_media'] = array();
-							$index                      = 0;
-							while ( bp_media() ) {
-								bp_the_media();
-
-								$params['reply_edit_media'][] = array(
-									'id'            => bp_get_media_id(),
-									'attachment_id' => bp_get_media_attachment_id(),
-									'name'          => bp_get_media_title(),
-									'thumb'         => bp_get_media_attachment_image_thumbnail(),
-									'url'           => bp_get_media_attachment_image(),
-									'menu_order'    => $index,
-								);
-								$index ++;
-							}
-						}
-					}
+                            $params['reply_edit_media'][] = array(
+                                'id'            => bp_get_media_id(),
+                                'attachment_id' => bp_get_media_attachment_id(),
+                                'name'          => bp_get_media_title(),
+                                'thumb'         => bp_get_media_attachment_image_thumbnail(),
+                                'url'           => bp_get_media_attachment_image(),
+                                'menu_order'    => $index,
+                            );
+                            $index ++;
+                        }
+                    }
 
 					$gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
 
