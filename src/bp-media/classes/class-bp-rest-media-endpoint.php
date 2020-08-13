@@ -1905,8 +1905,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url   = wp_get_attachment_url( $gif_data['still'] );
-		$video_url     = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url   = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url     = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 		$rendered_data = ( function_exists( 'bp_media_activity_embed_gif_content' ) ? bp_media_activity_embed_gif_content( $activity_id ) : '' );
 
 		$retval = array(
@@ -1938,9 +1938,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$mp4   = $object['mp4'];
 
 		if ( ! empty( $still ) && ! empty( $mp4 ) ) {
-
-			$still = bp_media_sideload_attachment( $still );
-			$mp4   = bp_media_sideload_attachment( $mp4 );
 
 			bp_activity_update_meta(
 				$value->id,
@@ -2255,8 +2252,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		$retval = array(
 			'preview_url' => $preview_url,
@@ -2283,9 +2280,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 			// save activity id if it is saved in forums and enabled in platform settings.
 			$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
-
-			$still = bp_media_sideload_attachment( $still );
-			$mp4   = bp_media_sideload_attachment( $mp4 );
 
 			$gdata = array(
 				'still' => $still,
@@ -2323,8 +2317,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		return '<div class="activity-attached-gif-container">' .
 			'<div class="gif-image-container">' .
@@ -2443,8 +2437,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		$retval = array(
 			'preview_url' => $preview_url,
@@ -2468,9 +2462,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$message_id = $value->id;
 
 		if ( ! empty( $still ) && ! empty( $mp4 ) ) {
-
-			$still = bp_media_sideload_attachment( $still );
-			$mp4   = bp_media_sideload_attachment( $mp4 );
 
 			$gdata = array(
 				'still' => $still,
@@ -2498,8 +2489,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		return '<div class="activity-attached-gif-container">' .
 			'<div class="gif-image-container">' .

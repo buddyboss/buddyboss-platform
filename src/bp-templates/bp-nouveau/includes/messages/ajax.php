@@ -570,8 +570,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
-			$preview_url  = wp_get_attachment_url( $gif_data['still'] );
-			$video_url    = wp_get_attachment_url( $gif_data['mp4'] );
+			$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+			$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 			$reply['gif'] = array(
 				'preview_url' => $preview_url,
 				'video_url'   => $video_url,
@@ -2120,8 +2120,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$preview_url                   = wp_get_attachment_url( $gif_data['still'] );
-				$video_url                     = wp_get_attachment_url( $gif_data['mp4'] );
+				$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+				$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 				$thread->messages[ $i ]['gif'] = array(
 					'preview_url' => $preview_url,
 					'video_url'   => $video_url,

@@ -409,11 +409,11 @@ function bp_media_delete_activity_gif( $activities ) {
 			$activity_gif = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
 			if ( ! empty( $activity_gif ) ) {
-				if ( ! empty( $activity_gif['still'] ) ) {
+				if ( ! empty( $activity_gif['still'] ) && is_int( $activity_gif['still'] ) ) {
 					wp_delete_attachment( (int) $activity_gif['still'], true );
 				}
 
-				if ( ! empty( $activity_gif['mp4'] ) ) {
+				if ( ! empty( $activity_gif['mp4'] ) && is_int( $activity_gif['mp4'] ) ) {
 					wp_delete_attachment( (int) $activity_gif['mp4'], true );
 				}
 			}
@@ -623,8 +623,8 @@ function bp_media_forums_embed_gif( $content, $id ) {
 		return $content;
 	}
 
-	$preview_url = wp_get_attachment_url( $gif_data['still'] );
-	$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'] ;
+	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 	ob_start();
 	?>
@@ -671,8 +671,8 @@ function bp_media_forums_save_gif_data( $post_id ) {
 			return;
 		}
 
-		$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-		$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+		$still = $gif_data['images']['480w_still']['url'];
+		$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 		$gdata = array(
 			'still' => $still,
@@ -783,11 +783,11 @@ function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
 			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) ) {
+				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
 					wp_delete_attachment( (int) $message_gif['still'], true );
 				}
 
-				if ( ! empty( $message_gif['mp4'] ) ) {
+				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
 					wp_delete_attachment( (int) $message_gif['mp4'], true );
 				}
 			}
@@ -815,11 +815,11 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
 			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) ) {
+				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
 					wp_delete_attachment( (int) $message_gif['still'], true );
 				}
 
-				if ( ! empty( $message_gif['mp4'] ) ) {
+				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
 					wp_delete_attachment( (int) $message_gif['mp4'], true );
 				}
 			}
@@ -845,8 +845,8 @@ function bp_media_messages_save_gif_data( &$message ) {
 
 	$gif_data = $_POST['gif_data'];
 
-	$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-	$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+	$still = $gif_data['images']['480w_still']['url'];
+	$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 	bp_messages_update_meta(
 		$message->id,
@@ -877,8 +877,8 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 		return;
 	}
 
-	$preview_url = wp_get_attachment_url( $gif_data['still'] );
-	$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 	ob_start();
 	?>
@@ -956,8 +956,8 @@ function bp_media_activity_save_gif_data( $activity ) {
 
 	$gif_data = $_POST['gif_data'];
 
-	$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-	$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+	$still = $gif_data['images']['480w_still']['url'];
+	$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 	bp_activity_update_meta(
 		$activity->id,
