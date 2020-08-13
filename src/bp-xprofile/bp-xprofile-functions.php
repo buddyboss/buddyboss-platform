@@ -2098,9 +2098,10 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 	// Get Groups and Group fields with Loggedin user data.
 	$profile_groups = bp_xprofile_get_groups(
 		array(
-			'fetch_fields'     => true,
-			'fetch_field_data' => true,
-			'user_id'          => $user_id,
+			'fetch_fields'                   => true,
+			'fetch_field_data'               => true,
+			'user_id'                        => $user_id,
+			'repeater_show_main_fields_only' => false,
 		)
 	);
 
