@@ -1977,10 +1977,10 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
 /**
  * Return Transient name using logged in User ID.
  *
- * @param string $key
- * @param string $widget_id
+ * @param string $key - Transient prefix key
+ * @param int $widget_id - Widget id part of transient name string
  *
- * @return string
+ * @return string $transient_name
  *
  * @since BuddyBoss 1.4.9
  */
@@ -1998,11 +1998,11 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  *
  * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields added/updated/deleted.
  *
- * @param type $profile_groups
- * @param type $profile_phototype
- * @param type $widget_id
+ * @param array $profile_groups - set of fieldset selected to show in progress
+ * @param array $profile_phototype - profile or cover photo selected to show in progress
+ * @param int $widget_id - Widget id specific user progress
  *
- * @return type
+ * @return array $user_progress - user progress to render profile completion
  *
  * @since BuddyBoss 1.4.9
  */
@@ -2036,10 +2036,10 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 /**
  * Function returns logged in user progress based on options selected in the widget form.
  *
- * @param type $group_ids
- * @param type $photo_types
+ * @param array $group_ids - set of fieldset selected to show in progress
+ * @param array $photo_types - profile or cover photo selected to show in progress
  *
- * @return int
+ * @return array progress_details - raw details to calculate user progress
  *
  * @since BuddyBoss 1.4.9
  */
@@ -2175,9 +2175,9 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 /**
  * Function formats user progress to pass on to templates.
  *
- * @param type $user_progress_arr
+ * @param array $user_progress_arr - raw details to calculate user progress
  *
- * @return int
+ * @return array $user_prgress_formatted - user progress to render profile completion
  *
  * @since BuddyBoss 1.4.9
  */

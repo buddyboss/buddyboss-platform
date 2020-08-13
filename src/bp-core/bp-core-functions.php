@@ -4904,7 +4904,7 @@ function bp_core_upload_max_size() {
 /**
  * Function deletes Transient based on the transient name specified.
  *
- * @param type $transient_name_prefix
+ * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
  *
  * @global type $wpdb
  *
