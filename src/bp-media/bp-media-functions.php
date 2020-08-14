@@ -184,6 +184,14 @@ function bp_media_compress_image( $source, $destination, $quality = 90 ) {
  * @return string
  */
 function bp_media_file_upload_max_size() {
+
+	/**
+	 * Filters file media upload max limit.
+	 * 
+	 * @param mixed $max_size media upload max limit.
+	 * 
+	 * @since BuddyBoss 1.4.1
+	 */
 	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
 }
 
@@ -471,6 +479,7 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
+ * 
  * @param array $medias
  * @param string $privacy
  * @param string $content

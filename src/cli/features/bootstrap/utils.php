@@ -209,11 +209,12 @@ function assoc_args_to_str( $assoc_args ) {
  * returns the final command, with the parameters escaped.
  */
 function esc_cmd( $cmd ) {
-	if ( func_num_args() < 2 ) {
-		trigger_error( 'esc_cmd() requires at least two arguments.', E_USER_WARNING );
-	}
 
 	$args = func_get_args();
+
+	if ( count( $args ) < 2 ) {
+		trigger_error( 'esc_cmd() requires at least two arguments.', E_USER_WARNING );
+	}
 
 	$cmd = array_shift( $args );
 

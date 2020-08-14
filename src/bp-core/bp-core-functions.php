@@ -4890,6 +4890,48 @@ function bp_core_upload_max_size() {
 		}
 	}
 
+	/**
+	 * Filters file upload max limit.
+	 *
+	 * @param mixed $max_size file upload max limit.
+	 *
+	 * @since BuddyBoss 1.4.8
+	 */
 	return apply_filters( 'bp_core_upload_max_size', $max_size );
 
+}
+
+/**
+ * Function deletes Transient based on the transient name specified.
+ *
+ * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
+ *
+ * @global type $wpdb
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_delete_transient_query( $transient_name_prefix ) {
+	global $wpdb;
+	$sql = $wpdb->prepare(
+			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
+			$transient_name_prefix
+	);
+
+	$keys = $wpdb->get_col( $sql );
+
+	if ( ! empty( $keys ) ) {
+		foreach ( $keys as $transient ) {
+			delete_transient( str_replace( '_transient_', '', $transient ) );
+		}
+	}
+}
+
+/**
+ * Function which return the profile completion key.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_get_profile_completion_key() {
+
+	return 'bbprofilecompletion';
 }
