@@ -28,18 +28,11 @@ if ( $group_id > 0 ) {
 
 <div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>" data-id="<?php echo esc_attr( bp_get_media_id() ); ?>">
 	<div class="media-action-wrap">
-		<a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
-			<i class="bb-icon-download"></i>
-		</a>
-
 		<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 			<i class="bb-icon-menu-dots-v"></i>
 		</a>
 		<div class="media-action_list">
 			<ul class="conflict-activity-ul-li-comment">
-				<li class="copy_download_file_url">
-					<a href="<?php echo $download_url; ?>"><?php _e( 'Copy Download Link', 'buddyboss' ); ?></a>
-				</li>
 				<li class="move_file">
 					<a href="#" data-action="activity" data-type="<?php echo $move_type; ?>" id="<?php echo $move_id; ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
 				</li>

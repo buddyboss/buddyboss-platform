@@ -23,24 +23,17 @@ if ( $group_id > 0 ) {
 
     <div class="bb-photo-thumb">
         <div class="media-action-wrap">
-            <a href="<?php echo $download_url; ?>" class="media-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
-                <i class="bb-icon-download"></i>
-            </a>
-
             <a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
                 <i class="bb-icon-menu-dots-v"></i>
             </a>
             <div class="media-action_list">
                 <ul>
-                    <li class="copy_download_file_url">
-                        <a href="<?php echo $download_url; ?>"><?php _e( 'Copy Download Link', 'buddyboss' ); ?></a>
-                    </li>
                     <li class="move_file">
                         <a href="#" data-action="media" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
                     </li>
-<!--                    <li class="delete_file">-->
-<!--                        <a class="media-file-delete" data-item-activity-id="--><?php //bp_media_activity_id(); ?><!--" data-item-from="media" data-item-id="--><?php //bp_media_id(); ?><!--" data-type="media" href="#">--><?php //_e( 'Delete', 'buddyboss' ); ?><!--</a>-->
-<!--                    </li>-->
+                    <li class="delete_file">
+                        <a class="media-file-delete" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+                    </li>
                 </ul>
             </div>
         </div> <!--.media-action-wrap-->
