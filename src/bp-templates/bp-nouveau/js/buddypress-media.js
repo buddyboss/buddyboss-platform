@@ -2395,8 +2395,9 @@ window.bp = window.bp || {};
 								self.dropzone_media[dropzone_obj_key].push(
 									{
 										'id'			: edit_documents[d].attachment_id,
-										'media_id'		: edit_documents[d].id,
+										'document_id'   : edit_documents[d].id,
 										'name'			: edit_documents[d].name,
+										'type'          : 'document',
 										'title'			: edit_documents[d].name,
 										'size'			: edit_documents[d].size,
 										'url'			: edit_documents[d].url,
