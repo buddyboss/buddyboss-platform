@@ -240,11 +240,25 @@ function bp_media_get_settings_fields() {
 		'args'              => array(),
 	);
 
+	$fields['bp_media_settings_photos']['bp_media_allowed_per_batch'] = array(
+			'title'             => __( 'Allowed Per Batch', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_media_allowed_per_batch',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+	);
+
 	$fields['bp_media_settings_documents']['bp_document_allowed_size'] = array(
 		'title'             => __( 'Allowed Max File Size', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_document_allowed_size',
 		'sanitize_callback' => 'absint',
 		'args'              => array(),
+	);
+
+	$fields['bp_media_settings_documents']['bp_document_allowed_per_batch'] = array(
+			'title'             => __( 'Allowed Per Batch', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_document_allowed_per_batch',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
 	);
 
 	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
@@ -1360,7 +1374,7 @@ function bp_document_settings_callback_extension_section() {
 }
 
 /**
- * Setting > Media > Photos > Allowed Mac File Size
+ * Setting > Media > Photos > Allowed Max File Size
  *
  * @since BuddyBoss 1.4.8
  */
@@ -1437,4 +1451,60 @@ function bp_media_allowed_upload_document_size() {
 	$max_size = bp_core_upload_max_size();
 	$default  =  bp_document_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
+}
+
+/**
+ * Setting > Media > Photos > Allowed Per Batch
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_media_settings_callback_media_allowed_per_batch() {
+	?>
+	<input type="number"
+		   name="bp_media_allowed_per_batch"
+		   id="bp_media_allowed_per_batch"
+		   value="<?php echo esc_attr( bp_media_allowed_upload_media_per_batch() ); ?>"
+	/>
+
+	<?php
+}
+
+/**
+ * Allowed per batch for the media.
+ *
+ * @return int Allowed upload per batch for the media.
+ * @since BuddyBoss 1.5.1
+ */
+function bp_media_allowed_upload_media_per_batch() {
+
+	$default  = apply_filters( 'bp_media_upload_chunk_limit', 10 );
+	return (int) apply_filters( 'bp_media_allowed_upload_media_per_batch', (int) get_option( 'bp_media_allowed_per_batch', $default ) );
+}
+
+/**
+ * Setting > Media > Photos > Allowed Per Batch
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_media_settings_callback_document_allowed_per_batch() {
+	?>
+	<input type="number"
+		   name="bp_document_allowed_per_batch"
+		   id="bp_document_allowed_per_batch"
+		   value="<?php echo esc_attr( bp_media_allowed_upload_document_per_batch() ); ?>"
+	/>
+
+	<?php
+}
+
+/**
+ * Allowed per batch for the media.
+ *
+ * @return int Allowed per batch for the media.
+ * @since BuddyBoss 1.5.1
+ */
+function bp_media_allowed_upload_document_per_batch() {
+
+	$default  = apply_filters( 'bp_document_upload_chunk_limit', 10 );
+	return (int) apply_filters( 'bp_media_allowed_upload_document_per_batch', (int) get_option( 'bp_document_allowed_per_batch', $default ) );
 }

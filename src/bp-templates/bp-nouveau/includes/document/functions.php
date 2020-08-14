@@ -99,7 +99,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$document_options = array(
 		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'max_upload_size'           => bp_document_file_upload_max_size(),
-		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'maxFiles'                  => bp_media_allowed_upload_document_per_batch(),
 		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
 
