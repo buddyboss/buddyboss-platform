@@ -299,19 +299,28 @@ window.bp = window.bp || {};
 				$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 			}
 
-			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-				(this.bbp_reply_edit_media.length || this.bbp_topic_edit_media.length || this.bbp_forum_edit_media.length)) {
+			if ( ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) &&
+				( this.bbp_reply_edit_media.length || this.bbp_topic_edit_media.length || this.bbp_forum_edit_media.length ) ) {
 				$( '#forums-media-button' ).trigger( 'click' );
 			}
 
-			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-				(this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length)) {
+			if ( ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) &&
+				( this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length ) ) {
 				$( '#forums-document-button' ).trigger( 'click' );
 			}
 
-			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
-				(Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length)) {
+			if ( ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) &&
+				( Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length ) ) {
 				this.editGifPreview();
+
+				// Disable other buttons( media/document ).
+				var tool_box = jQuery( '#forums-gif-button' ).addClass( 'active' ).closest( 'form' );
+				if ( tool_box.find( '#forums-document-button' ) ) {
+					tool_box.find( '#forums-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+				}
+				if ( tool_box.find( '#forums-media-button' ) ) {
+					tool_box.find( '#forums-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'disable' );
+				}
 			}
 
 			// Open edit folder popup if user redirected from activity edit folder privacy
