@@ -187,9 +187,9 @@ function bp_media_file_upload_max_size() {
 
 	/**
 	 * Filters file media upload max limit.
-	 * 
+	 *
 	 * @param mixed $max_size media upload max limit.
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.1
 	 */
 	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
@@ -479,7 +479,7 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
- * 
+ *
  * @param array $medias
  * @param string $privacy
  * @param string $content
@@ -3059,4 +3059,91 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 		}
 	}
 	return $media_id;
+}
+
+function bp_media_get_activity_media( $activity_id ) {
+
+	$media_content      = '';
+	$media_activity_ids = '';
+	$response           = array();
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
+
+		$media_activity_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+
+		global $media_template;
+		// Add Media to single activity page..
+		$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+		if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' == $media_activity && empty( $media_ids ) ) {
+			$media_ids = BP_Media::get_activity_media_id( $activity_id );
+		} else {
+			$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+		}
+
+		if ( empty( $media_ids ) ) {
+			return;
+		}
+
+		$args = array(
+			'include'  => $media_ids,
+			'order_by' => 'menu_order',
+			'sort'     => 'ASC',
+			'user_id'  => false,
+		);
+
+		$activity = new BP_Activity_Activity( (int) $activity_id );
+		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+			if ( bp_is_group_media_support_enabled() ) {
+				$args['privacy'] = array( 'grouponly' );
+				if ( ! bp_is_group_albums_support_enabled() ) {
+					$args['album_id'] = 'existing-media';
+				}
+			} else {
+				$args['privacy']  = array( '0' );
+				$args['album_id'] = 'existing-media';
+			}
+		} else {
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
+			if ( ! bp_is_profile_media_support_enabled() ) {
+				$args['user_id'] = 'null';
+			}
+			if ( ! bp_is_profile_albums_support_enabled() ) {
+				$args['album_id'] = 'existing-media';
+			}
+		}
+
+		$is_forum_activity = false;
+		if ( bp_is_active( 'forums' ) && in_array( $activity->type, array(
+				'bbp_forum_create',
+				'bbp_topic_create',
+				'bbp_reply_create'
+			), true ) && bp_is_forums_media_support_enabled() ) {
+			$is_forum_activity = true;
+			$args['privacy'][] = 'forums';
+		}
+
+		if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
+
+			ob_start();
+			?>
+			<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count );
+			echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
+			echo true === $is_forum_activity ? esc_attr( ' forums-media-wrap' ) : ''; ?>">
+				<?php
+				bp_get_template_part( 'media/media-move' );
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
+				?>
+			</div>
+			<?php
+			$media_content = ob_get_contents();
+			ob_end_clean();
+		}
+	}
+
+	$response['content']            = $media_content;
+	$response['media_activity_ids'] = $media_activity_ids;
+
+	return $response;
 }

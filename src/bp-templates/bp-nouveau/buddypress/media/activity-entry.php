@@ -34,10 +34,10 @@ if ( $group_id > 0 ) {
 		<div class="media-action_list">
 			<ul class="conflict-activity-ul-li-comment">
 				<li class="move_file">
-					<a href="#" data-action="activity" data-type="<?php echo $move_type; ?>" id="<?php echo $move_id; ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
+					<a href="#" data-media-id="<?php bp_media_id(); ?>" data-action="activity" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo $move_type; ?>" id="<?php echo $move_id; ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
 				</li>
 				<li class="delete_file">
-					<a class="media-file-delete" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+					<a class="media-file-delete" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
 				</li>
 			</ul>
 		</div>

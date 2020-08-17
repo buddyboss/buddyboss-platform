@@ -310,6 +310,8 @@ function bp_nouveau_ajax_media_delete() {
 	$nonce = $_POST['_wpnonce'];
 	$check = 'bp_nouveau_media';
 
+	$media_content = '';
+
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
 		wp_send_json_error( $response );
@@ -345,17 +347,12 @@ function bp_nouveau_ajax_media_delete() {
 		);
 		wp_send_json_error( $response );
 	}
-
-	$media_activity_ids = '';
-	if ( bp_is_active( 'activity' ) ) {
-		$activity_id = $_POST['activity_id'];
-		$media_activity_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-	}
-
+	$response 	= bp_media_get_activity_media( $_POST['activity_id'] );
 	wp_send_json_success(
 		array(
-			'media' => $media,
-			'media_ids' => $media_activity_ids,
+			'media'         => $media,
+			'media_ids'     => $response['media_activity_ids'],
+			'media_content' => $response['content']
 		)
 	);
 }
@@ -1101,14 +1098,17 @@ function bp_nouveau_ajax_media_move() {
 		}
 	}
 
-	$media = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+	$media		= bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+	$response 	= bp_media_get_activity_media( $_POST['activity_id'] );
 
 	if ( $media > 0 ) {
 		$content = '';
 		wp_send_json_success(
 			array(
-				'message' => 'success',
-				'html'    => $content,
+				'media_ids'     => $response['media_activity_ids'],
+				'media_content' => $response['content'],
+				'message'       => 'success',
+				'html'          => $content,
 			)
 		);
 	} else {

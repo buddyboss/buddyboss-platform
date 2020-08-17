@@ -29,10 +29,10 @@ if ( $group_id > 0 ) {
             <div class="media-action_list">
                 <ul>
                     <li class="move_file">
-                        <a href="#" data-action="media" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
+                        <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
                     </li>
                     <li class="delete_file">
-                        <a class="media-file-delete" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+                        <a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
                     </li>
                 </ul>
             </div>
