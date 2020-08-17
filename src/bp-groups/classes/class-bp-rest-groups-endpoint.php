@@ -730,6 +730,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'role'               => '',
 			'plural_role'        => '',
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
+			'can_post'           => $this->bp_rest_user_can_post( $item ),
 		);
 
 		// BuddyBoss Platform support.
@@ -1384,6 +1385,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'can_post'           => array(
+					'context'     => array( 'view', 'edit' ),
+					'description' => __( 'Check current user can post activity or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'forum'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Forum id of the group.', 'buddyboss' ),
@@ -1634,6 +1641,21 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Check the user can post activity into group or not based on settings.
+	 *
+	 * @param BP_Groups_Group $item Group object.
+	 *
+	 * @return bool
+	 */
+	protected function bp_rest_user_can_post( $item ) {
+		if ( ! bp_is_active( 'activity' ) ) {
+			return false;
+		}
+
+		return is_user_logged_in() && bp_group_is_member( $item ) && bp_group_is_member_allowed_posting( $item );
+	}
+
+	/**
 	 * Get sub groups id.
 	 *
 	 * @param integer $parent_group_id Group ID.
@@ -1709,7 +1731,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
 		$group_admin           = groups_get_group_admins( $group_id );
 		$group_mode            = groups_get_group_mods( $group_id );
-		$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
+		$group_member          = groups_get_group_members(
+			array(
+				'group_id' => $group_id,
+				'per_page' => 10,
+				'page'     => 1,
+			)
+		);
 
 		if ( groups_is_user_admin( $user_id, $group_id ) ) {
 			if ( isset( $group_admin ) && count( $group_admin ) > 1 ) {

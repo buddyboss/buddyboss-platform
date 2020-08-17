@@ -444,6 +444,12 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$medias = $this->assemble_response_data( array( 'media_ids' => $medias_ids ) );
 
+		$fields_update = $this->update_additional_fields_for_object( $medias['medias'], $request );
+
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
+
 		$retval = array();
 		foreach ( $medias['medias'] as $media ) {
 			$retval[] = $this->prepare_response_for_collection(
@@ -581,6 +587,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		}
 
 		$medias = $this->assemble_response_data( array( 'media_ids' => array( $request['id'] ) ) );
+		$media  = current( $medias['medias'] );
+
+		$fields_update = $this->update_additional_fields_for_object( $media, $request );
+
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
+		}
 
 		$retval = '';
 		foreach ( $medias['medias'] as $media ) {
