@@ -2233,13 +2233,13 @@ input.search-query-input {
   box-shadow: 0 0 6px 0 #eaeaea;
 }
 
-.medium-editor-toolbar-actions .medium-editor-action b {
+ul.medium-editor-toolbar-actions .medium-editor-action b {
   font-family: bb-icons;
   text-align: center;
   width: 24px;
 }
 
-.medium-editor-toolbar-actions .medium-editor-action b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action b:before {
   font-family: "bb-icons";
   /* stylelint-disable-line */
   line-height: 1;
@@ -2248,35 +2248,35 @@ input.search-query-input {
   font-size: 24px;
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-bold b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-bold b:before {
   content: "\e94a";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-italic b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-italic b:before {
   content: "\e949";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-unorderedlist b:before {
   content: "\e9c9";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-orderedlist b:before {
   content: "\e9ca";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-quote b:before {
   content: "\e961";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-anchor b:before {
   content: "\e9a2";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-pre b:before {
   content: "\e9c7";
 }
 
-.medium-editor-toolbar-actions .medium-editor-action-close b:before {
+ul.medium-editor-toolbar-actions .medium-editor-action-close b:before {
   content: "\e80a";
 }
 
@@ -2376,10 +2376,10 @@ input.search-query-input {
   color: #82878c;
   background: #fff;
   border: 1px solid #e5e5e5;
+  border-radius: 3px;
   position: relative;
   overflow: auto;
   zoom: 1;
-  margin: 0 -3px;
 }
 
 .activity-link-preview-container + .bb-activity-media-wrap {
@@ -2607,8 +2607,77 @@ span.dashicons.dashicons-admin-file:before {
   overflow: visible;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list.bp-list,
+#buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list,
+#buddypress.bb-media-model-wrapper.document-theatre .activity-list.bp-list {
+  position: relative;
+  display: inline-block;
+}
+
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
+#buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list .activity-item,
+#buddypress.bb-media-model-wrapper.document-theatre .activity-list.bp-list .activity-item {
+  margin-bottom: 40px;
+  max-height: calc(90vh - 40px);
+  min-height: calc(90vh - 40px);
+  position: static;
+}
+
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .download-document,
+#buddypress .bb-media-model-wrapper.document-theatre .activity-list.bp-list .download-document,
+#buddypress.bb-media-model-wrapper.document-theatre .activity-list.bp-list .download-document {
+  position: absolute;
+  bottom: 0;
+  z-index: 999999;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #ecedee;
+  background-color: #fff;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+#bbpress-forums .bb-media-model-container .activity-list.bp-list,
+#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
+#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
+  position: relative;
+  display: inline-block;
+}
+
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
+#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
+#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
+  margin-bottom: 40px;
+  max-height: calc(90vh - 40px);
+  min-height: calc(90vh - 40px);
+  position: static;
+}
+
+#bbpress-forums .bb-media-model-container .activity-list.bp-list .download-media,
+#buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media,
+#buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .download-media {
+  position: absolute;
+  bottom: 0;
+  z-index: 999999;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #ecedee;
+  background-color: #fff;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
 .activity-media-description {
   margin-bottom: 10px;
+}
+
+.activity-media-description .bp-add-media-activity-description.show-edit {
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-edit .add {
@@ -2616,16 +2685,27 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .activity-media-description .bp-add-media-activity-description.show-edit .edit {
-  display: block;
+  display: inline-block;
+}
+
+.activity-media-description .bp-add-media-activity-description.show-add {
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-add .add {
-  display: block;
+  display: inline-block;
   margin-bottom: 10px;
 }
 
 .activity-media-description .bp-add-media-activity-description.show-add .edit {
   display: none;
+}
+
+.activity-media-description .bp-media-activity-description {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .bb-activity-media-wrap {
@@ -3645,6 +3725,10 @@ form.ac-form .ac-reply-content input {
   width: 100%;
 }
 
+.bp-profile-search-widget .bp-heading-field-wrap {
+  border-radius: 0;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 4.0 - Directories
@@ -3828,6 +3912,27 @@ body.register .registration-popup .mfp-close:hover {
   background-color: #ef3e46;
   border-color: #ef3e46;
   color: #fff;
+}
+
+.bb-password-wrap {
+  position: relative;
+}
+
+.bb-password-wrap a.bb-toggle-password {
+  color: rgba(18, 43, 70, 0.5);
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none !important;
+}
+
+.bb-password-wrap .bb-show-pass .bb-icon-eye:before {
+  content: "\e8fc";
 }
 
 /**
@@ -4949,6 +5054,10 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   min-width: 0;
 }
 
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_title_empty {
+  color: #ccc;
+}
+
 .buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_edit {
   margin-left: auto;
   margin-right: 5px;
@@ -5418,6 +5527,33 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 #message-threads .bp-message-link .thread-avatar img.avatar {
   max-width: 60px;
   width: 100%;
+}
+
+#message-threads .bp-message-link .thread-multiple-avatar {
+  min-height: 45px;
+  min-width: 45px;
+  margin: 0 -2px;
+  position: relative;
+}
+
+#message-threads .bp-message-link .thread-multiple-avatar img.avatar {
+  border: 2px solid #fff;
+  max-width: 34px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#message-threads .bp-message-link .thread-multiple-avatar img.avatar + img {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: auto;
+}
+
+#message-threads .bp-message-link:hover .thread-multiple-avatar img.avatar,
+#message-threads .current .bp-message-link .thread-multiple-avatar img.avatar {
+  border-color: #f5f6f7;
 }
 
 #message-form-submit-wrapper,
@@ -11586,6 +11722,11 @@ body.login .login-popup .mfp-close:hover {
   min-width: 0;
 }
 
+.bb-media-length-1 .bb-activity-media-elem .entry-img img {
+  min-height: auto;
+  min-width: auto;
+}
+
 .bb-activity-media-elem {
   padding: 3px;
 }
@@ -12058,7 +12199,8 @@ body.login .login-popup .mfp-close:hover {
   overflow: auto;
 }
 
-.bb-media-model-container {
+#bbpress-forums .bb-media-model-container,
+#buddypress .bb-media-model-container {
   max-width: 90%;
   min-width: 90%;
   position: relative;
@@ -12066,6 +12208,7 @@ body.login .login-popup .mfp-close:hover {
   padding: 20px 0;
 }
 
+#bbpress-forums .bb-media-model-container .activity-list,
 #buddypress .bb-media-model-container .activity-list {
   border: 0;
   margin: 0;
@@ -12687,15 +12830,21 @@ ul.bb-albums-list .bb-more-photos strong {
     flex: none;
     width: 100%;
     margin-left: 0;
+    max-height: calc(50vh - 40px);
+  }
+  #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document .activity-list.bp-list {
+    min-height: calc(50vh - 40px);
+    max-height: calc(50vh - 40px);
   }
   #buddypress .bb-document-theater .bb-media-model-inner .bb-media-info-section.document li.activity_update {
-    min-height: auto;
+    min-height: calc(50vh - 80px);
+    max-height: calc(50vh - 80px);
   }
   #buddypress .bb-document-theater .bb-media-section {
     width: 100%;
     height: auto;
-    min-height: 260px;
-    max-height: 60vh;
+    min-height: 50vh;
+    max-height: 50vh;
     background-color: #fff;
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -12703,7 +12852,7 @@ ul.bb-albums-list .bb-more-photos strong {
     border-radius: 4px 4px 0 8px;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section {
-    max-height: 60vh;
+    max-height: 50vh;
     height: auto;
     display: block;
     text-align: center;
@@ -12711,10 +12860,10 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap {
     height: auto;
-    padding-bottom: 10px;
+    padding-bottom: 0;
   }
   #buddypress .bb-document-theater .bb-media-section .img-section .img-block-wrap img {
-    max-height: calc(60vh - 81px);
+    max-height: calc(50vh - 80px);
   }
   #buddypress .bb-document-theater .bb-media-section.bb-media-no-preview .img-section > p {
     font-size: 16px;
@@ -12737,8 +12886,11 @@ ul.bb-albums-list .bb-more-photos strong {
     padding: 0;
   }
   #buddypress .bb-document-theater .bb-media-section .CodeMirror {
-    height: calc(60vh - 40px);
+    height: calc(50vh - 40px);
     border-radius: 4px 4px 0 0;
+  }
+  #buddypress .bb-document-theater .bb-media-section .document-preview .document-text {
+    margin-top: 40px;
   }
   #buddypress .bb-document-theater .bb-media-section .document-preview h3 {
     right: 0;
@@ -13464,7 +13616,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   align-items: flex-end;
   background-color: #fff;
   border-radius: 4px 4px 4px 5px;
-  position: relative;
+  position: initial;
 }
 
 .bb-document-theater .bb-media-section .document-preview {
@@ -13576,8 +13728,8 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 .bb-document-theater .bb-media-section .img-section img {
-  padding: 20px 20px 8px;
-  max-height: calc(90vh - 75px);
+  padding: 20px;
+  max-height: calc(90vh - 40px);
 }
 
 .bb-document-theater .bb-media-section .img-section a.download-button {
@@ -13613,10 +13765,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   top: 0;
   left: 0;
   padding: 6px;
-  right: 0;
+  right: 375px;
   text-align: center;
   border-bottom: 1px solid #ecedee;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 400;
   border-radius: 4px 4px 0 0;
   white-space: nowrap;
@@ -13633,6 +13785,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   margin-left: -1px;
   border-radius: 0 4px 4px 0;
   overflow: hidden;
+  max-height: 90vh;
 }
 
 .bb-document-theater .document-text-file-data-hidden {
@@ -14606,6 +14759,20 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 #bp-media-edit-child-folder .bb-model-footer,
 #bp-media-create-child-folder .bb-model-footer {
   text-align: right !important;
+}
+
+.modal-container .error-box,
+#bp-media-create-folder .error-box {
+  display: none;
+  line-height: 1.3;
+  margin-top: 5px;
+}
+
+.modal-container #bb-album-child-title.error + .error-box,
+.modal-container #bb-album-title.error + .error-box,
+#bp-media-create-folder #bb-album-child-title.error + .error-box,
+#bp-media-create-folder #bb-album-title.error + .error-box {
+  display: block;
 }
 
 .modal-container.has-folderlocationUI .bb-model-footer a.saving, .modal-container.has-folderlocationUI .bb-model-footer a.loading {

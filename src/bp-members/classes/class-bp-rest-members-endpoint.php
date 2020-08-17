@@ -96,9 +96,10 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			'/' . $this->rest_base . '/me',
 			array(
 				array(
-					'methods'  => WP_REST_Server::READABLE,
-					'callback' => array( $this, 'get_current_item' ),
-					'args'     => array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_current_item' ),
+					'permission_callback' => '__return_true',
+					'args'                => array(
 						'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 					),
 				),
@@ -144,7 +145,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	 * @apiGroup       Members
 	 * @apiDescription Retrieve Members
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -554,7 +555,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 			);
 		}
 
-		if ( true === $retval && ! bp_current_user_can( 'delete_users' ) ) {
+		$user_id = (int) $request['id'];
+		if ( empty( $user_id ) ) {
+			$user_id = bp_loggedin_user_id();
+		}
+
+		if ( true === $retval && bp_loggedin_user_id() !== absint( $user_id ) && ! bp_current_user_can( 'delete_users' ) ) {
 			$retval = new WP_Error(
 				'bp_rest_user_cannot_delete',
 				__( 'Sorry, you are not allowed to delete this user.', 'buddyboss' ),

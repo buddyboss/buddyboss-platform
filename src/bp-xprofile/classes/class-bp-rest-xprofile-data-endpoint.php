@@ -69,14 +69,15 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 					'args'                => array(
 						'value' => array(
 							'description' => __( 'The list of values for the field data.', 'buddyboss' ),
-							'type'        => 'array',
+							// @todo Removed to support array and object both.
+							/*'type'        => 'object',
 							'items'       => array(
 								'type' => 'string',
 							),
 							'arg_options' => array(
 								'validate_callback' => 'rest_validate_request_arg',
 								'sanitize_callback' => 'rest_sanitize_request_arg',
-							),
+							),*/
 						),
 					),
 				),
@@ -103,6 +104,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Field data for the user.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} field_id The ID of the field the data is from.
 	 * @apiParam {Number} user_id The ID of user the field data is from.
 	 */
@@ -219,7 +221,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} field_id The ID of the field the data is from.
 	 * @apiParam {Number} user_id The ID of user the field data is from.
-	 * @apiParam {String} [value] The list of values for the field data.
+	 * @apiParam {Array} [value] The list of values for the field data.
 	 */
 	public function update_item( $request ) {
 		// Setting context.
@@ -244,7 +246,11 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * For field types not supporting multiple values, join values in case
 		 * the submitted value was not an array.
 		 */
-		if ( ! $field->type_obj->supports_multiple_defaults ) {
+		if (
+			! $field->type_obj->supports_multiple_defaults
+			&& is_array( $value )
+			&& ! in_array( $field->type, apply_filters( 'bp_rest_xprofile_mutiple', array( 'socialnetworks' ) ) )
+		) {
 			$value = implode( ' ', $value );
 		}
 

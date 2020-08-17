@@ -98,6 +98,12 @@ add_action(
 				),
 			),
 			array(
+				'document_get_document_description' => array(
+					'function' => 'bp_nouveau_ajax_document_get_document_description',
+					'nopriv'   => true,
+				),
+			),
+			array(
 				'document_activity_delete' => array(
 					'function' => 'bp_nouveau_ajax_document_activity_delete',
 					'nopriv'   => true,
@@ -328,6 +334,136 @@ function bp_nouveau_ajax_document_get_activity() {
 }
 
 /**
+ * Get description for the document.
+ *
+ * @since BuddyBoss 1.4.2
+ */
+function bp_nouveau_ajax_document_get_document_description() {
+
+	$document_description = '';
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Nonce check!
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$document_id	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id 	= filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
+
+	if ( empty( $document_id ) || empty( $attachment_id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $attachment_id ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$content = get_post_field( 'post_content', $attachment_id );
+
+	$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+	$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+
+	$document     = new BP_Document( $document_id );
+	$user_domain  = bp_core_get_user_domain( $document->user_id );
+	$display_name = bp_core_get_user_displayname( $document->user_id );
+	$time_since   = bp_core_time_since( $document->date_created );
+	$avatar       = bp_core_fetch_avatar( array(
+					'item_id' => $document->user_id,
+					'object'  => 'user',
+					'type'    => 'full',
+			) );
+
+	ob_start();
+
+	if ( $can_view ) {
+
+		?>
+		<li class="activity activity_update activity-item mini ">
+			<div class="bp-activity-head">
+				<div class="activity-avatar item-avatar">
+					<a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $avatar; ?></a>
+				</div>
+
+				<div class="activity-header">
+					<p><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $display_name; ?></a> <?php echo __( 'uploaded a document', 'buddyboss' ); ?><a href="<?php echo esc_url( $user_domain ); ?>" class="view activity-time-since"></p>
+					<p class="activity-date"><a href="<?php echo esc_url( $user_domain ); ?>"><?php echo $time_since; ?></a></p>
+				</div>
+			</div>
+		<div class="activity-media-description">
+			<div class="bp-media-activity-description"><?php echo esc_html( $content ); ?></div>
+			<?php
+			if ( $can_manage_btn ) {
+				?>
+				<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
+				href="#">
+					<span class="bb-icon-edit-thin"></span>
+					<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
+					<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
+				</a>
+
+				<div class="bp-edit-media-activity-description" style="display: none;">
+					<div class="innerWrap">
+								<textarea id="add-activity-description"
+										title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+										class="textInput"
+										name="caption_text"
+										placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
+										role="textbox"><?php echo $content; ?></textarea>
+					</div>
+					<div class="in-profile description-new-submit">
+						<?php ?>
+						<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+						<input type="submit" id="bp-activity-description-new-submit" class="button small"
+							name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+						<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
+							value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+					</div>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+		<?php
+			if ( ! empty( $document_id ) ) {
+				$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+				$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+				if ( $can_download_btn ) {
+					$download_url      = bp_document_download_link( $attachment_id, $document_id );
+					if ( $download_url ) {
+						?>
+						<a class="download-document"
+							href="<?php echo esc_url( $download_url ); ?>">
+							<?php _e( 'Download', 'buddyboss' ); ?>
+						</a>
+						<?php
+					}
+				}
+			}
+		?>
+	</li>
+		<?php
+		$document_description = ob_get_contents();
+		ob_end_clean();
+	}
+
+	wp_send_json_success(
+		array(
+			'description' => $document_description,
+		)
+	);
+}
+
+/**
  * Delete attachment with its files
  *
  * @since BuddyBoss 1.4.0
@@ -365,115 +501,6 @@ function bp_nouveau_ajax_document_delete_attachment() {
 
 	wp_send_json_success();
 }
-
-// add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2 );
-
-/**
- * Object template results media tabs.
- *
- * @param $results
- * @param $object
- *
- * @since BuddyBoss 1.4.0
- *
- * @return mixed
- */
-function bp_nouveau_object_template_results_document_tabs( $results, $object ) {
-	if ( 'document' !== $object ) {
-		return $results;
-	}
-
-	$results['scopes'] = array();
-
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_all_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	$results['scopes']['all'] = $GLOBALS['document_template']->total_document_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_all_scope', 20 );
-
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_personal_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	$results['scopes']['personal'] = $GLOBALS['document_template']->total_document_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_personal_scope', 20 );
-
-	return $results;
-}
-
-/**
- * Object template results document all scope.
- *
- * @param $querystring
- *
- * @since BuddyBoss 1.4.0
- *
- * @return string
- */
-function bp_nouveau_object_template_results_document_all_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope'] = array();
-
-	if ( bp_is_profile_document_support_enabled() && bp_is_active( 'friends' ) ) {
-		$querystring['scope'][] = 'friends';
-	}
-
-	if ( bp_is_group_document_support_enabled() && bp_is_active( 'groups' ) ) {
-		$querystring['scope'][] = 'groups';
-	}
-
-	if ( bp_is_profile_document_support_enabled() && is_user_logged_in() ) {
-		$querystring['scope'][] = 'personal';
-	}
-
-	$querystring['user_id']     = 0;
-	$querystring['count_total'] = true;
-	$querystring['type']        = 'document';
-	return http_build_query( $querystring );
-}
-
-/**
- * Object template results media personal scope.
- *
- * @since BuddyBoss 1.4.0
- */
-function bp_nouveau_object_template_results_document_personal_scope( $querystring ) {
-
-	if ( ! bp_is_profile_document_support_enabled() ) {
-		return $querystring;
-	}
-
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope']   = 'personal';
-	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	$querystring['type']    = 'document';
-	$privacy                = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-		$privacy[] = 'onlyme';
-	}
-
-	$querystring['privacy']     = $privacy;
-	$querystring['count_total'] = true;
-
-	return http_build_query( $querystring );
-}
-
-/**
- * Change the querystring based on caller of the albums media query
- *
- * @param $querystring
- */
-function bp_nouveau_object_template_results_folders_existing_document_query( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	if ( ! empty( $_POST['caller'] ) && 'bp-existing-document' === $_POST['caller'] ) {
-		$querystring['folder_id'] = 0;
-	}
-
-	return http_build_query( $querystring );
-}
-
-add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_folders_existing_document_query', 20 );
 
 /**
  * Save media
@@ -582,21 +609,26 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! is_user_logged_in() ) {
+		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
 
-	if ( ! is_user_logged_in() ) {
-		$response['feedback'] = esc_html__( 'Please login to create a folder.', 'buddyboss' );
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
 	// save media.
 	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = $_POST['title'];
+	$title     = wp_strip_all_tags( $_POST['title'] );
 	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
 	$parent    = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
 	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
@@ -637,8 +669,10 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -690,7 +724,6 @@ function bp_nouveau_ajax_document_child_folder_save() {
 
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
-
 		wp_send_json_error( $response );
 	}
 
@@ -699,10 +732,15 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+		wp_send_json_error( $response );
+	}
+
 	// save folder.
 	$id        = 0;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = $_POST['title'];
+	$title     = wp_strip_all_tags( $_POST['title'] );
 	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
 	$privacy   = '';
 
@@ -734,8 +772,10 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
+	$folder = new BP_Document_Folder( $folder_id );
+
 	if ( $group_id > 0 ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $folder->user_id, $group_id );
 	} else {
 		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	}
@@ -961,6 +1001,11 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
+		if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+			$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+
 		if ( (int) $document_id > 0 ) {
 			$has_access = bp_folder_user_can_edit( $document_id );
 			if ( ! $has_access ) {
@@ -1027,6 +1072,14 @@ function bp_nouveau_ajax_document_edit_folder() {
 			esc_html__( 'Please enter title of folder.', 'buddyboss' )
 		);
 
+		wp_send_json_error( $response );
+	}
+
+	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+		$response['feedback'] = sprintf(
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'Invalid folder name', 'buddyboss' )
+		);
 		wp_send_json_error( $response );
 	}
 
@@ -1351,9 +1404,9 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
-		$ul = bp_document_user_document_folder_tree_view_li_html( $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
 	} else {
-		$ul = bp_document_user_document_folder_tree_view_li_html( 0, $id );
+		$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id(), $id );
 	}
 
 	$first_text = '';

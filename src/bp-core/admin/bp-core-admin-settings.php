@@ -175,7 +175,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 	?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on blog posts, forum discussions and replies', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
 
 	<?php
 }

@@ -144,6 +144,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Groups
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [profile_group_id] ID of the field group that have fields.
 	 * @apiParam {Boolean} [hide_empty_groups=false] Whether to hide profile groups of fields that do not have any profile fields or not.
 	 * @apiParam {Number} [user_id=1] Required if you want to load a specific user's data.
@@ -264,6 +265,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Single xProfile Group
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the group of profile fields.
 	 * @apiParam {Number} [user_id=1] Required if you want to load a specific user's data.
 	 * @apiParam {string} [member_type] Limit fields by those restricted to a given member type, or array of member types.
@@ -373,7 +375,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				'bp_rest_required_param_missing',
 				__( 'Required param missing.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}

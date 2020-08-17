@@ -103,7 +103,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve groups
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -142,6 +142,11 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $request['parent_id'] ) ) {
 			$args['parent_id'] = null;
+		}
+
+		// See if the user can see hidden groups.
+		if ( isset( $request['show_hidden'] ) && true === (bool) $request['show_hidden'] && ! $this->can_see_hidden_groups( $request ) ) {
+			$args['show_hidden'] = false;
 		}
 
 		if ( isset( $request['scope'] ) ) {
@@ -224,16 +229,6 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! $this->can_see_hidden_groups( $request ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view hidden groups.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
 		/**
 		 * Filter the groups `get_items` permissions check.
 		 *
@@ -258,7 +253,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve single group
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the Group.
 	 */
 	public function get_item( $request ) {
@@ -317,6 +312,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( true === $retval && ! $this->can_see( $group ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you cannot view the group.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the groups `get_item` permissions check.
 		 *
@@ -362,7 +367,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'bp_rest_create_group_empty_name',
 				__( 'Please, enter the name of group.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -446,11 +451,11 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	/**
 	 * Update a group.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
-	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/groups/:id Update Group
 	 * @apiName        UpdateBBGroup
 	 * @apiGroup       Groups
@@ -465,6 +470,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [enable_forum] Whether the Group has a forum enabled or not.
 	 * @apiParam {Number} [parent_id] ID of the parent Group.
 	 * @apiParam {Array} [types] Set type(s) for a group.
+	 * @apiParam {Array} [append_types] Append type(s) for a group.
+	 * @apiParam {Array} [remove_types] Remove type(s) for a group.
 	 */
 	public function update_item( $request ) {
 		// Setting context.
@@ -936,12 +943,22 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		// Update group type(s).
 		if ( isset( $prepared_group->group_id ) && isset( $request['types'] ) ) {
+			bp_groups_set_group_type( $prepared_group->group_id, $request['types'], false );
+		}
 
-			// Append on update. Add on creation.
-			$append = WP_REST_Server::EDITABLE === $request->get_method();
+		// Remove group type(s).
+		if ( isset( $prepared_group->group_id ) && isset( $request['remove_types'] ) ) {
+			array_map(
+				function( $type ) use ( $prepared_group ) {
+					bp_groups_remove_group_type( $prepared_group->group_id, $type );
+				},
+				$request['remove_types']
+			);
+		}
 
-			// Add/Append group type(s).
-			bp_groups_set_group_type( $prepared_group->group_id, $request['types'], $append );
+		// Append group type(s).
+		if ( isset( $prepared_group->group_id ) && isset( $request['append_types'] ) ) {
+			bp_groups_set_group_type( $prepared_group->group_id, $request['append_types'], true );
 		}
 
 		/**
@@ -1001,6 +1018,25 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 */
 	public function can_user_delete_or_update( $group ) {
 		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $group->creator_id );
+	}
+
+	/**
+	 * Can a user see a group?
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param  BP_Groups_Group $group Group object.
+	 * @return bool
+	 */
+	protected function can_see( $group ) {
+
+		// If it is not a hidden group, user can see it.
+		if ( 'hidden' !== $group->status ) {
+			return true;
+		}
+
+		// Check for moderators or if user is a member of the group.
+		return ( bp_current_user_can( 'bp_moderate' ) || groups_is_user_member( bp_loggedin_user_id(), $group->id ) );
 	}
 
 	/**
@@ -1085,6 +1121,30 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			if ( WP_REST_Server::EDITABLE === $method ) {
 				$key = 'update_item';
 				unset( $args['slug'] );
+
+				// Append group types.
+				$args['append_types'] = array(
+					'description'       => __( 'Append type(s) for a group.', 'buddyboss' ),
+					'type'              => 'array',
+					'enum'              => bp_groups_get_group_types(),
+					'sanitize_callback' => 'bp_rest_sanitize_group_types',
+					'validate_callback' => 'bp_rest_validate_group_types',
+					'items'             => array(
+						'type' => 'string',
+					),
+				);
+
+				// Remove group types.
+				$args['remove_types'] = array(
+					'description'       => __( 'Remove type(s) for a group.', 'buddyboss' ),
+					'type'              => 'array',
+					'enum'              => bp_groups_get_group_types(),
+					'sanitize_callback' => 'bp_rest_sanitize_group_types',
+					'validate_callback' => 'bp_rest_validate_group_types',
+					'items'             => array(
+						'type' => 'string',
+					),
+				);
 			}
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key  = 'delete_item';

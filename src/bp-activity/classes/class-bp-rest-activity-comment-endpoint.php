@@ -67,17 +67,17 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	/**
 	 * Retrieve activity comments.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
-	 *
-	 * @api {GET} /wp-json/buddyboss/v1/activity/:id/comment Get activity comments
-	 * @apiName GetActivityComment
-	 * @apiGroup Activity
+	 * @api            {GET} /wp-json/buddyboss/v1/activity/:id/comment Get activity comments
+	 * @apiName        GetActivityComment
+	 * @apiGroup       Activity
 	 * @apiDescription Get all comments for an activity.
-	 * @apiVersion 1.0.0
-	 * @apiPermission LoggedInUser
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the activity.
 	 * @apiParam {String=threaded,stream,false} [display_comments=threaded] Comments by default, stream for within stream display, threaded for below each activity item.
 	 */
@@ -180,9 +180,9 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 */
 	public function create_item( $request ) {
 
-		if ( empty( $request['content'] ) ) {
+		if ( true === $this->activity_endpoint->bp_rest_activity_content_validate( $request ) ) {
 			return new WP_Error(
-				'blank_content',
+				'bp_rest_comment_blank_content',
 				__( 'Please do not leave the comment area blank.', 'buddyboss' ),
 				array(
 					'status' => 400,
@@ -192,6 +192,10 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $request['parent_id'] ) ) {
 			$request['parent_id'] = '';
+		}
+
+		if ( empty( $request['content'] ) ) {
+			$request['content'] = '&#8203;';
 		}
 
 		$comment_id = bp_activity_new_comment(
@@ -210,6 +214,14 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 					'status' => 500,
 				)
 			);
+		}
+
+		$activity_comment = new BP_Activity_Activity( $comment_id );
+
+		$fields_update = $this->update_additional_fields_for_object( $activity_comment, $request );
+
+		if ( is_wp_error( $fields_update ) ) {
+			return $fields_update;
 		}
 
 		$retval            = array();
@@ -295,13 +307,16 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	 */
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
 		$args = $this->get_collection_params();
+		$key  = 'get_item';
 
 		if ( WP_REST_Server::CREATABLE === $method ) {
+			$key = 'create_item';
+
 			$args['context']['default'] = 'edit';
 
 			$args['content'] = array(
 				'description'       => __( 'The content for the comment.', 'buddyboss' ),
-				'required'          => true,
+				'required'          => false,
 				'type'              => 'string',
 				'validate_callback' => 'rest_validate_request_arg',
 			);
@@ -323,7 +338,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 		 *
 		 * @since 0.1.0
 		 */
-		return apply_filters( 'bp_rest_activity_create_comment_query_arguments', $args, $method );
+		return apply_filters( "bp_rest_activity_comment_{$key}_query_arguments", $args, $method );
 	}
 
 	/**
@@ -335,7 +350,7 @@ class BP_REST_Activity_Comment_Endpoint extends WP_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'bp_activity_comments',
+			'title'      => 'activity_comments',
 			'type'       => 'object',
 			'properties' => array(
 				'created'  => array(

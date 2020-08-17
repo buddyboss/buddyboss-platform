@@ -123,6 +123,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Multiple xProfile Fields
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [profile_group_id] ID of the profile group of fields that have profile fields
 	 * @apiParam {Boolean} [hide_empty_groups=false] Whether to hide profile groups of fields that do not have any profile fields or not.
 	 * @apiParam {Number} [user_id=1] Required if you want to load a specific user's data.
@@ -268,6 +269,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile single Field
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the profile field.
 	 * @apiParam {Number} [user_id=0] Required if you want to load a specific user's data.
 	 * @apiParam {Boolean} [fetch_field_data] Whether to fetch data for the field. Requires a $user_id.
@@ -933,6 +935,9 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		// Added options for date field.
 		if ( 'datebox' === $field->type ) {
+			if ( empty( $data['options'] ) ) {
+				$data['options'] = array();
+			}
 			$data['options']['day']   = $this->get_date_field_options_array( $field, 'day' );
 			$data['options']['month'] = $this->get_date_field_options_array( $field, 'month' );
 			$data['options']['year']  = $this->get_date_field_options_array( $field, 'year' );
@@ -1453,6 +1458,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			foreach ( $posts->posts as $post ) {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
 				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
+				$key     = get_post_meta( $post->ID, '_bp_member_type_key', true );
 				if ( '' === $enabled || '1' === $enabled ) {
 					$options[] = array(
 						'id'                => $post->ID,
@@ -1460,6 +1466,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 						'parent_id'         => $field->id,
 						'type'              => 'option',
 						'name'              => $name,
+						'key'               => $key,
 						'description'       => '',
 						'is_required'       => '0',
 						'is_default_option' => ( $post_selected === $post->ID ),
@@ -1582,6 +1589,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$option->value = $option->name;
 				$key           = bp_social_network_search_key( $option->name, $providers );
 				$option->name  = $providers[ $key ]->name;
+				$option->icon  = $providers[ $key ]->svg;
 				$options[ $k ] = $option;
 			}
 		}

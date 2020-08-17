@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.2
+Tested up to: 5.5
 Requires PHP: 5.6.20
-Stable tag: 1.4.3
+Stable tag: 1.4.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ To run BuddyBoss Platform, we recommend your host supports:
 
 1. Visit 'Plugins > Add New'
 2. Click 'Upload Plugin'
-3. Upload the file 'buddyboss-platform.zip'
+3. Upload the file 'buddyboss-platform-pro.zip'
 4. Activate 'BuddyBoss Platform' from your Plugins page.
 
 == Setup ==
@@ -56,6 +56,85 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.4.9 =
+* Profiles - Fixed profile completion logic to reuse the same feature in Elementor
+* Media - Fixed logic to delete GIF attachments when entry deleted
+* Documents - Improved the logic to support BuddyBoss REST API
+* Compatibility - Fixes for WordPress 5.5 and PHP 7.*
+
+= 1.4.8 =
+* Media - New settings to set maximum file upload size for Photos and Documents
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
+* Media - Improved the logic to support BuddyBoss REST API
+
+= 1.4.7 =
+* Profiles - Fixed profile field type Gender default options unable to re-order
+* Profiles - Fixed profile completion widget does not update with object caching ON
+* Profiles - Fixed profile repeater fieldset, delete repeater field not working
+* Groups - Fixed documents and folders add/edit/delete/move permissions for group organizer/moderator/member
+* Groups - Fixed performance issue when group members increases
+* Groups - Fixed hidden groups not showing for group type shortcode
+* Forums - Fixed discussion reply text formatting validation
+* Activity - Fixed photo comment email notification on the activity feed
+* Activity - Fixed Privacy for activity attached photo
+* Activity - Fixed activity preview to allow German characters
+* Activity - Fixed activity post update formatting issues
+* Documents - Fixed document rename does not allow non-English characters
+* Messages - Improved the avatar display for multi-user message threads
+* Network Search - Fixed search members based on members profile field-specific privacy
+* Multisite - Fixed repair and import tools inaccessible/broken in multi-site
+* REST API - Fixed API issues in activity, private messages, connection, and site permissions
+* REST API - New endpoints added for Email invites profile types changes
+* Compatibility - Fixed register and activate page title when RankMath plugin is active
+* Compatibility - Fixed social groups and LearnDash group slug conflict
+* Compatibility - Fixed courses access based on membership expiry from MemberPress plugin
+* Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit
+* Translations - Fixed text for document file extension descriptions not available for translation
+* Translations - Fixed admin dashboard text not translatable
+* Translations - Added Hungarian language files
+* Translations - Updated German (formal) language files
+
+= 1.4.6 =
+* Groups - Fixed 'Pending Invites' page unable to display more than 20 invites
+* Media - Fixed photo attachments in messages not always displaying for recipients
+* Messages - Fixed unable to delete a conversation if Notifications is disabled
+* Activity - Fixed very long URLs unable to be entered into activity feed posts
+* Private Network - Fixed homepage being visible when using 'Custom URL' for Registration
+* REST API - Fixed conflict on some servers, with creating and editing posts and pages
+* LearnDash - When courses are connected to groups, fixed incorrect 'Lessons' count
+* LearnDash - Fixed error notices on group 'Courses' tab when 'WP_DEBUG' is enabled
+* Translations - Fixed 'his, her, their' text not translatable for 'Gender' profile field
+* Translations - Fixed layout issues on profile page when language set to Hungarian
+
+= 1.4.5 =
+* Profiles - Now allowing underscores in 'Nickname' field for registration and @mentions
+* Activity - Fixed small images in activity feed getting scaled up and distorted
+* Media - Fixed certain document types not always uploading into Forum replies
+* Media - Improved the formatting of media popups in Forum replies
+* REST API - Fixed API issues in private messages, activity privacy, and site permissions
+* Compatibility - Fixed conflicts with Private Network settings on Memcached servers
+
+= 1.4.4 =
+* Profiles - Improved the user experience when adding a new Repeater field on frontend
+* Profiles - Fixed certain profile fields types preventing Repeater fields from saving
+* Forums - Fixed disabling 'Subscriptions' should remove Subscriptions from member profile
+* Forums - Fixed disabling 'Favorites' should remove Favorites from member profile
+* Forums - Restrict @mentions dropdown to list only members who have access to the forum
+* Groups - Restrict @mentions dropdown to list only members who have joined the group
+* Groups - When viewing group invitations page, fixed invitations showing incorrect dates
+* Groups - Improved the experience for accepting an invite into a private group
+* Media - Added media popups for all Documents and Photos posted into Forums and Messages
+* Media - Added 'Download' link to media popups for all Document types and Photos
+* Media - Fixed private group Documents visibility, when uploading to profiles is disabled
+* Activity - Fixed comments not displaying in activity feed for blog posts and custom post types
+* Activity - Fixed media attachments not displaying when commenting on a group update
+* Compatibility - Fixed default Profile Type not being assigned when registering via MemberPress
+* Compatibility - Fixed text icon conflict with plugin 'BuddyPress User Blog' in Forum replies
+* Compatibility - Fixed missing locator icon when using plugin 'BP xProfile Location'
+* Compatibility - Fixed conflicts between Documents feature and plugin 'BP Group Documents'
+* Compatibility - Fixed notices adding a + symbol between words in PHP 7.4.2 and higher
+* Translations - Fixed text 'Invited by' for group invites not available for translation
 
 = 1.4.3 =
 * Activity - Fixed some activity posts hidden from logged out users, and new members

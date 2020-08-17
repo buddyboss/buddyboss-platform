@@ -133,7 +133,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Activity
 	 * @apiDescription Retrieve activities
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -151,7 +151,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [component] Limit result set to items with a specific active component.
 	 * @apiParam {String} [type] Limit result set to items with a specific activity type.
 	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
-	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy=public] Privacy of the activity.
+	 * @apiParam {Array=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -166,7 +166,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'site_id'           => $request['site_id'],
 			'group_id'          => $request['group_id'],
 			'scope'             => $request['scope'],
-			'privacy'           => ( is_array( $request['privacy'] ) ? $request['privacy'] : (array) $request['privacy'] ),
+			'privacy'           => ( ! empty( $request['privacy'] ) ? ( is_array( $request['privacy'] ) ? $request['privacy'] : (array) $request['privacy'] ) : '' ),
 			'count_total'       => true,
 			'fields'            => 'all',
 			'show_hidden'       => false,
@@ -238,6 +238,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( $this->show_hidden( $request['component'], $item_id ) ) {
 			$args['show_hidden'] = true;
+		}
+
+		$args['scope'] = $this->bp_rest_activity_default_scope( $args['scope'], ( $request['user_id'] ? $request['user_id'] : 0 ), $args['group_id'] );
+
+		if ( empty( $args['scope'] ) ) {
+			$args['privacy'] = 'public';
 		}
 
 		/**
@@ -423,7 +429,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} content Allowed HTML content for the activity.
 	 * @apiParam {String} date The date the activity was published, in the site's timezone.
 	 * @apiParam {Boolean=true,false} hidden Whether the activity object should be sitewide hidden or not.
-	 * @apiParam {string=public,loggedin,onlyme,friends,media} [privacy=public] Privacy of the activity.
+	 * @apiParam {string=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 * @apiParam {Array} [bp_media_ids] Media specific IDs when Media component is enable.
 	 * @apiParam {Array} [media_gif] Save gif data into activity when Media component is enable. param(url,mp4)
 	 */
@@ -435,12 +441,16 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_create_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
 
 		$prepared_activity = $this->prepare_item_for_database( $request );
+
+		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
+			$request['hidden'] = $prepared_activity->hide_sitewide;
+		}
 
 		// Fallback for the activity_update type.
 		$type = 'activity_update';
@@ -489,11 +499,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$activity = bp_activity_get(
+		$activity = bp_activity_get_specific(
 			array(
-				'in'               => $activity_id,
+				'activity_ids'     => array( $activity_id ),
 				'display_comments' => 'stream',
-				'show_hidden'      => $request['hidden'],
 			)
 		);
 
@@ -595,24 +604,31 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiParam {String} [content] Allowed HTML content for the activity.
 	 * @apiParam {String} [date] The date the activity was published, in the site's timezone.
 	 * @apiParam {Boolean=true,false} [hidden] Whether the activity object should be sitewide hidden or not.
-	 * @apiParam {string=public,loggedin,onlyme,friends,media} [privacy=public] Privacy of the activity.
+	 * @apiParam {string=public,loggedin,onlyme,friends,media} [privacy] Privacy of the activity.
 	 * @apiParam {Array} [bp_media_ids] Media specific IDs when Media component is enable.
 	 * @apiParam {Array} [media_gif] Save gif data into activity when Media component is enable. param(url,mp4)
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
+		$activity_object = $this->prepare_item_for_database( $request );
 
-		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
+		if (
+			(
+				empty( $activity_object->content )
+				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_media_ids', true ) )
+				&& empty( bp_activity_get_meta( $activity_object->id, '_gif_data', true ) )
+			) && true === $this->bp_rest_activity_content_validate( $request )
+		) {
 			return new WP_Error(
 				'bp_rest_update_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
 
-		$activity_id = bp_activity_add( $this->prepare_item_for_database( $request ) );
+		$activity_id = bp_activity_add( $activity_object );
 
 		if ( ! is_numeric( $activity_id ) ) {
 			return new WP_Error(
@@ -635,7 +651,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Update privacy for the documents which are uploaded in root of the documents.
 			bp_document_update_activity_privacy( $activity->id, $activity->privacy );
 		}
-
 
 		if ( function_exists( 'bp_document_update_activity_privacy' ) ) {
 			// Update privacy for the media which are uploaded in the activity.
@@ -700,7 +715,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -1180,6 +1195,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$activity          = $this->get_activity_object( $request );
 
 		if ( ! empty( $schema['properties']['id'] ) && ! empty( $activity->id ) ) {
+			$prepared_activity     = $activity;
 			$prepared_activity->id = $activity->id;
 
 			if ( 'activity_comment' !== $request['type'] ) {
@@ -1208,6 +1224,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Set the group ID of the activity.
 			if ( bp_is_active( 'groups' ) && isset( $prepared_activity->component ) && buddypress()->groups->id === $prepared_activity->component ) {
 				$prepared_activity->group_id = $item_id;
+
+				$status = bp_get_group_status( groups_get_group( $item_id ) );
 
 				// Use a generic item ID for other components.
 			} else {
@@ -1242,6 +1260,21 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		// Activity Privacy.
 		if ( ! empty( $schema['properties']['privacy'] ) && isset( $request['privacy'] ) ) {
 			$prepared_activity->privacy = $request['privacy'];
+		} else {
+			if ( ! empty( $activity->privacy ) ) {
+				$prepared_activity->privacy = $activity->privacy;
+			} else {
+				$prepared_activity->privacy = 'public';
+			}
+		}
+
+		if ( ! empty( $status ) && in_array( $status, array( 'hidden', 'private' ), true ) ) {
+			$prepared_activity->hide_sitewide = true;
+		}
+
+		// Ignore privacy passed when posting into group.
+		if ( ! empty( $status ) ) {
+			$prepared_activity->privacy = 'public';
 		}
 
 		/**
@@ -1406,8 +1439,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			unset( $args['content']['properties'] );
 
 			if ( WP_REST_Server::EDITABLE === $method ) {
-				$key                      = 'update_item';
-				$args['type']['required'] = true;
+				$key = 'update_item';
 			}
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key = 'delete_item';
@@ -1768,7 +1800,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$params['privacy'] = array(
 			'description'       => __( 'Privacy of the activity.', 'buddyboss' ),
 			'type'              => 'array',
-			'default'           => array( 'public' ),
 			'items'             => array(
 				'type' => 'string',
 				'enum' => array( 'public', 'loggedin', 'onlyme', 'friends', 'media' ),
@@ -1833,5 +1864,71 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		return $toolbar_option;
+	}
+
+	/**
+	 * Get default scope for the activity
+	 * - from: bp_activity_default_scope();
+	 *
+	 * @param string $scope    Default scope.
+	 * @param int    $user_id  User ID.
+	 * @param int    $group_id Group ID.
+	 *
+	 * @return string
+	 */
+	public function bp_rest_activity_default_scope( $scope = 'all', $user_id = 0, $group_id = 0 ) {
+		$new_scope = array();
+
+		if ( bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+
+			$new_scope[] = 'public';
+
+			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'groups';
+			} else {
+				$new_scope[] = 'just-me';
+
+				if ( empty( $user_id ) ) {
+					$new_scope[] = 'public';
+				}
+
+				if ( function_exists( 'bp_activity_do_mentions' ) && bp_activity_do_mentions() ) {
+					$new_scope[] = 'mentions';
+				}
+
+				if ( bp_is_active( 'friends' ) ) {
+					$new_scope[] = 'friends';
+				}
+
+				if ( bp_is_active( 'groups' ) ) {
+					$new_scope[] = 'groups';
+				}
+
+				if ( function_exists( 'bp_is_activity_follow_active' ) && bp_is_activity_follow_active() ) {
+					$new_scope[] = 'following';
+				}
+
+				if ( bp_is_single_activity() && bp_is_active( 'media' ) ) {
+					$new_scope[] = 'media';
+					$new_scope[] = 'document';
+				}
+			}
+		} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+			$new_scope[] = 'public';
+		}
+
+		$new_scope = array_unique( $new_scope );
+
+		if ( empty( $new_scope ) ) {
+			$new_scope = (array) $scope;
+		}
+
+		/**
+		 * Filter to update default scope.
+		 */
+		$new_scope = apply_filters( 'bp_rest_activity_default_scope', $new_scope );
+
+		return implode( ',', $new_scope );
+
 	}
 }

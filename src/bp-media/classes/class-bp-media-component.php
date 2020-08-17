@@ -257,14 +257,11 @@ class BP_Media_Component extends BP_Component {
 			if ( bp_is_user() ) {
 				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
 				$class    = ( 0 === $count ) ? 'no-count' : 'count';
-				$nav_name = sprintf(
-					/* translators: %s: total media count for the current user */
-					__( 'Photos %s', 'buddyboss' ),
-					sprintf(
-						'<span class="%s">%s</span>',
-						esc_attr( $class ),
-						bp_core_number_format( $count )
-					)
+				$nav_name = __( 'Photos', 'buddyboss' );
+				$nav_name .= sprintf(
+					' <span class="%s">%s</span>',
+					esc_attr( $class ),
+					bp_core_number_format( $count )
 				);
 			} else {
 				$nav_name = __( 'Photos', 'buddyboss' );
