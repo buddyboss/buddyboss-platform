@@ -3549,6 +3549,8 @@ form.ac-form .ac-reply-content input {
   border-radius: 4px;
   border: 1px solid #d2d4d6;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+  overflow: scroll;
+  max-height: 70%;
 }
 
 .edit-activity-modal .edit-activity-modal-content #whats-new-submit input {

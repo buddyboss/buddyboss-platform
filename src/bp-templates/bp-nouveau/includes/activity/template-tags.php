@@ -1460,7 +1460,7 @@ function bp_nouveau_get_edit_activity_data() {
 
 	$activity = apply_filters( 'bp_nouveau_get_edit_activity_data', array(
 			'id'      => bp_get_activity_id(),
-			'content' => $activities_template->activity->content,
+			'content' => stripslashes($activities_template->activity->content),
 			'item_id' => bp_get_activity_item_id(),
 			'object'  => bp_get_activity_object_name(),
 			'privacy' => bp_get_activity_privacy(),

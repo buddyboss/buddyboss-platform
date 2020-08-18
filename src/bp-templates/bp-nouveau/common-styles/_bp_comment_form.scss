@@ -126,6 +126,8 @@ form.ac-form {
 		border-radius: 4px;
 		border: 1px solid #d2d4d6;
 		box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+		overflow: scroll;
+		max-height: 70%;
 
 		#whats-new-submit input {
 			padding: 0 15px;
