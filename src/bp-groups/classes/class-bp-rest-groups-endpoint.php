@@ -1602,6 +1602,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Check the group join with members type.
+	 * - from bp_get_group_join_button().
 	 *
 	 * @param BP_Groups_Group $item Group object.
 	 *
@@ -1613,27 +1614,63 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if (
+			'hidden' === bp_get_group_status( $item )
+			|| bp_group_is_user_banned( $item, $user_id )
+			|| ! empty( $item->is_member )
+		) {
+			return false;
+		}
+
+		// Don't Show the button if restrict invite is enabled and member is not a part of parent group.
+		$parent_group_id = bp_get_parent_group_id( $item->id );
+		if (
+			isset( $parent_group_id )
+			&& $parent_group_id > 0
+			&& function_exists( 'bp_enable_group_hierarchies' )
+			&& true === bp_enable_group_hierarchies()
+			&& function_exists( 'bp_enable_group_restrict_invites' )
+			&& true === bp_enable_group_restrict_invites()
+		) {
+			$is_member = groups_is_user_member( $user_id, $parent_group_id );
+			if ( false === $is_member ) {
+				return false;
+			}
+		}
+
 		if ( 'public' === bp_get_group_status( $item ) ) {
 			return true;
 		}
 
-		// Check for the group type > profile type joining.
-		if (
-			function_exists( 'bp_member_type_enable_disable' )
-			&& true === bp_member_type_enable_disable()
-			&& function_exists( 'bp_disable_group_type_creation' )
-			&& true === bp_disable_group_type_creation()
-		) {
-			$group_type = bp_groups_get_group_type( $item->id );
-
-			$group_type_id = bp_group_get_group_type_id( $group_type );
-
-			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
-
-			$get_requesting_user_member_type = bp_get_member_type( $user_id );
-
-			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
+		if ( 'private' === bp_get_group_status( $item ) ) {
+			if ( $item->is_invited ) {
 				return true;
+			} else if ( $item->is_pending ) {
+				return false;
+			} else {
+				// Check for the group type > profile type joining.
+				if (
+					function_exists( 'bp_member_type_enable_disable' )
+					&& true === bp_member_type_enable_disable()
+					&& function_exists( 'bp_disable_group_type_creation' )
+					&& true === bp_disable_group_type_creation()
+				) {
+					$group_type = bp_groups_get_group_type( $item->id );
+
+					$group_type_id = bp_group_get_group_type_id( $group_type );
+
+					$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+					$get_requesting_user_member_type = bp_get_member_type( $user_id );
+
+					if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
+						return true;
+					} else {
+						return true;
+					}
+				} else {
+					return true;
+				}
 			}
 		}
 
