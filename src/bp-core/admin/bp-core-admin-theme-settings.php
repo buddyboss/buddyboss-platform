@@ -89,7 +89,7 @@ if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 
 		$return = true;
 		foreach ( $whitelist_domain as $domain ) {
-			if ( false !== strpos( $domain, $_SERVER['SERVER_NAME'] ) ) {
+			if ( false !== strpos( $_SERVER['SERVER_NAME'], $domain ) ) {
 				$return = false;
 			}
 		}
