@@ -126,7 +126,6 @@ form.ac-form {
 		border-radius: 4px;
 		border: 1px solid #d2d4d6;
 		box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-		overflow: scroll;
 		max-height: 70%;
 
 		#whats-new-submit input {
@@ -136,11 +135,38 @@ form.ac-form {
 			height: 34px;
 		}
 
-		#whats-new-toolbar .post-elements-buttons-item a {
-			text-decoration: none;
-			font-size: 16px;
-			line-height: 1.7;
+		#whats-new-content {
+			max-height: 40vh;
+			overflow: auto;
 		}
+
+		#whats-new-toolbar {
+
+			.post-elements-buttons-item a {
+				text-decoration: none;
+				font-size: 16px;
+				line-height: 1.7;
+			}
+
+			.gif-media-search-dropdown {
+				top: initial;
+				bottom: 30px;
+
+				&:before {
+					top: initial;
+					bottom: -11px;
+					border-color: transparent transparent #fff #fff;
+				}
+
+				.gif-search-results {
+					min-height: 30vh;
+					max-height: 30vh;
+				}
+
+			}
+
+		}
+
 	}
 
 	.edit-activity-modal-close-button {
