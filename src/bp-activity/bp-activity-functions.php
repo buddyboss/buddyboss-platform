@@ -2326,7 +2326,7 @@ function bp_activity_post_update( $args = '' ) {
 					'recorded_time'     => $activity->date_recorded,
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
-					'privacy'           => $activity->privacy,
+					'privacy'           => $r['privacy'],
 					'error_type'        => $r[ 'error_type' ],
 				)
 			);

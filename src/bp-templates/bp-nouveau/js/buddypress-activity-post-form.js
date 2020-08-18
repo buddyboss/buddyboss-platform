@@ -98,10 +98,12 @@ window.bp = window.bp || {};
 
 			var bpActivityEvent = new Event( 'bp_activity_edit' );
 
-			// close and destroy existing gif instance
-			self.activityToolbar.closeGifSelector( bpActivityEvent );
-			// close and destroy existing media instance
-			self.activityToolbar.closeMediaSelector( bpActivityEvent );
+			if ( typeof self.activityToolbar !== 'undefined') {
+				// close and destroy existing gif instance
+				self.activityToolbar.closeGifSelector(bpActivityEvent);
+				// close and destroy existing media instance
+				self.activityToolbar.closeMediaSelector(bpActivityEvent);
+			}
 
 			if ( typeof activity_data.gif !== 'undefined' && Object.keys( activity_data.gif ).length ) {
 				// close and destroy existing media instance
@@ -149,7 +151,8 @@ window.bp = window.bp || {};
 
 		displayEditActivityPopup : function (activity_data){
 
-			if ( ! $('.edit-activity-modal').length) {
+			var $edit_activity_modal = $('.edit-activity-modal');
+			if ( ! $edit_activity_modal.length) {
 				$('body').append(' <div class="edit-activity-modal" id="buddypress">\n' +
 					'        <div class="edit-activity-modal-content activity-update-form">\n' +
 					'            <span class="edit-activity-modal-close-button"><span class="bb-icon bb-icon-close"></span></span>\n' +
@@ -158,13 +161,18 @@ window.bp = window.bp || {};
 					'    </div>');
 			}
 
-			$('.edit-activity-modal').addClass('show-modal');
+			$edit_activity_modal.addClass('show-modal');
 			this.postActivityEditFormView();
 			this.displayEditActivity(activity_data);
+
+			//Make selected current privacy.
+			$edit_activity_modal.find( '#bp-activity-privacy' ).val( activity_data.privacy );
 
 			var edit_activity_editor_popup = jQuery('.edit-activity-modal');
 			var edit_activity_editor = edit_activity_editor_popup.find('#whats-new')[0];
 			var edit_activity_editor_content = edit_activity_editor_popup.find('#whats-new-content')[0];
+
+
 
 			window.activity_edit_editor = new window.MediumEditor( edit_activity_editor, {
 				placeholder: {
