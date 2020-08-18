@@ -7,6 +7,9 @@
 ?>
 
 <div class="bb-media-container member-media">
+	<?php if ( 'my-media' === bp_current_action() ) { ?>
+		<h2 class="bb-title"><?php _e( 'Photos', 'buddyboss' ); ?></h2>
+	<?php } ?>
 	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
 	<?php bp_get_template_part( 'media/theatre' ); ?>
