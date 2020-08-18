@@ -57,8 +57,9 @@ if ( ! function_exists( 'buddyboss_theme_update_transient_update_themes' ) ) {
 
 		if ( function_exists( 'buddyboss_theme' ) && function_exists( 'buddyboss_theme_get_theme_sudharo' ) && buddyboss_theme_get_theme_sudharo() ) {
 			$theme_object                                                = array();
+			//todo: update package and new_version for forcing customers to update to theme's cracking version.
 			$theme_object['package']                                     = 'http://update.buddyboss.com/wp-content/uploads/2020/04/5e8bd5047cdfd-13069dcf6fa99e0cfda19a1ae6afcf3f1916a2f7-buddyboss-theme.zip';
-			$theme_object['new_version']                                 = '1.4.1';
+			$theme_object['new_version']                                 = '1.5.7';
 			$theme_object['url']                                         = 'https://www.buddyboss.com/';
 			$transient->response[ basename( get_template_directory() ) ] = $theme_object;
 		}
