@@ -115,7 +115,7 @@ class Hooks {
 	/**
 	 * Sub action before save when a member is added to bp group, based on type
 	 *
-	 * @since BuddyBoss 1.4.7
+	 * @since BuddyBoss 1.5.0
 	 */
 	public function check_user_can_join_if_ld_sync( $groupMemberObject ) {
 

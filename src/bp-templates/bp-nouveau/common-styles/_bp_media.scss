@@ -2753,6 +2753,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 .bp-document-listing {
+	display: flex;
 
 	.media-search-form {
 		float: right;
@@ -2765,19 +2766,24 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				padding: 4px;
 				height: auto;
 				z-index: 112;
+				opacity: 0;
 			}
 
 			#group-document-search {
 				background-image: none;
-				padding: 6px 10px 6px 2rem;
+				padding: 6px 10px 6px 32px;
 				height: auto;
 				font-size: 14px;
 			}
 		}
 	}
 
-	.bp-media-header-wrap .bb-title {
-		width: auto;
+	.bp-media-header-wrap {
+		width: 100%;
+
+		.bb-title {
+			width: auto;
+		}
 	}
 
 }
@@ -2889,9 +2895,13 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			.bp-dir-search-form {
 				border: 0;
 
+				.nouveau-search-submit {
+					opacity: 0;
+				}
+
 				#group-document-search {
 					background-image: none;
-					padding: 6px 10px 6px 2rem;
+					padding: 6px 10px 6px 32px;
 					height: auto;
 					font-size: 14px;
 				}
@@ -2975,6 +2985,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			list-style: none;
 			margin: 10px 0 0;
 			text-align: left;
+			padding: 0;
 
 			li {
 				display: inline-block;

@@ -4848,3 +4848,90 @@ function bp_core_hide_display_name_field( $field_id = 0 ) {
 	 */
 	return ( bool ) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
 }
+
+/**
+ * Return the file upload max size in bytes.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_core_upload_max_size() {
+
+	static $max_size = - 1;
+
+	if ( $max_size < 0 ) {
+		// Start with post_max_size.
+		$size = @ini_get( 'post_max_size' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$post_max_size = round( $size );
+		}
+
+		if ( $post_max_size > 0 ) {
+			$max_size = $post_max_size;
+		}
+
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$size = @ini_get( 'upload_max_filesize' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$upload_max = round( $size );
+		}
+		if ( $upload_max > 0 && $upload_max < $max_size ) {
+			$max_size = $upload_max;
+		}
+	}
+
+	/**
+	 * Filters file upload max limit.
+	 *
+	 * @param mixed $max_size file upload max limit.
+	 *
+	 * @since BuddyBoss 1.4.8
+	 */
+	return apply_filters( 'bp_core_upload_max_size', $max_size );
+
+}
+
+/**
+ * Function deletes Transient based on the transient name specified.
+ *
+ * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
+ *
+ * @global type $wpdb
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_delete_transient_query( $transient_name_prefix ) {
+	global $wpdb;
+	$sql = $wpdb->prepare(
+			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
+			$transient_name_prefix
+	);
+
+	$keys = $wpdb->get_col( $sql );
+
+	if ( ! empty( $keys ) ) {
+		foreach ( $keys as $transient ) {
+			delete_transient( str_replace( '_transient_', '', $transient ) );
+		}
+	}
+}
+
+/**
+ * Function which return the profile completion key.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_get_profile_completion_key() {
+
+	return 'bbprofilecompletion';
+}

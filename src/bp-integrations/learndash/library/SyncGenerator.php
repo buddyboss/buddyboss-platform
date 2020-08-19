@@ -393,7 +393,7 @@ class SyncGenerator {
 	/**
 	 * Check before Sync a bp member to ld
 	 *
-	 * @since BuddyBoss 1.4.7
+	 * @since BuddyBoss 1.5.0
 	 */
 	public function syncBeforeBpMember( $group_object ) {
 

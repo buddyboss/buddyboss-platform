@@ -187,7 +187,7 @@ class Sync {
 	 *
 	 * @return mixed
 	 *
-	 * @since BuddyBoss 1.4.7
+	 * @since BuddyBoss 1.5.0
 	 */
 	public function bp_ld_sync_error_join_change_message( $feedback ) {
 		if ( ! empty( $feedback ) && isset( $feedback['type'] ) && 'error' == $feedback['type'] ) {
@@ -199,7 +199,7 @@ class Sync {
 	/**
 	 * Sync before when a member is added to the group
 	 *
-	 * @since BuddyBoss 1.4.7
+	 * @since BuddyBoss 1.5.0
 	 */
 	public function beforeMemberAdded( $groupMemberObject ) {
 		if ( ! $generator = $this->groupUserEditCheck( 'user', $groupMemberObject->group_id ) ) {
