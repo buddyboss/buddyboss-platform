@@ -660,7 +660,7 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
  *
  * @param $repair_list
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.0
  * @return array Repair list items.
  */
 function bp_messages_repair_items_unread_count( $repair_list ) {
@@ -675,7 +675,7 @@ function bp_messages_repair_items_unread_count( $repair_list ) {
 /**
  * Repair unread messages count.
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.0
  */
 function bp_messages_admin_repair_unread_messages_count() {
 	global $wpdb;
