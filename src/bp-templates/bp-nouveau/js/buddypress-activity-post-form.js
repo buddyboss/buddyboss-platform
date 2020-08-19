@@ -1463,6 +1463,7 @@ window.bp = window.bp || {};
 			id       : 'whats-new-content',
 			events: {
 				'click .medium-editor-toolbar-actions': 'focusEditor',
+				'input #whats-new': 'focusEditorOnChange',
 				'click .medium-editor-toolbar li.close-btn': 'hideToolbarSelector',
 			},
 
@@ -1477,7 +1478,17 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				if( window.group_messages_editor.exportSelection() === null ) {
+					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				}
+				e.preventDefault();
+			},
+			focusEditorOnChange: function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+				var medium_editor = $( e.currentTarget ).closest( '#whats-new-form' ).find( '.medium-editor-toolbar' );
+				setTimeout(function(){
+					medium_editor.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				},0);
 			}
 		}
 	);
@@ -1809,8 +1820,14 @@ window.bp = window.bp || {};
 				$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 				if ( $( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+					if( window.group_messages_editor.exportSelection() != null ){
+						medium_editor.addClass('medium-editor-toolbar-active');
+					}
 				} else {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+					if( window.group_messages_editor.exportSelection() === null ) {
+						medium_editor.removeClass('medium-editor-toolbar-active');
+					}
 				}
 				medium_editor.toggleClass( 'active' );
 			}
@@ -2385,6 +2402,10 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'document',documents );
 						}
+
+							// Reset formatting of editor
+							window.group_messages_editor.execAction('selectAll');
+							window.group_messages_editor.execAction('removeFormate');
 
 							// Reset the form.
 							self.resetForm();
