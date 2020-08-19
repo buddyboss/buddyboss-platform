@@ -202,7 +202,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	);
 
 	// Notify the topic author if not the current reply author
-	if ( $author_id !== $topic_author_id ) {
+	if ( $author_id !== $topic_author_id && $topic_author_id !== $reply_to_item_id ) {
 		$args['secondary_item_id'] = $secondary_item_id;
 
 		bp_notifications_add_notification( $args );
