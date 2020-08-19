@@ -1238,6 +1238,12 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		 */
 	} else {
 
+		/**
+		 * Initializing the count variable to avoid undefined notice
+		 */
+		$count = 0;
+		$count2 = 0;
+
 		// Step one: the first chunk.
 		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
 			$seconds = $chunks[ $i ];
@@ -1316,7 +1322,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) trim( $output ) ) {
+			if ( ! (int) $count && ! (int) $count2 ) {
 				$output = $right_now_text;
 			}
 		}
