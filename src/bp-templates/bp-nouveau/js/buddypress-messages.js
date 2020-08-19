@@ -684,6 +684,17 @@ window.bp = window.bp || {};
 	bp.Views.messageEditor = bp.Nouveau.Messages.View.extend(
 		{
 			template  : bp.template( 'bp-messages-editor' ),
+			events: {
+				'input #message_content': 'focusEditorOnChange'
+			},
+
+			focusEditorOnChange: function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
+				setTimeout(function(){
+					medium_editor_toolbar.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				},0);
+			},
 
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
@@ -1315,7 +1326,7 @@ window.bp = window.bp || {};
 				'click #messages-document-button': 'toggleDocumentSelector',
 				'click #messages-gif-button': 'toggleGifSelector',
 				'click #show-toolbar-button': 'toggleToolbarSelector',
-				'click .medium-editor-toolbar-actions': 'focusEditor',
+				'click .medium-editor-toolbar-actions': 'focusEditor'
 			},
 
 			initialize: function() {
@@ -1384,12 +1395,19 @@ window.bp = window.bp || {};
 			toggleToolbarSelector: function( e ) {
 				e.preventDefault();
 				$( e.currentTarget ).toggleClass( 'active' );
+				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
 				if ( $( e.currentTarget ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-hide' ) );
+					if( bp.Nouveau.Messages.mediumEditor.exportSelection() != null ){
+						medium_editor_toolbar.addClass('medium-editor-toolbar-active');
+					}
 				} else {
 					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
+					if( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
+						medium_editor_toolbar.removeClass('medium-editor-toolbar-active');
+					}
 				}
-				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
+				
 				medium_editor_toolbar.toggleClass( 'active' );
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
@@ -1399,7 +1417,9 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				if( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
+					$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				}
 			},
 
 			closeGifSelector: function() {
@@ -2763,6 +2783,9 @@ window.bp = window.bp || {};
 					tinyMCE.activeEditor.setContent( '' );
 					jQuery( tinyMCE.activeEditor.formElement ).removeClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
+					// Reset Formatting
+					bp.Nouveau.Messages.mediumEditor.execAction('selectAll');
+					bp.Nouveau.Messages.mediumEditor.execAction('removeFormate');
 					bp.Nouveau.Messages.mediumEditor.setContent( '' );
 					jQuery( '#message_content' ).removeClass( 'loading' );
 				}
