@@ -139,6 +139,7 @@ form.ac-form {
 
 		#whats-new-content {
 			max-height: 230px;
+			min-height: 230px;
 			overflow: auto;
 		}
 
@@ -161,10 +162,31 @@ form.ac-form {
 				}
 
 				.gif-search-results {
-					min-height: 30vh;
-					max-height: 30vh;
+					min-height: 200px;
+					max-height: 200px;
 				}
 
+			}
+
+			.emojionearea .emojionearea-picker {
+				top: inherit;
+				bottom: 100%;
+				margin-bottom: 10px;
+				height: 230px;
+
+				.emojionearea-wrapper {
+					height: 230px;
+
+					.emojionearea-scroll-area {
+						height: 150px;
+					}
+
+					&:after {
+						bottom: -9px;
+						top: inherit;
+						transform: rotate(180deg);
+					}
+				}
 			}
 
 		}

@@ -3563,6 +3563,7 @@ form.ac-form .ac-reply-content input {
 
 .edit-activity-modal .edit-activity-modal-content #whats-new-content {
   max-height: 230px;
+  min-height: 230px;
   overflow: auto;
 }
 
@@ -3584,8 +3585,29 @@ form.ac-form .ac-reply-content input {
 }
 
 .edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .gif-media-search-dropdown .gif-search-results {
-  min-height: 30vh;
-  max-height: 30vh;
+  min-height: 200px;
+  max-height: 200px;
+}
+
+.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker {
+  top: inherit;
+  bottom: 100%;
+  margin-bottom: 10px;
+  height: 230px;
+}
+
+.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker .emojionearea-wrapper {
+  height: 230px;
+}
+
+.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
+  height: 150px;
+}
+
+.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+  bottom: -9px;
+  top: inherit;
+  transform: rotate(180deg);
 }
 
 .edit-activity-modal .edit-activity-modal-content #whats-new-attachments .activity-media-container > .dropzone {
