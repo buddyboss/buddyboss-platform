@@ -2021,6 +2021,29 @@ function bp_media_get_edit_activity_data( $activity ) {
 			}
 		}
 
+		// Featch document ids of activity
+
+		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+
+		if ( ! empty( $document_ids ) ) {
+			$activity['document'] = array();
+
+			$document_ids = explode( ',', $document_ids );
+
+			foreach( $document_ids as $document_id ) {
+				$document = new BP_Document( $document_id );
+
+				$activity['document'][] = array(
+					'id'            => $document_id,
+					'doc_id'        => $document->attachment_id,
+					'name'          => $document->title,
+					'type'          => 'document',
+					'url'           => wp_get_attachment_url( $document->attachment_id ),
+					'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
+				);
+			}
+		}
+
 		// Fetch gif data for the activity
 		$gif_data = bp_activity_get_meta( $activity['id'], '_gif_data', true );
 

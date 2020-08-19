@@ -114,7 +114,9 @@ window.bp = window.bp || {};
 			// Display media for editing
 			if ( typeof activity_data.media !== 'undefined' && activity_data.media.length ) {
 				// open media uploader for editing media
-				self.activityToolbar.toggleMediaSelector( bpActivityEvent );
+				if ( typeof self.activityToolbar !== 'undefined') {
+					self.activityToolbar.toggleMediaSelector(bpActivityEvent);
+				}
 
 				var mock_file = false;
 				for ( var i = 0; i < activity_data.media.length; i++ ) {
@@ -142,9 +144,52 @@ window.bp = window.bp || {};
 						}
 					};
 
-					self.dropzone.files.push( mock_file );
-					self.dropzone.emit( 'addedfile', mock_file );
-					self.createThumbnailFromUrl( mock_file );
+					if ( self.dropzone ){
+						self.dropzone.files.push( mock_file );
+						self.dropzone.emit( 'addedfile', mock_file );
+						self.createThumbnailFromUrl( mock_file );
+					}
+
+				}
+			}
+
+			if ( typeof activity_data.document !== 'undefined' && activity_data.document.length ) {
+				// open document uploader for editing document
+
+				if ( typeof self.activityToolbar !== 'undefined'){
+					self.activityToolbar.toggleDocumentSelector( bpActivityEvent );
+				}
+
+				var doc_file = false;
+				for ( var doci = 0; doci < activity_data.document.length; doci++ ) {
+					doc_file = false;
+
+					doc_file = {
+						name: activity_data.document[doci].name,
+						size: activity_data.document[doci].size,
+						accepted: true,
+						kind: 'file',
+						upload: {
+							filename: activity_data.document[doci].name,
+							uuid: activity_data.document[doci].doc_id
+						},
+						dataURL: activity_data.document[doci].url,
+						id: activity_data.document[doci].doc_id,
+						document_edit_data: {
+							'id': activity_data.document[doci].doc_id,
+							'name': activity_data.document[doci].name,
+							'type': 'document',
+							'url': activity_data.document[doci].url,
+							'size': activity_data.document[doci].size,
+						}
+					};
+
+					if ( self.dropzone ){
+
+						self.dropzone.files.push(doc_file);
+						self.dropzone.emit('addedfile', doc_file);
+						self.dropzone.emit('complete', doc_file);
+					}
 				}
 			}
 		},
@@ -188,8 +233,15 @@ window.bp = window.bp || {};
 				imageDragging: false
 			});
 
+			var self = this;
 			$(document).on('click', '.edit-activity-modal-close-button, .edit-activity-modal-body #aw-whats-new-reset', function(){
-				$('.edit-activity-modal').removeClass('show-modal');
+				self.postActivityEditHideModal();
+			});
+
+			$(document).on('keyup', function( event ){
+				if ( event.keyCode === 27 && false === event.ctrlKey ){
+					self.postActivityEditHideModal();
+				}
 			});
 
 		},
@@ -584,6 +636,13 @@ window.bp = window.bp || {};
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-document-uploader', dropzone_options );
+
+				bp.Nouveau.Activity.postForm.dropzone.on( 'addedfile', function ( file ) {
+					if ( file.document_edit_data ) {
+						self.document.push( file.document_edit_data );
+						self.model.set( 'document', self.document );
+					}
+				} );
 
 				bp.Nouveau.Activity.postForm.dropzone.on(
 					'sending',
@@ -1990,6 +2049,7 @@ window.bp = window.bp || {};
 			activityLinkPreview: null,
 			activityAttachedGifPreview: null,
 			activityMedia: null,
+			activityDocument: null,
 			className: 'empty',
 			initialize: function () {
 				if ( !_.isUndefined( window.Dropzone ) ) {
@@ -2017,6 +2077,9 @@ window.bp = window.bp || {};
 				}
 				if ( !_.isNull( this.activityMedia ) ) {
 					this.activityMedia.destroy();
+				}
+				if ( !_.isNull( this.activityDocument ) ) {
+					this.activityDocument.destroyDocument();
 				}
 			}
 		}
