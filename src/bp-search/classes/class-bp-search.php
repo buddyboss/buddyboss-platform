@@ -160,7 +160,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				}
 			}
 
-			// Check BuddyPress is active
+			// Check BuddyPress is active.
 			if ( bp_is_search_members_enable() ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-members.php';
 				$this->search_helpers['members'] = Bp_Search_Members::instance();
@@ -171,6 +171,18 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-groups.php';
 				$this->search_helpers['groups'] = Bp_Search_Groups::instance();
 				$this->searchable_items[]       = 'groups';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_search_documents_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
+				$this->search_helpers['documents']  = Bp_Search_Documents::instance();
+				$this->searchable_items[]           = 'documents';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_search_folders_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-folders.php';
+				$this->search_helpers['folders']  = Bp_Search_Folders::instance();
+				$this->searchable_items[]         = 'folders';
 			}
 
 			if ( bp_is_active( 'activity' ) && bp_is_search_activity_enable() ) {
@@ -267,7 +279,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 						// Filter by default will be false.
 						$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
 						if ( true === $bp_search_group_or_type_title ) {
-							// add group/type title in first one
+							// add group/type title in first one.
 							if ( ! $first_html_changed ) {
 								// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
 								$label              = apply_filters( 'bp_search_label_search_type', $type );
@@ -458,6 +470,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				*/
 
 				$sql_queries = array();
+
+				if ( empty( $this->searchable_items ) && ! is_array( $this->searchable_items ) ) {
+					return;
+				}
 
 				foreach ( $this->searchable_items as $search_type ) {
 					if ( ! isset( $this->search_helpers[ $search_type ] ) ) {
@@ -813,14 +829,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 		public function print_tabs() {
 
-			// No tabs if 0 results
-			if ( $this->search_results['all']['total_match_count'] < 1 ) {
-				// return;
-			}
-
 			$search_url = $this->search_page_search_url();
 
-			// first print the 'all results' tab
+			// first print the 'all results' tab.
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			// this filter can be used to change display of 'all' to 'Everything' etc..
 			$all_label = __( 'All Results', 'buddyboss' );
@@ -833,8 +844,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$tab_url = $search_url;
 			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
 
-			// then other tabs
+			// then other tabs.
 			$search_items = bp_search_items();
+
+			if ( empty( $this->searchable_items ) && ! is_array( $this->searchable_items ) ) {
+				return;
+			}
+
 			foreach ( $this->searchable_items as $item ) {
 				$class = $item == $this->search_args['search_subset'] ? 'active current' : '';
 				// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
@@ -844,7 +860,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$label = apply_filters( 'bp_search_label_search_type', $label );
 
 				if ( empty( $this->search_results[ $item ]['total_match_count'] ) ) {
-					continue; // skip tab
+					continue; // skip tab.
 				}
 
 				if ( $this->search_args['count_total'] ) {
@@ -896,7 +912,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		}
 	}
 
-	// End class Bp_Search_Helper
+	// End class Bp_Search_Helper.
 
 endif;
 

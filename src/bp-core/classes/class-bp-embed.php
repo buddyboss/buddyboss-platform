@@ -265,7 +265,7 @@ class BP_Embed extends WP_Embed {
 
 		if ( $is_activity ) {
 
-			if ( false !== strpos( '<iframe', $content ) ) {
+			if ( !empty( $content ) && false !== strpos( '<iframe', $content ) ) {
 				return apply_filters( 'bp_embeds', $content );
 			}
 
@@ -279,7 +279,7 @@ class BP_Embed extends WP_Embed {
 				if ( isset( $embed_data['wp_embed'] ) && $embed_data['wp_embed'] && ! empty( $embed_data['description'] ) ) {
 					$embed_code = $embed_data['description'];
 				} else {
-					$embed_code = wp_oembed_get( $link_embed );
+					$embed_code = wp_oembed_get( $link_embed, array( 'discover' => false ) );
 
 					if ( ! empty( $embed_code ) ) {
 						$parsed_url_data = array(
