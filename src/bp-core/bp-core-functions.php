@@ -4798,3 +4798,140 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 
 	return $bytes;
 }
+
+/**
+ * Whether or not profile field is hidden.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int $field_id ID for the profile field.
+ *
+ * @return bool Whether or not profile field is hidden.
+ */
+function bp_core_hide_display_name_field( $field_id = 0 ) {
+	if (
+		! function_exists( 'bp_is_active' )
+		|| ! bp_is_active( 'xprofile' )
+		|| empty( $field_id )
+	) {
+		return false;
+	}
+
+	$retval = false;
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+			$retval = true;
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+			$retval = true;
+		}
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_firstname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+			$retval = true;
+		}
+	}
+
+	/**
+	 * Filters Hide Display name field.
+	 *
+	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param bool $retval   Return value.
+	 * @param int  $field_id ID for the profile field.
+	 */
+	return ( bool ) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
+}
+
+/**
+ * Return the file upload max size in bytes.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_core_upload_max_size() {
+
+	static $max_size = - 1;
+
+	if ( $max_size < 0 ) {
+		// Start with post_max_size.
+		$size = @ini_get( 'post_max_size' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$post_max_size = round( $size );
+		}
+
+		if ( $post_max_size > 0 ) {
+			$max_size = $post_max_size;
+		}
+
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$size = @ini_get( 'upload_max_filesize' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$upload_max = round( $size );
+		}
+		if ( $upload_max > 0 && $upload_max < $max_size ) {
+			$max_size = $upload_max;
+		}
+	}
+
+	/**
+	 * Filters file upload max limit.
+	 *
+	 * @param mixed $max_size file upload max limit.
+	 *
+	 * @since BuddyBoss 1.4.8
+	 */
+	return apply_filters( 'bp_core_upload_max_size', $max_size );
+
+}
+
+/**
+ * Function deletes Transient based on the transient name specified.
+ *
+ * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
+ *
+ * @global type $wpdb
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_delete_transient_query( $transient_name_prefix ) {
+	global $wpdb;
+	$sql = $wpdb->prepare(
+			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
+			$transient_name_prefix
+	);
+
+	$keys = $wpdb->get_col( $sql );
+
+	if ( ! empty( $keys ) ) {
+		foreach ( $keys as $transient ) {
+			delete_transient( str_replace( '_transient_', '', $transient ) );
+		}
+	}
+}
+
+/**
+ * Function which return the profile completion key.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_get_profile_completion_key() {
+
+	return 'bbprofilecompletion';
+}

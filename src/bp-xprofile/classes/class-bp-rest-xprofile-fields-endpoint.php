@@ -1589,6 +1589,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$option->value = $option->name;
 				$key           = bp_social_network_search_key( $option->name, $providers );
 				$option->name  = $providers[ $key ]->name;
+				$option->icon  = $providers[ $key ]->svg;
 				$options[ $k ] = $option;
 			}
 		}

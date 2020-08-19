@@ -50,19 +50,18 @@ function bbp_admin_repair() {
 					<fieldset>
 						<legend>
 							<?php
-							esc_html_e( 'Select the site:', 'buddyboss' );
+							esc_html_e( 'Sites:', 'buddyboss' );
 							?>
 						</legend>
 						<label for="select-site">
 							<?php
-							esc_html_e( 'Select the site:', 'buddyboss' );
 
 							if ( ! empty( $bbp_network_sites ) ) {
 								?>
 								<select name="bbp-network-site" id="bbp-network-site" required>
 									<option value="0">
 										<?php
-										esc_html_e( 'Select a site to fix the forums', 'buddyboss' );
+										esc_html_e( 'Select a site to repair forums', 'buddyboss' );
 										?>
 									</option>
 									<?php
