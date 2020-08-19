@@ -3046,22 +3046,22 @@ function bp_activity_can_comment_reply( $comment = false ) {
 		$comment = bp_activity_current_comment();
 	}
 
-	if ( ! empty( $comment ) ) {
-
-		// Fall back on current comment in activity loop.
-		$comment_depth = isset( $comment->depth )
-			? intval( $comment->depth )
-			: bp_activity_get_comment_depth( $comment );
-
-		// Threading is turned on, so check the depth.
-		if ( get_option( 'thread_comments' ) ) {
-			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
-
-			// No threading for comment replies if no threading for comments.
-		} else {
-			$can_comment = false;
-		}
-	}
+//	if ( ! empty( $comment ) ) {
+//
+//		// Fall back on current comment in activity loop.
+//		$comment_depth = isset( $comment->depth )
+//			? intval( $comment->depth )
+//			: bp_activity_get_comment_depth( $comment );
+//
+//		// Threading is turned on, so check the depth.
+//		if ( get_option( 'thread_comments' ) ) {
+//			$can_comment = (bool) ( $comment_depth < get_option( 'thread_comments_depth' ) );
+//
+//			// No threading for comment replies if no threading for comments.
+//		} else {
+//			$can_comment = false;
+//		}
+//	}
 
 	/**
 	 * Filters whether a comment can be made on an activity reply item.

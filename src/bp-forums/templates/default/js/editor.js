@@ -24,11 +24,17 @@ jQuery( document ).ready(
 							paste: {
 								forcePlainText: false,
 								cleanPastedHTML: true,
-								cleanReplacements: [],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
+								cleanReplacements: [
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
+								],
+								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -61,15 +67,16 @@ jQuery( document ).ready(
 								forcePlainText: false,
 								cleanPastedHTML: true,
 								cleanReplacements: [
-									[new RegExp(/<div>/gi), '<p>'],
-									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
 									[new RegExp(/<h[1-6]/gi), '<b'],
-									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
+								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 
@@ -102,15 +109,16 @@ jQuery( document ).ready(
 								forcePlainText: false,
 								cleanPastedHTML: true,
 								cleanReplacements: [
-									[new RegExp(/<div>/gi), '<p>'],
-									[new RegExp(/<\/div>/gi), '</p>'],
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
 									[new RegExp(/<h[1-6]/gi), '<b'],
-									[new RegExp(/<\/h[1-6]>/gi), '</b>'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
-								cleanAttrs: ['class', 'style', 'dir'],
-								cleanTags: ['meta'],
+								cleanAttrs: ['class', 'style', 'dir', 'id'],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: []
-							}
+							},
+							imageDragging: false
 						}
 					);
 

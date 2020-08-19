@@ -630,6 +630,24 @@ function bp_media_user_can_delete( $media = false ) {
 		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
+
+		if ( bp_is_active( 'groups' ) && $media->group_id > 0 ) {
+			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $media->group_id );
+			$status   = bp_group_get_media_status( $media->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $media->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $media->group_id );
+			if ( $manage ) {
+				if ( $media->user_id === bp_loggedin_user_id() ) {
+					$can_delete = true;
+				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+					$can_delete = true;
+				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+					$can_delete = true;
+				} elseif ( 'admins' == $status && $is_admin ) {
+					$can_delete = true;
+				}
+			}
+		}
 	}
 
 	/**

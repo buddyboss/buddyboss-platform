@@ -803,6 +803,28 @@ function bp_document_user_can_edit( $document = false ) {
 		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
 			$can_edit = true;
 		}
+
+		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
+
+			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
+			$status   = bp_group_get_media_status( $document->group_id );
+			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $document->group_id );
+			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $document->group_id );
+
+			if ( $manage ) {
+				if ( $document->user_id === bp_loggedin_user_id() ) {
+					$can_edit = true;
+				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+					$can_edit = true;
+				} elseif ( 'admins' == $status && $is_admin ) {
+					$can_edit = true;
+				}
+			}
+
+		}
+
 	}
 
 	/**
@@ -1740,19 +1762,17 @@ function bp_folder_user_can_edit( $folder = false ) {
 	// Only logged in users can edit folder.
 	if ( is_user_logged_in() ) {
 
-		// Groups documents have their own access.
-		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
+		// Users are allowed to edit their own folder.
+		if ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
 			$can_edit = true;
-
-			// Users are allowed to edit their own folder.
-		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
-			$can_edit = true;
-		}
-
 		// Community moderators can always edit folder (at least for now).
-		if ( bp_current_user_can( 'bp_moderate' ) ) {
+		} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_edit = true;
+		// Groups documents have their own access.
+		} elseif ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_edit = true;
 		}
+
 	}
 
 	/**

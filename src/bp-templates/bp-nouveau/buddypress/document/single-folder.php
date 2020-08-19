@@ -12,6 +12,11 @@ if ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_gr
 } else {
 	$folder_id = (int) bp_action_variable( 0 );
 }
+
+$folder_privacy     = bp_document_user_can_manage_folder( $folder_id, bp_loggedin_user_id() );
+$can_manage_btn     = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+$can_add_btn     	= ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
+
 $bradcrumbs = bp_document_folder_bradcrumb( $folder_id );
 if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 	while ( bp_folder() ) :
@@ -38,11 +43,11 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 								</form>
 							</div>
 							<?php
-							if ( is_user_logged_in() && ( bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) ) :
+							if ( is_user_logged_in() && ( bp_is_user_document() || bp_is_my_profile() || bp_is_group() || bp_is_document_directory() ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_add_btn ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -51,7 +56,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
-									} elseif ( ! bp_is_group() ) {
+									} elseif ( ! bp_is_group() && $can_add_btn ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -62,7 +67,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										<?php
 									}
 								}
-								if ( bp_is_active( 'groups' ) && bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) && is_user_logged_in() ) {
+								if ( bp_is_active( 'groups' ) && bp_is_group() && $can_manage_btn ) {
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">
@@ -84,7 +89,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 										</div>
 									</div> <!-- .media-folder_items -->
 									<?php
-								} elseif ( ! bp_is_group() ) {
+								} elseif ( ! bp_is_group() && $can_manage_btn ) {
 									?>
 									<div class="media-folder_items">
 										<div class="media-folder_actions">

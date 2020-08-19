@@ -1377,13 +1377,13 @@ ul.bb-albums-list {
 @media (max-width: 480px) {
 
 	#buddypress {
-		
+
 		.bb-media-container.member-media {
-			
+
 			#bp-media-single-album {
-				
+
 				.bb-single-album-header {
-					
+
 					input[type="text"] {
 						display: block;
 						width: 100%;
@@ -1411,7 +1411,7 @@ ul.bb-albums-list {
 			}
 
 		}
-		
+
 	}
 
 }
@@ -2094,7 +2094,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		align-items: flex-end;
 		background-color: #fff;
 		border-radius: 4px 4px 4px 5px;
-		position: relative;
+		position: initial;
 
 		.document-preview {
 			width: 100%;
@@ -2244,7 +2244,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			top: 0;
 			left: 0;
 			padding: 6px;
-			right: 0;
+			right: 375px;
 			text-align: center;
 			border-bottom: 1px solid #ecedee;
 			font-size: 16px;
@@ -2834,6 +2834,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 .bp-document-listing {
+	display: flex;
 
 	.media-search-form {
 		float: right;
@@ -2846,19 +2847,24 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				padding: 4px;
 				height: auto;
 				z-index: 112;
+				opacity: 0;
 			}
 
 			#group-document-search {
 				background-image: none;
-				padding: 6px 10px 6px 2rem;
+				padding: 6px 10px 6px 32px;
 				height: auto;
 				font-size: 14px;
 			}
 		}
 	}
 
-	.bp-media-header-wrap .bb-title {
-		width: auto;
+	.bp-media-header-wrap {
+		width: 100%;
+
+		.bb-title {
+			width: auto;
+		}
 	}
 
 }
@@ -2970,9 +2976,13 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			.bp-dir-search-form {
 				border: 0;
 
+				.nouveau-search-submit {
+					opacity: 0;
+				}
+
 				#group-document-search {
 					background-image: none;
-					padding: 6px 10px 6px 2rem;
+					padding: 6px 10px 6px 32px;
 					height: auto;
 					font-size: 14px;
 				}
@@ -3056,6 +3066,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			list-style: none;
 			margin: 10px 0 0;
 			text-align: left;
+			padding: 0;
 
 			li {
 				display: inline-block;
@@ -3296,7 +3307,6 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	}
 }
 
-
 #bp-media-create-folder,
 #bp-media-edit-child-folder,
 #bp-media-create-child-folder {
@@ -3313,6 +3323,21 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		text-align: right !important;
 	}
 
+}
+
+.modal-container,
+#bp-media-create-folder {
+
+	.error-box {
+		display: none;
+		line-height: 1.3;
+		margin-top: 5px;
+	}
+
+	#bb-album-child-title.error + .error-box,
+	#bb-album-title.error + .error-box {
+		display: block;
+	}
 }
 
 .modal-container.has-folderlocationUI {

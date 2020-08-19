@@ -509,6 +509,19 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 					$bp_user->add_role( $selected_member_type_wp_roles[0] );
 				}
 			}
+
+			$post_id = get_the_ID();
+
+			/**
+			 * Fires after invitee activate his/her account.
+			 *
+			 * @param int $user_id    Invitee user id.
+			 * @param int $inviter_id Inviter user id.
+			 * @param int $post_id 	  Invitation id.
+			 *
+			 * @since BuddyBoss 1.4.7
+			 */
+			do_action( 'bp_invites_member_invite_activate_user', $user_id, $inviter_id, $post_id );
 		}
 	}
 
@@ -580,6 +593,19 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 					$bp_user->add_role( $selected_member_type_wp_roles[0] );
 				}
 			}
+
+			$post_id = get_the_ID();
+
+			/**
+			 * Fires after invitee registered.
+			 *
+			 * @param int $user_id    Invitee user id.
+			 * @param int $inviter_id Inviter user id.
+			 * @param int $post_id 	  Invitation id.
+			 *
+			 * @since BuddyBoss 1.4.7
+			 */
+			do_action( 'bp_invites_member_invite_mark_register_user', $user_id, $inviter_id, $post_id );
 		}
 	}
 

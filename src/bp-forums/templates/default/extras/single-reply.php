@@ -32,7 +32,7 @@ get_header(); ?>
 
 	<?php elseif ( bbp_is_forum_private( bbp_get_reply_forum_id(), false ) ) : ?>
 
-		<?php bbp_get_template_part( 'feedback', 'no-access' ); ?>
+		<?php bbp_get_template_part( 'feedback', 'no-access-reply' ); ?>
 
 	<?php endif; ?>
 

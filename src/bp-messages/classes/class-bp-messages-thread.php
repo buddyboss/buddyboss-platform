@@ -415,7 +415,7 @@ class BP_Messages_Thread {
 
 		if ( false === $messages || static::$noCache ) {
 			// if current user isn't the recpient, then return empty array
-			if ( ! static::is_thread_recipient( $thread_id ) ) {
+			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
 				return array();
 			}
@@ -643,10 +643,12 @@ class BP_Messages_Thread {
 		 */
 		do_action( 'bp_messages_thread_messages_before_update', $thread_id, $message_ids, $user_id, $update_message_ids );
 
-		foreach ( $update_message_ids as $message_id ) {
-			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
-			$wpdb->query( $query ); // db call ok; no-cache ok;
-			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+		if ( ! empty( $update_message_ids ) ) {
+			foreach ( $update_message_ids as $message_id ) {
+				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+				$wpdb->query( $query ); // db call ok; no-cache ok;
+				bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+			}
 		}
 
 		/**
@@ -663,11 +665,14 @@ class BP_Messages_Thread {
 
 		// If there is no any messages in thread then delete the complete thread.
 		$thread_delete = true;
-		foreach ( $message_ids as $message_id ) {
-			$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
-			if ( '' === $is_deleted ) {
-				$thread_delete = false;
-				break;
+
+		if ( ! empty( $message_ids ) ) {
+			foreach ( $message_ids as $message_id ) {
+				$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
+				if ( '' === $is_deleted ) {
+					$thread_delete = false;
+					break;
+				}
 			}
 		}
 
@@ -751,10 +756,11 @@ class BP_Messages_Thread {
 	public static function get_current_threads_for_user( $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp             = buddypress();
+		$function_args  = func_get_args();
 
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -766,7 +772,7 @@ class BP_Messages_Thread {
 				5 => 'search_terms',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$r = bp_parse_args(
