@@ -196,8 +196,7 @@ window.bp = window.bp || {};
 
 		displayEditActivityPopup : function (activity_data){
 
-			var $edit_activity_modal = $('.edit-activity-modal');
-			if ( ! $edit_activity_modal.length) {
+			if ( ! $('.edit-activity-modal').length) {
 				$('body').append(' <div class="edit-activity-modal" id="buddypress">\n' +
 					'        <div class="edit-activity-modal-content activity-update-form">\n' +
 					'            <span class="edit-activity-modal-close-button"><span class="bb-icon bb-icon-close"></span></span>\n' +
@@ -205,6 +204,8 @@ window.bp = window.bp || {};
 					'        </div>\n' +
 					'    </div>');
 			}
+
+			var $edit_activity_modal = $('.edit-activity-modal');
 
 			$edit_activity_modal.addClass('show-modal');
 			this.postActivityEditFormView();
