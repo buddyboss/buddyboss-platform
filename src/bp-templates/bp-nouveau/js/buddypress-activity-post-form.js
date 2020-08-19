@@ -1362,31 +1362,39 @@ window.bp = window.bp || {};
 
 				if ( !_.isUndefined( window.MediumEditor ) ) {
 
-					window.group_messages_editor = new window.MediumEditor('#whats-new',{
-						placeholder: {
-							text: '',
-							hideOnClick: true
-						},
-						toolbar: {
-							buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
-							relativeContainer: document.getElementById('whats-new-content'),
-							static: true,
-							updateOnEmptySelection: true
-						},
-						paste: {
-							forcePlainText: false,
-							cleanPastedHTML: true,
-							cleanReplacements: [
-								[new RegExp(/<div/gi), '<p'],
-								[new RegExp(/<\/div/gi), '</p'],
-								[new RegExp(/<h[1-6]/gi), '<b'],
-								[new RegExp(/<\/h[1-6]/gi), '</b'],
-							],
-							cleanAttrs: ['class', 'style', 'dir', 'id'],
-							cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-							unwrapTags: []
-						},
-						imageDragging: false
+					$('#whats-new').each( function() {
+						var $this = $(this);
+						var whatsnewcontent = $this.closest('#whats-new-content')[0];
+
+						if ( !$(this).closest('.edit-activity-modal-body').length ) {
+
+							window.group_messages_editor = new window.MediumEditor( $this,{
+								placeholder: {
+									text: '',
+									hideOnClick: true
+								},
+								toolbar: {
+									buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor', 'pre' ],
+									relativeContainer: whatsnewcontent,
+									static: true,
+									updateOnEmptySelection: true
+								},
+								paste: {
+									forcePlainText: false,
+									cleanPastedHTML: true,
+									cleanReplacements: [
+										[new RegExp(/<div/gi), '<p'],
+										[new RegExp(/<\/div/gi), '</p'],
+										[new RegExp(/<h[1-6]/gi), '<b'],
+										[new RegExp(/<\/h[1-6]/gi), '</b'],
+									],
+									cleanAttrs: ['class', 'style', 'dir', 'id'],
+									cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+									unwrapTags: []
+								},
+								imageDragging: false
+							});
+						}
 					});
 
 					// check for mentions in the url, if set any then focus to editor.

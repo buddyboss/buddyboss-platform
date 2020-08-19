@@ -3535,6 +3535,7 @@ form.ac-form .ac-reply-content input {
 .edit-activity-modal .activity-update-form #whats-new-form.activity-form {
   margin-bottom: 0;
   border: 0;
+  width: 100%;
 }
 
 .edit-activity-modal .edit-activity-modal-content {
@@ -3549,7 +3550,8 @@ form.ac-form .ac-reply-content input {
   border-radius: 4px;
   border: 1px solid #d2d4d6;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-  max-height: 70%;
+  max-height: 90%;
+  overflow: auto;
 }
 
 .edit-activity-modal .edit-activity-modal-content #whats-new-submit input {
@@ -3560,7 +3562,7 @@ form.ac-form .ac-reply-content input {
 }
 
 .edit-activity-modal .edit-activity-modal-content #whats-new-content {
-  max-height: 40vh;
+  max-height: 230px;
   overflow: auto;
 }
 
@@ -3586,6 +3588,12 @@ form.ac-form .ac-reply-content input {
   max-height: 30vh;
 }
 
+.edit-activity-modal .edit-activity-modal-content #whats-new-attachments .activity-media-container > .dropzone {
+  max-height: 130px;
+  overflow: auto;
+  margin-top: 10px;
+}
+
 .edit-activity-modal .edit-activity-modal-close-button {
   float: right;
   width: auto;
@@ -3593,9 +3601,11 @@ form.ac-form .ac-reply-content input {
   text-align: center;
   cursor: pointer;
   border-radius: 3px;
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  z-index: 11;
   padding: 10px;
+  right: 0;
+  top: 7px;
 }
 
 .edit-activity-modal .edit-activity-modal-close-button .bb-icon {
@@ -3610,6 +3620,18 @@ form.ac-form .ac-reply-content input {
 
 .edit-activity-modal.show-modal .activity-update-form #whats-new-content .medium-editor-toolbar {
   display: block;
+}
+
+@media screen and (max-width: 603px) {
+  .edit-activity-modal#buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 58px;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .edit-activity-modal#buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 112px;
+  }
 }
 
 /**
