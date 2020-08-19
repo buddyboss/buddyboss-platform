@@ -251,3 +251,50 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 	}
 
 }
+
+/**
+ * Return absolute path of the media file.
+ *
+ * @param $attachment_id
+ * @param $size
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_scaled_image_path( $attachment_id, $size ) {
+
+	$is_image         = wp_attachment_is_image( $attachment_id );
+	$img_url          = get_attached_file( $attachment_id );
+	$meta             = wp_get_attachment_metadata( $attachment_id );
+	$img_url_basename = wp_basename( $img_url );
+
+	if ( ! $is_image ) {
+		if ( ! empty( $meta['sizes']['full'] ) ) {
+			$img_url = str_replace( $img_url_basename, $meta['sizes'][$size]['file'], $img_url );
+		}
+	}
+
+	return $img_url;
+}
+
+/**
+ * Return the preview url of the file.
+ *
+ * @param $media_id
+ * @param $extension
+ * @param $preview_attachment_id
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.0
+ */
+function bp_media_get_preview_image_url( $media_id, $preview_attachment_id, $size ) {
+	$attachment_url = '';
+
+	$media_id        = 'forbidden_' . $media_id;
+	$attachment_id   = 'forbidden_' . $preview_attachment_id;
+	$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
+	if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+		$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . base64_encode( $size );
+	}
+
+	return apply_filters( 'bp_media_get_preview_image_url', $attachment_url, $media_id );
+}

@@ -1174,5 +1174,5 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 		}
 	}
 
-	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
 }

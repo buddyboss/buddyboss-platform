@@ -956,10 +956,14 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		add_filter( 'upload_dir', 'bp_media_upload_dir' );
+
 		/**
 		 * Create and upload the media file.
 		 */
 		$upload = bp_media_upload();
+
+		remove_filter( 'upload_dir', 'bp_media_upload_dir' );
 
 		if ( is_wp_error( $upload ) ) {
 			return new WP_Error(

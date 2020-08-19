@@ -1986,3 +1986,66 @@ function bp_media_activity_after_email_content( $activity ) {
 		echo wpautop( $content );
 	}
 }
+
+/**
+ * Protect downloads from ms-files.php in multisite.
+ *
+ * @param string $rewrite rewrite rules.
+ * @return string
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_protect_download_rewite_rules( $rewrite ) {
+	if ( ! is_multisite() ) {
+		return $rewrite;
+	}
+
+	$rule  = "\n# Media Rules - Protect Files from ms-files.php\n\n";
+	$rule .= "<IfModule mod_rewrite.c>\n";
+	$rule .= "RewriteEngine On\n";
+	$rule .= "RewriteCond %{QUERY_STRING} file=media_uploads/ [NC]\n";
+	$rule .= "RewriteRule /ms-files.php$ - [F]\n";
+	$rule .= "</IfModule>\n\n";
+
+	return $rule . $rewrite;
+}
+add_filter( 'mod_rewrite_rules', 'bp_media_protect_download_rewite_rules' );
+
+function bp_media_check_download_album_protection() {
+
+	$upload_dir     = wp_get_upload_dir();
+	$files = array(
+			array(
+					'base'    => $upload_dir['basedir'] . '/bb_medias',
+					'file'    => 'index.html',
+					'content' => '',
+			),
+			array(
+					'base'    => $upload_dir['basedir'] . '/bb_medias',
+					'file'    => '.htaccess',
+					'content' => 'deny from all
+
+# BEGIN BuddyBoss code execution protection
+<IfModule mod_php5.c>
+php_flag engine 0
+</IfModule>
+<IfModule mod_php7.c>
+php_flag engine 0
+</IfModule>
+
+AddHandler cgi-script .php .phtml .php3 .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
+# END BuddyBoss code execution protection',
+			),
+	);
+
+	foreach ( $files as $file ) {
+		if ( wp_mkdir_p( $file['base'] ) && ! file_exists( trailingslashit( $file['base'] ) . $file['file'] ) ) {
+			$file_handle = @fopen( trailingslashit( $file['base'] ) . $file['file'], 'wb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_read_fopen
+			if ( $file_handle ) {
+				fwrite( $file_handle, $file['content'] ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+				fclose( $file_handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
+			}
+		}
+	}
+}
+add_action( 'bp_init', 'bp_media_check_download_album_protection', 9999 );
