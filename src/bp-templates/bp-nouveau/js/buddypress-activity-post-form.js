@@ -1039,7 +1039,14 @@ window.bp = window.bp || {};
 
 		scrapURL: function(urlText) {
 			var urlString = '';
-			urlText = urlText.replace( /<img .*?>/g, '' );
+
+			if ( urlText === null ) {
+				return;
+			}
+
+			if ( urlText.indexOf( '<img' ) >= 0 ) {
+				urlText = urlText.replace( /<img .*?>/g, '' );
+			}
 
 			if ( urlText.indexOf( 'http://' ) >= 0 ) {
 				urlString = this.getURL( 'http://', urlText );
