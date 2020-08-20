@@ -930,47 +930,41 @@ function bp_is_activity_edit_enabled( $default = false ) {
  *
  * @param null $time Return single time slot by time key.
  *
+ * @return mixed|void
  * @since BuddyBoss 1.5.1
  *
- * @return mixed|void
  */
-
-function bp_activity_edit_times( $time = null ){
+function bp_activity_edit_times( $time = null ) {
 
 	$times = apply_filters(
 		'bp_activity_edit_times',
 		array(
-			'thirty_days' 	=> array( 'value' => ( 60 * 60 * 24 * 30), 'label' => __( '30 Days', 'buddyboss' ) ),
-			'seven_days' 	=> array( 'value' => ( 60 * 60 * 24 * 7), 'label' => __( '7 Days', 'buddyboss' ) ),
-			'one_day'     	=> array( 'value' => ( 60 * 60 * 24), 'label' => __( '1 Day', 'buddyboss' ) ),
-			'one_hour' 		=> array( 'value' => ( 60 * 60), 'label' => __( '1 Hour', 'buddyboss' ) ),
-			'ten_minutes' 	=> array( 'value' => ( 60 * 10), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+			'thirty_days' => array( 'value' => ( 60 * 60 * 24 * 30 ), 'label' => __( '30 Days', 'buddyboss' ) ),
+			'seven_days'  => array( 'value' => ( 60 * 60 * 24 * 7 ), 'label' => __( '7 Days', 'buddyboss' ) ),
+			'one_day'     => array( 'value' => ( 60 * 60 * 24 ), 'label' => __( '1 Day', 'buddyboss' ) ),
+			'one_hour'    => array( 'value' => ( 60 * 60 ), 'label' => __( '1 Hour', 'buddyboss' ) ),
+			'ten_minutes' => array( 'value' => ( 60 * 10 ), 'label' => __( '10 Minutes', 'buddyboss' ) ),
 		)
 	);
 
-	if ( $time && isset( $times[ $time ] ) ){
+	if ( $time && isset( $times[ $time ] ) ) {
 		return $times[ $time ];
 	}
 
 	return $times;
 }
 
-if ( ! function_exists( 'bp_get_activity_edit_time' ) ) {
-
-	/**
-	 * @param bool $default when option not found, function will return $default value
-	 * @return mixed|void
-	 *
-	 * Get BuddyBoss Activity Time option
-	 *
-	 * @since BuddyBoss 1.5.1
-	 */
-
-	function bp_get_activity_edit_time( $default = false )
-	{
-		return apply_filters('_bp_activity_edit_time', bp_get_option('_bp_activity_edit_time', $default));
-	}
-
+/**
+ * Get BuddyBoss Activity Time option.
+ *
+ * @param bool $default when option not found, function will return $default value
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_get_activity_edit_time( $default = false ) {
+	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );
 }
 
 /**

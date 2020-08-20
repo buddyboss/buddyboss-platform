@@ -21,8 +21,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$this->tab_label = __( 'Activity', 'buddyboss' );
 		$this->tab_name  = 'bp-activity';
 		$this->tab_order = 40;
-
-		$this->update_extra_settings();
 	}
 
 	public function is_active() {
@@ -79,6 +77,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow Activity edit setting.
 		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
+		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
+			'class' => 'hidden',
+		) );
 
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
@@ -183,23 +184,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_activity_register_fields', $this );
 	}
-
-	public function update_extra_settings(){
-
-		if ( isset( $_POST['_bp_activity_edit_time'] ) ){
-
-			$time = sanitize_text_field( $_POST['_bp_activity_edit_time'] );
-
-			if ( '-1' !== $time ){
-				bp_update_option( '_bp_activity_edit_time', $time );
-			} else {
-				bp_delete_option( '_bp_activity_edit_time' );
-			}
-
-		}
-
-	}
-
 }
 
 return new BP_Admin_Setting_Activity();

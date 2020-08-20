@@ -478,10 +478,11 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				),
 			);
 
-			if ( bp_is_activity_edit_enabled( false ) ) {
+			// Add activity edit button.
+			if ( bp_is_activity_edit_enabled() ) {
 
-				$activity_edit_time = (int) bp_get_activity_edit_time(); //for 10 minutes, 600
-				$bp_dd_get_time            = bp_core_current_time(  true, 'timestamp' );
+				$activity_edit_time        = (int) bp_get_activity_edit_time(); //for 10 minutes, 600
+				$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
 				$activity_edit_expire_time = bp_nouveau_get_activity_timestamp() + $activity_edit_time;
 
 				//Checking if expire time still greater then current time.
@@ -1230,16 +1231,15 @@ function bp_nouveau_activity_privacy() {
 }
 
 /**
- * @param int $activity_id
+ * Get log is edited activity.
+ *
+ * @param int  $activity_id
  * @param bool $echo
  *
  * @return mixed
  *
- * Get log is edited activity.
- *
  * @since BuddyBoss 1.5.1
  */
-
 function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 
 	if ( empty( $activity_id ) ) {
@@ -1267,7 +1267,6 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 	} else {
 		return $rendered_text;
 	}
-
 }
 
 /**
@@ -1456,7 +1455,9 @@ function bp_nouveau_edit_activity_data() {
 function bp_nouveau_get_edit_activity_data() {
 	global $activities_template;
 
-	$activity = apply_filters( 'bp_nouveau_get_edit_activity_data', array(
+	$activity = apply_filters(
+		'bp_nouveau_get_edit_activity_data',
+		array(
 			'id'      => bp_get_activity_id(),
 			'content' => stripslashes($activities_template->activity->content),
 			'item_id' => bp_get_activity_item_id(),
