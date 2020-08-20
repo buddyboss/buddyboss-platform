@@ -1239,7 +1239,7 @@ function bp_nouveau_activity_privacy() {
  *
  * Get log is edited activity.
  *
- * @since BuddyBoss TODO: Version Number.
+ * @since BuddyBoss 1.5.1
  */
 
 function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {

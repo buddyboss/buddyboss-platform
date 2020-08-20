@@ -2062,6 +2062,8 @@ function bp_media_activity_after_email_content( $activity ) {
  * @param $activity
  *
  * @return array $activity Returns the activity with media if media saved otherwise no media.
+ *
+ * @since BuddyBoss 1.5.1
  */
 function bp_media_get_edit_activity_data( $activity ) {
 
