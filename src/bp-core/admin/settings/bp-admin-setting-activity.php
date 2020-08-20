@@ -190,9 +190,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 			$time = sanitize_text_field( $_POST['_bp_activity_edit_time'] );
 
-			if ( $time !== '-1' ){
+			if ( '-1' !== $time ){
 				bp_update_option( '_bp_activity_edit_time', $time );
-			}else{
+			} else {
 				bp_delete_option( '_bp_activity_edit_time' );
 			}
 
