@@ -392,7 +392,7 @@ abstract class BP_Invitation_Manager {
 		//For the normal query, like send invite from the group
 		$args['per_page'] = apply_filters( 'get_invitations_per_page', 20 );
 
-		if ( is_ajax() && isset( $_POST['action'] ) && $_POST['action'] === 'groups_get_group_potential_invites'
+		if ( isset( $_POST['action'] ) && $_POST['action'] === 'groups_get_group_potential_invites'
 		     && isset( $_POST['scope'] )
 		     && $_POST['scope'] === 'invited' ) {
 
