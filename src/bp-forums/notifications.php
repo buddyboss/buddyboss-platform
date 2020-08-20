@@ -183,7 +183,10 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		return;
 	}
 
-	// Get autohr information
+	// Define variable.
+	$reply_to_item_id = 0;
+
+	// Get author information.
 	$topic_author_id   = bbp_get_topic_author_id( $topic_id );
 	$secondary_item_id = $author_id;
 
