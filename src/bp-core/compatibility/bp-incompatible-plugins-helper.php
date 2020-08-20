@@ -478,3 +478,31 @@ function bp_settings_remove_wc_lostpassword_url() {
 }
 add_action( 'bp_before_member_settings_template', 'bp_settings_remove_wc_lostpassword_url' );
 add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
+
+/**
+ * Fix elementor editor issue while bp page set as front.
+ *
+ * @since BuddyBoss 1.4.9
+ *
+ * @param boolean $bool Boolean to return
+ *
+ * @return boolean
+ */
+function bp_core_set_uri_elementor_show_on_front( $bool ) {
+	if (
+		isset( $_REQUEST['elementor-preview'] )
+		|| (
+			is_admin() &&
+			isset( $_REQUEST['action'] )
+			&& (
+				'elementor' === $_REQUEST['action']
+				|| 'elementor_ajax' === $_REQUEST['action']
+			)
+		)
+	) {
+		return false;
+	}
+
+	return $bool;
+}
+add_filter( 'bp_core_set_uri_show_on_front', 'bp_core_set_uri_elementor_show_on_front', 10, 3 );

@@ -1,16 +1,38 @@
 <?php
 
-global $courses_new;
+$ld_group_id =  bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( bp_get_current_group_id() );
+
+if ( $ld_group_id ) {
+	$post_label_prefix  = 'group';
+	$meta              = learndash_get_setting( $ld_group_id );
+	$post_price_type   = ( isset( $meta[ $post_label_prefix . '_price_type' ] ) ) ? $meta[ $post_label_prefix . '_price_type' ] : '';
+	$post_price        = ( isset( $meta[ $post_label_prefix . '_price' ] ) ) ? $meta[ $post_label_prefix . '_price' ] : '';
+	// format the Course price to be proper XXX.YY no leading dollar signs or other values.
+	if ( ( 'paynow' === $post_price_type ) || ( 'subscribe' === $post_price_type ) ) {
+		if ( '' !== $post_price ) {
+			$post_price = preg_replace( '/[^0-9.]/', '', $post_price );
+			$post_price = number_format( floatval( $post_price ), 2, '.', '' );
+		}
+	}
+	if ( ! empty( $post_price ) && ! learndash_is_user_in_group( bp_loggedin_user_id(), $ld_group_id )  ) {
+		?>
+		<div class="bp-feedback error">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php echo esc_html__( 'You need to buy a learndash group membership first to join this group courses.', 'buddyboss' ); ?></p>
+		</div>
+		<?php
+		return;
+	}
+}
+
+
+global $courses_new, $course_id, $course;
 
 if ( is_user_logged_in() ) {
 	$user_id = get_current_user_id();
 } else {
 	$user_id = 0;
 }
-
-
-global $course_id;
-global $course;
 
 $course_id                  = $courses_new[0]->ID;
 $course                     = $courses_new[0];
@@ -279,7 +301,7 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 																">
 									<span class="ld-icon-arrow-down ld-icon"></span>
 									<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'buddyboss' ); ?></span>
-								</div> <!--/.ld-expand-button-->							
+								</div> <!--/.ld-expand-button-->
 								<?php
 								// TODO @37designs Need to test this
 								if ( apply_filters(

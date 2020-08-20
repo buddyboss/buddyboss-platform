@@ -50,6 +50,33 @@ jQuery( document ).ready(
 						}
 					);
 				});
+
+				//Add Click event to show / hide text formatting Toolbar
+				jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
+					e.preventDefault();
+					var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
+					jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
+					if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+						jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+						if( window.forums_medium_forum_editor[key].exportSelection() !== null ){
+							medium_editor.addClass('medium-editor-toolbar-active');
+						}
+					} else {
+						jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+						if( window.forums_medium_forum_editor[key].exportSelection() === null ) {
+							medium_editor.removeClass('medium-editor-toolbar-active');
+						}
+					}
+					medium_editor.toggleClass('active');
+
+				});
+
+				jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
+					e.preventDefault();
+					if( window.forums_medium_forum_editor[key].exportSelection() === null ) {
+						$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
+					} 
+				});
 			}
 			if ( jQuery( '.bbp_editor_reply_content' ).length ) {
 				window.forums_medium_reply_editor = [];
@@ -91,6 +118,33 @@ jQuery( document ).ready(
 							}
 						}
 					);
+
+					//Add Click event to show / hide text formatting Toolbar
+					jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar', function(e) {
+						e.preventDefault();
+						var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
+						jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
+						if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+							jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+							if( window.forums_medium_reply_editor[key].exportSelection() !== null ){
+								medium_editor.addClass('medium-editor-toolbar-active');
+							}
+						} else {
+							jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+							if( window.forums_medium_reply_editor[key].exportSelection() === null ) {
+								medium_editor.removeClass('medium-editor-toolbar-active');
+							}
+						}
+						medium_editor.toggleClass('active');
+
+					});
+
+					jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
+						e.preventDefault();
+						if( window.forums_medium_reply_editor[key].exportSelection() === null ) {
+							$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
+						} 
+					});
 				});
 			}
 			if ( jQuery( '.bbp_editor_topic_content' ).length ) {
@@ -134,8 +188,43 @@ jQuery( document ).ready(
 							}
 						}
 					);
+
+					//Add Click event to show / hide text formatting Toolbar
+					jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
+						e.preventDefault();
+						var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
+						jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
+						if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
+							jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
+							if( window.forums_medium_topic_editor[key].exportSelection() !== null ){
+								medium_editor.addClass('medium-editor-toolbar-active');
+							}
+						} else {
+							jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
+							if( window.forums_medium_topic_editor[key].exportSelection() === null ) {
+								medium_editor.removeClass('medium-editor-toolbar-active');
+							}
+						}
+						medium_editor.toggleClass('active');
+
+					});
+
+					jQuery( 'body' ).on('click', '.bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
+						e.preventDefault();
+						if( window.forums_medium_topic_editor[key].exportSelection() === null ) {
+							$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
+						} 
+					});
+
 				});
 			}
+			jQuery( document ).on('input', '.bbp-the-content', function(e) {
+				var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
+				setTimeout(function(){
+					medium_editor.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '.bbp-form' ).find( '.bbp-the-content' ).focus();
+				},0);
+			});
 		}
 
 			/* Use backticks instead of <code> for the Code button in the editor */

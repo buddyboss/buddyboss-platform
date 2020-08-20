@@ -1255,15 +1255,17 @@ window.bp = window.bp || {};
 				);
 			},
 
-			scrapURL: function ( urlText ) {
-				var urlString = '';
-				if ( urlText.indexOf( 'http://' ) >= 0 ) {
-					urlString = this.getURL( 'http://', urlText );
-				} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
-					urlString = this.getURL( 'https://', urlText );
-				} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
-					urlString = this.getURL( 'www', urlText );
-				}
+		scrapURL: function(urlText) {
+			var urlString = '';
+			urlText = urlText.replace( /<img .*?>/g, '' );
+
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
 
 				if ( urlString !== '' ) {
 					// check if the url of any of the excluded video oembeds.
@@ -1687,6 +1689,7 @@ window.bp = window.bp || {};
 			id: 'whats-new-content',
 			events: {
 				'click .medium-editor-toolbar-actions': 'focusEditor',
+				'input #whats-new': 'focusEditorOnChange',
 				'click .medium-editor-toolbar li.close-btn': 'hideToolbarSelector',
 			},
 
@@ -1703,7 +1706,17 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				if( window.group_messages_editor.exportSelection() === null ) {
+					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				}
+				e.preventDefault();
+			},
+			focusEditorOnChange: function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+				var medium_editor = $( e.currentTarget ).closest( '#whats-new-form' ).find( '.medium-editor-toolbar' );
+				setTimeout(function(){
+					medium_editor.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
+				},0);
 			}
 		}
 	);
@@ -2034,9 +2047,15 @@ window.bp = window.bp || {};
 				var medium_editor = $( e.currentTarget ).closest( '#whats-new-form' ).find( '.medium-editor-toolbar' );
 				$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 				if ( $( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
-					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+					if( window.group_messages_editor.exportSelection() != null ){
+						medium_editor.addClass('medium-editor-toolbar-active');
+					}
 				} else {
-					$( e.currentTarget ).attr( 'data-bp-tooltip', jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+					if( window.group_messages_editor.exportSelection() === null ) {
+						medium_editor.removeClass('medium-editor-toolbar-active');
+					}
 				}
 				medium_editor.toggleClass( 'active' );
 			}
@@ -2633,8 +2652,12 @@ window.bp = window.bp || {};
 							self.model.set('document', documents);
 						}
 
-						// Reset the form.
-						self.resetForm();
+							// Reset formatting of editor
+							window.group_messages_editor.execAction('selectAll');
+							window.group_messages_editor.execAction('removeFormate');
+
+							// Reset the form.
+							self.resetForm();
 
 						// Display a successful feedback if the acticity is not consistent with the displayed stream.
 						if (!toPrepend) {
