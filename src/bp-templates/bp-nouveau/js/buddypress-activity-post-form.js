@@ -33,6 +33,8 @@ window.bp = window.bp || {};
 			}
 
 			this.postFormView();
+
+			this.postFormPlaceholderView();
 		},
 
 		postFormView: function() {
@@ -49,6 +51,22 @@ window.bp = window.bp || {};
 
 			// Display it
 			this.postForm.inject( '#bp-nouveau-activity-form' );
+		},
+
+		postFormPlaceholderView: function() {
+			// Do not carry on if the main element is not available.
+			if ( ! $( '#bp-nouveau-activity-form-placeholder' ).length ) {
+				return;
+			}
+
+			//Create placeholder
+			this.postFormPlaceholder = new bp.Views.PostFormPlaceholder();
+
+			//Add it to views collection
+			this.views.add( { id: 'post_form_placeholder', view: this.postFormPlaceholder } );
+
+			//Display it within selector
+			this.postFormPlaceholder.inject( '#bp-nouveau-activity-form-placeholder' );
 		},
 
 		dropzoneView: function () {
@@ -2746,6 +2764,66 @@ window.bp = window.bp || {};
 			}
 		}
 	);
+
+
+	bp.Views.PostFormPlaceholder = bp.View.extend(
+		{
+			tagName: 'form',
+			className: 'activity-form-placeholder',
+			id: 'whats-new-form-placeholder',
+
+			initialize: function () {
+				this.model = new bp.Models.Activity(
+					_.pick(
+						BP_Nouveau.activity.params,
+						[ 'user_id', 'item_id', 'object' ]
+					)
+				);
+
+				// Clone the model to set the resetted one.
+				this.resetModel = this.model.clone();
+
+				this.views.set(
+					[
+						new bp.Views.FormAvatar(),
+						new bp.Views.FormPlaceholderContent( { activity: this.model, model: this.model } )
+					]
+				);
+
+			},
+
+		}
+	);
+
+
+
+	bp.Views.FormPlaceholderContent = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'whats-new-content-placeholder',
+
+			initialize: function () {
+				this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea-placeholder' ) );
+				this.views.set( '#whats-new-textarea-placeholder', new bp.Views.WhatsNewPlaceholder() );
+			},
+		}
+	);
+
+	bp.Views.WhatsNewPlaceholder = bp.View.extend( {
+			tagName: 'div',
+			className: 'bp-suggestions-placehoder',
+			id: 'whats-new-placeholder',
+			attributes: {
+				name: 'whats-new-placeholder',
+				cols: '50',
+				rows: '4',
+				placeholder: BP_Nouveau.activity.strings.whatsnewPlaceholder,
+				'aria-label': BP_Nouveau.activity.strings.whatsnewLabel,
+				contenteditable: true,
+			},
+		}
+	);
+
 
 	bp.Views.ActivityEditForm = bp.Views.PostForm;
 
