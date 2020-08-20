@@ -16,6 +16,11 @@
 	margin: 16px 0;
 }
 
+.bp-nouveau-activity-form-placeholder- {
+	display: none;
+}
+
+.bp-nouveau-activity-form-placeholder-,
 .activity-update-form {
 	border: 1px solid $bp-border-dark;
 
@@ -23,6 +28,7 @@
 
 	margin: $marg-med 0;
 
+	#whats-new-form-placeholder,
 	#whats-new-form.activity-form {
 		position: relative;
 	}
@@ -47,6 +53,7 @@
 	// these ID's need replacing with this!
 	//.content-wrap { // #whats-new-content
 
+	#whats-new-placeholder,
 	#whats-new {
 		outline: none;
 		box-shadow: none;
@@ -56,6 +63,7 @@
 		resize: none !important;
 	}
 
+	#whats-new-content-placeholder,
 	#whats-new-content {
 		padding: 0;
 	}
@@ -325,7 +333,7 @@
 
 // these ID's need replacing with this!
 //.textarea-wrap { // #whats-new-textarea
-
+#whats-new-textarea-placeholder,
 #whats-new-textarea {
 
 	[contenteditable="true"] {

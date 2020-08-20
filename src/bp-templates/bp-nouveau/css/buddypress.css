@@ -1028,6 +1028,11 @@ a.layout-grid-view {
   margin: 16px 0;
 }
 
+.bp-nouveau-activity-form-placeholder- {
+  display: none;
+}
+
+.bp-nouveau-activity-form-placeholder-,
 .activity-update-form {
   border: 1px solid #ccc;
   -webkit-box-shadow: inset 0 0 6px #eee;
@@ -1036,16 +1041,21 @@ a.layout-grid-view {
   margin: 15px 0;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-form-placeholder,
+.bp-nouveau-activity-form-placeholder- #whats-new-form.activity-form,
+.activity-update-form #whats-new-form-placeholder,
 .activity-update-form #whats-new-form.activity-form {
   position: relative;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-avatar,
 .activity-update-form #whats-new-avatar {
   border-bottom: 1px solid #ddd;
   padding: 10px;
   margin: 0;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-avatar img,
 .activity-update-form #whats-new-avatar img {
   box-shadow: none;
   display: inline-block;
@@ -1053,10 +1063,14 @@ a.layout-grid-view {
   vertical-align: middle;
 }
 
+.bp-nouveau-activity-form-placeholder- .activity-post-avatar,
 .activity-update-form .activity-post-avatar {
   display: inline-block;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-placeholder,
+.bp-nouveau-activity-form-placeholder- #whats-new,
+.activity-update-form #whats-new-placeholder,
 .activity-update-form #whats-new {
   outline: none;
   box-shadow: none;
@@ -1066,26 +1080,34 @@ a.layout-grid-view {
   resize: none !important;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-content-placeholder,
+.bp-nouveau-activity-form-placeholder- #whats-new-content,
+.activity-update-form #whats-new-content-placeholder,
 .activity-update-form #whats-new-content {
   padding: 0;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-attachments,
 .activity-update-form #whats-new-attachments {
   padding: 10px;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-elements-buttons,
 .activity-update-form #whats-new-elements-buttons {
   margin: 1em 0;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-elements-buttons ul,
 .activity-update-form #whats-new-elements-buttons ul {
   list-style: none;
 }
 
+.bp-nouveau-activity-form-placeholder- #whats-new-elements-buttons ul li,
 .activity-update-form #whats-new-elements-buttons ul li {
   display: inline-block;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup,
 .activity-update-form.modal-popup {
   position: fixed;
   left: 0;
@@ -1100,6 +1122,7 @@ a.layout-grid-view {
   justify-content: center;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 700px;
   max-width: 90%;
@@ -1336,6 +1359,7 @@ div .activity-update-form #whats-new-content .medium-editor-toolbar.active {
   display: block;
 }
 
+#whats-new-textarea-placeholder [contenteditable="true"]:empty:before,
 #whats-new-textarea [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   color: #bbb;
