@@ -597,7 +597,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
-	// Do not embed attachment in wp-admin area
+	// Do not embed attachment in wp-admin area.
 	if ( is_admin() || ! bp_is_forums_media_support_enabled() ) {
 		return $content;
 	}
@@ -645,7 +645,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  */
 function bp_media_forums_embed_gif( $content, $id ) {
 
-	// check if forums gif support enabled
+	// check if forums gif support enabled.
 	if ( ! bp_is_forums_gif_support_enabled() ) {
 		return $content;
 	}
@@ -688,7 +688,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
  */
 function bp_media_forums_save_gif_data( $post_id ) {
 
-	// check if forums gif support enabled
+	// check if forums gif support enabled.
 	if ( ! bp_is_forums_gif_support_enabled() ) {
 		return;
 	}
@@ -947,7 +947,7 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
  */
 function bp_media_activity_embed_gif( $content, $activity ) {
 
-	// check if profile and groups activity gif support enabled
+	// check if profile and groups activity gif support enabled.
 	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
 		return $content;
 	}
@@ -974,7 +974,7 @@ function bp_media_activity_embed_gif( $content, $activity ) {
 function bp_media_comment_embed_gif( $comment_id ) {
 	global $activities_template;
 
-	// check if profile and groups comments gif support enabled
+	// check if profile and groups comments gif support enabled.
 	if ( ! empty( $activities_template ) ) {
 		$parent_activity_id = $activities_template->activity->current_comment->item_id;
 	} else {
@@ -1013,7 +1013,7 @@ function bp_media_activity_save_gif_data( $activity ) {
 	$gif_data     = ! empty( $_POST['gif_data'] ) ? $_POST['gif_data'] : array();
 	$gif_old_data = bp_activity_get_meta( $activity->id, '_gif_data', true );
 
-	// if edit activity then delete attachment and clear activity meta
+	// if edit activity then delete attachment and clear activity meta.
 	if ( $bp_activity_edit && isset( $_POST['edit'] ) && empty( $gif_data ) ) {
 		if ( ! empty( $gif_old_data ) ) {
 			wp_delete_attachment( $gif_old_data['still'], true );
@@ -2068,7 +2068,7 @@ function bp_media_activity_after_email_content( $activity ) {
 function bp_media_get_edit_activity_data( $activity ) {
 
 	if ( ! empty( $activity['id'] ) ) {
-		// Fetch media ids of activity
+		// Fetch media ids of activity.
 		$media_ids = bp_activity_get_meta( $activity['id'], 'bp_media_ids', true );
 
 		if ( ! empty( $media_ids ) ) {
@@ -2094,8 +2094,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 			}
 		}
 
-		// Featch document ids of activity
-
+		// Fetch document ids of activity.
 		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) ) {
@@ -2117,7 +2116,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 			}
 		}
 
-		// Fetch gif data for the activity
+		// Fetch gif data for the activity.
 		$gif_data = bp_activity_get_meta( $activity['id'], '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
