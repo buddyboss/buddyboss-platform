@@ -90,6 +90,8 @@ window.bp = window.bp || {};
 			self.postEditForm.$el.find( '#whats-new' ).html( activity_data.content );
 			self.postEditForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 
+			var tool_box = $('.edit-activity-modal.show-modal #whats-new-toolbar');
+
 			// set object of activity and item id when group activity
 			if ( typeof activity_data.object !== 'undefined' && typeof activity_data.item_id !== 'undefined' && 'groups' === activity_data.object ) {
 				self.postEditForm.model.set( 'item_id', activity_data.item_id );
@@ -109,6 +111,18 @@ window.bp = window.bp || {};
 				// close and destroy existing media instance
 				self.activityToolbar.toggleGifSelector( bpActivityEvent );
 				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
+
+				//Make tool box button disable.
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				if ( tool_box.find( '#activity-gif-button' ) ) {
+					tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+				}
+				//END Toolbox Button
 			}
 
 			// Display media for editing
@@ -117,6 +131,18 @@ window.bp = window.bp || {};
 				if ( typeof self.activityToolbar !== 'undefined') {
 					self.activityToolbar.toggleMediaSelector(bpActivityEvent);
 				}
+
+				//Make tool box button disable.
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+				}
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				if ( tool_box.find( '#activity-gif-button' ) ) {
+					tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				//END Toolbox Button
 
 				var mock_file = false;
 				for ( var i = 0; i < activity_data.media.length; i++ ) {
@@ -160,6 +186,18 @@ window.bp = window.bp || {};
 					self.activityToolbar.toggleDocumentSelector( bpActivityEvent );
 				}
 
+				//Make tool box button disable.
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+				}
+				if ( tool_box.find( '#activity-gif-button' ) ) {
+					tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				//END Toolbox Button
+
 				var doc_file = false;
 				for ( var doci = 0; doci < activity_data.document.length; doci++ ) {
 					doc_file = false;
@@ -191,6 +229,7 @@ window.bp = window.bp || {};
 						self.dropzone.emit('complete', doc_file);
 					}
 				}
+
 			}
 		},
 
