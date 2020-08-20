@@ -2202,11 +2202,9 @@ function bp_activity_add( $args = '' ) {
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
-	$activity->action            = ! empty( $r['action'] )
-						? $r['action']
-						: bp_activity_generate_action_string( $activity );
+	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : bp_activity_generate_action_string( $activity );
 
-	// Do not update date when update activity
+	// Do not update date when update activity.
 	if ( empty( $r['id'] ) ) {
 		$activity->date_recorded = $r['recorded_time'];
 	}
@@ -2247,7 +2245,7 @@ function bp_activity_add( $args = '' ) {
  * @since BuddyPress 1.2.0
  *
  * @param array|string $args {
- *     @type int    $id         ID of the activity if update existing item
+ *     @type int    $id         ID of the activity if update existing item.
  *     @type string $content    The content of the activity update.
  *     @type int    $user_id    Optional. Defaults to the logged-in user.
  *     @type string $error_type Optional. Error type to return. Either 'bool' or 'wp_error'. Defaults to
@@ -2335,8 +2333,7 @@ function bp_activity_post_update( $args = '' ) {
 			 * Addition from the BuddyBoss
 			 * Add meta to ensure that this activity has been edited.
 			 */
-
-			bp_activity_update_meta( $activity->id, '_is_edited', current_time( 'mysql' ) );
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
 
 		}
 	} else {
@@ -2371,28 +2368,24 @@ function bp_activity_post_update( $args = '' ) {
 			}
 		}
 
+		/**
+		 * Filters the latest update content for the activity item.
+		 *
+		 * @param string $r Content of the activity update.
+		 * @param string $activity_content Content of the activity update.
+		 *
+		 * @since BuddyPress 1.6.0
+		 *
+		 */
+		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
+
 		if ( $update_activity ) {
-
-			/**
-			 * Filters the latest update content for the activity item.
-			 *
-			 * @param string $r Content of the activity update.
-			 * @param string $activity_content Content of the activity update.
-			 *
-			 * @since BuddyPress 1.6.0
-			 *
-			 */
-			$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
-
 			// Add this update to the "latest update" usermeta so it can be fetched anywhere.
-			bp_update_user_meta(
-				bp_loggedin_user_id(),
-				'bp_latest_update',
-				array(
-					'id'      => $activity_id,
-					'content' => $activity_content,
-				)
+			$data = array(
+				'id'      => $activity_id,
+				'content' => $activity_content,
 			);
+			bp_update_user_meta( bp_loggedin_user_id(), 'bp_latest_update', $data );
 		}
 	}
 
