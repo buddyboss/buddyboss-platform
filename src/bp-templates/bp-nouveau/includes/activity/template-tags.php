@@ -481,9 +481,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 			if ( bp_is_activity_edit_enabled( false ) ) {
 
 				$activity_edit_time = (int) bp_get_activity_edit_time(); //for 10 minutes, 600
-
-				//bp_dd_get_time() is not exists here.
-				$bp_dd_get_time            = current_time( 'timestamp' );
+				$bp_dd_get_time            = bp_core_current_time(  true, 'timestamp' );
 				$activity_edit_expire_time = bp_nouveau_get_activity_timestamp() + $activity_edit_time;
 
 				//Checking if expire time still greater then current time.
