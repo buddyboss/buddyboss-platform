@@ -772,13 +772,13 @@ window.bp = window.bp || {};
 						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-media-button' ) ) {
-								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
 							if ( tool_box.find( '#activity-gif-button' ) ) {
-								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+								tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
 							if ( tool_box.find( '#activity-document-button' ) ) {
-								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
+								tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
 							}
 						}
 					}
