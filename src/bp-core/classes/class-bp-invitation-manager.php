@@ -380,15 +380,25 @@ abstract class BP_Invitation_Manager {
 
 		/**
 		 * We are making sure that we are passing limits and page
+		 *
 		 * @since 1.4.7
 		 */
 		$page = 1;
-		if ( isset( $_POST['page'] ) ){
+		if ( isset( $_POST['page'] ) ) {
 			$page = (int) sanitize_text_field( $_POST['page'] );
 		}
 
 		$args['page'] = $page;
+		//For the normal query, like send invite from the group
 		$args['per_page'] = apply_filters( 'get_invitations_per_page', 20 );
+
+		if ( is_ajax() && isset( $_POST['action'] ) && $_POST['action'] === 'groups_get_group_potential_invites'
+		     && isset( $_POST['scope'] )
+		     && $_POST['scope'] === 'invited' ) {
+
+			//To get the pending Invites screen, need it badly
+			$args['per_page'] = apply_filters( 'get_invitations_per_page', 1000 );
+		}
 
 		return BP_Invitation::get( $args );
 	}

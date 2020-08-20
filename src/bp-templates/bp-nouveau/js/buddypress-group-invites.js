@@ -158,6 +158,9 @@ window.bp = window.bp || {};
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
 						data: data,
+						complete : function(){
+							memberInvitedList.find('.load-more:not(:last-child)').remove();
+						},
 						success: function (response) {
 							isWorking = 0;
 							if ( response.success ) {
@@ -175,7 +178,6 @@ window.bp = window.bp || {};
 								feedbackInviteColumn.addClass( response.data.type );
 								feedbackInvitePTag.html( response.data.feedback );
 							}
-							memberInvitedList.find('.load-more').remove();
 						}
 					});
 				} );
