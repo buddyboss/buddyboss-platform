@@ -482,7 +482,7 @@ add_action( 'login_form_login', 'bp_settings_remove_wc_lostpassword_url' );
 /**
  * Fix elementor editor issue while bp page set as front.
  *
- * @since BuddyBoss 1.5
+ * @since BuddyBoss 1.5.0
  *
  * @param boolean $bool Boolean to return
  *
