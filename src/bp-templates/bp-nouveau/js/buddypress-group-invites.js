@@ -158,13 +158,11 @@ window.bp = window.bp || {};
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
 						data: data,
-						complete : function(){
-							memberInvitedList.find('.load-more:not(:last-child)').remove();
-						},
 						success: function (response) {
 							isWorking = 0;
 							if ( response.success ) {
 								//memberInvitedList.html('');
+								memberInvitedList.find('.load-more').remove();
 								memberInvitedList.append( response.data.html );
 								subNavFilterLast.html('');
 								subNavFilterLast.html( response.data.pagination );

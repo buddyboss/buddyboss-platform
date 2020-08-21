@@ -410,30 +410,3 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	add_action( 'admin_notices', 'bp_duplicate_notice' );
 	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
 }
-
-/*
-add_action( 'init', function(){
-
-
-	$param = array(
-		'user_id'  => 'any',
-		'group_id' => 4,
-		'per_page' => 20,
-		'page' => 2,
-		'is_confirmed' => 0,
-		'inviter_id' => 0,
-	) ;
-
-
-	var_dump(BP_Invitation::get_total_count( $param ));
-
-	$bp_has_invite = bp_group_has_invites( $param );
-
-
-	$invites_class = new BP_Groups_Invitation_Manager();
-	$invited_ids = $invites_class->get_invitations( $param );
-
-
-	die(var_dump($bp_has_invite));
-
-} );*/
