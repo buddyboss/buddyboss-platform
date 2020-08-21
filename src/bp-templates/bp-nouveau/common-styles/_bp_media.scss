@@ -1231,6 +1231,7 @@ ul.bb-albums-list {
 
 	#buddypress .bb-document-theater {
 		width: calc(100% - 60px);
+		min-width: initial;
 		margin: 0 30px;
 		height: 100%;
 
