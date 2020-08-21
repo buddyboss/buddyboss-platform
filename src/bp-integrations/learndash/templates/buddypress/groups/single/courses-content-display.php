@@ -18,7 +18,7 @@ if ( $ld_group_id ) {
 		?>
 		<div class="bp-feedback error">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php echo esc_html__( 'You need to buy a learndash group membership first to join this group courses.', 'buddyboss' ); ?></p>
+			<p><?php echo esc_html__( 'You are not allowed to access group courses. Please purchase membership and try again.', 'buddyboss' ); ?></p>
 		</div>
 		<?php
 		return;

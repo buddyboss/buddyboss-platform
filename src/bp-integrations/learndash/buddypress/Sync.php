@@ -191,7 +191,7 @@ class Sync {
 	 */
 	public function bp_ld_sync_error_join_change_message( $feedback ) {
 		if ( ! empty( $feedback ) && isset( $feedback['type'] ) && 'error' == $feedback['type'] ) {
-			$feedback['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You need to buy a learndash group membership first to join this group.', 'buddyboss' ) );
+			$feedback['feedback'] = sprintf( '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>', esc_html__( 'You are not allowed to access this group. Please purchase membership and try again.', 'buddyboss' ) );
 		}
 		return $feedback;
 	}
