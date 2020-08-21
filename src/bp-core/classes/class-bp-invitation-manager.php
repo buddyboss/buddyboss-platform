@@ -391,8 +391,8 @@ abstract class BP_Invitation_Manager {
 			 */
 
 			$page = 1;
-			if ( isset( $_POST['page'] ) ) {
-				$page = (int) sanitize_text_field( $_POST['page'] );
+			if ( isset( $_REQUEST['page'] ) ) {
+				$page = (int) sanitize_text_field( $_REQUEST['page'] );
 			}
 
 			$args['page'] = $page;
