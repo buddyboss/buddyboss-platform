@@ -98,22 +98,22 @@ window.bp = window.bp || {};
 			var self = this;
 
 			// reset post form before editing
-			self.postEditForm.$el.trigger( 'reset' );
+			self.postForm.$el.trigger( 'reset' );
 
 			// set edit activity data
 			self.editActivityData = activity_data;
 
-			self.postEditForm.$el.addClass( 'bp-activity-edit' );
-			self.postEditForm.$el.find( '#whats-new' ).trigger( 'focus' );
-			self.postEditForm.$el.find( '#whats-new' ).html( activity_data.content );
-			self.postEditForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
+			self.postForm.$el.addClass( 'bp-activity-edit' );
+			self.postForm.$el.find( '#whats-new' ).trigger( 'focus' );
+			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
+			self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 
-			var tool_box = $('.edit-activity-modal.show-modal #whats-new-toolbar');
+			var tool_box = $('#whats-new-toolbar');
 
 			// set object of activity and item id when group activity
 			if ( typeof activity_data.object !== 'undefined' && typeof activity_data.item_id !== 'undefined' && 'groups' === activity_data.object ) {
-				self.postEditForm.model.set( 'item_id', activity_data.item_id );
-				self.postEditForm.model.set( 'object', 'group' );
+				self.postForm.model.set( 'item_id', activity_data.item_id );
+				self.postForm.model.set( 'object', 'group' );
 			}
 
 			var bpActivityEvent = new Event( 'bp_activity_edit' );
@@ -251,6 +251,62 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 *
+		 * Renamed it displayEditActivityPopup to displayEditActivityForm();
+		 *
+		 * @param activity_data
+		 */
+
+		displayEditActivityForm : function( activity_data ) {
+			var self = this;
+
+			var $activityForm = $('#bp-nouveau-activity-form');
+			var $activityFormPlaceholder = $('#bp-nouveau-activity-form-placeholder');
+
+
+			//Set the activity value
+			self.displayEditActivity(activity_data);
+
+			//Make selected current privacy.
+			$activityForm.find('#bp-activity-privacy').val(activity_data.privacy);
+
+			//Now Show the Modal
+			$activityForm.addClass('modal-popup');
+			$activityFormPlaceholder.show();
+
+
+			self.activityEditHideModalEvent();
+		},
+
+		activityEditHideModalEvent : function(){
+			var self = this;
+
+			$(document).on('keyup', function( event ){
+				if ( event.keyCode === 27 && false === event.ctrlKey ){
+					self.postActivityEditHideModal();
+				}
+			});
+
+			$(document).on('click', '.activity-update-form.modal-popup #aw-whats-new-reset', function(){
+				self.postActivityEditHideModal();
+			});
+
+		},
+
+		postActivityEditHideModal : function(){
+			var self = this;
+
+			$('.activity-update-form.modal-popup').removeClass('modal-popup');
+
+			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
+			$activityFormPlaceholder.hide();
+
+			//Reset the post form.
+			self.postForm.$el.trigger( 'reset' );
+		},
+
+/*
 		displayEditActivityPopup : function (activity_data){
 
 			if ( ! $('.edit-activity-modal').length) {
@@ -274,8 +330,6 @@ window.bp = window.bp || {};
 			var edit_activity_editor_popup = jQuery('.edit-activity-modal');
 			var edit_activity_editor = edit_activity_editor_popup.find('#whats-new')[0];
 			var edit_activity_editor_content = edit_activity_editor_popup.find('#whats-new-content')[0];
-
-
 
 			window.activity_edit_editor = new window.MediumEditor( edit_activity_editor, {
 				placeholder: {
@@ -318,6 +372,7 @@ window.bp = window.bp || {};
 			// Display it
 			this.postEditForm.inject( '.edit-activity-modal-body' );
 		},
+		*/
 
 		createThumbnailFromUrl: function ( mock_file ) {
 			var self = this;
@@ -2825,7 +2880,7 @@ window.bp = window.bp || {};
 	);
 
 
-	bp.Views.ActivityEditForm = bp.Views.PostForm;
+	//bp.Views.ActivityEditForm = bp.Views.PostForm;
 
 	bp.Nouveau.Activity.postForm.start();
 

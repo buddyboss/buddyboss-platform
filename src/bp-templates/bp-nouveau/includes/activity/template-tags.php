@@ -486,7 +486,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				$activity_edit_expire_time = bp_nouveau_get_activity_timestamp() + $activity_edit_time;
 
 				//Checking if expire time still greater then current time.
-				if ( $activity_edit_time === 0 || $activity_edit_expire_time >= $bp_dd_get_time ) {
+				if ( $activity_edit_time === -1 || $activity_edit_expire_time >= $bp_dd_get_time ) {
 					$buttons[ 'activity_edit' ] = array(
 						'id'                => 'activity_edit',
 						'position'          => 30,

@@ -1194,7 +1194,7 @@ window.bp = window.bp || {};
 
 				if ( typeof activity_data !== 'undefined' ) {
 					//bp.Nouveau.Activity.postForm.displayEditActivity( activity_data );
-					bp.Nouveau.Activity.postForm.displayEditActivityPopup( activity_data );
+					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
 				}
 			}
 		},
