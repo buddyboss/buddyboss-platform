@@ -96,11 +96,88 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		max-height: 100%;
+		overflow: auto;
+
+		#whats-new-content {
+			max-height: 230px;
+			overflow: auto;
+		}
 
 		#whats-new-form {
 			width: 700px;
 			max-width: 90%;
+			margin: auto;
 		}
+
+		#whats-new-attachments .activity-media-container > .dropzone {
+			max-height: 130px;
+			overflow: auto;
+			margin-top: 10px;
+		}
+
+		.gif-media-search-dropdown {
+			top: initial;
+			bottom: 30px;
+
+			&:before {
+				top: initial;
+				bottom: -11px;
+				border-color: transparent transparent #fff #fff;
+			}
+
+			.gif-search-results {
+				min-height: 200px;
+				max-height: 200px;
+			}
+
+		}
+
+		.emojionearea .emojionearea-picker {
+			top: inherit;
+			bottom: 100%;
+			margin-bottom: 10px;
+			height: 230px;
+
+			.emojionearea-wrapper {
+				height: 230px;
+
+				.emojionearea-scroll-area {
+					height: 150px;
+				}
+
+				&:after {
+					bottom: -9px;
+					top: inherit;
+					transform: rotate(180deg);
+				}
+			}
+		}
+
+		@media screen and (max-width: 603px) {
+
+			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+
+				#buddypress > & {
+					bottom: 58px;
+				}
+
+			}
+
+		}
+
+		@media screen and (max-width: 544px) {
+
+			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+
+				#buddypress > & {
+					bottom: 112px;
+				}
+
+			}
+
+		}
+
 	}
 
 	// close @media

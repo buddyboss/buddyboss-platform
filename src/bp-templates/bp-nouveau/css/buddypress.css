@@ -1120,12 +1120,86 @@ a.layout-grid-view {
   display: flex;
   align-items: center;
   justify-content: center;
+  max-height: 100%;
+  overflow: auto;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-content,
+.activity-update-form.modal-popup #whats-new-content {
+  max-height: 230px;
+  overflow: auto;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 700px;
   max-width: 90%;
+  margin: auto;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-attachments .activity-media-container > .dropzone,
+.activity-update-form.modal-popup #whats-new-attachments .activity-media-container > .dropzone {
+  max-height: 130px;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown,
+.activity-update-form.modal-popup .gif-media-search-dropdown {
+  top: initial;
+  bottom: 30px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown:before,
+.activity-update-form.modal-popup .gif-media-search-dropdown:before {
+  top: initial;
+  bottom: -11px;
+  border-color: transparent transparent #fff #fff;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown .gif-search-results,
+.activity-update-form.modal-popup .gif-media-search-dropdown .gif-search-results {
+  min-height: 200px;
+  max-height: 200px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker,
+.activity-update-form.modal-popup .emojionearea .emojionearea-picker {
+  top: inherit;
+  bottom: 100%;
+  margin-bottom: 10px;
+  height: 230px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
+.activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper {
+  height: 230px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area,
+.activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
+  height: 150px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after,
+.activity-update-form.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
+  bottom: -9px;
+  top: inherit;
+  transform: rotate(180deg);
+}
+
+@media screen and (max-width: 603px) {
+  #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
+  .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 58px;
+  }
+}
+
+@media screen and (max-width: 544px) {
+  #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
+  .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 112px;
+  }
 }
 
 #whats-new-toolbar {
@@ -3566,143 +3640,6 @@ form.ac-form .ac-reply-content input {
 
 .activity-comments form.root {
   margin-left: 0;
-}
-
-/** Modal **/
-.edit-activity-modal {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(250, 251, 253, 0.9);
-  opacity: 0;
-  visibility: hidden;
-  z-index: 999901;
-}
-
-.edit-activity-modal .activity-update-form #whats-new-form.activity-form {
-  margin-bottom: 0;
-  border: 0;
-  width: 100%;
-}
-
-.edit-activity-modal .edit-activity-modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  padding: 0;
-  width: 700px;
-  max-width: 90%;
-  border-radius: 4px;
-  border: 1px solid #d2d4d6;
-  box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-  max-height: 90%;
-  overflow: auto;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-submit input {
-  padding: 0 15px;
-  margin: 0 5px;
-  line-height: 27px;
-  height: 34px;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-content {
-  max-height: 230px;
-  min-height: 230px;
-  overflow: auto;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .post-elements-buttons-item a {
-  text-decoration: none;
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .gif-media-search-dropdown {
-  top: initial;
-  bottom: 30px;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .gif-media-search-dropdown:before {
-  top: initial;
-  bottom: -11px;
-  border-color: transparent transparent #fff #fff;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .gif-media-search-dropdown .gif-search-results {
-  min-height: 200px;
-  max-height: 200px;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker {
-  top: inherit;
-  bottom: 100%;
-  margin-bottom: 10px;
-  height: 230px;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker .emojionearea-wrapper {
-  height: 230px;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker .emojionearea-wrapper .emojionearea-scroll-area {
-  height: 150px;
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-toolbar .emojionearea .emojionearea-picker .emojionearea-wrapper:after {
-  bottom: -9px;
-  top: inherit;
-  transform: rotate(180deg);
-}
-
-.edit-activity-modal .edit-activity-modal-content #whats-new-attachments .activity-media-container > .dropzone {
-  max-height: 130px;
-  overflow: auto;
-  margin-top: 10px;
-}
-
-.edit-activity-modal .edit-activity-modal-close-button {
-  float: right;
-  width: auto;
-  line-height: 15px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 3px;
-  position: absolute;
-  z-index: 11;
-  padding: 10px;
-  right: 0;
-  top: 7px;
-}
-
-.edit-activity-modal .edit-activity-modal-close-button .bb-icon {
-  font-size: 22px;
-  color: #939597;
-}
-
-.edit-activity-modal.show-modal {
-  opacity: 1;
-  visibility: visible;
-}
-
-.edit-activity-modal.show-modal .activity-update-form #whats-new-content .medium-editor-toolbar {
-  display: block;
-}
-
-@media screen and (max-width: 603px) {
-  .edit-activity-modal#buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 58px;
-  }
-}
-
-@media screen and (max-width: 560px) {
-  .edit-activity-modal#buddypress > .activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 112px;
-  }
 }
 
 /**
