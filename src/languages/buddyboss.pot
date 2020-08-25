@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-08-25 10:38:04+00:00\n"
+"POT-Creation-Date: 2020-08-25 12:32:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17106,7 +17106,9 @@ msgid "All Courses"
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Sync.php:194
-msgid "You need to buy a learndash group membership first to join this group."
+msgid ""
+"You are not allowed to access this group. Please purchase membership and "
+"try again."
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/AllReportsGenerator.php:29
@@ -17356,8 +17358,8 @@ msgstr ""
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:21
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-courses.php:21
 msgid ""
-"You need to buy a learndash group membership first to join this group "
-"courses."
+"You are not allowed to access group courses. Please purchase membership and "
+"try again."
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:162
