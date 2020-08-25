@@ -64,18 +64,13 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 				}
 			}
 
-			if ( ! empty( $bp_nouveau_customizer_nav_group ) ) {
-				$random = $bp_nouveau_customizer_nav_group;
-			} else {
-				// Try to fetch any random group:
-				$random = groups_get_groups( array(
-						'type'        => 'random',
-						'per_page'    => 1,
-						'slug'        => $slug,
-						'show_hidden' => true,
-				) );
-				$bp_nouveau_customizer_nav_group = $random;
-			}
+			// Try to fetch any random group:
+			$random = groups_get_groups( array(
+					'type'        => 'random',
+					'per_page'    => 1,
+					'slug'        => $slug,
+					'show_hidden' => true,
+			) );
 
 			if ( ! empty( $random['groups'] ) ) {
 				$group    = reset( $random['groups'] );
@@ -180,19 +175,21 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 											if ( $default_tab === $item->slug ) {
 												$class = 'bp-hide';
 
-											} ?>
-										<?php if ( $hide ) { ?>
-											<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
-												<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
-												<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
-											</span>
-										<?php } else { ?>
-											<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
-												<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
-												<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
-											</span>
-										<?php } ?>
-
+											}
+											if ( 'user' === $this->type ) {
+												if ( $hide ) { ?>
+													<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
+														<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="hidden-checkboxes" id="hidden_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'hidden_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
+														<label for="hidden_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+													</span> <?php
+												} else { ?>
+													<span class="checkbox-wrap <?php echo esc_attr( $class ); ?>">
+														<input data-bp-hide="<?php echo esc_attr( $item->slug ); ?>" <?php echo $checked; ?> type="checkbox" class="visible-checkboxes" id="visible_<?php echo esc_attr( $item->slug ); ?>" name="<?php echo esc_attr( 'visible_' . $item->slug ); ?>" value="1" data-bp-which-type="<?php echo esc_attr( $this->type ); ?>">
+														<label for="visible_<?php echo esc_attr( $item->slug ); ?>"><?php echo esc_html( __( 'Hide', 'buddyboss') ); ?></label><br>
+													</span> <?php
+												}
+											}
+											?>
 									</span>
 								</div>
 							</div>

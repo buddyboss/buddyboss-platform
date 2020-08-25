@@ -810,13 +810,6 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_nav_hide]'         => array(
-			'index'             => 'group_nav_hide',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'bp_nouveau_sanitize_nav_hide',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[groups_dir_tabs]'         => array(
 			'index'             => 'groups_dir_tabs',
 			'capability'        => 'bp_moderate',
@@ -891,13 +884,6 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 				'label'    => __( 'Reorder the primary navigation for a group.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
 				'settings' => 'bp_nouveau_appearance[group_nav_order]',
-				'type'     => 'group',
-			),
-			'group_nav_hide'   => array(
-				'class'    => 'BP_Nouveau_Nav_Customize_Control',
-				'label'    => __( 'Hide the primary navigation for a group.', 'buddyboss' ),
-				'section'  => 'bp_nouveau_group_primary_nav',
-				'settings' => 'bp_nouveau_appearance[group_nav_hide]',
 				'type'     => 'group',
 			),
 		) );
