@@ -485,8 +485,14 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
 				$activity_edit_expire_time = bp_nouveau_get_activity_timestamp() + $activity_edit_time;
 
+				/**
+				 * Checking the activity privacy so this edit button is not available on the preview
+				 */
+				$activity_privacy = bp_get_activity_privacy();
+				$privacy = array(  'public', 'loggedin', 'friends', 'onlyme' );
+
 				//Checking if expire time still greater then current time.
-				if ( $activity_edit_time === -1 || $activity_edit_expire_time >= $bp_dd_get_time ) {
+				if ( ( $activity_edit_time === -1 || $activity_edit_expire_time >= $bp_dd_get_time ) && in_array( $activity_privacy , $privacy )  ) {
 					$buttons[ 'activity_edit' ] = array(
 						'id'                => 'activity_edit',
 						'position'          => 30,
