@@ -297,6 +297,15 @@ window.bp = window.bp || {};
 
 			$activityFormPlaceholder.show();
 
+			setTimeout(function() {
+				$( '#whats-new img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+			}, 10);
+
 			self.activityEditHideModalEvent();
 		},
 
