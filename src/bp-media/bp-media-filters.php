@@ -308,7 +308,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
-	global $bp_activity_post_update, $bp_activity_post_update_id;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
 		return false;
 	}

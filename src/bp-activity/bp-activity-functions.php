@@ -2198,16 +2198,12 @@ function bp_activity_add( $args = '' ) {
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
+	$activity->date_recorded     = empty( $r['id'] ) ? $r['recorded_time'] : $activity->date_recorded;
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
 	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : bp_activity_generate_action_string( $activity );
-
-	// Do not update date when update activity.
-	if ( empty( $r['id'] ) ) {
-		$activity->date_recorded = $r['recorded_time'];
-	}
 
 	$save = $activity->save();
 
