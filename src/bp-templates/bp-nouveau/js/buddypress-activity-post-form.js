@@ -2748,8 +2748,9 @@ window.bp = window.bp || {};
 						}
 
 							// Reset formatting of editor
-							window.group_messages_editor.execAction( 'selectAll' );
-							window.group_messages_editor.execAction( 'removeFormate' );
+
+							//window.group_messages_editor.execAction( 'selectAll' );
+							//window.group_messages_editor.execAction( 'removeFormate' );
 
 							// Reset the form.
 							self.resetForm();
