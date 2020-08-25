@@ -273,7 +273,12 @@ window.bp = window.bp || {};
 			self.displayEditActivity( activity_data );
 
 			// Make selected current privacy.
-			$activityForm.find( '#bp-activity-privacy' ).val( activity_data.privacy );
+			var $activityPrivacySelect = $activityForm.find( '#bp-activity-privacy' );
+
+			$activityPrivacySelect.val( activity_data.privacy );
+			if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' ){
+				$activityPrivacySelect.val( bp.Nouveau.Activity.EditedPrivacyData.privacy );
+			}
 
 			var edit_activity_editor = $('#whats-new')[0];
 			var edit_activity_editor_content = $('#whats-new-content')[0];
