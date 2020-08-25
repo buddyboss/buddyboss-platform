@@ -12927,6 +12927,7 @@ ul.bb-albums-list .bb-more-photos strong {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
 
 #buddypress #bp-media-single-album .bb-single-album-header #bp-single-album-title {
@@ -12949,10 +12950,6 @@ ul.bb-albums-list .bb-more-photos strong {
 #buddypress #bp-media-single-album .bb-single-album-header p {
   flex-basis: 100%;
   width: 100%;
-}
-
-#buddypress #bp-media-single-album .bb-single-album-header .button.small {
-  line-height: 2;
 }
 
 @media (min-width: 768px) {
