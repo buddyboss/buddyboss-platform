@@ -1364,7 +1364,7 @@ window.bp = window.bp || {};
 				var startIndex  = urlText.indexOf( prefix );
 				var responseUrl = '';
 
-				if ( typeof $( urlText ).attr( 'href' ) !== 'undefined' ) {
+				if ( typeof $( $.parseHTML( urlText ) ).attr( 'href' ) !== 'undefined' ) {
 					urlString = $( urlText ).attr( 'href' );
 				} else {
 					for ( var i = startIndex; i < urlText.length; i++ ) {
@@ -2615,7 +2615,7 @@ window.bp = window.bp || {};
 				}
 
 				// validation for content editor.
-				if ( $( content ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && ! self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && ! self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && ! self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && ! self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
 					self.model.set(
 						'errors',
 						{
