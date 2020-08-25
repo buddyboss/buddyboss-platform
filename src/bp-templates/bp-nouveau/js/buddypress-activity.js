@@ -580,6 +580,8 @@ window.bp = window.bp || {};
 						target.addClass( 'selected' );
 						activity_item.find( '.privacy' ).removeClass( 'public' ).removeClass( 'loggedin' ).removeClass( 'onlyme' ).removeClass( 'friends' );
 						activity_item.find( '.privacy' ).addClass( target.data( 'value' ) );
+
+						bp.Nouveau.Activity.EditedPrivacyData = { 'id': activity_id, 'privacy': target.data( 'value' ) };
 					}
 				}
 			);
