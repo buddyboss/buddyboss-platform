@@ -1831,7 +1831,7 @@ function bp_activity_document_add( $document ) {
 	if ( ! empty( $document ) ) {
 		$parent_activity_id = false;
 		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
-			$parent_activity_id = (int) $_POST['bp_activity_id'];
+			$parent_activity_id = (int) $bp_activity_post_update_id;
 		}
 
 		if ( $bp_document_upload_count > 1 || ! empty( $bp_new_activity_comment ) ) {
