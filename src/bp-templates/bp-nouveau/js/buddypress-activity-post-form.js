@@ -263,6 +263,11 @@ window.bp = window.bp || {};
 
 			var $activityForm            = $( '#bp-nouveau-activity-form' );
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
+			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+
+			if ( $singleActivityFormWrap.length ){
+				$singleActivityFormWrap.show();
+			}
 
 			// Set the activity value
 			self.displayEditActivity( activity_data );
@@ -321,7 +326,13 @@ window.bp = window.bp || {};
 			$('.activity-update-form.modal-popup').removeClass('modal-popup');
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
+			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+
 			$activityFormPlaceholder.hide();
+
+			if ( $singleActivityFormWrap.length ){
+				$singleActivityFormWrap.hide();
+			}
 		},
 
 		createThumbnailFromUrl: function ( mock_file ) {
