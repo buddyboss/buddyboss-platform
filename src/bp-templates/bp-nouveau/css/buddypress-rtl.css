@@ -1169,6 +1169,7 @@ a.layout-grid-view {
   bottom: 100%;
   margin-bottom: 10px;
   height: 230px;
+  z-index: 999;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .emojionearea .emojionearea-picker .emojionearea-wrapper,
