@@ -108,6 +108,13 @@ window.bp = window.bp || {};
 			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
 			self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
 
+
+
+
+
+
+
+
 			var tool_box = $('#whats-new-toolbar');
 
 			// set object of activity and item id when group activity
@@ -271,6 +278,34 @@ window.bp = window.bp || {};
 			//Make selected current privacy.
 			$activityForm.find('#bp-activity-privacy').val(activity_data.privacy);
 
+
+
+
+
+
+			var edit_activity_editor = $('#whats-new')[0];
+			var edit_activity_editor_content = $('#whats-new-content')[0];
+
+			window.activity_edit_editor = new window.MediumEditor( edit_activity_editor, {
+				placeholder: {
+					text: '',
+					hideOnClick: true
+				},
+				toolbar: {
+					buttons: [ 'bold', 'italic', 'unorderedlist', 'orderedlist', 'quote', 'anchor', 'pre' ],
+					relativeContainer: edit_activity_editor_content,
+					static: true,
+					updateOnEmptySelection: true
+				},
+				imageDragging: false
+			});
+
+
+
+
+
+
+
 			//Now Show the Modal
 			$activityForm.addClass('modal-popup');
 			$activityFormPlaceholder.show();
@@ -295,15 +330,10 @@ window.bp = window.bp || {};
 		},
 
 		postActivityEditHideModal : function(){
-			var self = this;
-
 			$('.activity-update-form.modal-popup').removeClass('modal-popup');
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			$activityFormPlaceholder.hide();
-
-			//Reset the post form.
-			self.postForm.$el.trigger( 'reset' );
 		},
 
 /*
