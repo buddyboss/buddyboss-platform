@@ -1114,6 +1114,7 @@ a.layout-grid-view {
   top: 0;
   width: 100%;
   height: 100%;
+  padding: 10px 0;
   background-color: rgba(250, 251, 253, 0.9);
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
   z-index: 999901;
@@ -1124,24 +1125,11 @@ a.layout-grid-view {
   overflow: auto;
 }
 
-.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-content,
-.activity-update-form.modal-popup #whats-new-content {
-  max-height: 230px;
-  overflow: auto;
-}
-
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 700px;
   max-width: 90%;
   margin: auto;
-}
-
-.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-attachments .activity-media-container > .dropzone,
-.activity-update-form.modal-popup #whats-new-attachments .activity-media-container > .dropzone {
-  max-height: 130px;
-  overflow: auto;
-  margin-top: 10px;
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown,
