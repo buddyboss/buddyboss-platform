@@ -258,9 +258,22 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
-
-	global $bp_activity_post_update, $bp_activity_post_update_id;
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+		// save document meta for activity.
+		if ( ! empty( $activity_id ) ) {
+			// Delete document if not exists in activity anymore.
+			if ( $bp_activity_edit && isset( $_POST['edit'] ) ) {
+				$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+				$old_document_ids = explode( ',', $old_document_ids );
+				if ( ! empty( $old_document_ids ) ) {
+					foreach ( $old_document_ids as $document_id ) {
+						bp_document_delete( array( 'id' => $document_id ) );
+					}
+				}
+			}
+			bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
+		}
 		return false;
 	}
 
@@ -291,6 +304,18 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
+		// Delete document if not exists in current document ids
+		if ( $bp_activity_edit && isset( $_POST['edit'] ) ) {
+			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+			$old_document_ids = explode( ',', $old_document_ids );
+			if ( ! empty( $old_document_ids ) ) {
+				foreach ( $old_document_ids as $document_id ) {
+					if ( ! in_array( $document_id, $document_ids ) ) {
+						bp_document_delete( array( 'id' => $document_id ) );
+					}
+				}
+			}
+		}
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
 	}
 }
