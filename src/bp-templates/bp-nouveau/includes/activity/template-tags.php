@@ -491,8 +491,11 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				$activity_privacy = bp_get_activity_privacy();
 				$privacy = array(  'public', 'loggedin', 'friends', 'onlyme' );
 
+				$media_activity            = ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] );
+				$document_activity         = ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] );
+
 				//Checking if expire time still greater then current time.
-				if ( ( $activity_edit_time === -1 || $activity_edit_expire_time >= $bp_dd_get_time ) && in_array( $activity_privacy , $privacy )  ) {
+				if ( ( $activity_edit_time === -1 || $activity_edit_expire_time >= $bp_dd_get_time ) && in_array( $activity_privacy , $privacy ) && ! ( $media_activity || $document_activity )  ) {
 					$buttons[ 'activity_edit' ] = array(
 						'id'                => 'activity_edit',
 						'position'          => 30,
