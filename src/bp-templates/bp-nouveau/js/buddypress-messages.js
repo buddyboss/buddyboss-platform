@@ -684,6 +684,17 @@ window.bp = window.bp || {};
 	bp.Views.messageEditor = bp.Nouveau.Messages.View.extend(
 		{
 			template  : bp.template( 'bp-messages-editor' ),
+			events: {
+				'input #message_content': 'focusEditorOnChange'
+			},
+
+			focusEditorOnChange: function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
+				setTimeout(function(){
+					medium_editor_toolbar.addClass('medium-editor-toolbar-active');
+					$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				},0);
+			},
 
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
@@ -706,9 +717,14 @@ window.bp = window.bp || {};
 					paste: {
 						forcePlainText: false,
 						cleanPastedHTML: true,
-						cleanReplacements: [],
-						cleanAttrs: ['class', 'style', 'dir'],
-						cleanTags: ['meta'],
+						cleanReplacements: [
+							[new RegExp(/<div/gi), '<p'],
+							[new RegExp(/<\/div/gi), '</p'],
+							[new RegExp(/<h[1-6]/gi), '<b'],
+							[new RegExp(/<\/h[1-6]/gi), '</b'],
+						],
+						cleanAttrs: ['class', 'style', 'dir', 'id'],
+						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 						unwrapTags: []
 					},
 					imageDragging: false
@@ -1310,7 +1326,7 @@ window.bp = window.bp || {};
 				'click #messages-document-button': 'toggleDocumentSelector',
 				'click #messages-gif-button': 'toggleGifSelector',
 				'click #show-toolbar-button': 'toggleToolbarSelector',
-				'click .medium-editor-toolbar-actions': 'focusEditor',
+				'click .medium-editor-toolbar-actions': 'focusEditor'
 			},
 
 			initialize: function() {
@@ -1379,12 +1395,19 @@ window.bp = window.bp || {};
 			toggleToolbarSelector: function( e ) {
 				e.preventDefault();
 				$( e.currentTarget ).toggleClass( 'active' );
+				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
 				if ( $( e.currentTarget ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-hide' ) );
+					if( bp.Nouveau.Messages.mediumEditor.exportSelection() != null ){
+						medium_editor_toolbar.addClass('medium-editor-toolbar-active');
+					}
 				} else {
 					$( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).parent( '.show-toolbar' ).attr( 'data-bp-tooltip-show' ) );
+					if( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
+						medium_editor_toolbar.removeClass('medium-editor-toolbar-active');
+					}
 				}
-				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
+				
 				medium_editor_toolbar.toggleClass( 'active' );
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
@@ -1394,7 +1417,9 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				if( bp.Nouveau.Messages.mediumEditor.exportSelection() === null ) {
+					$( e.currentTarget ).closest( '.bp-message-content-wrap' ).find( '#bp-message-content #message_content' ).focus();
+				}
 			},
 
 			closeGifSelector: function() {
@@ -1753,7 +1778,8 @@ window.bp = window.bp || {};
 				}
 
 				// check message content empty.
-				if ( this.model.get( 'message_content' ) === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
+				this.model.set('message_content', this.model.get('message_content').replace(/&nbsp;/g, '').trim(), { silent: true });
+				if ( $(this.model.get('message_content')).text().trim() === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -2707,7 +2733,8 @@ window.bp = window.bp || {};
 				}
 
 				// check message content empty.
-				if ( content === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				content = content.replace(/&nbsp;/g,'').trim();
+				if ( $(content).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -2756,6 +2783,9 @@ window.bp = window.bp || {};
 					tinyMCE.activeEditor.setContent( '' );
 					jQuery( tinyMCE.activeEditor.formElement ).removeClass( 'loading' );
 				} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
+					// Reset Formatting
+					bp.Nouveau.Messages.mediumEditor.execAction('selectAll');
+					bp.Nouveau.Messages.mediumEditor.execAction('removeFormate');
 					bp.Nouveau.Messages.mediumEditor.setContent( '' );
 					jQuery( '#message_content' ).removeClass( 'loading' );
 				}

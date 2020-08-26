@@ -529,6 +529,10 @@ window.bp = window.bp || {};
 									feedbackSelector.hide();
 									feedbackSelector.after( feedbackHtmlSuccess );
 
+									// Reset formatting of editor
+									window.group_messages_editor.execAction('selectAll');
+									window.group_messages_editor.execAction('removeFormate');
+									
 									window.group_messages_editor.setContent( '' );
 									if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
@@ -690,8 +694,14 @@ window.bp = window.bp || {};
 					$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 					if ( jQuery( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
+						if( window.group_messages_editor.exportSelection() != null ){
+							medium_editor.addClass('medium-editor-toolbar-active');
+						}
 					} else {
 						jQuery( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
+						if( window.group_messages_editor.exportSelection() === null ) {
+							medium_editor.removeClass('medium-editor-toolbar-active');
+						}
 					}
 					medium_editor.toggleClass( 'active' );
 				}
@@ -700,7 +710,20 @@ window.bp = window.bp || {};
 				'click',
 				'#group-messages-container .medium-editor-toolbar-actions',
 				function(e) {
-					$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+					if( window.group_messages_editor.exportSelection() === null ) {
+						$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+					}
+				}
+			);
+			$( document ).on(
+				'input',
+				'#group_message_content',
+				function ( e ) { //Fix issue of Editor loose focus when formatting is opened after selecting text
+					var medium_editor = $( e.currentTarget ).closest( '#bp-group-message-content' ).find( '.medium-editor-toolbar' );
+					setTimeout(function(){
+						medium_editor.addClass('medium-editor-toolbar-active');
+						$( e.currentTarget ).closest( '#bp-group-message-content' ).find( '#group_message_content' ).focus();
+					},0);
 				}
 			);
 		},
@@ -726,6 +749,19 @@ window.bp = window.bp || {};
 						relativeContainer: document.getElementById('whats-new-toolbar'),
 						static: true,
 						updateOnEmptySelection: true
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: true,
+						cleanReplacements: [
+							[new RegExp(/<div/gi), '<p'],
+							[new RegExp(/<\/div/gi), '</p'],
+							[new RegExp(/<h[1-6]/gi), '<b'],
+							[new RegExp(/<\/h[1-6]/gi), '</b'],
+						],
+						cleanAttrs: ['class', 'style', 'dir', 'id'],
+						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+						unwrapTags: []
 					},
 					imageDragging: false
 				});

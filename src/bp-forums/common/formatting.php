@@ -84,8 +84,11 @@ function bbp_kses_allowed_tags() {
 			'ul'         => array(),
 			'ol'         => array(
 				'start' => true,
+				'class' => true,
 			),
-			'li'         => array(),
+			'li'         => array(
+				'class' => true,
+			),
 
 			// Images
 			'img'        => array(

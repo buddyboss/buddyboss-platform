@@ -361,7 +361,7 @@ function bp_document_delete_activity_document( $activities ) {
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_update_document_privacy( &$folder ) {
+function bp_document_update_document_privacy( $folder ) {
 
 	if ( ! empty( $folder->id ) ) {
 
@@ -1582,12 +1582,12 @@ function bp_document_activity_after_email_content( $activity ) {
 	if ( ! empty( $document_ids ) ) {
 		$document_ids = explode( ',', $document_ids );
 		$document_text = sprintf(
-		        _n( '%s Document', '%s Documents', count( $document_ids) , 'buddyboss' ),
+		        _n( '%s document', '%s documents', count( $document_ids) , 'buddyboss' ),
                 number_format_i18n( count( $document_ids ) )
         );
 		$content   = sprintf(
 	    	/* translator: 1. Activity link, 2. Activity document count */
-			__( '<a href="%1$s" target="_blank">%2$s Uploaded.</a>', 'buddyboss' ),
+			__( '<a href="%1$s" target="_blank">%2$s uploaded</a>', 'buddyboss' ),
 			bp_activity_get_permalink( $activity->id ),
 			$document_text
 		);

@@ -289,6 +289,16 @@ function bp_nouveau_ajax_joinleave_group() {
 			break;
 	}
 
+	/**
+	 * Filters change the success/fail message.
+	 *
+	 * @since BuddyBoss 1.5.0
+	 *
+	 * @param array $response Array of response message.
+	 * @param int   $group_id Group id.
+	 */
+	$response = apply_filters( 'bp_nouveau_ajax_joinleave_group', $response, $group_id );
+
 	if ( 'error' === $response['type'] ) {
 		wp_send_json_error( $response );
 	}
@@ -1856,8 +1866,8 @@ function bp_groups_messages_new_message( $args = '' ) {
 			'append_thread' => false,
 			'is_hidden'     => false,
 			'mark_visible'  => false,
-			'error_type'    => 'wp_error',
 			'group_thread'  => true,
+			'error_type'    => 'wp_error',
 		),
 		'bp_groups_messages_new_message'
 	);

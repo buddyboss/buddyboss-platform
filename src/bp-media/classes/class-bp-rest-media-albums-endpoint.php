@@ -123,7 +123,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'page'        => $request['page'],
 			'per_page'    => $request['per_page'],
-			'sort'        => $request['order'],
+			'sort'        => strtoupper( $request['order'] ),
 			'order_by'    => $request['orderby'],
 			'count_total' => $request['count_total'],
 			'fields'      => 'all',

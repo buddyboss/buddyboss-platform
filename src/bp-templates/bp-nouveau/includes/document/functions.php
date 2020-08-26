@@ -98,7 +98,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$document_options = array(
 		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'max_upload_size'           => bp_document_file_upload_max_size( false, 'MB' ),
+		'max_upload_size'           => bp_document_file_upload_max_size(),
 		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
 		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
@@ -948,7 +948,8 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 
 	//$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$document_folder_table} WHERE parent IN (@pv)) AS lv FROM {$document_folder_table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id );
 	//$documents_folder_query = $wpdb->prepare( "SELECT * FROM (select * from  {$document_folder_table}  order by parent, id) {$document_folder_table},(select @pv := %d ) initialisation WHERE find_in_set(parent, @pv) > 0 and @pv := concat(@pv, ',', id)", $folder_id );
-	$documents_folder_query = $wpdb->prepare( "SELECT DATA.* FROM( SELECT @ids as _ids, (   SELECT @ids := GROUP_CONCAT(id) FROM {$document_folder_table} WHERE FIND_IN_SET(parent, @ids) ) as cids, @l := @l+1 as level FROM {$document_folder_table}, (SELECT @ids :=%d, @l := 0 ) b WHERE @ids IS NOT NULL ) id, {$document_folder_table} DATA WHERE FIND_IN_SET(DATA.id, ID._ids) AND parent > 0 ORDER BY level, id", $folder_id );
+	//$documents_folder_query = $wpdb->prepare( "SELECT DATA.* FROM( SELECT @ids as _ids, (   SELECT @ids := GROUP_CONCAT(id) FROM {$document_folder_table} WHERE FIND_IN_SET(parent, @ids) ) as cids, @l := @l+1 as level FROM {$document_folder_table}, (SELECT @ids :=%d, @l := 0 ) b WHERE @ids IS NOT NULL ) id, {$document_folder_table} DATA WHERE FIND_IN_SET(DATA.id, ID._ids) AND parent > 0 ORDER BY level, id", $folder_id );
+	$documents_folder_query = $wpdb->prepare( "SELECT DATA.* FROM( SELECT @ids as _ids, (   SELECT @ids := GROUP_CONCAT(id) FROM {$document_folder_table} WHERE FIND_IN_SET(parent, @ids) ) as cids, @l := @l+1 as level FROM {$document_folder_table}, (SELECT @ids :=%d, @l := 0 ) b WHERE @ids IS NOT NULL ) AS id, {$document_folder_table} AS DATA WHERE FIND_IN_SET(DATA.id, id._ids) AND parent > 0 ORDER BY level, id", $folder_id );
 	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
 	// Build array of item references.
