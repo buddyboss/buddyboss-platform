@@ -221,22 +221,26 @@ window.bp = window.bp || {};
 					doc_file = false;
 
 					doc_file = {
-						name		: activity_data.document[doci].name,
-						size		: activity_data.document[doci].size,
-						accepted	: true,
-						kind		: 'file',
+						name				: activity_data.document[doci].name,
+						size				: activity_data.document[doci].size,
+						accepted			: true,
+						kind				: 'file',
 						upload: {
-							filename	: activity_data.document[doci].name,
-							uuid	: activity_data.document[doci].doc_id
+							filename			: activity_data.document[doci].name,
+							uuid			: activity_data.document[doci].doc_id
 						},
-						dataURL		: activity_data.document[doci].url,
-						id			: activity_data.document[doci].doc_id,
+						dataURL				: activity_data.document[doci].url,
+						id					: activity_data.document[doci].doc_id,
 						document_edit_data: {
-							'id'	: activity_data.document[doci].doc_id,
-							'name'	: activity_data.document[doci].name,
-							'type'	: 'document',
-							'url'	: activity_data.document[doci].url,
-							'size'	: activity_data.document[doci].size,
+							'id'			: activity_data.document[doci].doc_id,
+							'name'			: activity_data.document[doci].name,
+							'type'			: 'document',
+							'url'			: activity_data.document[doci].url,
+							'size'			: activity_data.document[doci].size,
+							'uuid'			: activity_data.document[doci].doc_id,
+							'document_id'	: activity_data.document[doci].id,
+							'menu_order'	: activity_data.document[doci].menu_order,
+							'saved'			: true
 						}
 					};
 
