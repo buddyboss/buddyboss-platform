@@ -999,23 +999,29 @@ window.bp = window.bp || {};
 				var tool_box = this.$el.parents( '#whats-new-form' );
 				if ( tool_box.find( '#activity-document-button' ) ) {
 					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 				if ( tool_box.find( '#activity-media-button' ) ) {
 					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 				if ( tool_box.find( '#activity-gif-button' ) ) {
 					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'active' );
+					tool_box.find( '#activity-gif-button' ).removeClass( 'open' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 
 				var tool_box_comment = this.$el.parents( '.ac-reply-content' );
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable' );
+					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'no-click' );
 				}
 				if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active' );
+					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'no-click' );
 				}
 			}
 		}
