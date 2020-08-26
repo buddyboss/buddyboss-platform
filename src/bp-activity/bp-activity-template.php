@@ -4148,7 +4148,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 /**
  * Output the activity entry CSS class.
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.0
  */
 function bp_activity_entry_css_class() {
 	echo bp_get_activity_entry_css_class();
@@ -4157,7 +4157,7 @@ function bp_activity_entry_css_class() {
 	/**
 	 * Return the current activity entry item's CSS class.
 	 *
-	 * @since BuddyBoss 1.4.9
+	 * @since BuddyBoss 1.5.0
 	 *
 	 * @global object $activities_template {@link BP_Activity_Template}
 	 *
@@ -4179,7 +4179,7 @@ function bp_activity_entry_css_class() {
 		/**
 		 * Filters the determined classes to add to the HTML element.
 		 *
-		 * @since BuddyBoss 1.4.9
+		 * @since BuddyBoss 1.5.0
 		 *
 		 * @param string $value Classes to be added to the HTML element.
 		 */
