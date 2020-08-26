@@ -187,9 +187,9 @@ function bp_media_file_upload_max_size() {
 
 	/**
 	 * Filters file media upload max limit.
-	 * 
+	 *
 	 * @param mixed $max_size media upload max limit.
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.1
 	 */
 	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
@@ -479,7 +479,7 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
- * 
+ *
  * @param array $medias
  * @param string $privacy
  * @param string $content
@@ -2389,7 +2389,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $media->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -2769,7 +2774,12 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $album->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $album->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_add      = true;
 				$can_view     = true;
