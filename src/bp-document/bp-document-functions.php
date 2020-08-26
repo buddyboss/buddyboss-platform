@@ -263,9 +263,9 @@ function bp_document_file_upload_max_size() {
 
 	/**
 	 * Filters doucment file upload max limit.
-	 * 
+	 *
 	 * @param mixed $max_size document upload max limit.
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.0
 	 */
 	return apply_filters( 'bp_document_file_upload_max_size', bp_media_allowed_upload_document_size() );
@@ -2907,7 +2907,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $folder->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $folder->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -3044,7 +3049,11 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'loggedin':
-			if ( $document->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
