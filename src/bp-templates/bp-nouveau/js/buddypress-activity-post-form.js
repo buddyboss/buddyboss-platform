@@ -184,6 +184,8 @@ window.bp = window.bp || {};
 							'url'			: activity_data.media[i].url,
 							'uuid'			: activity_data.media[i].attachment_id,
 							'menu_order'	: activity_data.media[i].menu_order,
+							'album_id'	: activity_data.media[i].album_id,
+							'group_id'	: activity_data.media[i].group_id,
 							'saved'			: true
 						}
 					};
@@ -240,6 +242,8 @@ window.bp = window.bp || {};
 							'uuid'			: activity_data.document[doci].doc_id,
 							'document_id'	: activity_data.document[doci].id,
 							'menu_order'	: activity_data.document[doci].menu_order,
+							'folder_id'	: activity_data.document[doci].folder_id,
+							'group_id'	: activity_data.document[doci].group_id,
 							'saved'			: true
 						}
 					};
