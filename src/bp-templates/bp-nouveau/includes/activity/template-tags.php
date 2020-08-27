@@ -1259,7 +1259,6 @@ function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 		return;
 	}
 
-	$activity_id = bp_get_activity_id();
 	$is_edited   = bp_activity_get_meta( $activity_id, '_is_edited', true );
 
 	if ( $is_edited ) {
