@@ -3165,7 +3165,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$data['can_download'] = $can_download;
 	$data['can_add']      = $can_add;
 
-	return apply_filters( 'bp_document_user_can_manage_folder', $data, $document_id, $user_id );
+	return apply_filters( 'bp_document_user_can_manage_document', $data, $document_id, $user_id );
 }
 
 /**
