@@ -48,6 +48,49 @@ window.wp = window.wp || {};
 			}
 		} ).disableSelection();
 
+
+		$( document ).on( 'click', '.visible-checkboxes', function() {
+			var hide  = [];
+			var finder = '#customize-control-' + $( this ).data( 'bp-which-type' ) + '_nav_order [data-bp-nav]';
+			$( document ).find( finder ).each( function() {
+				if ($(this).find( '.visible-checkboxes' ).is(':checked')) {
+					hide.push( $(this).find( '.visible-checkboxes' ).data('bp-hide' ) );
+				}
+			} );
+
+			console.log( 'trigger change ');
+
+			if ( hide.length ) {
+				$( '#bp_item_' + $( this ).data( 'bp-which-type' ) + '_hide' ).val( hide.join() ).trigger( 'change' );
+			}
+		});
+
+		// Show/Hide checkbox based on the Profile Navigation Order.
+		$( document ).on( 'change', '#_customize-input-user_default_tab', function() {
+			var currentValue = $( this ).val();
+			if ( 'media' === currentValue ) {
+				currentValue = 'photos';
+			} else if ( 'document' === currentValue ) {
+				currentValue = 'documents';
+			}
+			$( document ).find( 'ul#customize-control-user_nav_order li .checkbox-wrap' ).removeClass( 'bp-hide');
+			if ( $( document ).find( 'ul#customize-control-user_nav_order li.' + currentValue + ' .checkbox-wrap' ).find( '.visible-checkboxes').is(':checked') ) {
+				$( document ).find( 'ul#customize-control-user_nav_order li.' + currentValue + ' .checkbox-wrap' ).find( '.visible-checkboxes').trigger( 'click' );
+			}
+			$( document ).find( 'ul#customize-control-user_nav_order li.' + currentValue + ' .checkbox-wrap' ).addClass( 'bp-hide');
+		});
+
+		// Show/Hide checkbox based on the Group Navigation Order.
+		$( document ).on( 'change', '#_customize-input-group_default_tab', function() {
+			var currentValue = $( this ).val();
+
+			$( document ).find( 'ul#customize-control-group_nav_order li .checkbox-wrap' ).removeClass( 'bp-hide');
+			if ( $( document ).find( 'ul#customize-control-group_nav_order li.' + currentValue + ' .checkbox-wrap' ).find( '.visible-checkboxes').is(':checked') ) {
+				$( document ).find( 'ul#customize-control-group_nav_order li.' + currentValue + ' .checkbox-wrap' ).find( '.visible-checkboxes').trigger( 'click' );
+			}
+			$( document ).find( 'ul#customize-control-group_nav_order li.' + currentValue + ' .checkbox-wrap' ).addClass( 'bp-hide');
+		});
+
 		$( '#accordion-section-bp_nouveau_mail > h3' ).off( 'click' );
 		$( '#accordion-section-bp_nouveau_mail' ).on( 'click', function() {
 			location.replace( BP_Customizer.emailCustomizerUrl );
