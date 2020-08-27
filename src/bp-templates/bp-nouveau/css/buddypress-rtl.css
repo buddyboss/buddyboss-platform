@@ -1191,6 +1191,10 @@ a.layout-grid-view {
   }
 }
 
+.atwho-container .atwho-view {
+  z-index: 999999;
+}
+
 #whats-new-toolbar {
   padding: 10px;
 }
