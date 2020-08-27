@@ -2730,6 +2730,13 @@ window.bp = window.bp || {};
 				bp.ajax.post( 'post_update', data ).done(
 					function ( response ) {
 
+						// check if edit activity then scroll up 1px so image will load automatically.
+						if ( self.model.get( 'id' ) > 0 ) {
+							$('html, body').animate({
+								scrollTop: $(window).scrollTop() + 1
+							});
+						}
+
 							// At first, hide the modal
 							bp.Nouveau.Activity.postForm.postActivityEditHideModal();
 
