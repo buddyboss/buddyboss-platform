@@ -479,6 +479,13 @@ function groups_record_activity( $args = '' ) {
 				'privacy'           => $activity->privacy,
 				'error_type'        => ! empty( $args['error_type'] ) ? $args['error_type'] : $activity->error_type,
 			);
+
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+
 		}
 	}
 
