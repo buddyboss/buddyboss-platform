@@ -324,6 +324,18 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		/**
+		 * Fires if the cover photo was successfully deleted.
+		 *
+		 * The dynamic portion of the hook will be xprofile in case of a user's
+		 * cover photo, groups in case of a group's cover photo. For instance:
+		 * Use add_action( 'xprofile_cover_image_deleted' ) to run your specific
+		 * code once the user has deleted his cover photo.
+		 *
+		 * @param int $item_id Inform about the item id the cover photo was deleted for.
+		 */
+		do_action( 'xprofile_cover_image_deleted', (int) $this->user->ID );
+
 		// Build the response.
 		$response = new WP_REST_Response();
 		$response->set_data(
@@ -408,7 +420,8 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $cover_url, $request ) {
 		$data = array(
-			'image' => $cover_url,
+			'image'   => ( is_array( $cover_url ) ? $cover_url['cover'] : $cover_url ),
+			'warning' => ( is_array( $cover_url ) && isset( $cover_url['warning'] ) ? $cover_url['warning'] : '' ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -441,11 +454,17 @@ class BP_REST_Attachments_Member_Cover_Endpoint extends WP_REST_Controller {
 			'title'      => 'bp_attachments_member_cover',
 			'type'       => 'object',
 			'properties' => array(
-				'image' => array(
+				'image'   => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Full size of the image file.', 'buddyboss' ),
 					'type'        => 'string',
 					'format'      => 'uri',
+					'readonly'    => true,
+				),
+				'warning' => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Warning while uploading the cover photo.', 'buddyboss' ),
+					'type'        => 'string',
 					'readonly'    => true,
 				),
 			),

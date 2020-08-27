@@ -19,7 +19,8 @@ add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 
 add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
 add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
-add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' ); // Delete activity medias.
+add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_gif' ); // Delete activity gif.
 add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
@@ -43,9 +44,10 @@ add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
-add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 );
-add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_media', 10, 4 );
-add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 );
+add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 ); // Delete thread medias.
+add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_media', 10, 4 ); // Delete messages medias.
+add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 ); // Delete thread gifs.
+add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_gif', 10, 4 ); // Delete messages gifs.
 // add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );.
 
 // Core tools.
@@ -295,14 +297,13 @@ function bp_media_activity_comment_entry( $comment_id ) {
  * @return bool
  */
 function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
-
+	global $bp_activity_post_update, $bp_activity_post_update_id;
 	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
 		return false;
 	}
 
-	$_POST['medias']             = $_POST['media'];
-	$_POST['bp_activity_update'] = true;
-	$_POST['bp_activity_id']     = $activity_id;
+	$bp_activity_post_update    = true;
+	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
 	if ( ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
@@ -319,7 +320,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 
-	$media_ids = bp_media_add_handler();
+	$media_ids = bp_media_add_handler( $_POST['media'], $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
@@ -391,6 +392,32 @@ function bp_media_delete_activity_media( $activities ) {
 			}
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+	}
+}
+
+/**
+ * Delete media gif when related activity is deleted.
+ *
+ * @since BuddyBoss 1.4.9
+ *
+ * @param array $activities Array of activities.
+ */
+function bp_media_delete_activity_gif( $activities ) {
+	if ( ! empty( $activities ) ) {
+		foreach ( $activities as $activity ) {
+			$activity_id  = $activity->id;
+			$activity_gif = bp_activity_get_meta( $activity_id, '_gif_data', true );
+
+			if ( ! empty( $activity_gif ) ) {
+				if ( ! empty( $activity_gif['still'] ) ) {
+					wp_delete_attachment( (int) $activity_gif['still'], true );
+				}
+
+				if ( ! empty( $activity_gif['mp4'] ) ) {
+					wp_delete_attachment( (int) $activity_gif['mp4'], true );
+				}
+			}
+		}
 	}
 }
 
@@ -681,7 +708,7 @@ function bp_media_attach_media_to_message( &$message ) {
 		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
-		$media_ids = bp_media_add_handler( $_POST['media'] );
+		$media_ids = bp_media_add_handler( $_POST['media'], 'message' );
 
 		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
@@ -742,19 +769,63 @@ function bp_media_user_messages_delete_attached_media( $thread_id, $message_ids,
 }
 
 /**
- * Delete gif attached to messages
+ * Delete gif attached to thread messages.
  *
  * @since BuddyBoss 1.2.9
- * @param $thread_id
- * @param $message_ids
+ *
+ * @param int   $thread_id   ID of the thread being deleted.
+ * @param array $message_ids IDs of messages being deleted.
  */
 function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
 
 	if ( ! empty( $message_ids ) ) {
 		foreach ( $message_ids as $message_id ) {
-			bp_messages_update_meta( $message_id, '_gif_data', '' );
-			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
+			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
+			if ( ! empty( $message_gif ) ) {
+				if ( ! empty( $message_gif['still'] ) ) {
+					wp_delete_attachment( (int) $message_gif['still'], true );
+				}
+
+				if ( ! empty( $message_gif['mp4'] ) ) {
+					wp_delete_attachment( (int) $message_gif['mp4'], true );
+				}
+			}
+
+			bp_messages_delete_meta( $message_id, '_gif_data' );
+			bp_messages_delete_meta( $message_id, '_gif_raw_data' );
+		}
+	}
+}
+
+/**
+ * Delete gif attached to messages.
+ *
+ * @since BuddyBoss 1.4.9
+ *
+ * @param int   $thread_id          ID of the thread being deleted.
+ * @param array $message_ids        IDs of messages being deleted.
+ * @param int   $user_id            ID of the user the threads messages update for.
+ * @param array $update_message_ids IDs of messages being updated.
+ */
+function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $user_id, $update_message_ids ) {
+
+	if ( ! empty( $update_message_ids ) ) {
+		foreach ( $update_message_ids as $message_id ) {
+			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
+
+			if ( ! empty( $message_gif ) ) {
+				if ( ! empty( $message_gif['still'] ) ) {
+					wp_delete_attachment( (int) $message_gif['still'], true );
+				}
+
+				if ( ! empty( $message_gif['mp4'] ) ) {
+					wp_delete_attachment( (int) $message_gif['mp4'], true );
+				}
+			}
+
+			bp_messages_delete_meta( $message_id, '_gif_data' );
+			bp_messages_delete_meta( $message_id, '_gif_raw_data' );
 		}
 	}
 }
@@ -901,7 +972,7 @@ function bp_media_activity_save_gif_data( $activity ) {
 }
 
 function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
-	
+
 	$tabs[] = array(
 		'href' => bp_get_admin_url( add_query_arg( array(
 			'page' => 'bp-media-import',
