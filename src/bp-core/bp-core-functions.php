@@ -2868,6 +2868,10 @@ function bp_nav_menu_get_loggedin_pages() {
 					$sub_name = __( 'My Photos', 'buddyboss' );
 				}
 
+				if ( 'my-courses' === $s_nav['slug'] ) {
+					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+				}
+
 				$link = $s_nav['link'];
 				$arr_key = $key . '-sub';
 				$page_args[ $arr_key ] =

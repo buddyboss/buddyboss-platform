@@ -302,17 +302,9 @@ class BP_Core_Nav {
 	public function sort_nav( $items ) {
 		$sorted = array();
 
-		$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
-
 		foreach ( $items as $item ) {
 			// Default position
 			$position = 99;
-
-			$slug = $item->slug;
-
-			if ( ! is_admin() && is_array( $hidden_tabs ) && ! empty( $hidden_tabs ) && in_array( $slug, $hidden_tabs, true ) ) {
-				continue;
-			}
 
 			if ( isset( $item->position ) ) {
 				$position = (int) $item->position;
