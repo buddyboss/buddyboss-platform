@@ -48,19 +48,15 @@ window.wp = window.wp || {};
 			}
 		} ).disableSelection();
 
-
-		$( document ).on( 'click', '.visible-checkboxes', function() {
-			var hide  = [];
-			var finder = '#customize-control-' + $( this ).data( 'bp-which-type' ) + '_nav_order [data-bp-nav]';
-			$( document ).find( finder ).each( function() {
-				if ($(this).find( '.visible-checkboxes' ).is(':checked')) {
-					hide.push( $(this).find( '.visible-checkboxes' ).data('bp-hide' ) );
+		$(document).on('click', '.visible-checkboxes', function () {
+			var hide = [];
+			var finder = 'ul.customize-control-' + $(this).data('bp-which-type') + '_nav_order [data-bp-nav]';
+			$(document).find(finder).each(function () {
+				if ($(this).find('.visible-checkboxes').is(':checked')) {
+					hide.push($(this).find('.visible-checkboxes').data('bp-hide'));
 				}
-			} );
-
-			if ( hide.length ) {
-				$( '#bp_item_' + $( this ).data( 'bp-which-type' ) + '_hide' ).val( hide.join() ).trigger( 'change' );
-			}
+			});
+			$('#bp_item_' + $(this).data('bp-which-type') + '_hide').val(hide.join()).trigger('change');
 		});
 
 		// Show/Hide checkbox based on the Profile Navigation Order.

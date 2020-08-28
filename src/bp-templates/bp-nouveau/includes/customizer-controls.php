@@ -98,7 +98,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $item_nav ) ) : ?>
-			<ul id="<?php echo esc_attr( $id ); ?>" class="ui-sortable" style="margin-top: 0px; height: 500px; <?php echo ( $hide ) ? 'display:none;' : ''; ?>" data-bp-type="<?php echo esc_attr( $this->type ); ?>">
+			<ul id="<?php echo esc_attr( $id ); ?>" class="ui-sortable <?php echo esc_attr( $id ); ?>" style="margin-top: 0px; height: 500px; <?php echo ( $hide ) ? 'display:none;' : ''; ?>" data-bp-type="<?php echo esc_attr( $this->type ); ?>">
 
 				<?php
 				$i = 0;
