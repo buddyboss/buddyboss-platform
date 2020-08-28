@@ -3149,7 +3149,7 @@ msgstr "Repeuplement des enregistrements de blogs %s"
 #: bp-core/admin/bp-core-admin-tools.php:570
 #, php-format
 msgid "Counting the number of active members on the site&hellip; %s"
-msgstr "Comptage du nombre de pasteurs actifs sur le site&hellip; %s"
+msgstr "Comptage du nombre de membres actifs sur le site&hellip; %s"
 
 #: bp-core/admin/bp-core-admin-tools.php:588
 #, php-format
@@ -7784,7 +7784,7 @@ msgstr "Un membre accepte votre demande de connexion"
 #: bp-core/gdpr/class-bp-settings-export.php:165
 #: bp-groups/bp-groups-notifications.php:1193
 msgid "A member invites you to join a group"
-msgstr "Un pasteur vous invite à rejoindre un groupe"
+msgstr "Un membre vous invite à rejoindre un groupe"
 
 #: bp-core/gdpr/class-bp-settings-export.php:166
 #: bp-groups/bp-groups-notifications.php:1209
@@ -13378,7 +13378,7 @@ msgstr "%s n'a encore créé aucune connexion."
 #: bp-friends/bp-friends-template.php:189
 msgid "There aren't enough site members to show a random sample just yet."
 msgstr ""
-"Il n'y a pas encore assez de pasteurs pour afficher une liste aléatoire."
+"Il n'y a pas encore assez de membres pour afficher une liste aléatoire."
 
 #: bp-friends/bp-friends-template.php:206
 msgid "Filter Connections"
@@ -13703,7 +13703,7 @@ msgstr "Sauvegarder"
 
 #: bp-groups/bp-groups-admin.php:167
 msgid "Add New Members"
-msgstr "Ajouter de nouveaux pasteurs"
+msgstr "Ajouter de nouveaux membres"
 
 #: bp-groups/bp-groups-admin.php:186
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:267
@@ -13744,7 +13744,7 @@ msgid ""
 msgstr ""
 "En cliquant sur \"Editer\" vous accèderez à un tableau de bord depuis lequel "
 "vous pourrez gérer différents détails concernant le groupe, tels que son nom "
-"et sa description, ses pasteurs et d'autres réglages."
+"et sa description, ses membres et d'autres réglages."
 
 #: bp-groups/bp-groups-admin.php:230
 msgid ""
@@ -13764,7 +13764,7 @@ msgstr "Navigation dans la liste de structures"
 
 #: bp-groups/bp-groups-admin.php:257
 msgid "Start typing a username to add a new member."
-msgstr "Saisissez un nom d'usager pour ajouter un nouveau pasteur."
+msgstr "Saisissez un nom d'usager pour ajouter un nouveau membre."
 
 #: bp-groups/bp-groups-admin.php:258
 msgid ""
@@ -13801,7 +13801,7 @@ msgstr "Les usagers suivants ont bien été ajoutés au groupe: %s"
 #: bp-groups/bp-groups-admin.php:650
 #, php-format
 msgid "An error occurred when trying to modify the following members: %s"
-msgstr "Une erreur est survenue pendant la modification du pasteur: %s"
+msgstr "Une erreur est survenue pendant la modification du membre: %s"
 
 #: bp-groups/bp-groups-admin.php:655
 #, php-format
@@ -13992,7 +13992,7 @@ msgstr "Bannir"
 
 #: bp-groups/bp-groups-admin.php:1463
 msgid "No members of this type"
-msgstr "Aucun pasteur de ce type"
+msgstr "Aucun membre de ce type"
 
 #: bp-groups/bp-groups-admin.php:1527
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:210
@@ -14014,7 +14014,7 @@ msgstr "&raquo;"
 msgid "Viewing 1 member"
 msgid_plural "Viewing %1$s - %2$s of %3$s members"
 msgstr[0] "Aperçu: 1 membre"
-msgstr[1] "%1$s - %2$s sur %3$s pasteurs"
+msgstr[1] "%1$s - %2$s sur %3$s membres"
 
 #: bp-groups/bp-groups-admin.php:1707
 #, php-format
@@ -14865,7 +14865,7 @@ msgstr ""
 
 #: bp-groups/screens/single/invite.php:128
 msgid "The member requested to join the group"
-msgstr "Ce pasteur demande son adhésion au groupe"
+msgstr "Ce membre demande son adhésion au groupe"
 
 #: bp-groups/screens/single/invite.php:131
 msgid "There was an error removing the invite"
@@ -16497,7 +16497,7 @@ msgstr[1] "Aperçu: %1$s - %2$s sur %3$s membres avec leurs connexions"
 msgid "Viewing 1 online member"
 msgid_plural "Viewing %1$s - %2$s of %3$s online members"
 msgstr[0] "Aperçu: 1 membre en ligne"
-msgstr[1] "Affichage %1$s - %2$s sur %3$s pasteurs en ligne"
+msgstr[1] "Affichage %1$s - %2$s sur %3$s membres en ligne"
 
 #: bp-members/bp-members-template.php:1194
 #, php-format
@@ -16592,7 +16592,7 @@ msgstr "Photos de profil des membres récemment actifs"
 #: bp-members/classes/class-bp-core-recently-active-widget.php:107
 #: bp-members/classes/class-bp-core-recently-active-widget.php:241
 msgid "There are no recently active members"
-msgstr "Aucun pasteur n'a été actif récemment"
+msgstr "Aucun membre n'a été actif récemment"
 
 #: bp-members/classes/class-bp-core-recently-active-widget.php:181
 msgid "Recently Active Members"
@@ -16611,7 +16611,7 @@ msgstr "Photos de profil des usagers en ligne"
 #: bp-members/classes/class-bp-core-whos-online-widget.php:358
 #: bp-members/classes/class-bp-core-whos-online-widget.php:402
 msgid "There are no users currently online"
-msgstr "Aucun pasteur ne se trouve actuellement sur le site"
+msgstr "Aucun utilisateur ne se trouve actuellement sur le site"
 
 #: bp-members/classes/class-bp-core-whos-online-widget.php:169
 msgid "Online"
@@ -17316,7 +17316,7 @@ msgstr[1] "Vous avez %s nouveaux messages privés"
 
 #: bp-messages/bp-messages-notifications.php:311
 msgid "A member sends you a new message"
-msgstr "Un pasteur vous a envoyé un message"
+msgstr "Un membre vous a envoyé un message"
 
 #: bp-messages/bp-messages-star.php:108
 #: bp-templates/bp-nouveau/includes/messages/functions.php:136
@@ -21115,7 +21115,7 @@ msgstr "(Types de profil: %s)"
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:840
 msgid "(Unavailable to all members)"
-msgstr "(Non disponible pour tous les pasteurs)"
+msgstr "(Non disponible pour tous les membres)"
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1170
 msgid "Profile fields must have a name."
