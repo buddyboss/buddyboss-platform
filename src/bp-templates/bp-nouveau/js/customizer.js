@@ -58,8 +58,6 @@ window.wp = window.wp || {};
 				}
 			} );
 
-			console.log( 'trigger change ');
-
 			if ( hide.length ) {
 				$( '#bp_item_' + $( this ).data( 'bp-which-type' ) + '_hide' ).val( hide.join() ).trigger( 'change' );
 			}
