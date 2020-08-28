@@ -2860,6 +2860,14 @@ function bp_nav_menu_get_loggedin_pages() {
 					$sub_name = __( 'My Connections', 'buddyboss' );
 				}
 
+				if ( 'my-document' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Documents', 'buddyboss' );
+				}
+
+				if ( 'my-media' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Photos', 'buddyboss' );
+				}
+
 				$link = $s_nav['link'];
 				$arr_key = $key . '-sub';
 				$page_args[ $arr_key ] =
