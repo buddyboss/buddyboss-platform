@@ -5362,7 +5362,7 @@ msgstr ""
 msgid ""
 "[{{{site.name}}}] Membership request for group \"{{group.name}}\" accepted"
 msgstr ""
-"[{{{site.name}}}] votre demande de participation au projet \"{{group."
+"[{{{site.name}}}] votre demande de participation au groupe \"{{group."
 "name}}\" a été acceptée"
 
 #. translators: do not remove {} brackets or translate its contents.
@@ -5690,7 +5690,7 @@ msgid ""
 "You will no longer receive emails when your request to join a group has been "
 "accepted or denied."
 msgstr ""
-"Vous ne recevrez plus d’e-mail quand vos demandes de participation au projet "
+"Vous ne recevrez plus d’e-mail quand vos demandes de participation au groupe "
 "seront acceptées ou refusées."
 
 #: bp-core/bp-core-functions.php:3860
@@ -13583,7 +13583,7 @@ msgstr ""
 #: bp-groups/actions/feed.php:40
 #, php-format
 msgid "Activity feed for the group, %s."
-msgstr "Activités du projet, %s."
+msgstr "Activités du groupe, %s."
 
 #: bp-groups/actions/join.php:35 bp-groups/actions/join.php:42
 msgid "There was an error joining the group."
@@ -13600,7 +13600,7 @@ msgstr "Ce groupe doit avoir au moins un(e) organisateur(trice)."
 
 #: bp-groups/actions/leave-group.php:42
 msgid "There was an error leaving the group."
-msgstr "Une erreur s'est produite pendant le retrait du projet."
+msgstr "Une erreur s'est produite pendant le retrait du groupe."
 
 #: bp-groups/actions/leave-group.php:44
 msgid "You left the group."
@@ -14204,12 +14204,12 @@ msgstr "modérateur(trice)"
 #: bp-groups/bp-groups-notifications.php:383
 #, php-format
 msgid "%1$d new membership requests for the group \"%2$s\""
-msgstr "%1$d nouvelles demande de participation au projet \"%2$s\""
+msgstr "%1$d nouvelles demande de participation au groupe \"%2$s\""
 
 #: bp-groups/bp-groups-notifications.php:437
 #, php-format
 msgid "%s requests group membership"
-msgstr "%s demande son participation au projet"
+msgstr "%s demande son participation au groupe"
 
 #: bp-groups/bp-groups-notifications.php:500
 #, php-format
@@ -14219,7 +14219,7 @@ msgstr "%d demande de participation acceptées"
 #: bp-groups/bp-groups-notifications.php:546
 #, php-format
 msgid "Membership for group \"%s\" accepted"
-msgstr "Participation au projet \"%s\" acceptée"
+msgstr "Participation au groupe \"%s\" acceptée"
 
 #: bp-groups/bp-groups-notifications.php:603
 #, php-format
@@ -14229,7 +14229,7 @@ msgstr "%d demandes de participation rejetées"
 #: bp-groups/bp-groups-notifications.php:649
 #, php-format
 msgid "Membership for group \"%s\" rejected"
-msgstr "Demande de participation au projet \"%s\" refusé"
+msgstr "Demande de participation au groupe \"%s\" refusé"
 
 #: bp-groups/bp-groups-notifications.php:705
 #, php-format
@@ -14417,7 +14417,7 @@ msgid ""
 "This is a private group and you must request group membership in order to "
 "join."
 msgstr ""
-"Ce projet est privé. Vous devez faire une demande de participation pour y "
+"Ce groupe est privé. Vous devez faire une demande de participation pour y "
 "entrer."
 
 #: bp-groups/bp-groups-template.php:4338
@@ -14425,8 +14425,8 @@ msgid ""
 "This is a private group. To join you must be a registered site member and "
 "request group membership."
 msgstr ""
-"Ce projet est privé! Vous devez être membre du site, puis faire une demande "
-"de participation au projet."
+"Ce groupe est privé! Vous devez être membre du site, puis faire une demande "
+"de participation au groupe."
 
 #: bp-groups/bp-groups-template.php:4341
 msgid ""
@@ -14542,7 +14542,7 @@ msgstr "créé %s"
 
 #: bp-groups/bp-groups-widgets.php:95
 msgid "No groups matched the current filter."
-msgstr "Aucun projet ne correspond au filtre actuel."
+msgstr "Aucun groupe ne correspond au filtre actuel."
 
 #: bp-groups/classes/class-bp-group-extension.php:886
 msgid "You do not have access to this content."
@@ -14884,7 +14884,7 @@ msgid ""
 "There was an error sending your group membership request. Please try again."
 msgstr ""
 "Une erreur est survenue pendant l'envoi de la demande de participation au "
-"projet. Veuillez recommencer."
+"groupe. Veuillez recommencer."
 
 #: bp-groups/screens/single/request-membership.php:47
 msgid ""
@@ -18050,7 +18050,7 @@ msgstr "Inviter des membres"
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:29
 msgid "Group invitations menu"
-msgstr "Menu des invitations du projet"
+msgstr "Menu des invitations du groupe"
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:5
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:18
@@ -18319,7 +18319,7 @@ msgstr "Je veux aussi supprimer le forum de discussion."
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/edit-details.php:13
 msgid "Enter Group Name &amp; Description"
-msgstr "Saisir le nom et la description du projet"
+msgstr "Saisir le nom et la description du groupe"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/edit-details.php:19
 msgid "Edit Group Name &amp; Description"
@@ -18331,7 +18331,7 @@ msgstr "Nom du groupe (requis)"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:13
 msgid "Upload Group Avatar"
-msgstr "Téléverser l’image de profil du projet"
+msgstr "Téléverser l’image de profil du groupe"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:19
 msgid "Change Group Avatar"
@@ -18416,7 +18416,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:13
 msgid "Select Group Settings"
-msgstr "Sélectionner les réglages du projet"
+msgstr "Sélectionner les réglages du groupe"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:19
 msgid "Change Group Settings"
@@ -18522,7 +18522,7 @@ msgstr "Quel groupe devrait être le parent de ce groupe ? (facultatif)"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:11
 msgid "Manage Group Members"
-msgstr "Gérer les membres du projet"
+msgstr "Gérer les membres du groupe"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:14
 #, php-format
@@ -18652,7 +18652,7 @@ msgstr "Organisé par"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/item-nav.php:10
 msgid "Group menu"
-msgstr "Menu du projet"
+msgstr "Menu du groupe"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/request-membership.php:13
 #, php-format
@@ -19524,7 +19524,7 @@ msgstr "Désolé, aucun groupe n’a été trouvé."
 
 #: bp-templates/bp-nouveau/includes/functions.php:827
 msgid "Loading the group updates. Please wait."
-msgstr "Chargement des mises à jour du projet. Veuillez patienter."
+msgstr "Chargement des mises à jour du groupe. Veuillez patienter."
 
 #: bp-templates/bp-nouveau/includes/functions.php:831
 msgid "Requesting the group members. Please wait."
@@ -19561,7 +19561,7 @@ msgstr "Vous avez déjà demandé à rejoindre ce groupe."
 #: bp-templates/bp-nouveau/includes/functions.php:863
 msgid "Loading the members who requested to join the group. Please wait."
 msgstr ""
-"Chargement des membres ayant demandé à rejoindre le projet. Veuillez "
+"Chargement des membres ayant demandé à rejoindre le groupe. Veuillez "
 "patienter."
 
 #: bp-templates/bp-nouveau/includes/functions.php:867
@@ -19765,11 +19765,11 @@ msgstr "Demande d'exportation de données"
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:109
 msgid "You cannot join this group."
-msgstr "Vous ne pouvez pas rejoindre ce projet."
+msgstr "Vous ne pouvez pas rejoindre ce groupe."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:110
 msgid "You are already a member of the group."
-msgstr "Vous êtes déjà membre de ce projet."
+msgstr "Vous êtes déjà membre de ce groupe."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:132
 msgid "Group invitation could not be accepted."
@@ -19781,15 +19781,15 @@ msgstr "Invitation du groupe acceptée."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:185
 msgid "Error joining this group."
-msgstr "Erreur au moment de rejoindre ce projet."
+msgstr "Erreur au moment de rejoindre ce groupe."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:203
 msgid "Error requesting membership."
-msgstr "Erreur au moment de demander à adhérer au projet."
+msgstr "Erreur au moment de demander à adhérer au groupe."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:221
 msgid "Error leaving group."
-msgstr "Erreur au moment de quitter le projet."
+msgstr "Erreur au moment de quitter le groupe."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:308
 msgid "You are not authorized to send invites to other users."
@@ -20014,7 +20014,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:850
 msgid "Display the group navigation vertically."
-msgstr "Afficher la navigation du projet verticalement."
+msgstr "Afficher la navigation du groupe verticalement."
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:856
 msgid "Group navigation order"
@@ -20031,19 +20031,19 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:865
 msgid "Reorder the primary navigation for a group."
-msgstr "Réordonner la navigation principale du projet."
+msgstr "Réordonner la navigation principale du groupe."
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1184
 msgid "Pending Group membership requests"
-msgstr "Demande de participation au projet en attente"
+msgstr "Demande de participation au groupe en attente"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1189
 msgid "Accepted Group membership requests"
-msgstr "Demandes de participation au projet acceptées"
+msgstr "Demandes de participation au groupe acceptées"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1194
 msgid "Rejected Group membership requests"
-msgstr "Demande de participation au projet refusé"
+msgstr "Demande de participation au groupe refusé"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1199
 msgid "Group Organizer promotions"
@@ -20051,7 +20051,7 @@ msgstr "Promotions de l'organisateur(trice) de groupe"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1204
 msgid "Group Moderator promotions"
-msgstr "Nominations des modérateurs de projet"
+msgstr "Nominations des modérateurs de groupe"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1209
 msgid "Group invitations"
