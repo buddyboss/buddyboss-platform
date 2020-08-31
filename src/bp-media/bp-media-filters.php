@@ -2078,6 +2078,82 @@ function bp_media_activity_after_email_content( $activity ) {
 function bp_media_get_edit_activity_data( $activity ) {
 
 	if ( ! empty( $activity['id'] ) ) {
+
+		$can_edit_privacy = true;
+
+		if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+
+			$privacy                   = $activity['privacy'];
+			$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
+			$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
+			$parent_activity_id        = false;
+			$parent_activity_permalink = false;
+			$album_id                  = false;
+			$album_url                 = '';
+			$folder_id                 = false;
+			$folder_url                = '';
+
+			// Get media privacy to show.
+			if ( bp_is_active( 'media' ) ) {
+				if ( $media_activity ) {
+					$media_id = BP_Media::get_activity_media_id( $activity['id'] );
+					$media    = new BP_Media( $media_id );
+
+					if ( ! empty( $media ) ) {
+						$album_id = $media->album_id;
+						if ( ! empty( $album_id ) ) {
+							$album     = new BP_Media_Album( $album_id );
+							$album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+						} else {
+							$parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
+							$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+						}
+					}
+				}
+
+				if ( $document_activity ) {
+					$document_id = BP_Document::get_activity_document_id( $activity['id'] );
+					$document    = new BP_Document( $document_id );
+					if ( ! empty( $document ) ) {
+						$folder_id = $document->folder_id;
+
+						if ( ! empty( $folder_id ) ) {
+							$folder_id  = bp_document_get_root_parent_id( $folder_id );
+							$folder     = new BP_Document_Folder( $folder_id );
+							$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+						} else {
+							$parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
+							$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+						}
+					}
+				}
+
+				$activity_album_id = bp_activity_get_meta( $activity['id'], 'bp_media_album_activity', true );
+				if ( ! empty( $activity_album_id ) ) {
+					$album_id       = $activity_album_id;
+					$album          = new BP_Media_Album( $album_id );
+					$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+					$media_activity = true;
+				}
+
+				$activity_folder_id = bp_activity_get_meta( $activity['id'], 'bp_document_folder_activity', true );
+				if ( ! empty( $activity_folder_id ) ) {
+					$folder_id         = $activity_folder_id;
+					$folder_id         = bp_document_get_root_parent_id( $folder_id );
+					$folder            = new BP_Document_Folder( $folder_id );
+					$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+					$document_activity = true;
+				}
+			}
+
+			if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
+				$can_edit_privacy = false;
+			} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
+				$can_edit_privacy = false;
+			}
+
+		}
+
 		// Fetch media ids of activity.
 		$media_ids = bp_activity_get_meta( $activity['id'], 'bp_media_ids', true );
 
@@ -2100,6 +2176,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'activity_id'   => $media->activity_id,
 					'saved'         => true,
 					'menu_order'    => $media->menu_order,
+					'can_edit_privacy'      => $can_edit_privacy,
 				);
 			}
 		}
@@ -2127,6 +2204,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 					'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
 					'saved'         => true,
 					'menu_order'    => $document->menu_order,
+					'can_edit_privacy'      => $can_edit_privacy,
 				);
 			}
 		}

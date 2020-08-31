@@ -13,9 +13,15 @@ window.bp = window.bp || {};
 
 	_.extend( bp, _.pick( wp, 'Backbone', 'ajax', 'template' ) );
 
-	bp.Models      = bp.Models || {};
-	bp.Collections = bp.Collections || {};
-	bp.Views       = bp.Views || {};
+	bp.Models           = bp.Models || {};
+	bp.Collections      = bp.Collections || {};
+	bp.Views            = bp.Views || {};
+
+	// Set the global variable for the edit activity privacy/album_id/folder_id/group_id maintain.
+	bp.privacyEditable  = true;
+	bp.album_id         = 0;
+	bp.folder_id        = 0;
+	bp.group_id         = 0;
 
 	/**
 	 * [Activity description]
@@ -280,6 +286,12 @@ window.bp = window.bp || {};
 				$singleActivityFormWrap.show();
 			}
 
+			// Set the global variable for the edit activity privacy/album_id/folder_id/group_id maintain.
+			bp.privacyEditable = activity_data.can_edit_privacy;
+			bp.album_id        = activity_data.album_id;
+			bp.folder_id       = activity_data.folder_id;
+			bp.group_id        = activity_data.group_id;
+
 			// Set the activity value
 			self.displayEditActivity( activity_data );
 
@@ -289,6 +301,13 @@ window.bp = window.bp || {};
 			$activityPrivacySelect.val( activity_data.privacy );
 			if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' ){
 				$activityPrivacySelect.val( bp.Nouveau.Activity.EditedPrivacyData.privacy );
+			}
+
+			// Do not allow the edit privacy if activity is belongs to any folder/album.
+			if ( ! this.privacyEditable ) {
+				$activityPrivacySelect.prop( 'disabled', true );
+			} else {
+				$activityPrivacySelect.prop( 'disabled', false );
 			}
 
 			var edit_activity_editor = $('#whats-new')[0];
@@ -348,6 +367,13 @@ window.bp = window.bp || {};
 		},
 
 		postActivityEditHideModal : function(){
+
+			// Reset Global variable after edit activity.
+			bp.privacyEditable = true;
+			bp.album_id        = 0;
+			bp.folder_id       = 0;
+			bp.group_id        = 0;
+
 			$('.activity-update-form.modal-popup').removeClass('modal-popup');
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
@@ -608,6 +634,13 @@ window.bp = window.bp || {};
 					'success',
 					function(file, response) {
 						if ( response.data.id ) {
+
+							// Set the album_id and group_id if activity belongs to any album and group in edit activity on new uploaded media id.
+							if ( ! bp.privacyEditable ) {
+								response.data.album_id = bp.album_id;
+								response.data.group_id = bp.group_id;
+							}
+
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
@@ -772,6 +805,13 @@ window.bp = window.bp || {};
 					'success',
 					function(file, response) {
 						if ( response.data.id ) {
+
+							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
+							if ( ! bp.privacyEditable ) {
+								response.data.folder_id = bp.folder_id;
+								response.data.group_id  = bp.group_id;
+							}
+
 							file.id                  = response.data.id;
 							response.data.uuid       = file.upload.uuid;
 							response.data.group_id   = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
