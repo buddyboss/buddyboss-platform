@@ -306,8 +306,10 @@ window.bp = window.bp || {};
 			// Do not allow the edit privacy if activity is belongs to any folder/album.
 			if ( ! this.privacyEditable ) {
 				$activityPrivacySelect.prop( 'disabled', true );
+				$activityPrivacySelect.hide();
 			} else {
 				$activityPrivacySelect.prop( 'disabled', false );
+				$activityPrivacySelect.show();
 			}
 
 			var edit_activity_editor = $('#whats-new')[0];
