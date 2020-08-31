@@ -22,6 +22,7 @@ window.bp = window.bp || {};
 	bp.album_id         = 0;
 	bp.folder_id        = 0;
 	bp.group_id         = 0;
+	bp.privacy          = 'public';
 
 	/**
 	 * [Activity description]
@@ -291,6 +292,7 @@ window.bp = window.bp || {};
 			bp.album_id        = activity_data.album_id;
 			bp.folder_id       = activity_data.folder_id;
 			bp.group_id        = activity_data.group_id;
+			bp.privacy         = activity_data.privacy;
 
 			// Set the activity value
 			self.displayEditActivity( activity_data );
@@ -305,11 +307,9 @@ window.bp = window.bp || {};
 
 			// Do not allow the edit privacy if activity is belongs to any folder/album.
 			if ( ! this.privacyEditable ) {
-				$activityPrivacySelect.prop( 'disabled', true );
-				$activityPrivacySelect.hide();
+				$activityPrivacySelect.css( 'visibility', 'hidden');
 			} else {
-				$activityPrivacySelect.prop( 'disabled', false );
-				$activityPrivacySelect.show();
+				$activityPrivacySelect.css( 'visibility', 'visible');
 			}
 
 			var edit_activity_editor = $('#whats-new')[0];
@@ -375,6 +375,7 @@ window.bp = window.bp || {};
 			bp.album_id        = 0;
 			bp.folder_id       = 0;
 			bp.group_id        = 0;
+			bp.privacy         = 'public';
 
 			$('.activity-update-form.modal-popup').removeClass('modal-popup');
 
@@ -641,6 +642,7 @@ window.bp = window.bp || {};
 							if ( ! bp.privacyEditable ) {
 								response.data.album_id = bp.album_id;
 								response.data.group_id = bp.group_id;
+								response.data.privacy  = bp.privacy;
 							}
 
 							file.id                  = response.data.id;
@@ -812,6 +814,7 @@ window.bp = window.bp || {};
 							if ( ! bp.privacyEditable ) {
 								response.data.folder_id = bp.folder_id;
 								response.data.group_id  = bp.group_id;
+								response.data.privacy   = bp.privacy;
 							}
 
 							file.id                  = response.data.id;
@@ -2774,6 +2777,11 @@ window.bp = window.bp || {};
 				if ( self.model.get( 'id' ) > 0 ) {
 					edit      = true;
 					data.edit = 1;
+
+					if ( ! bp.privacyEditable ) {
+						data.privacy  = bp.privacy;
+					}
+
 				}
 
 				bp.ajax.post( 'post_update', data ).done(
