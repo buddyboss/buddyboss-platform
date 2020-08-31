@@ -2332,6 +2332,7 @@ function bp_is_get_request() {
  * @return bool True on success, false on failure.
  */
 function bp_core_load_buddypress_textdomain() {
+	$bp = buddypress();
 	$domain = 'buddyboss';
 
 	/**
@@ -2355,7 +2356,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
+			trailingslashit( $bp->plugin_dir . '/languages' ),
 		)
 	);
 
