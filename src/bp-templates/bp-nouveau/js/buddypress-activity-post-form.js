@@ -257,6 +257,9 @@ window.bp = window.bp || {};
 				}
 
 			}
+
+			self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
+
 		},
 
 		/**
