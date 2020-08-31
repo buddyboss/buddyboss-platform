@@ -463,6 +463,14 @@ function groups_record_activity( $args = '' ) {
 		if ( ! empty( $activity->id ) ) {
 			$bp_activity_edit = true;
 
+			if ( ! bp_activity_user_can_edit( $activity ) ) {
+				if ( 'wp_error' === $args['error_type'] ) {
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
 			$args = array(
 				'id'                => $activity->id,
 				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,

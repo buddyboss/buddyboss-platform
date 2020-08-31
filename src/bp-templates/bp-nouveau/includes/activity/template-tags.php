@@ -478,46 +478,6 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				),
 			);
 
-			// Add activity edit button.
-			if ( bp_is_activity_edit_enabled() ) {
-
-				$activity_edit_time        = (int) bp_get_activity_edit_time(); //for 10 minutes, 600
-				$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
-				$activity_edit_expire_time = bp_nouveau_get_activity_timestamp() + $activity_edit_time;
-
-				/**
-				 * Checking the activity privacy so this edit button is not available on the preview
-				 */
-				$activity_privacy = bp_get_activity_privacy();
-				$privacy = array(  'public', 'loggedin', 'friends', 'onlyme' );
-
-				$media_activity            = ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] );
-				$document_activity         = ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] );
-
-				//Checking if expire time still greater then current time.
-				if ( ( $activity_edit_time === -1 || $activity_edit_expire_time >= $bp_dd_get_time ) && in_array( $activity_privacy , $privacy ) && ! ( $media_activity || $document_activity )  ) {
-					$buttons[ 'activity_edit' ] = array(
-						'id'                => 'activity_edit',
-						'position'          => 30,
-						'component'         => 'activity',
-						'parent_element'    => $parent_element,
-						'parent_attr'       => $parent_attr,
-						'must_be_logged_in' => true,
-						'button_element'    => $button_element,
-						'button_attr'       => array(
-							'href'  => '#',
-							'class' => 'button edit-activity bp-secondary-action bp-tooltip',
-							'title' => __( 'Edit Activity', 'buddyboss' ),
-						),
-						'link_text'         => sprintf(
-							'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
-							__( 'Edit Activity', 'buddyboss' ),
-							__( 'Edit', 'buddyboss' )
-						),
-					);
-				}
-			}
-
 			// If button element set add href link to data-attr
 			if ( 'button' === $button_element ) {
 				$buttons['activity_conversation']['button_attr']['data-bp-url'] = bp_get_activity_comment_link();
@@ -526,6 +486,28 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				$buttons['activity_conversation']['button_attr']['role'] = 'button';
 			}
 
+			// Add activity edit button.
+			if ( bp_is_activity_edit_enabled() ) {
+				$buttons['activity_edit'] = array(
+					'id'                => 'activity_edit',
+					'position'          => 30,
+					'component'         => 'activity',
+					'parent_element'    => $parent_element,
+					'parent_attr'       => $parent_attr,
+					'must_be_logged_in' => true,
+					'button_element'    => $button_element,
+					'button_attr'       => array(
+						'href'  => '#',
+						'class' => 'button edit-activity bp-secondary-action bp-tooltip',
+						'title' => __( 'Edit Activity', 'buddyboss' ),
+					),
+					'link_text'         => sprintf(
+						'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+						__( 'Edit Activity', 'buddyboss' ),
+						__( 'Edit', 'buddyboss' )
+					),
+				);
+			}
 		}
 
 		// The delete button is always created, and removed later on if needed.
@@ -1050,7 +1032,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  *
  */
 function bp_nouveau_activity_privacy() {
-	if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+	if ( bp_activity_user_can_edit( false, true ) && ! bp_is_group() ) {
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
 			return;
@@ -1305,7 +1287,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	echo '<div class="activity-media-description">' .
 	     '<div class="bp-media-activity-description">' . $content . '</div>';
 
-	if ( bp_activity_user_can_edit() ) {
+	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
@@ -1382,7 +1364,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	echo '<div class="activity-media-description">' .
 	     '<div class="bp-media-activity-description">' . $content . '</div>';
 
-	if ( bp_activity_user_can_edit() ) {
+	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"

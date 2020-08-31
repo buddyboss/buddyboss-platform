@@ -2306,6 +2306,14 @@ function bp_activity_post_update( $args = '' ) {
 		if ( ! empty( $activity->id ) ) {
 			$bp_activity_edit = true;
 
+			if ( ! bp_activity_user_can_edit( $activity ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
 			$activity_id = bp_activity_add(
 				array(
 					'id'                => $activity->id,

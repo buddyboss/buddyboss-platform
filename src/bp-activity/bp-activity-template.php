@@ -1651,14 +1651,16 @@ function bp_activity_user_can_delete( $activity = false ) {
 /**
  * Determine if the current user can edit an activity item.
  *
+ * @param false|BP_Activity_Activity $activity            Optional. Falls back on the current item in the loop.
+ * @param bool                       $privacy_edit        Optional. True if editing privacy.
+ *
+ * @return bool True if can edit, false otherwise.
+ * @global object                    $activities_template {@link BP_Activity_Template}
+ *
  * @since BuddyBoss 1.2.0
  *
- * @global object $activities_template {@link BP_Activity_Template}
- *
- * @param false|BP_Activity_Activity $activity Optional. Falls back on the current item in the loop.
- * @return bool True if can edit, false otherwise.
  */
-function bp_activity_user_can_edit( $activity = false ) {
+function bp_activity_user_can_edit( $activity = false, $privacy_edit = false ) {
 	global $activities_template;
 
 	// Try to use current activity if none was passed.
@@ -1688,13 +1690,32 @@ function bp_activity_user_can_edit( $activity = false ) {
 		}
 	}
 
+	if ( $can_edit && ! $privacy_edit ) {
+
+		// Check activity edit time expiration.
+		$activity_edit_time        = (int) bp_get_activity_edit_time(); //for 10 minutes, 600
+		$bp_dd_get_time            = bp_core_current_time( true, 'timestamp' );
+		$activity_edit_expire_time = strtotime( $activity->date_recorded ) + $activity_edit_time;
+
+		//Checking if expire time still greater than current time.
+		if ( $activity_edit_time !== - 1 && $activity_edit_expire_time <= $bp_dd_get_time ) {
+			$can_edit = false;
+		}
+	}
+
+	// Return true for site admin or network admin.
+//	if ( bp_current_user_can( 'bp_moderate' ) ) {
+//		$can_edit = true;
+//	}
+
 	/**
 	 * Filters whether the current user can edit an activity item.
 	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $activity Current activity item object.
+	 *
 	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param bool   $can_edit Whether the user can edit the item.
-	 * @param object $activity   Current activity item object.
 	 */
 	return (bool) apply_filters( 'bp_activity_user_can_edit', $can_edit, $activity );
 }
