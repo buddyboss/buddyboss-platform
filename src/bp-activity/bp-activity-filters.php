@@ -229,6 +229,9 @@ function bp_activity_save_link_data( $activity ) {
 	if ( empty( $link_url ) ) {
 		if ( false === $link_embed ) {
 			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
+
+			// This will remove the preview data if the activity don't have anymore link in content.
+			bp_activity_update_meta( $activity->id, '_link_preview_data', '' );
 		}
 
 		return;
