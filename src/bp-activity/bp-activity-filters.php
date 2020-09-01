@@ -134,9 +134,11 @@ add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 99
 
 add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
+add_filter( 'bp_media_add_handler', 'bp_activity_edit_update_media', 10 );
 
 add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
 /** Functions *****************************************************************/
 
@@ -1717,7 +1719,7 @@ function bp_activity_media_add( $media ) {
  * @return mixed
  */
 function bp_activity_create_parent_media_activity( $media_ids ) {
-	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content;
+	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
 
 	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) {
 
@@ -1783,6 +1785,97 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 				if ( ! empty( $main_activity ) ) {
 					$main_activity->privacy = $privacy;
 					$main_activity->save();
+				}
+			}
+		}
+	}
+
+	return $media_ids;
+}
+
+/**
+ * Update media and activity for media updation and deletion while editing the activity.
+ *
+ * @param $media_ids
+ *
+ * @return mixed
+ * @since BuddyBoss 1.5.0
+ *
+ */
+function bp_activity_edit_update_media( $media_ids ) {
+	global $bp_activity_edit;
+
+	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
+		$old_media_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_media_ids', true );
+		$old_media_ids = explode( ',', $old_media_ids );
+
+		if ( ! empty( $old_media_ids ) ) {
+
+			// old media count 1 and new media uploaded count is greater than 1.
+			if ( 1 === count( $old_media_ids ) && 1 < count( $media_ids ) ) {
+				$old_media_id = $old_media_ids[0];
+
+				// check if old media id is in new media uploaded.
+				if ( in_array( $old_media_id, $media_ids ) ) {
+
+					// Create new media activity for old media because it has only parent activity to show right now.
+					$old_media = new BP_Media( $old_media_id );
+					$args      = array(
+						'hide_sitewide' => true,
+						'privacy'       => 'media'
+					);
+
+					if ( ! empty( $old_media->group_id ) && bp_is_active( 'groups' ) ) {
+						$args['item_id'] = $old_media->group_id;
+						$args['type']    = 'activity_update';
+						$current_group   = groups_get_group( $old_media->group_id );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$activity_id     = groups_record_activity( $args );
+					} else {
+						$activity_id = bp_activity_post_update( $args );
+					}
+
+					// media activity for old media is created and it is being assigned to the old media.
+					// And media activity is being saved with needed data to figure out everything for it.
+					if ( $activity_id ) {
+						$old_media->activity_id = $activity_id;
+						$old_media->save();
+
+						$media_activity                    = new BP_Activity_Activity( $activity_id );
+						$media_activity->secondary_item_id = $bp_activity_post_update_id;
+						$media_activity->save();
+
+						// update activity meta to tell it is media activity.
+						bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+
+						// save attachment meta for activity.
+						update_post_meta( $old_media->attachment_id, 'bp_media_activity_id', $activity_id );
+
+						//save parent activity id in attachment meta.
+						update_post_meta( $old_media->attachment_id, 'bp_media_parent_activity_id', $bp_activity_post_update_id );
+					}
+				}
+
+				// old media count is greater than 1 and new media uploaded count is only 1 now.
+			} else if ( 1 < count( $old_media_ids ) && 1 === count( $media_ids ) ) {
+				$new_media_id = $media_ids[0];
+
+				// check if new media is in old media uploaded, if yes then delete that media's media activity first.
+				if ( in_array( $new_media_id, $old_media_ids ) ) {
+					$new_media         = new BP_Media( $new_media_id );
+					$media_activity_id = $new_media->activity_id;
+
+					// delete media's assigned media activity.
+					remove_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+					bp_activity_delete( array( 'id' => $media_activity_id ) );
+					add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
+
+					//save parent activity id in media.
+					$new_media->activity_id = $bp_activity_post_update_id;
+					$new_media->save();
+
+					//save parent activity id in attachment meta.
+					update_post_meta( $new_media->attachment_id, 'bp_media_parent_activity_id', $bp_activity_post_update_id );
 				}
 			}
 		}
@@ -1991,6 +2084,97 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				if ( ! empty( $main_activity ) ) {
 					$main_activity->privacy = $privacy;
 					$main_activity->save();
+				}
+			}
+		}
+	}
+
+	return $document_ids;
+}
+
+/**
+ * Update document and activity for document updation and deletion while editing the activity.
+ *
+ * @param $document_ids
+ *
+ * @return mixed
+ * @since BuddyBoss 1.5.0
+ *
+ */
+function bp_activity_edit_update_document( $document_ids ) {
+	global $bp_activity_edit;
+
+	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
+		$old_document_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_document_ids', true );
+		$old_document_ids = explode( ',', $old_document_ids );
+
+		if ( ! empty( $old_document_ids ) ) {
+
+			// old document count 1 and new document uploaded count is greater than 1.
+			if ( 1 === count( $old_document_ids ) && 1 < count( $document_ids ) ) {
+				$old_document_id = $old_document_ids[0];
+
+				// check if old document id is in new document uploaded.
+				if ( in_array( $old_document_id, $document_ids ) ) {
+
+					// Create new document activity for old document because it has only parent activity to show right now.
+					$old_document = new BP_Document( $old_document_id );
+					$args         = array(
+						'hide_sitewide' => true,
+						'privacy'       => 'document'
+					);
+
+					if ( ! empty( $old_document->group_id ) && bp_is_active( 'groups' ) ) {
+						$args['item_id'] = $old_document->group_id;
+						$args['type']    = 'activity_update';
+						$current_group   = groups_get_group( $old_document->group_id );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$activity_id     = groups_record_activity( $args );
+					} else {
+						$activity_id = bp_activity_post_update( $args );
+					}
+
+					// document activity for old document is created and it is being assigned to the old document.
+					// And document activity is being saved with needed data to figure out everything for it.
+					if ( $activity_id ) {
+						$old_document->activity_id = $activity_id;
+						$old_document->save();
+
+						$document_activity                    = new BP_Activity_Activity( $activity_id );
+						$document_activity->secondary_item_id = $bp_activity_post_update_id;
+						$document_activity->save();
+
+						// update activity meta to tell it is document activity.
+						bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+
+						// save attachment meta for activity.
+						update_post_meta( $old_document->attachment_id, 'bp_document_activity_id', $activity_id );
+
+						//save parent activity id in attachment meta.
+						update_post_meta( $old_document->attachment_id, 'bp_document_parent_activity_id', $bp_activity_post_update_id );
+					}
+				}
+
+				// old document count is greater than 1 and new document uploaded count is only 1 now.
+			} else if ( 1 < count( $old_document_ids ) && 1 === count( $document_ids ) ) {
+				$new_document_id = $document_ids[0];
+
+				// check if new document is in old document uploaded, if yes then delete that document's document activity first.
+				if ( in_array( $new_document_id, $old_document_ids ) ) {
+					$new_document         = new BP_Document( $new_document_id );
+					$document_activity_id = $new_document->activity_id;
+
+					// delete document's assigned document activity.
+					remove_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
+					bp_activity_delete( array( 'id' => $document_activity_id ) );
+					add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
+
+					//save parent activity id in document.
+					$new_document->activity_id = $bp_activity_post_update_id;
+					$new_document->save();
+
+					//save parent activity id in attachment meta.
+					update_post_meta( $new_document->attachment_id, 'bp_document_parent_activity_id', $bp_activity_post_update_id );
 				}
 			}
 		}
