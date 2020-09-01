@@ -311,17 +311,20 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
 
-		//save media meta for activity.
-		$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) && ! empty( $old_media_ids ) ) {
-			// Delete media if not exists anymore in activity.
-			$old_media_ids = explode( ',', $old_media_ids );
+		// delete media ids and meta for activity if empty media in request.
+		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+			$old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+
 			if ( ! empty( $old_media_ids ) ) {
-				foreach ( $old_media_ids as $media_id ) {
-					bp_media_delete( array( 'id' => $media_id ) );
+				// Delete media if not exists anymore in activity.
+				$old_media_ids = explode( ',', $old_media_ids );
+				if ( ! empty( $old_media_ids ) ) {
+					foreach ( $old_media_ids as $media_id ) {
+						bp_media_delete( array( 'id' => $media_id ) );
+					}
 				}
+				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
 			}
-			bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
 		}
 		return false;
 	}
