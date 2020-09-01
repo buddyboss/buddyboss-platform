@@ -2081,7 +2081,7 @@ function bp_media_get_edit_activity_data( $activity ) {
 
 		$can_edit_privacy = true;
 
-		if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+		if ( bp_activity_user_can_edit() ) {
 
 			$privacy                   = $activity['privacy'];
 			$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );

@@ -1451,7 +1451,7 @@ function bp_nouveau_get_edit_activity_data() {
 	$folder_id        = 0;
 	$group_id         = 0;
 
-	if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+	if ( bp_activity_user_can_edit() ) {
 
 		$privacy                   = bp_get_activity_privacy();
 		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
