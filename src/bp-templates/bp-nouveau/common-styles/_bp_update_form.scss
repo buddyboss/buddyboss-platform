@@ -145,6 +145,29 @@
 			}
 		}
 
+		.bp-activity-edit.loading {
+
+			text-align: center;
+
+			#whats-new-content{
+
+				position: relative;
+
+				&:after {
+					content: '\e838';
+					font: normal normal normal 22px/1 "bb-icons";
+					margin: 10px auto;
+					display: inline-block;
+					text-align: center;
+					color: #939597;
+					animation: spin 2s infinite linear;
+					position: absolute;
+					top: 15px;
+				}
+
+			}
+		}
+
 		@media screen and (max-width: 603px) {
 
 			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {

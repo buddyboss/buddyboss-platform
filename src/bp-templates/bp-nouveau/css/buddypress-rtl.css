@@ -1177,6 +1177,29 @@ a.layout-grid-view {
   transform: rotate(-180deg);
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading,
+.activity-update-form.modal-popup .bp-activity-edit.loading {
+  text-align: center;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading #whats-new-content,
+.activity-update-form.modal-popup .bp-activity-edit.loading #whats-new-content {
+  position: relative;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading #whats-new-content:after,
+.activity-update-form.modal-popup .bp-activity-edit.loading #whats-new-content:after {
+  content: '\e838';
+  font: normal normal normal 22px/1 "bb-icons";
+  margin: 10px auto;
+  display: inline-block;
+  text-align: center;
+  color: #939597;
+  animation: spin 2s infinite linear;
+  position: absolute;
+  top: 15px;
+}
+
 @media screen and (max-width: 603px) {
   #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
   .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
