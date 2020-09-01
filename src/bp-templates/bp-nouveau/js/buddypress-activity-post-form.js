@@ -358,7 +358,7 @@ window.bp = window.bp || {};
 				'keyup',
 				function( event ) {
 					if ( event.keyCode === 27 && false === event.ctrlKey ) {
-						self.postActivityEditHideModal();
+						$( '.activity-update-form.modal-popup #aw-whats-new-reset' ).trigger( 'click' );
 					}
 				}
 			);
