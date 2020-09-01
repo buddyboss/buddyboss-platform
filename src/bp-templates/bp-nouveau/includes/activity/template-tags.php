@@ -1486,9 +1486,9 @@ function bp_nouveau_get_edit_activity_data() {
 					$folder_id = $document->folder_id;
 					$group_id  = $document->group_id;
 					if ( ! empty( $folder_id ) ) {
-						$folder_id  = bp_document_get_root_parent_id( $folder_id );
 						$folder     = new BP_Document_Folder( $folder_id );
-						$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+						$folder_id_url  = bp_document_get_root_parent_id( $folder_id );
+						$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id_url );
 					} else {
 						$parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
 						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
@@ -1507,9 +1507,9 @@ function bp_nouveau_get_edit_activity_data() {
 			$activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
 			if ( ! empty( $activity_folder_id ) ) {
 				$folder_id         = $activity_folder_id;
-				$folder_id         = bp_document_get_root_parent_id( $folder_id );
+				$folder_id_url     = bp_document_get_root_parent_id( $folder_id );
 				$folder            = new BP_Document_Folder( $folder_id );
-				$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id );
+				$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id_url );
 				$document_activity = true;
 			}
 		}
