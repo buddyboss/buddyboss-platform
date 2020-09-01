@@ -113,7 +113,7 @@ window.bp = window.bp || {};
 			self.postForm.$el.addClass( 'bp-activity-edit' ).addClass('loading');
 
 			// add a pause to form to let it cool down a bit.
-			setTimeout( function(){
+			setTimeout( function() {
 				self.postForm.$el.find( '#whats-new' ).trigger( 'focus' );
 				self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
 				self.postForm.$el.find( '#bp-activity-id' ).val( activity_data.id );
@@ -268,6 +268,21 @@ window.bp = window.bp || {};
 				}
 				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 				self.postForm.$el.removeClass('loading');
+
+				// Make selected current privacy.
+				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
+
+				$activityPrivacySelect.val( activity_data.privacy );
+				if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' ){
+					$activityPrivacySelect.val( bp.Nouveau.Activity.EditedPrivacyData.privacy );
+				}
+
+				// Do not allow the edit privacy if activity is belongs to any folder/album.
+				if ( ! bp.privacyEditable ) {
+					$activityPrivacySelect.css( 'visibility', 'hidden');
+				} else {
+					$activityPrivacySelect.css( 'visibility', 'visible');
+				}
 			},0 );
 
 		},
@@ -300,20 +315,7 @@ window.bp = window.bp || {};
 			// Set the activity value
 			self.displayEditActivity( activity_data );
 
-			// Make selected current privacy.
-			var $activityPrivacySelect = $activityForm.find( '#bp-activity-privacy' );
 
-			$activityPrivacySelect.val( activity_data.privacy );
-			if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' ){
-				$activityPrivacySelect.val( bp.Nouveau.Activity.EditedPrivacyData.privacy );
-			}
-
-			// Do not allow the edit privacy if activity is belongs to any folder/album.
-			if ( ! this.privacyEditable ) {
-				$activityPrivacySelect.css( 'visibility', 'hidden');
-			} else {
-				$activityPrivacySelect.css( 'visibility', 'visible');
-			}
 
 			var edit_activity_editor = $('#whats-new')[0];
 			var edit_activity_editor_content = $('#whats-new-content')[0];
