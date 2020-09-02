@@ -273,8 +273,10 @@ window.bp = window.bp || {};
 				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
 
 				$activityPrivacySelect.val( activity_data.privacy );
-				if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' && bp.Nouveau.Activity.EditedPrivacyData !== false ){
-					$activityPrivacySelect.val( bp.Nouveau.Activity.EditedPrivacyData.privacy );
+
+				var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
+				if ( typeof privacy !== 'undefined' ) {
+					$activityPrivacySelect.val( privacy );
 				}
 
 				// Do not allow the edit privacy if activity is belongs to any folder/album.
@@ -2800,7 +2802,6 @@ window.bp = window.bp || {};
 							} );
 						}
 
-						bp.Nouveau.Activity.EditedPrivacyData = false;
 						// At first, hide the modal
 						bp.Nouveau.Activity.postForm.postActivityEditHideModal();
 
