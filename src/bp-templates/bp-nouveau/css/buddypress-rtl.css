@@ -1130,6 +1130,8 @@ a.layout-grid-view {
   width: 700px;
   max-width: 90%;
   margin: auto;
+  border: 1px solid #d2d4d6;
+  box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 }
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .gif-media-search-dropdown,
