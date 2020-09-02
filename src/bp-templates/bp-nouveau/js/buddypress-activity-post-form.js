@@ -148,7 +148,7 @@ window.bp = window.bp || {};
 						tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
 					}
 					if ( tool_box.find( '#activity-gif-button' ) ) {
-						tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+						tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active' );
 					}
 					// END Toolbox Button
 				}
@@ -2134,7 +2134,9 @@ window.bp = window.bp || {};
 				} else {
 					this.$self.addClass( 'open' );
 				}
-				this.$gifPickerEl.toggleClass( 'open' );
+				if ( e.type !== 'bp_activity_edit' ) {
+					this.$gifPickerEl.toggleClass( 'open' );
+				}
 			},
 
 			closeGifSelector: function () {
