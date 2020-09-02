@@ -505,13 +505,36 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
-				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
-			) );
+			// Update media if existing
+			if ( ! empty( $media['media_id'] ) ) {
+				$bp_media = new BP_Media( $media['media_id'] );
+
+				if ( ! empty( $bp_media->id ) ) {
+					$media_id = bp_media_add( array(
+						'id'            => $bp_media->id,
+						'blog_id'       => $bp_media->blog_id,
+						'attachment_id' => $bp_media->attachment_id,
+						'user_id'       => $bp_media->user_id,
+						'title'         => $bp_media->title,
+						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'activity_id'   => $bp_media->activity_id,
+						'privacy'       => $bp_media->privacy,
+						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+						'date_created'  => $bp_media->date_created,
+					) );
+				}
+			} else {
+
+				$media_id = bp_media_add( array(
+					'attachment_id' => $media['id'],
+					'title'         => $media['name'],
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+					'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+					'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
+				) );
+			}
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
