@@ -2017,9 +2017,9 @@ function bp_activity_document_add( $document ) {
  *
  */
 function bp_activity_create_parent_document_activity( $document_ids ) {
-	global $bp_document_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content;
+	global $bp_document_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
 
-	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) ) {
+	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) {
 
 		$added_document_ids = $document_ids;
 		$content            = false;
