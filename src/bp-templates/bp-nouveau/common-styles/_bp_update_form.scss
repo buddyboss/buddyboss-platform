@@ -105,7 +105,7 @@
 			max-width: 90%;
 			margin: auto;
 			border: 1px solid #d2d4d6;
-    		box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
+			box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
 		}
 
 		.gif-media-search-dropdown {
@@ -151,13 +151,13 @@
 
 			text-align: center;
 
-			#whats-new-content{
+			#whats-new-content {
 
 				position: relative;
 
 				&:after {
-					content: '\e838';
-					font: normal normal normal 22px/1 "bb-icons";
+					content: "\e838";
+					font: normal normal 400 22px/1 "bb-icons";/* stylelint-disable-line */
 					margin: 10px auto;
 					display: inline-block;
 					text-align: center;
