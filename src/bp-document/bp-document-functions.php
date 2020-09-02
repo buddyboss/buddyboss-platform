@@ -2936,7 +2936,12 @@ function bp_document_user_can_manage_folder( $folder_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $folder->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $folder->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -3073,7 +3078,11 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 			break;
 
 		case 'loggedin':
-			if ( $document->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+			} elseif ( $document->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -3185,7 +3194,7 @@ function bp_document_user_can_manage_document( $document_id = 0, $user_id = 0 ) 
 	$data['can_download'] = $can_download;
 	$data['can_add']      = $can_add;
 
-	return apply_filters( 'bp_document_user_can_manage_folder', $data, $document_id, $user_id );
+	return apply_filters( 'bp_document_user_can_manage_document', $data, $document_id, $user_id );
 }
 
 /**

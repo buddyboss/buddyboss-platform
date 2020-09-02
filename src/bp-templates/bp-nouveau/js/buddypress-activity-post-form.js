@@ -1397,9 +1397,12 @@ window.bp = window.bp || {};
 				// Insert the filtered content.
 				document.execCommand( 'insertHTML', false, data );
 
-				// Prevent the standard paste behavior.
-				event.preventDefault();
-			},
+			// trigger keyup event of this view to handle changes.
+			this.$el.trigger('keyup');
+
+			// Prevent the standard paste behavior.
+			event.preventDefault();
+		},
 
 			handleKeyUp: function () {
 				var self = this;

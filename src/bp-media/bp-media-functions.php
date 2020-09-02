@@ -2412,7 +2412,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $media->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -2792,7 +2797,12 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $album->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $album->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_add      = true;
 				$can_view     = true;

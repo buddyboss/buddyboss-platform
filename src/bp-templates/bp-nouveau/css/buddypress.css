@@ -6829,6 +6829,23 @@ ul.bbp-stats .bbp-count {
   font-size: 30px;
 }
 
+#customize-control-group_nav_order .item-title .checkbox-wrap,
+#customize-control-user_nav_order .item-title .checkbox-wrap {
+  display: flex;
+  align-items: center;
+  float: right;
+}
+
+#customize-control-group_nav_order .item-title .checkbox-wrap.bp-hide,
+#customize-control-user_nav_order .item-title .checkbox-wrap.bp-hide {
+  display: none;
+}
+
+#customize-control-group_nav_order .item-title .checkbox-wrap .visible-checkboxes,
+#customize-control-user_nav_order .item-title .checkbox-wrap .visible-checkboxes {
+  margin: 0 5px 0 0;
+}
+
 /**
 *----------------------------------------------------------
 * @section 6.1 - Directory Search
