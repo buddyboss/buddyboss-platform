@@ -1928,7 +1928,7 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 function bp_activity_document_add( $document ) {
 	global $bp_document_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
 
-	if ( ! empty( $document ) ) {
+	if ( ! empty( $document ) && empty( $document->activity_id ) ) {
 		$parent_activity_id = false;
 		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
 			$parent_activity_id = (int) $bp_activity_post_update_id;

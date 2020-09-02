@@ -1552,7 +1552,7 @@ class BP_Document {
 	 * @since BuddyBoss 1.4.0
 	 */
 	public static function delete( $args = array(), $from = false ) {
-		global $wpdb, $bp_activity_edit;
+		global $wpdb;
 
 		$bp = buddypress();
 		$r  = wp_parse_args(
@@ -1698,7 +1698,7 @@ class BP_Document {
 			// Loop through attachment ids and attempt to delete.
 			foreach ( $attachment_ids as $attachment_id ) {
 
-				if ( bp_is_active( 'activity' ) && ( ! $bp_activity_edit && empty( $_POST['edit'] ) ) ) {
+				if ( bp_is_active( 'activity' ) ) {
 					$parent_activity_id = get_post_meta( $attachment_id, 'bp_document_parent_activity_id', true );
 					if ( ! empty( $parent_activity_id ) ) {
 						$activity_document_ids = bp_activity_get_meta( $parent_activity_id, 'bp_document_ids', true );
@@ -1715,7 +1715,7 @@ class BP_Document {
 					}
 				}
 
-				if ( empty( $from ) ) {
+				if ( empty( $from ) || 'activity' === $from ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
@@ -1742,7 +1742,7 @@ class BP_Document {
 					// Deleting an activity.
 					} else {
 						// Do not delete the activity if action did via edit.
-						if ( bp_is_active( 'activity' ) && ( ! $bp_activity_edit && empty( $_POST['edit'] ) ) ) {
+						if ( bp_is_active( 'activity' ) && 'activity' !== $from ) {
 							if ( bp_activity_delete( array(
 									'id'      => $activity->id,
 									'user_id' => $activity->user_id,
