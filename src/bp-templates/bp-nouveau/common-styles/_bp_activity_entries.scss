@@ -954,7 +954,6 @@ span.dashicons.dashicons-admin-file:before {
 				background-color: #fff;
 				padding: 7px;
 				border: 1px solid #e7e9ec;
-				border-left-width: 0;
 			}
 
 			&:hover {
@@ -980,7 +979,7 @@ span.dashicons.dashicons-admin-file:before {
 
 				i {
 
-					border-radius: 0 3px 3px 0;
+					border-radius: 3px;
 				}
 
 			}

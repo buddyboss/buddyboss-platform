@@ -2759,7 +2759,6 @@ span.dashicons.dashicons-admin-file:before {
   background-color: #fff;
   padding: 7px;
   border: 1px solid #e7e9ec;
-  border-right-width: 0;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a:hover,
@@ -2786,7 +2785,7 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_more i,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a.media-action_more i {
-  border-radius: 3px 0 0 3px;
+  border-radius: 3px;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_download i,
