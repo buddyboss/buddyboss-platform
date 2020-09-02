@@ -907,7 +907,7 @@ function bp_is_activity_autoload_active( $default = true ) {
 /**
  * Check whether Activity edit is enabled.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -918,7 +918,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
 	/**
 	 * Filters whether or not Activity edit is enabled.
 	 *
-	 * @since BuddyBoss 1.5.1
+	 * @since BuddyBoss 1.5.0
 	 *
 	 * @param bool $value Whether or not Activity edit is enabled.
 	 */
@@ -931,7 +931,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
  * @param null $time Return single time slot by time key.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  *
  */
 function bp_activity_edit_times( $time = null ) {
@@ -961,7 +961,7 @@ function bp_activity_edit_times( $time = null ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  */
 function bp_get_activity_edit_time( $default = false ) {
 	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );

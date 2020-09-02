@@ -1229,7 +1229,7 @@ function bp_nouveau_activity_privacy() {
  *
  * @return mixed
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  */
 function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
 
@@ -1429,7 +1429,7 @@ function bp_nouveau_clear_activity_content_body( $content, $activity ) {
 /**
  * Output the Activity timestamp into the bp-timestamp attribute.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  */
 function bp_nouveau_edit_activity_data() {
 	echo bp_nouveau_get_edit_activity_data();
@@ -1438,7 +1438,7 @@ function bp_nouveau_edit_activity_data() {
 /**
  * Get the Activity edit data.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  *
  * @return json The Activity edit data.
  */
@@ -1555,7 +1555,7 @@ function bp_nouveau_get_edit_activity_data() {
 	/**
 	 * Filter here to edit the activity edit data.
 	 *
-	 * @since BuddyBoss 1.5.1
+	 * @since BuddyBoss 1.5.0
 	 *
 	 * @param json $activity The Activity edit data.
 	 */

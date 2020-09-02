@@ -246,7 +246,7 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 /**
  * Enable activity edit
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.0
  */
 function bp_admin_setting_callback_enable_activity_edit() {
 	$edit_times = bp_activity_edit_times();
