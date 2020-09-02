@@ -926,6 +926,8 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 
 	$preview_url = wp_get_attachment_url( $gif_data['still'] );
 	$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+	$preview_url = $preview_url . '?' . wp_rand() . '=' . wp_rand();
+	$video_url   = $video_url . '?' . wp_rand() . '=' . wp_rand();
 
 	ob_start();
 	?>

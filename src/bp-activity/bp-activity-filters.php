@@ -1803,7 +1803,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
  *
  */
 function bp_activity_edit_update_media( $media_ids ) {
-	global $bp_activity_edit;
+	global $bp_activity_edit, $bp_activity_post_update_id;
 
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
 		$old_media_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_media_ids', true );
@@ -2102,7 +2102,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
  *
  */
 function bp_activity_edit_update_document( $document_ids ) {
-	global $bp_activity_edit;
+	global $bp_activity_edit, $bp_activity_post_update_id;
 
 	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
 		$old_document_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_document_ids', true );
