@@ -1661,19 +1661,14 @@ function bp_activity_media_add( $media ) {
 			);
 
 			// Create activity only if not created previously.
-			if ( ! $media->activity_id ) {
-				if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
-					$args['item_id'] = $media->group_id;
-					$args['type']    = 'activity_update';
-					$current_group   = groups_get_group( $media->group_id );
-					$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-					$activity_id     = groups_record_activity( $args );
-				} else {
-					$activity_id = bp_activity_post_update( $args );
-				}
-			// Do not create child activity on edit.
+			if ( ! empty( $media->group_id ) && bp_is_active( 'groups' ) ) {
+				$args['item_id'] = $media->group_id;
+				$args['type']    = 'activity_update';
+				$current_group   = groups_get_group( $media->group_id );
+				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $media->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+				$activity_id     = groups_record_activity( $args );
 			} else {
-				$activity_id = $media->activity_id;
+				$activity_id = bp_activity_post_update( $args );
 			}
 
 			if ( $activity_id ) {
@@ -1959,19 +1954,14 @@ function bp_activity_document_add( $document ) {
 			);
 
 			// Create activity if not created previously.
-			if ( ! $document->activity_id ) {
-				if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
-					$args['item_id'] = $document->group_id;
-					$args['type']    = 'activity_update';
-					$current_group   = groups_get_group( $document->group_id );
-					$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
-					$activity_id     = groups_record_activity( $args );
-				} else {
-					$activity_id = bp_activity_post_update( $args );
-				}
-			// Do not create child activity on edit.
+			if ( ! empty( $document->group_id ) && bp_is_active( 'groups' ) ) {
+				$args['item_id'] = $document->group_id;
+				$args['type']    = 'activity_update';
+				$current_group   = groups_get_group( $document->group_id );
+				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $document->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+				$activity_id     = groups_record_activity( $args );
 			} else {
-				$activity_id = $document->activity_id;
+				$activity_id = bp_activity_post_update( $args );
 			}
 
 			if ( $activity_id ) {
