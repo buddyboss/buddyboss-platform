@@ -58,12 +58,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.0 =
+* Activity - Provided 'Edit Activity' support
+* Activity - Provided settings to allow members to edit their activity posts for a duration specified
+* Activity - Provided 'Edit Activity' compatibility with photos, documents, permissions, emoji, giphy, etc
 * Profiles - Provided option to setup Custom Profile dropdown
 * Profiles - Provided option to Hide Profile navigation
 * Profiles - Fixed profile completion issue with Repeater Field Set
 * Forums - Fixed discussion nested replies notification issue
 * Forums - Fixed discussion reply editor formatting issue
-* Media - Fixed album edit/save/canel button layout issue
+* Media - Fixed album edit/save/cancel button layout issue
 * Documents - Fixed document download link privacy issue
 * Documents - Fixed document sub-folder download issue
 * Messages - Improved message thread delete logic
