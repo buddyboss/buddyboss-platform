@@ -140,6 +140,9 @@ add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
 
+// Temporary filter to remove edit button on popup until we fully make compatible on edit everywhere in popup/reply/comment.
+add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_remove_edit_activity_entry_buttons', 999, 2 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -2181,4 +2184,28 @@ function bp_activity_edit_update_document( $document_ids ) {
 	}
 
 	return $document_ids;
+}
+
+/**
+ * We removing the Edit Button on Document/Media Activity popup until we fully support on popup.
+ *
+ * @param $buttons
+ * @param $activity_id
+ *
+ * @return mixed
+ */
+function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
+
+	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity' );
+
+	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, 1 ) ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+		if ( in_array( $activity->privacy, array( 'document', 'media' ), 1 ) ) {
+			unset( $buttons['activity_edit'] );
+		}
+
+	}
+
+	return $buttons;
+
 }

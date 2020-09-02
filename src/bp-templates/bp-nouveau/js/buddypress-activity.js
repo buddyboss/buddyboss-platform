@@ -1197,6 +1197,12 @@ window.bp = window.bp || {};
 				if ( typeof activity_data !== 'undefined' ) {
 					//bp.Nouveau.Activity.postForm.displayEditActivity( activity_data );
 					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
+						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
+						$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
+					}
+
 				}
 			}
 		},
