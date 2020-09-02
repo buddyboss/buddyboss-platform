@@ -273,7 +273,7 @@ window.bp = window.bp || {};
 				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
 
 				$activityPrivacySelect.val( activity_data.privacy );
-				if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' ){
+				if ( typeof bp.Nouveau.Activity.EditedPrivacyData !== 'undefined' && bp.Nouveau.Activity.EditedPrivacyData !== false ){
 					$activityPrivacySelect.val( bp.Nouveau.Activity.EditedPrivacyData.privacy );
 				}
 
@@ -2639,7 +2639,7 @@ window.bp = window.bp || {};
 					meta = {}, edit = false;
 
 				if ( event ) {
-					if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
+					if ( 'keydown' === event.type && ( 13 !== event.keyCode || !event.ctrlKey ) ) {
 						return event;
 					}
 
@@ -2658,7 +2658,7 @@ window.bp = window.bp || {};
 							if ( _.isUndefined( meta[pair.name] ) ) {
 								meta[pair.name] = pair.value;
 							} else {
-								if ( ! _.isArray( meta[pair.name] ) ) {
+								if ( !_.isArray( meta[pair.name] ) ) {
 									meta[pair.name] = [ meta[pair.name] ];
 								}
 
@@ -2685,7 +2685,7 @@ window.bp = window.bp || {};
 
 				// Add valid line breaks.
 				var content = $.trim( $whatsNew[0].innerHTML.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
-				content     = content.replace( /&nbsp;/g, ' ' );
+				content = content.replace( /&nbsp;/g, ' ' );
 
 				self.model.set( 'content', content, { silent: true } );
 
@@ -2709,7 +2709,7 @@ window.bp = window.bp || {};
 				}
 
 				// validation for content editor.
-				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && ! self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && ! self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( $( $.parseHTML( content ) ).text().trim() === '' && ( ( typeof self.model.get( 'document' ) !== 'undefined' && !self.model.get( 'document' ).length ) && ( typeof self.model.get( 'media' ) !== 'undefined' && !self.model.get( 'media' ).length ) && ( typeof self.model.get( 'gif_data' ) !== 'undefined' && !Object.keys( self.model.get( 'gif_data' ) ).length ) ) ) {
 					self.model.set(
 						'errors',
 						{
@@ -2750,7 +2750,7 @@ window.bp = window.bp || {};
 				// Form link preview data to pass in request if available.
 				if ( self.model.get( 'link_success' ) ) {
 					var images = self.model.get( 'link_images' ),
-						index  = self.model.get( 'link_image_index' );
+						index = self.model.get( 'link_image_index' );
 					if ( images && images.length ) {
 						data = _.extend(
 							data,
@@ -2776,19 +2776,18 @@ window.bp = window.bp || {};
 				}
 
 				// Append zero-width character to allow post gif without activity content.
-				if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
+				if ( !_.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
 					data.content = '&#8203;';
 				}
 
 				// check if edit activity
 				if ( self.model.get( 'id' ) > 0 ) {
-					edit      = true;
+					edit = true;
 					data.edit = 1;
 
-					if ( ! bp.privacyEditable ) {
-						data.privacy  = bp.privacy;
+					if ( !bp.privacyEditable ) {
+						data.privacy = bp.privacy;
 					}
-
 				}
 
 				bp.ajax.post( 'post_update', data ).done(
@@ -2796,105 +2795,109 @@ window.bp = window.bp || {};
 
 						// check if edit activity then scroll up 1px so image will load automatically.
 						if ( self.model.get( 'id' ) > 0 ) {
-							$('html, body').animate({
-								scrollTop: $(window).scrollTop() + 1
-							});
+							$( 'html, body' ).animate( {
+								scrollTop: $( window ).scrollTop() + 1
+							} );
 						}
 
-							// At first, hide the modal
-							bp.Nouveau.Activity.postForm.postActivityEditHideModal();
+						bp.Nouveau.Activity.EditedPrivacyData = false;
+						// At first, hide the modal
+						bp.Nouveau.Activity.postForm.postActivityEditHideModal();
 
-							var store   = bp.Nouveau.getStorage( 'bp-activity' ),
+						var store = bp.Nouveau.getStorage( 'bp-activity' ),
 							searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-							toPrepend   = false;
+							toPrepend = false;
 
-							// Look for matches if the stream displays search results.
-						if (searchTerms) {
-							  searchTerms = new RegExp( searchTerms, 'im' );
-							  matches     = response.activity.match( searchTerms );
+						// Look for matches if the stream displays search results.
+						if ( searchTerms ) {
+							searchTerms = new RegExp( searchTerms, 'im' );
+							matches = response.activity.match( searchTerms );
 						}
 
-							/**
-							 * Before injecting the activity into the stream, we need to check the filter
-							 * and search terms are consistent with it when posting from a single item or
-							 * from the Activity directory.
-							 */
-						if (( ! searchTerms || matches)) {
-							  toPrepend = ! store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
+						/**
+						 * Before injecting the activity into the stream, we need to check the filter
+						 * and search terms are consistent with it when posting from a single item or
+						 * from the Activity directory.
+						 */
+						if ( ( !searchTerms || matches ) ) {
+							toPrepend = !store.filter || 0 === parseInt( store.filter, 10 ) || 'activity_update' === store.filter;
 						}
 
-							/**
-							 * In the Activity directory, we also need to check the active scope.
-							 * eg: An update posted in a private group should only show when the
-							 * "My Groups" tab is active.
-							 */
-						if (toPrepend && response.is_directory) {
-							  toPrepend = ('all' === store.scope && ('user' === self.model.get( 'object' ) || false === response.is_private)) || (self.model.get( 'object' ) + 's' === store.scope);
+						/**
+						 * In the Activity directory, we also need to check the active scope.
+						 * eg: An update posted in a private group should only show when the
+						 * "My Groups" tab is active.
+						 */
+						if ( toPrepend && response.is_directory ) {
+							toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
 						}
 
-							var medias = self.model.get( 'media' );
-						if (typeof medias !== 'undefined' && medias.length) {
-							for (var k = 0; k < medias.length; k++) {
+						var medias = self.model.get( 'media' );
+						if ( typeof medias !== 'undefined' && medias.length ) {
+							for ( var k = 0; k < medias.length; k++ ) {
 								medias[k].saved = true;
 							}
-								self.model.set( 'media', medias );
+							self.model.set( 'media', medias );
 						}
 
-							var link_embed = false;
-						if (self.model.get( 'link_embed' ) == true) {
-							  link_embed = true;
+						var link_embed = false;
+						if ( self.model.get( 'link_embed' ) == true ) {
+							link_embed = true;
 						}
 
-							var documents = self.model.get( 'document' );
-						if (typeof documents !== 'undefined' && documents.length) {
-							for (var d = 0; d < documents.length; d++) {
+						var documents = self.model.get( 'document' );
+						if ( typeof documents !== 'undefined' && documents.length ) {
+							for ( var d = 0; d < documents.length; d++ ) {
 								documents[d].saved = true;
 							}
-								self.model.set( 'document', documents );
+							self.model.set( 'document', documents );
 						}
 
-							// Reset formatting of editor
+						// Reset formatting of editor
 
-							//window.group_messages_editor.execAction( 'selectAll' );
-							//window.group_messages_editor.execAction( 'removeFormate' );
+						//window.group_messages_editor.execAction( 'selectAll' );
+						//window.group_messages_editor.execAction( 'removeFormate' );
 
-							// Reset the form.
-							self.resetForm();
+						// Reset the form.
+						self.resetForm();
 
-							// Display a successful feedback if the acticity is not consistent with the displayed stream.
-						if ( ! toPrepend) {
-							  self.views.add( new bp.Views.activityFeedback( {value: response.message, type: 'updated'} ) );
+						// Display a successful feedback if the acticity is not consistent with the displayed stream.
+						if ( !toPrepend ) {
+							self.views.add( new bp.Views.activityFeedback( {
+								value: response.message,
+								type: 'updated'
+							} ) );
 
-							  // Edit activity
-						} else if (edit) {
-							  $( '#activity-' + response.id ).replaceWith( response.activity );
+							// Edit activity
+						} else if ( edit ) {
+							$( '#activity-' + response.id ).replaceWith( response.activity );
 
-							  // Inject the activity into the stream only if it hasn't been done already (HeartBeat).
-						} else if ( ! $( '#activity-' + response.id ).length) {
+							// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
+						} else if ( !$( '#activity-' + response.id ).length ) {
 
-							  // It's the very first activity, let's make sure the container can welcome it!
-							if ( ! $( '#activity-stream ul.activity-list' ).length) {
+							// It's the very first activity, let's make sure the container can welcome it!
+							if ( !$( '#activity-stream ul.activity-list' ).length ) {
 								$( '#activity-stream' ).html( $( '<ul></ul>' ).addClass( 'activity-list item-list bp-list' ) );
 							}
 
-								// Prepend the activity.
-								bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
+							// Prepend the activity.
+							bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
 
-								// replace dummy image with original image by faking scroll event
-								jQuery( window ).scroll();
+							// replace dummy image with original image by faking scroll event
+							jQuery( window ).scroll();
 
-							if (link_embed) {
-								if (typeof window.instgrm !== 'undefined') {
+							if ( link_embed ) {
+								if ( typeof window.instgrm !== 'undefined' ) {
 									window.instgrm.Embeds.process();
 								}
-								if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined') {
+								if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
 									window.FB.XFBML.parse( $( document ).find( '#activity-' + response.id ).get( 0 ) );
 								}
 							}
 						}
 					}
 				).fail(
-					function( response ) {
+					function ( response ) {
 						self.model.set( 'posting', false );
 						self.model.set( 'errors', { type: 'error', value: response.message } );
 					}
