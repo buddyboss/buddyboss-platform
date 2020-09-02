@@ -58,7 +58,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.0 =
-* 
+* Profiles - Provided option to setup Custom Profile dropdown
+* Profiles - Provided option to Hide Profile navigation
+* Profiles - Fixed profile completion issue with Repeater Field Set
+* Forums - Fixed discussion nested replies notification issue
+* Forums - Fixed discussion reply editor formatting issue
+* Media - Fixed album edit/save/canel button layout issue
+* Documents - Fixed document download link privacy issue
+* Documents - Fixed document sub-folder download issue
+* Messages - Improved message thread delete logic
+* Messages - Fixed deleted message thread count issue
+* Templates - Profile navigation template enhancement for new profile navigation hide feature
+* REST API - Fixed API issues in profile, media, and social groups
+* LearnDash - Fixed Social groups and LearnDash groups sync conflict
+* Compatibility - Fixed frontend page conflict with Elementor plugin
+* Compatibility - Fixed activity date conflict with TranslatePress plugin
+* Compatibility - Fixed document layout issues with Wallstreet Theme
 
 = 1.4.9 =
 * Profiles - Fixed profile completion logic to reuse the same feature in Elementor
