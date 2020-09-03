@@ -1037,6 +1037,12 @@ window.bp = window.bp || {};
 
 				comment_content = $( form ).find( '.ac-input' ).first();
 
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+
 				comment_content.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
