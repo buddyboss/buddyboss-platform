@@ -451,10 +451,16 @@ window.bp = window.bp || {};
 					var editor  = '';
 					if ( typeof window.group_messages_editor !== 'undefined' ) {
 						editor = window.group_messages_editor;
+						$( '#group_message_content' ).find( 'img.emojioneemoji' ).replaceWith(
+							function () {
+								return this.dataset.emojiChar;
+							}
+						);
 					}
 
 					content = editor.getContent();
-					if ( editor && $.trim( editor.getContent().replace( '<p><br></p>','' ) ) === '' ) {
+					content = $.trim( content.replace(/&nbsp;/g, '').replace('<p><br></p>','') );
+					if ( editor && content === '' ) {
 						content = '';
 					} else if ( ! editor && $.trim( $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form' ).find( '#group_message_content' ).val() ) === '' ) {
 						content = '';
@@ -494,13 +500,13 @@ window.bp = window.bp || {};
 						'action'  	 	: 'groups_get_group_members_send_message',
 						'nonce'   	 	: BP_Nouveau.group_messages.nonces.send_messages_users,
 						'group'   	 	: BP_Nouveau.group_messages.group_id,
-						'content' 	 	: window.group_messages_editor.getContent(),
+						'content' 	 	: content,
 						'media'   	 	: media,
 						'document'   	: document,
 						'users'   		: user,
 						'users_list'    : users_list,
 						'type'    		: type,
-						'gif'     	 	: gif
+						'gif_data'     	: gif
 					};
 
 					$.ajax(
@@ -530,10 +536,8 @@ window.bp = window.bp || {};
 									feedbackSelector.after( feedbackHtmlSuccess );
 
 									// Reset formatting of editor
-									window.group_messages_editor.execAction('selectAll');
-									window.group_messages_editor.execAction('removeFormate');
-									
-									window.group_messages_editor.setContent( '' );
+									window.group_messages_editor.resetContent();
+
 									if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
 										if ( bp.Nouveau.Media.dropzone_media.length ) {
@@ -786,6 +790,7 @@ window.bp = window.bp || {};
 							events: {
 								emojibtn_click: function () {
 									$( '#group_message_content' )[0].emojioneArea.hidePicker();
+									window.group_messages_editor.checkContentChanged();
 								}
 							}
 						}

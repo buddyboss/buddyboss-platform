@@ -730,10 +730,10 @@ window.bp = window.bp || {};
 					imageDragging: false
 				});
 
-					if ( ! _.isUndefined( BP_Nouveau.media ) &&
-						! _.isUndefined( BP_Nouveau.media.emoji ) &&
+					if ( !_.isUndefined( BP_Nouveau.media ) &&
+						!_.isUndefined( BP_Nouveau.media.emoji ) &&
 						(
-							! _.isUndefined( BP_Nouveau.media.emoji.messages ) &&
+							!_.isUndefined( BP_Nouveau.media.emoji.messages ) &&
 							BP_Nouveau.media.emoji.messages
 						)
 					) {
@@ -749,9 +749,10 @@ window.bp = window.bp || {};
 								events: {
 									emojibtn_click: function () {
 										$( '#message_content' )[0].emojioneArea.hidePicker();
+										bp.Nouveau.Messages.mediumEditor.checkContentChanged();
 									}
 								}
-								}
+							}
 						);
 					}
 
@@ -1407,7 +1408,7 @@ window.bp = window.bp || {};
 						medium_editor_toolbar.removeClass('medium-editor-toolbar-active');
 					}
 				}
-				
+
 				medium_editor_toolbar.toggleClass( 'active' );
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
@@ -1779,7 +1780,7 @@ window.bp = window.bp || {};
 
 				// check message content empty.
 				this.model.set('message_content', this.model.get('message_content').replace(/&nbsp;/g, '').trim(), { silent: true });
-				if ( $(this.model.get('message_content')).text().trim() === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
+				if ( this.model.get('message_content') === '' && ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) {
 					errors.push( 'message_content' );
 				}
 
@@ -2734,7 +2735,7 @@ window.bp = window.bp || {};
 
 				// check message content empty.
 				content = content.replace(/&nbsp;/g,'').trim();
-				if ( $(content).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
+				if ( $( content ).text().trim() === '' && ( ( typeof this.model.get( 'document' ) !== 'undefined' && ! this.model.get( 'document' ).length ) && ( typeof this.model.get( 'media' ) !== 'undefined' && ! this.model.get( 'media' ).length ) && ( typeof this.model.get( 'gif_data' ) !== 'undefined' && ! Object.keys( this.model.get( 'gif_data' ) ).length ) ) ) {
 					errors.push( 'message_content' );
 				}
 

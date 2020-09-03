@@ -195,7 +195,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+	if ( empty( $topic_content )
 		 && empty( $_POST['bbp_media'] )
 		 && empty( $_POST['bbp_document'] )
 		 && empty( $_POST['bbp_media_gif'] )
