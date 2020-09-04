@@ -1191,8 +1191,9 @@ a.layout-grid-view {
 
 .bp-nouveau-activity-form-placeholder-.modal-popup .bp-activity-edit.loading #whats-new-content:after,
 .activity-update-form.modal-popup .bp-activity-edit.loading #whats-new-content:after {
-  content: '\e838';
-  font: normal normal normal 22px/1 "bb-icons";
+  content: "\e838";
+  font: normal normal 400 22px/1 "bb-icons";
+  /* stylelint-disable-line */
   margin: 10px auto;
   display: inline-block;
   text-align: center;

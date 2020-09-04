@@ -451,20 +451,23 @@ window.bp = window.bp || {};
 					var editor  = '';
 					if ( typeof window.group_messages_editor !== 'undefined' ) {
 						editor = window.group_messages_editor;
+						$( '#group_message_content' ).find( 'img.emoji' ).each(function( index, Obj) {
+							$( Obj ).addClass( 'emojioneemoji' );
+							var emojis = $( Obj ).attr( 'alt' );
+							$( Obj ).attr( 'data-emoji-char', emojis );
+							$( Obj ).removeClass( 'emoji' );
+						});
 						$( '#group_message_content' ).find( 'img.emojioneemoji' ).replaceWith(
 							function () {
 								return this.dataset.emojiChar;
 							}
 						);
+						content = editor.getContent();
 					}
 
-					content = editor.getContent();
-					content = $.trim( content.replace(/&nbsp;/g, '').replace('<p><br></p>','') );
-					if ( editor && content === '' ) {
-						content = '';
-					} else if ( ! editor && $.trim( $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form' ).find( '#group_message_content' ).val() ) === '' ) {
-						content = '';
-					}
+					// Add valid line breaks.
+					content = $.trim( content.replace( /<div>/gi, '\n' ).replace( /<\/div>/gi, '' ) );
+					content = content.replace( /&nbsp;/g, ' ' );
 
 					var media   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
 					var document   	   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_document' ).val();
@@ -472,7 +475,7 @@ window.bp = window.bp || {};
 					var contentError   = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-content-no-error' );
 					var recipientError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-recipient-no-error' );
 
-					if ( '' === content && '' === media && '' === document && '' === gif ) {
+					if ( $( $.parseHTML( content ) ).text().trim() === '' && '' === media && '' === document && '' === gif ) {
 						if ( ! contentError.length ) {
 							var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + BP_Nouveau.group_messages.no_content + ' </p></div>';
 							$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback' ).append( feedbackHtml );
