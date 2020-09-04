@@ -2183,6 +2183,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  * @param $activity_id
  *
  * @return mixed
+ * @since BuddyBoss 1.5.0
  */
 function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
