@@ -2063,6 +2063,28 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 		if ( $is_profile_photo_uploaded ) {
 			++ $grand_completed_fields;
+		} else {
+
+			// check if profile gravatar option enabled.
+			if ( bp_enable_profile_gravatar() ) {
+
+				/**
+				 * There is not any direct way to check gravatar set for user.
+				 * We need to pass argument `deafult => 404` while `get_avatar_url` and
+				 * in return URL we need to verify `d=404` query param set or not.
+				 * if `d=404` set then gravatar is not set for user.
+				 */
+
+				// Check gravatar is for given user or not
+				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
+				$profile_url_data = parse_url( $profile_url );
+				parse_str( $profile_url_data['query'], $profile_url_data );
+
+				if ( ! empty( $profile_url ) && '404' !== $profile_url_data['d'] ) {
+					$is_profile_photo_uploaded = 1;
+					++ $grand_completed_fields;
+				}
+			}
 		}
 
 		$progress_details['photo_type']['profile_photo'] = array(
