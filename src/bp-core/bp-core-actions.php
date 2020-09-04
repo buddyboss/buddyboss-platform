@@ -53,7 +53,7 @@ add_action( 'generate_rewrite_rules', 'bp_generate_rewrite_rules', 10 );
  *                                                      v---Load order
  */
 add_action( 'bp_loaded', 'bp_setup_components', 2 );
-add_action( 'bp_loaded', 'bp_setup_memberships', 3 ); // Memberships.
+add_action( 'bp_loaded', 'bp_setup_membership', 3 ); // Membership.
 add_action( 'bp_loaded', 'bp_setup_integrations', 3 );
 add_action( 'bp_loaded', 'bp_include', 4 );
 add_action( 'bp_loaded', 'bp_setup_option_filters', 5 );

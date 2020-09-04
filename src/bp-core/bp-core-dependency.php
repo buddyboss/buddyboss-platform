@@ -784,16 +784,16 @@ function bp_get_request() {
 }
 
 /**
- * Fire the 'bp_setup_components' action, where plugins should initialize components.
+ * Fire the 'bp_setup_membership' action, where plugins should initialize components.
  *
  * @since BuddyBoss 1.5.3
  */
-function bp_setup_memberships() {
+function bp_setup_membership() {
 
 	/**
-	 * Fires inside the 'bp_setup_memberships' function, where plugins should initialize components.
+	 * Fires inside the 'bp_setup_membership' function, where plugins should initialize components.
 	 *
 	 * @since BuddyBoss 1.5.3
 	 */
-	do_action( 'bp_setup_memberships' );
+	do_action( 'bp_setup_membership' );
 }
