@@ -50,6 +50,8 @@ add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 ); // Delete thread gifs.
 add_action( 'bp_messages_thread_messages_after_update', 'bp_media_user_messages_delete_attached_gif', 10, 4 ); // Delete messages gifs.
 // add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );.
+add_filter( 'bp_messages_message_validated_content', 'bp_media_message_validated_content', 10, 3 );
+add_filter( 'bp_messages_message_validated_content', 'bp_media_gif_message_validated_content', 10, 3 );
 
 // Core tools.
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
@@ -905,6 +907,40 @@ function bp_media_messages_save_gif_data( &$message ) {
 	);
 
 	bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
+}
+
+/**
+ * Validate message if media is not empty.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $post              Request object.
+ *
+ * @return bool
+ */
+function bp_media_message_validated_content( $validated_content, $content, $post ) {
+	// check if media is enabled in messages or not and empty media in object request or not.
+	if ( bp_is_messages_media_support_enabled() && ! empty( $post['media'] ) ) {
+		$validated_content = true;
+	}
+	return $validated_content;
+}
+
+/**
+ * Validate message if media is not empty.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $post              Request object.
+ *
+ * @return bool
+ */
+function bp_media_gif_message_validated_content( $validated_content, $content, $post ) {
+	// check if gif data is enabled in messages or not and empty gif data in object request or not.
+	if ( bp_is_messages_gif_support_enabled() && ! empty( $post['gif_data'] ) ) {
+		$validated_content = true;
+	}
+	return $validated_content;
 }
 
 /**
