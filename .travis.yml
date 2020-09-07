@@ -120,7 +120,7 @@ before_install:
   # setup NodeJS version using NVM
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - node --version
-  - nvm install 12
+  - nvm install 14
   - node --version
   - npm install -g grunt-cli
   - npm --version
@@ -144,9 +144,10 @@ before_script:
   - mkdir -p /tmp/node/node_modules
   - ln -s /tmp/node/node_modules $plugin_dir/node_modules
   - npm install
+  - npm rebuild node-sass
 
 # Run tests
-script: grunt $BP_TRAVISCI --verbose
+script: grunt $BP_TRAVISCI
 
 notifications:
   email: false

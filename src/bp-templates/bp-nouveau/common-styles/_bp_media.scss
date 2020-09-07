@@ -692,7 +692,7 @@ a.bb-close-model {
 
 				&:focus {
 
-					@include box-shadow( 0 0 6px $med-light-grey );
+					@include box-shadow(0 0 6px $med-light-grey);
 				}
 			}
 
@@ -1161,6 +1161,42 @@ ul.bb-albums-list {
 	}
 }
 
+
+#buddypress {
+
+	#bp-media-single-album {
+
+		.bb-single-album-header {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+
+			#bp-single-album-title {
+				padding: 10px 0;
+				margin: 0 !important;
+			}
+
+			#bb-album-title {
+				max-width: 202px;
+			}
+
+			#bp-edit-album-title {
+				margin: 0 0 0 10px;
+			}
+
+			#bp-save-album-title {
+				margin: 0 10px 0 10px;
+			}
+
+			p {
+				flex-basis: 100%;
+				width: 100%;
+			}
+		}
+	}
+}
+
 @media (min-width: 768px) {
 
 	.bb-media-model-inner {
@@ -1333,6 +1369,48 @@ ul.bb-albums-list {
 	.buddypress-wrap .bp-list.bb-photo-list li {
 		flex: 0 0 50%;
 	}
+}
+
+@media (max-width: 480px) {
+
+	#buddypress {
+
+		.bb-media-container.member-media {
+
+			#bp-media-single-album {
+
+				.bb-single-album-header {
+
+					input[type="text"] {
+						display: block;
+						width: 100%;
+						max-width: 100%;
+						margin-bottom: 10px;
+					}
+
+				}
+
+			}
+
+			.bb-album-actions {
+				flex-wrap: wrap;
+				justify-content: space-around;
+
+				.button {
+					margin: 0 0 10px 0;
+				}
+
+				select {
+					width: 100%;
+					direction: ltr;
+				}
+
+			}
+
+		}
+
+	}
+
 }
 
 .bb-custom-check {
@@ -1747,7 +1825,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			float: right;
 		}
 
-		@media screen and ( max-width: 420px ) {
+		@media screen and (max-width: 420px) {
 
 			.bb-dropdown-wrap {
 				margin-bottom: 10px;
@@ -1918,7 +1996,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		a.button.loading:after {
 			content: "\e838";
-			font-family: "bb-icons";/* stylelint-disable-line */
+			font-family: "bb-icons"; /* stylelint-disable-line */
 			font-size: 18px;
 			line-height: 1;
 			margin-left: 10px;
@@ -2013,7 +2091,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		align-items: flex-end;
 		background-color: #fff;
 		border-radius: 4px 4px 4px 5px;
-		position: relative;
+		position: initial;
 
 		.document-preview {
 			width: 100%;
@@ -2163,7 +2241,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			top: 0;
 			left: 0;
 			padding: 6px;
-			right: 0;
+			right: 375px;
 			text-align: center;
 			border-bottom: 1px solid #ecedee;
 			font-size: 16px;
@@ -2192,7 +2270,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		display: none;
 	}
 
-	.CodeMirror {/* stylelint-disable-line */
+	.CodeMirror { /* stylelint-disable-line */
 		height: calc(90vh - 40px);
 		border-top: 1px solid #ecedee;
 		border-radius: 0 0 0 4px;
@@ -2431,7 +2509,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 						}
 
 						&:before {
-							font-family: 'bb-icons';/* stylelint-disable-line */
+							font-family: 'bb-icons'; /* stylelint-disable-line */
 							font-size: 16px;
 							display: inline-block;
 							margin-right: 10px;
@@ -2739,7 +2817,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		&:after {
 			content: "\e81f";
-			font-family: bb-icons;/* stylelint-disable-line */
+			font-family: bb-icons; /* stylelint-disable-line */
 			display: inline-block;
 			color: #4d5c6d;
 			opacity: 0.4;
@@ -2753,6 +2831,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 }
 
 .bp-document-listing {
+	display: flex;
 
 	.media-search-form {
 		float: right;
@@ -2765,24 +2844,29 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				padding: 4px;
 				height: auto;
 				z-index: 112;
+				opacity: 0;
 			}
 
 			#group-document-search {
 				background-image: none;
-				padding: 6px 10px 6px 2rem;
+				padding: 6px 10px 6px 32px;
 				height: auto;
 				font-size: 14px;
 			}
 		}
 	}
 
-	.bp-media-header-wrap .bb-title {
-		width: auto;
+	.bp-media-header-wrap {
+		width: 100%;
+
+		.bb-title {
+			width: auto;
+		}
 	}
 
 }
 
-body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
+body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
 	-webkit-box-orient: horizontal;
 	-webkit-box-direction: normal;
 	-ms-flex-direction: row;
@@ -2889,9 +2973,13 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			.bp-dir-search-form {
 				border: 0;
 
+				.nouveau-search-submit {
+					opacity: 0;
+				}
+
 				#group-document-search {
 					background-image: none;
-					padding: 6px 10px 6px 2rem;
+					padding: 6px 10px 6px 32px;
 					height: auto;
 					font-size: 14px;
 				}
@@ -2902,7 +2990,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		@media screen and (max-width: 1480px) {
 
 			.bp-media-header-wrap-inner {
-				webkit-box-orient: vertical;/* stylelint-disable-line */
+				webkit-box-orient: vertical; /* stylelint-disable-line */
 				-webkit-box-direction: normal;
 				-ms-flex-direction: column;
 				flex-direction: column;
@@ -2975,6 +3063,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 			list-style: none;
 			margin: 10px 0 0;
 			text-align: left;
+			padding: 0;
 
 			li {
 				display: inline-block;
@@ -2984,7 +3073,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 				&:after {
 					content: "\f345";
-					font-family: dashicons;/* stylelint-disable-line */
+					font-family: dashicons; /* stylelint-disable-line */
 					vertical-align: middle;
 					font-size: 15px;
 					margin-right: 6px;
@@ -3116,7 +3205,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 							}
 
 							i:before {
-								font-family: 'bb-icons';/* stylelint-disable-line */
+								font-family: 'bb-icons'; /* stylelint-disable-line */
 								font-size: 16px;
 								display: inline-block;
 								margin-right: 10px;
@@ -3215,7 +3304,6 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 	}
 }
 
-
 #bp-media-create-folder,
 #bp-media-edit-child-folder,
 #bp-media-create-child-folder {
@@ -3234,6 +3322,21 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 }
 
+.modal-container,
+#bp-media-create-folder {
+
+	.error-box {
+		display: none;
+		line-height: 1.3;
+		margin-top: 5px;
+	}
+
+	#bb-album-child-title.error + .error-box,
+	#bb-album-title.error + .error-box {
+		display: block;
+	}
+}
+
 .modal-container.has-folderlocationUI {
 
 	.bb-model-footer a {
@@ -3244,7 +3347,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			&:after {
 				content: "\e838";
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -3303,7 +3406,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 		margin: 0;
 	}
 
-	@media screen and ( max-width: 520px ) {
+	@media screen and (max-width: 520px) {
 
 		.bb-model-footer a.bp-document-open-create-popup-folder {
 			display: block;
@@ -3342,7 +3445,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			&:after {
 				content: "\e838";
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 18px;
 				line-height: 1;
 				margin-left: 10px;
@@ -3361,7 +3464,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 	&:after {
 		content: "\e81f";
-		font-family: bb-icons;/* stylelint-disable-line */
+		font-family: bb-icons; /* stylelint-disable-line */
 		display: inline-block;
 		color: #4d5c6d;
 		opacity: 0.4;
@@ -3407,7 +3510,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 			span:before {
 				content: "\e827";
-				font-family: "bb-icons";/* stylelint-disable-line */
+				font-family: "bb-icons"; /* stylelint-disable-line */
 				font-size: 20px;
 				vertical-align: middle;
 				display: inline-block;
@@ -3428,7 +3531,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 				white-space: nowrap;
 				vertical-align: middle;
 
-				@media screen and ( max-width: 520px ) {
+				@media screen and (max-width: 520px) {
 					max-width: 120px;
 				}
 
@@ -3513,7 +3616,7 @@ body.document  #bp-media-single-folder  .album-single-view .bp-media-header-wrap
 
 					&:before {
 						content: "\e959";
-						font-family: bb-icons;/* stylelint-disable-line */
+						font-family: bb-icons; /* stylelint-disable-line */
 						color: #939597;
 						margin-right: 12px;
 						font-size: 16px;

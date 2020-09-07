@@ -2004,7 +2004,7 @@ function bp_core_activate_signup( $key ) {
 		// Set up data to pass to the legacy filter.
 		$user = array(
 			'user_id'  => $user_id,
-			'password' => $signup->meta['password'],
+			'password' => isset( $signup->meta['password'] ) ? $signup->meta['password'] : '',
 			'meta'     => $signup->meta,
 		);
 
@@ -2789,6 +2789,12 @@ function bp_remove_member_type( $user_id, $member_type ) {
 		return false;
 	}
 
+	// No need to continue if the member doesn't have the type.
+	$existing_types = bp_get_member_type( $user_id, false );
+	if ( ! in_array( $member_type, $existing_types, true ) ) {
+		return false;
+	}
+
 	$deleted = bp_remove_object_terms( $user_id, $member_type, bp_get_member_type_tax_name() );
 
 	// Bust the cache if the type has been removed.
@@ -2944,12 +2950,12 @@ function bp_register_member_type_section() {
 			array(
 				'description'        => __( 'BuddyBoss profile type', 'buddyboss' ),
 				'labels'             => bp_get_member_type_post_type_labels(),
-				'public'             => true,
-				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+				'public'             => false,
+				'publicly_queryable' => false,
 				'query_var'          => false,
 				'rewrite'            => false,
 				'show_in_admin_bar'  => false,
-				'show_in_menu'       => '',
+				'show_in_menu'       => false,
 				'map_meta_cap'       => true,
 				'show_in_rest'       => true,
 				'show_ui'            => bp_current_user_can( 'bp_moderate' ),

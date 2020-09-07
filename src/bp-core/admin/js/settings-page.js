@@ -755,6 +755,7 @@
 									'action': 'bp_admin_forum_repair_tools_wrapper_function',
 									'type': BbToolsForumsRepairActions[currentAction],
 									'offset': offset,
+									'site_id': $('body .section-repair_forums #bbp-network-site').val(),
 									'nonce': $( 'body .section-repair_forums .settings fieldset .submit input[name="_wpnonce"]' ).val()
 								},
 								'success': function (response) {
@@ -795,6 +796,12 @@
 						e.preventDefault();
 
 						BbToolsForumsRepairActions = [];
+						var $bbp_network_site = $('body .section-repair_forums #bbp-network-site');
+
+						if ($bbp_network_site.length && '0' === $bbp_network_site.val() ) {
+							alert(BP_ADMIN.tools.repair_forums.validate_site_id_message);
+							return false;
+						}
 
 						setTimeout(
 							function () {
