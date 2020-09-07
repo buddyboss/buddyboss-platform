@@ -99,24 +99,29 @@ function member_widget_click_handler() {
 	);
 }
 
-function member_widget_response(response) {
-	response = response.substr( 0, response.length - 1 );
-	response = response.split( '[[SPLIT]]' );
+function member_widget_response( response ) {
+	var result = jQuery.parseJSON( response );
 
-	if ( response[0] !== '-1' ) {
+	if ( result.success === 1 ) {
 		jQuery( '.widget ul#members-list' ).fadeOut(
 			200,
-			function() {
-				jQuery( '.widget ul#members-list' ).html( response[1] );
+			function () {
+				jQuery( '.widget ul#members-list' ).html( result.data );
 				jQuery( '.widget ul#members-list' ).fadeIn( 200 );
 			}
 		);
 
+		if ( true === result.show_more ) {
+			jQuery( '.more-block' ).show();
+		} else {
+			jQuery( '.more-block' ).hide();
+		}
 	} else {
+
 		jQuery( '.widget ul#members-list' ).fadeOut(
 			200,
-			function() {
-				var message = '<p>' + response[1] + '</p>';
+			function () {
+				var message = '<p>' + result.data + '</p>';
 				jQuery( '.widget ul#members-list' ).html( message );
 				jQuery( '.widget ul#members-list' ).fadeIn( 200 );
 			}
