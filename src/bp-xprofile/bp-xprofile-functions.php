@@ -1787,7 +1787,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 	}
 
 	$format = bp_get_option( 'bp-display-name-format' );
-	
+
 	$display_name = '';
 
 	switch ( $format ) {
@@ -1901,10 +1901,10 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
  * Sync the standard built in WordPress profile data to xprofile data.
  *
  * @since BuddyBoss 1.4.7
- * 
+ *
  * @param int $user_id sync specified user id first name, last name and nickname.
- * 
- * @return void 
+ *
+ * @return void
  */
 function bp_xprofile_sync_bp_profile( $user_id ) {
 
@@ -1939,8 +1939,8 @@ add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
  * @param bool  $errors           Whether or not any errors occurred.
  * @param array $old_values       Array of original values before update.
  * @param array $new_values       Array of newly saved values after update.
- * 
- * @return void 
+ *
+ * @return void
  */
 
 function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
@@ -1977,14 +1977,14 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
 /**
  * Reset cover image position while uploading/deleting profile cover photo.
  *
- * @since BuddyBoss 1.4.7
+ * @since BuddyBoss 1.5.1
  *
  * @param int $user_id User ID.
  */
-function bp_xprofile_cover_image_position_reset( $user_id ) {
+function bp_xprofile_reset_cover_image_position( $user_id ) {
 	if ( ! empty( (int) $user_id ) ) {
 		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
 	}
 }
-add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_cover_image_position_reset', 10, 1 );
-add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_cover_image_position_reset', 10, 1 );
+add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );

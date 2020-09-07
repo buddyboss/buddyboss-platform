@@ -6,13 +6,12 @@
  * @version 3.1.0
  */
 
-$group_link = bp_get_group_permalink();
-$admin_link = trailingslashit( $group_link . 'admin' );
-$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
-$group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
-
-$group_cover_image = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups','item_id' => bp_get_group_id() ) );
-$has_cover_image = '';
+$group_link               = bp_get_group_permalink();
+$admin_link               = trailingslashit( $group_link . 'admin' );
+$group_avatar             = trailingslashit( $admin_link . 'group-avatar' );
+$group_cover_link         = trailingslashit( $admin_link . 'group-cover-image' );
+$group_cover_image        = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups', 'item_id'    => bp_get_group_id() ) );
+$has_cover_image          = '';
 $has_cover_image_position = '';
 
 ?>

@@ -286,10 +286,11 @@ function bp_nouveau_object_template_results_groups_personal_scope( $querystring,
 }
 
 add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position' );
+
 /**
  * Save Cover image position for group and member.
  *
- * @since BuddyBoss 1.4.7
+ * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_ajax_save_cover_position() {
 
@@ -318,4 +319,3 @@ function bp_nouveau_ajax_save_cover_position() {
 
 	wp_send_json_success( $result );
 }
-

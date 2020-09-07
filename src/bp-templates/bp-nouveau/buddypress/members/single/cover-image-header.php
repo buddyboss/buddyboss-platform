@@ -5,16 +5,11 @@
  * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
-$has_cover_image = '';
+$has_cover_image          = '';
 $has_cover_image_position = '';
-$displayed_user = bp_get_displayed_user();
-$cover_image_url = bp_attachments_get_attachment(
-	'url',
-	array(
-		'object_dir' => 'members',
-		'item_id' => $displayed_user->id,
-	)
-);
+$displayed_user           = bp_get_displayed_user();
+$cover_image_url          = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'members', 'item_id'    => $displayed_user->id, ) );
+
 ?>
 
 <div id="cover-image-container">
