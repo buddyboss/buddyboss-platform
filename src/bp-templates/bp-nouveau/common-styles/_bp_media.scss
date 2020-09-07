@@ -1170,6 +1170,7 @@ ul.bb-albums-list {
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: center;
+			align-items: center;
 
 			#bp-single-album-title {
 				padding: 10px 0;
@@ -1191,10 +1192,6 @@ ul.bb-albums-list {
 			p {
 				flex-basis: 100%;
 				width: 100%;
-			}
-
-			.button.small {
-				line-height: 2;
 			}
 		}
 	}
