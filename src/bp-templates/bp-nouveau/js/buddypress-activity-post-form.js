@@ -2681,6 +2681,14 @@ window.bp = window.bp || {};
 					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
 				}
 
+				// transform other emoji into emojionearea emoji.
+				$whatsNew.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+
 				// Transform emoji image into emoji unicode.
 				$whatsNew.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
