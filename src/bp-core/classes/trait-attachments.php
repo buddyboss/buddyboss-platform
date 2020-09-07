@@ -53,6 +53,7 @@ trait BP_REST_Attachments {
 				),
 				array(
 					'status' => 500,
+					'reason' => 'upload_error',
 				)
 			);
 		}
@@ -73,6 +74,7 @@ trait BP_REST_Attachments {
 				__( 'The BuddyPress attachments uploads directory is not set.', 'buddyboss' ),
 				array(
 					'status' => 500,
+					'reason' => 'attachments_upload_dir',
 				)
 			);
 		}
@@ -86,21 +88,27 @@ trait BP_REST_Attachments {
 		}
 
 		// If upload path doesn't exist, stop.
-		if ( 0 !== validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
+		if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 			return new WP_Error(
 				"bp_rest_attachments_{$this->object}_cover_upload_error",
 				__( 'The cover image directory is not valid.', 'buddyboss' ),
 				array(
 					'status' => 500,
+					'reason' => 'cover_image_dir',
 				)
 			);
+		}
+
+		// Added buddypress support.
+		if ( isset( buddypress()->buddyboss ) && 'members' === $component ) {
+			$component = 'xprofile';
 		}
 
 		// Upload cover.
 		$cover = bp_attachments_cover_image_generate_file(
 			array(
 				'file'            => $uploaded_image['file'],
-				'component'       => ( 'members' === $component ? 'xprofile' : $component ),
+				'component'       => $component,
 				'cover_image_dir' => $cover_dir,
 			)
 		);
@@ -112,35 +120,62 @@ trait BP_REST_Attachments {
 				__( 'There was a problem uploading the cover image.', 'buddyboss' ),
 				array(
 					'status' => 500,
+					'reason' => 'unknown',
 				)
 			);
 		}
+
+		$warning = '';
 
 		// Bail with error if too small.
 		if ( true === $cover['is_too_small'] ) {
 
 			// Get cover image advised dimensions.
 			$cover_dimensions = bp_attachments_get_cover_image_dimensions( $component );
-
-			return new WP_Error(
-				"bp_rest_attachments_{$this->object}_cover_upload_error",
-				sprintf(
-					/* translators: %$1s and %$2s is replaced with the correct sizes. */
-					__( 'You have selected an image that is smaller than recommended. For better results, make sure to upload an image that is larger than %1$spx wide, and %2$spx tall.', 'buddyboss' ),
-					(int) $cover_dimensions['width'],
-					(int) $cover_dimensions['height']
-				),
-				array(
-					'status' => 500,
-				)
+			$warning          = sprintf(
+				/* translators: %$1s and %$2s is replaced with the correct sizes. */
+				__( 'You have selected an image that is smaller than recommended. For better results, make sure to upload an image that is larger than %1$spx wide, and %2$spx tall.', 'buddyboss' ),
+				(int) $cover_dimensions['width'],
+				(int) $cover_dimensions['height']
 			);
 		}
 
-		return sprintf(
+		// Set the name of the file.
+		$name       = $file['file']['name'];
+		$name_parts = pathinfo( $name );
+		$name       = trim( substr( $name, 0, - ( 1 + strlen( $name_parts['extension'] ) ) ) );
+
+		$cover_url = sprintf(
 			'%1$s%2$s%3$s',
-			trailingslashit( $bp_attachments_uploads_dir['baseurl'] ),
+			$bp_attachments_uploads_dir['baseurl'],
 			trailingslashit( $cover_subdir ),
 			$cover['cover_basename']
+		);
+
+		/**
+		 * Fires if the new cover photo was successfully uploaded.
+		 *
+		 * The dynamic portion of the hook will be xprofile in case of a user's
+		 * cover photo, groups in case of a group's cover photo. For instance:
+		 * Use add_action( 'xprofile_cover_image_uploaded' ) to run your specific
+		 * code once the user has set his cover photo.
+		 *
+		 * @param int    $item_id       Inform about the item id the cover photo was set for.
+		 * @param string $name          Filename.
+		 * @param string $cover_url     URL to the image.
+		 * @param int    $feedback_code If value not 1, an error occured.
+		 */
+		do_action(
+			$component . '_cover_image_uploaded',
+			(int) $item_id,
+			$name,
+			$cover_url,
+			1
+		);
+
+		return array(
+			'cover'   => $cover_url,
+			'warning' => $warning,
 		);
 	}
 
@@ -183,6 +218,7 @@ trait BP_REST_Attachments {
 				),
 				array(
 					'status' => 500,
+					'reason' => 'upload_error',
 				)
 			);
 		}
@@ -195,16 +231,22 @@ trait BP_REST_Attachments {
 
 		// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 		if ( $avatar_attachment->is_too_small( $image_file ) ) {
+			$full_width  = bp_core_avatar_full_width();
+			$full_height = bp_core_avatar_full_height();
+
 			return new WP_Error(
 				"bp_rest_attachments_{$this->object}_avatar_error",
 				sprintf(
 					/* translators: %1$s and %2$s is replaced with the correct sizes. */
 					__( 'You have selected an image that is smaller than recommended. For best results, upload a picture larger than %1$s x %2$s pixels.', 'buddyboss' ),
-					bp_core_avatar_full_width(),
-					bp_core_avatar_full_height()
+					$full_width,
+					$full_height
 				),
 				array(
-					'status' => 500,
+					'status'     => 400,
+					'reason'     => 'image_too_small',
+					'min_width'  => $full_width,
+					'min_height' => $full_height,
 				)
 			);
 		}
@@ -286,6 +328,7 @@ trait BP_REST_Attachments {
 				),
 				array(
 					'status' => 500,
+					'reason' => 'resize_error',
 				)
 			);
 		}

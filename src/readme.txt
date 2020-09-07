@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Requires PHP: 5.6.20
-Stable tag: 1.4.7
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,38 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.0 =
+* Activity - Provided 'Edit Activity' support
+* Activity - Provided settings to allow members to edit their activity posts for a duration specified
+* Activity - Provided 'Edit Activity' compatibility with photos, documents, permissions, emoji, giphy, etc
+* Profiles - Provided option to setup Custom Profile dropdown
+* Profiles - Provided option to Hide Profile navigation
+* Profiles - Fixed profile completion issue with Repeater Field Set
+* Forums - Fixed discussion nested replies notification issue
+* Forums - Fixed discussion reply editor formatting issue
+* Media - Fixed album edit/save/cancel button layout issue
+* Documents - Fixed document download link privacy issue
+* Documents - Fixed document sub-folder download issue
+* Messages - Improved message thread delete logic
+* Messages - Fixed deleted message thread count issue
+* Templates - Profile navigation template enhancement for new profile navigation hide feature
+* REST API - Fixed API issues in profile, media, and social groups
+* LearnDash - Fixed Social groups and LearnDash groups sync conflict
+* Compatibility - Fixed frontend page conflict with Elementor plugin
+* Compatibility - Fixed activity date conflict with TranslatePress plugin
+* Compatibility - Fixed document layout issues with Wallstreet Theme
+
+= 1.4.9 =
+* Profiles - Fixed profile completion logic to reuse the same feature in Elementor
+* Media - Fixed logic to delete GIF attachments when entry deleted
+* Documents - Improved the logic to support BuddyBoss REST API
+* Compatibility - Fixes for WordPress 5.5 and PHP 7.*
+
+= 1.4.8 =
+* Media - New settings to set maximum file upload size for Photos and Documents
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
+* Media - Improved the logic to support BuddyBoss REST API
 
 = 1.4.7 =
 * Profiles - Fixed profile field type Gender default options unable to re-order

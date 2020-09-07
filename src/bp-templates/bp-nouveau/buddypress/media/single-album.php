@@ -25,9 +25,9 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                     <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
                     <?php if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && $can_manage ) ) : ?>
                         <input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php _e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-                        <a href="#" id="bp-edit-album-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
-                        <a href="#" id="bp-save-album-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
-                        <a href="#" id="bp-cancel-edit-album-title" style="display: none;" ><?php _e( 'cancel', 'buddyboss' ); ?></a>
+                        <a href="#" class="button small" id="bp-edit-album-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
+                        <a href="#" class="button small" id="bp-save-album-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
+                        <a href="#" class="button small" id="bp-cancel-edit-album-title" style="display: none;" ><?php _e( 'cancel', 'buddyboss' ); ?></a>
                     <?php endif; ?>
                     <p>
                         <span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span><span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span>

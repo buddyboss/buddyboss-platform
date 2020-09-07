@@ -4273,9 +4273,6 @@ window.bp = window.bp || {};
 
 				}
 			);
-			if ( ! $( '.bb-activity-media-elem.document-activity' ).closest( '.activity-inner' ).hasClass( 'documemt-activity' )) {
-				$( '.bb-activity-media-elem.document-activity' ).closest( '.activity-content' ).addClass( 'documemt-activity' );
-			}
 		},
 
 		/**

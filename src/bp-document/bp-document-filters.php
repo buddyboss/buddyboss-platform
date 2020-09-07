@@ -258,14 +258,30 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
-
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+
+		// delete document ids and meta for activity if empty document in request.
+		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+			if ( ! empty( $old_document_ids ) ) {
+
+				// Delete document if not exists in activity anymore.
+				$old_document_ids = explode( ',', $old_document_ids );
+				if ( ! empty( $old_document_ids ) ) {
+					foreach ( $old_document_ids as $document_id ) {
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
+					}
+				}
+				bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
+			}
+		}
 		return false;
 	}
 
-	$_POST['documents']          = $_POST['document'];
-	$_POST['bp_activity_update'] = true;
-	$_POST['bp_activity_id']     = $activity_id;
+	$bp_activity_post_update    = true;
+	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
 	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
@@ -282,7 +298,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler();
+	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -291,6 +307,18 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
+		// Delete document if not exists in current document ids
+		if ( isset( $_POST['edit'] ) ) {
+			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+			$old_document_ids = explode( ',', $old_document_ids );
+			if ( ! empty( $old_document_ids ) ) {
+				foreach ( $old_document_ids as $document_id ) {
+					if ( ! in_array( $document_id, $document_ids ) ) {
+						bp_document_delete( array( 'id' => $document_id ) );
+					}
+				}
+			}
+		}
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
 	}
 }
@@ -361,7 +389,7 @@ function bp_document_delete_activity_document( $activities ) {
  *
  * @since BuddyBoss 1.4.0
  */
-function bp_document_update_document_privacy( &$folder ) {
+function bp_document_update_document_privacy( $folder ) {
 
 	if ( ! empty( $folder->id ) ) {
 
