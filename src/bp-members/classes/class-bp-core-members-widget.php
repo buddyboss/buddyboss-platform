@@ -188,17 +188,11 @@ class BP_Core_Members_Widget extends WP_Widget {
             <input type="hidden" name="members_widget_max" id="members_widget_max"
                    value="<?php echo esc_attr( $settings['max_members'] ); ?>"/>
 
-			<?php
-			if ( $members_template->total_member_count > $settings['max_members'] ) {
-				?>
-                <div class="more-block">
-                    <a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
-						<?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
-                    </a>
-                </div>
-				<?php
-			}
-			?>
+			<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : 'hide'; ?>">
+				<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
+					<?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
+				</a>
+			</div>
 
 		<?php else : ?>
 
@@ -277,17 +271,17 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'member_default' ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
 			<select name="<?php echo $this->get_field_name( 'member_default' ); ?>" id="<?php echo $this->get_field_id( 'member_default' ); ?>">
-				<option value="newest"  
+				<option value="newest"
 				<?php
 				if ( 'newest' === $member_default ) :
 					?>
 					selected="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
-				<option value="active"  
+				<option value="active"
 				<?php
 				if ( 'active' === $member_default ) :
 					?>
 					selected="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></option>
-				<option value="popular" 
+				<option value="popular"
 				<?php
 				if ( 'popular' === $member_default ) :
 					?>
