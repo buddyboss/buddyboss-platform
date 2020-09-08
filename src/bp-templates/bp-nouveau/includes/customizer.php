@@ -19,7 +19,9 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	}
 
 	require_once( trailingslashit( bp_nouveau()->includes_dir ) . 'customizer-controls.php' );
+	require_once( trailingslashit( bp_nouveau()->includes_dir ) . 'profile-header-customizer-controls.php' );
 	$wp_customize->register_control_type( 'BP_Nouveau_Nav_Customize_Control' );
+	$wp_customize->register_control_type( 'BP_Nouveau_Profile_Header_Customize_Control' );
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 	//@todo is the BuddyBoss Platform really translatable?
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
@@ -41,6 +43,12 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
 			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
+		),
+		'bp_nouveau_user_profile_header' => array(
+			'title'       => __( 'Profile Header', 'buddyboss' ),
+			'panel'       => 'bp_nouveau_panel',
+			'priority'    => 50,
+			'description' => __( 'Re-order the profile header menu.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
 			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
@@ -87,6 +95,13 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'index'             => 'user_nav_hide',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'bp_nouveau_sanitize_nav_hide',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[profile_header_buttons]' => array(
+			'index'             => 'profile_header_buttons',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
@@ -215,6 +230,15 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'settings' => 'bp_nouveau_appearance[user_nav_hide]',
 			'type'     => 'user',
 		),
+
+		'profile_header_buttons'   => array(
+			'class'    => 'BP_Nouveau_Profile_Header_Customize_Control',
+			'label'    => __( 'Reorder the profile header buttons.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_profile_header',
+			'settings' => 'bp_nouveau_appearance[profile_header_buttons]',
+			'type'     => 'header_button',
+		),
+
 		'mail_layout'      => array(
 			'section'  => 'bp_nouveau_mail',
 			'settings' => 'bp_nouveau_appearance[bp_emails]',
@@ -229,6 +253,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer controls.
 	 */
 	$controls = apply_filters( 'bp_nouveau_customizer_controls', $controls );
+
 
 	// Add the controls to the customizer's section
 	foreach ( $controls as $id_control => $control_args ) {

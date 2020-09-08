@@ -570,6 +570,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
 		'user_nav_order'     => array(),
 		'user_nav_hide'      => array(),
+		'profile_header_buttons'      => array(),
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
