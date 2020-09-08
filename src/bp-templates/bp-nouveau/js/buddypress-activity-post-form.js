@@ -2459,7 +2459,7 @@ window.bp = window.bp || {};
 			id: 'activity-form-submit-wrapper',
 			initialize: function () {
 				// Select box for the object
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && bp.Nouveau.Activity.postForm.editActivityData === false ) {
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || typeof bp.Nouveau.Activity.postForm.editActivityData === 'undefined' ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
 				}
 
