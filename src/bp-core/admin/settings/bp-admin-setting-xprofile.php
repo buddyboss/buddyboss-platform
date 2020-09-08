@@ -41,10 +41,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		// Set requirement for last name based on display format
-		if ( isset( $_POST['bp-display-name-format'] ) && $_POST['bp-display-name-format'] == 'first_last_name' ) {
-			if ( $last_name_field = xprofile_get_field( bp_xprofile_lastname_field_id() ) ) {
-				// $last_name_field->is_required = true;
-				$last_name_field->save();
+		if ( isset( $_POST['bp-display-name-format'] ) ) {
+			if ( $_POST['bp-display-name-format'] == 'first_last_name' ){
+				$lastname_field_id = bp_xprofile_lastname_field_id();
+				bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
+
+				$firstname_field_id = bp_xprofile_firstname_field_id();
+				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+			} elseif ( $_POST['bp-display-name-format'] == 'first_name' ){
+				$firstname_field_id = bp_xprofile_firstname_field_id();
+				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+			} elseif ( $_POST['bp-display-name-format'] == 'nickname' ){
+				$nickname_field_id = bp_xprofile_nickname_field_id();
+				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 			}
 		}
 
