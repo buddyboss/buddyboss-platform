@@ -3436,6 +3436,188 @@ span.dashicons.dashicons-admin-file:before {
   }
 }
 
+.reactions-box.generic-button {
+  margin: 0 !important;
+}
+
+.reactions-box .reactions {
+  position: absolute;
+  left: 2rem;
+  bottom: 120%;
+  -webkit-transform: translate3d(-10%, 0, 0);
+  transform: translate3d(-10%, 0, 0);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0.125rem;
+  border-radius: 100rem;
+  -webkit-transition: 0.3s 0.3s;
+  transition: 0.3s 0.3s;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+}
+
+.reactions-box .reactions:hover,
+.reactions-button:hover ~ .reactions-box .reactions {
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  opacity: 1;
+  visibility: visible;
+}
+
+.reactions-box .reactions .react {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  color: #ffd972;
+  cursor: pointer;
+  border: none !important;
+  padding: 0 25px !important;
+  -webkit-transition-delay: 0.6s, 0.3s;
+  transition-delay: 0.6s, 0.3s;
+  -webkit-transition-duration: 0s, 0.3s;
+  transition-duration: 0s, 0.3s;
+  -webkit-transition-property: opacity, -webkit-transform;
+  transition-property: opacity, -webkit-transform;
+  transition-property: transform, opacity;
+  transition-property: transform, opacity, -webkit-transform;
+  opacity: 0;
+  -webkit-transform: translate3d(0, 100%, 0) scale(0.3);
+  transform: translate3d(0, 100%, 0) scale(0.3);
+}
+
+.reactions-box .reactions:hover .react,
+.reactions-button:hover + .reactions-box .reactions .react {
+  -webkit-transform: none;
+  transform: none;
+  opacity: 1;
+}
+
+.react .react-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-transform: scale(0.8);
+  transform: scale(0.8);
+  -webkit-transition: -webkit-transform 0.2s ease;
+  transition: -webkit-transform 0.2s ease;
+  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, -webkit-transform 0.2s ease;
+}
+
+.react:hover .react-icon {
+  -webkit-transform: scale(1) translate3d(0, -10%, 0);
+  transform: scale(1) translate3d(0, -10%, 0);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(1),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(1) {
+  -webkit-transition-duration: 0.2s;
+  transition-duration: 0.2s;
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(2),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(2) {
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-delay: 0.02s;
+  transition-delay: 0.02s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.2);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.2);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(3),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(3) {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  -webkit-transition-delay: 0.04s;
+  transition-delay: 0.04s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.4);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.4);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(4),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(4) {
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+  -webkit-transition-delay: 0.06s;
+  transition-delay: 0.06s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.6);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.6);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(5),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(5) {
+  -webkit-transition-duration: 0.6s;
+  transition-duration: 0.6s;
+  -webkit-transition-delay: 0.08s;
+  transition-delay: 0.08s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.8);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 1.8);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(6),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(6) {
+  -webkit-transition-duration: 0.7s;
+  transition-duration: 0.7s;
+  -webkit-transition-delay: 0.1s;
+  transition-delay: 0.1s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 2);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 2);
+}
+
+.reactions-box .reactions:hover .react:nth-of-type(7),
+.reactions-button:hover + .reactions-box .reactions .react:nth-of-type(7) {
+  -webkit-transition-duration: 0.8s;
+  transition-duration: 0.8s;
+  -webkit-transition-delay: 0.12s;
+  transition-delay: 0.12s;
+  -webkit-transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 2.2);
+  transition-timing-function: cubic-bezier(0.6, 0.6, 0.5, 2.2);
+}
+
+.react-icon {
+  background-image: url(../images/reaction.webp);
+  background-repeat: no-repeat;
+}
+
+.react-icon-like {
+  background-position: -6px -6px;
+}
+
+.react-icon-love {
+  background-position: -68px -4px;
+}
+
+.react-icon-care {
+  background-position: -191px -6px;
+}
+
+.react-icon-haha {
+  background-position: -129px -6px;
+}
+
+.react-icon-wow {
+  background-position: -191px -6px;
+}
+
+.react-icon-sad {
+  background-position: -252px -5px;
+}
+
+.react-icon-angry {
+  background-position: -314px -6px;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments

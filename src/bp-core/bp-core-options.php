@@ -1051,6 +1051,27 @@ function bp_is_activity_like_active( $default = true ) {
 	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
 }
 
+/**
+ * Check whether Activity Reaction is enabled.
+ *
+ * @since BuddyBoss 1.8.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Reaction is enabled, otherwise false.
+ */
+function bp_is_activity_reaction_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity Reaction is enabled.
+	 *
+	 * @since BuddyBoss 1.8.0
+	 *
+	 * @param bool $value Whether or not Activity Reaction is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_reaction_active', (bool) bp_get_option( '_bp_enable_activity_reaction', $default ) );
+}
+
 
 /**
  * Check whether Activity Link Preview is enabled.

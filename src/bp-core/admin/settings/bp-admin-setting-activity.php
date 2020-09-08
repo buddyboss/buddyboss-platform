@@ -96,6 +96,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow like.
 		$this->add_field( '_bp_enable_activity_like', __( 'Likes', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_like', 'intval' );
 
+		// Allow reaction.
+		$this->add_field( '_bp_enable_activity_reaction', __( 'Reactions', 'buddyboss' ), '', 'intval', ['class' => 'hidden'] );
+
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 

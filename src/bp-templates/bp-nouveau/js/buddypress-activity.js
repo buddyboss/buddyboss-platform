@@ -721,6 +721,61 @@ window.bp = window.bp || {};
 				);
 			}
 
+			// Reacting.
+			if ( target.hasClass( 'react' ) || target.hasClass( 'react' ) ) {
+				var reactionType = target.data( 'react' );
+
+				// Stop event propagation.
+				event.preventDefault();
+
+				target.addClass( 'loading' );
+
+				parent.ajax( { action: 'activity_mark_react', 'id': activity_id, 'type' : reactionType }, 'activity' ).done(
+					function( response ) {
+						target.removeClass( 'loading' );
+
+						if ( false === response.success ) {
+							return;
+						} else {
+							$( '.reactions-button a' ).fadeOut(
+								200,
+								function() {
+									if ( $( this ).find( 'span' ).first().length ) {
+										$( this ).find( 'span' ).first().html( response.data.content );
+									} else {
+										$( this ).html( response.data.content );
+									}
+
+									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
+										$( this ).attr( 'aria-pressed', 'true' );
+									} else {
+										$( this ).attr( 'aria-pressed', 'false' );
+									}
+
+									if ( likes_text.length ) {
+										response.data.like_count ?
+										likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
+										likes_text.empty() && activity_state.removeClass( 'has-likes' );
+
+										// Update like tooltip.
+										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
+										likes_text.attr( 'data-hint', decoded );
+									}
+
+									if ( $( this ).find( '.like-count' ).length ) {
+										$( this ).find( '.like-count' ).html( response.data.content );
+									}
+
+									$( this ).fadeIn( 200 );
+								}
+							);
+						}
+						$( '.reactions-button a' ).removeClass( 'fav' );
+						$( '.reactions-button a' ).addClass( 'unfav' );
+					}
+				);
+			}
+
 			// Deleting or spamming.
 			if ( target.hasClass( 'delete-activity' ) || target.hasClass( 'acomment-delete' ) || target.hasClass( 'spam-activity' ) || target.hasClass( 'spam-activity-comment' ) ) {
 				var activity_comment_li = target.closest( '[data-bp-activity-comment-id]' ),

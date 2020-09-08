@@ -403,7 +403,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'position'          => 4,
 				'component'         => 'activity',
 				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
+				'parent_attr'       => ( bp_is_activity_reaction_active() ) ? ['class' => 'reactions-button'] : $parent_attr,
 				'must_be_logged_in' => true,
 				'button_element'    => $fav_args['button_element'],
 				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
@@ -414,6 +414,23 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'aria-pressed'    => $fav_args['aria-pressed'],
 				),
 			);
+		}
+
+		if ( bp_is_activity_reaction_active() ) {
+			$buttons['activity_reactions'] =  array(
+				'id'                => 'activity_reactions',
+				'position'          => 4,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => ['class'=>'reactions-box'],
+				'must_be_logged_in' => true,
+				'button_element'    => 'div',
+				'link_text'         => bp_nouveau_reaction_buttions(),
+				'button_attr'       => array(
+					'class'           => "reactions",
+					'aria-pressed'    => $fav_args['aria-pressed'],
+				),
+			);	
 		}
 
 		/*
@@ -688,6 +705,28 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 
 		return $return;
 	}
+
+/**
+ * Output reactions button
+ *
+ * @since BuddyBoss 1.8.0
+ */
+function bp_nouveau_reaction_buttions() {
+	$html = "";
+	$buttons = [ "like", "love", "care", "haha", "wow", "sad", "angry" ];
+	foreach ( $buttons as $button ) {
+		$html .= sprintf(
+			'<a class="react react-%1$s " href="%2$s" data-bp-tooltip-pos="up" data-bp-tooltip="%3$s" data-react="%4$s"><span class="react-icon react-icon-%5$s"></span></a>', 
+			$button, 
+			bp_get_activity_reaction_link( $button ),
+			__( ucfirst( $button ), 'buddyboss' ),
+			$button,
+			$button
+		);
+	}
+	
+	return $html;
+}
 
 /**
  * Output Activity Comments if any

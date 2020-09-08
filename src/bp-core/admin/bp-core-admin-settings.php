@@ -306,6 +306,14 @@ function bp_admin_setting_callback_enable_activity_like() {
 
 	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
 	<label for="_bp_enable_activity_like"><?php _e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
+	<br/>
+	<input id="_bp_enable_activity_reaction"
+		name="_bp_enable_activity_reaction"
+		type="checkbox" value="1"
+		<?php echo ! bp_is_activity_like_active() ? 'disabled="disabled"' : ''; ?>
+		<?php checked( bp_is_activity_reaction_active( false ) ); ?>
+	/>
+	<label for="_bp_enable_activity_reaction"><?php _e( 'Allow for enhanced "Reaction" emojis', 'buddyboss' ); ?></label>
 
 	<?php
 }
