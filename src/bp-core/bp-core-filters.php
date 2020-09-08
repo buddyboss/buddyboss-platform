@@ -702,6 +702,11 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
  * @return WP_Post The modified WP_Post object.
  */
 function bp_setup_nav_menu_item( $menu_item ) {
+
+	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
+		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+	}
+
 	if ( is_admin() ) {
 		return $menu_item;
 	}
@@ -809,7 +814,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => __( 'Custom Link', 'buddyboss' ),
+			'type_label' => __( 'BuddyBoss', 'buddyboss' ),
 			'object'     => $object,
 			'object_id'  => -1,
 		);
@@ -832,12 +837,12 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),

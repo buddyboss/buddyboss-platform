@@ -37,6 +37,7 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
+add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 10, 3 );
 
 // Download Document.
 add_action( 'init', 'bp_document_download_url_file' );
@@ -258,14 +259,30 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  * @since BuddyBoss 1.4.0
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
-
+	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+
+		// delete document ids and meta for activity if empty document in request.
+		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
+			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+
+			if ( ! empty( $old_document_ids ) ) {
+
+				// Delete document if not exists in activity anymore.
+				$old_document_ids = explode( ',', $old_document_ids );
+				if ( ! empty( $old_document_ids ) ) {
+					foreach ( $old_document_ids as $document_id ) {
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
+					}
+				}
+				bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
+			}
+		}
 		return false;
 	}
 
-	$_POST['documents']          = $_POST['document'];
-	$_POST['bp_activity_update'] = true;
-	$_POST['bp_activity_id']     = $activity_id;
+	$bp_activity_post_update    = true;
+	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
 	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
@@ -282,7 +299,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler();
+	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -291,6 +308,18 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
+		// Delete document if not exists in current document ids
+		if ( isset( $_POST['edit'] ) ) {
+			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
+			$old_document_ids = explode( ',', $old_document_ids );
+			if ( ! empty( $old_document_ids ) ) {
+				foreach ( $old_document_ids as $document_id ) {
+					if ( ! in_array( $document_id, $document_ids ) ) {
+						bp_document_delete( array( 'id' => $document_id ) );
+					}
+				}
+			}
+		}
 		bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $document_ids ) );
 	}
 }
@@ -671,6 +700,23 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
 			}
 		}
 	}
+}
+
+/**
+ * Validate message if document is not empty.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $post              Request object.
+ *
+ * @return bool
+ */
+function bp_document_message_validated_content( $validated_content, $content, $post ) {
+	// check if media is enabled in messages or not and empty media in object request or not.
+	if ( bp_is_messages_document_support_enabled() && ! empty( $post['document'] ) ) {
+		$validated_content = true;
+	}
+	return $validated_content;
 }
 
 /**

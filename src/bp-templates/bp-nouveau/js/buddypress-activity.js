@@ -224,7 +224,7 @@ window.bp = window.bp || {};
 				 * Deal with the 'All Members' dynamic span from here as HeartBeat is working even when
 				 * the user is not logged in
 				 */
-				 $( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( newest_activities_count );
+				$( bp.Nouveau.objectNavParent + ' [data-bp-scope="all"]' ).find( 'a span' ).html( newest_activities_count );
 
 				// Set all activities to be highlighted for the current scope.
 			} else {
@@ -344,7 +344,7 @@ window.bp = window.bp || {};
 				// Remove highlighted for the current scope.
 				setTimeout(
 					function () {
-							$( event.delegateTarget ).find( '[data-bp-activity-id]' ).removeClass( 'newest_' + scope + '_activity' );
+						$( event.delegateTarget ).find( '[data-bp-activity-id]' ).removeClass( 'newest_' + scope + '_activity' );
 					},
 					3000
 				);
@@ -371,7 +371,7 @@ window.bp = window.bp || {};
 				// Now set it.
 				$( event.delegateTarget ).children( '.just-posted' ).each(
 					function() {
-							self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
+						self.just_posted.push( $( this ).data( 'bp-activity-id' ) );
 					}
 				);
 
@@ -422,34 +422,34 @@ window.bp = window.bp || {};
 
 			comments.each(
 				function( c, comment ) {
-						comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
-						comment_items   = $( comment_parents ).find( 'li' ).not( '.document-action-class' );
+					comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
+					comment_items   = $( comment_parents ).find( 'li' ).not( '.document-action-class' );
 
 					if ( ! comment_items.length ) {
 						return;
 					}
 
-						// Get the activity id.
-						activity_item = $( comment ).closest( '.activity-item' );
+					// Get the activity id.
+					activity_item = $( comment ).closest( '.activity-item' );
 
-						// Get the comment count.
-						comment_count = $( '#acomment-comment-' + activity_item.data( 'bp-activity-id' ) + ' span.comment-count' ).html() || ' ';
+					// Get the comment count.
+					comment_count = $( '#acomment-comment-' + activity_item.data( 'bp-activity-id' ) + ' span.comment-count' ).html() || ' ';
 
-						// Keep latest 5 comments.
-						comment_items.each(
-							function( i, item ) {
-								if ( i < comment_items.length - 4 ) {
-									$( item ).addClass( 'bp-hidden' ).hide();
+					// Keep latest 5 comments.
+					comment_items.each(
+						function( i, item ) {
+							if ( i < comment_items.length - 4 ) {
+								$( item ).addClass( 'bp-hidden' ).hide();
 
-									// Prepend a link to display all.
-									if ( ! i ) {
-										$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
-									}
+								// Prepend a link to display all.
+								if ( ! i ) {
+									$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 								}
 							}
-						);
+						}
+					);
 
-						// If all parents are hidden, reveal at least one. It seems very risky to manipulate the DOM to keep exactly 5 comments!
+					// If all parents are hidden, reveal at least one. It seems very risky to manipulate the DOM to keep exactly 5 comments!
 					if ( $( comment_parents ).children( '.bp-hidden' ).length === $( comment_parents ).children( 'li' ).length - 1 && $( comment_parents ).find( 'li.show-all' ).length ) {
 						$( comment_parents ).children( 'li:not(.show-all)' ).removeClass( 'bp-hidden' ).toggle();
 					}
@@ -471,12 +471,12 @@ window.bp = window.bp || {};
 
 			setTimeout(
 				function() {
-						$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
-							300,
-							function() {
-								$( event.target ).parent( 'li' ).remove();
-							}
-						);
+					$( event.target ).closest( 'ul' ).find( 'li' ).removeClass( 'bp-hidden' ).fadeIn(
+						300,
+						function() {
+							$( event.target ).parent( 'li' ).remove();
+						}
+					);
 				},
 				600
 			);
@@ -539,7 +539,7 @@ window.bp = window.bp || {};
 
 			setTimeout(
 				function () {
-						$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
+					$( '#buddypress #activity-stream .activity-item' ).removeClass( 'newest_' + data.scope + '_activity' );
 				},
 				3000
 			);
@@ -572,7 +572,7 @@ window.bp = window.bp || {};
 
 			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data( 'value' ) }, 'activity' ).done(
 				function( response ) {
-						activity_item.find( '.privacy' ).removeClass( 'loading' );
+					activity_item.find( '.privacy' ).removeClass( 'loading' );
 
 					if ( true === response.success ) {
 						activity_item.find( '.activity-privacy li' ).removeClass( 'selected' );
@@ -644,7 +644,7 @@ window.bp = window.bp || {};
 
 				parent.ajax( { action: 'activity_mark_' + type, 'id': activity_id }, 'activity' ).done(
 					function( response ) {
-							target.removeClass( 'loading' );
+						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
 							return;
@@ -667,8 +667,8 @@ window.bp = window.bp || {};
 
 									if ( likes_text.length ) {
 										response.data.like_count ?
-										likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
-										likes_text.empty() && activity_state.removeClass( 'has-likes' );
+											likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
+											likes_text.empty() && activity_state.removeClass( 'has-likes' );
 
 										// Update like tooltip.
 										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
@@ -714,8 +714,8 @@ window.bp = window.bp || {};
 								}
 							}
 
-								target.removeClass( 'unfav' );
-								target.addClass( 'fav' );
+							target.removeClass( 'unfav' );
+							target.addClass( 'fav' );
 						}
 					}
 				);
@@ -765,7 +765,7 @@ window.bp = window.bp || {};
 
 				parent.ajax( ajaxData, 'activity' ).done(
 					function( response ) {
-							target.removeClass( 'loading' );
+						target.removeClass( 'loading' );
 
 						if ( false === response.success ) {
 							li_parent.prepend( response.data.feedback );
@@ -865,12 +865,12 @@ window.bp = window.bp || {};
 				).done(
 					function( response ) {
 
-							// check for JSON output.
+						// check for JSON output.
 						if ( typeof response !== 'object' && target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 ) {
 							response = JSON.parse( response );
 						}
 
-							$( readMore ).removeClass( 'loading' );
+						$( readMore ).removeClass( 'loading' );
 
 						if ( content.parent().find( '.bp-feedback' ).length ) {
 							content.parent().find( '.bp-feedback' ).remove();
@@ -1037,6 +1037,15 @@ window.bp = window.bp || {};
 
 				comment_content = $( form ).find( '.ac-input' ).first();
 
+				// transform other emoji into emojionearea emoji.
+				comment_content.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+
+				// Transform emoji image into emoji unicode.
 				comment_content.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
@@ -1176,13 +1185,32 @@ window.bp = window.bp || {};
 							$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 						}
 
-							self.destroyCommentMediaUploader( activity_id );
-							self.destroyCommentDocumentUploader( activity_id );
+						self.destroyCommentMediaUploader( activity_id );
+						self.destroyCommentDocumentUploader( activity_id );
 
-							target.prop( 'disabled', false );
-							comment_content.prop( 'disabled', false );
+						target.prop( 'disabled', false );
+						comment_content.prop( 'disabled', false );
 					}
 				);
+			}
+
+			// Edit the activity
+			if ( target.hasClass( 'edit-activity' ) ) {
+				// Stop event propagation
+				event.preventDefault();
+
+				var activity_data = activity_item.data('bp-activity');
+
+				if ( typeof activity_data !== 'undefined' ) {
+					//bp.Nouveau.Activity.postForm.displayEditActivity( activity_data );
+					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
+					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
+						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
+						$( document ).find( '.bb-close-document-theatre' ).trigger( 'click' );
+					}
+
+				}
 			}
 		},
 

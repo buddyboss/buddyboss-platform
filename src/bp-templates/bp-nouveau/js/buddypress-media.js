@@ -1546,7 +1546,7 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function() {
 			var self = this;
-			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
+			if ( self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined' ) {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];
@@ -2698,7 +2698,7 @@ window.bp = window.bp || {};
 				document_edit.addClass( 'error' );
 			}
 
-			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) { 
+			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
 
 				if( document_name_val.indexOf('\\\\') != -1 || matchStatus) { //Also check if filename has "\\"
 					document_edit.addClass( 'error' );
@@ -4273,9 +4273,6 @@ window.bp = window.bp || {};
 
 				}
 			);
-			if ( ! $( '.bb-activity-media-elem.document-activity' ).closest( '.activity-inner' ).hasClass( 'documemt-activity' )) {
-				$( '.bb-activity-media-elem.document-activity' ).closest( '.activity-content' ).addClass( 'documemt-activity' );
-			}
 		},
 
 		/**
