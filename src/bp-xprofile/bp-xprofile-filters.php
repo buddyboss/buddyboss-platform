@@ -96,6 +96,8 @@ add_filter( 'password_change_email', 'bp_xprofile_replace_username_to_display_na
 add_filter( 'email_change_email', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'new_user_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 
+//Display Name setting support
+add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -997,4 +999,35 @@ function bp_social_network_search_key( $id, $array ) {
 		}
 	}
 	return null;
+}
+
+/**
+ * Removed Display setting field form profile if is disabled on setting page.
+ *
+ * @param array $args
+ *
+ * @return array
+ */
+function bp_xprofile_exclude_display_name_profile_fields( $args ){
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	$fields_id = array();
+
+	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_nickname_last_name() ) {
+		$fields_id[] = bp_xprofile_lastname_field_id();
+	}
+
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+		$fields_id[] = bp_xprofile_lastname_field_id();
+	}
+
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+		$fields_id[] = bp_xprofile_firstname_field_id();
+	}
+
+	$args['exclude_fields'] = $fields_id;
+
+	return $args;
 }
