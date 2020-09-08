@@ -969,26 +969,6 @@ function bp_get_the_profile_field_visibility_level_label() {
 		$level = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}
 
-	// Nickname field always a public
-	$nick_name_id = bp_xprofile_nickname_field_id();
-	if ( $field->id ===  $nick_name_id ) {
-		$level = 'public';
-	}
-
-	$first_name_id        = bp_xprofile_firstname_field_id();
-	$last_name_id        = bp_xprofile_lastname_field_id();
-	$display_name_format = bp_core_display_name_format();
-
-	if ( 'first_last_name' === $display_name_format ) {
-		if ( $field->id && in_array( $field->id, array( $first_name_id ) ) ) {
-			$level = 'public';
-		}
-	} elseif ( 'first_name' === $display_name_format ) {
-		if ( $field->id && in_array( $field->id, array( $first_name_id ) ) ) {
-			$level = 'public';
-		}
-	}
-
 	$fields = bp_xprofile_get_visibility_levels();
 
 	/**

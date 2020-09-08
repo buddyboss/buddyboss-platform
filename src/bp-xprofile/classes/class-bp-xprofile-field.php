@@ -1647,29 +1647,6 @@ class BP_XProfile_Field {
 	 * @return void If default field id 1.
 	 */
 	private function visibility_metabox() {
-
-
-		if ( ! empty( $this->id ) ) {
-
-			$first_name_id        = bp_xprofile_firstname_field_id();
-			$last_name_id         = bp_xprofile_lastname_field_id();
-			$nick_name_id         = bp_xprofile_nickname_field_id();
-			$display_name_format = bp_core_display_name_format();
-
-			if ( $this->id === $nick_name_id ) {
-				return;
-			}
-
-			if ( 'first_last_name' === $display_name_format ) {
-				if ( $this->id && in_array( $this->id, array( $first_name_id ) ) ) {
-					return;
-				}
-			} elseif ( 'first_name' === $display_name_format ) {
-				if ( $this->id && in_array( $this->id, array( $first_name_id ) ) ) {
-					return;
-				}
-			}
-		}
 		?>
 
 		<div class="postbox">
