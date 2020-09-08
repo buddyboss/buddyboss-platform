@@ -391,26 +391,6 @@ function bp_search_items() {
 		}
 	}
 
-	/**
-	 * Supported for all other custom post types
-	 */
-	$post_types = get_post_types( array( 'public' => true ) , 'objects');
-	foreach ( $post_types as $post_type ) {
-		if ( in_array( $post_type->name, array( 'forum', 'topic', 'reply', 'post', 'page' ) ) ) {
-			continue;
-		}
-
-		if ( in_array( $post_type->name, array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-question', 'sfwd-transactions', 'groups', 'sfwd-assignment', 'sfwd-essays', 'sfwd-certificates' ) ) ) {
-			$ld_setting_slug = str_replace( 'sfwd-', '', $post_type->name );
-			$search_group_label = LearnDash_Custom_Label::get_label( $ld_setting_slug );
-		} else {
-			$search_group_label = $post_type->label;
-		}
-
-		$items[ $post_type->name ] = $search_group_label;
-
-	}
-
 	return apply_filters( 'bp_search_items', $items );
 }
 

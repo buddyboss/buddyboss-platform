@@ -135,21 +135,6 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			if ( bp_is_search_post_type_enable( 'page' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['pages'] = new Bp_Search_Posts( 'page', 'pages' );
-				$this->searchable_items[]      = 'pages';
-			}
-
-			/**
-			 * Supported for all other custom post types
-			 */
-			$post_types = get_post_types( array( 'public' => true ) );
-			foreach ( $post_types as $post_type ) {
-				if ( in_array( $post_type, array( 'forum', 'topic', 'reply', 'post', 'page' ) ) ) {
-					continue;
-				}
-
-				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
-				$this->search_helpers[ $post_type ] = new Bp_Search_Posts( $post_type, $post_type );
-				$this->searchable_items[]      = $post_type;
 			}
 
 			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( 'forum' ) ) {
@@ -224,7 +209,6 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					 */
 					if ( ! isset( $this->search_helpers[ $search_type ] ) && is_a( $helper_object, 'BP_Search_Type' ) ) {
 						$this->search_helpers[ $search_type ] = $helper_object;
-						$this->searchable_items[]             = $search_type;
 					}
 				}
 			}
