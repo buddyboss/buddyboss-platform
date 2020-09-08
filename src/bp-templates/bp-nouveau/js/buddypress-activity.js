@@ -552,7 +552,7 @@ window.bp = window.bp || {};
 			}
 
 			// Fix comments atwho query elements.
-			this.fixAtWhoComments();
+			this.fixAtWhoActivity();
 
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout( function() {
