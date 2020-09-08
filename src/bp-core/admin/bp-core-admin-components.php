@@ -221,7 +221,7 @@ function bp_core_admin_components_options() {
 				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
 				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
-			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 		</div>
 	</div>
 	<table class="wp-list-table widefat plugins">
@@ -393,7 +393,7 @@ function bp_core_admin_components_options() {
 				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
 				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
-			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 		</div>
 	</div>
 	<?php

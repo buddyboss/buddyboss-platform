@@ -1546,7 +1546,7 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function() {
 			var self = this;
-			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
+			if ( self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined' ) {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];
@@ -2684,18 +2684,28 @@ window.bp = window.bp || {};
 			var pattern				   		= '';
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
-				pattern = /^[-\w^&@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
 			} else if ( $( event.currentTarget ).closest( '.ac-folder-list' ).length ) {
-				pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
+				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val );
 			var matchStatus = Boolean( matches );
 
-			if ( matchStatus ) { // If any not supported character found add error class.
+			if ( !matchStatus ) { // If any not supported character found add error class.
 				document_edit.removeClass( 'error' );
 			} else {
 				document_edit.addClass( 'error' );
+			}
+
+			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
+
+				if( document_name_val.indexOf('\\\\') != -1 || matchStatus) { //Also check if filename has "\\"
+					document_edit.addClass( 'error' );
+				} else {
+					document_edit.removeClass( 'error' );
+				}
+
 			}
 
 			if ( $( event.currentTarget ).hasClass( 'name_edit_cancel' ) || event.keyCode == 27 ) {
@@ -2707,7 +2717,7 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).hasClass( 'name_edit_save' ) || event.keyCode == 13 ) {
 
-				if ( ! matchStatus ) {
+				if ( matchStatus ) {
 					return; // prevent user to add not supported characters.
 				}
 
@@ -3468,7 +3478,11 @@ window.bp = window.bp || {};
 				privacy = $( event.currentTarget ).parents().find( '.open-popup #bb-folder-privacy option:selected' );
 			event.preventDefault();
 
-			if ($.trim( title.val() ) === '') {
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -3545,7 +3559,12 @@ window.bp = window.bp || {};
 		saveChildFolder: function (event) {
 			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' );
 			event.preventDefault();
-			if ($.trim( title.val() ) === '') {
+
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -3598,7 +3617,11 @@ window.bp = window.bp || {};
 				privacy = $( '#bp-media-edit-child-folder #bb-folder-privacy' ),
 				id	    = this.currentTargetParent;
 
-			if ($.trim( title.val() ) === '') {
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -4250,9 +4273,6 @@ window.bp = window.bp || {};
 
 				}
 			);
-			if ( ! $( '.bb-activity-media-elem.document-activity' ).closest( '.activity-inner' ).hasClass( 'documemt-activity' )) {
-				$( '.bb-activity-media-elem.document-activity' ).closest( '.activity-content' ).addClass( 'documemt-activity' );
-			}
 		},
 
 		/**

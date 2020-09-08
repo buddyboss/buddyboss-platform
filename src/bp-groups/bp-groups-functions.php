@@ -248,8 +248,10 @@ function groups_create_group( $args = '' ) {
  */
 function groups_edit_base_group_details( $args = array() ) {
 
+	$function_args = func_get_args();
+
 	// Backward compatibility with old method of passing arguments.
-	if ( ! is_array( $args ) || func_num_args() > 1 ) {
+	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -259,7 +261,7 @@ function groups_edit_base_group_details( $args = array() ) {
 			3 => 'notify_members',
 		);
 
-		$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+		$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 	}
 
 	$r = bp_parse_args(
@@ -292,7 +294,9 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	$group->description = $r['description'];
 
-	$group->parent_id = $r['parent_id'];
+	if ( $r['parent_id'] ) {
+		$group->parent_id = $r['parent_id'];
+	}
 
 	if ( ! $group->save() ) {
 		return false;
@@ -749,8 +753,10 @@ function groups_get_group_mods( $group_id ) {
  */
 function groups_get_group_members( $args = array() ) {
 
+	$function_args = func_get_args();
+
 	// Backward compatibility with old method of passing arguments.
-	if ( ! is_array( $args ) || func_num_args() > 1 ) {
+	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -763,7 +769,7 @@ function groups_get_group_members( $args = array() ) {
 			6 => 'group_role',
 		);
 
-		$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+		$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 	}
 
 	$r = bp_parse_args(
@@ -783,7 +789,7 @@ function groups_get_group_members( $args = array() ) {
 	);
 
 	// For legacy users. Use of BP_Groups_Member::get_all_for_group() is deprecated.
-	if ( apply_filters( 'bp_use_legacy_group_member_query', false, __FUNCTION__, func_get_args() ) ) {
+	if ( apply_filters( 'bp_use_legacy_group_member_query', false, __FUNCTION__, $function_args ) ) {
 		$retval = BP_Groups_Member::get_all_for_group( $r['group_id'], $r['per_page'], $r['page'], $r['exclude_admins_mods'], $r['exclude_banned'], $r['exclude'] );
 	} else {
 
@@ -1605,6 +1611,7 @@ function groups_is_user_creator( $user_id, $group_id ) {
  *
  * @param array|string $args {
  *     Array of arguments.
+ *     @type int    $content  ID of the activity to edit.
  *     @type string $content  The content of the update.
  *     @type int    $user_id  Optional. ID of the user posting the update. Default:
  *                            ID of the logged-in user.
@@ -1623,6 +1630,7 @@ function groups_post_update( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
+			'id'         => false,
 			'content'    => false,
 			'user_id'    => bp_loggedin_user_id(),
 			'group_id'   => 0,
@@ -1675,6 +1683,7 @@ function groups_post_update( $args = '' ) {
 
 	$activity_id = groups_record_activity(
 		array(
+			'id'         => $id,
 			'user_id'    => $user_id,
 			'action'     => $action,
 			'content'    => $content_filtered,
@@ -2001,8 +2010,11 @@ function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
  * }
  */
 function groups_send_invites( $args = array() ) {
+
+	$function_args = func_get_args();
+
 	// Backward compatibility with old method of passing arguments.
-	if ( ! is_array( $args ) || func_num_args() > 1 ) {
+	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -2010,7 +2022,7 @@ function groups_send_invites( $args = array() ) {
 			1 => 'group_id',
 		);
 
-		$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+		$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 	}
 
 	$r = bp_parse_args( $args, array(
@@ -2345,8 +2357,11 @@ function groups_remove_member( $user_id, $group_id ) {
  * @return bool True on success, false on failure.
  */
 function groups_send_membership_request( $args = array() ) {
+
+	$function_args = func_get_args();
+
 	// Backward compatibility with old method of passing arguments.
-	if ( ! is_array( $args ) || func_num_args() > 1 ) {
+	if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 		_deprecated_argument( __METHOD__, '1.3.5', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -2354,7 +2369,7 @@ function groups_send_membership_request( $args = array() ) {
 			1 => 'group_id',
 		);
 
-		$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+		$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 	}
 
 	$r = bp_parse_args( $args, array(
@@ -3124,6 +3139,12 @@ function bp_groups_remove_group_type( $group_id, $group_type ) {
 		return false;
 	}
 
+	// No need to continue if the group doesn't have the type.
+	$existing_types = bp_groups_get_group_type( $group_id, false );
+ 	if ( ! in_array( $group_type, $existing_types, true ) ) {
+		return false;
+ 	}
+
 	$deleted = bp_remove_object_terms( $group_id, $group_type, 'bp_group_type' );
 
 	// Bust the case, if the type has been removed.
@@ -3620,7 +3641,7 @@ function bp_group_type_short_code_callback( $atts ) {
 					unset( $atts['type'] );
 					$bp_group_type_query = build_query( $atts );
 					if ( ! empty( $bp_group_type_query ) ) {
-						$bp_group_type_query = '&' . $bp_group_type_query;
+						$bp_group_type_query = '&' . $bp_group_type_query . '&show_hidden=true';
 					}
 					update_option( 'bp_group_type_short_code_query_build', $bp_group_type_query );
 

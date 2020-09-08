@@ -56,6 +56,9 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
+			// Toggle password text
+			this.togglePassword();
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -525,6 +528,11 @@ window.bp = window.bp || {};
 			$.each(
 				this.objects,
 				function( o, object ) {
+					// Continue when ajax is blocked for object request.
+					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+						return;
+					}
+
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
@@ -1371,7 +1379,16 @@ window.bp = window.bp || {};
 					if ( false === response.success ) {
 						  item_inner.prepend( response.data.feedback );
 						  target.removeClass( 'pending loading' );
-						  item.find( '.bp-feedback' ).fadeOut( 6000 );
+						  if ( item.find( '.bp-feedback' ).length ) {
+							  item.find( '.bp-feedback' ).show();
+							  item.find( '.bp-feedback' ).fadeOut( 6000 );
+						  } else {
+						  	if ( 'groups' === object && 'join_group' === action ) {
+								item.append(response.data.feedback);
+								item.find('.bp-feedback').fadeOut(6000);
+							}
+						  }
+
 					} else {
 						  // Specific cases for groups
 						if ( 'groups' === object ) {
@@ -1654,6 +1671,20 @@ window.bp = window.bp || {};
 				page         : self.getLinkParams( navLink.prop( 'href' ), pagArg ) || 1
 			};
 
+			// Set group type with pagination.
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				/* jshint ignore:start */
+				queryData['group_type'] = $( '#buddypress [data-bp-group-type-filter]' ).val();
+				/* jshint ignore:end */
+			}
+
+			// Set member type with pagination.
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				/* jshint ignore:start */
+				queryData['member_type_id'] = $( '#buddypress [data-bp-member-type-filter]' ).val();
+				/* jshint ignore:end */
+			}
+
 			// Request the page
 			self.objectRequest( queryData );
 		},
@@ -1696,6 +1727,19 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+		togglePassword: function() {
+                    $( document ).on( 'click', '.bb-toggle-password', function ( e ) {
+                        e.preventDefault();
+                        var $this = $( this );
+                        var $input = $this.next( 'input' );
+                        $this.toggleClass( 'bb-show-pass' );
+                        if ( $this.hasClass( 'bb-show-pass' ) ) {
+                                $input.attr( 'type', 'text' );
+                        } else {
+                                $input.attr( 'type', 'password' );
+                        }
+                    } );
 		},
 
 		/**

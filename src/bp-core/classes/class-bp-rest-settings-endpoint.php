@@ -401,6 +401,9 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 					$results[ 'bp-enable-send-invite-member-type-' . $option_name ] = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false );
 				}
 			}
+
+			$results['bp-email-subject'] = ( true === bp_disable_invite_member_email_subject() ? stripslashes( wp_strip_all_tags( bp_get_member_invitation_subject() ) ) : '' );
+			$results['bp-email-content'] = ( true === bp_disable_invite_member_email_content() ? bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ) : '' );
 		}
 
 		// Network Search.
@@ -411,6 +414,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
+		$results['enable_messages']               = bp_is_active( 'messages' );
 
 		return $results;
 	}
@@ -450,6 +454,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
+		$results['enable_messages']               = bp_is_active( 'messages' );
 
 		return $results;
 	}

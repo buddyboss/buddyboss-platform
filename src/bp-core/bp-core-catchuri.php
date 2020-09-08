@@ -154,7 +154,7 @@ function bp_core_set_uri_globals() {
 	 */
 	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) && empty( $_GET['cat'] ) ) {
 		$post = get_post( get_option( 'page_on_front' ) );
-		if ( ! empty( $post ) ) {
+		if ( ! empty( $post ) && apply_filters( 'bp_core_set_uri_show_on_front', true ) ) {
 			$bp_uri[0] = $post->post_name;
 		}
 	}

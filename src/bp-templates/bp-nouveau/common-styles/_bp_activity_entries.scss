@@ -321,6 +321,11 @@
 				color: #0061ac;
 			}
 
+			.edit-activity:before {
+				content: "\e80c";
+				font-size: 17px !important;
+			}
+
 			.delete-activity:before {
 				content: "\eaea";
 			}
@@ -804,7 +809,8 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #bbpress-forums .bb-media-model-container,
-#buddypress .bb-media-model-wrapper.document-theatre {
+#buddypress .bb-media-model-wrapper.document-theatre,
+#buddypress.bb-media-model-wrapper.document-theatre {
 
 	.activity-list.bp-list {
 		position: relative;
@@ -835,7 +841,8 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 #bbpress-forums .bb-media-model-container,
-#buddypress .bb-media-model-wrapper.media-theatre {
+#buddypress .bb-media-model-wrapper.media-theatre,
+#buddypress.bb-media-model-wrapper.media-theatre {
 
 	.activity-list.bp-list {
 		position: relative;
