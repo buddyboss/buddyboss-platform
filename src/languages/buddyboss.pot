@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-07 08:23:40+00:00\n"
+"POT-Creation-Date: 2020-09-08 03:47:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20875,17 +20875,17 @@ msgid ""
 msgstr ""
 
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:530
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:29
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:34
 msgid "Account Email"
 msgstr ""
 
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:539
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:37
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:44
 msgid "Add Your New Password"
 msgstr ""
 
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:548
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:40
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:52
 msgid "Repeat Your New Password"
 msgstr ""
 
@@ -22042,11 +22042,11 @@ msgstr ""
 msgid "Update your email and or password."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:25
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:29
 msgid "Lost your password?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:34
+#: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:40
 msgid "Leave password fields blank for no change"
 msgstr ""
 
