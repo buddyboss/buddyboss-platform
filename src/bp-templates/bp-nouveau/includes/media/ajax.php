@@ -525,10 +525,10 @@ function bp_nouveau_ajax_media_album_save() {
 		foreach ( $_POST['medias'] as $key => $media ) {
 			$_POST['medias'][ $key ]['album_id'] = $album_id;
 		}
-	}
 
-	// save all media uploaded
-	bp_media_add_handler( $_POST['medias'], $privacy );
+		// save all media uploaded
+		bp_media_add_handler( $_POST['medias'], $privacy );
+	}
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
