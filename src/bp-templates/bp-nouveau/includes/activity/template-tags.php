@@ -1443,54 +1443,5 @@ function bp_nouveau_edit_activity_data() {
  * @return string The Activity edit data.
  */
 function bp_nouveau_get_edit_activity_data() {
-	global $activities_template;
-
-	$can_edit_privacy = true;
-	$album_id         = 0;
-	$folder_id        = 0;
-	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ? bp_get_activity_item_id() : 0;
-
-	$album_activity_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
-	if ( ! empty( $album_activity_id ) ) {
-		$album_id = $album_activity_id;
-	}
-
-	$folder_activity_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
-	if ( ! empty( $folder_activity_id ) ) {
-		$folder_id = $folder_activity_id;
-	}
-
-	// if album or folder activity then set privacy edit to always false.
-	if ( $album_id || $folder_id ) {
-		$can_edit_privacy = false;
-	}
-
-	// if group activity then set privacy edit to always false.
-	if ( 0 < (int) $group_id ) {
-		$can_edit_privacy = false;
-	}
-
-	$activity = apply_filters(
-		'bp_nouveau_get_edit_activity_data',
-		array(
-			'id'               => bp_get_activity_id(),
-			'can_edit_privacy' => $can_edit_privacy,
-			'album_id'         => $album_id,
-			'group_id'         => $group_id,
-			'folder_id'        => $folder_id,
-			'content'          => stripslashes( $activities_template->activity->content ),
-			'item_id'          => bp_get_activity_item_id(),
-			'object'           => bp_get_activity_object_name(),
-			'privacy'          => bp_get_activity_privacy(),
-		)
-	);
-
-	/**
-	 * Filter here to edit the activity edit data.
-	 *
-	 * @since BuddyBoss 1.5.0
-	 *
-	 * @param string $activity The Activity edit data.
-	 */
-	return htmlentities( wp_json_encode( $activity ) );
+	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
 }
