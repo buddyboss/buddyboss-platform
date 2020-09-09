@@ -1,4 +1,4 @@
-/* global bp, BP_Nouveau, _, Backbone */
+/* global bp, BP_Nouveau, _, Backbone, tinymce */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
