@@ -2469,9 +2469,11 @@ window.bp = window.bp || {};
 			id: 'activity-form-submit-wrapper',
 			initialize: function () {
 				// Select box for the object
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || typeof bp.Nouveau.Activity.postForm.editActivityData === 'undefined' ) ) {
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
-				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && typeof bp.Nouveau.Activity.postForm.editActivityData !== 'undefined' ) {
+
+					// when editing activity, need to display which object is being edited.
+				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && ! _.isUndefined( bp.Nouveau.Activity.postForm.editActivityData ) ) {
 					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
 
