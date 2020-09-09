@@ -5416,7 +5416,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	 * @param string $activity_data The Activity edit data.
 	 */
 	return apply_filters(
-		'bp_nouveau_get_edit_activity_data',
+		'bp_activity_get_edit_data',
 		array(
 			'id'               => $activity_id,
 			'can_edit_privacy' => $can_edit_privacy,
