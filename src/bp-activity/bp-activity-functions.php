@@ -5368,7 +5368,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	global $activities_template;
 
 	// check activity empty or not.
-	if ( empty( $activity_id ) || empty( $activities_template ) ) {
+	if ( empty( $activity_id ) && empty( $activities_template ) ) {
 		return false;
 	}
 	// get activity.
