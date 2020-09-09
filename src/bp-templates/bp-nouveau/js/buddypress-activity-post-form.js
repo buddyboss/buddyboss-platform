@@ -124,6 +124,7 @@ window.bp = window.bp || {};
 				if ( ! _.isUndefined( activity_data.object ) && ! _.isUndefined( activity_data.item_id ) && 'groups' === activity_data.object ) {
 					self.postForm.model.set( 'item_id', activity_data.item_id );
 					self.postForm.model.set( 'object', 'group' );
+					self.postForm.model.set( 'group_name', activity_data.group_name );
 				}
 
 				var bpActivityEvent = new Event( 'bp_activity_edit' );
@@ -317,8 +318,6 @@ window.bp = window.bp || {};
 			// Set the activity value
 			self.displayEditActivity( activity_data );
 
-
-
 			var edit_activity_editor = $('#whats-new')[0];
 			var edit_activity_editor_content = $('#whats-new-content')[0];
 
@@ -464,7 +463,7 @@ window.bp = window.bp || {};
 				link_description	: '',
 				link_url			: '',
 				gif_data			: {},
-				privacy				: 'public'
+				privacy				: 'public',
 			}
 		}
 	);
@@ -2453,6 +2452,17 @@ window.bp = window.bp || {};
 		}
 	);
 
+	bp.Views.EditActivityPostIn = bp.View.extend( {
+		template: bp.template( 'activity-edit-postin' ),
+		initialize: function () {
+			this.model.on( 'change', this.render, this );
+		},
+		render: function () {
+			this.$el.html( this.template( this.model.attributes ) );
+			return this;
+		}
+	} );
+
 	bp.Views.FormSubmitWrapper = bp.View.extend(
 		{
 			tagName: 'div',
@@ -2461,6 +2471,8 @@ window.bp = window.bp || {};
 				// Select box for the object
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || typeof bp.Nouveau.Activity.postForm.editActivityData === 'undefined' ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
+				} else if ( bp.Nouveau.Activity.postForm.editActivityData !== false && typeof bp.Nouveau.Activity.postForm.editActivityData !== 'undefined' ) {
+					this.views.add( new bp.Views.EditActivityPostIn( { model: this.model } ) );
 				}
 
 				// activity privacy dropdown for profile

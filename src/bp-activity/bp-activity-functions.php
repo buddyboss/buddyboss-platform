@@ -5387,6 +5387,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	$album_id         = 0;
 	$folder_id        = 0;
 	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name       = '';
 
 	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
 	if ( ! empty( $album_activity_id ) ) {
@@ -5406,6 +5407,8 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	// if group activity then set privacy edit to always false.
 	if ( 0 < (int) $group_id ) {
 		$can_edit_privacy = false;
+		$group      = groups_get_group( $group_id );
+		$group_name = bp_get_group_name( $group );
 	}
 
 	/**
@@ -5422,6 +5425,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 			'can_edit_privacy' => $can_edit_privacy,
 			'album_id'         => $album_id,
 			'group_id'         => $group_id,
+			'group_name'       => $group_name,
 			'folder_id'        => $folder_id,
 			'content'          => stripslashes( $activity->content ),
 			'item_id'          => $activity->item_id,
