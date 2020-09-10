@@ -142,7 +142,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	protected function setup_support() {
 		$width         = 1300;
-		$top_offset    = 150;
+		$top_offset    = 200;
 
 		/** This filter is documented in bp-core/bp-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
