@@ -1177,3 +1177,27 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
 }
+
+/**
+ * Edit button alter when document activity other than activity page.
+ *
+ * @param array $buttons     Array of Buttons visible on activity entry.
+ * @param int   $activity_id Activity ID.
+ *
+ * @return mixed
+ * @since BuddyBoss 1.5.1
+ */
+function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
+	if ( isset( $buttons['activity_edit'] ) && ! empty( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( ! empty( $activity->id ) && 'document' !== $activity->privacy ) {
+			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+			$classes                                          = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
+			$classes[]                                        = 'document-activity';
+			$buttons['activity_edit']['button_attr']['class'] = implode( ' ', $classes );
+		}
+	}
+
+	return $buttons;
+}

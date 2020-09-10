@@ -229,3 +229,27 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 	}
 
 }
+
+/**
+ * Edit button alter when media activity other than activity page.
+ *
+ * @param array $buttons     Array of Buttons visible on activity entry.
+ * @param int   $activity_id Activity ID.
+ *
+ * @return mixed
+ * @since BuddyBoss 1.5.1
+ */
+function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
+	if ( isset( $buttons['activity_edit'] ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {
+			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+			$classes                                          = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
+			$classes[]                                        = 'media-activity';
+			$buttons['activity_edit']['button_attr']['class'] = implode( ' ', $classes );
+		}
+	}
+
+	return $buttons;
+}
