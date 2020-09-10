@@ -13,6 +13,8 @@ window.bp = window.bp || {};
 		bp.mentions.users = window.BP_Suggestions.friends || window.BP_Suggestions.members || bp.mentions.users;
 	}
 
+	bp.mentions.xhr = null;
+
 	/**
 	 * Adds BuddyPress @mentions to form inputs.
 	 *
@@ -182,8 +184,7 @@ window.bp = window.bp || {};
 					 * @since BuddyPress 3.0.0. Renamed from "remote_filter" for at.js v1.5.4 support.
 					 */
 					remoteFilter: function( query, render_view ) {
-						var self = $( this ),
-						params   = {};
+						var params   = {};
 
 						mentionsItem = mentionsQueryCache[ query ];
 						if ( typeof mentionsItem === 'object' ) {
@@ -191,8 +192,8 @@ window.bp = window.bp || {};
 							return;
 						}
 
-						if ( self.xhr ) {
-							self.xhr.abort();
+						if ( bp.mentions.xhr ) {
+							bp.mentions.xhr.abort();
 						}
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
@@ -201,7 +202,7 @@ window.bp = window.bp || {};
 							params['group-id'] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
 						}
 
-						self.xhr = $.getJSON( ajaxurl, params )
+						bp.mentions.xhr = $.getJSON( ajaxurl, params )
 						/**
 						 * Success callback for the @suggestions lookup.
 						 *
@@ -266,6 +267,7 @@ window.bp = window.bp || {};
 
 			at:         '@',
 			searchKey:  'search',
+			startWithSpace: true,
 			displayTpl: BP_Mentions_Options.display_tpl
 			},
 			BP_Mentions_Options.extra_options,
@@ -274,6 +276,16 @@ window.bp = window.bp || {};
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {
+
+			jQuery(this).on('keydown', function (e) {
+				// Check backspace key down event
+				if(e.keyCode == 8){
+					jQuery(this).find('.atwho-inserted:last-child').each(function (  ){
+						jQuery(this).removeAttr('contenteditable');
+					});
+				}
+			});
+
 			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
 				var i = 0;
 				if ( typeof window.forums_medium_reply_editor !== 'undefined' ) {

@@ -905,6 +905,69 @@ function bp_is_activity_autoload_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity edit is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bp_is_activity_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity edit is enabled.
+	 *
+	 * @since BuddyBoss 1.5.0
+	 *
+	 * @param bool $value Whether or not Activity edit is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+}
+
+/**
+ * single time slot by time key.
+ *
+ * @param null $time Return single time slot by time key.
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.5.0
+ *
+ */
+function bp_activity_edit_times( $time = null ) {
+
+	$times = apply_filters(
+		'bp_activity_edit_times',
+		array(
+			'thirty_days' => array( 'value' => ( 60 * 60 * 24 * 30 ), 'label' => __( '30 Days', 'buddyboss' ) ),
+			'seven_days'  => array( 'value' => ( 60 * 60 * 24 * 7 ), 'label' => __( '7 Days', 'buddyboss' ) ),
+			'one_day'     => array( 'value' => ( 60 * 60 * 24 ), 'label' => __( '1 Day', 'buddyboss' ) ),
+			'one_hour'    => array( 'value' => ( 60 * 60 ), 'label' => __( '1 Hour', 'buddyboss' ) ),
+			'ten_minutes' => array( 'value' => ( 60 * 10 ), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+		)
+	);
+
+	if ( $time && isset( $times[ $time ] ) ) {
+		return $times[ $time ];
+	}
+
+	return $times;
+}
+
+/**
+ * Get BuddyBoss Activity Time option.
+ *
+ * @param bool $default when option not found, function will return $default value
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_get_activity_edit_time( $default = false ) {
+	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );
+}
+
+/**
  * Check whether Activity Tabs are enabled.
  *
  * @since BuddyBoss 1.1.6
@@ -1162,12 +1225,22 @@ function bp_disable_invite_member_type( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string
+ * @param string $post_type Post Type
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
 function bp_is_post_type_feed_enable( $post_type, $default = false ) {
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) get_option( "bp-feed-custom-post-type-$post_type", $default ) );
+
+	/**
+	 * Filters whether post type feed enabled or not.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether post type feed enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
 }
 
 /**
@@ -1175,12 +1248,21 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
 function bp_is_custom_post_type_feed_enable( $default = false ) {
-	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) get_option( 'bp-enable-custom-post-type-feed', $default ) );
+
+	/**
+	 * Filters whether custom post type feed enabled or not.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether custom post type feed enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) bp_get_option( 'bp-enable-custom-post-type-feed', $default ) );
 }
 
 /**
@@ -1188,12 +1270,22 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string
+ * @param string $activity_type Activity Type
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
-	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( $activity_type, $default ) );
+
+	/**
+	 * Filters whether specified $activity_type should be enabled or no.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not the feed enable or not.
+	 */
+	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) bp_get_option( $activity_type, $default ) );
 }
 
 /**
@@ -1245,12 +1337,22 @@ function bp_member_type_default_on_registration( $default = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $member_type string
+ * @param string $member_type Member type
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
  *
  * @return bool Is member type send invites enabled or not
  */
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
-	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) get_option( $member_type, $default ) );
+
+	/**
+	 * Filters whether specified $member_type should be allowed to send invites.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value whether or not allow member type invitations.
+	 */
+	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) bp_get_option( $member_type, $default ) );
 }
 
 /**
@@ -1258,12 +1360,19 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return string
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: Empty string.
+ * @return string Private network's public content.
  */
 function bp_enable_private_network_public_content( $default = '' ) {
 
+	/**
+	 * Filters private network's public content.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Private network's public content.
+	 */
 	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
 }
 
@@ -1440,8 +1549,21 @@ function bp_register_confirm_password( $default = false ) {
  * Default layout option for the members listing
  *
  * @since BuddyBoss 1.2.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: grid.
+ *
+ * @return string Profile layout format.
  */
 function bp_profile_layout_default_format( $default = 'grid' ) {
+
+	/**
+	 * Filters profile layout format.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool $value Profile layout format.
+	 */
 	return apply_filters( 'bp_profile_layout_default_format', bp_get_option( 'bp-profile-layout-default-format', $default ) );
 }
 
@@ -1449,8 +1571,21 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
  * Default layout option for the groups listing
  *
  * @since BuddyBoss 1.2.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: grid.
+ *
+ * @return string Group layout format.
  */
 function bp_group_layout_default_format( $default = 'grid' ) {
+
+	/**
+	 * Filters group layout format.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool $value Group layout format.
+	 */
 	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
 }
 
@@ -1480,12 +1615,23 @@ function bp_allow_custom_registration( $default = false ) {
  *
  * @since BuddyBoss 1.2.8
  *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: Empty string.
+ *
  * @return string URL of register page.
  */
 function bp_custom_register_page_url( $default = '' ) {
 
+	/**
+	 * Filters custom registration page URL.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param string $value custom registration page URL.
+	 */
 	return apply_filters( 'bp_custom_register_page_url', bp_get_option( 'register-page-url', $default ) );
 }
+
 /**
  * Are group messages disabled?
  *

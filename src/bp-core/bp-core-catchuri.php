@@ -61,6 +61,11 @@ function bp_core_set_uri_globals() {
 	 */
 	$bp->pages = apply_filters( 'bp_pages', $bp->pages );
 
+	// Exclude site page from bp pages as we removed component to visible publicly.
+	if ( isset( $bp->blogs ) && isset( $bp->pages->{$bp->blogs->id} ) ){
+		unset( $bp->pages->{$bp->blogs->id} );
+	}
+
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
@@ -154,7 +159,7 @@ function bp_core_set_uri_globals() {
 	 */
 	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) && empty( $_GET['cat'] ) ) {
 		$post = get_post( get_option( 'page_on_front' ) );
-		if ( ! empty( $post ) ) {
+		if ( ! empty( $post ) && apply_filters( 'bp_core_set_uri_show_on_front', true ) ) {
 			$bp_uri[0] = $post->post_name;
 		}
 	}

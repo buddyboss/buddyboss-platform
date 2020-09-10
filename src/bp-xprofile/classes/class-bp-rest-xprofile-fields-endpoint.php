@@ -883,10 +883,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
 			$data['visibility_level']        = $field->visibility_level;
-			$data['allow_custom_visibility'] = (
-				! empty( $field->__get( 'allow_custom_visibility' ) )
-				&& 'allowed' === $field->__get( 'allow_custom_visibility' )
-			) ? $field->__get( 'allow_custom_visibility' ) : 'disabled';
+			$data['allow_custom_visibility'] = $this->bp_rest_get_field_visibility( $field );
 		}
 
 		if ( true === wp_validate_boolean( $request->get_param( 'fetch_field_data' ) ) ) {
@@ -1589,6 +1586,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$option->value = $option->name;
 				$key           = bp_social_network_search_key( $option->name, $providers );
 				$option->name  = $providers[ $key ]->name;
+				$option->icon  = $providers[ $key ]->svg;
 				$options[ $k ] = $option;
 			}
 		}
@@ -1738,5 +1736,36 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Check current user can edit the visibility or not.
+	 *
+	 * @param BP_XProfile_Field $field_object Field Object.
+	 *
+	 * @return string
+	 */
+	public function bp_rest_get_field_visibility( $field_object ) {
+		global $field;
+
+		// Get the field id into for user check.
+		$GLOBALS['profile_template']              = new stdClass();
+		$GLOBALS['profile_template']->in_the_loop = true;
+
+		// Setup current user id into global.
+		$field = $field_object;
+
+		return (
+			! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
+			? 'disabled'
+			: (
+				(
+					! empty( $field->__get( 'allow_custom_visibility' ) )
+					&& 'allowed' === $field->__get( 'allow_custom_visibility' )
+				)
+				? $field->__get( 'allow_custom_visibility' )
+				: 'disabled'
+			)
+		);
 	}
 }

@@ -621,6 +621,11 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 					$field->set_member_types( $member_types );
 				}
 
+				// Set position of Gender fields option.
+				if ( isset( $_POST['gender-option-order'] ) && ! empty( $_POST['gender-option-order'] ) ) {
+					bp_xprofile_update_field_meta( $field_id, 'gender-option-order', $_POST['gender-option-order'] );
+				}
+
 				// Validate default visibility.
 				if ( ! empty( $_POST['default-visibility'] ) && in_array( $_POST['default-visibility'], wp_list_pluck( bp_xprofile_get_visibility_levels(), 'id' ) ) ) {
 					bp_xprofile_update_field_meta( $field_id, 'default_visibility', $_POST['default-visibility'] );
