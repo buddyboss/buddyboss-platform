@@ -2792,15 +2792,15 @@ span.dashicons.dashicons-admin-file:before {
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
   position: relative;
-  display: inline-block;
+  float: right;
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
-  margin-bottom: 40px;
-  max-height: calc(90vh - 40px);
-  min-height: calc(90vh - 40px);
+  padding-bottom: 40px;
+  max-height: 90vh;
+  min-height: 90vh;
   position: static;
 }
 
@@ -13187,6 +13187,7 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater {
     width: calc(100% - 60px);
+    min-width: initial;
     margin: 0 30px;
     height: 100%;
   }
