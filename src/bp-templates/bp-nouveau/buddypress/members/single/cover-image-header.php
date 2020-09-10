@@ -31,13 +31,13 @@ $cover_image_url          = bp_attachments_get_attachment( 'url', array( 'object
 		}
 		?>
 		<?php if ( bp_is_my_profile() ) { ?>
-			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
+			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 
 			<?php if ( ! empty( $cover_image_url ) ) { ?>
-				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
-					<span class="dashicons dashicons-move"></span>
+				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
+					<i class="bb-icon-move"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss'); ?></a>

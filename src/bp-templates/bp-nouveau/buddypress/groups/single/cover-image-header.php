@@ -35,12 +35,12 @@ $has_cover_image_position = '';
 				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '"' . ( '' !== $group_cover_position ? ' data-top="' . $group_cover_position . '"' : '' ) . ( '' !== $group_cover_position ? ' style="top: ' . $group_cover_position . 'px"' : '' ) . ' alt="" />';
 			}
 			?>
-			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
+			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 			<?php if ( ! empty( $group_cover_image ) ) { ?>
-				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
-					<span class="dashicons dashicons-move"></span>
+				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
+					<i class="bb-icon-move"></i>
 				</a>
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss'); ?></a>
