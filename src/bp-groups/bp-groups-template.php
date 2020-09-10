@@ -6885,7 +6885,7 @@ function bp_group_has_invites( $args = '' ) {
 		array(
 			'group_id' => false,
 			'user_id'  => bp_loggedin_user_id(),
-			'per_page' => false,
+			'per_page' => 20,
 			'page'     => 1,
 		),
 		'group_has_invites'

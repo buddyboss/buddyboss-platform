@@ -171,7 +171,7 @@ window.bp = window.bp || {};
 								feedbackInvitePTag.html( response.data.feedback );
 								page = page + 1;
 							} else {
-								//memberInvitedList.html('');
+								memberInvitedList.html('');
 								feedbackInviteColumn.attr( 'class', 'bp-feedback' );
 								feedbackInviteColumn.addClass( response.data.type );
 								feedbackInvitePTag.html( response.data.feedback );
