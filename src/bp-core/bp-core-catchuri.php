@@ -61,6 +61,11 @@ function bp_core_set_uri_globals() {
 	 */
 	$bp->pages = apply_filters( 'bp_pages', $bp->pages );
 
+	// Exclude site page from bp pages as we removed component to visible publicly.
+	if ( isset( $bp->blogs ) && isset( $bp->pages->{$bp->blogs->id} ) ){
+		unset( $bp->pages->{$bp->blogs->id} );
+	}
+
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
