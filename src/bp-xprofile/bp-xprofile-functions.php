@@ -2045,6 +2045,10 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
  */
 function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
+	if( empty($group_ids) ){
+		$group_ids = array();
+	}
+
 	/* User Progress specific VARS. */
 	$user_id                = get_current_user_id();
 	$progress_details       = array();
