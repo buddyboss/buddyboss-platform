@@ -510,7 +510,7 @@ class BP_REST_Notifications_Endpoint extends WP_REST_Controller {
 				'bp_rest_notification_invalid_id',
 				__( 'Invalid notification ID.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 404,
 				)
 			);
 		}

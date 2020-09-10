@@ -2004,7 +2004,7 @@ function bp_core_activate_signup( $key ) {
 		// Set up data to pass to the legacy filter.
 		$user = array(
 			'user_id'  => $user_id,
-			'password' => $signup->meta['password'],
+			'password' => isset( $signup->meta['password'] ) ? $signup->meta['password'] : '',
 			'meta'     => $signup->meta,
 		);
 
@@ -2786,6 +2786,12 @@ function bp_set_member_type( $user_id, $member_type, $append = false ) {
 function bp_remove_member_type( $user_id, $member_type ) {
 	// Bail if no valid profile type was passed.
 	if ( empty( $member_type ) || ! bp_get_member_type_object( $member_type ) ) {
+		return false;
+	}
+
+	// No need to continue if the member doesn't have the type.
+	$existing_types = bp_get_member_type( $user_id, false );
+	if ( ! in_array( $member_type, $existing_types, true ) ) {
 		return false;
 	}
 

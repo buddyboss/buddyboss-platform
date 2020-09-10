@@ -441,7 +441,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_create_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -617,13 +617,14 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				empty( $activity_object->content )
 				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_media_ids', true ) )
 				&& empty( bp_activity_get_meta( $activity_object->id, '_gif_data', true ) )
+				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_document_ids', true ) )
 			) && true === $this->bp_rest_activity_content_validate( $request )
 		) {
 			return new WP_Error(
 				'bp_rest_update_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -715,7 +716,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -1088,6 +1089,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'can_favorite'      => bp_activity_can_favorite(),
 			'favorite_count'    => $this->get_activity_favorite_count( $activity->id ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
+			'can_edit'          => ( function_exists( 'bp_activity_user_can_edit' ) ? bp_activity_user_can_edit( $activity ) : false ),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ) ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
@@ -1614,6 +1616,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'can_edit'        => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'can_delete'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the delete access for the activity object.', 'buddyboss' ),
@@ -1859,6 +1867,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					|| empty( $request['media_gif']['mp4'] )
 				)
 			)
+			&& empty( $request['bp_documents'] )
 		) {
 			$toolbar_option = true;
 		}
@@ -1883,7 +1892,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			$new_scope[] = 'public';
 
-			if ( empty( $user_id ) ) {
+			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'groups';
+			} else {
 				$new_scope[] = 'just-me';
 
 				if ( empty( $user_id ) ) {
@@ -1910,8 +1921,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					$new_scope[] = 'media';
 					$new_scope[] = 'document';
 				}
-			} elseif ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
-				$new_scope[] = 'groups';
 			}
 		} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 			$new_scope[] = 'public';

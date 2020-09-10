@@ -528,6 +528,11 @@ window.bp = window.bp || {};
 			$.each(
 				this.objects,
 				function( o, object ) {
+					// Continue when ajax is blocked for object request.
+					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+						return;
+					}
+
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
@@ -1374,7 +1379,16 @@ window.bp = window.bp || {};
 					if ( false === response.success ) {
 						  item_inner.prepend( response.data.feedback );
 						  target.removeClass( 'pending loading' );
-						  item.find( '.bp-feedback' ).fadeOut( 6000 );
+						  if ( item.find( '.bp-feedback' ).length ) {
+							  item.find( '.bp-feedback' ).show();
+							  item.find( '.bp-feedback' ).fadeOut( 6000 );
+						  } else {
+						  	if ( 'groups' === object && 'join_group' === action ) {
+								item.append(response.data.feedback);
+								item.find('.bp-feedback').fadeOut(6000);
+							}
+						  }
+
 					} else {
 						  // Specific cases for groups
 						if ( 'groups' === object ) {

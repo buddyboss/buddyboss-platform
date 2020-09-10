@@ -1436,6 +1436,22 @@
     "groupTitle": "Email_Invites"
   },
   {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/invites/profile-type",
+    "title": "Invites Profile Type",
+    "name": "GetBBInvitesProfileType",
+    "group": "Email_Invites",
+    "description": "<p>Retrieve Sent Invites Profile Type.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "groupTitle": "Email_Invites"
+  },
+  {
     "type": "POST",
     "url": "/wp-json/buddyboss/v1/reply/action/:id",
     "title": "Reply Actions",
@@ -4042,6 +4058,20 @@
             "optional": true,
             "field": "types",
             "description": "<p>Set type(s) for a group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "append_types",
+            "description": "<p>Append type(s) for a group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "remove_types",
+            "description": "<p>Remove type(s) for a group.</p>"
           }
         ]
       }
@@ -4698,6 +4728,13 @@
           {
             "group": "Parameter",
             "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Media Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
             "allowedValues": [
               "public",
               "loggedin",
@@ -5227,6 +5264,13 @@
             "optional": true,
             "field": "group_id",
             "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Media Content.</p>"
           },
           {
             "group": "Parameter",
@@ -6079,6 +6123,42 @@
             "optional": false,
             "field": "group_id",
             "description": "<p>Group id to search members.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "groupTitle": "Messages"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/messages/search-thread",
+    "title": "Search Thread",
+    "name": "SearchBBThread",
+    "group": "Messages",
+    "description": "<p>Search Existing thread by user and recipient for the message.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Sender users ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "recipient_id",
+            "description": "<p>Thread recipient ID.</p>"
           }
         ]
       }
@@ -7379,7 +7459,7 @@
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Array",
             "optional": true,
             "field": "value",
             "description": "<p>The list of values for the field data.</p>"
