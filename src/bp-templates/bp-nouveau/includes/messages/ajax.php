@@ -131,8 +131,20 @@ function bp_nouveau_ajax_messages_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	// Validate subject and message content.
-	if ( empty( $_POST['message_content'] ) ) {
+	$content = filter_input( INPUT_POST, 'message_content', FILTER_SANITIZE_STRING );
+
+	/**
+	 * Filter to validate message content.
+	 *
+	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param string $content           Content of the message.
+	 * @param array  $_POST             POST Request Object.
+	 *
+	 * @return bool True if message is not valid, false otherwise.
+	 */
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+
+	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 
 		wp_send_json_error( $response );
@@ -272,6 +284,8 @@ function bp_nouveau_ajax_messages_send_message() {
 				if ( array_filter( $thread_extra_content ) ) {
 					$response = array_merge( $response, $thread_extra_content );
 				}
+
+				$response['avatars'] = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
 			}
 		}
 
@@ -311,7 +325,26 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['content'] ) || empty( $_POST['thread_id'] ) ) {
+	if ( empty( $_POST['thread_id'] ) ) {
+		$response['feedback'] = __( 'Please provide thread id.', 'buddyboss' );
+
+		wp_send_json_error( $response );
+	}
+
+	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
+	/**
+	 * Filter to validate message content.
+	 *
+	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param string $content           Content of the message.
+	 * @param array  $_POST             POST Request Object.
+	 *
+	 * @return bool True if message is not valid, false otherwise.
+	 */
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+
+	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
 
 		wp_send_json_error( $response );
@@ -966,6 +999,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		$threads->threads[ $i ]['is_search'] = ( isset( $_POST ) && isset( $_POST['search_terms'] ) && '' !== trim( $_POST['search_terms'] ) ) ? true : false;
+		$threads->threads[ $i ]['avatars'] = bp_messages_get_avatars( bp_get_message_thread_id(), bp_loggedin_user_id() );
 
 		$i += 1;
 	endwhile;
@@ -1517,6 +1551,9 @@ add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients
 /**
  * messages for each thread.
  *
+ * @param int   $thread_id thread id.
+ * @param array $post      $_POST data.
+ *
  * @since BuddyBoss 1.3.0
  */
 function bp_nouveau_get_thread_messages( $thread_id, $post ) {
@@ -1703,8 +1740,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
 		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
 
-		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
+		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id  && 'open' === $message_type ) {
 			$is_group_thread = 1;
+			unset($thread->feedback_error);
 		}
 	}
 

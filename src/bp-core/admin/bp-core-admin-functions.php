@@ -1202,7 +1202,8 @@ function bp_admin_wp_nav_menu_meta_box() {
 function bp_admin_do_wp_nav_menu_meta_box() {
 	global $nav_menu_selected_id;
 
-	$walker = new BP_Walker_Nav_Menu_Checklist( false );
+	$db_fields = array('parent' => 'post_parent', 'id' => 'ID');
+	$walker = new BP_Walker_Nav_Menu_Checklist( $db_fields );
 	$args   = array( 'walker' => $walker );
 
 	$post_type_name = 'buddypress';
@@ -1297,16 +1298,13 @@ function bp_admin_email_maybe_add_translation_notice() {
 		return;
 	}
 
-	if ( bp_core_do_network_admin() ) {
-		$admin_page = 'admin.php';
-	} else {
-		$admin_page = 'tools.php';
-	}
-
 	bp_core_add_admin_notice(
 		sprintf(
 			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
-			esc_url( add_query_arg( 'page', 'bp-tools', bp_get_admin_url( $admin_page ) ) )
+			esc_url( add_query_arg( array(
+				'page' => 'bp-repair-community',
+				'tab'  => 'bp-repair-community',
+			), bp_get_admin_url( 'admin.php' ) ) )
 		),
 		'updated'
 	);

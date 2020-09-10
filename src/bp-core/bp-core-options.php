@@ -926,6 +926,69 @@ function bp_is_activity_autoload_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity edit is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bp_is_activity_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity edit is enabled.
+	 *
+	 * @since BuddyBoss 1.5.0
+	 *
+	 * @param bool $value Whether or not Activity edit is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+}
+
+/**
+ * single time slot by time key.
+ *
+ * @param null $time Return single time slot by time key.
+ *
+ * @return mixed|void
+ * @since BuddyBoss 1.5.0
+ *
+ */
+function bp_activity_edit_times( $time = null ) {
+
+	$times = apply_filters(
+		'bp_activity_edit_times',
+		array(
+			'thirty_days' => array( 'value' => ( 60 * 60 * 24 * 30 ), 'label' => __( '30 Days', 'buddyboss' ) ),
+			'seven_days'  => array( 'value' => ( 60 * 60 * 24 * 7 ), 'label' => __( '7 Days', 'buddyboss' ) ),
+			'one_day'     => array( 'value' => ( 60 * 60 * 24 ), 'label' => __( '1 Day', 'buddyboss' ) ),
+			'one_hour'    => array( 'value' => ( 60 * 60 ), 'label' => __( '1 Hour', 'buddyboss' ) ),
+			'ten_minutes' => array( 'value' => ( 60 * 10 ), 'label' => __( '10 Minutes', 'buddyboss' ) ),
+		)
+	);
+
+	if ( $time && isset( $times[ $time ] ) ) {
+		return $times[ $time ];
+	}
+
+	return $times;
+}
+
+/**
+ * Get BuddyBoss Activity Time option.
+ *
+ * @param bool $default when option not found, function will return $default value
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_get_activity_edit_time( $default = false ) {
+	return apply_filters( 'bp_get_activity_edit_time', bp_get_option( '_bp_activity_edit_time', $default ) );
+}
+
+/**
  * Check whether Activity Tabs are enabled.
  *
  * @since BuddyBoss 1.1.6
@@ -1237,7 +1300,7 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 
 	/**
-	 * Filters whether or not the feed enable or not.
+	 * Filters whether specified $activity_type should be enabled or no.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -1304,9 +1367,9 @@ function bp_member_type_default_on_registration( $default = '' ) {
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 
 	/**
-	 * Filters whether or not allow member type invitations.
+	 * Filters whether specified $member_type should be allowed to send invites.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value whether or not allow member type invitations.
 	 */
@@ -1327,7 +1390,7 @@ function bp_enable_private_network_public_content( $default = '' ) {
 	/**
 	 * Filters private network's public content.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Private network's public content.
 	 */
@@ -1518,7 +1581,7 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
 	/**
 	 * Filters profile layout format.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param bool $value Profile layout format.
 	 */
@@ -1540,7 +1603,7 @@ function bp_group_layout_default_format( $default = 'grid' ) {
 	/**
 	 * Filters group layout format.
 	 *
-	 * @since BuddyBoss 1.2.8
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param bool $value Group layout format.
 	 */
