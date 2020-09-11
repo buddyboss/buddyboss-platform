@@ -170,6 +170,10 @@
 			}
 		}
 
+		.dropzone .dz-preview.dz-complete .dz-progress {
+			display: none;
+		}
+
 		@media screen and (max-width: 603px) {
 
 			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {

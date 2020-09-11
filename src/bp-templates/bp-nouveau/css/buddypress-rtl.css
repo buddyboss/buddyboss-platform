@@ -1203,6 +1203,11 @@ a.layout-grid-view {
   top: 15px;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .dropzone .dz-preview.dz-complete .dz-progress,
+.activity-update-form.modal-popup .dropzone .dz-preview.dz-complete .dz-progress {
+  display: none;
+}
+
 @media screen and (max-width: 603px) {
   #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
   .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
