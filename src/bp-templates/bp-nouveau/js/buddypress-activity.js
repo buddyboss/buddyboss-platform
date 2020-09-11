@@ -714,6 +714,9 @@ window.bp = window.bp || {};
 								}
 							}
 
+							target.removeClass (function (index, className) {
+								return (className.match (/(^|\s)react-\S+/g) || []).join(' ');
+							});
 							target.removeClass( 'unfav' );
 							target.addClass( 'fav' );
 						}
@@ -737,7 +740,8 @@ window.bp = window.bp || {};
 						if ( false === response.success ) {
 							return;
 						} else {
-							$( '.reactions-button a' ).fadeOut(
+							var buttom_ele = target.parent().parent().parent().find( '.reactions-button a' );
+							buttom_ele.fadeOut(
 								200,
 								function() {
 									if ( $( this ).find( 'span' ).first().length ) {
@@ -769,9 +773,13 @@ window.bp = window.bp || {};
 									$( this ).fadeIn( 200 );
 								}
 							);
+							buttom_ele.removeClass( 'fav' );
+							buttom_ele.addClass( 'unfav' );
+							buttom_ele.removeClass (function (index, className) {
+								return (className.match (/(^|\s)react-\S+/g) || []).join(' ');
+							});
+							buttom_ele.addClass( 'react-' + reactionType );
 						}
-						$( '.reactions-button a' ).removeClass( 'fav' );
-						$( '.reactions-button a' ).addClass( 'unfav' );
 					}
 				);
 			}

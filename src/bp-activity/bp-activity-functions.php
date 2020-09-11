@@ -950,13 +950,24 @@ function bp_activity_add_user_reaction( $activity_id, $react_type = 'like', $use
 		$my_favs = array();
 	}
 
+	$my_reactions = bp_get_user_meta( $user_id, 'bp_reaction_activities', true );
+	if ( empty( $my_reactions ) || ! is_array( $my_reactions ) ) {
+		$my_reactions = array();
+	}
+
 	// Bail if the user has already favorited this activity item.
 	if ( in_array( $activity_id, $my_favs ) ) {
-		return false;
+		unset($my_favs[ array_search( $activity_id , $my_favs) ]);
+	}
+	foreach ( $my_reactions as $key => $val ) {
+		if ( in_array( $activity_id, $my_reactions[ $key ] ) ) {
+			unset($my_reactions[ $key ][ array_search( $activity_id , $my_reactions[ $key ] ) ]);
+		}
 	}
 
 	// Add to user's favorites.
 	$my_favs[] = $activity_id;
+	$my_reactions[ $react_type ][] = $activity_id;
 
 	// Update the total number of users who have favorited this activity.
 	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
@@ -970,11 +981,39 @@ function bp_activity_add_user_reaction( $activity_id, $react_type = 'like', $use
 	// Add to activity's favorited users.
 	$users[] = $user_id;
 
-	// Update user meta.
-	bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
+	// Update the users who have favorited this activity.
+	$users_react = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+	foreach ( $users_react as $key => $val ) {
+		if ( in_array( $user_id, $users_react[ $key ] ) ) {
+			unset( $users_react[ $key ][ array_search( $user_id, $users_react[ $key ] ) ] );
+		}
+	}
+	// Add to activity's favorited users.
+	$users_react[ $react_type ][] = $user_id;
 
-	// Update activity meta
-	bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
+	if( $react_type === 'like' ) {
+		// Update user meta.
+		bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
+		bp_update_user_meta( $user_id, 'bp_reaction_activities', $my_reactions );
+
+		// Update activity meta
+		bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
+		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+	} else {
+		// Update user meta.
+		unset($my_favs[ array_search( $activity_id , $my_favs) ]);
+		bp_update_user_meta( $user_id, 'bp_reaction_activities', $my_reactions );
+		bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
+
+		// Update activity meta
+		$users = array_unique( $users );
+		unset( $users[ array_search( $user_id , $users) ] );
+		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+		bp_activity_update_meta( $activity_id, 'bp_favorite_users', $users );
+
+		return true;
+	}
+
 
 	// Update activity meta counts.
 	if ( bp_activity_update_meta( $activity_id, 'favorite_count', $fav_count ) ) {
@@ -1109,8 +1148,31 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 	$my_favs = array_flip( (array) $my_favs );
 
 	// Bail if the user has not previously favorited the item.
-	if ( ! isset( $my_favs[ $activity_id ] ) ) {
+	if ( ! isset( $my_favs[ $activity_id ] ) && ! bp_is_activity_reaction_active() ) {
 		return false;
+	}
+
+	// Check if user has not previously favorited the item but reaction on the item.
+	if ( ! isset( $my_favs[ $activity_id ] ) && bp_is_activity_reaction_active() ) {
+		// Update user meta.
+		$my_reactions = bp_get_user_meta( $user_id, 'bp_reaction_activities', true );
+		foreach ( $my_reactions as $key => $val ) {
+			if ( in_array( $activity_id, $my_reactions[ $key ] ) ) {
+				unset($my_reactions[ $key ][ array_search( $activity_id , $my_reactions[ $key ] ) ]);
+			}
+		}
+		bp_update_user_meta( $user_id, 'bp_reaction_activities', $my_reactions );
+
+		// Update activity meta
+		$users_react = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+		foreach ( $users_react as $key => $val ) {
+			if ( in_array( $user_id, $users_react[ $key ] ) ) {
+				unset( $users_react[ $key ][ array_search( $user_id, $users_react[ $key ] ) ] );
+			}
+		}
+		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+
+		return true;
 	}
 
 	// Remove the fav from the user's favs.

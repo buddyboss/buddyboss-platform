@@ -316,6 +316,41 @@
 				content: "\e815";
 			}
 
+			.reactions-button .react-like:before {
+				content: "\e815";
+				color: #0061ac;
+			}
+
+			.reactions-button .react-love:before {
+				content: "\e80d";
+				color: #0061ac;
+			}
+
+			.reactions-button .react-care:before {
+				content: "\e96d";
+				color: #0061ac;
+			}
+
+			.reactions-button .react-haha:before {
+				content: "\e814";
+				color: #0061ac;
+			}
+
+			.reactions-button .react-wow:before {
+				content: "\e8f0";
+				color: #0061ac;
+			}
+
+			.reactions-button .react-sad:before {
+				content: "\e821";
+				color: #0061ac;
+			}
+
+			.reactions-button .react-angry:before {
+				content: "\e8cf";
+				color: #0061ac;
+			}
+
 			.unfav:before {
 				content: "\e815";
 				color: #0061ac;
