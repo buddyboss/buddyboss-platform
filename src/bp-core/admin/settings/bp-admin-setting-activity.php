@@ -33,7 +33,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$bp                = buddypress();
 		$active_components = $bp->active_components;
 
-		// Flag for activate the blogs component
+		// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
 		$is_blog_component_active = false;
 
 		// Get all active custom post type.
@@ -55,6 +55,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			}
 		}
 
+		// Add blogs component to $active_components list.
 		if ( $is_blog_component_active ) {
 			$active_components['blogs'] = '1';
 		} else {
@@ -69,6 +70,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		bp_core_install( $bp->active_components );
 		bp_core_add_page_mappings( $bp->active_components );
 		bp_update_option( 'bp-active-components', $bp->active_components );
+		// Reset the permalink to fix the 404 on some pages.
+		flush_rewrite_rules();
 
 	}
 
