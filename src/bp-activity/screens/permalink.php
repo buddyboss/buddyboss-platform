@@ -64,6 +64,11 @@ function bp_activity_action_permalink_router() {
 		$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 	}
 
+	// check if edit activity link.
+	if ( 'edit' === bp_action_variable( 1 ) ) {
+		$redirect = untrailingslashit( $redirect ) . '/edit';
+	}
+
 	// If set, add the original query string back onto the redirect URL.
 	if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
 		$query_frags = array();
