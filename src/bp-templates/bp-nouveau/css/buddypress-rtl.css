@@ -1203,17 +1203,28 @@ a.layout-grid-view {
   top: 15px;
 }
 
+@media screen and (max-width: 646px) {
+  #buddypress .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar, #buddypress
+  .activity-update-form.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 111px;
+  }
+}
+
 @media screen and (max-width: 603px) {
   #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
   .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 58px;
+    bottom: 112px;
   }
 }
 
 @media screen and (max-width: 544px) {
   #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
   .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 112px;
+    bottom: 146px;
+  }
+  #buddypress .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar, #buddypress
+  .activity-update-form.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 146px;
   }
 }
 

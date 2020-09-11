@@ -282,9 +282,9 @@ window.bp = window.bp || {};
 
 				// Do not allow the edit privacy if activity is belongs to any folder/album.
 				if ( ! bp.privacyEditable ) {
-					$activityPrivacySelect.css( 'visibility', 'hidden');
+					$activityPrivacySelect.parent().css( 'display', 'none');
 				} else {
-					$activityPrivacySelect.css( 'visibility', 'visible');
+					$activityPrivacySelect.parent().css( 'display', 'block');
 				}
 			},0 );
 
@@ -383,7 +383,7 @@ window.bp = window.bp || {};
 			bp.group_id        = 0;
 			bp.privacy         = 'public';
 
-			$('.activity-update-form.modal-popup').removeClass('modal-popup');
+			$('.activity-update-form.modal-popup').removeClass('modal-popup group-activity');
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
