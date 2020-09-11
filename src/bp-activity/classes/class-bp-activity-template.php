@@ -199,6 +199,9 @@ class BP_Activity_Template {
 		// Get an array of the logged in user's favorite activities.
 		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_activities', true );
 
+		// Get an array of the logged in user's reactions activities.
+		$this->my_reactions = bp_get_user_meta( bp_loggedin_user_id(), 'bp_reaction_activities', true );
+
 		// Fetch specific activity items based on ID's.
 		if ( ! empty( $include ) ) {
 			$this->activities = bp_activity_get_specific(

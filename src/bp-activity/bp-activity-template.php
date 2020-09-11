@@ -1872,6 +1872,33 @@ function bp_get_activity_is_favorite() {
 }
 
 /**
+	 * Return whether the current activity is in a current user's reactions.
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @global object $activities_template {@link BP_Activity_Template}
+	 *
+	 * @return string if user reacted, false otherwise.
+	 */
+	function bp_get_activity_is_reacted() {
+		global $activities_template;
+		$react = false;
+		foreach ($activities_template->my_reactions as $key => $value ) {
+			if( in_array( $activities_template->activity->id, (array) $value ) ) {
+				$react = $key;
+			}
+		}
+		/**
+		 * Filters whether the current activity item is in the current user's reaction.
+		 *
+		 * @since BuddyPress 1.2.0
+		 *
+		 * @param bool $value Whether or not the current activity item is in the current user's reaction.
+		 */
+		return apply_filters( 'bp_get_activity_is_reacted', $react );
+	}
+
+/**
  * Output the comment markup for an activity item.
  *
  * @since BuddyPress 1.2.0

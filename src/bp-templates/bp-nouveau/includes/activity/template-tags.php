@@ -398,6 +398,21 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				);
 			}
 
+			if ( bp_is_activity_reaction_active() ) {
+				$rection = bp_get_activity_is_reacted();
+				if( $rection ) {
+					$fav_args = array(
+						'parent_element'  => $parent_element,
+						'parent_attr'     => $parent_attr,
+						'button_element'  => $button_element,
+						'link_class'      => 'button unfav bp-secondary-action react-' . $rection,
+						'link_text'       => __( ucfirst($rection), 'buddyboss' ),
+						'aria-pressed'    => 'true',
+						'link_attr'       => bp_get_activity_unfavorite_link(),
+					);
+				}
+			}
+
 			$buttons['activity_favorite'] =  array(
 				'id'                => 'activity_favorite',
 				'position'          => 4,
