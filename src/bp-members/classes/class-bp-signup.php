@@ -129,6 +129,7 @@ class BP_Signup {
 	 *     @type string      $orderby        Order By parameter. Default 'signup_id'.
 	 *     @type string      $order          Order direction. Default 'DESC'.
 	 *     @type bool        $include        Whether or not to include more specific query params.
+	 *     @type bool        $exclude_active Whether or not to exclude signups previously activated.
 	 *     @type string      $activation_key Activation key to search for.
 	 *     @type string      $user_login     Specific user login to return.
 	 *     @type string      $fields         Which fields to return. Specify 'ids' to fetch a list of signups IDs.
@@ -151,6 +152,7 @@ class BP_Signup {
 				'orderby'        => 'signup_id',
 				'order'          => 'DESC',
 				'include'        => false,
+				'exclude_active' => true,
 				'activation_key' => '',
 				'user_login'     => '',
 				'fields'         => 'all',
@@ -169,7 +171,11 @@ class BP_Signup {
 		$signups_table  = buddypress()->members->table_name_signups;
 		$sql['select']  = "SELECT * FROM {$signups_table}";
 		$sql['where']   = array();
-		$sql['where'][] = 'active = 0';
+
+		// Exclude active signups
+		if (  ! empty( $r['exclude_active'] ) ) {
+			$sql['where'][] = 'active = 0';
+		}
 
 		if ( empty( $r['include'] ) ) {
 
