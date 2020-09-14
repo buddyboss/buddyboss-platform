@@ -498,7 +498,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'button_element'    => $button_element,
 					'button_attr'       => array(
 						'href'  => '#',
-						'class' => 'button edit-activity bp-secondary-action bp-tooltip',
+						'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
 						'title' => __( 'Edit Activity', 'buddyboss' ),
 					),
 					'link_text'         => sprintf(
