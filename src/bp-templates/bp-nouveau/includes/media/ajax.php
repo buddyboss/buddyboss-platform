@@ -636,8 +636,11 @@ function bp_nouveau_ajax_media_get_activity() {
 		wp_send_json_error( $response );
 	}
 
+	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+
 	// check activity is media or not.
-	$media_activity = bp_activity_get_meta( $_POST['id'], 'bp_media_activity', true );
+	$media_activity = bp_activity_get_meta( $post_id, 'bp_media_activity', true );
 
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
@@ -645,17 +648,31 @@ function bp_nouveau_ajax_media_get_activity() {
 
 	if ( ! empty( $media_activity ) ) {
 		$args = array(
-			'include'     => $_POST['id'],
+			'include'     => $post_id,
 			'show_hidden' => true,
 			'scope'       => 'media',
 			'privacy'     => false,
 		);
 	} else {
-		$args = array(
-			'include' => $_POST['id'],
-			'privacy' => false,
-			'scope'   => false,
-		);
+
+		if ( $group_id > 0 ) {
+			$args = array(
+				'include'     => $post_id,
+				'object'      => buddypress()->groups->id,
+				'primary_id'  => $group_id,
+				'privacy'     => false,
+				'scope'       => false,
+				'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
+			);
+		} else {
+			$args = array(
+				'include' => $post_id,
+				'privacy' => false,
+				'scope'   => false,
+			);
+		}
+
+
 	}
 
 	ob_start();

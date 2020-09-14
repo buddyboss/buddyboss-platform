@@ -5024,6 +5024,7 @@ window.bp = window.bp || {};
 						data	: {
 							action	: 'media_get_activity',
 							id		: self.current_media.activity_id,
+							group_id 	: self.current_media.group_id,
 							nonce	: BP_Nouveau.nonces.media
 						},
 						success: function (response) {
