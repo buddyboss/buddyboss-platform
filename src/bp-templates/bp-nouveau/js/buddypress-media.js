@@ -5071,7 +5071,7 @@ window.bp = window.bp || {};
 						data	: {
 							action		: 'document_get_activity',
 							id			: self.current_document.activity_id,
-							group_id 	: ! _.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
+							group_id 	: ! _.isUndefined( self.current_document.group_id ) ? self.current_document.group_id : 0,
 							nonce		: BP_Nouveau.nonces.media
 						},
 						success: function (response) {
