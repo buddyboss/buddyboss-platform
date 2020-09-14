@@ -5019,16 +5019,16 @@ window.bp = window.bp || {};
 
 				self.activity_ajax = $.ajax(
 					{
-						type	: 'POST',
-						url		: BP_Nouveau.ajaxurl,
-						data	: {
-							action	: 'media_get_activity',
-							id		: self.current_media.activity_id,
-							group_id 	: self.current_media.group_id,
-							nonce	: BP_Nouveau.nonces.media
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: {
+							action: 'media_get_activity',
+							id: self.current_media.activity_id,
+							group_id: ! _.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
+							nonce: BP_Nouveau.nonces.media
 						},
-						success: function (response) {
-							if (response.success) {
+						success: function ( response ) {
+							if ( response.success ) {
 								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
 								$( '.bb-media-info-section:visible' ).show();
 
@@ -5071,8 +5071,7 @@ window.bp = window.bp || {};
 						data	: {
 							action		: 'document_get_activity',
 							id			: self.current_document.activity_id,
-							group_id 	: self.current_document.group_id,
-							author		: self.current_document.author,
+							group_id 	: ! _.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
 							nonce		: BP_Nouveau.nonces.media
 						},
 						success: function (response) {

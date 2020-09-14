@@ -654,8 +654,7 @@ function bp_nouveau_ajax_media_get_activity() {
 			'privacy'     => false,
 		);
 	} else {
-
-		if ( $group_id > 0 ) {
+		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
 			$args = array(
 				'include'     => $post_id,
 				'object'      => buddypress()->groups->id,
@@ -671,8 +670,6 @@ function bp_nouveau_ajax_media_get_activity() {
 				'scope'   => false,
 			);
 		}
-
-
 	}
 
 	ob_start();
