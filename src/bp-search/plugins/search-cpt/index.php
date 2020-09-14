@@ -61,7 +61,7 @@ function bp_search_helpers_cpts( $helpers ) {
 
 	foreach ( $post_types as $post_type ) {
 		// if name starts with cpt-
-		if ( ! in_array( $post_type, $custom_handler_cpts ) && bp_is_search_post_type_enable( $post_type, 0 ) ) {
+		if ( ! in_array( $post_type, $custom_handler_cpts ) && bp_is_search_post_type_enable( $post_type, 1 ) ) {
 			$searchable_type = 'cpt-' . $post_type;
 			$cpt_obj         = get_post_type_object( $post_type );
 			// is cpt still valid?

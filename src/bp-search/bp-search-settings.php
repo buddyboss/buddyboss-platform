@@ -200,6 +200,25 @@ function bp_search_get_settings_fields() {
 		);
 	}
 
+	if ( bp_is_active( 'media' ) ) {
+		$fields['bp_search_settings_community']['bp_search_photos'] = array(
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_photos',
+				'sanitize_callback' => 'intval',
+				'args'              => array(
+						'class' => 'bp-search-parent-field',
+				),
+		);
+		$fields['bp_search_settings_community']['bp_search_albums'] = array(
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_albums',
+				'sanitize_callback' => 'intval',
+				'args'              => array(
+						'class' => 'bp-search-child-field',
+				),
+		);
+	}
+
 	if ( bp_is_active( 'media' ) && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
 		$fields['bp_search_settings_community']['bp_search_documents'] = array(
 				'title'             => '&#65279;',
@@ -724,6 +743,50 @@ function bp_search_settings_callback_groups() {
  *
  * @uses checked() To display the checked attribute
  */
+function bp_search_settings_callback_photos() {
+	?>
+	<input
+			name="bp_search_photos"
+			id="bp_search_photos"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_photos_enable( false ) ); ?>
+	/>
+	<label for="bp_search_photos">
+		<?php esc_html_e( 'Photos', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_albums() {
+	?>
+	<input
+			name="bp_search_albums"
+			id="bp_search_albums"
+			type="checkbox"
+			value="1"
+			<?php checked( bp_is_search_albums_enable( false ) ); ?>
+	/>
+	<label for="bp_search_albums">
+		<?php esc_html_e( 'Albums', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 1.4.0
+ *
+ * @uses checked() To display the checked attribute
+ */
 function bp_search_settings_callback_documents() {
 	?>
 	<input
@@ -772,6 +835,32 @@ function bp_search_settings_callback_folders() {
  */
 function bp_is_search_groups_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_groups_enable', (bool) get_option( 'bp_search_groups', $default ) );
+}
+
+/**
+ * Checks if photos search is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media search enabled or not
+ */
+function bp_is_search_photos_enable( $default = 0) {
+	return (bool) apply_filters( 'bp_is_search_photos_enable', (bool) get_option( 'bp_search_photos', $default ) );
+}
+
+/**
+ * Checks if albums search is enabled.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is albums search enabled or not
+ */
+function bp_is_search_albums_enable( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_search_albums_enable', (bool) get_option( 'bp_search_albums', $default ) );
 }
 
 /**

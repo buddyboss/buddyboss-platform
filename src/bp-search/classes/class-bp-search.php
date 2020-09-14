@@ -173,6 +173,18 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]       = 'groups';
 			}
 
+			if ( bp_is_active( 'media' ) && bp_is_search_photos_enable() ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-media.php';
+				$this->search_helpers['photos'] = Bp_Search_Media::instance();
+				$this->searchable_items[]       = 'photos';
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_search_albums_enable() ) {
+				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-albums.php';
+				$this->search_helpers['albums'] = Bp_Search_Albums::instance();
+				$this->searchable_items[]       = 'albums';
+			}
+
 			if ( bp_is_active( 'media' ) && bp_is_search_documents_enable() && ( bp_is_group_document_support_enabled() || bp_is_profile_document_support_enabled() ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-documents.php';
 				$this->search_helpers['documents']  = Bp_Search_Documents::instance();
