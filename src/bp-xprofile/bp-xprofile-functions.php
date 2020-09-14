@@ -2014,7 +2014,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
 
-	if ( ! empty( $pc_transient_data ) ) {
+	if ( false && ! empty( $pc_transient_data ) ) {
 
 		$user_progress = $pc_transient_data;
 
@@ -2044,6 +2044,10 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
  * @since BuddyBoss 1.4.9
  */
 function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
+
+	if( empty($group_ids) ){
+		$group_ids = array();
+	}
 
 	/* User Progress specific VARS. */
 	$user_id                = get_current_user_id();
@@ -2197,20 +2201,22 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 	// Group specific details
 	$listing_number = 1;
-	foreach ( $user_progress_arr['groups'] as $group_id => $group_details ) {
+	if( isset( $user_progress_arr['groups'] ) ){
+		foreach ( $user_progress_arr['groups'] as $group_id => $group_details ) {
 
-		$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
+			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
 
-		$user_prgress_formatted['groups'][] = array(
-			'number'             => $listing_number,
-			'label'              => $group_details['group_name'],
-			'link'               => $group_link,
-			'is_group_completed' => ( $group_details['group_total_fields'] === $group_details['group_completed_fields'] ) ? true : false,
-			'total'              => $group_details['group_total_fields'],
-			'completed'          => $group_details['group_completed_fields'],
-		);
+			$user_prgress_formatted['groups'][] = array(
+				'number'             => $listing_number,
+				'label'              => $group_details['group_name'],
+				'link'               => $group_link,
+				'is_group_completed' => ( $group_details['group_total_fields'] === $group_details['group_completed_fields'] ) ? true : false,
+				'total'              => $group_details['group_total_fields'],
+				'completed'          => $group_details['group_completed_fields'],
+			);
 
-		$listing_number ++;
+			$listing_number ++;
+		}
 	}
 
 	/* Profile Photo */

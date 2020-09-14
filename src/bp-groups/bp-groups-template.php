@@ -408,6 +408,12 @@ function bp_has_groups( $args = '' ) {
 		}
 	}
 
+	$parent_id = null;
+
+	if ( bp_is_groups_directory() && ( empty( $args['scope'] ) || 'all' === $args['scope'] ) && true === (bool) bp_enable_group_hide_subgroups() ) {
+		$parent_id = 0;
+    }
+
 	// Parse defaults and requested arguments.
 	$r = bp_parse_args(
 		$args,
@@ -429,7 +435,7 @@ function bp_has_groups( $args = '' ) {
 			'meta_query'         => false,
 			'include'            => false,
 			'exclude'            => false,
-			'parent_id'          => null,
+			'parent_id'          => $parent_id,
 			'update_meta_cache'  => true,
 			'update_admin_cache' => bp_is_groups_directory() || bp_is_user_groups(),
 		),
@@ -6885,7 +6891,7 @@ function bp_group_has_invites( $args = '' ) {
 		array(
 			'group_id' => false,
 			'user_id'  => bp_loggedin_user_id(),
-			'per_page' => false,
+			'per_page' => 20,
 			'page'     => 1,
 		),
 		'group_has_invites'

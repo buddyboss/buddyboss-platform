@@ -277,7 +277,6 @@ function bp_nouveau_ajax_document_get_activity() {
 
 	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$author_id 	= filter_input( INPUT_POST, 'author', FILTER_VALIDATE_INT );
 
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
@@ -294,7 +293,7 @@ function bp_nouveau_ajax_document_get_activity() {
 			'scope'       => 'document',
 		);
 	} else {
-		if ( $group_id > 0 ) {
+		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
 			$args = array(
 				'include'     => $post_id,
 				'object'      => buddypress()->groups->id,
