@@ -276,6 +276,16 @@ window.bp = window.bp || {};
 
 		// Update medium editors when mention inserted into editor.
 		this.on( 'inserted.atwho', function( event ) {
+
+			jQuery(this).on('keydown', function (e) {
+				// Check backspace key down event
+				if(e.keyCode == 8){
+					jQuery(this).find('.atwho-inserted:last-child').each(function (  ){
+						jQuery(this).removeAttr('contenteditable');
+					});
+				}
+			});
+
 			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
 				var i = 0;
 				if ( typeof window.forums_medium_reply_editor !== 'undefined' ) {

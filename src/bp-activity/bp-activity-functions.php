@@ -2198,14 +2198,12 @@ function bp_activity_add( $args = '' ) {
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
-	$activity->date_recorded     = $r['recorded_time'];
+	$activity->date_recorded     = empty( $r['id'] ) ? $r['recorded_time'] : $activity->date_recorded;
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
-	$activity->action            = ! empty( $r['action'] )
-						? $r['action']
-						: bp_activity_generate_action_string( $activity );
+	$activity->action            = ! empty( $r['action'] ) ? $r['action'] : bp_activity_generate_action_string( $activity );
 
 	$save = $activity->save();
 
@@ -2243,6 +2241,7 @@ function bp_activity_add( $args = '' ) {
  * @since BuddyPress 1.2.0
  *
  * @param array|string $args {
+ *     @type int    $id         ID of the activity if update existing item.
  *     @type string $content    The content of the activity update.
  *     @type int    $user_id    Optional. Defaults to the logged-in user.
  *     @type string $error_type Optional. Error type to return. Either 'bool' or 'wp_error'. Defaults to
@@ -2252,10 +2251,12 @@ function bp_activity_add( $args = '' ) {
  *                                        object depending on the 'error_type' $args parameter.
  */
 function bp_activity_post_update( $args = '' ) {
+	global $bp_activity_edit;
 
 	$r = wp_parse_args(
 		$args,
 		array(
+			'id'            => false,
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
 			'component'     => buddypress()->activity->id,
@@ -2273,6 +2274,9 @@ function bp_activity_post_update( $args = '' ) {
 	if ( bp_is_user_inactive( $r['user_id'] ) ) {
 		return false;
 	}
+
+	$bp_activity_edit = false;
+	$activity_id      = false;
 
 	// Record this on the user's profile.
 	$activity_content = $r['content'];
@@ -2296,19 +2300,61 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', $primary_link );
 
-	// Now write the values.
-	$activity_id = bp_activity_add(
-		array(
-			'user_id'       => $r['user_id'],
-			'content'       => $add_content,
-			'primary_link'  => $add_primary_link,
-			'component'     => $r['component'],
-			'type'          => $r['type'],
-			'hide_sitewide' => $r['hide_sitewide'],
-			'privacy'       => $r['privacy'],
-			'error_type'    => $r['error_type'],
-		)
-	);
+	if ( ! empty( $r['id'] ) ) {
+		$activity = new BP_Activity_Activity( $r['id'] );
+
+		if ( ! empty( $activity->id ) ) {
+			$bp_activity_edit = true;
+
+			if ( ! bp_activity_user_can_edit( $activity ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					return new WP_Error( 'error', __( 'Allowed time for editing this activity is passed already, you can not edit now.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+
+			$activity_id = bp_activity_add(
+				array(
+					'id'                => $activity->id,
+					'action'            => $activity->action,
+					'content'           => $add_content,
+					'component'         => $activity->component,
+					'type'              => $activity->type,
+					'primary_link'      => $add_primary_link,
+					'user_id'           => $activity->user_id,
+					'item_id'           => $activity->item_id,
+					'secondary_item_id' => $activity->secondary_item_id,
+					'recorded_time'     => $activity->date_recorded,
+					'hide_sitewide'     => $activity->hide_sitewide,
+					'is_spam'           => $activity->is_spam,
+					'privacy'           => $r['privacy'],
+					'error_type'        => $r[ 'error_type' ],
+				)
+			);
+
+			/**
+			 * Addition from the BuddyBoss
+			 * Add meta to ensure that this activity has been edited.
+			 */
+			bp_activity_update_meta( $activity->id, '_is_edited', bp_core_current_time() );
+
+		}
+	} else {
+		// Now write the values.
+		$activity_id = bp_activity_add(
+			array(
+				'user_id'       => $r['user_id'],
+				'content'       => $add_content,
+				'primary_link'  => $add_primary_link,
+				'component'     => $r['component'],
+				'type'          => $r['type'],
+				'hide_sitewide' => $r['hide_sitewide'],
+				'privacy'       => $r['privacy'],
+				'error_type'    => $r['error_type'],
+			)
+		);
+	}
 
 	// Bail on failure.
 	if ( false === $activity_id || is_wp_error( $activity_id ) ) {
@@ -2316,25 +2362,35 @@ function bp_activity_post_update( $args = '' ) {
 	}
 
 	if ( ! empty( $r['content'] ) && ! strlen( trim( $r['content'] ) ) ) {
+		$update_activity = true;
+
+		if ( $bp_activity_edit ) {
+			$latest_activity = bp_get_user_meta( bp_loggedin_user_id(), 'bp_latest_update', true );
+
+			if ( $latest_activity['id'] !== $activity_id ) {
+				$update_activity = false;
+			}
+		}
+
 		/**
 		 * Filters the latest update content for the activity item.
 		 *
-		 * @since BuddyPress 1.6.0
-		 *
 		 * @param string $r Content of the activity update.
 		 * @param string $activity_content Content of the activity update.
+		 *
+		 * @since BuddyPress 1.6.0
+		 *
 		 */
 		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
 
-		// Add this update to the "latest update" usermeta so it can be fetched anywhere.
-		bp_update_user_meta(
-			bp_loggedin_user_id(),
-			'bp_latest_update',
-			array(
+		if ( $update_activity ) {
+			// Add this update to the "latest update" usermeta so it can be fetched anywhere.
+			$data = array(
 				'id'      => $activity_id,
 				'content' => $activity_content,
-			)
-		);
+			);
+			bp_update_user_meta( bp_loggedin_user_id(), 'bp_latest_update', $data );
+		}
 	}
 
 	/**
@@ -5297,4 +5353,84 @@ function bp_activity_default_scope( $scope = 'all' ) {
 
 	return implode( ',', $new_scope );
 
+}
+
+/**
+ * Get the Activity edit data.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array|bool The Activity edit data or false otherwise.
+ */
+function bp_activity_get_edit_data( $activity_id = 0 ) {
+	global $activities_template;
+
+	// check activity empty or not.
+	if ( empty( $activity_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+	// get activity.
+	if ( ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	} else {
+		$activity = new BP_Activity_Activity( $activity_id );
+	}
+
+	// check activity exists.
+	if ( empty( $activity->id ) ) {
+		return false;
+	}
+
+	$can_edit_privacy = true;
+	$album_id         = 0;
+	$folder_id        = 0;
+	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name       = '';
+
+	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	if ( ! empty( $album_activity_id ) ) {
+		$album_id = $album_activity_id;
+	}
+
+	$folder_activity_id = bp_activity_get_meta( $activity_id, 'bp_document_folder_activity', true );
+	if ( ! empty( $folder_activity_id ) ) {
+		$folder_id = $folder_activity_id;
+	}
+
+	// if album or folder activity then set privacy edit to always false.
+	if ( $album_id || $folder_id ) {
+		$can_edit_privacy = false;
+	}
+
+	// if group activity then set privacy edit to always false.
+	if ( 0 < (int) $group_id ) {
+		$can_edit_privacy = false;
+		$group      = groups_get_group( $group_id );
+		$group_name = bp_get_group_name( $group );
+	}
+
+	/**
+	 * Filter here to edit the activity edit data.
+	 *
+	 * @since BuddyBoss 1.5.0
+	 *
+	 * @param string $activity_data The Activity edit data.
+	 */
+	return apply_filters(
+		'bp_activity_get_edit_data',
+		array(
+			'id'               => $activity_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'group_id'         => $group_id,
+			'group_name'       => $group_name,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( $activity->content ),
+			'item_id'          => $activity->item_id,
+			'object'           => $activity->component,
+			'privacy'          => $activity->privacy,
+		)
+	);
 }

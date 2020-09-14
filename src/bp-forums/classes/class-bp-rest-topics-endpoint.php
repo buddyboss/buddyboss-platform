@@ -1863,7 +1863,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'forum_id'              => (int) bbp_get_topic_forum_id( $topic->ID ),
 			'is_topic_anonymous'    => (int) bbp_is_topic_anonymous( $topic->ID ),
 			'anonymous_author_data' => (
-			bbp_is_topic_anonymous( $topic->ID )
+				bbp_is_topic_anonymous( $topic->ID )
 				? array(
 					'name'    => bbp_get_topic_author_display_name( $topic->ID ),
 					'email'   => bbp_get_topic_author_email( $topic->ID ),
@@ -1901,17 +1901,17 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		/* -- Prepare content */
 
 		$data['group'] = (
-		(
-			function_exists( 'bbp_is_forum_group_forum' )
-			&& bbp_get_topic_forum_id( $topic->ID )
-			&& bbp_is_forum_group_forum( bbp_get_topic_forum_id( $topic->ID ) )
-			&& function_exists( 'groups_get_group' )
-		)
+			(
+				function_exists( 'bbp_is_forum_group_forum' )
+				&& bbp_get_topic_forum_id( $topic->ID )
+				&& bbp_is_forum_group_forum( bbp_get_topic_forum_id( $topic->ID ) )
+				&& function_exists( 'groups_get_group' )
+			)
 			? (
-		! empty( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) )
-			? groups_get_group( current( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) ) )
-			: ''
-		)
+				! empty( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) )
+				? groups_get_group( current( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) ) )
+				: ''
+			)
 			: ''
 		);
 
