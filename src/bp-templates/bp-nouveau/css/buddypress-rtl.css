@@ -1125,6 +1125,17 @@ a.layout-grid-view {
   overflow: auto;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .edit-activity-content-wrap,
+.activity-update-form.modal-popup .edit-activity-content-wrap {
+  max-height: calc(100vh - 230px);
+  overflow: auto;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,
+.activity-update-form.modal-popup #whats-new-form #whats-new-toolbar {
+  padding-top: 10px;
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 700px;

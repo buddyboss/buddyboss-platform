@@ -269,6 +269,10 @@ window.bp = window.bp || {};
 				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 				self.postForm.$el.removeClass('loading');
 
+				//Wrap content section for better scroll
+				$( '#whats-new-content, #whats-new-attachments' ).wrapAll('<div class="edit-activity-content-wrap"></div>');
+
+
 				// Make selected current privacy.
 				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
 
@@ -388,6 +392,11 @@ window.bp = window.bp || {};
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+
+			//unwrap hw wrapped content section
+			if( $( '#whats-new-content').parent().is( '.edit-activity-content-wrap' ) ) {
+				$( '#whats-new-content').unwrap();
+			}
 
 			$activityFormPlaceholder.hide();
 

@@ -100,6 +100,15 @@
 		max-height: 100%;
 		overflow: auto;
 
+		.edit-activity-content-wrap {
+			max-height: calc(100vh - 230px);
+			overflow: auto;
+		}
+
+		#whats-new-form #whats-new-toolbar {
+			padding-top: 10px;
+		}
+
 		#whats-new-form {
 			width: 700px;
 			max-width: 90%;
