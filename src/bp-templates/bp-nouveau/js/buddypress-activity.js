@@ -1220,9 +1220,7 @@ window.bp = window.bp || {};
 			}
 
 			// Edit the activity
-			if ( target.hasClass( 'edit-activity' ) &&
-				( ! target.hasClass( 'media-activity' ) && ! target.hasClass( 'document-activity' ) ) // adding this condition only for pages other than activity.
-			) {
+			if ( target.hasClass( 'edit' ) && target.hasClass( 'edit-activity' ) ) {
 				// Stop event propagation
 				event.preventDefault();
 

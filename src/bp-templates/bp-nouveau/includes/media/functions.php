@@ -245,8 +245,12 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 
 		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {
 			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
-			$classes                                          = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
-			$classes[]                                        = 'media-activity';
+
+			$classes  = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
+			$edit_key = array_search( 'edit', $classes, true );
+			if ( ! empty( $edit_key ) ) {
+				unset( $classes[ $edit_key ] );
+			}
 			$buttons['activity_edit']['button_attr']['class'] = implode( ' ', $classes );
 		}
 	}
