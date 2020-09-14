@@ -2014,7 +2014,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
 
-	if ( ! empty( $pc_transient_data ) ) {
+	if ( ! empty( $pc_transient_data ) && false ) {
 
 		$user_progress = $pc_transient_data;
 
@@ -2066,21 +2066,19 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 		} else {
 
 			// check if profile gravatar option enabled.
-			if ( bp_enable_profile_gravatar() ) {
+			// blank setting will remove gravatar also
+			if ( bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' ) ) {
 
 				/**
 				 * There is not any direct way to check gravatar set for user.
-				 * We need to pass argument `deafult => 404` while `get_avatar_url` and
-				 * in return URL we need to verify `d=404` query param set or not.
-				 * if `d=404` set then gravatar is not set for user.
+				 * Need to check $profile_url is send 200 status or not.
 				 */
-
-				// Check gravatar is for given user or not
+				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
 				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
-				$profile_url_data = parse_url( $profile_url );
-				parse_str( $profile_url_data['query'], $profile_url_data );
+				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
-				if ( ! empty( $profile_url ) && '404' !== $profile_url_data['d'] ) {
+				$headers = get_headers($profile_url, 1);
+				if ($headers[0] === 'HTTP/1.1 200 OK') {
 					$is_profile_photo_uploaded = 1;
 					++ $grand_completed_fields;
 				}
