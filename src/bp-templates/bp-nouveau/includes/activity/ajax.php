@@ -556,7 +556,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$activity_id = 0;
+	$activity_id = ! empty( $_POST['id'] ) ? $_POST['id'] : 0;
 	$item_id     = 0;
 	$object      = '';
 	$is_private  = false;
@@ -591,6 +591,7 @@ function bp_nouveau_ajax_post_update() {
 
 		$activity_id = bp_activity_post_update(
 			array(
+				'id' => $activity_id,
 				'content' => $content,
 				'privacy' => $privacy,
 			)
@@ -598,9 +599,13 @@ function bp_nouveau_ajax_post_update() {
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {
+
+			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
+
 			// This function is setting the current group!
 			$activity_id = groups_post_update(
 				array(
+					'id'       => $activity_id,
 					'content'  => $_POST['content'],
 					'group_id' => $item_id,
 				)

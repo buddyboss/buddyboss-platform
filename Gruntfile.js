@@ -37,31 +37,7 @@ module.exports = function (grunt) {
 			'!bp-core/css/medium-editor-beagle.css',
 			'!bp-core/css/medium-editor.css',
 			'!**/endpoints/**/*.css'
-		],
-
-		stylelintConfigCss = require('stylelint-config-wordpress/index.js'),
-		stylelintConfigScss = require('stylelint-config-wordpress/scss.js');
-
-	if (typeof stylelintConfigCss.rules !== 'undefined') {
-		stylelintConfigCss.rules = Object.assign(stylelintConfigCss.rules, {
-			'no-descending-specificity': null,
-			'selector-pseudo-element-colon-notation': null,
-			'no-duplicate-selectors': null,
-			'selector-class-pattern': null,
-			'selector-id-pattern': null
-		});
-	}
-	if (typeof stylelintConfigScss.rules !== 'undefined') {
-		stylelintConfigScss.rules = Object.assign(stylelintConfigScss.rules, {
-			'no-descending-specificity': null,
-			'selector-pseudo-element-colon-notation': null,
-			'no-duplicate-selectors': null,
-			'selector-class-pattern': null,
-			'selector-id-pattern': null,
-			'font-family-no-missing-generic-family-keyword': null,
-			'selector-combinator-space-after': null
-		});
-	}
+		];
 
 	require('matchdep').filterDev(['grunt-*', '!grunt-legacy-util']).forEach(grunt.loadNpmTasks);
 	grunt.util = require('grunt-legacy-util');
@@ -326,7 +302,7 @@ module.exports = function (grunt) {
 		stylelint: {
 			css: {
 				options: {
-					config: stylelintConfigCss,
+					configFile: '.stylelintrc',
 					format: 'css'
 				},
 				expand: true,
@@ -342,7 +318,7 @@ module.exports = function (grunt) {
 			},
 			scss: {
 				options: {
-					config: stylelintConfigScss,
+					configFile: '.stylelintrc',
 					format: 'scss'
 				},
 				expand: true,

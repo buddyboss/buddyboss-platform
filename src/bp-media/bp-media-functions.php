@@ -112,8 +112,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 			'test_form'            => false,
 			'upload_error_strings' => array(
 				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size(),
 				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
 				__( 'No file was uploaded.', 'buddyboss' ),
 				'',
@@ -184,40 +183,16 @@ function bp_media_compress_image( $source, $destination, $quality = 90 ) {
  *
  * @return string
  */
-function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
-	static $max_size = - 1;
+function bp_media_file_upload_max_size() {
 
-	if ( $max_size < 0 ) {
-		// Start with post_max_size.
-		$size = @ini_get( 'post_max_size' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$post_max_size = round( $size );
-		}
-
-		if ( $post_max_size > 0 ) {
-			$max_size = $post_max_size;
-		}
-
-		// If upload_max_size is less, then reduce. Except if upload_max_size is
-		// zero, which indicates no limit.
-		$size = @ini_get( 'upload_max_filesize' );
-		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
-		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
-		if ( $unit ) {
-			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
-		} else {
-			$upload_max = round( $size );
-		}
-		if ( $upload_max > 0 && $upload_max < $max_size ) {
-			$max_size = $upload_max;
-		}
-	}
-
-	return apply_filters( 'bp_media_file_upload_max_size', bp_media_format_size_units( $max_size, $post_string, $type ) );
+	/**
+	 * Filters file media upload max limit.
+	 *
+	 * @param mixed $max_size media upload max limit.
+	 *
+	 * @since BuddyBoss 1.4.1
+	 */
+	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
 }
 
 /**
@@ -504,35 +479,62 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
+ *
  * @param array $medias
+ * @param string $privacy
+ * @param string $content
+ * @param int $group_id
+ * @param int $album_id
  *
  * @return mixed|void
  */
-function bp_media_add_handler( $medias = array() ) {
-	global $bp_media_upload_count;
+function bp_media_add_handler( $medias = array(), $privacy = 'public', $content = '', $group_id = false, $album_id = false ) {
+	global $bp_media_upload_count, $bp_media_upload_activity_content;
 	$media_ids = array();
 
-	if ( empty( $medias ) && ! empty( $_POST['medias'] ) ) {
-		$medias = $_POST['medias'];
-	}
-
-	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_media_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
+	$privacy = in_array( $privacy, array_keys( bp_media_get_visibility_levels() ) ) ? $privacy : 'public';
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 
 		// update count of media for later use.
 		$bp_media_upload_count = count( $medias );
 
+		// update the content of medias for later use.
+		$bp_media_upload_activity_content = $content;
+
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
-			) );
+			// Update media if existing
+			if ( ! empty( $media['media_id'] ) ) {
+				$bp_media = new BP_Media( $media['media_id'] );
+
+				if ( ! empty( $bp_media->id ) ) {
+					$media_id = bp_media_add( array(
+						'id'            => $bp_media->id,
+						'blog_id'       => $bp_media->blog_id,
+						'attachment_id' => $bp_media->attachment_id,
+						'user_id'       => $bp_media->user_id,
+						'title'         => $bp_media->title,
+						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'activity_id'   => $bp_media->activity_id,
+						'privacy'       => $bp_media->privacy,
+						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+						'date_created'  => $bp_media->date_created,
+					) );
+				}
+			} else {
+
+				$media_id = bp_media_add( array(
+					'attachment_id' => $media['id'],
+					'title'         => $media['name'],
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+					'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+					'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
+				) );
+			}
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
@@ -2410,7 +2412,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $media->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -2790,7 +2797,12 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $album->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $album->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_add      = true;
 				$can_view     = true;
