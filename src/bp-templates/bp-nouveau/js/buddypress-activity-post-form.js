@@ -2841,7 +2841,7 @@ window.bp = window.bp || {};
 						 * "My Groups" tab is active.
 						 */
 						if ( toPrepend && response.is_directory ) {
-							toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
+							 toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || 'group' === self.model.get( 'object' ) ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
 						}
 
 						var medias = self.model.get( 'media' );
