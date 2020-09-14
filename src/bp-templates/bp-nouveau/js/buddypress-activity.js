@@ -551,6 +551,9 @@ window.bp = window.bp || {};
 				window.FB.XFBML.parse();
 			}
 
+			// Fix comments atwho query elements.
+			this.fixAtWhoActivity();
+
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout( function() {
 				jQuery( window ).scroll();
@@ -1037,6 +1040,21 @@ window.bp = window.bp || {};
 
 				comment_content = $( form ).find( '.ac-input' ).first();
 
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+
+				// transform other emoji into emojionearea emoji.
+				comment_content.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+
+				// Transform emoji image into emoji unicode.
 				comment_content.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
@@ -1730,7 +1748,17 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		}
+		},
+
+		fixAtWhoActivity: function() {
+			$('.acomment-content, .activity-content').each(function(){
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = $(this).find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+			});
+		},
 	};
 
 	// Launch BP Nouveau Activity.

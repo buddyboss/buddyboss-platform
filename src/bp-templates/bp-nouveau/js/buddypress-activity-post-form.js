@@ -2459,7 +2459,7 @@ window.bp = window.bp || {};
 			id: 'activity-form-submit-wrapper',
 			initialize: function () {
 				// Select box for the object
-				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && bp.Nouveau.Activity.postForm.editActivityData === false ) {
+				if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && ( bp.Nouveau.Activity.postForm.editActivityData === false || typeof bp.Nouveau.Activity.postForm.editActivityData === 'undefined' ) ) {
 					this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
 				}
 
@@ -2680,6 +2680,14 @@ window.bp = window.bp || {};
 				for ( var i = 0; i < atwho_query.length; i++ ) {
 					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
 				}
+
+				// transform other emoji into emojionearea emoji.
+				$whatsNew.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
 
 				// Transform emoji image into emoji unicode.
 				$whatsNew.find( 'img.emojioneemoji' ).replaceWith(
