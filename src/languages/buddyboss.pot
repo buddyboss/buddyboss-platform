@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-14 09:07:51+00:00\n"
+"POT-Creation-Date: 2020-09-15 13:27:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -550,7 +550,7 @@ msgid "Cancel"
 msgstr ""
 
 #: bp-activity/bp-activity-adminbar.php:46
-#: bp-core/admin/settings/bp-admin-setting-activity.php:79
+#: bp-core/admin/settings/bp-admin-setting-activity.php:82
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:502
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:506
 msgid "Edit Activity"
@@ -592,8 +592,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-filters.php:1668
 #: bp-activity/bp-activity-filters.php:1830
-#: bp-activity/bp-activity-filters.php:1961
-#: bp-activity/bp-activity-filters.php:2124
+#: bp-activity/bp-activity-filters.php:1980
+#: bp-activity/bp-activity-filters.php:2143
 #: bp-groups/bp-groups-activity.php:179 bp-groups/bp-groups-functions.php:1668
 #: cli/components/activity.php:763
 msgid "%1$s posted an update in the group %2$s"
@@ -1039,7 +1039,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:4148
-#: bp-core/admin/settings/bp-admin-setting-activity.php:94
+#: bp-core/admin/settings/bp-admin-setting-activity.php:97
 msgid "Follow"
 msgstr ""
 
@@ -3686,38 +3686,38 @@ msgstr ""
 msgid "Migrated invitations!"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:76
+#: bp-core/admin/settings/bp-admin-setting-activity.php:79
 #: bp-core/admin/settings/bp-admin-setting-general.php:120
 msgid "Activity Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:80
+#: bp-core/admin/settings/bp-admin-setting-activity.php:83
 msgid "Edit Activity Time Limit"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:85
+#: bp-core/admin/settings/bp-admin-setting-activity.php:88
 msgid "Activity auto-refresh"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:88
+#: bp-core/admin/settings/bp-admin-setting-activity.php:91
 msgid "Activity auto-load"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:91
+#: bp-core/admin/settings/bp-admin-setting-activity.php:94
 msgid "Activity tabs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:97
+#: bp-core/admin/settings/bp-admin-setting-activity.php:100
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:127
 #: bp-templates/bp-nouveau/includes/activity/functions.php:262
 msgid "Likes"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:100
+#: bp-core/admin/settings/bp-admin-setting-activity.php:103
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:110
+#: bp-core/admin/settings/bp-admin-setting-activity.php:113
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -3725,15 +3725,15 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:154
+#: bp-core/admin/settings/bp-admin-setting-activity.php:157
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:156
+#: bp-core/admin/settings/bp-admin-setting-activity.php:159
 msgid "Post Type Comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:165
+#: bp-core/admin/settings/bp-admin-setting-activity.php:168
 msgid "Custom Post Types"
 msgstr ""
 

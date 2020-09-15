@@ -1409,6 +1409,7 @@ window.bp = window.bp || {};
 					}
 				}
 
+				$(bp.Nouveau.Messages.mediumEditor.elements[0]).focus();
 				medium_editor_toolbar.toggleClass( 'active' );
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );
