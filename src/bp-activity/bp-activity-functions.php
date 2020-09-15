@@ -1252,6 +1252,26 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 	$like_count      = ( isset( $like_count ) && ! empty( $like_count ) ) ? $like_count : 0;
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
 
+	if ( bp_is_activity_reaction_active() ) {
+		$reacted_data	= [];
+		$reacted_users 	= bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+		if ($like_count > sizeof( $favorited_users ) ) {
+			$like_count = sizeof( $favorited_users );
+		}
+		if ( (empty( $reacted_users ) || ! is_array( $reacted_users )) && $like_count == 0 ) {
+			return 0;
+		}
+		foreach ( $reacted_users as $react_type => $react_user ) {
+			$reacted_data[ $react_type ] = count( $react_user );
+		}
+		$reacted_data['like'] = $like_count;
+		arsort( $reacted_data, SORT_STRING );
+		$reacted_data = array_filter( $reacted_data );
+		return implode(", ",  array_map( function ( $key, $val ) {
+			return $val . " " . __( ucfirst( $key ), 'buddyboss' );
+		}, array_keys( $reacted_data ), $reacted_data ) );
+	}
+
 	if ( empty( $favorited_users ) || ! is_array( $favorited_users ) ) {
 		return 0;
 	}
