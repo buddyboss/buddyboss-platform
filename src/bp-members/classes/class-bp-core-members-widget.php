@@ -188,7 +188,7 @@ class BP_Core_Members_Widget extends WP_Widget {
             <input type="hidden" name="members_widget_max" id="members_widget_max"
                    value="<?php echo esc_attr( $settings['max_members'] ); ?>"/>
 
-			<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : 'hide'; ?>">
+			<div class="more-block <?php echo ( $members_template->total_member_count > $settings['max_members'] ) ? '' : 'bp-hide'; ?>">
 				<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
 					<?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
 				</a>

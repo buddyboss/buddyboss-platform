@@ -112,9 +112,9 @@ function member_widget_response( response ) {
 		);
 
 		if ( true === result.show_more ) {
-			jQuery( '.more-block' ).addClass( 'hide' );
+			jQuery( '.more-block' ).addClass( 'bp-hide' );
 		} else {
-			jQuery( '.more-block' ).removeClass( 'hide' );
+			jQuery( '.more-block' ).removeClass( 'bp-hide' );
 		}
 	} else {
 
