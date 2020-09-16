@@ -261,7 +261,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-profile-gravatar'               => bp_enable_profile_gravatar(),
 			'bp-disable-cover-image-uploads'           => bp_disable_cover_image_uploads(),
 			'bp-member-type-enable-disable'            => bp_member_type_enable_disable(),
-			'bp-member-type-display-on-profile'        => bp_member_type_display_on_profile(),
+			'bp-member-type-display-on-profile'        => ! empty( bp_member_type_enable_disable() ) && bp_member_type_display_on_profile(),
 			'bp-member-type-default-on-registration'   => bp_member_type_default_on_registration(),
 			'bp-enable-profile-search'                 => bp_disable_advanced_profile_search(),
 			'bp-profile-layout-format'                 => bp_get_option( 'bp-profile-layout-format', 'list_grid' ),
@@ -328,6 +328,8 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 		// Activity settings.
 		if ( bp_is_active( 'activity' ) ) {
 			// Activity Settings.
+			$results['bp_enable_activity_edit']         = bp_is_activity_edit_enabled();
+			$results['bp_activity_edit_time']           = bp_get_activity_edit_time( -1 );
 			$results['bp_enable_heartbeat_refresh']     = bp_is_activity_heartbeat_active();
 			$results['bp_enable_activity_autoload']     = bp_is_activity_autoload_active();
 			$results['bp_enable_activity_tabs']         = bp_is_activity_tabs_active();
@@ -381,6 +383,14 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_media_groups_gif_support']   = bp_is_groups_gif_support_enabled();
 			$results['bp_media_messages_gif_support'] = bp_is_messages_gif_support_enabled();
 			$results['bp_media_forums_gif_support']   = bp_is_forums_gif_support_enabled();
+
+			// Documents settings.
+			if ( bp_is_active( 'document' ) ) {
+				$results['bp_media_profile_document_support']     = bp_is_profile_document_support_enabled();
+				$results['bp_media_group_document_support']       = bp_is_group_document_support_enabled();
+				$results['bp_media_messages_document_support']    = bp_is_messages_document_support_enabled();
+				$results['bp_is_forums_document_support_enabled'] = bp_is_forums_document_support_enabled();
+			}
 		}
 
 		// Connection Settings.
