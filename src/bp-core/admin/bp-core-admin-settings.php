@@ -580,6 +580,18 @@ function bp_admin_setting_callback_group_hierarchies() {
 }
 
 /**
+ * 'Hide subgroups from Groups Directory & Group Type Shortcode field markup.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_admin_setting_callback_group_hide_subgroups() {
+	?>
+    <input id="bp-enable-group-hide-subgroups" name="bp-enable-group-hide-subgroups" type="checkbox" value="1" <?php checked( bp_enable_group_hide_subgroups() ); ?> />
+    <label for="bp-enable-group-hide-subgroups"><?php _e( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
  * Enable group restrict invites field markup.
  *
  * @since BuddyBoss 1.0.0
