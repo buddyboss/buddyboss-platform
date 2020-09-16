@@ -2126,6 +2126,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 			'fetch_field_data'               => true,
 			'user_id'                        => $user_id,
 			'repeater_show_main_fields_only' => false,
+			'fetch_social_network_fields'    => true,
 		)
 	);
 
@@ -2164,13 +2165,25 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				}
 			}
 
-			$field_data_value = maybe_unserialize( $group_single_field->data->value );
+			// For Social networks field check child field is completed or not
+			if  ( 'socialnetworks' == $group_single_field->type ){
+				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$children = $group_single_field->type_obj->field_obj->get_children();
+				foreach ( $children as $child ){
+					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
+						++ $group_completed_fields;
+					}
+					++ $group_total_fields;
+				}
+			} else{
+				$field_data_value = maybe_unserialize( $group_single_field->data->value );
 
-			if ( ! empty( $field_data_value ) ) {
-				++ $group_completed_fields;
+				if ( ! empty( $field_data_value ) ) {
+					++ $group_completed_fields;
+				}
+
+				++ $group_total_fields;
 			}
-
-			++ $group_total_fields;
 		}
 
 		/* Prepare array to return group specific progress details */
