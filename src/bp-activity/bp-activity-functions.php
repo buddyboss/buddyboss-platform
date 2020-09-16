@@ -1387,6 +1387,41 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 	$current_user_id = get_current_user_id();
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
 
+	if ( bp_is_activity_reaction_active() ) {
+		$reacted_users = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+		if ( count( $favorited_users ) ) {
+			$favorited_users_text = __( 'Like', 'buddyboss' ) . ": ";
+			if( in_array( $current_user_id, $favorited_users ) ) {
+				$favorited_users_text .= __( 'You', 'buddyboss' ) . "&#10;";
+			}
+			$favorited_users_text .= array_reduce (
+				$favorited_users,
+				function ( $carry, $user_id ) use ( $current_user_id ) {
+					if ( $user_id != $current_user_id ) {
+						$user_display_name = bp_core_get_user_displayname( $user_id );
+						$carry .= $user_display_name . '&#10;';
+					}
+					return $carry;
+				}
+			);
+		}
+		$reacted_users = array_filter( $reacted_users );
+		unset( $reacted_users['like'] );
+		foreach ( $reacted_users as $react => $user_ids ) {
+			$favorited_users_text .= ! empty( $favorited_users_text ) ? ", " : "";
+			$favorited_users_text .= __( ucfirst( $react ), 'buddyboss' ) . ": ";
+			if( in_array( $current_user_id, $user_ids ) && strpos( $favorited_users_text, __( 'You', 'buddyboss' ) ) === false  ) {
+				$favorited_users_text .= __( 'You', 'buddyboss' ) . "&#10;";
+			}
+			foreach ( $user_ids as $user_id ) {
+				if ( $user_id != $current_user_id ) {
+					$user_display_name = bp_core_get_user_displayname( $user_id );
+					$favorited_users_text .= $user_display_name . '&#10;';
+				}
+			}
+		}
+		return $favorited_users_text;
+	}
 	if ( ! empty( $favorited_users ) ) {
 		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
 		$favorited_users = array_reduce(
