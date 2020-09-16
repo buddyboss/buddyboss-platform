@@ -2014,7 +2014,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
 
-	if ( false && ! empty( $pc_transient_data ) ) {
+	if ( ! empty( $pc_transient_data ) ) {
 
 		$user_progress = $pc_transient_data;
 
@@ -2067,6 +2067,26 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 		if ( $is_profile_photo_uploaded ) {
 			++ $grand_completed_fields;
+		} else {
+
+			// check if profile gravatar option enabled.
+			// blank setting will remove gravatar also
+			if ( bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' ) ) {
+
+				/**
+				 * There is not any direct way to check gravatar set for user.
+				 * Need to check $profile_url is send 200 status or not.
+				 */
+				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
+				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
+				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
+
+				$headers = get_headers($profile_url, 1);
+				if ($headers[0] === 'HTTP/1.1 200 OK') {
+					$is_profile_photo_uploaded = 1;
+					++ $grand_completed_fields;
+				}
+			}
 		}
 
 		$progress_details['photo_type']['profile_photo'] = array(
