@@ -961,6 +961,11 @@ function bp_activity_add_user_reaction( $activity_id, $react_type = 'like', $use
 	}
 	foreach ( $my_reactions as $key => $val ) {
 		if ( in_array( $activity_id, $my_reactions[ $key ] ) ) {
+			$react_count_key = "reacted_count_" . $key;
+			$react_count = bp_activity_get_meta( $activity_id, $react_count_key );
+			if ( ! empty( $react_count ) ) {
+				bp_activity_update_meta( $activity_id, $react_count_key, (int) $react_count - 1 );
+			}
 			unset($my_reactions[ $key ][ array_search( $activity_id , $my_reactions[ $key ] ) ]);
 		}
 	}
@@ -972,6 +977,11 @@ function bp_activity_add_user_reaction( $activity_id, $react_type = 'like', $use
 	// Update the total number of users who have favorited this activity.
 	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
 	$fav_count = ! empty( $fav_count ) ? (int) $fav_count + 1 : 1;
+
+	// Update the total number of users who have reacted this activity.
+	$react_count_key = "reacted_count_" . $react_type;
+	$react_count = bp_activity_get_meta( $activity_id, $react_count_key );
+	$react_count = ! empty( $react_count ) ? (int) $react_count + 1 : 1;
 
 	// Update the users who have favorited this activity.
 	$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
@@ -1010,6 +1020,9 @@ function bp_activity_add_user_reaction( $activity_id, $react_type = 'like', $use
 		unset( $users[ array_search( $user_id , $users) ] );
 		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
 		bp_activity_update_meta( $activity_id, 'bp_favorite_users', $users );
+
+		// Update activity meta counts.
+		bp_activity_update_meta( $activity_id, $react_count_key, $react_count );
 
 		return true;
 	}
@@ -1154,6 +1167,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 
 	// Check if user has not previously favorited the item but reaction on the item.
 	if ( ! isset( $my_favs[ $activity_id ] ) && bp_is_activity_reaction_active() ) {
+		$react_count_key = "";
 		// Update user meta.
 		$my_reactions = bp_get_user_meta( $user_id, 'bp_reaction_activities', true );
 		foreach ( $my_reactions as $key => $val ) {
@@ -1167,10 +1181,17 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 		$users_react = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
 		foreach ( $users_react as $key => $val ) {
 			if ( in_array( $user_id, $users_react[ $key ] ) ) {
+				$react_count_key = "reacted_count_" . $key;
 				unset( $users_react[ $key ][ array_search( $user_id, $users_react[ $key ] ) ] );
 			}
 		}
 		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+
+		// Update activity meta counts.
+		$react_count = bp_activity_get_meta( $activity_id, $react_count_key );
+		if ( ! empty( $react_count ) ) {
+			bp_activity_update_meta( $activity_id, $react_count_key, (int) $react_count - 1 );
+		}
 
 		return true;
 	}
