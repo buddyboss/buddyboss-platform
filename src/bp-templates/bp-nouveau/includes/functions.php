@@ -1546,14 +1546,14 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
  * @since BuddyBoss 1.5.1
  */
 
-add_action( 'wp_ajax_save_profile_header_buttons_order', 'save_profile_header_buttons_order' );
+add_action( 'wp_ajax_save_profile_header_buttons_order', 'bp_save_profile_header_buttons_order' );
 
 /**
  * Call back function of save profile header buttons order
  * @since BuddyBoss 1.5.1
  */
 
-function save_profile_header_buttons_order(){
+function bp_save_profile_header_buttons_order(){
 	$buttons = sanitize_text_field( $_POST['buttons'] );
 
 	/**
