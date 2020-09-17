@@ -89,11 +89,10 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_document();
 	}
 
+	do_action( 'bp_core_install', $active_components );
+
 	// Reset the permalink to fix the 404 on some pages.
 	flush_rewrite_rules();
-
-	do_action( 'bp_core_install', $active_components );
-}
 
 /**
  * Uninstall forums if $uninstalled_components['forums'] is not empty.
