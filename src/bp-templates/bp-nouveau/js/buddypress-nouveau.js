@@ -1822,11 +1822,6 @@ window.bp = window.bp || {};
 			if($( e.currentTarget ).hasClass( 'position-change-cover-image' )){
 				var imageHeight  = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).height();
 				var imageCenter = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2;
-				if(imageHeight < 300){
-					alert('To reposition the image, Image height must be larger then 300px');
-					e.preventDefault();
-					return;
-				}
 				var currentTarget = $( e.currentTarget );
 				guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
 				guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
