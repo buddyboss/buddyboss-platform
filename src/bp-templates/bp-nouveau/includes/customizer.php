@@ -295,3 +295,24 @@ function bp_nouveau_customizer_enqueue_scripts() {
 	do_action( 'bp_nouveau_customizer_enqueue_scripts' );
 }
 add_action( 'customize_controls_enqueue_scripts', 'bp_nouveau_customizer_enqueue_scripts' );
+
+
+/**
+ * Return profile header buttons
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return mixed|void
+ */
+
+function bp_get_profile_header_buttons() {
+
+	$buttons = apply_filters( 'bp_get_profile_header_buttons', array(
+		'member_friendship' => __( 'Connect', 'buddyboss' ),
+		'member_follow'     => __( 'Follow', 'buddyboss' ),
+		'private_message'   => __( 'Message', 'buddyboss' ),
+		'member_switch'     => __( 'View As', 'buddyboss' ),
+	) );
+
+	return $buttons;
+}

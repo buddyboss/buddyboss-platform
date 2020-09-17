@@ -138,7 +138,7 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 
 	$members_buttons = bp_nouveau_get_members_buttons( $args );
 
-	$order = bb_get_profile_header_buttons();
+	$order = bp_get_profile_header_buttons_by_order();
 	$order = explode( ',', $order );
 
 	uksort( $members_buttons, function ( $key1, $key2 ) use ( $order ) {

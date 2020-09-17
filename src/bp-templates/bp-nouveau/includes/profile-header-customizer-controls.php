@@ -35,10 +35,10 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 		$hide    = false;
 		$setting = "bp_nouveau_appearance[profile_header_order]";
 
-		$order = bb_get_profile_header_buttons();
+		$order = bp_get_profile_header_buttons_by_order();
 		$order = explode(',', $order);
 
-		$profile_buttons = bb_profile_header_buttons();
+		$profile_buttons = bp_get_profile_header_buttons();
 
 		uksort($profile_buttons, function($key1, $key2) use ($order) {
 			return (array_search($key1, $order) > array_search($key2, $order));
@@ -78,7 +78,7 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 			</ul>
 		<?php endif; ?>
 
-		<input id="bp_profile_header_order" type="hidden" value="<?php echo bb_get_profile_header_buttons(); ?>" data-customize-setting-link="<?php echo esc_attr( $setting ); ?>"/>
+		<input id="bp_profile_header_order" type="hidden" value="<?php echo bp_get_profile_header_buttons_by_order(); ?>" data-customize-setting-link="<?php echo esc_attr( $setting ); ?>"/>
 
 		<?php
 	}

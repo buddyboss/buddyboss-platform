@@ -1538,3 +1538,48 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 
 	return true;
 }
+
+
+
+/**
+ * Save Profile Header
+ * @since BuddyBoss 1.5.1
+ */
+
+add_action( 'wp_ajax_save_profile_header_buttons_order', 'save_profile_header_buttons_order' );
+
+/**
+ * Call back function of save profile header buttons order
+ * @since BuddyBoss 1.5.1
+ */
+
+function save_profile_header_buttons_order(){
+	$buttons = sanitize_text_field( $_POST['buttons'] );
+
+	/**
+	 * Filter the profile header buttons
+	 *
+	 * @since BuddyBoss 1.5.1
+	 */
+	update_option( '_bp_get_profile_header_buttons', apply_filters( '_bp_get_profile_header_buttons', $buttons ) );
+
+	wp_send_json_success();
+}
+
+/**
+ * Return saved profile header buttons by order
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return mixed|void
+ */
+function bp_get_profile_header_buttons_by_order(){
+
+	/**
+	 * Filter the header buttons
+	 *
+	 * @since BuddyBoss 1.5.1
+	 */
+
+	return apply_filters( 'bp_get_profile_header_buttons_by_order', get_option( '_bp_get_profile_header_buttons' ) );
+}
