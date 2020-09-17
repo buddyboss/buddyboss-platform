@@ -42,6 +42,8 @@ window.bp = window.bp || {};
 			this.postFormView();
 
 			this.postFormPlaceholderView();
+
+			this.checkDraftContentInPostForm();
 		},
 
 		postFormView: function() {
@@ -74,6 +76,92 @@ window.bp = window.bp || {};
 
 			// Display it within selector
 			this.postFormPlaceholder.inject( '#bp-nouveau-activity-form-placeholder' );
+		},
+
+		checkDraftContentInPostForm: function(){
+			var self = this;
+
+			var hasDraft = false;
+
+
+			var $whatsNew = self.postForm.$el.find( '#whats-new' );
+
+
+			$( document ).on( 'paste keyup change', '#whats-new', function(){
+
+				if ( self.postForm.$el.hasClass( 'bp-activity-edit' ) ){
+					return;
+				}
+
+				var $postContent = $( $.parseHTML( window.group_messages_editor.getContent() ) );
+				var postContent = $postContent.text();
+				var hasEmoji = $whatsNew.find( 'img.emojioneemoji' ).length;
+
+				if ( postContent.length || hasEmoji > 0 ){
+					hasDraft = true;
+				}else{
+					hasDraft = false;
+				}
+
+				self.toggleDraftClass( hasDraft );
+
+			});
+
+		},
+
+		checkDraftAttachments: function(){
+
+			if ( this.postForm.$el.hasClass( 'bp-activity-edit' ) ){
+				return;
+			}
+
+			var hasDraft;
+
+			var $whatsNewAttachments = $( '#whats-new-attachments' );
+			var countAttachmets = $whatsNewAttachments.find( '.dz-preview' ).length;
+
+			if ( countAttachmets ){
+				hasDraft = true;
+			}else{
+				hasDraft = false;
+			}
+
+			this.toggleDraftClass( hasDraft );
+			if ( hasDraft ){
+				return;
+			}
+
+			//Check GIF
+
+			var hasGif = $whatsNewAttachments.find( '.gif-image-container' ).length;
+
+			if ( hasGif ){
+				hasDraft = true;
+			}else{
+				hasDraft = false;
+			}
+
+			this.toggleDraftClass( hasDraft );
+
+		},
+
+		toggleDraftClass: function( hasDraft ) {
+			if ( hasDraft ) {
+				this.postForm.$el.addClass('bp-activity-has-draft');
+			} else {
+				this.postForm.$el.removeClass('bp-activity-has-draft');
+			}
+		},
+
+		draftPostAlert: function() {
+
+			var hasDraft = this.postForm.$el.hasClass( 'bp-activity-has-draft' );
+
+			if ( hasDraft ){
+				alert( 'You have a draft post, publish the draft post first in order to edit any activity.' );
+			}
+
+			return hasDraft;
 		},
 
 		dropzoneView: function () {
@@ -299,6 +387,10 @@ window.bp = window.bp || {};
 
 		displayEditActivityForm : function( activity_data ) {
 			var self = this;
+
+			if ( self.draftPostAlert() ){
+				return;
+			}
 
 			var $activityForm            = $( '#bp-nouveau-activity-form' );
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
@@ -658,6 +750,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.media.push( response.data );
 							self.model.set( 'media', self.media );
+							bp.Nouveau.Activity.postForm.checkDraftAttachments();
 						} else {
 							$( 'body' ).append( '<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>' );
 							this.removeFile( file );
@@ -690,6 +783,7 @@ window.bp = window.bp || {};
 									}
 									self.media.splice( i, 1 );
 									self.model.set( 'media', self.media );
+									bp.Nouveau.Activity.postForm.checkDraftAttachments();
 								}
 							}
 						}
@@ -830,6 +924,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
 							self.document.push( response.data );
 							self.model.set( 'document', self.document );
+							bp.Nouveau.Activity.postForm.checkDraftAttachments();
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -881,6 +976,7 @@ window.bp = window.bp || {};
 									}
 									self.document.splice( i, 1 );
 									self.model.set( 'document', self.document );
+									bp.Nouveau.Activity.postForm.checkDraftAttachments();
 								}
 							}
 						}
@@ -1041,6 +1137,8 @@ window.bp = window.bp || {};
 					this.el.style.height          = gifData.images.original.height + 'px';
 					this.el.style.width           = gifData.images.original.width + 'px';
 					$( '#whats-new-attachments' ).removeClass( 'empty' );
+
+					bp.Nouveau.Activity.postForm.checkDraftAttachments();
 				}
 
 				return this;
@@ -1081,6 +1179,9 @@ window.bp = window.bp || {};
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active' );
 					tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'no-click' );
 				}
+
+				bp.Nouveau.Activity.postForm.checkDraftAttachments();
+
 			}
 		}
 	);
@@ -2591,6 +2692,8 @@ window.bp = window.bp || {};
 							events: {
 								emojibtn_click: function () {
 									$( '#whats-new' )[0].emojioneArea.hidePicker();
+
+									$( '#whats-new' ).trigger( 'change' );
 								},
 							}
 						}
