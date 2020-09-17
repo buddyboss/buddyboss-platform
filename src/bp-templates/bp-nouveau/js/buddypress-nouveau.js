@@ -1834,7 +1834,7 @@ window.bp = window.bp || {};
 					width: guillotineWidth,
 					height: guillotineHeight,
 					eventOnChange: 'guillotinechange',
-					init: { scale: guillotineScale, y: guillotineTop ? -guillotineTop : imageCenter, w: guillotineWidth, h: guillotineHeight }
+					init: { scale: guillotineScale, y: guillotineTop && $( e.currentTarget ).closest( '#header-cover-image' ).hasClass('has-position') ? -guillotineTop : imageCenter, w: guillotineWidth, h: guillotineHeight }
 				});
 				// picture.guillotine('fit');
 				picture.on('guillotinechange', function(e, data) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y); });
