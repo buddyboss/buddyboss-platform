@@ -34,7 +34,7 @@
 		min-width: 100%;
 		-o-object-fit: cover;
 		object-fit: cover;
-		min-height: 101%; //Fixed 1px white line issue at top
+		min-height: 100%;
 		height: auto;
 		position: absolute;
 		top: 50%;
@@ -175,11 +175,18 @@ body.guillotine-dragging * {
 .guillotine-canvas {
 	position: absolute;
 	top: 0;
-	left: 0;
 	text-align: center;
 	margin: 0 !important;
 	padding: 0 !important;
 	border: none !important;
+	width: 100% !important;
+	left: 0 !important;
+
+	> img {
+		height: auto;
+		min-height: 100%;
+		object-fit: cover;
+	}
 
 	> * {
 		position: absolute;

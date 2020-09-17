@@ -4308,7 +4308,7 @@ body.no-js .single-item-header .js-self-profile-button {
   min-width: 100%;
   -o-object-fit: cover;
   object-fit: cover;
-  min-height: 101%;
+  min-height: 100%;
   height: auto;
   position: absolute;
   top: 50%;
@@ -4448,11 +4448,18 @@ body.guillotine-dragging * {
 .guillotine-canvas {
   position: absolute;
   top: 0;
-  right: 0;
   text-align: center;
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
+  width: 100% !important;
+  right: 0 !important;
+}
+
+.guillotine-canvas > img {
+  height: auto;
+  min-height: 100%;
+  object-fit: cover;
 }
 
 .guillotine-canvas > * {
