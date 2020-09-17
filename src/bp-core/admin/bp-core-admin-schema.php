@@ -89,6 +89,9 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_document();
 	}
 
+	// Reset the permalink to fix the 404 on some pages.
+	flush_rewrite_rules();
+
 	do_action( 'bp_core_install', $active_components );
 }
 
