@@ -117,20 +117,7 @@ window.wp = window.wp || {};
 			}
 		} ).disableSelection();
 
-		$( document ).on( 'change', '#bp_profile_header_order', function() {
-			var buttons = $( this ).val();
-
-
-			$.post( ajaxurl, { buttons : buttons, action : 'save_profile_header_buttons_order' }, function(){
-
-			} );
-
-		});
-
 	} );
-
-
-
 
 
 } )( window.wp, jQuery );

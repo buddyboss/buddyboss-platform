@@ -91,6 +91,16 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
+
+		'bp_nouveau_appearance[profile_header_order]' => array(
+			'index'             => 'profile_header_order',
+			'capability'        => 'bp_moderate',
+			//'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+
+
 		'bp_nouveau_appearance[user_nav_hide]' => array(
 			'index'             => 'user_nav_hide',
 			'capability'        => 'bp_moderate',

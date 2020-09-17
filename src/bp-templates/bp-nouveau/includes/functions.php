@@ -571,6 +571,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'user_nav_order'     => array(),
 		'user_nav_hide'      => array(),
 		'profile_header_buttons'      => array(),
+		'profile_header_order'      => '',
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
@@ -1539,33 +1540,6 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 	return true;
 }
 
-
-
-/**
- * Save Profile Header
- * @since BuddyBoss 1.5.1
- */
-
-add_action( 'wp_ajax_save_profile_header_buttons_order', 'bp_save_profile_header_buttons_order' );
-
-/**
- * Call back function of save profile header buttons order
- * @since BuddyBoss 1.5.1
- */
-
-function bp_save_profile_header_buttons_order(){
-	$buttons = sanitize_text_field( $_POST['buttons'] );
-
-	/**
-	 * Filter the profile header buttons
-	 *
-	 * @since BuddyBoss 1.5.1
-	 */
-	update_option( '_bp_get_profile_header_buttons', apply_filters( '_bp_get_profile_header_buttons', $buttons ) );
-
-	wp_send_json_success();
-}
-
 /**
  * Return saved profile header buttons by order
  *
@@ -1573,7 +1547,11 @@ function bp_save_profile_header_buttons_order(){
  *
  * @return mixed|void
  */
-function bp_get_profile_header_buttons_by_order(){
+
+function bp_get_profile_header_buttons_by_order() {
+	$bp_nouveau_appearance     = bp_get_option( 'bp_nouveau_appearance' );
+	$profile_header_btn_orders = isset( $bp_nouveau_appearance['profile_header_order'] )
+		? $bp_nouveau_appearance['profile_header_order'] : '';
 
 	/**
 	 * Filter the header buttons
@@ -1581,5 +1559,5 @@ function bp_get_profile_header_buttons_by_order(){
 	 * @since BuddyBoss 1.5.1
 	 */
 
-	return apply_filters( 'bp_get_profile_header_buttons_by_order', get_option( '_bp_get_profile_header_buttons' ) );
+	return apply_filters( 'bp_get_profile_header_buttons_by_order', $profile_header_btn_orders );
 }
