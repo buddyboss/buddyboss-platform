@@ -4495,6 +4495,14 @@ body.guillotine-dragging * {
   height: auto !important;
 }
 
+#cover-photo-alert .bb-field-wrap {
+  margin-bottom: 0;
+}
+
+#cover-photo-alert .bb-field-wrap p {
+  margin-bottom: 0;
+}
+
 /**
 *-----------------------------------------------------
 * @subsection 5.1.1 - item-header Groups
