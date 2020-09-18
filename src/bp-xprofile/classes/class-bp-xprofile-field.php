@@ -1811,13 +1811,11 @@ class BP_XProfile_Field {
 		}
 
 		$synced_fields = array(
-			//bp_xprofile_firstname_field_id(),
 			bp_xprofile_nickname_field_id(),
-			// bp_xprofile_lastname_field_id()
 		);
 
-		if ( bp_core_display_name_format() == 'first_last_name' ) {
-			// $synced_fields[] = bp_xprofile_lastname_field_id();
+		if (  'first_last_name' === bp_core_display_name_format() || 'first_name' === bp_core_display_name_format() ) {
+			$synced_fields[] = bp_xprofile_firstname_field_id();
 		}
 
 		// Compare & return.
