@@ -265,11 +265,12 @@ window.bp = window.bp || {};
 					}
 
 					// Update the header of the page
-					$( '#header-cover-image' ).css(
-						{
-							'background-image': 'url( ' + model.get( 'url' ) + ' )'
-							}
-					);
+					// Update cover image on ajax is removed for time being
+					// $( '#header-cover-image' ).css(
+					// 	{
+					// 		'background-image': 'url( ' + model.get( 'url' ) + ' )'
+					// 		}
+					// );
 
 					// Add the delete view
 					bp.CoverImage.deleteView();
