@@ -1651,7 +1651,7 @@ function bp_document_activity_after_email_content( $activity ) {
  *
  * @return array $activity Returns the activity with document if document saved otherwise no documents.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  */
 function bp_document_get_edit_activity_data( $activity ) {
 

@@ -2351,7 +2351,7 @@ function bp_is_single_activity() {
 /**
  * Is the current page a single activity item edit permalink?
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  *
  * @return bool True if the current page is a single activity item edit permalink.
  */
