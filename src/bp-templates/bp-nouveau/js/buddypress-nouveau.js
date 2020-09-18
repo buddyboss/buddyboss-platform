@@ -670,6 +670,8 @@ window.bp = window.bp || {};
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
 
 			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper);
+
+			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert);
 		},
 
 		/**
@@ -1823,6 +1825,11 @@ window.bp = window.bp || {};
 				var imageHeight  = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).height();
 				var imageCenter = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2;
 				var currentTarget = $( e.currentTarget );
+				if(imageHeight <= currentTarget.closest( '#header-cover-image' ).height()){	
+					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.cover_photo_size_error_header + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
+					e.preventDefault();	
+					return;	
+				}
 				guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
 				guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
 				guillotineTop = Number( $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).css('top').replace('px','') );
@@ -1876,7 +1883,14 @@ window.bp = window.bp || {};
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).attr( 'data-top', '' );
 			}
 			e.preventDefault();
-		},		
+		},
+		/**
+		 *  Cover photo Cropper Alert close
+		 */
+		coverPhotoCropperAlert: function ( e ) {
+			$('#cover-photo-alert').remove();
+		}
+		
 	};
 
 	// Launch BP Nouveau

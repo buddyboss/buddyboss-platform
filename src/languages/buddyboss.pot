@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-18 05:16:25+00:00\n"
+"POT-Creation-Date: 2020-09-18 07:16:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1508,7 +1508,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:172
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 #: bp-templates/bp-nouveau/includes/groups/functions.php:590
-#: bp-templates/bp-nouveau/includes/media/functions.php:193
+#: bp-templates/bp-nouveau/includes/media/functions.php:195
 msgid "My Groups"
 msgstr ""
 
@@ -2502,7 +2502,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:14
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:22
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
-#: bp-templates/bp-nouveau/includes/media/functions.php:141
+#: bp-templates/bp-nouveau/includes/media/functions.php:143
 msgid "Select All"
 msgstr ""
 
@@ -4443,7 +4443,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:16
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:16
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
-#: bp-templates/bp-nouveau/includes/media/functions.php:144
+#: bp-templates/bp-nouveau/includes/media/functions.php:146
 msgid "Upload"
 msgstr ""
 
@@ -5023,7 +5023,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2868
 #: bp-media/classes/class-bp-media-component.php:338
 #: bp-media/classes/class-bp-media-component.php:369
-#: bp-templates/bp-nouveau/includes/media/functions.php:181
+#: bp-templates/bp-nouveau/includes/media/functions.php:183
 msgid "My Photos"
 msgstr ""
 
@@ -7593,13 +7593,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -19840,7 +19840,7 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/document/entry.php:18
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:30
-#: bp-templates/bp-nouveau/includes/media/functions.php:139
+#: bp-templates/bp-nouveau/includes/media/functions.php:141
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -23571,37 +23571,47 @@ msgstr ""
 msgid "Empty media file will not be uploaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:140
-msgid "Unselect"
+#: bp-templates/bp-nouveau/includes/media/functions.php:106
+msgid "Unable to reposition the image. "
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/functions.php:107
+msgid ""
+"To reposition your cover photo, please upload a larger image and then try "
+"again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:142
+msgid "Unselect"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/functions.php:144
 msgid "Unselect All"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:143
+#: bp-templates/bp-nouveau/includes/media/functions.php:145
 msgid "Sorry, no photos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:145
+#: bp-templates/bp-nouveau/includes/media/functions.php:147
 msgid "Uploading"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:146
+#: bp-templates/bp-nouveau/includes/media/functions.php:148
 msgid "%d out of %d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:147
+#: bp-templates/bp-nouveau/includes/media/functions.php:149
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:148
+#: bp-templates/bp-nouveau/includes/media/functions.php:150
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:170
+#: bp-templates/bp-nouveau/includes/media/functions.php:172
 msgid "All Photos"
 msgstr ""
 
