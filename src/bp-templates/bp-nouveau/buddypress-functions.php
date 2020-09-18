@@ -141,7 +141,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_support() {
-		$width         = 1300;
+		$width         = 1178;
 		$top_offset    = 200;
 
 		/** This filter is documented in bp-core/bp-core-avatars.php. */
