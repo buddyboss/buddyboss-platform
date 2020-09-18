@@ -765,6 +765,27 @@ function resync_wordpress_xprofile_fields() {
  */
 function xprofile_update_display_names() {
 
+
+	// Get the display settings.
+	$format = bp_core_display_name_format();
+
+	// If $format is first_name OR first_last_name then make the DB changes on first name field.
+	if ( 'first_name' === $format || 'first_last_name' === $format ) {
+		$first_name_field_id = bp_xprofile_firstname_field_id();
+
+		// Make the first name field to required if not in required list.
+		$field              = xprofile_get_field( $first_name_field_id );
+		$field->is_required = true;
+		$field->save();
+
+		// Make the first name field visibility to always public.
+		bp_xprofile_update_field_meta( $first_name_field_id, 'default_visibility', 'public' );
+
+		// Make the first name field visibility to disable so no one change.
+		bp_xprofile_update_field_meta( $first_name_field_id, 'allow_custom_visibility', 'disabled' );
+	}
+
+
 	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
 	$args = array(
