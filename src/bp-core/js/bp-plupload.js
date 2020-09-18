@@ -303,6 +303,12 @@ window.bp = window.bp || {};
 		this.uploader.bind(
 			'Error',
 			function( uploader, pluploadError ) {
+
+				var max_size = ( self.params && self.params.defaults && self.params.defaults.filters && self.params.defaults.filters.max_file_size ) ? self.params.defaults.filters.max_file_size : '5120000b';
+				max_size = max_size.replace( 'b', '' );
+				max_size = (max_size / (1024*1024)).toFixed(2);
+				max_size = max_size + 'MB';
+
 				var message = self.strings.default_error,
 				key,
 				errors      = {
@@ -315,8 +321,10 @@ window.bp = window.bp || {};
 					'IO_ERROR':               self.strings.io_error,
 					'HTTP_ERROR':             self.strings.http_error,
 					'SECURITY_ERROR':         self.strings.security_error,
-					'FILE_SIZE_ERROR':        self.strings.file_exceeds_size_limit.replace( '%s' , $( '<span />' ).text( pluploadError.file.name ).html() )
+					'FILE_SIZE_ERROR':        self.strings.file_exceeds_size_limit.replace( '%1$s' , $( '<span />' ).text( pluploadError.file.name ).html() ).replace( '%2$s' , max_size )
 				};
+
+				console.log(  );
 
 				// Check for plupload errors.
 				for ( key in errors ) {
