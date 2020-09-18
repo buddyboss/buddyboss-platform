@@ -1677,7 +1677,7 @@ function bp_disable_group_messages( $default = false ) {
 /**
  * Default display name format.
  *
- * @since BuddyBoss 1.4.7
+ * @since BuddyBoss 1.5.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: first_name.
@@ -1688,7 +1688,7 @@ function bp_core_display_name_format( $default = 'first_name' ) {
 	/**
 	 * Filters default display name format.
 	 *
-	 * @since BuddyBoss 1.4.7
+	 * @since BuddyBoss 1.5.1
 	 *
 	 * @param string $value Default display name format.
 	 */

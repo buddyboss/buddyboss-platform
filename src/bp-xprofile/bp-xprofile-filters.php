@@ -1046,6 +1046,8 @@ function bp_xprofile_delete_profile_completion_transient() {
  * @param array $args
  *
  * @return array
+ *
+ * @since BuddyBoss 1.5.1
  */
 function bp_xprofile_exclude_display_name_profile_fields( $args ){
 

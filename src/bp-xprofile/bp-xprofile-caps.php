@@ -90,7 +90,7 @@ add_filter( 'bp_user_can', 'bp_xprofile_grant_bp_xprofile_change_field_visibilit
 /**
  * Remove the 'bp_xprofile_change_field_visibility' cap based on display name format.
  *
- * @since BuddyBoss 1.4.7
+ * @since BuddyBoss 1.5.1
  *
  * @param bool   $user_can
  * @param int    $user_id
