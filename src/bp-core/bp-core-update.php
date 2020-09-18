@@ -314,7 +314,7 @@ function bp_version_updater() {
 			bp_update_to_1_4_3();
 		}
 
-		if ( $raw_db_version < 16101 ) {
+		if ( $raw_db_version < 16201 ) {
 			bp_update_to_1_5_1();
 		}
 	}
@@ -653,6 +653,7 @@ function bp_update_to_1_5_1() {
 	if ( bp_is_active( 'xprofile' ) ) {
 		$nickname_field_id = bp_xprofile_nickname_field_id();
 		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
 }
 
