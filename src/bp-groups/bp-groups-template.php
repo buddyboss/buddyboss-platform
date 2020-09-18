@@ -4323,6 +4323,16 @@ function bp_group_join_button( $group = false ) {
 		}
 
 		/**
+		 * Filters if the current logged in user can join group.
+		 *
+		 * @since BuddyBoss 1.5.7
+		 *
+		 * @param string $button HTML button for joining a group.
+		 * @param object $group BuddyPress group object
+		 */
+		$button = apply_filters( 'bp_user_can_join_groups', $button, $group );
+
+		/**
 		 * Filters the HTML button for joining a group.
 		 *
 		 * @since BuddyPress 1.2.6
