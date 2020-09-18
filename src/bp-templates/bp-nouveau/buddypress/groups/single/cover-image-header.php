@@ -29,16 +29,19 @@ $has_cover_image_position = '';
 	?>
 
 	<div id="header-cover-image" class="<?php echo $has_cover_image_position; echo $has_cover_image; ?>">
-		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) {
+		<?php if ( bp_group_use_cover_image_header() ) {
 
 			if ( ! empty( $group_cover_image ) ) {
 				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '"' . ( '' !== $group_cover_position ? ' data-top="' . $group_cover_position . '"' : '' ) . ( '' !== $group_cover_position ? ' style="top: ' . $group_cover_position . 'px"' : '' ) . ' alt="" />';
 			}
 			?>
-			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
+			<?php if ( bp_is_item_admin() ) { ?>
+				<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
 				<i class="bb-icon-edit-thin"></i>
 			</a>
-			<?php if ( ! empty( $group_cover_image ) ) { ?>
+			<?php } ?>
+			
+			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() ) { ?>
 				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
 					<i class="bb-icon-move"></i>
 				</a>
