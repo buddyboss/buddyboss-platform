@@ -48,12 +48,25 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 				$firstname_field_id = bp_xprofile_firstname_field_id();
 				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+
+				// Make the first name field to required if not in required list.
+				$field              = xprofile_get_field( $firstname_field_id );
+				$field->is_required = true;
+				$field->save();
 			} elseif ( $_POST['bp-display-name-format'] == 'first_name' ){
 				$firstname_field_id = bp_xprofile_firstname_field_id();
 				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+
+				// Make the first name field to required if not in required list.
+				$field              = xprofile_get_field( $firstname_field_id );
+				$field->is_required = true;
+				$field->save();
 			} elseif ( $_POST['bp-display-name-format'] == 'nickname' ){
 				$nickname_field_id = bp_xprofile_nickname_field_id();
 				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
 		}
 
