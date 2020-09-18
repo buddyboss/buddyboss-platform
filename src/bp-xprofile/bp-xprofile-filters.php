@@ -1054,7 +1054,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 
 	$fields_id = array();
 
-	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_nickname_last_name() ) {
+	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
 		$fields_id[] = bp_xprofile_lastname_field_id();
 	}
 
