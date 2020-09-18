@@ -704,7 +704,7 @@ function bp_enable_group_hierarchies( $default = false ) {
 /**
  * Are group hide subgroups from the main Groups Directory?
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -715,7 +715,7 @@ function bp_enable_group_hide_subgroups( $default = false ) {
 	/**
 	 * Filters whether or not group hide subgroups from the main Groups Directory
 	 *
-	 * @since BuddyBoss 1.5.1
+	 * @since BuddyBoss 1.5.8
 	 *
 	 * @param bool $value whether or not group hide subgroups from the main Groups Directory.
 	 */

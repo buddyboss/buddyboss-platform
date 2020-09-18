@@ -582,7 +582,7 @@ function bp_admin_setting_callback_group_hierarchies() {
 /**
  * 'Hide subgroups from Groups Directory & Group Type Shortcode field markup.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  */
 function bp_admin_setting_callback_group_hide_subgroups() {
 	?>
