@@ -254,7 +254,7 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			'bp-enable-private-network-public-content' => bp_enable_private_network_public_content(),
 
 			// Profile settings.
-			'bp-display-name-format'                   => bp_get_option( 'bp-display-name-format', 'first_name' ),
+			'bp-display-name-format'                   => bp_core_display_name_format(),
 			'bp-hide-nickname-first-name'              => bp_hide_nickname_first_name(),
 			'bp-hide-nickname-last-name'               => bp_hide_nickname_last_name(),
 			'bp-disable-avatar-uploads'                => bp_disable_avatar_uploads(),

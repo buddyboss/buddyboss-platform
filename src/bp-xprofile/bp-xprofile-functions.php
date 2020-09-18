@@ -1430,6 +1430,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
+		$user_visibility_levels = array();
+	}
 
 	// Parse the user-provided visibility levels with the default levels, which may take
 	// precedence.
@@ -1450,8 +1453,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		}
 	}
 
-	// Never allow the fullname field to be excluded.
-	if ( in_array( 1, $field_ids ) ) {
+	// Never allow the Nickname field to be excluded.
+	$nickname_field_id = bp_xprofile_nickname_field_id();
+	if ( in_array( $nickname_field_id, $field_ids ) ) {
 		$key = array_search( 1, $field_ids );
 		unset( $field_ids[ $key ] );
 	}
@@ -1786,7 +1790,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 		return false;
 	}
 
-	$format = bp_get_option( 'bp-display-name-format' );
+	$format = bp_core_display_name_format();
 
 	$display_name = '';
 
