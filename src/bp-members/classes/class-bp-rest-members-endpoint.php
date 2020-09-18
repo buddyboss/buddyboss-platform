@@ -860,22 +860,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * Added support for display name format support from platform.
 					 */
 					// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-					$current_value = bp_core_display_name_format();
-
-					// If First Name selected then do not add last name field.
-					if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $item->id ) {
-						if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-							continue;
-						}
-						// If Nick Name selected then do not add first & last name field.
-					} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $item->id ) {
-						if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-							continue;
-						}
-					} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $item->id ) {
-						if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-							continue;
-						}
+					if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $item->id ) ) {
+						continue;
 					}
 
 					if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
