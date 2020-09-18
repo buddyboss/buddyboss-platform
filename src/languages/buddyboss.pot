@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-18 07:34:07+00:00\n"
+"POT-Creation-Date: 2020-09-18 08:18:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4348,7 +4348,7 @@ msgid "You have attempted to queue too many files."
 msgstr ""
 
 #: bp-core/bp-core-attachments.php:670
-msgid "%s exceeds the maximum upload size for this site."
+msgid "%1$s exceeds the maximum upload size of %2$s for this site."
 msgstr ""
 
 #: bp-core/bp-core-attachments.php:671

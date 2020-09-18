@@ -667,7 +667,7 @@ function bp_attachments_get_plupload_l10n() {
 		'bp_attachments_get_plupload_l10n',
 		array(
 			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss' ),
-			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size for this site upto %2$s.', 'buddyboss' ),
+			'file_exceeds_size_limit'   => __( '%1$s exceeds the maximum upload size of %2$s for this site.', 'buddyboss' ),
 			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss' ),
 			'invalid_filetype'          => __( 'This file type is not allowed. Please try another.', 'buddyboss' ),
 			'not_an_image'              => __( 'This file is not an image. Please try another.', 'buddyboss' ),

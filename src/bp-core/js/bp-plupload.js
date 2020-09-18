@@ -306,7 +306,7 @@ window.bp = window.bp || {};
 
 				var max_size = ( self.params && self.params.defaults && self.params.defaults.filters && self.params.defaults.filters.max_file_size ) ? self.params.defaults.filters.max_file_size : '5120000b';
 				max_size = max_size.replace( 'b', '' );
-				max_size = (max_size / (1024*1024)).toFixed(2);
+				max_size = (max_size  / 1e+6).toFixed(0); // Convert to MB
 				max_size = max_size + 'MB';
 
 				var message = self.strings.default_error,

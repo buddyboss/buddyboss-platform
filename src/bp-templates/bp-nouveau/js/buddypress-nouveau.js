@@ -1888,6 +1888,7 @@ window.bp = window.bp || {};
 		 *  Cover photo Cropper Alert close
 		 */
 		coverPhotoCropperAlert: function ( e ) {
+			e.preventDefault();
 			$('#cover-photo-alert').remove();
 		}
 		
