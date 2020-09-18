@@ -2003,6 +2003,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @param int $activity_id Activity ID.
 	 *
 	 * @return array
+	 * 
+	 * @since BuddyBoss 1.5.8
 	 */
 	public function bp_rest_activitiy_edit_data( $activity_id = 0 ) {
 		if ( empty( $activity_id ) ) {

@@ -290,7 +290,7 @@ add_action( 'wp_ajax_save_cover_position', 'bp_nouveau_ajax_save_cover_position'
 /**
  * Save Cover image position for group and member.
  *
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_ajax_save_cover_position() {
 

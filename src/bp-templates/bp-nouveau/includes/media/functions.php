@@ -239,7 +239,7 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 	if ( isset( $buttons['activity_edit'] ) && ( bp_is_media_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {

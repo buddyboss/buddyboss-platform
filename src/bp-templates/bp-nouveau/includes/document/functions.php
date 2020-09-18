@@ -1185,7 +1185,7 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
  * @param int   $activity_id Activity ID.
  *
  * @return mixed
- * @since BuddyBoss 1.5.8
+ * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
 	if ( isset( $buttons['activity_edit'] ) && ( bp_is_document_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
