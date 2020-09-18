@@ -2303,7 +2303,7 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 /**
  * Reset cover image position while uploading/deleting profile cover photo.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  *
  * @param int $user_id User ID.
  */

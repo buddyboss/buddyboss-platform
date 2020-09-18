@@ -4226,7 +4226,7 @@ function bp_groups_migrate_invitations() {
 /**
  * Reset cover image position while uploading/deleting groups cover photo.
  *
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  *
  * @param int $group_id Group ID.
  */

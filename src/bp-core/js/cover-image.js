@@ -264,13 +264,6 @@ window.bp = window.bp || {};
 						$( '.bp-cover-image-status' ).append( '<p class="warning">' + BP_Uploader.strings.cover_image_warnings.dimensions + '</p>' );
 					}
 
-					// Update the header of the page
-					// Update cover image on ajax is removed for time being
-					// $( '#header-cover-image' ).css(
-					// 	{
-					// 		'background-image': 'url( ' + model.get( 'url' ) + ' )'
-					// 		}
-					// );
 
 					// Add the delete view
 					bp.CoverImage.deleteView();

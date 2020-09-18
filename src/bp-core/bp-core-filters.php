@@ -1416,7 +1416,7 @@ add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
  * @param $component string
  *
  * @return array
- * @since BuddyBoss 1.5.1
+ * @since BuddyBoss 1.5.8
  */
 function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
 	if ( did_action( 'wp_ajax_bp_cover_image_upload' ) && ( 'xprofile' === $component || 'groups' === $component ) ) {
