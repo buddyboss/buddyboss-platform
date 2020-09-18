@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-17 09:37:29+00:00\n"
+"POT-Creation-Date: 2020-09-18 05:16:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7593,13 +7593,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -9933,6 +9933,8 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:1224 bp-groups/bp-groups-admin.php:1538
 #: bp-groups/classes/class-bp-group-extension.php:524
+#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:47
+#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:44
 #: bp-templates/bp-nouveau/includes/functions.php:1398
 #: bp-templates/bp-nouveau/includes/functions.php:1429
 #: bp-templates/bp-nouveau/includes/functions.php:1440
@@ -21682,11 +21684,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:42
 #: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:39
 msgid "Reposition Cover Photo"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:47
-#: bp-templates/bp-nouveau/buddypress/members/single/cover-image-header.php:44
-msgid "Save Change"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:48

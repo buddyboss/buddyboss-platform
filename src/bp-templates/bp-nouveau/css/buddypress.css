@@ -4369,7 +4369,8 @@ body.no-js .single-item-header .js-self-profile-button {
   border-radius: 5px;
   font-size: 13px;
   line-height: 1.6;
-  padding: 6px 10px;
+  padding: 6px 11px;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 #buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
