@@ -846,12 +846,12 @@ span.dashicons.dashicons-admin-file:before {
 
 	.activity-list.bp-list {
 		position: relative;
-		display: inline-block;
+		float: right;
 
 		.activity-item {
-			margin-bottom: 40px;
-			max-height: calc(90vh - 40px);
-			min-height: calc(90vh - 40px);
+			padding-bottom: 40px;
+			max-height: 90vh;
+			min-height: 90vh;
 			position: static;
 		}
 

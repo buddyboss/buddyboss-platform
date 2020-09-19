@@ -551,10 +551,29 @@ window.bp = window.bp || {};
 				window.FB.XFBML.parse();
 			}
 
+			// Fix comments atwho query elements.
+			this.fixAtWhoActivity();
+
+			// Edit Activity Loader.
+			this.openEditActivityPopup();
+
 			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
 			setTimeout( function() {
 				jQuery( window ).scroll();
 			},200);
+		},
+
+		openEditActivityPopup: function() {
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.is_activity_edit ) && 0 < BP_Nouveau.activity.params.is_activity_edit ) {
+				var activity_item = $( '#activity-' + BP_Nouveau.activity.params.is_activity_edit );
+				if ( activity_item.length ) {
+					var activity_data = activity_item.data( 'bp-activity' );
+
+					if ( ! _.isUndefined( activity_data ) ) {
+						bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+					}
+				}
+			}
 		},
 
 		activityPrivacyChange: function( event ) {
@@ -1037,6 +1056,21 @@ window.bp = window.bp || {};
 
 				comment_content = $( form ).find( '.ac-input' ).first();
 
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+
+				// transform other emoji into emojionearea emoji.
+				comment_content.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+
+				// Transform emoji image into emoji unicode.
 				comment_content.find( 'img.emojioneemoji' ).replaceWith(
 					function () {
 						return this.dataset.emojiChar;
@@ -1186,15 +1220,23 @@ window.bp = window.bp || {};
 			}
 
 			// Edit the activity
-			if ( target.hasClass( 'edit-activity' ) ) {
+			if ( target.hasClass( 'edit' ) && target.hasClass( 'edit-activity' ) ) {
 				// Stop event propagation
 				event.preventDefault();
 
 				var activity_data = activity_item.data('bp-activity');
 
 				if ( typeof activity_data !== 'undefined' ) {
-					//bp.Nouveau.Activity.postForm.displayEditActivity( activity_data );
 					bp.Nouveau.Activity.postForm.displayEditActivityForm( activity_data );
+
+					// Check if it's a Group activity
+					if( target.closest('li').hasClass( 'groups' ) ) {
+						$('#bp-nouveau-activity-form').addClass( 'group-activity' );
+					} else {
+						$('#bp-nouveau-activity-form').removeClass( 'group-activity' );
+					}
+
+
 					// Close the Media/Document popup if someone click on Edit while on Media/Document popup.
 					if ( typeof bp.Nouveau.Media !== 'undefined' && typeof bp.Nouveau.Media.Theatre !== 'undefined' && ( bp.Nouveau.Media.Theatre.is_open_media || bp.Nouveau.Media.Theatre.is_open_document ) ) {
 						$( document ).find( '.bb-close-media-theatre' ).trigger( 'click' );
@@ -1730,7 +1772,17 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		}
+		},
+
+		fixAtWhoActivity: function() {
+			$('.acomment-content, .activity-content').each(function(){
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = $(this).find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+			});
+		},
 	};
 
 	// Launch BP Nouveau Activity.

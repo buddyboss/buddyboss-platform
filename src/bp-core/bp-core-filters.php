@@ -1409,6 +1409,29 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
 
 /**
+ * Filter to change cover image dimensions to original for group and profile.
+ *
+ * @param $wh        array
+ * @param $settings  array
+ * @param $component string
+ *
+ * @return array
+ * @since BuddyBoss 1.5.1
+ */
+function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if ( did_action( 'wp_ajax_bp_cover_image_upload' ) && ( 'xprofile' === $component || 'groups' === $component ) ) {
+		return array(
+			'width'  => 99999,
+			'height' => 99999,
+		);
+	}
+
+	return $wh;
+}
+
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_image_dimensions', 10, 3 );
+
+/**
  * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.
  */
 if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {

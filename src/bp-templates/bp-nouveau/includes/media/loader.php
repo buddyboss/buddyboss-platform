@@ -81,6 +81,9 @@ class BP_Nouveau_Media {
 
 		// Localize Scripts
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_media_localize_scripts', 10, 1 );
+
+		// Redirect edit button media popup activity to parent activity edit.
+		add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_media_activity_edit_button', 10, 2 );
 	}
 }
 
