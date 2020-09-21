@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
-= 1.5.1.1
+= 1.5.1.1 =
 * Photos - Fixed private messages photos and documents attachments security issue
 
 = 1.5.1 =
