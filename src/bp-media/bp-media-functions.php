@@ -2334,11 +2334,11 @@ function bp_media_default_scope( $scope ) {
 		$new_scope = (array) $scope;
 	}
 
-	if ( bp_is_user_media() ) {
+	if ( bp_is_user_media() && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
 
-	if ( bp_is_group_media() ) {
+	if ( bp_is_group_media() && bp_is_group_media_support_enabled() ) {
 		$new_scope[] = 'groups';
 	}
 
