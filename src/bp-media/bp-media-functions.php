@@ -2297,13 +2297,21 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
-	// Don't allow the scope if edited via browser Session Storage variable.
-	$restricted_scope = array( 'following', 'mentions', 'favorites' );
-	if ( in_array( $scope, $restricted_scope, 1) ) {
-		$scope = '';
+	$allowed_scopes = array( 'all', 'public' );
+	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
+		$allowed_scopes[] = 'friends';
 	}
 
-	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_media_directory() ) {
+	if ( bp_is_active( 'groups' ) && bp_is_group_media_support_enabled() ) {
+		$allowed_scopes[] = 'groups';
+	}
+
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+		$allowed_scopes[] = 'personal';
+	}
+
+	if ( bp_is_media_directory() && ( 'all' === $scope || empty( $scope ) || ( ! empty( $scope ) && !in_array( $scope, $allowed_scopes, 1 ) ) ) ) {
+
 		$new_scope[] = 'public';
 
 		if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
@@ -2327,23 +2335,15 @@ function bp_media_default_scope( $scope ) {
 	}
 
 	if ( bp_is_user_media() ) {
-		$restricted_scope[] = 'groups';
-		$new_scope = array_diff( $new_scope, $restricted_scope );
+		$new_scope[] = 'personal';
 	}
 
 	if ( bp_is_group_media() ) {
-		unset( $restricted_scope['groups'] );
-		$restricted_scope[] = 'personal';
-		$new_scope = array_diff( $new_scope, $restricted_scope );
-	}
-
-	if ( bp_is_media_directory() ) {
-		unset( $restricted_scope['personal'] );
-		unset( $restricted_scope['groups'] );
-		$new_scope = array_diff( $new_scope, $restricted_scope );
+		$new_scope[] = 'groups';
 	}
 
 	$new_scope = array_unique( $new_scope );
+	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
 	/**
 	 * Filter to update default scope.
