@@ -138,7 +138,7 @@ window.bp = window.bp || {};
 
 			var store = sessionStorage.getItem( type );
 
-			if ( store && _.isObject( store ) ) {
+			if ( store ) {
 				store = JSON.parse( store );
 			} else {
 				store = {};
