@@ -3440,12 +3440,12 @@ function bp_document_default_scope( $scope = 'all' ) {
 		$new_scope[] = 'groups';
 	}
 
+	// Remove duplicate scope if added.
+	$new_scope = array_unique( $new_scope );
+
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
 	}
-
-	// Remove duplicate scope if added.
-	$new_scope = array_unique( $new_scope );
 
 	/**
 	 * Filter to update default scope.
