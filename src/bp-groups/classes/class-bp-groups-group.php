@@ -1125,15 +1125,11 @@ class BP_Groups_Group {
 
 		$sql = array(
 			'select'     => 'SELECT DISTINCT g.id',
-			'from'       => "{$bp->groups->table_name} g",
+			'from'       => "{$bp->groups->table_name} g  JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )",
 			'where'      => '',
 			'orderby'    => '',
 			'pagination' => '',
 		);
-
-		if ( ! empty( $r['user_id'] ) ) {
-			$sql['from'] .= " JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )";
-		}
 
 		$where_conditions = array();
 
@@ -1144,7 +1140,14 @@ class BP_Groups_Group {
 			$r['status']                = array_map( 'sanitize_title', $r['status'] );
 			$status_in                  = "'" . implode( "','", $r['status'] ) . "'";
 			$where_conditions['status'] = "g.status IN ({$status_in})";
-		} elseif ( empty( $r['show_hidden'] ) ) {
+		}
+
+		if ( ! empty( $r['show_hidden'] ) ){
+			if ( ! bp_current_user_can( 'bp_moderate' ) && ( is_user_logged_in() && $r['user_id'] != bp_loggedin_user_id() ) ) {
+				// Exclude all other hidden group
+				$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", bp_loggedin_user_id() );
+			}
+		} else {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 
