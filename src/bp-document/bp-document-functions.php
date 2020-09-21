@@ -3419,6 +3419,12 @@ function bp_document_ie_nocache_headers_fix( $headers ) {
 function bp_document_default_scope( $scope = 'all' ) {
 	$new_scope = array();
 
+	// Don't allow the scope if edited via browser Session Storage variable.
+	$restricted_scope = array( 'following', 'mentions', 'favorites' );
+	if ( in_array( $scope, $restricted_scope, 1) ) {
+		$scope = '';
+	}
+
 	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_document_directory() ) {
 		$new_scope[] = 'public';
 
@@ -3440,11 +3446,28 @@ function bp_document_default_scope( $scope = 'all' ) {
 		$new_scope[] = 'groups';
 	}
 
-	$new_scope = array_unique( $new_scope );
-
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
 	}
+
+	if ( bp_is_user_document() ) {
+		$restricted_scope[] = 'groups';
+		$new_scope = array_diff( $new_scope, $restricted_scope );
+	}
+
+	if ( bp_is_group_document() ) {
+		unset( $restricted_scope['groups'] );
+		$restricted_scope[] = 'personal';
+		$new_scope = array_diff( $new_scope, $restricted_scope );
+	}
+
+	if ( bp_is_document_directory() ) {
+		unset( $restricted_scope['personal'] );
+		unset( $restricted_scope['groups'] );
+		$new_scope = array_diff( $new_scope, $restricted_scope );
+	}
+
+	$new_scope = array_unique( $new_scope );
 
 	/**
 	 * Filter to update default scope.

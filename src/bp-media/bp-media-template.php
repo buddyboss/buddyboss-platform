@@ -152,13 +152,6 @@ function bp_has_media( $args = '' ) {
 
 	// The default scope should recognize custom slugs.
 	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
-
-	// Don't allow the scope if edited via browser Session Storage variable.
-	$restricted_scope = array( 'following', 'mentions', 'groups', 'favorites' );
-	if ( bp_is_user_media() && in_array( $scope, $restricted_scope ) ) {
-		$scope = 'all';
-	}
-
 	$scope = bp_media_default_scope( $scope );
 
 	/*
