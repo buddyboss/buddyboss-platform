@@ -882,7 +882,7 @@ function bp_media_object_template_results_media_groups_scope( $querystring ) {
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
-	$querystring['user_id']     = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['user_id']     = false;
 	$querystring['count_total'] = true;
 
 	return http_build_query( $querystring );
