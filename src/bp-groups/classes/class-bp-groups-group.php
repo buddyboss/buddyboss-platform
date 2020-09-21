@@ -1146,12 +1146,16 @@ class BP_Groups_Group {
 			$where_conditions['status'] = "g.status IN ({$status_in})";
 		}
 
-		if ( ! empty( $r['show_hidden'] ) ){
-			if ( ! bp_current_user_can( 'bp_moderate' ) && ( is_user_logged_in() && $r['user_id'] != bp_loggedin_user_id() ) ) {
-				// Exclude all other hidden group
-				$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", bp_loggedin_user_id() );
-			}
-		} else {
+		/**
+		 * if show_hidden is true and user is moderator and query is not for current user group
+		 *      then hidden group should be only visible if user is member of that group
+		 * else show_hidden is true is user is guest or show_hidden is false
+		 *      then hide hidden group
+		 */
+		if ( ! empty( $r['show_hidden'] ) && ! bp_current_user_can( 'bp_moderate' ) && is_user_logged_in() && $r['user_id'] != bp_loggedin_user_id() ){
+			// Exclude all other hidden group
+			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", bp_loggedin_user_id() );
+		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() )  ) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 
