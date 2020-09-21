@@ -160,8 +160,6 @@ function bp_has_media( $args = '' ) {
 		unset( $args['scope'] );
 	}
 
-	error_log( $scope );
-
 	/*
 	 * Parse Args.
 	 */
