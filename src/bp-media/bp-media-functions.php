@@ -2334,15 +2334,20 @@ function bp_media_default_scope( $scope ) {
 		$new_scope = (array) $scope;
 	}
 
+	// Forcefully pass the personal scope if user is his/her photos page.
 	if ( bp_is_user_media() && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
 
+	// Forcefully pass the groups scope if user is groups photos page.
 	if ( bp_is_group_media() && bp_is_group_media_support_enabled() ) {
 		$new_scope[] = 'groups';
 	}
 
+	// Remove duplicate scope if added.
 	$new_scope = array_unique( $new_scope );
+
+	// Remove all unwanted scope.
 	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
 	/**
