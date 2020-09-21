@@ -1125,11 +1125,15 @@ class BP_Groups_Group {
 
 		$sql = array(
 			'select'     => 'SELECT DISTINCT g.id',
-			'from'       => "{$bp->groups->table_name} g  JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )",
+			'from'       => "{$bp->groups->table_name} g",
 			'where'      => '',
 			'orderby'    => '',
 			'pagination' => '',
 		);
+
+		if ( ! empty( $r['user_id'] ) || ! empty( $r['show_hidden'] ) ) {
+			$sql['from'] .= " JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )";
+		}
 
 		$where_conditions = array();
 
