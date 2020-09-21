@@ -3419,7 +3419,7 @@ function bp_document_ie_nocache_headers_fix( $headers ) {
 function bp_document_default_scope( $scope = 'all' ) {
 	$new_scope = array();
 
-	if ( bp_is_document_directory() && ( 'all' === $scope || empty( $scope ) || ( ! empty( $scope ) && !in_array( $scope, $allowed_scopes, 1 ) ) ) ) {
+	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_document_directory() ) {
 		$new_scope[] = 'public';
 
 		if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_document_support_enabled() ) {

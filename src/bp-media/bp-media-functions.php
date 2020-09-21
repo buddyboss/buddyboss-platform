@@ -2297,20 +2297,7 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
-	$allowed_scopes = array( 'all', 'public' );
-	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
-		$allowed_scopes[] = 'friends';
-	}
-
-	if ( bp_is_active( 'groups' ) && bp_is_group_media_support_enabled() ) {
-		$allowed_scopes[] = 'groups';
-	}
-
-	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
-		$allowed_scopes[] = 'personal';
-	}
-
-	if ( bp_is_media_directory() && ( 'all' === $scope || empty( $scope ) || ( ! empty( $scope ) && !in_array( $scope, $allowed_scopes, 1 ) ) ) ) {
+	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_media_directory() ) {
 
 		$new_scope[] = 'public';
 
