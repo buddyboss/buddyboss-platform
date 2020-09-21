@@ -370,6 +370,16 @@ window.bp = window.bp || {};
 				data.scope = 'all';
 			}
 
+			// if object is media and object nav does not exists fallback to scope = all
+			if ( data.object == 'media' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
+			// if object is document and object nav does not exists fallback to scope = all
+			if ( data.object == 'document' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -1825,15 +1835,15 @@ window.bp = window.bp || {};
 				var imageHeight  = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).height();
 				var imageCenter = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2;
 				var currentTarget = $( e.currentTarget );
-				if(imageHeight <= currentTarget.closest( '#header-cover-image' ).height()){	
+				if(imageHeight <= currentTarget.closest( '#header-cover-image' ).height()){
 					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.cover_photo_size_error_header + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
-					e.preventDefault();	
-					return;	
+					e.preventDefault();
+					return;
 				}
 				guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
 				guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
 				guillotineTop = Number( $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).css('top').replace('px','') );
-				
+
 				guillotineScale = $( e.currentTarget ).closest( '#header-cover-image' ).width() / $( e.currentTarget ).closest( '#header-cover-image' ).find('.header-cover-reposition-wrap img')[0].width;
 				currentTarget.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).show();
 				picture = $( '.header-cover-reposition-wrap img' );
@@ -1891,7 +1901,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			$('#cover-photo-alert').remove();
 		}
-		
+
 	};
 
 	// Launch BP Nouveau

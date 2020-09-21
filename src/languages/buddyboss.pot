@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-19 04:24:29+00:00\n"
+"POT-Creation-Date: 2020-09-21 06:49:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -893,9 +893,9 @@ msgid "A member replies to an update or comment you've posted"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:459
-#: bp-document/bp-document-template.php:322
-#: bp-document/bp-document-template.php:1329 bp-media/bp-media-template.php:309
-#: bp-media/bp-media-template.php:1220
+#: bp-document/bp-document-template.php:327
+#: bp-document/bp-document-template.php:1334 bp-media/bp-media-template.php:314
+#: bp-media/bp-media-template.php:1225
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
@@ -25597,32 +25597,32 @@ msgctxt "member latest update in member directory"
 msgid "- &quot;%s&quot;"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3482
+#: bp-document/bp-document-functions.php:3505
 #. translators: Memory unit for terabyte.
 msgctxt "memory unit"
 msgid "TB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3484
+#: bp-document/bp-document-functions.php:3507
 #. translators: Memory unit for gigabyte.
 msgctxt "memory unit"
 msgid "GB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3486
+#: bp-document/bp-document-functions.php:3509
 #. translators: Memory unit for megabyte.
 msgctxt "memory unit"
 msgid "MB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3488
+#: bp-document/bp-document-functions.php:3511
 #. translators: Memory unit for kilobyte.
 msgctxt "memory unit"
 msgid "KB"
 msgstr ""
 
-#: bp-document/bp-document-functions.php:3490
-#: bp-document/bp-document-functions.php:3495
+#: bp-document/bp-document-functions.php:3513
+#: bp-document/bp-document-functions.php:3518
 #. translators: Memory unit for byte.
 msgctxt "memory unit"
 msgid "B"
