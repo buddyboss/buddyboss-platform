@@ -844,7 +844,7 @@ function bp_get_total_media_count() {
 function bp_media_object_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = bp_media_default_scope( 'all' );
+	$querystring['scope'] = 'all';
 
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
@@ -2297,7 +2297,7 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
-	$allowed_scopes = array( 'public', 'all' );
+	$allowed_scopes = array( 'public' );
 	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
 		$allowed_scopes[] = 'friends';
 	}

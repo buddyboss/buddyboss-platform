@@ -151,13 +151,16 @@ function bp_has_media( $args = '' ) {
 	}
 
 	// The default scope should recognize custom slugs.
-	$scope = ( isset( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
-	$scope = ( isset( $args['scope'] ) ? $args['scope'] : $scope );
-	$scope = bp_media_default_scope( $scope );
+	$scope = ( isset( $_REQUEST['scope'] ) && ! empty( $_REQUEST['scope'] ) ? $_REQUEST['scope'] : 'all' );
+	$scope = ( isset( $args['scope'] ) && ! empty( $args['scope'] ) ? $args['scope'] : $scope );
+
+	$scope = bp_media_default_scope( trim( $scope ) );
 
 	if ( isset( $args ) && isset( $args['scope'] ) ) {
 		unset( $args['scope'] );
 	}
+
+	error_log( $scope );
 
 	/*
 	 * Parse Args.
