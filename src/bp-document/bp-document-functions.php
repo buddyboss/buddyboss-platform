@@ -3457,11 +3457,11 @@ function bp_document_default_scope( $scope = 'all' ) {
 		$new_scope = (array) $scope;
 	}
 
-	if ( bp_is_user_media() ) {
+	if ( bp_is_user_document() && bp_is_profile_document_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
 
-	if ( bp_is_group_media() ) {
+	if ( bp_is_group_document() && bp_is_group_document_support_enabled() ) {
 		$new_scope[] = 'groups';
 	}
 
