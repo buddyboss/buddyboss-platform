@@ -2018,7 +2018,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
 
-	if ( ! empty( $pc_transient_data ) ) {
+	if ( ! empty( $pc_transient_data ) && false ) {
 
 		$user_progress = $pc_transient_data;
 
@@ -2157,6 +2157,14 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 		$group_total_fields     = 0;
 		$group_completed_fields = 0;
 		foreach ( $single_group_details->fields as $group_single_field ) {
+
+			/**
+			 * Added support for display name format support from platform.
+			 * Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+			 */
+			if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $group_single_field->id ) ) {
+				continue;
+			}
 
 			// If current group is repeater then only consider first set of fields.
 			if ( $is_group_repeater ) {
