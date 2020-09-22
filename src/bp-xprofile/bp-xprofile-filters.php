@@ -96,6 +96,21 @@ add_filter( 'password_change_email', 'bp_xprofile_replace_username_to_display_na
 add_filter( 'email_change_email', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 add_filter( 'new_user_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 
+// Profile Completion.
+add_action( 'xprofile_avatar_uploaded', 'bp_xprofile_delete_profile_completion_user_transient' ); // When profile photo uploaded from profile in Frontend.
+add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_delete_profile_completion_user_transient' ); // When cover photo uploaded from profile in Frontend.
+add_action( 'bp_core_delete_existing_avatar', 'bp_xprofile_delete_profile_completion_user_transient' ); // When profile photo deleted from profile in Frontend.
+add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_delete_profile_completion_user_transient' ); // When cover photo deleted from profile in Frontend.
+add_action( 'xprofile_updated_profile', 'bp_xprofile_delete_profile_completion_transient' ); // On Profile updated from frontend.
+add_action( 'xprofile_fields_saved_field', 'bp_xprofile_delete_profile_completion_transient' ); // On field added/updated in wp-admin > Profile
+add_action( 'xprofile_fields_deleted_field', 'bp_xprofile_delete_profile_completion_transient' ); // On field deleted in wp-admin > profile.
+add_action( 'xprofile_groups_deleted_group', 'bp_xprofile_delete_profile_completion_transient' ); // On profile group deleted in wp-admin.
+add_action( 'update_option_bp-disable-avatar-uploads', 'bp_xprofile_delete_profile_completion_transient' ); // When avatar photo setting updated in wp-admin > Settings > profile.
+add_action( 'update_option_bp-disable-cover-image-uploads', 'bp_xprofile_delete_profile_completion_transient' ); // When cover photo setting updated in wp-admin > Settings > profile.
+add_action( 'wp_ajax_xprofile_reorder_fields', 'bp_xprofile_delete_profile_completion_transient' ); // When fields inside fieldset are dragged and dropped in wp-admin > buddybpss > profile.
+
+//Display Name setting support
+add_filter( 'bp_after_has_profile_parse_args', 'bp_xprofile_exclude_display_name_profile_fields' );
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -997,4 +1012,63 @@ function bp_social_network_search_key( $id, $array ) {
 		}
 	}
 	return null;
+}
+
+/**
+ * Function trigger when profile updated. Profile field added/updated/deleted.
+ * Deletes Profile Completion Transient here.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_xprofile_delete_profile_completion_user_transient() {
+	// Delete logged in user all widgets transients from options table.
+	$user_id               = get_current_user_id();
+	$transient_name_prefix  = '%_transient_' . bp_core_get_profile_completion_key() . $user_id . '%';
+	bp_core_delete_transient_query( $transient_name_prefix );
+}
+
+/**
+ * Function trigger when profile updated. Profile field added/updated/deleted.
+ * Deletes Profile Completion Transient here.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_xprofile_delete_profile_completion_transient() {
+
+	// Delete all users all widget transients from options table.
+	$transient_name_prefix = '%_transient_' . bp_core_get_profile_completion_key() . '%';
+	bp_core_delete_transient_query( $transient_name_prefix );
+}
+
+/**
+ * Removed Display setting field form profile if is disabled on setting page.
+ *
+ * @param array $args
+ *
+ * @return array
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_xprofile_exclude_display_name_profile_fields( $args ){
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	$fields_id = array();
+
+	if ( 'first_name' === $current_value && function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+		$fields_id[] = bp_xprofile_lastname_field_id();
+	}
+
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+		$fields_id[] = bp_xprofile_lastname_field_id();
+	}
+
+	if ( 'nickname' === $current_value && function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+		$fields_id[] = bp_xprofile_firstname_field_id();
+	}
+
+	$args['exclude_fields'] = $fields_id;
+
+	return $args;
 }

@@ -192,6 +192,11 @@ class BP_Messages_Message {
 
 		messages_remove_callback_values();
 
+		// Removed message meta while sending a new message.
+		if ( ! empty( $this->id ) && ! is_wp_error( $this->id ) ) {
+			bp_messages_delete_meta( $this->id );
+		}
+
 		/**
 		 * Fires after the current message item has been saved.
 		 *
