@@ -917,6 +917,8 @@ function bp_media_messages_save_gif_data( &$message ) {
  * @param array|object $post              Request object.
  *
  * @return bool
+ * 
+ * @since BuddyBoss 1.5.1
  */
 function bp_media_message_validated_content( $validated_content, $content, $post ) {
 	// check if media is enabled in messages or not and empty media in object request or not.
@@ -934,6 +936,8 @@ function bp_media_message_validated_content( $validated_content, $content, $post
  * @param array|object $post              Request object.
  *
  * @return bool
+ * 
+ * @since BuddyBoss 1.5.1
  */
 function bp_media_gif_message_validated_content( $validated_content, $content, $post ) {
 	// check if gif data is enabled in messages or not and empty gif data in object request or not.

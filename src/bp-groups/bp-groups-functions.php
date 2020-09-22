@@ -4221,3 +4221,20 @@ function bp_groups_migrate_invitations() {
 		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
 	}
 }
+
+
+/**
+ * Reset cover image position while uploading/deleting groups cover photo.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $group_id Group ID.
+ */
+function bp_groups_reset_cover_image_position( $group_id ) {
+	if ( ! empty( (int) $group_id ) ) {
+		groups_delete_groupmeta( $group_id, 'bp_cover_position' );
+	}
+}
+
+add_action( 'groups_cover_image_uploaded', 'bp_groups_reset_cover_image_position', 10, 1 );
+add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position', 10, 1 );

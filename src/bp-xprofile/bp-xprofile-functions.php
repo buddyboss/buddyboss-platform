@@ -1430,6 +1430,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
+		$user_visibility_levels = array();
+	}
 
 	// Parse the user-provided visibility levels with the default levels, which may take
 	// precedence.
@@ -1450,8 +1453,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		}
 	}
 
-	// Never allow the fullname field to be excluded.
-	if ( in_array( 1, $field_ids ) ) {
+	// Never allow the Nickname field to be excluded.
+	$nickname_field_id = bp_xprofile_nickname_field_id();
+	if ( in_array( $nickname_field_id, $field_ids ) ) {
 		$key = array_search( 1, $field_ids );
 		unset( $field_ids[ $key ] );
 	}
@@ -1786,7 +1790,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 		return false;
 	}
 
-	$format = bp_get_option( 'bp-display-name-format' );
+	$format = bp_core_display_name_format();
 
 	$display_name = '';
 
@@ -2154,6 +2158,14 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 		$group_completed_fields = 0;
 		foreach ( $single_group_details->fields as $group_single_field ) {
 
+			/**
+			 * Added support for display name format support from platform.
+			 * Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+			 */
+			if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $group_single_field->id ) ) {
+				continue;
+			}
+
 			// If current group is repeater then only consider first set of fields.
 			if ( $is_group_repeater ) {
 
@@ -2295,3 +2307,18 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 	 */
 	return apply_filters( 'xprofile_pc_user_progress_formatted', $user_prgress_formatted );
 }
+
+/**
+ * Reset cover image position while uploading/deleting profile cover photo.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $user_id User ID.
+ */
+function bp_xprofile_reset_cover_image_position( $user_id ) {
+	if ( ! empty( (int) $user_id ) ) {
+		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
+	}
+}
+add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );
