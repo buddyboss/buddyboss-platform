@@ -40,7 +40,7 @@ if ( $group_id > 0 ) {
 		<?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-media-thumbnail' ); ?>
         <a class="bb-open-media-theatre bb-photo-cover-wrap"
            data-id="<?php bp_media_id(); ?>"
-           data-attachment-full="<?php bp_media_attachment_image(); ?>"
+           data-attachment-full="<?php echo esc_attr( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'full' ) ); ?>"
            data-activity-id="<?php bp_media_activity_id(); ?>"
            data-privacy="<?php bp_media_privacy(); ?>"
            data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
