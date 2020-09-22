@@ -710,6 +710,7 @@ window.bp = window.bp || {};
 							medium_editor.removeClass('medium-editor-toolbar-active');
 						}
 					}
+					$(window.group_messages_editor.elements[0]).focus();
 					medium_editor.toggleClass( 'active' );
 				}
 			);
