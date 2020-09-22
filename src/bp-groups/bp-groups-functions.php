@@ -959,6 +959,11 @@ function bp_group_object_template_results_groups_all_scope( $querystring, $objec
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id']  = 0;
+
+	if ( true === (bool) bp_enable_group_hide_subgroups() ) {
+		$querystring['parent_id'] = 0;
+    }
+
 	return http_build_query( $querystring );
 }
 
@@ -4216,3 +4221,20 @@ function bp_groups_migrate_invitations() {
 		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
 	}
 }
+
+
+/**
+ * Reset cover image position while uploading/deleting groups cover photo.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $group_id Group ID.
+ */
+function bp_groups_reset_cover_image_position( $group_id ) {
+	if ( ! empty( (int) $group_id ) ) {
+		groups_delete_groupmeta( $group_id, 'bp_cover_position' );
+	}
+}
+
+add_action( 'groups_cover_image_uploaded', 'bp_groups_reset_cover_image_position', 10, 1 );
+add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position', 10, 1 );
