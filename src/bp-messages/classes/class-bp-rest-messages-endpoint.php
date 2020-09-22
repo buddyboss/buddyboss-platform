@@ -452,6 +452,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$unread_query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 0, $thread_id, $message_object->sender_id ); // phpcs:ignore
 		$wpdb->query( $unread_query ); // phpcs:ignore
 
+		$cache_key = "{$thread_id}99999999";
+		wp_cache_delete( $cache_key, 'bp_messages_threads' );
+
 		// Make sure to get the newest message to update REST Additional fields.
 		$thread        = $this->get_thread_object( $thread_id );
 		$last_message  = reset( $thread->messages );
@@ -2112,6 +2115,14 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		return $result;
 	}
 
+	/**
+	 * Get avatars for the messages thread.
+	 *
+	 * @param int $thread_id Thread ID.
+	 * @param int $user_id   User ID.
+	 *
+	 * @return mixed|void
+	 */
 	public function bp_rest_messages_get_avatars( $thread_id, $user_id = 0 ) {
 		global $wpdb;
 
@@ -2132,7 +2143,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						continue;
 					}
 
-					if ( ! in_array( $message->sender_id, $avatars_user_ids ) ) {
+					if ( ! in_array( $message->sender_id, $avatars_user_ids, true ) ) {
 						$avatars_user_ids[] = $message->sender_id;
 					}
 				}
@@ -2179,9 +2190,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 		$first_message_id = ( ! empty( $first_message ) ? $first_message->id : false );
 		$group_id         = ( isset( $first_message_id ) ) ? (int) bp_messages_get_meta( $first_message_id, 'group_id', true ) : 0;
 		if ( ! empty( $first_message_id ) && ! empty( $group_id ) ) {
-			$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group
-			$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual
-			$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private
+			$message_from  = bp_messages_get_meta( $first_message_id, 'message_from', true ); // group.
+			$message_users = bp_messages_get_meta( $first_message_id, 'group_message_users', true ); // all - individual.
+			$message_type  = bp_messages_get_meta( $first_message_id, 'group_message_type', true ); // open - private.
 
 			if ( 'group' === $message_from && 'all' === $message_users && 'open' === $message_type ) {
 				if ( bp_is_active( 'groups' ) ) {
@@ -2205,8 +2216,9 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 						),
 					);
 				} else {
-					$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
-					$groups_table             = $prefix . 'bp_groups';
+					$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+					$groups_table = $prefix . 'bp_groups';
+					// phpcs:ignore
 					$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
 					$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
 					$legacy_group_avatar_name = '-groupavatar-full';

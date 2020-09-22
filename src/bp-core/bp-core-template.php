@@ -2348,6 +2348,17 @@ function bp_is_single_activity() {
 	return (bool) ( bp_is_activity_component() && is_numeric( bp_current_action() ) );
 }
 
+/**
+ * Is the current page a single activity item edit permalink?
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return bool True if the current page is a single activity item edit permalink.
+ */
+function bp_is_activity_edit() {
+	return (bool) ( bp_is_activity_component() && is_numeric( bp_current_action() ) && 'edit' === bp_action_variable() );
+}
+
 /** User **********************************************************************/
 
 /**

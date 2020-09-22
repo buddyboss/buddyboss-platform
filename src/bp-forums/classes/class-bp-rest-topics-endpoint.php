@@ -697,8 +697,24 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		// No topic content.
 		if (
 			empty( $topic_content )
-			&& empty( $request['bbp_media'] )
-			&& empty( $request['bbp_media_gif'] )
+			&& ! (
+				(
+					function_exists( 'bp_is_forums_media_support_enabled' )
+					&& false !== bp_is_forums_media_support_enabled()
+					&& ! empty( $request['bbp_media'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_gif_support_enabled' )
+					&& false !== bp_is_forums_gif_support_enabled()
+					&& ! empty( $request['bbp_media_gif']['url'] )
+					&& ! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_document_support_enabled' )
+					&& false !== bp_is_forums_document_support_enabled()
+					&& ! empty( $request['bbp_documents'] )
+				)
+			)
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_topic_content',
@@ -1345,7 +1361,27 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		$topic_content = apply_filters( 'bbp_edit_topic_pre_content', $topic_content, $topic_id );
 
 		// No topic content.
-		if ( empty( $topic_content ) ) {
+		if (
+			empty( $topic_content )
+			&& ! (
+				(
+					function_exists( 'bp_is_forums_media_support_enabled' )
+					&& false !== bp_is_forums_media_support_enabled()
+					&& ! empty( $request['bbp_media'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_gif_support_enabled' )
+					&& false !== bp_is_forums_gif_support_enabled()
+					&& ! empty( $request['bbp_media_gif']['url'] )
+					&& ! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_document_support_enabled' )
+					&& false !== bp_is_forums_document_support_enabled()
+					&& ! empty( $request['bbp_documents'] )
+				)
+			)
+		) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_topic_content',
 				__( 'Sorry, Your discussion cannot be empty.', 'buddyboss' ),
@@ -1440,8 +1476,24 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			remove_post_type_support( bbp_get_topic_post_type(), 'revisions' );
 		}
 
+		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
+			remove_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		}
+
+		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
+			remove_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
+		}
+
 		// Insert topic.
 		$topic_id = wp_update_post( $topic_data );
+
+		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
+			add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		}
+
+		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
+			add_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
+		}
 
 		// Toggle revisions back on.
 		if ( true === $revisions_removed ) {
@@ -1544,6 +1596,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		do_action( 'bbp_edit_topic_post_extras', $topic_id );
 
 		$topic         = get_post( $topic_id );
+		$topic->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $topic, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
@@ -1770,7 +1823,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			$args['title']['type']         = 'string';
 			$args['title']['required']     = true;
 			$args['content']['type']       = 'string';
-			$args['content']['required']   = true;
+			$args['content']['required']   = false;
 			$args['status']['default']     = 'publish';
 			$args['status']['enum']        = array_keys( bbp_get_topic_statuses() );
 			$args['sticky']['type']        = 'string';
@@ -1863,7 +1916,7 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			'forum_id'              => (int) bbp_get_topic_forum_id( $topic->ID ),
 			'is_topic_anonymous'    => (int) bbp_is_topic_anonymous( $topic->ID ),
 			'anonymous_author_data' => (
-			bbp_is_topic_anonymous( $topic->ID )
+				bbp_is_topic_anonymous( $topic->ID )
 				? array(
 					'name'    => bbp_get_topic_author_display_name( $topic->ID ),
 					'email'   => bbp_get_topic_author_email( $topic->ID ),
@@ -1901,17 +1954,17 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		/* -- Prepare content */
 
 		$data['group'] = (
-		(
-			function_exists( 'bbp_is_forum_group_forum' )
-			&& bbp_get_topic_forum_id( $topic->ID )
-			&& bbp_is_forum_group_forum( bbp_get_topic_forum_id( $topic->ID ) )
-			&& function_exists( 'groups_get_group' )
-		)
+			(
+				function_exists( 'bbp_is_forum_group_forum' )
+				&& bbp_get_topic_forum_id( $topic->ID )
+				&& bbp_is_forum_group_forum( bbp_get_topic_forum_id( $topic->ID ) )
+				&& function_exists( 'groups_get_group' )
+			)
 			? (
-		! empty( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) )
-			? groups_get_group( current( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) ) )
-			: ''
-		)
+				! empty( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) )
+				? groups_get_group( current( bbp_get_forum_group_ids( bbp_get_topic_forum_id( $topic->ID ) ) ) )
+				: ''
+			)
 			: ''
 		);
 

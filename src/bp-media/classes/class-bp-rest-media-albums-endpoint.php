@@ -123,7 +123,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$args = array(
 			'page'        => $request['page'],
 			'per_page'    => $request['per_page'],
-			'sort'        => $request['order'],
+			'sort'        => strtoupper( $request['order'] ),
 			'order_by'    => $request['orderby'],
 			'count_total' => $request['count_total'],
 			'fields'      => 'all',
@@ -265,7 +265,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		$response = rest_ensure_response( $retval );
 
 		/**
-		 * Fires after a album is fetched via the REST API.
+		 * Fires after an album is fetched via the REST API.
 		 *
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
@@ -306,6 +306,20 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 				__( 'Invalid Album ID.', 'buddyboss' ),
 				array(
 					'status' => 404,
+				)
+			);
+		}
+
+		if (
+			true === $retval
+			&& 'public' !== $album->privacy
+			&& true === $this->bp_rest_check_album_privacy_restriction( $album )
+		) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to view this Album.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -427,6 +441,20 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
+			if (
+				! bp_is_active( 'groups' )
+				|| groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] ) ) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to create an album inside this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -575,6 +603,21 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
+			if (
+				! bp_is_active( 'groups' )
+				|| groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] )
+			) {
+				$retval = new WP_Error(
+					'bp_rest_invalid_permission',
+					__( 'You don\'t have a permission to edit an album inside this group.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -1105,6 +1148,42 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		}
 
 		return $relval;
+	}
+
+	/**
+	 * Check user access based on the privacy for the single album.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param BP_Media_Album $album Media Album object.
+	 *
+	 * @return bool
+	 */
+	protected function bp_rest_check_album_privacy_restriction( $album ) {
+		return (
+			       'onlyme' === $album->privacy
+			       && bp_loggedin_user_id() !== $album->user_id
+		       )
+		       || (
+			       'loggedin' === $album->privacy
+			       && empty( bp_loggedin_user_id() )
+		       )
+		       || (
+			       bp_is_active( 'groups' )
+			       && 'grouponly' === $album->privacy
+			       && ! empty( $album->group_id )
+			       && 'public' !== bp_get_group_status( groups_get_group( $album->group_id ) )
+			       && empty( groups_is_user_admin( bp_loggedin_user_id(), $album->group_id ) )
+			       && empty( groups_is_user_mod( bp_loggedin_user_id(), $album->group_id ) )
+			       && empty( groups_is_user_member( bp_loggedin_user_id(), $album->group_id ) )
+		       )
+		       || (
+			       bp_is_active( 'friends' )
+			       && 'friends' === $album->privacy
+			       && ! empty( $album->user_id )
+			       && bp_loggedin_user_id() !== $album->user_id
+			       && 'is_friend' !== friends_check_friendship_status( $album->user_id, bp_loggedin_user_id() )
+		       );
 	}
 }
 

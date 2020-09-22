@@ -121,6 +121,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'media_size_error_header'      => __( 'File too large ', 'buddyboss' ),
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
 		'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
+		'cover_photo_size_error_header'=> __( 'Unable to reposition the image ', 'buddyboss' ),
+		'cover_photo_size_error_description'=> __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
 		'maxFiles'                     => bp_media_allowed_upload_media_per_batch(),
 		'is_media_directory'           => ( bp_is_media_directory() ) ? 'yes' : 'no',
 		'create_album_error_title'     => __( 'Please enter title of album', 'buddyboss' ),
@@ -250,6 +252,34 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 		bp_media_download_file_force( $the_file, $file_name );
 	}
 
+}
+
+/**
+ * Edit button alter when media activity other than activity page.
+ *
+ * @param array $buttons     Array of Buttons visible on activity entry.
+ * @param int   $activity_id Activity ID.
+ *
+ * @return mixed
+ * @since BuddyBoss 1.5.1
+ */
+function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
+	if ( isset( $buttons['activity_edit'] ) && ( bp_is_media_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {
+			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+
+			$classes  = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
+			$edit_key = array_search( 'edit', $classes, true );
+			if ( ! empty( $edit_key ) ) {
+				unset( $classes[ $edit_key ] );
+			}
+			$buttons['activity_edit']['button_attr']['class'] = implode( ' ', $classes );
+		}
+	}
+
+	return $buttons;
 }
 
 /**

@@ -722,10 +722,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		if ( 'edit' === $context ) {
-			$data['registered_date']    = bp_rest_prepare_date_response( $user->data->user_registered );
-			$data['roles']              = (array) array_values( $user->roles );
-			$data['capabilities']       = (array) array_keys( $user->allcaps );
-			$data['extra_capabilities'] = (array) array_keys( $user->caps );
+			$user_data = get_userdata( $user->ID );
+			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
+			$data['roles']              = (array) array_values( $user_data->roles );
+			$data['capabilities']       = (array) array_keys( $user_data->allcaps );
+			$data['extra_capabilities'] = (array) array_keys( $user_data->caps );
 		}
 
 		// The name used for that user in @-mentions.
@@ -739,19 +740,20 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		// Avatars.
 		if ( ! empty( $schema['properties']['avatar_urls'] ) ) {
 			$data['avatar_urls'] = array(
-				'full'  => bp_core_fetch_avatar(
+				'full'       => bp_core_fetch_avatar(
 					array(
 						'item_id' => $user->ID,
 						'html'    => false,
 						'type'    => 'full',
 					)
 				),
-				'thumb' => bp_core_fetch_avatar(
+				'thumb'      => bp_core_fetch_avatar(
 					array(
 						'item_id' => $user->ID,
 						'html'    => false,
 					)
 				),
+				'is_default' => ! bp_get_user_has_avatar( $user->ID ),
 			);
 		}
 
@@ -858,22 +860,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					 * Added support for display name format support from platform.
 					 */
 					// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-					$current_value = bp_get_option( 'bp-display-name-format' );
-
-					// If First Name selected then do not add last name field.
-					if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $item->id ) {
-						if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-							continue;
-						}
-						// If Nick Name selected then do not add first & last name field.
-					} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $item->id ) {
-						if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-							continue;
-						}
-					} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $item->id ) {
-						if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-							continue;
-						}
+					if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $item->id ) ) {
+						continue;
 					}
 
 					if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
@@ -1174,6 +1162,12 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 				'description' => sprintf( __( 'Avatar URL with thumb image size (%1$d x %2$d pixels).', 'buddyboss' ), number_format_i18n( bp_core_avatar_thumb_width() ), number_format_i18n( bp_core_avatar_thumb_height() ) ),
 				'type'        => 'string',
 				'format'      => 'uri',
+				'context'     => array( 'embed', 'view', 'edit' ),
+			);
+
+			$avatar_properties['is_default'] = array(
+				'description' => __( 'Whether the member has a default avatar or not.', 'buddyboss' ),
+				'type'        => 'boolean',
 				'context'     => array( 'embed', 'view', 'edit' ),
 			);
 
