@@ -2115,10 +2115,21 @@ function bp_avatar_template_check() {
 	}
 }
 
-function bp_core_pre_get_avatar_data_url_filter( $data, $id_or_email, $args ) {
-	if ( is_admin() ) {
-		return  $data;
+/**
+ * inject uploaded profile photo as avatar into get_avatar()
+ *
+ * @param $data
+ * @param $id_or_email
+ * @param $args
+ *
+ * @return mixed|void
+ */
+function bp_core_pre_get_avatar_filter( $data, $id_or_email, $args ) {
+
+	if ( isset( $args['force_default'] ) && true === $args['force_default'] ){
+		return $data;
 	}
+
 	// Ugh, hate duplicating code; process the user identifier.
 	if ( is_numeric( $id_or_email ) ) {
 		$user = get_user_by( 'id', absint( $id_or_email ) );
@@ -2135,10 +2146,12 @@ function bp_core_pre_get_avatar_data_url_filter( $data, $id_or_email, $args ) {
 	} elseif ( is_email( $id_or_email ) ) {
 		$user = get_user_by( 'email', $id_or_email );
 	}
+
 	// No user, so bail.
 	if ( false === $user instanceof WP_User ) {
 		return $data;
 	}
+
 	// Set BuddyPress-specific avatar args.
 	$args['item_id'] = $user->ID;
 	$args['html']    = false;
@@ -2146,10 +2159,12 @@ function bp_core_pre_get_avatar_data_url_filter( $data, $id_or_email, $args ) {
 	if ( (int) $args['size'] > bp_core_avatar_thumb_width() ) {
 		$args['type'] = 'full';
 	}
+
 	// Get the BuddyPress avatar URL.
 	if ( $bp_avatar = bp_core_fetch_avatar( $args ) ) {
 		$url = $bp_avatar;
-		$url2x = $bp_avatar;
+
+		// Avatar classes
 		$class = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
 		if ( ( isset( $args['found_avatar'] ) && ! $args['found_avatar'] ) || $args['force_default'] ) {
 			$class[] = 'avatar-default';
@@ -2161,6 +2176,7 @@ function bp_core_pre_get_avatar_data_url_filter( $data, $id_or_email, $args ) {
 				$class[] = $args['class'];
 			}
 		}
+
 		// Add `loading` attribute.
 		$extra_attr = $args['extra_attr'];
 		$loading    = $args['loading'];
@@ -2170,17 +2186,19 @@ function bp_core_pre_get_avatar_data_url_filter( $data, $id_or_email, $args ) {
 			}
 			$extra_attr .= "loading='{$loading}'";
 		}
+
 		$data = sprintf(
 			"<img alt='%s' src='%s' srcset='%s' class='%s' height='%d' width='%d' %s/>",
 			esc_attr( $args['alt'] ),
 			esc_url( $url ),
-			esc_url( $url2x ) . ' 2x',
+			esc_url( $url ) . ' 2x',
 			esc_attr( join( ' ', $class ) ),
 			(int) $args['height'],
 			(int) $args['width'],
 			$extra_attr
 		);
 	}
+
 	return apply_filters( 'bp_core_pre_get_avatar_data_url_filter', $data, $id_or_email, $args );
 }
-add_filter( 'pre_get_avatar', 'bp_core_pre_get_avatar_data_url_filter', 10, 3 );
+add_filter( 'pre_get_avatar', 'bp_core_pre_get_avatar_filter', 10, 3 );
