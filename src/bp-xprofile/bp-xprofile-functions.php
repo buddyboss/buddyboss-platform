@@ -2018,7 +2018,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
 
-	if ( ! empty( $pc_transient_data ) && false ) {
+	if ( ! empty( $pc_transient_data ) ) {
 
 		$user_progress = $pc_transient_data;
 
