@@ -16,7 +16,7 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), bp_get_current_group_id() );
+			$inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), groups_get_current_group() );
 			if ( ! empty( $inviter ) ) :
 				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
 				printf(
@@ -42,20 +42,22 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 	</aside>
 
 	<?php elseif ( ! bp_group_has_requested_membership() ) : ?>
-	<p>
-		<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
-	</p>
+	<?php if ( apply_filters( 'bp_groups_user_can_send_request_membership', true, bp_get_current_group_id() ) ) { ?>
+		<p>
+			<?php echo sprintf( __( 'You are requesting to become a member of the group "%s".', 'buddyboss' ), bp_get_group_name() ); ?>
+		</p>
 
-	<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
-		<label for="group-request-membership-comments"><?php esc_html( 'Comments (optional)', 'buddyboss' ); ?></label>
-		<textarea name="group-request-membership-comments" id="group-request-membership-comments"></textarea>
+		<form action="<?php bp_group_form_action( 'request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
+			<label for="group-request-membership-comments"><?php esc_html( 'Comments (optional)', 'buddyboss' ); ?></label>
+			<textarea name="group-request-membership-comments" id="group-request-membership-comments"></textarea>
 
-		<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
+			<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
 
-		<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php esc_attr_e( 'Send Request', 'buddyboss' ); ?>" />
+			<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php esc_attr_e( 'Send Request', 'buddyboss' ); ?>" />
 
-		<?php wp_nonce_field( 'groups_request_membership' ); ?>
-	</form><!-- #request-membership-form -->
+			<?php wp_nonce_field( 'groups_request_membership' ); ?>
+		</form><!-- #request-membership-form -->
+	<?php } ?>
 
 <?php else : ?>
     <?php bp_nouveau_user_feedback( 'group-requested-membership' ); ?>
