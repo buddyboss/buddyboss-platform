@@ -175,7 +175,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 	?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( ! bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on blog posts, forum discussions and replies', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on blog posts, custom post types, and forum discussions', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -244,6 +244,31 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 }
 
 /**
+ * Enable activity edit
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_admin_setting_callback_enable_activity_edit() {
+	$edit_times = bp_activity_edit_times();
+	$edit_time  = bp_get_activity_edit_time();
+	?>
+
+	<input id="_bp_enable_activity_edit" name="_bp_enable_activity_edit" type="checkbox" value="1" <?php checked( bp_is_activity_edit_enabled( false ) ); ?> />
+	<label for="_bp_enable_activity_edit"><?php _e( 'Allow members to edit their activity posts for a duration of', 'buddyboss' ); ?></label>
+
+	<select name="_bp_activity_edit_time">
+		<option value="-1"><?php _e('Forever', 'buddyboss'); ?></option>
+		<?php foreach ( $edit_times as $time ) {
+			$value      = isset( $time['value'] ) ? $time['value'] : 0;
+			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
+			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
+		} ?>
+	</select>
+
+	<?php
+}
+
+/**
  * Enable activity scopes like groups, friends, mentions, following etc.
  *
  * @since BuddyBoss 1.1.6
@@ -266,7 +291,7 @@ function bp_admin_setting_callback_enable_activity_follow() {
 	?>
 
 	<input id="_bp_enable_activity_follow" name="_bp_enable_activity_follow" type="checkbox" value="1" <?php checked( bp_is_activity_follow_active( false ) ); ?> />
-	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your users to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -280,7 +305,7 @@ function bp_admin_setting_callback_enable_activity_like() {
 	?>
 
 	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php _e( 'Allow your users to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_like"><?php _e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -551,6 +576,18 @@ function bp_admin_setting_callback_group_hierarchies() {
 	?>
 	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
 	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have subgroups', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * 'Hide subgroups from Groups Directory & Group Type Shortcode field markup.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_admin_setting_callback_group_hide_subgroups() {
+	?>
+    <input id="bp-enable-group-hide-subgroups" name="bp-enable-group-hide-subgroups" type="checkbox" value="1" <?php checked( bp_enable_group_hide_subgroups() ); ?> />
+    <label for="bp-enable-group-hide-subgroups"><?php _e( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ); ?></label>
 	<?php
 }
 

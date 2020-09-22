@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
 "POT-Creation-Date: 2019-09-23 08:22:42+00:00\n"
-"PO-Revision-Date: 2019-10-03 11:55+0200\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2020-07-08 17:58-0600\n"
+"Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: hu_HU\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "esc_html_x:1,2c\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-SearchPath-0: .\n"
 
 #: bp-activity/actions/delete.php:51
@@ -158,7 +158,7 @@ msgid ""
 "ERROR: The item you are trying to reply to cannot be found, or it has been "
 "deleted."
 msgstr ""
-"HIBA: Az elem amihez hozzászólni szerettünk volna, nem található, vagy "
+"HIBA: Az elem amihez hozzászólni szerettél volna, nem található, vagy "
 "törlésre került."
 
 #: bp-activity/bp-activity-admin.php:222 bp-activity/bp-activity-admin.php:274
@@ -194,7 +194,7 @@ msgid ""
 "Type, Author ID) or to choose a 1- or 2-column layout for this screen."
 msgstr ""
 "A tevékenység címéhez és tartalmához tartozó két nagy szerkesztési terület "
-"helyben marad, de az összes többi doboz áthelyezhető drag and drop "
+"helyben marad, de az összes többi doboz áthelyezhető fogd és vidd "
 "technikával. Lehetőség van minimalizálni vagy kinyitni ezeket a dobozok "
 "címsávjára kattintva. Használd a Képernyő opciók fület további dobozok "
 "megjelenítésére (Elsődleges elem/Másodlagos elem, Link, Típus, Szerző "
@@ -362,7 +362,7 @@ msgstr ""
 #. translators: accessibility text
 #: bp-activity/bp-activity-admin.php:298
 msgid "Activity list navigation"
-msgstr "Email lista navigáció"
+msgstr "E-mail lista navigáció"
 
 #: bp-activity/bp-activity-admin.php:660
 msgid "Editing Activity (ID #%s)"
@@ -496,7 +496,7 @@ msgstr ""
 msgid "%s activity item has been permanently deleted."
 msgid_plural "%s activity items have been permanently deleted."
 msgstr[0] "%s tevékenység elem azonnal törlésre került."
-msgstr[1] "%s tevékenység elem azonnal törlésre került."
+msgstr[1] "%s tevékenység elemek azonnal törlésre kerültek."
 
 #: bp-activity/bp-activity-admin.php:965
 msgid "An error occurred when trying to update activity ID #%s."
@@ -515,13 +515,13 @@ msgstr "#%s"
 msgid "%s activity item has been successfully spammed."
 msgid_plural "%s activity items have been successfully spammed."
 msgstr[0] "%s tevékenység elem sikeresen spamnek jelölve."
-msgstr[1] "%s tevékenység elem sikeresen spamnek jelölve."
+msgstr[1] "%s tevékenység elemek sikeresen spamnek jelölve."
 
 #: bp-activity/bp-activity-admin.php:986
 msgid "%s activity item has been successfully unspammed."
 msgid_plural "%s activity items have been successfully unspammed."
 msgstr[0] "%s tevékenység elem sikeresen nem spamnek jelölve."
-msgstr[1] "%s tevékenység elem sikeresen nem spamnek jelölve."
+msgstr[1] "%s tevékenység elemek sikeresen nem spamnek jelölve."
 
 #: bp-activity/bp-activity-admin.php:989
 msgid "The activity item has been updated successfully."
@@ -674,7 +674,7 @@ msgstr "és 1 másik kedveli ezt a"
 
 #: bp-activity/bp-activity-functions.php:1173
 msgid "others like this"
-msgstr "mások kedvelik"
+msgstr "mások kedvelik ezt"
 
 #: bp-activity/bp-activity-functions.php:1175
 msgid "other like this"
@@ -762,7 +762,7 @@ msgstr "Új tevékenység válasz"
 
 #: bp-activity/bp-activity-notifications.php:54
 msgid "You have %1$d new replies"
-msgstr "%1$d új említésed van"
+msgstr "%1$d új válaszod van"
 
 #: bp-activity/bp-activity-notifications.php:58
 msgid "%1$s commented on one of your updates"
@@ -834,7 +834,7 @@ msgstr ""
 #: bp-groups/bp-groups-notifications.php:1144
 #: bp-messages/bp-messages-notifications.php:274
 msgid "Yes, send email"
-msgstr "Igen, küldje az emailt"
+msgstr "Igen, küldje az e-mailt"
 
 #. translators: accessibility text
 #: bp-activity/bp-activity-notifications.php:406
@@ -848,7 +848,7 @@ msgstr "Igen, küldje az emailt"
 #: bp-groups/bp-groups-notifications.php:1148
 #: bp-messages/bp-messages-notifications.php:278
 msgid "No, do not send email"
-msgstr "Nem, ne küldje el az emailt"
+msgstr "Nem, ne küldje el az e-mailt"
 
 #: bp-activity/bp-activity-notifications.php:413
 #: bp-core/gdpr/class-bp-settings-export.php:155
@@ -1356,7 +1356,7 @@ msgstr "Legutolsó bejegyzés: %s"
 #: bp-blogs/bp-blogs-template.php:1020
 msgid "There was a problem; please correct the form below and try again."
 msgstr ""
-"Hiba történ. Kérjük, javítsd ki a lenti űrlapot, majd próbáld meg újra."
+"Hiba történt. Kérjük, javítsd ki a lenti űrlapot, majd próbáld meg újra."
 
 #: bp-blogs/bp-blogs-template.php:1023
 msgid ""
@@ -1528,7 +1528,7 @@ msgstr "Legutóbbi bejegyzések a hálózatból"
 
 #: bp-blogs/classes/class-bp-blogs-recent-posts-widget.php:111
 msgid "Sorry, there were no posts found. Why not write one?"
-msgstr "Sajnáljuk, nem található bejegyzés. De miért nem írsz egyet?"
+msgstr "Sajnáljuk, nem található bejegyzés. Miért nem írsz egyet?"
 
 #: bp-blogs/classes/class-bp-blogs-recent-posts-widget.php:159
 msgid "Link widget title to Blogs directory"
@@ -1548,7 +1548,7 @@ msgstr "Összetevők"
 #. translators: accessibility text
 #: bp-core/admin/bp-core-admin-components.php:130
 msgid "Filter components list"
-msgstr "Összetevől kistájának szűrése"
+msgstr "Összetevők listájának szűrése"
 
 #: bp-core/admin/bp-core-admin-components.php:134
 msgid "All <span class=\"count\">(%s)</span>"
@@ -1583,7 +1583,7 @@ msgstr "Összetevők listája"
 #: bp-core/admin/bp-core-admin-components.php:162
 #: bp-core/admin/bp-core-admin-components.php:264
 msgid "Enable or disable all optional components in bulk"
-msgstr "Engedélyezd vagy tiltsd le az összes opcionális összetevőt tömegesen"
+msgstr "Engedélyezd vagy tiltsd le az összes opcionális komponenst csoportosan"
 
 #: bp-core/admin/bp-core-admin-components.php:164
 #: bp-core/admin/bp-core-admin-components.php:266
@@ -1651,11 +1651,11 @@ msgstr "Beállítások"
 
 #: bp-core/admin/bp-core-admin-components.php:252
 msgid "No components found."
-msgstr "Nem találhatóak összetevők."
+msgstr "Nem találhatóak komponensek."
 
 #: bp-core/admin/bp-core-admin-components.php:278
 msgid "Select bulk action"
-msgstr "Tömeges művelet kiválasztása"
+msgstr "Csoportos művelet kiválasztása"
 
 #: bp-core/admin/bp-core-admin-components.php:280
 #: bp-forums/admin/forums.php:177 bp-forums/admin/replies.php:166
@@ -1685,7 +1685,7 @@ msgid ""
 "\">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a "
 "href=\"%s\">Users</a> menu."
 msgstr ""
-"Az összetevőket, oldalakat, beállításokat és a fórumokat a <a href=\"%s"
+"Az komponenseket, oldalakat, beállításokat és a fórumokat a <a href=\"%s"
 "\">Beállítások &gt; BuddyPress</a> menübe helyeztük át. Az adatlap mezőket "
 "pedig a <a href=\"%s\">Felhasználók</a> menübe."
 
@@ -1695,8 +1695,8 @@ msgid ""
 "\">update your permalink structure</a> to something other than the default "
 "for it to work."
 msgstr ""
-"<strong>BuddyBoss Platform már majdnem kész</strong>. You must <a href=\"%s"
-"\">frissítsd a közvetlen hivatkozás struktúrát</a> valami másra, mint az "
+"<strong>BuddyBoss Platform már majdnem kész</strong>. Frissítsd<a href=\"%s"
+"\">a közvetlen hivatkozás struktúrát</a> valami másra, mint az "
 "alapértelmezett."
 
 #: bp-core/admin/bp-core-admin-functions.php:274
@@ -1726,8 +1726,8 @@ msgid ""
 "Each BuddyBoss Component needs its own WordPress page. The following "
 "WordPress Pages have more than one component associated with them: %s."
 msgstr ""
-"Minden BuddyBoss összetevőnek saját WordPress oldalra van szüksége. A "
-"következő WordPress oldalakhoz egynél több összetevő van társítva: %s."
+"Minden BuddyBoss komponensnek saját WordPress oldalra van szüksége. A "
+"következő WordPress oldalakhoz egynél több komponens van társítva: %s."
 
 #: bp-core/admin/bp-core-admin-functions.php:447
 msgid ""
@@ -1798,10 +1798,10 @@ msgid ""
 "the disabled components will no longer be accessible to anyone using the "
 "site."
 msgstr ""
-"Alapértelmezés szerint több BuddyBoss összetevő engedélyezve van. Az alábbi "
+"Alapértelmezés szerint több BuddyBoss komponens engedélyezve van. Az alábbi "
 "űrlap segítségével szelektíven engedélyezheted vagy letilthatod bármelyik "
-"összetevőt. A BuddyBoss telepítés továbbra is működni fog. A letiltott "
-"összetevők szolgáltatásai azonban már nem lesznek elérhetők a webhelyet "
+"komponenst. A BuddyBoss telepítés továbbra is működni fog. A letiltott "
+"komponensek szolgáltatásai azonban már nem lesznek elérhetők a webhelyet "
 "használók számára."
 
 #: bp-core/admin/bp-core-admin-functions.php:934
@@ -1810,9 +1810,9 @@ msgid ""
 "pages. You can change the page associations for each active component by "
 "using the form below."
 msgstr ""
-"A BuddyBoss összetevők a WordPress oldalakat használják gyökérkönyvtáruk / "
+"A BuddyBoss komponensek a WordPress oldalakat használják gyökérkönyvtáruk / "
 "archívumuk oldalaikhoz. Az alábbi űrlap segítségével az egyes aktív "
-"összetevők oldal-asszociációit változtathatod meg."
+"komponensek oldal-asszociációit változtathatod meg."
 
 #: bp-core/admin/bp-core-admin-functions.php:938
 msgid ""
@@ -1880,8 +1880,8 @@ msgid ""
 "Are these emails not written in your site's language? Go to <a href=\"%s"
 "\">BuddyBoss Tools and try the \"reinstall emails\"</a> tool."
 msgstr ""
-"Ezek az email-ek nem a Te nyelveden íródnak? Nyisd meg a <a href=\"%s"
-"\">BuddyBoss eszközöket, és próbáld ki az \"emailek újratelepítése\"</a> "
+"Ezek az e-mail-ek nem a Te nyelveden íródnak? Nyisd meg a <a href=\"%s"
+"\">BuddyBoss eszközöket, és próbáld ki az \"e-mailek újratelepítése\"</a> "
 "eszközt."
 
 #: bp-core/admin/bp-core-admin-functions.php:1242
@@ -1889,18 +1889,18 @@ msgid ""
 "Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href=\"%s"
 "\">Learn about email tokens</a>."
 msgstr ""
-"A zárójelekbe csomagolt kifejezések <code>{{}}</code> email tokenek. <a href="
-"\"%s\">Tudj meg többet az email tokenekről</a>."
+"A zárójelekbe csomagolt kifejezések <code>{{}}</code> e-mail tokenek. <a "
+"href=\"%s\">Tudj meg többet az e-mail tokenekről</a>."
 
 #: bp-core/admin/bp-core-admin-functions.php:1285
 msgid "Choose when this email will be sent."
-msgstr "Válasszuk ki, hogy mikor küldjük ki ezt az e-mailt."
+msgstr "Válaszd ki, hogy mikor küldjük ki ezt az e-mailt."
 
 #. translators: accessibility text
 #: bp-core/admin/bp-core-admin-functions.php:1298
 #: bp-core/admin/bp-core-admin-functions.php:1316
 msgid "Plain text email content"
-msgstr "Sima szöveges email tartalom"
+msgstr "Sima szöveges e-mail tartalom"
 
 #: bp-core/admin/bp-core-admin-functions.php:1319
 msgid ""
@@ -1908,8 +1908,8 @@ msgid ""
 "receive plain text email. Enter a plain text alternative version of your "
 "email here."
 msgstr ""
-"A legtöbb email kliens támogatja a HTML emailt. Azonban egyesek inkább "
-"egyszerű szöveges emailt kapnak. Add meg az email egyszerű szöveges "
+"A legtöbb e-mail kliens támogatja a HTML e-mailt. Azonban egyesek inkább "
+"egyszerű szöveges e-mailt kapnak. Add meg az e-mail egyszerű szöveges "
 "alternatív verzióját."
 
 #: bp-core/admin/bp-core-admin-functions.php:1447
@@ -2033,7 +2033,7 @@ msgstr ""
 #: bp-invites/classes/class-bp-invites-component.php:215
 #: bp-invites/classes/class-bp-invites-component.php:294
 msgid "Email Invites"
-msgstr "Email meghívók"
+msgstr "E-mail meghívók"
 
 #: bp-core/admin/bp-core-admin-functions.php:1796
 msgid ""
@@ -2075,10 +2075,10 @@ msgid ""
 "Extended) and then you can come back to this page to update the associated "
 "WordPress role."
 msgstr ""
-"Mivel a profilod jelenleg hozzá van rendelve ehhez a profil típushozhoz, nem "
+"Mivel a profilod jelenleg hozzá van rendelve ehhez a profil típushoz, nem "
 "módosíthatod a hozzá kapcsolódó WordPress szerepet. Ennek a beállításnak a "
 "megváltoztatásával eltávolítod az adminisztrátori szerepet, és kizár téged a "
-"WordPress rendszergazda körből. Először el kell távolítanod magad eből a "
+"WordPress rendszergazda körből. Először el kell távolítanod magad ebből a "
 "profil típusból (Felhasználók > Saját profil > Bővített), majd "
 "visszatérhetsz erre az oldalra a társított WordPress szerep frissítéséhez."
 
@@ -2150,7 +2150,7 @@ msgstr "Sikeresen hozzáadva"
 #: bp-core/classes/class-bp-admin.php:612
 #: bp-core/classes/class-bp-admin.php:613
 msgid "Emails"
-msgstr "Emailek"
+msgstr "E-mailek"
 
 #: bp-core/admin/bp-core-admin-functions.php:2477
 #: bp-groups/bp-groups-admin.php:557
@@ -2229,12 +2229,12 @@ msgstr "Regisztrációs oldalak"
 #: bp-media/bp-media-settings.php:457 bp-media/bp-media-settings.php:601
 #: bp-media/bp-media-settings.php:784 bp-search/bp-search-settings.php:396
 msgid "View Tutorial"
-msgstr "Útmutató megteintése"
+msgstr "Útmutató megtekintése"
 
 #: bp-core/admin/bp-core-admin-pages.php:190
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
-"Kapcsolj össze egy WordPress oldalt a következő összetevők mindegyikével."
+"Kapcsolj össze egy WordPress oldalt a következő komponensek mindegyikével."
 
 #: bp-core/admin/bp-core-admin-pages.php:200
 msgid "Associate a WordPress page with the following Registration sections."
@@ -2471,11 +2471,11 @@ msgstr "AppBoss"
 
 #: bp-core/admin/bp-core-admin-settings.php:665
 msgid "Allow members to customize the email subject"
-msgstr "Engedélyzed a tagoknak az email tárgyának testreszabását"
+msgstr "Engedélyzed a tagoknak az e-mail tárgyának testreszabását"
 
 #: bp-core/admin/bp-core-admin-settings.php:677
 msgid "Allow members to customize the email body content"
-msgstr "Engedélyzed a tagoknak az email törzsének testreszabását"
+msgstr "Engedélyzed a tagoknak az e-mail törzsének testreszabását"
 
 #: bp-core/admin/bp-core-admin-settings.php:690
 msgid "Allow members to select profile type of invitee"
@@ -2495,7 +2495,7 @@ msgid ""
 "the activity feed. For example, if using WooCommerce it could post into the "
 "activity feed every time someone creates a new product."
 msgstr ""
-"Válaszd ki, mely (a bővítményktől származó) egyéni bejegyzés típusok "
+"Válaszd ki, mely (a bővítményektől származó) egyéni bejegyzés típusok "
 "jelenjenek meg a tevékenység hírfolyamban. Például, ha a WooCommerce-t "
 "használod, akkor minden alkalommal elküldheted a tevékenység hírfolyamba, "
 "amikor valaki új terméket hoz létre."
@@ -2520,8 +2520,8 @@ msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
-"Azért mert az <a href=\"%s\">Email meghívók</a> engedélyezve van a meghívott "
-"felhasználók továbbra is regisztrálhatnak új fiókokat."
+"Azért mert az <a href=\"%s\">E-mail meghívók</a> engedélyezve van a "
+"meghívott felhasználók továbbra is regisztrálhatnak új fiókokat."
 
 #: bp-core/admin/bp-core-admin-settings.php:805
 msgid "Only allow the selected profile types to send invites."
@@ -2533,7 +2533,7 @@ msgid ""
 "profile avatars"
 msgstr ""
 "Engedélyezheted a felhasználóknak a <a href=\"https://gravatar.com/"
-"\">Gravatar</a> használatát a profil avatárjukhoz"
+"\">Gravatarok</a> használatát a profil avatárjukhoz"
 
 #: bp-core/admin/bp-core-admin-settings.php:857
 #: bp-core/admin/bp-core-admin-settings.php:910
@@ -2569,7 +2569,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1003
 msgid "Add Email confirmation to register form"
-msgstr "Email megerősítés hozzáadása a regisztrációs űrlaphoz"
+msgstr "E-mail megerősítés hozzáadása a regisztrációs űrlaphoz"
 
 #: bp-core/admin/bp-core-admin-settings.php:1018
 msgid "Add Password confirmation to register form"
@@ -2662,7 +2662,7 @@ msgstr "Adatlap mezők (adatokkal)"
 #: bp-templates/bp-nouveau/includes/activity/functions.php:274
 #: bp-templates/bp-nouveau/includes/customizer.php:167
 msgid "Connections"
-msgstr "Kapcsolatok"
+msgstr "Ismerősök"
 
 #: bp-core/admin/bp-core-admin-tools.php:86
 #: bp-core/admin/bp-core-admin-tools.php:132
@@ -2778,11 +2778,13 @@ msgstr "Alapértelmezett profil készlet és mezők javítása."
 
 #: bp-core/admin/bp-core-admin-tools.php:332
 msgid "Re-sync BuddyBoss profile fields to WordPress profile fields."
-msgstr "Szinkronizálja a BuddyBoss profil mezőket a WordPress profil mezőkkel."
+msgstr ""
+"Újra szinkronizálja a BuddyBoss profil mezőket a WordPress profil mezőkkel."
 
 #: bp-core/admin/bp-core-admin-tools.php:338
 msgid "Re-sync WordPress profile fields to BuddyBoss profile fields."
-msgstr "Szinkronizálja a WordPress profil mezőket a BuddyBoss profil mezőkkel."
+msgstr ""
+"Újra szinkronizálja a WordPress profil mezőket a BuddyBoss profil mezőkkel."
 
 #: bp-core/admin/bp-core-admin-tools.php:344
 msgid "Update display name to selected format in profile settings."
@@ -2792,11 +2794,11 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:353
 msgid "Repair total connections count for each member."
-msgstr "Az összes tag kapcsolat számának javítása."
+msgstr "Az összes tag ismerős számának javítása."
 
 #: bp-core/admin/bp-core-admin-tools.php:363
 msgid "Repair total groups count for each member."
-msgstr "Javítsd a csoportok számának számlálóját minden felhasználó esetében."
+msgstr "Javítsd a csoportok számának számlálóját minden tag esetében."
 
 #: bp-core/admin/bp-core-admin-tools.php:373
 msgid "Repopulate site tracking records."
@@ -2804,7 +2806,7 @@ msgstr "Oldal követő rekordok újranépesítése."
 
 #: bp-core/admin/bp-core-admin-tools.php:382
 msgid "Reinstall emails (delete and restore from defaults)."
-msgstr "Emailek újratelepítése (törlés majd az alapértékek visszaállítása)."
+msgstr "E-mailek újratelepítése (törlés majd az alapértékek visszaállítása)."
 
 #: bp-core/admin/bp-core-admin-tools.php:394
 msgid ""
@@ -2917,7 +2919,7 @@ msgstr "Használd a(z) %s eszközt a kapcsolatok megjavítására."
 
 #: bp-core/admin/bp-core-admin-tools.php:890
 msgid "Emails have been successfully reinstalled."
-msgstr "Az emaileket sikeresen újratelepítettük."
+msgstr "Az e-maileket sikeresen újratelepítettük."
 
 #: bp-core/admin/bp-core-admin-tools.php:910
 msgid ""
@@ -3004,7 +3006,7 @@ msgstr "Egyedi bejegyzés típusok"
 
 #: bp-core/admin/settings/bp-admin-setting-friends.php:31
 msgid "Connection Settings"
-msgstr "Kapcsolat beállítások"
+msgstr "Ismerős beállítások"
 
 #: bp-core/admin/settings/bp-admin-setting-friends.php:34
 msgid "Messaging"
@@ -3036,7 +3038,7 @@ msgstr "Eszköztár"
 #: bp-xprofile/classes/class-bp-xprofile-component.php:340
 #: bp-xprofile/classes/class-bp-xprofile-component.php:486
 msgid "Privacy"
-msgstr "Adtavédelem"
+msgstr "Adatvédelem"
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:62
 msgid "Private Network"
@@ -3053,7 +3055,7 @@ msgstr "Fő beállítások"
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:79
 msgid "Groups Settings"
-msgstr "Csoportok beállítások"
+msgstr "Csoportok beállításai"
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:35
 #: bp-core/deprecated/buddypress/2.1.php:373
@@ -3097,15 +3099,15 @@ msgstr "Meghívók"
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:33
 msgid "Email Invites Settings"
-msgstr "Email meghívók beállításai"
+msgstr "E-mail meghívók beállításai"
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:36
 msgid "Email Subject"
-msgstr "Email tárgy"
+msgstr "E-mail tárgy"
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:39
 msgid "Email Content"
-msgstr "Email tartalom"
+msgstr "E-mail tartalom"
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:44
 msgid "Set Profile Type"
@@ -3143,7 +3145,7 @@ msgstr "Regisztráció"
 
 #: bp-core/admin/settings/bp-admin-setting-registration.php:27
 msgid "Registration Settings"
-msgstr "BRegisztrációs beállítások"
+msgstr "Regisztrációs beállítások"
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:21
 #: bp-media/bp-media-settings.php:54 bp-media/bp-media-settings.php:73
@@ -3319,7 +3321,7 @@ msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:26
 msgid "New in BuddyBoss"
-msgstr "Új vagy a BuddyBoss-ban"
+msgstr "Új a BuddyBoss-ban"
 
 #: bp-core/admin/templates/about-buddyboss.php:33 bp-core/bp-core-admin.php:24
 msgid "Maintenance Release"
@@ -3332,13 +3334,14 @@ msgstr[1] "Karbantartási kiadások"
 msgid "<strong>Version %1$s</strong> addressed %2$s bug."
 msgid_plural "<strong>Version %1$s</strong> addressed %2$s bugs."
 msgstr[0] "A <strong>%1$s verzió</strong> %2$s hibát tartalmaz."
-msgstr[1] "A <strong>%1$s verzió</strong> %2$s hibát tartalmaz."
+msgstr[1] "A <strong>%1$s verzió</strong> %2$s hibákat tartalmaz."
 
 #: bp-core/admin/templates/about-buddyboss.php:53
 msgid "Welcome to BuddyBoss Platform"
 msgstr "Üdvözöllek a BuddyBoss platformban"
 
 #: bp-core/admin/templates/about-buddyboss.php:54
+#, fuzzy
 msgid ""
 "BuddyBoss Platform is a fork of <a href=\"https://buddypress.org/\" target="
 "\"_blank\">BuddyPress</a>, and is designed to be backwards compatible with "
@@ -3460,7 +3463,7 @@ msgid ""
 "Search</a> plugin with BuddyPress, you should remove it as those features "
 "have been merged into BuddyBoss Platform and greatly improved."
 msgstr ""
-"Hozzáadtunk egy natív keresési összetevőt. A tagok most már kereshetnek "
+"Hozzáadtunk egy natív keresési komponenst. A tagok most már kereshetnek "
 "tartalmat az egész hálózaton, beleértve a tagokat, csoportokat, fórumokat, "
 "egyéni üzenettípusokat és még sok mást. Ha korábban a <a href=\"https://"
 "wordpress.org/plugins/buddypress-global-search/\" target=\"_blank"
@@ -3470,7 +3473,7 @@ msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:71
 msgid "6. Email Invites"
-msgstr "6. Email meghívók"
+msgstr "6. E-mail meghívók"
 
 #: bp-core/admin/templates/about-buddyboss.php:72
 msgid ""
@@ -3478,8 +3481,8 @@ msgid ""
 "invite outside users to your community. The recipients will receive an email "
 "with a link to join the site."
 msgstr ""
-"Hozzáadtunk egy natív email meghívó komponenst. Tagjaid most már külső "
-"felhasználókat is meghívhatnak a közösségbe. A címzettek emailt kapnak egy "
+"Hozzáadtunk egy natív e-mail meghívó komponenst. Tagjaid most már külső "
+"felhasználókat is meghívhatnak a közösségbe. A címzettek e-mailt kapnak egy "
 "linkkel, hogy csatlakozzanak a webhelyhez."
 
 #: bp-core/admin/templates/about-buddyboss.php:74
@@ -3500,7 +3503,7 @@ msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:77
 msgid "<strong>Thank you for using BuddyBoss!</strong>"
-msgstr "<strong>Köszönjük a BuddyBoss-t használod!</strong>"
+msgstr "<strong>Köszönjük hogy a BuddyBoss-t használod!</strong>"
 
 #: bp-core/admin/templates/about-buddyboss.php:87
 msgid "Built by <a href=\"%s\">BuddyBoss</a>."
@@ -3527,6 +3530,7 @@ msgid "Special thanks to the BuddyPress contributors"
 msgstr "Külön köszönet ezeknek a BuddyPress közreműködőknek"
 
 #: bp-core/admin/templates/credit-screen.php:44
+#, fuzzy
 msgid ""
 "The <strong>BuddyBoss Platform</strong> is a fork of the open source project "
 "<strong><a class=\"web\" href=\"%s\">BuddyPress</a></strong>. We cannot "
@@ -3600,7 +3604,7 @@ msgid ""
 "The BuddyBar is no longer supported. Please migrate to the WordPress toolbar "
 "as soon as possible."
 msgstr ""
-"A BuddyBar többé nem támogatott. Kérjük, migrálj a WordPress eszköztárra, "
+"A BuddyBar többé nem támogatott. Kérjük, migrálja a WordPress eszköztárra, "
 "amint lehetséges."
 
 #: bp-core/bp-core-adminbar.php:202 bp-members/bp-members-adminbar.php:40
@@ -3663,7 +3667,7 @@ msgstr "HTTP hiba."
 
 #: bp-core/bp-core-attachments.php:660 bp-core/bp-core-avatars.php:1098
 msgid "Upload failed."
-msgstr "Hibás feltöltés."
+msgstr "A feltötlés nem sikerült."
 
 #: bp-core/bp-core-attachments.php:661
 msgid "Please try uploading this file with the %1$sbrowser uploader%2$s."
@@ -3824,17 +3828,17 @@ msgstr "Nem egyező"
 
 #: bp-core/bp-core-cssjs.php:724
 msgid "Enter valid email"
-msgstr "Érvényes email-t adj meg"
+msgstr "Érvényes e-mail-t adj meg"
 
 #: bp-core/bp-core-customizer-email.php:25
 #: bp-templates/bp-nouveau/includes/customizer.php:49
 msgid "Customize the appearance of emails sent by BuddyBoss."
-msgstr "BuddyBoss által küldött emailek megjelenésének testreszabása."
+msgstr "BuddyBoss által küldött e-mailek megjelenésének testreszabása."
 
 #: bp-core/bp-core-customizer-email.php:26 bp-core/bp-core-filters.php:1158
 #: bp-templates/bp-nouveau/includes/customizer.php:46
 msgid "BuddyBoss Emails"
-msgstr "BuddyBoss emailek"
+msgstr "BuddyBoss e-mailek"
 
 #: bp-core/bp-core-customizer-email.php:131
 msgid "Header"
@@ -3850,11 +3854,11 @@ msgstr "Lábléc"
 
 #: bp-core/bp-core-customizer-email.php:305
 msgid "Upload Logo"
-msgstr "Logo feltöltés"
+msgstr "Logó feltöltés"
 
 #: bp-core/bp-core-customizer-email.php:314
 msgid "Site Title logo size"
-msgstr "Weblap cím logo méret"
+msgstr "Weblap cím logó méret"
 
 #: bp-core/bp-core-customizer-email.php:315
 msgid "Used when logo is set."
@@ -3883,7 +3887,7 @@ msgstr "Címzett szövegméret"
 
 #: bp-core/bp-core-customizer-email.php:370
 msgid "Email Background Color"
-msgstr "Email háttér színe"
+msgstr "E-mail háttér színe"
 
 #: bp-core/bp-core-customizer-email.php:377
 msgid "Body Background Color"
@@ -3915,7 +3919,7 @@ msgstr "Linkek és gombok színe"
 
 #: bp-core/bp-core-customizer-email.php:432
 msgid "Change the email footer content."
-msgstr "Email lábléc tartalom megváltoztatása."
+msgstr "E-mail lábléc tartalom megváltoztatása."
 
 #: bp-core/bp-core-customizer-email.php:433
 msgid "Footer Text"
@@ -3976,43 +3980,43 @@ msgstr "%s óta"
 msgid "%s year"
 msgid_plural "%s years"
 msgstr[0] "%s év"
-msgstr[1] "%s év"
+msgstr[1] "%s évek"
 
 #: bp-core/bp-core-functions.php:1255 bp-core/bp-core-functions.php:1289
 msgid "%s month"
 msgid_plural "%s months"
 msgstr[0] "%s hónap"
-msgstr[1] "%s hónap"
+msgstr[1] "%s hónapok"
 
 #: bp-core/bp-core-functions.php:1258 bp-core/bp-core-functions.php:1292
 msgid "%s week"
 msgid_plural "%s weeks"
 msgstr[0] "%s hét"
-msgstr[1] "%s hét"
+msgstr[1] "%s hetek"
 
 #: bp-core/bp-core-functions.php:1261 bp-core/bp-core-functions.php:1295
 msgid "%s day"
 msgid_plural "%s days"
 msgstr[0] "%s nap"
-msgstr[1] "%s nap"
+msgstr[1] "%s napok"
 
 #: bp-core/bp-core-functions.php:1264 bp-core/bp-core-functions.php:1298
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s óra"
-msgstr[1] "%s óra"
+msgstr[1] "%s órák"
 
 #: bp-core/bp-core-functions.php:1267 bp-core/bp-core-functions.php:1301
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] "%s perc"
-msgstr[1] "%s perc"
+msgstr[1] "%s percek"
 
 #: bp-core/bp-core-functions.php:1270 bp-core/bp-core-functions.php:1304
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] "%s másodperc"
-msgstr[1] "%s másodperc"
+msgstr[1] "%s másodpercek"
 
 #: bp-core/bp-core-functions.php:1603
 msgid "Not recently active"
@@ -4027,7 +4031,7 @@ msgid ""
 "Everything in a community website revolves around its members. All website "
 "users are given member profiles."
 msgstr ""
-"A közösségi weboldalon minden a tagjok körül forog. Minden webhely "
+"A közösségi weboldalon minden a tagok körül forog. Minden webhely "
 "felhasználója tag profilokat kap."
 
 #: bp-core/bp-core-functions.php:2471 bp-xprofile/bp-xprofile-admin.php:156
@@ -4074,8 +4078,8 @@ msgid ""
 "Notify members of relevant activity with a toolbar bubble and/or via email "
 "and allow them to customize their notification settings."
 msgstr ""
-"Értesítsd a tagokat a releváns tevékenységekről egy eszköztá rbuborékkal és/"
-"vagy emailben, és engedélyzed, hogy testreszabhassák értesítési "
+"Értesítsd a tagokat a releváns tevékenységekről egy eszköztár buborékkal és/"
+"vagy e-mailben, és engedélyezd, hogy testreszabhassák értesítési "
 "beállításaikat."
 
 #: bp-core/bp-core-functions.php:2490 bp-groups/bp-groups-functions.php:2997
@@ -4119,7 +4123,7 @@ msgid ""
 "posting, and @mentions, with email notification support."
 msgstr ""
 "Globális, személyes és csoportos tevékenység hírfolyamok hírcsatornás "
-"kommentálással, közvetlen bejegyzésekkel, és @említésekkel, email értesítés "
+"kommentálással, közvetlen bejegyzésekkel, és @említésekkel, e-mail értesítés "
 "támogatással."
 
 #: bp-core/bp-core-functions.php:2508
@@ -4162,7 +4166,7 @@ msgstr ""
 msgid ""
 "Allow members to send email invitations to non-members to join the network."
 msgstr ""
-"Engedélyezheted a tagoknak, hogy emailben meghívókat küldjenek a nem "
+"Engedélyezheted a tagoknak, hogy e-mailben meghívókat küldjenek a nem "
 "tagoknak a hálózathoz való csatlakozásra."
 
 #: bp-core/bp-core-functions.php:2531 bp-search/bp-search-settings.php:22
@@ -4206,47 +4210,47 @@ msgstr "Bejelentkezés"
 
 #: bp-core/bp-core-functions.php:2913 bp-core/bp-core-functions.php:2922
 msgid "New Email"
-msgstr "Új email"
+msgstr "Új e-mail"
 
 #: bp-core/bp-core-functions.php:2914
 msgid "Add New Email"
-msgstr "Új email hozzáadása"
+msgstr "Új e-mail hozzáadása"
 
 #: bp-core/bp-core-functions.php:2915
 msgid "All Emails"
-msgstr "Összes email"
+msgstr "Összes e-mail"
 
 #: bp-core/bp-core-functions.php:2916
 msgid "Edit Email"
-msgstr "Email szerkesztése"
+msgstr "E-mail szerkesztése"
 
 #: bp-core/bp-core-functions.php:2917
 msgid "Filter email list"
-msgstr "Email lista szűrés"
+msgstr "E-mail lista szűrés"
 
 #: bp-core/bp-core-functions.php:2918 bp-core/bp-core-functions.php:3007
 msgid "Email list"
-msgstr "Email lista"
+msgstr "E-mail lista"
 
 #: bp-core/bp-core-functions.php:2919 bp-core/bp-core-functions.php:3008
 msgid "Email list navigation"
-msgstr "Email lista navigáció"
+msgstr "E-mail lista navigáció"
 
 #: bp-core/bp-core-functions.php:2921
 msgid "Email Templates"
-msgstr "Email sablonok"
+msgstr "E-mail sablonok"
 
 #: bp-core/bp-core-functions.php:2923
 msgid "No emails found"
-msgstr "Nincs találhatók emailek"
+msgstr "Nincs találhatók e-mailek"
 
 #: bp-core/bp-core-functions.php:2924
 msgid "No emails found in trash"
-msgstr "Nem található email a lomtárban"
+msgstr "Nem található e-mail a lomtárban"
 
 #: bp-core/bp-core-functions.php:2925 bp-core/bp-core-functions.php:3015
 msgid "Search Emails"
-msgstr "Emailek keresése"
+msgstr "E-mailek keresése"
 
 #: bp-core/bp-core-functions.php:2926 bp-core/bp-core-functions.php:3016
 #: bp-forums/admin/metaboxes.php:535
@@ -4264,27 +4268,27 @@ msgstr "Emailek keresése"
 #: bp-templates/bp-nouveau/includes/functions.php:1178
 #: bp-templates/bp-nouveau/includes/functions.php:1241
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #: bp-core/bp-core-functions.php:2927
 msgid "Uploaded to this email"
-msgstr "Feltöltve ehhez az emailhez"
+msgstr "Feltöltve ehhez az e-mailhez"
 
 #: bp-core/bp-core-functions.php:2928
 msgid "View Email"
-msgstr "Email megtekintése"
+msgstr "E-mail megtekintése"
 
 #: bp-core/bp-core-functions.php:3004
 msgid "New Email Situation"
-msgstr "Új email helyzet"
+msgstr "Új e-mail helyzet"
 
 #: bp-core/bp-core-functions.php:3005
 msgid "All Email Situations"
-msgstr "Összes email helyzet"
+msgstr "Összes e-mail helyzet"
 
 #: bp-core/bp-core-functions.php:3006
 msgid "Edit Email Situations"
-msgstr "Email helyzetek szerkesztése"
+msgstr "E-mail helyzetek szerkesztése"
 
 #: bp-core/bp-core-functions.php:3009 bp-core/classes/class-bp-admin.php:770
 msgid "Situations"
@@ -4296,29 +4300,27 @@ msgstr "Helyzet"
 
 #: bp-core/bp-core-functions.php:3011
 msgid "New email situation name"
-msgstr ""
-"Új e-\n"
-"mail helyzetnév"
+msgstr "Új e-mail helyzetnév"
 
 #: bp-core/bp-core-functions.php:3012
 msgid "No email situations found"
-msgstr "Nem található email helyzet"
+msgstr "Nem található e-mail helyzet"
 
 #: bp-core/bp-core-functions.php:3013
 msgid "No email situations"
-msgstr "Nincs email helyzet"
+msgstr "Nincs e-mail helyzet"
 
 #: bp-core/bp-core-functions.php:3014
 msgid "Popular Email Situation"
-msgstr "Népszerű email helyzet"
+msgstr "Népszerű e-mail helyzet"
 
 #: bp-core/bp-core-functions.php:3017
 msgid "Update Email Situation"
-msgstr "Email helyzet frissítés"
+msgstr "E-mail helyzet frissítés"
 
 #: bp-core/bp-core-functions.php:3018
 msgid "View Email Situation"
-msgstr "Email helyzet megtekintése"
+msgstr "E-mail helyzet megtekintése"
 
 #. translators: email disclaimer, e.g. "© 2016 Site Name".
 #: bp-core/bp-core-functions.php:3310
@@ -4356,8 +4358,8 @@ msgstr ""
 "\n"
 "{{{activity_reply}}}\n"
 "\n"
-"Keresd fel a beszélgetést a válaszhoz, vagy hogy felzárkózz a "
-"beszélgetéshez: {{{thread.url}}}"
+"Menj a beszélgetéshez válaszolni, vagy felzárkózni a beszélgetéshez: "
+"{{{thread.url}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3419
@@ -4391,8 +4393,8 @@ msgstr ""
 "\n"
 "{{{activity_reply}}}\n"
 "\n"
-"Keresd fel a beszélgetést a válaszhoz, vagy hogy felzárkózz a "
-"beszélgetéshez: {{{thread.url}}}"
+"Menj a beszélgetéshez válaszolni, vagy felzárkózni a beszélgetéshez: "
+"{{{thread.url}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3427
@@ -4426,8 +4428,8 @@ msgstr ""
 "\n"
 "{{{status_update}}}\n"
 "\n"
-"Keresd fel a beszélgetést a válaszhoz, vagy hogy felzárkózz a "
-"beszélgetéshez: {{{mentioned.url}}}"
+"Menj a beszélgetéshez válaszolni, vagy felzárkózni a beszélgetéshez: "
+"{{{mentioned.url}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3435
@@ -4461,8 +4463,8 @@ msgstr ""
 "\n"
 "{{{status_update}}}\n"
 "\n"
-"Keresd fel a beszélgetést a válaszhoz, vagy hogy felzárkózz a "
-"beszélgetéshez: {{{mentioned.url}}}"
+"Menj a beszélgetéshez válaszolni, vagy felzárkózni a beszélgetéshez: "
+"{{{mentioned.url}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3443
@@ -4541,7 +4543,7 @@ msgstr ""
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3462
 msgid "[{{{site.name}}}] New request to connect from {{initiator.name}}"
-msgstr "[{{{site.name}}}] Új kapcsolati kérés innen: {{initiator.name}}"
+msgstr "[{{{site.name}}}] Új ismerős kérés innen: {{initiator.name}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3464
@@ -4583,7 +4585,7 @@ msgstr ""
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3470
 msgid "[{{{site.name}}}] {{friend.name}} accepted your request to connect"
-msgstr "[{{{site.name}}}] {{friend.name}} elfogadta a kapcsolódási kérésedet"
+msgstr "[{{{site.name}}}] {{friend.name}} elfogadta a ismerős kérésedet"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3472
@@ -4593,7 +4595,7 @@ msgid ""
 "\n"
 "{{{member.card}}}"
 msgstr ""
-"<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> elfogadta kapcsolat "
+"<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> elfogadta ismerős "
 "kérésedet.\n"
 "\n"
 "{{{member.card}}}"
@@ -4624,7 +4626,7 @@ msgid ""
 "\n"
 "{{{group.small_card}}}"
 msgstr ""
-"A következő &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot "
+"A következő &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; "
 "csoport adatai frissítésre kerültek.\n"
 "\n"
 "{{{group.description}}}\n"
@@ -4651,7 +4653,7 @@ msgstr ""
 msgid ""
 "[{{{site.name}}}] You have an invitation to the group: \"{{group.name}}\""
 msgstr ""
-"[{{{site.name}}}] Új tagsági kérelem ebbe a csoportba: \"{{group.name}} \""
+"[{{{site.name}}}] Meghívót kaptál ebbe a csoportba: \"{{group.name}} \""
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3488
@@ -4666,7 +4668,7 @@ msgid ""
 "<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other "
 "pending group invites."
 msgstr ""
-"<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> meghívott téged, hofy "
+"<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> meghívott Téged, hogy "
 "csatlakozz a csoporthoz <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n"
 "\n"
 "{{{group.invite_message}}}\n"
@@ -4748,7 +4750,7 @@ msgid ""
 msgstr ""
 "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> csatlakozni "
 "szeretne a csoporthoz &quot;<a href=\"{{{group.url}}}\">{{group.name}}</"
-"a>&quot;. Mivel Te vagy a csport szervezője el kell fogadnod vagy vissza "
+"a>&quot;. Mivel Te vagy a csoport készítője el kell fogadnod vagy vissza "
 "kell utasítanod tagsági kérelmet.\n"
 "\n"
 "{{{member.card}}}\n"
@@ -4769,7 +4771,7 @@ msgid ""
 "To view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}"
 msgstr ""
 "{{requesting-user.name}} szeretne csatlakozni a csoporthoz \"{{group."
-"name}}\". A csoport szervezőjeként jóvá kell hagynod vagy el kell utasítanod "
+"name}}\". A csoport készítőjeként jóvá kell hagynod vagy el kell utasítanod "
 "a tagsági kérelmet.\n"
 "\n"
 "Ennek és az összes függőben lévő kérelem kezeléséhez látogasd meg: {{{group-"
@@ -4807,14 +4809,13 @@ msgstr ""
 "{{sender.name}} új üzenetet küldött neked.\n"
 "\n"
 "{{{message}}}\"\n"
-"\n"
-"Keresd fel a beszélgetést a válaszhoz, vagy hogy felzárkózz a "
-"beszélgetéshez: {{{message.url}}}"
+"Menj a beszélgetéshez válaszolni, vagy felzárkózni a beszélgetéshez: "
+"{{{message.url}}}"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3518
 msgid "[{{{site.name}}}] Verify your new email address"
-msgstr "[{{{site.name}}}] Hitelesítsed új email címed"
+msgstr "[{{{site.name}}}] Hitelesítsed új e-mail címed"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3520
@@ -4826,13 +4827,13 @@ msgid ""
 "Otherwise, you can safely ignore and delete this email if you have changed "
 "your mind, or if you think you have received this email in error."
 msgstr ""
-"Nemrégiben módosítottad a(z) {{site.name}} fiókodhoz társított email címet "
-"{{user.email}} címre. Ha ez helyes, <a href=\"{{{verify.url}}}\">kattintson "
+"Nemrégiben módosítottad a(z) {{site.name}} fiókodhoz társított e-mail címet "
+"{{user.e-mail}} címre. Ha ez helyes, <a href=\"{{{verify.url}}}\">kattintson "
 "ide</a> a módosítás megerősítéséhez.\n"
 "\n"
-"Ellenkező esetben nyugodtan figyelmen kívül hagyhatod és törölheti ezt az "
-"emailt, ha meggondoltad magad, vagy ha úgy gondolod, hogy tévesen kapta meg "
-"ezt az emailt."
+"Ellenkező esetben nyugodtan figyelmen kívül hagyhatod és törölheted ezt az e-"
+"mailt, ha meggondoltad magad, vagy ha úgy gondolod, hogy tévesen kaptad meg "
+"ezt az e-mailt."
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3522
@@ -4844,20 +4845,21 @@ msgid ""
 "Otherwise, you can safely ignore and delete this email if you have changed "
 "your mind, or if you think you have received this email in error."
 msgstr ""
-"Nemrég módosítottad a {{site.name}} fiókodhoz tartozó email címet a {{user."
-"email}} címre. Ha ez helyes, akkor lépj a következő linkre a módosítás "
+"Nemrég módosítottad a {{site.name}} fiókodhoz tartozó e-mail címet a {{user."
+"e-mail}} címre. Ha ez helyes, akkor lépj a következő linkre a módosítás "
 "megerősítéséhez: {{{verify.url}}}\n"
 "\n"
-"Ellenkező esetben biztonságosan figyelmen kívül hagyhatod és törölheted ezt "
-"az emailt, ha megváltoztattad elképzelésed, vagy ha úgy gondolod, hogy hibás "
-"kaptál."
+"Ellenkező esetben nyugodtan figyelmen kívül hagyhatod és törölheted ezt az e-"
+"mailt, ha meggondoltad magad, vagy ha úgy gondolod, hogy tévesen kaptad meg "
+"ezt az e-mailt."
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3526
 msgid ""
 "[{{{site.name}}}] Membership request for group \"{{group.name}}\" accepted"
 msgstr ""
-"[{{{site.name}}}] A(z) \"{{group.name}}\" csoportba való felvétel megtörtént"
+"[{{{site.name}}}] A(z) \"{{group.name}}\" csoportba való felvételed "
+"elfogadták"
 
 #. translators: do not remove {} brackets or translate its contents.
 #: bp-core/bp-core-functions.php:3528
@@ -4994,7 +4996,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:3558
 msgid "An invitation from {{inviter.name}} to join [{{{site.name}}}]"
 msgstr ""
-"{{inviter.name}} meghívót küldöttt, hogy csatlakozz ehhez az oldalhoz: "
+"{{inviter.name}} meghívót küldött, hogy csatlakozz ehhez az oldalhoz: "
 "[{{{site.name}}}]"
 
 #. translators: do not remove {} brackets or translate its contents.
@@ -5012,7 +5014,7 @@ msgid ""
 "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] "
 "community."
 msgstr ""
-"{{inviter.name}} meghívott téged, hogy csatlakozz a [{{{site.name}}}] oldal "
+"{{inviter.name}} meghívott téged, hogy csatlakozz a [{{{site.name}}}] "
 "közösségéhez."
 
 #: bp-core/bp-core-functions.php:3588
@@ -5026,8 +5028,8 @@ msgid ""
 "You will no longer receive emails when someone replies to an update or "
 "comment you posted."
 msgstr ""
-"Egy felhasználó válaszolt egy frissítésre, vagy megjegyzésre bejegyzéseddel "
-"kapcsolatban."
+"Most már nem kapsz e-mailt, amikor valaki válaszol egy frissítésedre vagy "
+"hozzászólásodra amit közzétettél."
 
 #: bp-core/bp-core-functions.php:3596
 msgid ""
@@ -5039,16 +5041,16 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:3604
 msgid "Recipient was mentioned in an activity update."
-msgstr "A címzettet említésre került egy tevékenységi frissítésben."
+msgstr "A címzett említésre került egy tevékenységi frissítésben."
 
 #: bp-core/bp-core-functions.php:3607 bp-core/bp-core-functions.php:3615
 msgid ""
 "You will no longer receive emails when someone mentions you in an update."
-msgstr "Nem kapsz több e-mailt, ha valaki megemlít egy frissítésben."
+msgstr "Most már nem kapsz e-mailt, ha valaki megemlít egy frissítésben."
 
 #: bp-core/bp-core-functions.php:3612
 msgid "Recipient was mentioned in a group activity update."
-msgstr "A címzettet említésre került egy csoport tevékenység frissítésében."
+msgstr "A címzett említésre került egy csoport tevékenység frissítésében."
 
 #: bp-core/bp-core-functions.php:3620
 msgid "Recipient has registered for an account."
@@ -5056,7 +5058,7 @@ msgstr "A címzett regisztrált egy fiókot."
 
 #: bp-core/bp-core-functions.php:3625
 msgid "Recipient has registered for an account and site."
-msgstr "A címzett regisztrált egy fiókot és egy webhelyet."
+msgstr "A címzett regisztrált egy fiókot és egy oldalt."
 
 #: bp-core/bp-core-functions.php:3630
 msgid "A member has sent an invitation to connect to the recipient."
@@ -5066,7 +5068,7 @@ msgstr "Egy tag meghívást küldött, hogy csatlakozz a címzetthez."
 msgid ""
 "You will no longer receive emails when someone sends you an invitation to "
 "connect."
-msgstr "Nem kapsz több emailt, ha valaki kapcsolódás üzenetet küld."
+msgstr "Most már nem kapsz e-mailt, ha valaki meghívót küld."
 
 #: bp-core/bp-core-functions.php:3638
 msgid "Recipient has had an invitation to connect accepted by a member."
@@ -5078,7 +5080,7 @@ msgid ""
 "You will no longer receive emails when someone accepts your invitation to "
 "connect."
 msgstr ""
-"Többé nem fogsz emaileket kapni, ha valaki elfogadja a csatlakozási "
+"Most már nem kapsz e-mailt kapni, ha valaki elfogadja a csatlakozási "
 "meghívást."
 
 #: bp-core/bp-core-functions.php:3646
@@ -5087,7 +5089,7 @@ msgstr "Egy csoport részleteit frissítették."
 
 #: bp-core/bp-core-functions.php:3649
 msgid "You will no longer receive emails when one of your groups is updated."
-msgstr "Nem kapsz több e-mailt, ha az egyik csoport frissítve van."
+msgstr "Most már nem kapsz e-mailt, ha az egyik csoport frissítve lett."
 
 #: bp-core/bp-core-functions.php:3654
 msgid "A member has sent a group invitation to the recipient."
@@ -5095,7 +5097,7 @@ msgstr "A tag csoportos meghívást küldött a címzettnek."
 
 #: bp-core/bp-core-functions.php:3657
 msgid "You will no longer receive emails when you are invited to join a group."
-msgstr "Nem kapsz több e-mailt, amikor meghívást kapsz egy csoporthoz."
+msgstr "Most már nem kapsz e-mailt, amikor meghívást kapsz egy csoporthoz."
 
 #: bp-core/bp-core-functions.php:3662
 msgid "Recipient's status within a group has changed."
@@ -5104,7 +5106,7 @@ msgstr "A csoporton belüli címzett állapota megváltozott."
 #: bp-core/bp-core-functions.php:3665
 msgid ""
 "You will no longer receive emails when you have been promoted in a group."
-msgstr "Nem kapsz több e-mailt, ha egy csoportban előléptettek."
+msgstr "Most már nem kapsz e-mailt, ha egy csoportban előléptettek."
 
 #: bp-core/bp-core-functions.php:3670
 msgid "A member has requested permission to join a group."
@@ -5115,7 +5117,7 @@ msgid ""
 "You will no longer receive emails when someone requests to be a member of "
 "your group."
 msgstr ""
-"Nem kapsz több e-mailt, ha valaki megkéri, hogy tagja legyél a csoportnak."
+"Most már nem kapsz e-mailt, ha valaki szeretne tagja lenni a csoportodnak."
 
 #: bp-core/bp-core-functions.php:3678
 msgid "Recipient has received a private message."
@@ -5123,7 +5125,7 @@ msgstr "A címzett privát üzenetet kapott."
 
 #: bp-core/bp-core-functions.php:3681
 msgid "You will no longer receive emails when someone sends you a message."
-msgstr "Nem kapsz több e-mailt, ha valaki üzenetet küld."
+msgstr "Most már nem kapsz e-mailt, ha valaki üzenetet küld."
 
 #: bp-core/bp-core-functions.php:3686
 msgid "Recipient has changed their email address."
@@ -5138,7 +5140,7 @@ msgid ""
 "You will no longer receive emails when your request to join a group has been "
 "accepted or denied."
 msgstr ""
-"Nem kapsz több e-mailt, amikor a csoporthoz való csatlakozás iránti "
+"Most már nem kapsz e-mailt, amikor a csoporthoz való csatlakozás iránti "
 "kérelmedet elfogadták vagy elutasították."
 
 #: bp-core/bp-core-functions.php:3699
@@ -5155,7 +5157,7 @@ msgid ""
 "You will no longer receive emails when a member will create a new forum "
 "discussion."
 msgstr ""
-"Többé nem fogsz emaileket kapni, amikor egy tag új fórumbeszélgetést készít."
+"Most már nem kapsz e-mailt , amikor egy tag új fórumbeszélgetést készít."
 
 #: bp-core/bp-core-functions.php:3715
 msgid ""
@@ -5167,12 +5169,11 @@ msgid ""
 "You will no longer receive emails when a member will reply to one of your "
 "forum discussions."
 msgstr ""
-"Többé nem fogsz emaileket kapni, amikor a tag válaszol az egyik fórum-"
-"megbeszélésedre."
+"Most már nem kapsz e-mailt, amikor a tag válaszol az egyik fórumbeszélésedre."
 
 #: bp-core/bp-core-functions.php:3723
 msgid "Recipient has been invited by a member to join the website."
-msgstr "Egy tag meghívta a címzettet, hogy csatlakozzon a weboldalhoz."
+msgstr "Egy tag meghívta a címzettet, hogy csatlakozzon a oldalhoz."
 
 #: bp-core/bp-core-functions.php:3771 bp-core/bp-core-functions.php:3777
 #: bp-core/bp-core-functions.php:3782
@@ -5184,13 +5185,13 @@ msgid ""
 "Please log in and go to your settings to unsubscribe from notification "
 "emails."
 msgstr ""
-"Jelentkezz be, és lépj be a beállításaidba, hogy leiratkozz az értesítési "
-"emailekről."
+"Jelentkezz be, és lépj be a beállításaidba, hogy leiratkozz az értesítési e-"
+"mailekről."
 
 #: bp-core/bp-core-functions.php:3783
 msgid "Please go to your notifications settings to unsubscribe from emails."
 msgstr ""
-"Kérjük, keresd meg az értesítési beállításaidat az emailekről való "
+"Kérjük, keresd meg az értesítési beállításaidat az e-mailekről való "
 "leiratkozáshoz."
 
 #: bp-core/bp-core-functions.php:3811
@@ -5198,8 +5199,8 @@ msgid ""
 "You can change this or any other email notification preferences in your "
 "email settings."
 msgstr ""
-"Ezt vagy bármely más email értesítési beállítást megváltoztathatja az email "
-"beállításaiban."
+"Ezt vagy bármely más e-mail értesítési beállítást megváltoztathatod az e-"
+"mail beállításaidban."
 
 #: bp-core/bp-core-functions.php:4096
 msgid "Member changes their profile photo"
@@ -5215,7 +5216,7 @@ msgstr "Tag regisztrált az oldalra"
 
 #: bp-core/bp-core-functions.php:4108
 msgid "Two members become connected"
-msgstr "Két tag kacsolódva"
+msgstr "Két tag ismerősök lettek"
 
 #: bp-core/bp-core-functions.php:4112
 msgid "Member creates a group"
@@ -5223,11 +5224,11 @@ msgstr "Tag létrehoz egy csoportot"
 
 #: bp-core/bp-core-functions.php:4116
 msgid "Member joins a group"
-msgstr "Tag csatlakozott egy csoporthoz"
+msgstr "Tag csatlakozik egy csoporthoz"
 
 #: bp-core/bp-core-functions.php:4120
 msgid "Group details are updated"
-msgstr "Csoport részleteit frissítve"
+msgstr "Csoport részletei frissítve"
 
 #: bp-core/bp-core-functions.php:4124
 msgid "Member creates a forum discussion"
@@ -5267,7 +5268,7 @@ msgstr "Név"
 
 #: bp-core/bp-core-taxonomy.php:32
 msgid "BuddyBoss email types"
-msgstr "BuddyBoss email típusok"
+msgstr "BuddyBoss e-mail típusok"
 
 #: bp-core/bp-core-template.php:119 bp-forums/admin/settings.php:1237
 msgid "Options"
@@ -5330,7 +5331,7 @@ msgstr "%s profil mező bejegyzések"
 
 #: bp-core/bp-core-tools-default-data.php:39
 msgid "%s member connections"
-msgstr "%s tag kapcsolatok"
+msgstr "%s tag ismerősök"
 
 #: bp-core/bp-core-tools-default-data.php:45
 msgid "%s private messages"
@@ -5342,7 +5343,7 @@ msgstr "%s személyes tevékenység elem"
 
 #: bp-core/bp-core-tools-default-data.php:58
 msgid "%s new social groups"
-msgstr "%s új közösségi csopprtok"
+msgstr "%s új közösségi csoportok"
 
 #: bp-core/bp-core-tools-default-data.php:63
 msgid "%s group members (1 user can be in several groups)"
@@ -5388,7 +5389,7 @@ msgstr "trackback-et adott a bejegyzésedhez"
 #: bp-core/bp-core-wp-emails.php:113 bp-core/bp-core-wp-emails.php:387
 msgid "<a href=\"%s\">Click here</a> to see all trackbacks on this post."
 msgstr ""
-"<a href=\"%s\">Kattints ide</a> a bejegyzés összes visszakövetésének "
+"<a href=\"%s\">Kattints ide</a> a bejegyzés összes trackback-nek "
 "megtekintéséhez."
 
 #: bp-core/bp-core-wp-emails.php:114 bp-core/bp-core-wp-emails.php:388
@@ -5398,7 +5399,7 @@ msgstr "Trackback moderálása: "
 #. translators: 1: blog name, 2: post title
 #: bp-core/bp-core-wp-emails.php:117
 msgid "[%1$s] Trackback: \"%2$s\""
-msgstr "[%1$s] Visszakövetés: \"%2$s\""
+msgstr "[%1$s] Trackback: \"%2$s\""
 
 #: bp-core/bp-core-wp-emails.php:120
 msgid "added pingback on your post"
@@ -5462,7 +5463,7 @@ msgid ""
 "added new trackback on the post <a href=\"%s\">\"%s\"</a> is waiting for "
 "your approval."
 msgstr ""
-"új visszakövetést adott a bejegyzéshez <a href=\"%s\">\"%s\"</a> , mely a "
+"új trackback-et adott a bejegyzéshez <a href=\"%s\">\"%s\"</a> , mely a "
 "jóváhagyásodra vár."
 
 #: bp-core/bp-core-wp-emails.php:392
@@ -5510,7 +5511,7 @@ msgstr "Felhasználónév: <b>%s</b>"
 #. translators: %s: user email address
 #: bp-core/bp-core-wp-emails.php:687
 msgid "Email: <b>%s</b>"
-msgstr "Email: <b>%s</b>"
+msgstr "E-mail: <b>%s</b>"
 
 #. translators: Password change notification email subject. %s: Site title
 #: bp-core/bp-core-wp-emails.php:692
@@ -5543,8 +5544,8 @@ msgstr "Weblap név: <b>%s</b>"
 #: bp-core/bp-core-wp-emails.php:834
 msgid "If this was a mistake, just ignore this email and nothing will happen."
 msgstr ""
-"Ha ez egy hiba, akkor csak hagyd figyelmen kívül ezt az emailt, és semmi sem "
-"fog történni."
+"Ha ez egy hiba, akkor csak hagyd figyelmen kívül ezt az e-mailt, és semmi "
+"sem fog történni."
 
 #: bp-core/bp-core-wp-emails.php:835
 msgid "To reset your password <a href=\"%s\">Click here</a>."
@@ -5559,7 +5560,7 @@ msgstr "Szia ###USERNAME###,"
 #: bp-core/bp-core-wp-emails.php:874
 msgid "This notice confirms that your password was changed on ###SITENAME###."
 msgstr ""
-"Ez az értesítés megerősíti, hogy jelszavad megváltozott az ###SITENAME### "
+"Ez az értesítés megerősíti, hogy jelszavad megváltozott a(z) ###SITENAME### "
 "oldalon."
 
 #: bp-core/bp-core-wp-emails.php:875
@@ -5574,7 +5575,7 @@ msgstr ""
 #: bp-core/bp-core-wp-emails.php:981 bp-core/bp-core-wp-emails.php:1144
 #: bp-core/bp-core-wp-emails.php:1370
 msgid "This email has been sent to ###EMAIL###"
-msgstr "Ez az email ide került elküldésre: ###EMAIL###"
+msgstr "Ez az e-mail ide került elküldésre: ###EMAIL###"
 
 #: bp-core/bp-core-wp-emails.php:877 bp-core/bp-core-wp-emails.php:927
 #: bp-core/bp-core-wp-emails.php:982 bp-core/bp-core-wp-emails.php:1145
@@ -5591,7 +5592,7 @@ msgid ""
 "This notice confirms that your email address on ###SITENAME### was changed "
 "to ###NEW_EMAIL###."
 msgstr ""
-"Ez az értesítés megerősíti, hogy az email címed megváltozott az "
+"Ez az értesítés megerősíti, hogy az e-mail címed megváltozott a(z) "
 "###SITENAME### oldalon, erre: ###NEW_EMAIL###."
 
 #: bp-core/bp-core-wp-emails.php:925
@@ -5599,13 +5600,13 @@ msgid ""
 "If you did not change your email, please contact the Site Administrator at "
 "<br/>###ADMIN_EMAIL###"
 msgstr ""
-"Ha nem módosítottad az email címed, kérjük, fordulj a webhely "
+"Ha nem módosítottad az e-mail címed, kérjük, fordulj a webhely "
 "adminisztrátorához: <br />###ADMIN_EMAIL###"
 
 #. translators: User email change notification email subject. 1: Site name
 #: bp-core/bp-core-wp-emails.php:932
 msgid "[%s] Notice of Email Change"
-msgstr "[%s] Email változás értesítés"
+msgstr "[%s] E-mail változás értesítés"
 
 #. translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME,
 #. SITEURL: those are placeholders.
@@ -5621,7 +5622,7 @@ msgstr "Hogy vagy ###USERNAME###,"
 #: bp-core/bp-core-wp-emails.php:978
 msgid ""
 "You recently requested to have the email address on your account changed."
-msgstr "Nemrég kérted fiókod email címének megváltoztatását."
+msgstr "Nemrég kérted fiókod e-mail címének megváltoztatását."
 
 #: bp-core/bp-core-wp-emails.php:979 bp-core/bp-core-wp-emails.php:1142
 msgid ""
@@ -5637,7 +5638,7 @@ msgid ""
 "You can safely ignore and delete this email if you do not want to take this "
 "action."
 msgstr ""
-"Nyugodtan figyelmen kívül hagyhatod és törölheted ezt az emailt, ha nem "
+"Nyugodtan figyelmen kívül hagyhatod és törölheted ezt az e-mailt, ha nem "
 "akarod megtenni ezt a műveletet."
 
 #. translators: Do not translate SITENAME, SITEURL; those are placeholders.
@@ -5687,7 +5688,7 @@ msgid ""
 "Your request to erase your personal data on ###SITENAME### has been "
 "completed."
 msgstr ""
-"A(z) ###SITENAME### weblapon tett személyes adat törlése kérelmed "
+"A(z) ###SITENAME### weblapon tett személyes adat törlési kérelmed "
 "befejeződött."
 
 #: bp-core/bp-core-wp-emails.php:1042 bp-core/bp-core-wp-emails.php:1048
@@ -5726,7 +5727,7 @@ msgstr ""
 msgid ""
 "You recently requested to have the administration email address on your site "
 "changed."
-msgstr "Nemrég kérted a webhely adminisztrációs email címének módosítását."
+msgstr "Nemrég kérted a webhely adminisztrációs e-mail címének módosítását."
 
 #. translators: New site notification email. 1: Site URL, 2: User IP address,
 #. 3: Settings screen URL
@@ -5775,14 +5776,14 @@ msgstr "Jelentkezz be itt: BLOG_URLwp-login.php"
 
 #: bp-core/bp-core-wp-emails.php:1299
 msgid "We hope you enjoy your new site. Thanks! <br />--The Team @ SITE_NAME"
-msgstr "Reméljük tetszik az új oldalad. Köszi! <br />--A SITE_NAME csapata"
+msgstr "Reméljük tetszik az új oldalad. Köszi! <br />--A @ SITE_NAME csapata"
 
 #: bp-core/bp-core-wp-emails.php:1367
 msgid ""
 "You recently requested to have the network admin email address on your "
 "network changed."
 msgstr ""
-"Nemrég kérted a hálózaton található adminisztrátor email cím változtatását."
+"Nemrég kérted a hálózaton található adminisztrátor e-mail cím változtatását."
 
 #: bp-core/bp-core-wp-emails.php:1368
 msgid ""
@@ -5808,40 +5809,40 @@ msgid ""
 "This notice confirms that the network admin email address was changed on "
 "###SITENAME###."
 msgstr ""
-"Ez az értesítés megerősíti, hogy az hálózat adminisztrátor email címee "
+"Ez az értesítés megerősíti, hogy az hálózat adminisztrátor e-mail címee "
 "megváltozott az ###SITENAME### oldalon."
 
 #: bp-core/bp-core-wp-emails.php:1411
 msgid "The new network admin email address is ###NEW_EMAIL###."
-msgstr "Az új hálózati rendszergazdai email cím: ###NEW_EMAIL###.."
+msgstr "Az új hálózati rendszergazdai e-mail cím: ###NEW_EMAIL###.."
 
 #: bp-core/bp-core-wp-emails.php:1412 bp-core/bp-core-wp-emails.php:1461
 msgid "This email has been sent to ###OLD_EMAIL###"
-msgstr "Ez az email ide került elküldésre: ###OLD_EMAIL###"
+msgstr "Ez az e-mail ide került elküldésre: ###OLD_EMAIL###"
 
 #. translators: Network admin email change notification email subject. %s:
 #. Network title
 #: bp-core/bp-core-wp-emails.php:1418
 msgid "[%s] Notice of Network Admin Email Change"
-msgstr "[%s] Értesítés a rendszergazdai email változásról"
+msgstr "[%s] Értesítés a rendszergazdai e-mail változásról"
 
 #: bp-core/bp-core-wp-emails.php:1459
 msgid ""
 "This notice confirms that the admin email address was changed on "
 "###SITENAME###."
 msgstr ""
-"Ez az értesítés megerősíti, hogy az adminisztrátor email címe megváltozott "
+"Ez az értesítés megerősíti, hogy az adminisztrátor e-mail címe megváltozott "
 "az ###SITENAME### oldalon."
 
 #: bp-core/bp-core-wp-emails.php:1460
 msgid "The new admin email address is ###NEW_EMAIL###."
-msgstr "Az új rendszergazdai email cím: ###NEW_EMAIL###.."
+msgstr "Az új rendszergazdai e-mail cím: ###NEW_EMAIL###.."
 
 #. translators: Site admin email change notification email subject. %s: Site
 #. title
 #: bp-core/bp-core-wp-emails.php:1467
 msgid "[%s] Notice of Admin Email Change"
-msgstr "[%s] Értesítés a rendszergazdai email változásról"
+msgstr "[%s] Értesítés a rendszergazdai e-mail változásról"
 
 #: bp-core/bp-core-wp-emails.php:1503
 msgid ""
@@ -5889,7 +5890,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:309
 #: bp-core/classes/class-bp-admin.php:411
 msgid "BuddyBoss Components"
-msgstr "BuddyBoss összetevők"
+msgstr "BuddyBoss komponensek"
 
 #: bp-core/classes/class-bp-admin.php:327
 #: bp-core/classes/class-bp-admin.php:429
@@ -5928,23 +5929,22 @@ msgstr[1] "Csak ilyen fájl típusokat tölts fel: %s."
 #: bp-core/classes/class-bp-attachment-avatar.php:376
 #: bp-xprofile/screens/change-avatar.php:66
 msgid "There was a problem cropping your profile photo."
-msgstr "Az adatlap-kép körbevágása során valami gond támadt."
+msgstr "Az profilképed körbevágása során valami gond támadt."
 
 #: bp-core/classes/class-bp-attachment-avatar.php:377
 #: bp-xprofile/screens/change-avatar.php:80
 msgid "Your new profile photo was uploaded successfully."
-msgstr "Az új adatlapkép feltöltése sikeres."
+msgstr "Sikeresen feltöltötted az új profilképed."
 
 #: bp-core/classes/class-bp-attachment-avatar.php:378
 #: bp-xprofile/actions/delete-avatar.php:34
 msgid "There was a problem deleting your profile photo. Please try again."
-msgstr ""
-"Az adatlap fotó törlése során hiba történt. Meg kell ismételni a műveletet."
+msgstr "Az profilképed törlése során hiba történt. Kérlek, próbáld újra."
 
 #: bp-core/classes/class-bp-attachment-avatar.php:379
 #: bp-xprofile/actions/delete-avatar.php:32
 msgid "Your profile photo was deleted successfully!"
-msgstr "Az adatlap fotódat sikeresen töröltük!"
+msgstr "Az profilképed sikeresen töröltük!"
 
 #: bp-core/classes/class-bp-attachment-avatar.php:394
 #: bp-groups/screens/single/admin/group-avatar.php:77
@@ -5954,14 +5954,13 @@ msgstr "A csoport profilkép körbevágása közben probléma történt."
 #: bp-core/classes/class-bp-attachment-avatar.php:395
 #: bp-groups/actions/create.php:331
 msgid "The group profile photo was uploaded successfully."
-msgstr "A csoport adatlapjához tartozó kép feltöltése sikeres."
+msgstr "Sikeresen feltöltötted a csoport profilképet."
 
 #: bp-core/classes/class-bp-attachment-avatar.php:396
 #: bp-groups/screens/single/admin/group-avatar.php:34
 msgid "There was a problem deleting the group profile photo. Please try again."
 msgstr ""
-"Hiba történt a csoport adatlap képének törlése során. Kérjük, próbálja meg "
-"újra."
+"Hiba történt a csoport adatlap képének törlése során. Kérlek, próbáld újra."
 
 #: bp-core/classes/class-bp-attachment-avatar.php:397
 #: bp-groups/screens/single/admin/group-avatar.php:32
@@ -5974,24 +5973,23 @@ msgstr "A kép túl nagy. Kérlek, tölts fel kisebbet, mint %s"
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:209
 msgid "Your new cover photo was uploaded successfully."
-msgstr "Az új borítókép feltöltése sikeres."
+msgstr "Sikeresen feltöltötted az új borítóképed."
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:210
 msgid "There was a problem deleting your cover photo. Please try again."
-msgstr "Hiba történt a borítóképed törlése során. Kérjük, próbáld meg újra."
+msgstr "Hiba történt a borítóképed törlése során. Kérjük, próbáld újra."
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:211
 msgid "Your cover photo was deleted successfully."
-msgstr "A borítóképedet fotódat sikeresen töröltük."
+msgstr "A borítóképedet sikeresen töröltük."
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:227
 msgid "The group cover photo was uploaded successfully."
-msgstr "A csoport borítókép feltöltése sikeres."
+msgstr "Sikeresen feltöltötted a csoport borítóképét."
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:228
 msgid "There was a problem deleting the group cover photo. Please try again."
-msgstr ""
-"Hiba történt a csoport borítókép törlése során. Kérjük, próbáld meg újra."
+msgstr "Hiba történt a csoport borítókép törlése során. Kérjük, próbáld újra."
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:229
 msgid "The group cover photo was deleted successfully!"
@@ -6033,7 +6031,7 @@ msgstr "A fájl lemezre mentése sikertelen."
 #: bp-core/classes/class-bp-attachment.php:167
 #: bp-media/bp-media-functions.php:118
 msgid "File upload stopped by extension."
-msgstr "A fájlfeltöltést a bővítmény leállította."
+msgstr "A fájlfeltöltést egy bővítmény leállította."
 
 #: bp-core/classes/class-bp-attachment.php:456
 msgid "Cropping the file failed: missing source file."
@@ -6098,7 +6096,7 @@ msgid ""
 "BuddyPress nav functions instead."
 msgstr ""
 "Ezeket a globális értékeket nem szabad közvetlenül felhasználni és "
-"elavultnak kell lenniük. használd a A BuddyPress navigációs funkcióit."
+"elavultak. Használd a BuddyPress navigációs funkcióit."
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:25
 msgid "Show a list of member avatars that are following the logged-in user."
@@ -6106,7 +6104,7 @@ msgstr "Megjeleníti a bejelentkezett felhasználót követő tagok avatárjait.
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:31
 msgid "(BB) - Users Following Me"
-msgstr "(BB) - Követő felhasználók"
+msgstr "(BB) - Általam követett felhasználók"
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:81
 #: bp-core/classes/class-bp-core-follow-following-widget.php:81
@@ -6163,7 +6161,7 @@ msgstr "Megjeleníti a bejelentkezett felhasználót követő tagok avatárjait.
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:31
 msgid "(BB) - Users I'm Following"
-msgstr "(BB) - A követett felhasználók"
+msgstr "(BB) - Követett felhasználók"
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:108
 msgid "Users I'm Following"
@@ -6195,7 +6193,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:136
 #: bp-search/bp-search-functions.php:511
 msgid "Username"
-msgstr "Felhasználónév vagy email"
+msgstr "Felhasználónév vagy e-mail"
 
 #: bp-core/classes/class-bp-core-login-widget.php:110
 #: bp-forums/common/widgets.php:96
@@ -6254,7 +6252,7 @@ msgstr "BuddyBoss mag"
 
 #: bp-core/classes/class-bp-core.php:350
 msgid "BuddyBoss emails"
-msgstr "BuddyBoss emailek"
+msgstr "BuddyBoss e-mailek"
 
 #: bp-core/classes/class-bp-core.php:370
 msgid "BuddyBoss group type"
@@ -6262,7 +6260,7 @@ msgstr "BuddyBoss csoport típus"
 
 #: bp-core/classes/class-bp-email-tokens.php:81
 msgid "Display the group card with minimal group details."
-msgstr "Megjeleníti a csoportkártyát csoport minimális részleteivel."
+msgstr "Megjeleníti a csoportkártyát a csoport minimális részleteivel."
 
 #: bp-core/classes/class-bp-email-tokens.php:85
 msgid "Display the group card with more details like group cover photo etc."
@@ -6287,7 +6285,7 @@ msgid ""
 "Display the link to the member profile who sent the message. Only works in "
 "email that is sent to a member when someone sends him/her a message."
 msgstr ""
-"Megjeleníti az üzenetet küldő tag profil linkjét. Csak abban az emailben "
+"Megjeleníti az üzenetet küldő tag profil linkjét. Csak abban az e-mailben "
 "működik, amelyet egy tagnak küldenek, akkor ha üzenetet kap."
 
 #: bp-core/classes/class-bp-email-tokens.php:105
@@ -6351,11 +6349,11 @@ msgstr "és %d több"
 
 #: bp-core/classes/class-bp-email-tokens.php:917
 msgid "connections"
-msgstr "kapcsolatok"
+msgstr "ismerősök"
 
 #: bp-core/classes/class-bp-email-tokens.php:917
 msgid "connection"
-msgstr "kapcsolat"
+msgstr "ismerős"
 
 #: bp-core/classes/class-bp-email-tokens.php:928
 #: bp-members/classes/class-bp-members-admin.php:1217
@@ -6373,7 +6371,7 @@ msgstr "aktiválás"
 
 #: bp-core/compatibility/bp-incompatible-plugins-helper.php:313
 msgid "LearnDash & bbPress Integration is deactivated."
-msgstr "LearnDash és bbPressintegráció ki van kapcsolva."
+msgstr "LearnDash és bbPress Integration ki van kapcsolva."
 
 #: bp-core/compatibility/bp-incompatible-plugins-helper.php:314
 msgid ""
@@ -6381,9 +6379,9 @@ msgid ""
 "plugin & %s component is deactivated. Please activate LearnDash LMS plugin & "
 "%s component."
 msgstr ""
-"A LearnDash és bbPress integrációs bővítmény nem működik, ha a LearnDash LMS "
-"és a %s összetevő ki van kapcsolva. Kérjük, aktiváld a LearnDash LMS "
-"bővítményt és a %s összetevőt."
+"A LearnDash és bbPress Integration bővítmény nem működik, ha a LearnDash LMS "
+"és a %s komponens ki van kapcsolva. Kérjük, aktiváld a LearnDash LMS "
+"bővítményt és a %s komponenst."
 
 #: bp-core/compatibility/bp-rankmath-plugin-helpers.php:32
 msgid "Social Group"
@@ -6500,7 +6498,7 @@ msgstr "Yahoo Messenger"
 
 #: bp-core/deprecated/buddypress/1.5.php:368
 msgid "%1$s mentioned you in the group \"%2$s\""
-msgstr "%1$s említést tett rólad ebben acsoportban: \"%2$s\""
+msgstr "%1$s említést tett rólad ebben a csoportban: \"%2$s\""
 
 #: bp-core/deprecated/buddypress/1.5.php:370
 msgid ""
@@ -6672,7 +6670,7 @@ msgid ""
 "Your site is currently running PHP version %s, while BuddyPress 2.8 will "
 "require version 5.3+."
 msgstr ""
-"A webhelyed jelenleg PHP %s verziót futtat, a BuddyPress 2.8 pedig 5.3+ "
+"A webhelyed jelenleg PHP %s verziót futtat, a BuddyPress 2.8-nak pedig 5.3+ "
 "verzióra van szüksége."
 
 #: bp-core/deprecated/buddypress/3.0.php:138
@@ -6741,7 +6739,7 @@ msgstr "Fórum szerző"
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:116
 msgid "Forum Author Email"
-msgstr "Fórum szerző email"
+msgstr "Fórum szerző e-mail"
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:120
 msgid "Forum Title"
@@ -6775,7 +6773,7 @@ msgstr "Válasz szerző"
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-replies.php:111
 msgid "Reply Author Email"
-msgstr "Válasz szerzőjének email címe"
+msgstr "Válasz szerzőjének e-mail címe"
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-replies.php:115
 msgid "Reply Title"
@@ -6803,7 +6801,7 @@ msgstr "Beszélgetés szerző"
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:109
 msgid "Discussion Author Email"
-msgstr "Beszélgetés szerző email"
+msgstr "Beszélgetés szerző e-mail"
 
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:113
 #: bp-forums/templates/default/bbpress/form-topic.php:65
@@ -6840,7 +6838,7 @@ msgstr "Függőben lévő kapott kapcsolati kérések"
 
 #: bp-core/gdpr/class-bp-friendship-export.php:83
 msgid "Connection Name"
-msgstr "Kapcsolat név"
+msgstr "Ismerős név"
 
 #: bp-core/gdpr/class-bp-friendship-export.php:87
 msgid "Sent Created (GMT)"
@@ -6904,7 +6902,7 @@ msgstr "legutóbbi tevékenység"
 #: bp-core/gdpr/class-bp-group-membership-export.php:27
 #: bp-groups/bp-groups-activity.php:53
 msgid "Group Memberships"
-msgstr "Csoporttagság"
+msgstr "Csoport tagságok"
 
 #: bp-core/gdpr/class-bp-group-membership-export.php:59
 #: bp-core/gdpr/class-bp-group-membership-export.php:76
@@ -6962,7 +6960,7 @@ msgstr "Üzenet címzettjei"
 
 #: bp-core/gdpr/class-bp-message-export.php:98
 msgid "Thread URL"
-msgstr "Téma URL"
+msgstr "Szál URL"
 
 #: bp-core/gdpr/class-bp-notification-export.php:73
 msgid "Notification Action"
@@ -6986,7 +6984,7 @@ msgstr "Igen (alapértelmezett)"
 #: bp-settings/classes/class-bp-settings-component.php:247
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:12
 msgid "Email Preferences"
-msgstr "Email beállítások"
+msgstr "E-mail beállítások"
 
 #: bp-core/gdpr/class-bp-settings-export.php:154
 msgid "A member mentions you in an update using \"@name\""
@@ -7011,7 +7009,7 @@ msgstr "Egy tag elfogadta a kapcsolat kérésedet"
 #: bp-core/gdpr/class-bp-settings-export.php:165
 #: bp-groups/bp-groups-notifications.php:1093
 msgid "A member invites you to join a group"
-msgstr "Egy felhasználó meghívott, hogy csatlakozz egy csoporthoz"
+msgstr "Egy tag meghívott, hogy csatlakozz egy csoporthoz"
 
 #: bp-core/gdpr/class-bp-settings-export.php:166
 #: bp-groups/bp-groups-notifications.php:1105
@@ -7087,14 +7085,14 @@ msgid ""
 ">Profiles."
 msgstr ""
 "Ezt a mezőt nem távolíthatod el, a szolgáltatás használatához legalább egy "
-"mezőnek lennie. A keresés letiltásához keresd meg az Irányítópult-> "
+"mezőnek kell lennie. A keresés letiltásához keresd meg az Irányítópult-> "
 "BuddyBoss-> Beállítások-> Profilok menüpontot."
 
 #: bp-core/profile-search/bps-admin.php:105
 #: bp-core/profile-search/bps-admin.php:264
 #: bp-core/profile-search/bps-start.php:184
 msgid "Drag & drop to reorder fields"
-msgstr "Fogd és mozgasd a mezők újrarendezéséhez"
+msgstr "Fogd és dobd a mezők újrarendezéséhez"
 
 #: bp-core/profile-search/bps-admin.php:116
 #: bp-core/profile-search/bps-admin.php:275
@@ -7138,7 +7136,7 @@ msgstr "egy"
 
 #: bp-core/profile-search/bps-fields.php:67
 msgid "is like"
-msgstr "kedveli"
+msgstr "hasonló mint"
 
 #: bp-core/profile-search/bps-fields.php:68
 msgid "range"
@@ -7186,11 +7184,11 @@ msgstr "Új űrlap hozzáadása"
 
 #: bp-core/profile-search/bps-start.php:61
 msgid "No forms found"
-msgstr "Nem találhatók űrlapok"
+msgstr "Nem találhatóak űrlapok"
 
 #: bp-core/profile-search/bps-start.php:62
 msgid "No forms found in trash"
-msgstr "Nem található űrlap a lomtárban"
+msgstr "Nem találhatóak űrlapok a lomtárban"
 
 #: bp-core/profile-search/bps-start.php:120
 msgid "Form updated."
@@ -7269,11 +7267,11 @@ msgstr "tartalmazza: %1$s"
 
 #: bp-core/profile-search/bps-templates47.php:307
 msgid "is like: %1$s"
-msgstr "kedveli: %1$s"
+msgstr "hasonló mint: %1$s"
 
 #: bp-core/profile-search/bps-templates47.php:314
 msgid "is one of: %1$s"
-msgstr "az egyik a következőből: %1$s"
+msgstr "egy ezek közül: %1$s"
 
 #: bp-core/profile-search/bps-templates47.php:318
 #: bp-core/profile-search/bps-templates47.php:325
@@ -7286,7 +7284,7 @@ msgstr "bármilyen egyezés: %1$s"
 
 #: bp-core/profile-search/bps-templates47.php:328
 msgid "match all: %1$s"
-msgstr "összes egyezés: %1$s"
+msgstr "teljes egyezés: %1$s"
 
 #: bp-core/profile-search/bps-templates47.php:332
 msgid "is within: %1$s km of %2$s"
@@ -7323,7 +7321,7 @@ msgstr "LearnDash"
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:150
 #: bp-templates/bp-nouveau/includes/groups/classes.php:284
 msgid "Courses"
-msgstr "Tanfolyam(ok)"
+msgstr "Tanfolyamok"
 
 #: bp-core/profile-search/bps-xprofile.php:413
 #: bp-core/profile-search/bps-xprofile.php:416
@@ -7407,7 +7405,7 @@ msgstr "Új fórum hozzászólás"
 
 #: bp-forums/activity.php:397 bp-forums/activity.php:639
 msgid "%1$s started the discussion %2$s in the forum %3$s"
-msgstr "%1$s beszélgetést kezdeményezett %2$s a következő csoportban: %3$s"
+msgstr "%1$s beszélgetést kezdeményezett %2$s a következő fórumban: %3$s"
 
 #: bp-forums/activity.php:538 bp-forums/activity.php:666
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
@@ -7419,7 +7417,7 @@ msgstr "%1$s beszélgetést kezdeményezett %2$s a következő csoportban: %3$s"
 
 #: bp-forums/activity.php:729
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
-msgstr "%1$s hozzászólt a beszélgetéshez %2$s, ezen az oldalon: %3$s"
+msgstr "%1$s hozzászólt a beszélgetéshez %2$s, ebben a csoportban: %3$s"
 
 #: bp-forums/admin/admin.php:207 bp-forums/admin/functions.php:232
 #: bp-forums/admin/functions.php:259 bp-forums/admin/tools.php:40
@@ -7494,7 +7492,7 @@ msgstr "Vissza"
 msgid ""
 "You can update your forum through this page. Hit the link below to update."
 msgstr ""
-"A fórum ezen az oldalon frissíthető. A frissítéshez kattintsu az alábbi "
+"A fórum ezen az oldalon frissíthető. A frissítéshez kattints az alábbi "
 "hivatkozásra."
 
 #: bp-forums/admin/admin.php:805
@@ -7814,7 +7812,7 @@ msgid ""
 "for all selected forums at once. To remove a forum from the grouping, just "
 "click the x next to its name in the Bulk Edit area that appears."
 msgstr ""
-"A Tömeges szerkesztés használatakor megváltoztathatod az összes kiválasztott "
+"A tömeges szerkesztés használatakor megváltoztathatod az összes kiválasztott "
 "fórum állapotát (közzétett, privát stb.). A fórum eltávolításához a "
 "csoportból kattints a megjelenő Tömeges szerkesztés területen a neve mellett "
 "található x-re."
@@ -7830,7 +7828,7 @@ msgid ""
 msgstr ""
 "A cím mező és a nagy fórum szerkesztő terület helyben marad, de az összes "
 "egyéb doboz áthelyezhető drag and drop technikával és becsukható vagy "
-"kinyitható a dobozok címsávjára kattintva. A Képernyőopciók fül "
+"kinyitható a dobozok címsávjára kattintva. A képernyőopciók fül "
 "használatával megjeleníthető több doboz (Kivonat, Visszakövetés küldése, "
 "Egyedi mezők, Beszélgetés, Keresőbarát név, Szerző) vagy választható az egy-"
 "vagy kétoszlopos megjelenés."
@@ -8042,7 +8040,7 @@ msgstr ""
 
 #: bp-forums/admin/functions.php:240 bp-forums/admin/tools.php:1253
 msgid "Reset Forums"
-msgstr "Fórumok alaphelyzet"
+msgstr "Fórumok alaphelyzetre állítása"
 
 #: bp-forums/admin/metaboxes.php:65 bp-forums/admin/metaboxes.php:448
 #: bp-forums/admin/replies.php:575 bp-forums/admin/settings.php:300
@@ -8167,7 +8165,7 @@ msgstr "Név:"
 
 #: bp-forums/admin/metaboxes.php:534
 msgid "Email:"
-msgstr "Email:"
+msgstr "E-mail:"
 
 #: bp-forums/admin/metaboxes.php:540
 #: bp-forums/templates/default/bbpress/form-anonymous.php:31
@@ -8180,7 +8178,7 @@ msgstr "ID:"
 
 #: bp-forums/admin/metaboxes.php:549 bp-groups/bp-groups-admin.php:1218
 msgid "ID"
-msgstr "Azonosító"
+msgstr "ID"
 
 #: bp-forums/admin/metaboxes.php:556
 msgid "IP:"
@@ -8268,7 +8266,7 @@ msgid ""
 "spam queue, from which you can permanently delete it."
 msgstr ""
 "A <strong>Spam</strong> eltávolítja a hozzászólásod a listából és a "
-"spamsorba helyezi át, ahonann véglegesen törölhető."
+"spamsorba helyezi át, ahonnan véglegesen törölhető."
 
 #: bp-forums/admin/replies.php:159
 msgid ""
@@ -8289,8 +8287,8 @@ msgid ""
 msgstr ""
 "Egyszerre több hozzászólás szerkeszthető vagy helyezhető lomtárba. Válaszd "
 "ki a művelethez a hozzászólásokat a jelölő dobozok segítségével, majd "
-"válaszd ki a végrehajtandó műveletet a Kötegelt műveletek menüből és "
-"kattintsu az Alkalmazás gombra."
+"válaszd ki a végrehajtandó műveletet a tömeges műveletek menüből és kattints "
+"az Alkalmazás gombra."
 
 #: bp-forums/admin/replies.php:169
 msgid ""
@@ -8298,9 +8296,9 @@ msgid ""
 "for all selected replies at once. To remove a reply from the grouping, just "
 "click the x next to its name in the Bulk Edit area that appears."
 msgstr ""
-"A Tömeges szerkesztés használatakor megváltoztathatod az összes válasz "
+"A tömeges szerkesztés használatakor megváltoztathatod az összes válasz "
 "állapotát (közzétett, privát stb.). A válasz eltávolításához a csoportból "
-"kattints a megjelenő Tömeges szerkesztés területen a neve mellett található "
+"kattints a megjelenő tömeges szerkesztés területen a neve mellett található "
 "x-re."
 
 #: bp-forums/admin/replies.php:189
@@ -8313,7 +8311,7 @@ msgid ""
 "screen."
 msgstr ""
 "A cím mező és a nagy szerkesztő hely fix helyen van, de az összes egyéb "
-"doboz áthelyezhető drag and drop technikávalé, becsukható vagy kinyitható a "
+"doboz áthelyezhető drag and drop technikával, becsukható vagy kinyitható a "
 "doboz melletti címsávra kattintva. A Képernyő opciók fül segítségével lehet "
 "megjeleníteni a további dobozokat (kivonat, visszakövetés küldése, egyedi "
 "mezők, beszélgetés, keresőbarát név, szerző) vagy választani lehet az egy- "
@@ -8608,7 +8606,7 @@ msgstr "Bejegyzése visszafogás minden"
 
 #: bp-forums/admin/settings.php:106
 msgid "Anonymous posting"
-msgstr "Vendég bejegyzés"
+msgstr "Anonim bejegyzés"
 
 #: bp-forums/admin/settings.php:125 bp-forums/admin/settings.php:1534
 msgid "Revisions"
@@ -8674,21 +8672,21 @@ msgstr "Időkorlát és egyéb felhasználói bejegyzés lehetőségeinek beáll
 
 #: bp-forums/admin/settings.php:421 bp-forums/common/functions.php:122
 msgid "minutes"
-msgstr "perc"
+msgstr "percek"
 
 #: bp-forums/admin/settings.php:437 bp-forums/common/functions.php:123
 msgid "seconds"
-msgstr "másodperc"
+msgstr "másodpercek"
 
 #: bp-forums/admin/settings.php:453
 msgid "Allow guest users without accounts to create discussions and replies"
 msgstr ""
 "Lehetővé teszi a fiók nélküli vendégfelhasználók számára, hogy "
-"bszélgetéseket és válaszokat hozzanak létre"
+"beszélgetéseket és válaszokat hozzanak létre"
 
 #: bp-forums/admin/settings.php:468
 msgid "Forum features that can be toggled on and off"
-msgstr "Fórum szolgáltatások, amelyeket össze lehet zárni és kinyitni"
+msgstr "Fórum szolgáltatások, amelyeket össze lehet zárni és ki lehet nyitni"
 
 #: bp-forums/admin/settings.php:484
 msgid "Allow users to mark discussions as favorites"
@@ -8703,7 +8701,7 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:516
 msgid "Allow discussions to have tags"
-msgstr "Engedélyezi a beszélgetés címkéket"
+msgstr "Engedélyezd a beszélgetés címkéket"
 
 #: bp-forums/admin/settings.php:532
 msgid "Allow forum wide search"
@@ -8886,7 +8884,7 @@ msgstr "Tartsd alacsonyan, ha memória elfogyási hibák jelentkeznek."
 
 #: bp-forums/admin/settings.php:1281
 msgid "second(s) delay between each group of rows"
-msgstr "másodperc késleltetés a sorok csoportjai között"
+msgstr "másodperc(ek) késleltetés(e) a sorok csoportjai között"
 
 #: bp-forums/admin/settings.php:1282
 msgid "Keep this high to prevent too-many-connection issues."
@@ -8999,7 +8997,7 @@ msgid ""
 "\"Anonymous Posting\" allows guest users who do not have accounts on your "
 "site to both create discussions as well as replies."
 msgstr ""
-"A \"Vendég bejegyzés beküldése\" lehetővé teszi a nem-regisztrált "
+"Az \"Anonim bejegyzés beküldése\" lehetővé teszi a nem-regisztrált "
 "felhasználók részére beszélgetések és válaszok létrehozását."
 
 #: bp-forums/admin/settings.php:1412
@@ -9123,7 +9121,7 @@ msgstr "Fórum keresőbarát név"
 
 #: bp-forums/admin/settings.php:1556
 msgid "Discussion slug"
-msgstr "Beszélgetés keresőbarát címke"
+msgstr "Beszélgetés keresőbarát név"
 
 #: bp-forums/admin/settings.php:1559
 msgid "Reply slug"
@@ -9269,7 +9267,7 @@ msgstr "BuddyBoss csoport fórum kapcsolatok javítása&hellip; %s"
 
 #: bp-forums/admin/tools.php:414
 msgid "group-forums"
-msgstr "group-forums"
+msgstr "csoport-fórumok"
 
 #: bp-forums/admin/tools.php:430
 msgid ""
@@ -9354,7 +9352,7 @@ msgstr "Beszélgetés újraszámlálása bejegyzésenként &hellip; %s"
 
 #: bp-forums/admin/tools.php:1143
 msgid "Recalculating reply menu order &hellip; %s"
-msgstr "%s &hellip; hozzászólás menü rendezés újrakalkulása"
+msgstr "%s &hellip; hozzászólás menü rendezés újraszámlálása"
 
 #: bp-forums/admin/tools.php:1144
 msgid "No reply positions to recalculate!"
@@ -9606,7 +9604,7 @@ msgid ""
 "discussion from the grouping, just click the x next to its name in the Bulk "
 "Edit area that appears."
 msgstr ""
-"A Tömeges szerkesztés használatakor megváltoztathatod az állapotot "
+"A tömeges szerkesztés használatakor megváltoztathatod az állapotot "
 "(közzétett, privát stb.), és hozzáadhatsz beszélgetés címkéket az összes "
 "kiválasztott beszélgetéshez egyszerre. Ha egy beszélgetést el szeretnél "
 "távolítani a csoportból, kattints a megjelenő tömeges szerkesztés területen "
@@ -9738,8 +9736,7 @@ msgstr "A beszélgetés nem található!"
 
 #: bp-forums/admin/topics.php:571
 msgid "There was a problem opening the discussion \"%1$s\"."
-msgstr ""
-"\"%1$s\" beszélgetés spam minősítésének eltávolítása közben hiba történt."
+msgstr "\"%1$s\" beszélgetés megnyitásakor probléma lépett fel."
 
 #: bp-forums/admin/topics.php:571
 msgid "Discussion \"%1$s\" successfully opened."
@@ -9771,7 +9768,7 @@ msgstr "\"%1$s\" beszélgetés sikeresen rögzítve."
 
 #: bp-forums/admin/topics.php:587
 msgid "There was a problem unsticking the discussion \"%1$s\"."
-msgstr "\"%1$s\" beszélgetés nem-rögzítése közben hiba történt."
+msgstr "\"%1$s\" beszélgetés rögzítésének feloldása közben hiba történt."
 
 #: bp-forums/admin/topics.php:587
 msgid "Discussion \"%1$s\" successfully unsticked."
@@ -9911,7 +9908,7 @@ msgstr ""
 #: bp-search/classes/class-bp-search.php:109 class-buddypress.php:168
 #: class-buddypress.php:175
 msgid "Cheatin' huh?"
-msgstr "Valami csalás történt?"
+msgstr "Csalás mi?"
 
 #: bp-forums/classes/class-bbpress.php:387
 #: bp-forums/templates/default/bbpress-functions.php:48
@@ -9937,7 +9934,7 @@ msgstr "Árva"
 msgid "Orphan <span class=\"count\">(%s)</span>"
 msgid_plural "Orphans <span class=\"count\">(%s)</span>"
 msgstr[0] "Árva <span class=\"count\">(%s)</span>"
-msgstr[1] "Árva <span class=\"count\">(%s)</span>"
+msgstr[1] "Árvák <span class=\"count\">(%s)</span>"
 
 #: bp-forums/classes/class-bbpress.php:561
 #: bp-groups/classes/class-bp-groups-list-table.php:336
@@ -9981,7 +9978,7 @@ msgstr "év"
 
 #: bp-forums/common/functions.php:117
 msgid "years"
-msgstr "év"
+msgstr "évek"
 
 #: bp-forums/common/functions.php:118
 msgid "month"
@@ -9989,7 +9986,7 @@ msgstr "hónap"
 
 #: bp-forums/common/functions.php:118
 msgid "months"
-msgstr "hónap"
+msgstr "hónapok"
 
 #: bp-forums/common/functions.php:119
 msgid "week"
@@ -9997,7 +9994,7 @@ msgstr "hét"
 
 #: bp-forums/common/functions.php:119
 msgid "weeks"
-msgstr "hét"
+msgstr "hetek"
 
 #: bp-forums/common/functions.php:120
 msgid "day"
@@ -10005,7 +10002,7 @@ msgstr "nap"
 
 #: bp-forums/common/functions.php:120
 msgid "days"
-msgstr "nap"
+msgstr "napok"
 
 #: bp-forums/common/functions.php:121
 msgid "hour"
@@ -10013,7 +10010,7 @@ msgstr "óra"
 
 #: bp-forums/common/functions.php:121
 msgid "hours"
-msgstr "óra"
+msgstr "órák"
 
 #: bp-forums/common/functions.php:122
 msgid "minute"
@@ -10037,11 +10034,11 @@ msgstr "Lomtárban: %s"
 
 #: bp-forums/common/functions.php:629
 msgid "<strong>ERROR</strong>: Invalid author name submitted!"
-msgstr "<strong>HIBA</strong>: A meadott szerzőnév érvénytelen!"
+msgstr "<strong>HIBA</strong>: A megadott szerzőnév érvénytelen!"
 
 #: bp-forums/common/functions.php:633
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
-msgstr "<strong>HIBA</strong>: A megadott email cím érvénytelen!"
+msgstr "<strong>HIBA</strong>: A megadott e-mail cím érvénytelen!"
 
 #: bp-forums/common/functions.php:1911
 msgid ""
@@ -10226,7 +10223,7 @@ msgstr "(BB) Fórum lista"
 
 #: bp-forums/common/widgets.php:664 bp-forums/common/widgets.php:912
 msgid "Parent Forum ID:"
-msgstr "Szülőfórum azonosító ID:"
+msgstr "Szülőfórum azonosító:"
 
 #: bp-forums/common/widgets.php:670 bp-forums/common/widgets.php:918
 msgid "\"0\" to show only root - \"any\" to show all"
@@ -10379,7 +10376,7 @@ msgstr "A bejegyzés állapota megváltozott erre: %s"
 
 #: bp-forums/extend/akismet.php:475
 msgid "Akismet cleared this post as not spam"
-msgstr "Akismet megjelölte ezt a bejegyzést, mint nem kéretlen"
+msgstr "Akismet megjelölte ezt a bejegyzést, mint nem-spam"
 
 #: bp-forums/extend/akismet.php:489
 msgid ""
@@ -10469,7 +10466,7 @@ msgstr "<strong>HIBA</strong>: A fórumod jelenleg nem hozható létre."
 
 #: bp-forums/forums/functions.php:383
 msgid "<strong>ERROR</strong>: Forum ID not found."
-msgstr "<strong>HIBA</strong>: A fórum azonosító ID nem található."
+msgstr "<strong>HIBA</strong>: A fórum azonosító nem található."
 
 #: bp-forums/forums/functions.php:399
 msgid "<strong>ERROR</strong>: The forum you want to edit was not found."
@@ -10634,16 +10631,15 @@ msgstr "<strong>HIBA</strong>: Nincs jogosultságod a hozzászóláshoz."
 
 #: bp-forums/replies/functions.php:153
 msgid "<strong>ERROR</strong>: Discussion ID is missing."
-msgstr "<strong>HIBA</strong>: Hiányzik a beszélgetés azonosító ID."
+msgstr "<strong>HIBA</strong>: Hiányzik a beszélgetés azonosító."
 
 #: bp-forums/replies/functions.php:157
 msgid "<strong>ERROR</strong>: Discussion ID must be a number."
-msgstr "<strong>HIBA</strong>: A beszélgetés azonosító ID csak szám lehet."
+msgstr "<strong>HIBA</strong>: A beszélgetés azonosító csak szám lehet."
 
 #: bp-forums/replies/functions.php:167
 msgid "<strong>ERROR</strong>: Discussion ID cannot be a negative number."
-msgstr ""
-"<strong>HIBA</strong>: A bezélgetés azonosító ID nem lehet negatív szám."
+msgstr "<strong>HIBA</strong>: A bezélgetés azonosító nem lehet negatív szám."
 
 #: bp-forums/replies/functions.php:171
 msgid "<strong>ERROR</strong>: Discussion does not exist."
@@ -10653,15 +10649,15 @@ msgstr "<strong>HIBA</strong>: A beszélgetés nem létezik."
 #: bp-forums/topics/functions.php:195 bp-forums/topics/functions.php:209
 #: bp-forums/topics/functions.php:534
 msgid "<strong>ERROR</strong>: Forum ID is missing."
-msgstr "<strong>HIBA</strong>: Hiányzik a fórum ID azonosító."
+msgstr "<strong>HIBA</strong>: Hiányzik a fórum azonosító."
 
 #: bp-forums/replies/functions.php:194 bp-forums/topics/functions.php:199
 msgid "<strong>ERROR</strong>: Forum ID must be a number."
-msgstr "<strong>HIBA</strong>: A fórum azonosító ID csak számkarakter lehet.."
+msgstr "<strong>HIBA</strong>: A fórum azonosító csak számkarakter lehet.."
 
 #: bp-forums/replies/functions.php:208 bp-forums/topics/functions.php:213
 msgid "<strong>ERROR</strong>: Forum ID cannot be a negative number."
-msgstr "<strong>HIBA</strong>: A fórum azonosítója ID nem lehet negatív szám."
+msgstr "<strong>HIBA</strong>: A fórum azonosítója nem lehet negatív szám."
 
 #: bp-forums/replies/functions.php:212 bp-forums/topics/functions.php:217
 msgid "<strong>ERROR</strong>: Forum does not exist."
@@ -10724,7 +10720,7 @@ msgstr ""
 
 #: bp-forums/replies/functions.php:504
 msgid "<strong>ERROR</strong>: Reply ID not found."
-msgstr "<strong>HIBA</strong>: A hozzászólás azonosító ID nem található."
+msgstr "<strong>HIBA</strong>: A hozzászólás azonosító nem található."
 
 #: bp-forums/replies/functions.php:521
 msgid "<strong>ERROR</strong>: The reply you want to edit was not found."
@@ -10741,7 +10737,8 @@ msgstr "<strong>HIBA</strong>: A hozzászólásod jelenleg nem szerkeszthető."
 
 #: bp-forums/replies/functions.php:1222
 msgid "<strong>ERROR</strong>: Reply ID to move not found!"
-msgstr "<strong>HIBA</strong>: Áthelyezendő hozzászólás ID nem található!"
+msgstr ""
+"<strong>HIBA</strong>: Áthelyezendő hozzászólás azonosító nem található!"
 
 #: bp-forums/replies/functions.php:1231
 msgid "<strong>ERROR</strong>: The reply you want to move was not found."
@@ -10878,7 +10875,7 @@ msgstr "Új hozzászólás"
 
 #: bp-forums/replies/template.php:51
 msgid "Create New Reply"
-msgstr "Új hozzászólás"
+msgstr "Új hozzászólás írása"
 
 #: bp-forums/replies/template.php:53
 msgid "Edit Reply"
@@ -10911,7 +10908,7 @@ msgstr "A hozzászólás módosításra került: %1$s-%2$s."
 #: bp-forums/replies/template.php:1097 bp-forums/topics/template.php:1367
 #: bp-forums/users/template.php:183
 msgid "Anonymous"
-msgstr "Névtelen"
+msgstr "Anonim"
 
 #: bp-forums/replies/template.php:1209 bp-forums/topics/template.php:1480
 #: bp-forums/users/template.php:1643
@@ -10951,31 +10948,31 @@ msgstr "Témakör felosztása ettől a hozzászólástól"
 msgid "Viewing %1$s reply thread"
 msgid_plural "Viewing %1$s reply threads"
 msgstr[0] "%1$s válasz szál megtekintése"
-msgstr[1] "%1$s válasz szál megtekintése"
+msgstr[1] "%1$s válasz szálak megtekintése"
 
 #: bp-forums/replies/template.php:2351
 msgid "Viewing %1$s reply"
 msgid_plural "Viewing %1$s replies"
 msgstr[0] "%1$s válasz megtekintése"
-msgstr[1] "%1$s válasz megtekintése"
+msgstr[1] "%1$s válaszok megtekintése"
 
 #: bp-forums/replies/template.php:2355
 msgid "Viewing %2$s of %4$s replies"
 msgid_plural "Viewing %2$s - %3$s of %4$s replies"
 msgstr[0] "%2$s / %4$s válasz megtekintése"
-msgstr[1] "%2$s - %3$s / %4$s válasz megtekintése"
+msgstr[1] "%2$s - %3$s / %4$s válaszok megtekintése"
 
 #: bp-forums/replies/template.php:2363
 msgid "Viewing %1$s post"
 msgid_plural "Viewing %1$s posts"
 msgstr[0] "%1$s bejegyzés megtekintése"
-msgstr[1] "%1$s bejegyzés megtekintése"
+msgstr[1] "%1$s bejegyzések megtekintése"
 
 #: bp-forums/replies/template.php:2367
 msgid "Viewing %2$s of %4$s posts"
 msgid_plural "Viewing %2$s - %3$s of %4$s posts"
 msgstr[0] "%2$s / %4$s bejegyzés megtekintése"
-msgstr[1] "%2$s - %3$s / %4$s bejegyzés megtekintése"
+msgstr[1] "%2$s - %3$s / %4$s bejegyzések megtekintése"
 
 #: bp-forums/search/template.php:228
 msgid "Search Results for '%s'"
@@ -10985,13 +10982,13 @@ msgstr "Keresési eredmény erre: '%s'"
 msgid "Viewing %1$s result"
 msgid_plural "Viewing %1$s results"
 msgstr[0] "%1$s eredmény megtekintése"
-msgstr[1] "%1$s eredmény megtekintése"
+msgstr[1] "%1$s eredmények megtekintése"
 
 #: bp-forums/search/template.php:409
 msgid "Viewing %2$s of %4$s results"
 msgid_plural "Viewing %2$s - %3$s of %4$s results"
 msgstr[0] "%2$s / %4$s eredmény megtekintése"
-msgstr[1] "%2$s - %3$s / %4$s eredmény megtekintése"
+msgstr[1] "%2$s - %3$s / %4$s eredmények megtekintése"
 
 #: bp-forums/templates/default/bbpress/content-statistics.php:16
 msgid "Registered Users"
@@ -11043,7 +11040,7 @@ msgstr "Név (kötelező):"
 
 #: bp-forums/templates/default/bbpress/form-anonymous.php:26
 msgid "Email (will not be published) (required):"
-msgstr "Email (nem tesszük közzé) (kötelező):"
+msgstr "E-mail (nem tesszük közzé) (kötelező):"
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:39
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:43
@@ -11101,7 +11098,7 @@ msgid ""
 "and attributes:"
 msgstr ""
 "A következő <abbr title=\"HyperText Markup Language\">HTML</abbr> címkéket "
-"és attribútumokat lehet használhatod:"
+"és attribútumokat használhatod:"
 
 #: bp-forums/templates/default/bbpress/form-forum.php:81
 msgid "Forum Type:"
@@ -11205,12 +11202,12 @@ msgstr "Írj be egy vagy több címkét, vesszővel elválasztva"
 #: bp-forums/templates/default/bbpress/form-reply.php:87
 #: bp-forums/templates/default/bbpress/form-topic.php:144
 msgid "Notify the author of follow-up replies via email"
-msgstr "Szerző értesítése emailben a hozzászólásokról"
+msgstr "Szerző értesítése e-mailben a hozzászólásokról"
 
 #: bp-forums/templates/default/bbpress/form-reply.php:91
 #: bp-forums/templates/default/bbpress/form-topic.php:148
 msgid "Notify me of follow-up replies via email"
-msgstr "Értesítés emailben a hozzászólásokról"
+msgstr "Értesítés e-mailben a hozzászólásokról"
 
 #: bp-forums/templates/default/bbpress/form-reply.php:108
 #: bp-forums/templates/default/bbpress/form-topic.php:164
@@ -11702,7 +11699,7 @@ msgstr "<strong>HIBA</strong>: A beszélgetésed jelenleg nem hozható létre."
 
 #: bp-forums/topics/functions.php:481 bp-forums/topics/functions.php:1145
 msgid "<strong>ERROR</strong>: Discussion ID not found."
-msgstr "<strong>HIBA</strong>: Beszélgetés ID nem található."
+msgstr "<strong>HIBA</strong>: Beszélgetés azonosító nem található."
 
 #: bp-forums/topics/functions.php:492
 msgid "<strong>ERROR</strong>: The discussion you want to edit was not found."
@@ -11732,7 +11729,7 @@ msgstr "<strong>HIBA</strong>: Az összevonandó beszélgetés nem található."
 
 #: bp-forums/topics/functions.php:1171
 msgid "<strong>ERROR</strong>: Destination discussion ID not found."
-msgstr "<strong>HIBA</strong>: Cél beszélgetés ID nem található."
+msgstr "<strong>HIBA</strong>: Cél beszélgetés azonosító nem található."
 
 #: bp-forums/topics/functions.php:1177
 msgid ""
@@ -11751,8 +11748,8 @@ msgstr ""
 #: bp-forums/topics/functions.php:1434
 msgid "<strong>ERROR</strong>: Reply ID to split the topic from not found!"
 msgstr ""
-"<strong>HIBA</strong>: A témakör felosztásának hozzászólás azonosítója (ID) "
-"nem található!"
+"<strong>HIBA</strong>: A témakör felosztásának hozzászólás azonosítója nem "
+"található!"
 
 #: bp-forums/topics/functions.php:1442
 msgid "<strong>ERROR</strong>: The reply you want to split from was not found."
@@ -11784,7 +11781,7 @@ msgid ""
 "<strong>ERROR</strong>: The following problem(s) have been found while "
 "getting the tag: %s"
 msgstr ""
-"<strong>HIBA</strong>: A következő problémák merültek fel a címke "
+"<strong>HIBA</strong>: A következő probléma ('k) merült(ek) fel a címke "
 "\"beolvasásakor\": %s"
 
 #: bp-forums/topics/functions.php:1825 bp-forums/topics/functions.php:1864
@@ -11826,7 +11823,7 @@ msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to delete the "
 "discussion tags."
 msgstr ""
-"<strong>HIBA</strong>: Nincs jogosultságod a beszélgetés címkék törtléséhez."
+"<strong>HIBA</strong>: Nincs jogosultságod a beszélgetés címkék törléséhez."
 
 #: bp-forums/topics/functions.php:1930
 msgid ""
@@ -11879,8 +11876,8 @@ msgstr "<strong>HIBA</strong>: Probléma merült fel a beszélgetés rögzítés
 msgid ""
 "<strong>ERROR</strong>: There was a problem unmarking the discussion as spam."
 msgstr ""
-"<strong>HIBA</strong>: Probléma merült fel a beszélgetés spamként történő "
-"megjelölésénél."
+"<strong>HIBA</strong>: Probléma merült fel a beszélgetés nem-spamként "
+"történő megjelölésénél."
 
 #: bp-forums/topics/functions.php:2122
 msgid ""
@@ -12098,7 +12095,7 @@ msgstr "Fő adminisztrátori jogosultsággal rendelkezel."
 
 #: bp-forums/users/template.php:1174
 msgid "This user has super admin privileges."
-msgstr "Ez a felhasználó Szuper Admin jogokkal rendelkezik."
+msgstr "Ez a felhasználó fő adminisztátori jogokkal rendelkezik."
 
 #: bp-forums/users/template.php:1241
 msgid "- No role for this site -"
@@ -12118,15 +12115,15 @@ msgstr "Új felhasználói regisztráció jelenleg nem engedélyezett."
 
 #: bp-forums/users/template.php:1453
 msgid "Check your e-mail for the confirmation link."
-msgstr "Ellenőrizd az email fiókod a megerősítő linkért."
+msgstr "Ellenőrizd az e-mail fiókod a megerősítő linkért."
 
 #: bp-forums/users/template.php:1458
 msgid "Check your e-mail for your new password."
-msgstr "Ellenőrizd az email fiókod az új jelszavadért."
+msgstr "Ellenőrizd az e-mail fiókod az új jelszavadért."
 
 #: bp-forums/users/template.php:1463
 msgid "Registration complete. Please check your e-mail."
-msgstr "Sikeres regisztráció. Ellenőrizd a megadott email fiókod."
+msgstr "Sikeres regisztráció. Ellenőrizd a megadott e-mail fiókod."
 
 #: bp-friends/actions/add-friend.php:32
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:201
@@ -12139,11 +12136,11 @@ msgstr "Kapcsolat megkérve"
 
 #: bp-friends/actions/add-friend.php:38
 msgid "You are already connected with this user"
-msgstr "Már kapcsolatban vagy ezzel a felhazsnálóval"
+msgstr "Már ismerősök vagytok ezzel a felhasználóval"
 
 #: bp-friends/actions/add-friend.php:40
 msgid "You already have a pending connection request with this user"
-msgstr "Már van függőben lévő csatlakozási kérelmeid ezzel a felhasználóval"
+msgstr "Már van függőben lévő ismerős kérelmed ezzel a felhasználóval"
 
 #: bp-friends/actions/remove-friend.php:32
 msgid "Connection could not be canceled."
@@ -12155,19 +12152,19 @@ msgstr "Kapcsolat megszakítva"
 
 #: bp-friends/actions/remove-friend.php:38
 msgid "You are not connected with this user"
-msgstr "Nem vagy kapcsolatban ezzel a felhasználóval"
+msgstr "Nem vagytok ismerősök ezzel a felhasználóval"
 
 #: bp-friends/actions/remove-friend.php:40
 msgid "You have a pending connection request with this user"
-msgstr "Függőben lévő csatlakozási kérelmed van ezzel a felhasználóval"
+msgstr "Függőben lévő ismerős kérelmed van ezzel a felhasználóval"
 
 #: bp-friends/bp-friends-activity.php:103
 msgid "Connections accepted"
-msgstr "Kapcsolatok elfogadva"
+msgstr "Ismerős elfogadva"
 
 #: bp-friends/bp-friends-activity.php:112
 msgid "New connections"
-msgstr "Új kapcsolatok"
+msgstr "Új ismerősök"
 
 #: bp-friends/bp-friends-activity.php:119
 msgid "New connection created"
@@ -12176,19 +12173,19 @@ msgstr "Új kapcsolat létrehozva"
 #: bp-friends/bp-friends-activity.php:143
 #: bp-friends/bp-friends-activity.php:177 cli/components/activity.php:880
 msgid "%1$s and %2$s are now connected"
-msgstr "%1$s és %2$s most má kapcsolódtak"
+msgstr "%1$s és %2$s most már ismerősök"
 
 #: bp-friends/bp-friends-notifications.php:40
 msgid "%d members accepted your connection requests"
-msgstr "%d tagok elfogadták a kapcsolat kérelmedet"
+msgstr "%d tagok elfogadták az ismerős kérelmedet"
 
 #: bp-friends/bp-friends-notifications.php:43
 msgid "%s accepted your request to connect"
-msgstr "%s elfogadta a kapcsolódási kérésedet"
+msgstr "%s elfogadta az ismerős kérésedet"
 
 #: bp-friends/bp-friends-notifications.php:56
 msgid "You have %d pending requests to connect"
-msgstr "%s függőben lévő kapcsolat kérésed van"
+msgstr "%s függőben lévő ismerős kérésed van"
 
 #: bp-friends/bp-friends-notifications.php:59
 msgid "%s sent you an invitation to connect"
@@ -12202,12 +12199,12 @@ msgstr "%s meghívót küldött neked, hogy csatlakozz"
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
 #: bp-xprofile/classes/class-bp-xprofile-component.php:196
 msgid "My Connections"
-msgstr "Kapcsolataim"
+msgstr "Ismerőseim"
 
 #: bp-friends/bp-friends-template.php:83
 #: bp-friends/classes/class-bp-core-friends-widget.php:106
 msgid "%s's Connections"
-msgstr "%s kapcsolatai"
+msgstr "%s ismerősei"
 
 #: bp-friends/bp-friends-template.php:83
 msgid "See All"
@@ -12215,11 +12212,11 @@ msgstr "Mutasd mindet"
 
 #: bp-friends/bp-friends-template.php:103
 msgid "You haven't made any connections yet."
-msgstr "Még nincsenek kapcsolataid."
+msgstr "Még nincsenek ismerőseid."
 
 #: bp-friends/bp-friends-template.php:103
 msgid "%s hasn't created any connections yet."
-msgstr "%snek még nincsenek kapcsolatai."
+msgstr "%snek még nincsenek ismerősei."
 
 #: bp-friends/bp-friends-template.php:173
 msgid "There aren't enough site members to show a random sample just yet."
@@ -12233,15 +12230,15 @@ msgstr "Kapcsolatok szűrése"
 
 #: bp-friends/bp-friends-template.php:247
 msgid "%d connection"
-msgstr "%d kapcsolat"
+msgstr "%d ismerős"
 
 #: bp-friends/bp-friends-template.php:251
 msgid "%d connections"
-msgstr "%d kapcsolatok"
+msgstr "%d ismerősök"
 
 #: bp-friends/bp-friends-template.php:376
 msgid "Cancel connection request"
-msgstr "Kapcsolat kérés visszavonása"
+msgstr "Ismerős kérés visszavonása"
 
 #: bp-friends/bp-friends-template.php:393
 msgid "Connect Requested"
@@ -12250,15 +12247,15 @@ msgstr "Kapcsolat megkérve"
 #: bp-friends/bp-friends-template.php:410
 #: bp-friends/bp-friends-template.php:416
 msgid "Connected"
-msgstr "Kapcsolódva"
+msgstr "Ismerősök"
 
 #: bp-friends/bp-friends-template.php:415
 msgid "Remove Connection"
-msgstr "Kapcsolat eltávolítása"
+msgstr "Ismerős eltávolítása"
 
 #: bp-friends/bp-friends-template.php:431
 msgid "Connect"
-msgstr "Kapcsolódás"
+msgstr "Ismerős"
 
 #: bp-friends/bp-friends-template.php:782
 msgid "%s connection"
@@ -12282,7 +12279,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:30
 msgid "(BB) Connections"
-msgstr "(BB) Kapcsolatok"
+msgstr "(BB) Ismerősök"
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:145
 #: bp-friends/classes/class-bp-core-friends-widget.php:237
@@ -12305,7 +12302,7 @@ msgstr "Népszerű"
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:178
 msgid "Sorry, no connections were found."
-msgstr "Sajnáljuk, nem találhatók kapcsolatok."
+msgstr "Sajnáljuk, nem találhatóak ismerősök."
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:229
 #: bp-members/classes/class-bp-core-members-widget.php:229
@@ -12314,7 +12311,7 @@ msgstr "Widget kötése a Tagok mappájához"
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:231
 msgid "Max connections to show:"
-msgstr "Maximálisan megjelenítendő kapcsolatok:"
+msgstr "Maximálisan megjelenítendő ismerősök:"
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:234
 msgid "Default connections to show:"
@@ -12329,15 +12326,15 @@ msgstr "Kapcsolatgok keresése&hellip;"
 #: bp-friends/classes/class-bp-friends-component.php:178
 #: bp-friends/classes/class-bp-friends-component.php:254
 msgid "Connections %s"
-msgstr "Kapcsolatok %s"
+msgstr "Ismerősök %s"
 
 #: bp-friends/classes/class-bp-friends-component.php:197
 msgid "All Connections"
-msgstr "Összes kapcsolat"
+msgstr "Összes ismerős"
 
 #: bp-friends/classes/class-bp-friends-component.php:208
 msgid "Mutual Connections"
-msgstr "Kölcsönös kapcsolatok"
+msgstr "Közös ismerősök"
 
 #: bp-friends/classes/class-bp-friends-component.php:219
 #: bp-groups/classes/class-bp-groups-component.php:791
@@ -12355,7 +12352,7 @@ msgstr "Nincsenek függő kérések"
 
 #: bp-friends/screens/requests.php:20
 msgid "Connection accepted"
-msgstr "Kapcsolat elfogadva"
+msgstr "Ismerős elfogadva"
 
 #: bp-friends/screens/requests.php:22
 msgid "Connection could not be accepted"
@@ -12363,7 +12360,7 @@ msgstr "A kapcsolatot nem fogadták el"
 
 #: bp-friends/screens/requests.php:31
 msgid "Connection rejected"
-msgstr "Kapcsolat visszautasítva"
+msgstr "Ismerős visszautasítva"
 
 #: bp-friends/screens/requests.php:33
 msgid "Connection could not be rejected"
@@ -12371,11 +12368,11 @@ msgstr "A kapcsolatot nem lehet elutasítani"
 
 #: bp-friends/screens/requests.php:42
 msgid "Connection request withdrawn"
-msgstr "Kapcsolat kérés visszavonása"
+msgstr "Ismerős kérés visszavonása"
 
 #: bp-friends/screens/requests.php:44
 msgid "Connection request could not be withdrawn"
-msgstr "A kapcsolat kérelmet nem lehetett visszavonni"
+msgstr "A ismerős kérelmet nem lehetett visszavonni"
 
 #: bp-groups/actions/access.php:34
 msgid "You do not have access to this group."
@@ -12412,7 +12409,7 @@ msgstr "Hiba történt a meghívó visszavonása során"
 
 #: bp-groups/actions/create.php:318
 msgid "There was an error with the group profile photo, please try again."
-msgstr "Hiba történt a csoport adatlap képével. Kérjük, próbáld meg újra."
+msgstr "Hiba történt a csoport képével. Kérjük, próbáld meg újra."
 
 #: bp-groups/actions/feed.php:38
 msgid "Activity feed for the group, %s."
@@ -12424,7 +12421,7 @@ msgstr "Hiba történt a csoport csatlakozásnál."
 
 #: bp-groups/actions/join.php:42
 msgid "You joined the group!"
-msgstr "Csatlakoztál egy csoporthoz!"
+msgstr "Csatlakoztál a csoporthoz!"
 
 #: bp-groups/actions/leave-group.php:40 bp-groups/bp-groups-admin.php:605
 #: bp-groups/bp-groups-functions.php:538
@@ -12583,8 +12580,8 @@ msgid ""
 "and then choose Delete from the Bulk Actions menu, you will be led to a page "
 "where you'll be asked to confirm the permanent deletion of the group(s)."
 msgstr ""
-"Ha egy adott csoport alatt a \"Törlés\" elemre kattintasz, vagy kiválasztaz "
-"egy csoportot, majd a Tömeges műveletek menüben a Törlés lehetőséget "
+"Ha egy adott csoport alatt a \"Törlés\" elemre kattintasz, vagy kiválasztasz "
+"egy csoportot, majd a tömeges műveletek menüben a Törlés lehetőséget "
 "választod, akkor egy oldalra kerülsz, ahol meg kell erősíteni a csoport(ok) "
 "végleges törlését."
 
@@ -12684,7 +12681,7 @@ msgstr "Ezt az műveletet nem lehet visszavonni."
 msgid "%s group has been permanently deleted."
 msgid_plural "%s groups have been permanently deleted."
 msgstr[0] "%s csoport azonnal törlésre került."
-msgstr[1] "%s csoport azonnal törlésre került."
+msgstr[1] "%s csoportok azonnal törlésre kerültek."
 
 #: bp-groups/bp-groups-admin.php:1012
 msgid "Search all Groups"
@@ -13123,7 +13120,7 @@ msgstr "még nem aktív"
 
 #: bp-groups/bp-groups-template.php:1657
 msgid "Group organizer profile photo of %s"
-msgstr "Csoport szervező %s adatlap képe"
+msgstr "Csoport szervező %s profilképe"
 
 #: bp-groups/bp-groups-template.php:1726
 msgid "No Organizers"
@@ -13383,7 +13380,7 @@ msgstr "Folyam"
 #: bp-groups/classes/class-bp-groups-component.php:660
 #: bp-templates/bp-nouveau/includes/groups/classes.php:273
 msgid "Subgroups"
-msgstr "Alcsportok"
+msgstr "Alcsoportok"
 
 #: bp-groups/classes/class-bp-groups-component.php:690
 #: bp-invites/classes/class-bp-invites-component.php:244
@@ -13643,7 +13640,7 @@ msgstr "Meghívás sikeresen visszavonva"
 
 #: bp-groups/screens/single/send-invites.php:90
 msgid "You are not allowed to send or remove invites"
-msgstr "Nincs jogsultságod meghívókat küldeni és eltávolítani"
+msgstr "Nincs jogosultságod meghívókat küldeni és eltávolítani"
 
 #: bp-groups/screens/single/send-invites.php:93
 msgid "The member requested to join the group"
@@ -13726,7 +13723,7 @@ msgstr "Közösségi csoportok <span>&rarr; LearnDash csoportok</span>"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:101
 msgid "Social Group Sync"
-msgstr "Közösségi csoport szinkroizálás"
+msgstr "Közösségi csoport szinkronizálás"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:104
 msgid ""
@@ -13780,7 +13777,7 @@ msgstr "Csoport tagok"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:143
 msgid "No one"
-msgstr "Egysem"
+msgstr "Senki"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:146
 msgid "Select who can see the course tab in social groups"
@@ -13991,7 +13988,7 @@ msgstr "Megjelenített jelentés eredmények száma oldalanként"
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:417
 msgid "Control the setting for social group's reports."
-msgstr "Közösségi csoport jelentések beállításainak sazbályzozása."
+msgstr "Közösségi csoport jelentések beállításainak szabályozása."
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:447
 msgid "Select which roles can view reports"
@@ -14219,9 +14216,9 @@ msgid "%s is not initilized, the following required plugins are missing: %s"
 msgid_plural ""
 "%s is not initilized, the following required plugin is missing: %s"
 msgstr[0] ""
-"A(z) %s nincs inicializálva, hiányzik a következő szükséges bővítmény: %s"
-msgstr[1] ""
 "A(z) %s nincs inicializálva, hiányoznak a következő szükséges bővítmények: %s"
+msgstr[1] ""
+"A(z) %s nincs inicializálva, hiányzik a következő szükséges bővítmény: %s"
 
 #: bp-integrations/learndash/core/Core.php:44
 msgid "BuddyBoss LearnDash"
@@ -14237,7 +14234,7 @@ msgstr "LearnDash LMS"
 
 #: bp-integrations/learndash/core/Requirements.php:35
 msgid "BuddyBoss Platform component %s needs to be enabled."
-msgstr "A %s BuddyBoss Platform összetevőt engedélyezni kell."
+msgstr "A %s BuddyBoss Platform komponenst engedélyezni kell."
 
 #: bp-integrations/learndash/learndash/Admin.php:54
 msgid "Associated Social Group"
@@ -14245,11 +14242,11 @@ msgstr "Kapcsolódó közösségi csoport"
 
 #: bp-integrations/learndash/library/ReportsGenerator.php:339
 msgid "Course ID"
-msgstr "Tanfolyam ID"
+msgstr "Tanfolyam azonosító"
 
 #: bp-integrations/learndash/library/ReportsGenerator.php:349
 msgid "User ID"
-msgstr "Felhasználó ID"
+msgstr "Felhasználó azonosító"
 
 #: bp-integrations/learndash/library/ReportsGenerator.php:364
 msgid "Start Date"
@@ -14357,7 +14354,7 @@ msgstr "Összes becsukása"
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:6
 msgid "%s Lessons"
-msgstr "%s lecke"
+msgstr "%s leckék"
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:6
 msgid "%s Lesson"
@@ -14380,7 +14377,7 @@ msgstr "<b>%d / %d</b> %s befejezve"
 msgid "student"
 msgid_plural "students"
 msgstr[0] "tanuló"
-msgstr[1] "tanuló"
+msgstr[1] "tanulók"
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-course-stats.php:21
 msgid "<b>%d</b> average points"
@@ -14432,7 +14429,7 @@ msgstr "Üzenet"
 #: bp-invites/actions/revoke-invite.php:46
 #: bp-invites/actions/revoke-invite.php:56
 msgid "You didn't include any email addresses!"
-msgstr "Nem adtál meg email címet!"
+msgstr "Nem adtál meg e-mail címet!"
 
 #: bp-invites/bp-invites-admin.php:66
 msgid "Sender"
@@ -14446,7 +14443,7 @@ msgstr "Küldő neve"
 #: bp-invites/bp-invites-admin.php:68
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:18
 msgid "Recipient Email"
-msgstr "Küldő email címe"
+msgstr "Küldő e-mail címe"
 
 #: bp-invites/bp-invites-admin.php:69
 msgid "Date Invited"
@@ -14517,7 +14514,7 @@ msgstr "Elküldött meghívó"
 
 #: bp-invites/bp-invites-functions.php:148
 msgid "We couldn't find any invitations associated with this email address."
-msgstr "Nem találtunk meghívást ehhez az email címhez."
+msgstr "Nem találtunk meghívást ehhez az e-mail címhez."
 
 #: bp-invites/bp-invites-functions.php:192
 msgid ""
@@ -14526,8 +14523,8 @@ msgid ""
 "invitation email."
 msgstr ""
 "Úgy tűnik, hogy megpróbálsz elfogadni a webhelyhez való csatlakozási "
-"meghívót, de hiányoznak bizonyos információk. Kérjük, próbálkozz újra az "
-"emailben található linkre kattintva."
+"meghívót, de hiányoznak bizonyos információk. Kérjük, próbálkozz újra az e-"
+"mailben található linkre kattintva."
 
 #: bp-invites/bp-invites-functions.php:224
 msgid ""
@@ -14537,11 +14534,11 @@ msgid_plural ""
 "Welcome! You've been invited to join the site by the following users: %s. "
 "Please fill out the information below to create your account."
 msgstr[0] ""
-"Üdvözlünk! A következő felhasználó meghívott Téged, hogy csatlakozz a "
-"webhelyhez: %s. Fiókod létrehozásához töltsd ki az alábbi információkat."
+"Üdvözlünk! A %s felhasználó meghívott Téged, hogy csatlakozz a webhelyhez. "
+"Fiókod létrehozásához töltsd ki az alábbi információkat."
 msgstr[1] ""
-"Üdvözlünk! A következő felhasználók meghívtak Téged, hogy csatlakozz a "
-"webhelyhez: %s. Fiókod létrehozásához töltsd ki az alábbi információkat."
+"Üdvözlünk! A %s felhasználók meghívtak Téged, hogy csatlakozz a webhelyhez. "
+"Fiókod létrehozásához töltsd ki az alábbi információkat."
 
 #: bp-invites/bp-invites-functions.php:389
 msgid "To accept this invitation, please visit %%ACCEPTURL%%"
@@ -14560,7 +14557,7 @@ msgid ""
 msgstr ""
 "A BuddyBoss Platform nem működik, ha a BuddyPress Global Search bővítmény "
 "aktív. A globális keresés funkció be van építve a platformba. Először "
-"kapcsold ki a BuddyPress globális keresést, ha aktiválni szeretnéd  a "
+"kapcsold ki a BuddyPress globális keresést, ha aktiválni szeretnéd a "
 "BuddyBoss Platformot."
 
 #: bp-loader.php:69
@@ -14571,7 +14568,7 @@ msgid ""
 msgstr ""
 "A BuddyBoss Platform nem működik, ha a BuddyPress Follow bővítmény aktív. A "
 "követés funkció be van építve a platformba. Kérjük, kapcsold ki a BuddyPress "
-"Follow-t, ha aktiválni szeretnéd a BuddyBoss Platform-ot."
+"követést, ha aktiválni szeretnéd a BuddyBoss Platform-ot."
 
 #: bp-loader.php:156
 msgid "Your site does not support BuddyBoss Platform."
@@ -14905,7 +14902,7 @@ msgstr "Fiók törlése"
 
 #: bp-members/bp-members-filters.php:136 bp-members/bp-members-filters.php:150
 msgid "Email Address"
-msgstr "Email cím / felhasználónév"
+msgstr "E-mail cím / felhasználónév"
 
 #: bp-members/bp-members-functions.php:534
 #: bp-messages/bp-messages-template.php:1753
@@ -14937,16 +14934,16 @@ msgstr "<strong>HIBA</strong>: A felhasználói fiókod spamnek lett megjelölve
 
 #: bp-members/bp-members-functions.php:1589
 msgid "Please enter a valid email address."
-msgstr "Kérjük, érvényes email címet adj meg."
+msgstr "Kérjük, érvényes e-mail címet adj meg."
 
 #: bp-members/bp-members-functions.php:1593
 #: bp-members/bp-members-functions.php:1597
 msgid "Sorry, that email address is not allowed!"
-msgstr "Sajnáljuk, ez az email cím nem megengedett!"
+msgstr "Sajnáljuk, ez az e-mail cím nem megengedett!"
 
 #: bp-members/bp-members-functions.php:1601
 msgid "Sorry, that email address is already used!"
-msgstr "Sajnáljuk, ez az email cím már használatban van!"
+msgstr "Sajnáljuk, ez az e-mail cím már használatban van!"
 
 #: bp-members/bp-members-functions.php:1641
 msgid "Please enter a username"
@@ -14960,7 +14957,7 @@ msgstr "Ez a felhasználónév nem engedélyezett"
 msgid "Usernames can contain only letters, numbers, ., -, and @"
 msgstr ""
 "A felhasználónév csak az angol abc betűit, számokat, kötőjeleket , "
-"vesszőket, pontokat és ezt a jelet tartalmazhatja @"
+"vesszőket, pontokat és @ jelet tartalmazhat"
 
 #: bp-members/bp-members-functions.php:1657
 msgid "Username must be at least 3 characters"
@@ -15012,7 +15009,7 @@ msgid ""
 "email for the activation link."
 msgstr ""
 "<strong>HIBA</strong>: A felhasználói fiókod nem került jóváhagyásra. A "
-"jóváhagyáshoz szükséges hivatkozást tartalmazó email utasításait kell "
+"jóváhagyáshoz szükséges hivatkozást tartalmazó e-mail utasításait kell "
 "követni."
 
 #: bp-members/bp-members-functions.php:2345
@@ -15022,7 +15019,7 @@ msgstr "<strong>HIBA</strong>: Már aktiválva van a felhasználói fiókod."
 #: bp-members/bp-members-functions.php:2347
 msgid "Activation email resent! Please check your inbox or spam folder."
 msgstr ""
-"Aktiváló levél újra küldve!. Ellenőrizd a bejövő levelek és a spam fiókokat."
+"Aktiváló levél újraküldve!. Ellenőrizd a bejövő levelek és a spam fiókokat."
 
 #: bp-members/bp-members-functions.php:2538
 msgid "Profile type already exists."
@@ -15286,7 +15283,7 @@ msgstr "Függő feliratkozások"
 
 #: bp-members/classes/class-bp-members-admin.php:828
 msgid "Extended Profile"
-msgstr "Bővített adatlap"
+msgstr "Bővített profil"
 
 #: bp-members/classes/class-bp-members-admin.php:850
 msgid "You cannot edit the requested user."
@@ -15307,8 +15304,8 @@ msgid ""
 "In the right-hand column, you can update the user's status, delete the "
 "user's avatar, and view recent statistics."
 msgstr ""
-"A jobb oldali oszlopban frissítheted a fehasználó állapotát, törölheted "
-"avatárját és megtekintheted a legfrisebb statisztikákat."
+"A jobb oldali oszlopban frissítheted a felhasználó állapotát, törölheted "
+"avatárját és megtekintheted a legfrissebb statisztikákat."
 
 #: bp-members/classes/class-bp-members-admin.php:940
 msgid "%s's Stats"
@@ -15412,8 +15409,8 @@ msgid ""
 "You can reorder the list of your pending accounts by clicking on the "
 "Username, Email or Registered column headers."
 msgstr ""
-"A függőben lévő felhasználók listáját átrendezhetjük az egyes oszlop tetején "
-"lévő Felhasználónév, Email vagy Regisztrált névre kattintva."
+"A függőben lévő felhasználók listáját átrendezheted az egyes oszlop tetején "
+"lévő Felhasználónév, E-mail vagy Regisztrált névre kattintva."
 
 #: bp-members/classes/class-bp-members-admin.php:1713
 msgid ""
@@ -15421,7 +15418,7 @@ msgid ""
 "Username and Email fields will be included in the search."
 msgstr ""
 "A keresőűrlapot használva egyszerűbb megtalálni a függőben lévő felhasználói "
-"fiókokat. A felhasználónév és email cím szerepelnek a keresés eredményében."
+"fiókokat. A felhasználónév és e-mail cím szerepelnek a keresés eredményében."
 
 #: bp-members/classes/class-bp-members-admin.php:1720
 msgid ""
@@ -15429,7 +15426,7 @@ msgid ""
 "that allow you to manage pending accounts. You can perform the following "
 "actions:"
 msgstr ""
-"Ha a függőben lévő felhasználói fiókok egy sora fölé viszed az egeret, "
+"Ha a függőben lévő felhasználói fiókok sora fölé viszed az egeret, "
 "megjelennek a fiók kezeléséhez használható műveletek. A következő "
 "műveleteket lehet elvégezni:"
 
@@ -15439,8 +15436,8 @@ msgid ""
 "activation link to the desired pending account. You can only send the "
 "activation email once per day."
 msgstr ""
-"Az \"Email\" először a megerősítő oldalra visz, mielőtt aktivációs linket "
-"küldene a kívánt függőben lévő felhasználónak. Az aktivációs emailt naponta "
+"Az \"E-mail\" először a megerősítő oldalra visz, mielőtt aktivációs linket "
+"küldene a kívánt függőben lévő felhasználónak. Az aktivációs e-mailt naponta "
 "csak egyszer lehet elküldeni."
 
 #: bp-members/classes/class-bp-members-admin.php:1722
@@ -15484,38 +15481,38 @@ msgstr "Függőben lévő felhasználók listája"
 #: bp-members/classes/class-bp-members-admin.php:1898
 msgid "%s activation email successfully sent! "
 msgid_plural "%s activation emails successfully sent! "
-msgstr[0] "%s aktivációs email sikeresen elküldve! "
-msgstr[1] "%s aktivációs email sikeresen elküldve! "
+msgstr[0] "%s aktivációs e-mail sikeresen elküldve! "
+msgstr[1] "%s aktivációs e-mailek sikeresen elküldve! "
 
 #: bp-members/classes/class-bp-members-admin.php:1908
 msgid "%s activation email was not sent."
 msgid_plural "%s activation emails were not sent."
-msgstr[0] "%s aktivációs email nem lett elküldve."
-msgstr[1] "%s aktivációs email nem lett elküldve."
+msgstr[0] "%s aktivációs e-mail nem lett elküldve."
+msgstr[1] "%s aktivációs e-mailek nem lettek elküldve."
 
 #: bp-members/classes/class-bp-members-admin.php:1930
 msgid "%s account successfully activated! "
 msgid_plural "%s accounts successfully activated! "
 msgstr[0] "%s fiók sikeresen aktiválva! "
-msgstr[1] "%s fiók sikeresen aktiválva! "
+msgstr[1] "%s fiókok sikeresen aktiválva! "
 
 #: bp-members/classes/class-bp-members-admin.php:1940
 msgid "%s account was not activated."
 msgid_plural "%s accounts were not activated."
 msgstr[0] "%s fiók nincs aktiválva."
-msgstr[1] "%s fiók nincs aktiválva."
+msgstr[1] "%s fiókok nincsenek aktiválva."
 
 #: bp-members/classes/class-bp-members-admin.php:1962
 msgid "%s sign-up successfully deleted!"
 msgid_plural "%s sign-ups successfully deleted!"
 msgstr[0] "%s feliratkozás sikeresen törölve!"
-msgstr[1] "%s feliratkozás sikeresen törölve!"
+msgstr[1] "%s feliratkozások sikeresen törölve!"
 
 #: bp-members/classes/class-bp-members-admin.php:1972
 msgid "%s sign-up was not deleted."
 msgid_plural "%s sign-ups were not deleted."
 msgstr[0] "%s feliratkozás nem lett törölve."
-msgstr[1] "%s feliratkozás nem lett törölve."
+msgstr[1] "%s feliratkozások nem lettek törölve."
 
 #: bp-members/classes/class-bp-members-admin.php:1994
 msgid "There was a problem sending the activation emails. Please try again."
@@ -15542,7 +15539,7 @@ msgstr "Függőben lévő fiókok eltávolítása"
 
 #: bp-members/classes/class-bp-members-admin.php:2229
 msgid "You are about to delete the following account:"
-msgstr "Biztos, hogy törölöd a következő felhasználói fiókot:"
+msgstr "Biztos, hogy törlöd a következő felhasználói fiókot:"
 
 #: bp-members/classes/class-bp-members-admin.php:2231
 msgid "You are about to delete the following accounts:"
@@ -15554,11 +15551,11 @@ msgstr "Függőben lévő felhasználók aktiválása"
 
 #: bp-members/classes/class-bp-members-admin.php:2238
 msgid "You are about to activate the following account:"
-msgstr "Biztos, hogy aktiválod a következő felhasználót:"
+msgstr "A következő felhasználó aktiválását választottad:"
 
 #: bp-members/classes/class-bp-members-admin.php:2240
 msgid "You are about to activate the following accounts:"
-msgstr "A következő felhasználó aktiválását választottas:"
+msgstr "A következő felhasználók aktiválását választottad:"
 
 #: bp-members/classes/class-bp-members-admin.php:2245
 msgid "Resend Activation Emails"
@@ -15567,12 +15564,13 @@ msgstr "Aktiváló levelek újraküldése"
 #: bp-members/classes/class-bp-members-admin.php:2247
 msgid "You are about to resend an activation email to the following account:"
 msgstr ""
-"Biztosan ismételten elküldöd az aktiváló emailt a következő felhasználónak:"
+"A következő felhasználó részére az aktivációs e-mail újra küldését "
+"választotad:"
 
 #: bp-members/classes/class-bp-members-admin.php:2249
 msgid "You are about to resend an activation email to the following accounts:"
 msgstr ""
-"A következő felhasználó részére az aktivációs email újra küldését "
+"A következő felhasználók részére az aktivációs e-mail újra küldését "
 "választotad:"
 
 #: bp-members/classes/class-bp-members-admin.php:2318
@@ -15679,11 +15677,11 @@ msgstr "Győződj meg róla, hogy megadtad a jelszavad."
 
 #: bp-members/screens/register.php:79
 msgid "Please make sure to enter your email twice."
-msgstr "Győződj meg róla, hogy kétszer megadtad az email címed."
+msgstr "Győződj meg róla, hogy kétszer megadtad az e-mail címed."
 
 #: bp-members/screens/register.php:84
 msgid "The emails entered do not match."
-msgstr "A megadott emailek nem egyeznek."
+msgstr "A megadott e-mailek nem egyeznek."
 
 #: bp-members/screens/register.php:94
 msgid "Please make sure to enter your password twice."
@@ -15710,13 +15708,13 @@ msgstr "Az üzenetek törölve."
 msgid "%s message was successfully starred"
 msgid_plural "%s messages were successfully starred"
 msgstr[0] "%s üzenet sikeresen csillagozva"
-msgstr[1] "%s üzenet sikeresen csillagozva"
+msgstr[1] "%s üzenetek sikeresen csillagozva"
 
 #: bp-messages/actions/bulk-manage-star.php:68
 msgid "%s message was successfully unstarred"
 msgid_plural "%s messages were successfully unstarred"
 msgstr[0] "%s üzenet csillagozás sikeresen megszűntetve"
-msgstr[1] "%s üzenet csillagozás sikeresen megszűntetve"
+msgstr[1] "%s üzenetek csillagozása sikeresen megszűntetve"
 
 #: bp-messages/actions/bulk-manage.php:42
 msgid "There was a problem managing your messages."
@@ -15724,7 +15722,7 @@ msgstr "Hiba történt az üzenetek kezelése során."
 
 #: bp-messages/actions/bulk-manage.php:60
 msgid "Messages marked as read"
-msgstr "Olvasottként megjelölt üzenetek"
+msgstr "Üzenetek megjelölve olvasottként."
 
 #: bp-messages/actions/bulk-manage.php:67
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:939
@@ -15878,7 +15876,7 @@ msgstr "%s új privát üzenetet küldött"
 msgid "You have %s new private message"
 msgid_plural "You have %s new private messages"
 msgstr[0] "%s új privát üzeneted van"
-msgstr[1] "%s új privát üzeneted van"
+msgstr[1] "%s új privát üzeneteid vannak"
 
 #: bp-messages/bp-messages-notifications.php:271
 msgid "A member sends you a new message"
@@ -15897,7 +15895,7 @@ msgstr "Csillagozás"
 #: bp-messages/bp-messages-star.php:108
 #: bp-templates/bp-nouveau/includes/messages/functions.php:141
 msgid "Starred"
-msgstr "Csillagozás eltávolítása"
+msgstr "Csillagozott"
 
 #: bp-messages/bp-messages-star.php:109
 #: bp-templates/bp-nouveau/includes/messages/functions.php:142
@@ -15912,7 +15910,7 @@ msgstr "Távolítsd el az összes megcsillagozott üzenetet ebből a beszélget�
 #: bp-messages/bp-messages-star.php:111
 #: bp-templates/bp-nouveau/includes/messages/functions.php:144
 msgid "Star the first message in this thread"
-msgstr "Csilagozzuk meg ennek a beszélgetésnek az első üzenetét"
+msgstr "Csilagozzd meg ennek a beszélgetésnek az első üzenetét"
 
 #: bp-messages/bp-messages-star.php:338
 msgid "Add star"
@@ -16001,7 +15999,7 @@ msgstr "Alkalmaz"
 
 #: bp-messages/bp-messages-template.php:1097
 msgid "Currently Active"
-msgstr "Éppen aktuális"
+msgstr "Éppen aktív"
 
 #: bp-messages/bp-messages-template.php:1335
 msgid "Dismiss this notice"
@@ -16227,7 +16225,7 @@ msgstr "Felhasználói Meta"
 
 #: bp-search/bp-search-functions.php:510
 msgid "User Email"
-msgstr "Felhasználó email"
+msgstr "Felhasználó e-mail"
 
 #: bp-search/bp-search-settings.php:27
 msgid "Pages and Posts Search"
@@ -16260,7 +16258,7 @@ msgstr "eredmények"
 
 #: bp-search/bp-search-settings.php:409
 msgid "Search the following BuddyBoss components:"
-msgstr "BuddyBoss összetevők keresése:"
+msgstr "BuddyBoss komponensek keresése:"
 
 #: bp-search/bp-search-settings.php:423
 msgid "Search the following WordPress content and custom post types:"
@@ -16276,7 +16274,7 @@ msgstr "Fiók"
 
 #: bp-search/bp-search-settings.php:632
 msgid "Meta Data"
-msgstr "Meta Data"
+msgstr "Meta adat"
 
 #: bp-search/classes/class-bp-search-members.php:268
 msgid "Username/Login"
@@ -16323,23 +16321,23 @@ msgstr "Nem sikerült elindítani az adatok exportálási kérelmet."
 #: bp-settings/actions/export.php:55
 msgid "Please check your email to confirm the data export request."
 msgstr ""
-"Kérlek ellenőrizd az email fiókod, hogy megerősítsd az adat export kérésed."
+"Kérlek ellenőrizd az e-mail fiókod, hogy megerősítsd az adat export kérésed."
 
 #: bp-settings/actions/general.php:188
 msgid "That email address is invalid. Check the formatting and try again."
-msgstr "Ez az email cím hibás! Ellenőrizd a formázást, és próbáld meg újra."
+msgstr "Ez az e-mail cím hibás! Ellenőrizd a formázást, és próbáld meg újra."
 
 #: bp-settings/actions/general.php:191
 msgid "That email address is currently unavailable for use."
-msgstr "Ez az email cím jelenleg nem használható."
+msgstr "Ez az e-mail cím jelenleg nem használható."
 
 #: bp-settings/actions/general.php:194
 msgid "That email address is already taken."
-msgstr "Ez az email cím már foglalt."
+msgstr "Ez az e-mail cím már foglalt."
 
 #: bp-settings/actions/general.php:197
 msgid "Email address cannot be empty."
-msgstr "Az email cím nem lehet üres."
+msgstr "Az e-mail cím nem lehet üres."
 
 #: bp-settings/actions/general.php:207
 msgid "Your current password is invalid."
@@ -16363,7 +16361,7 @@ msgstr "Beállítások elmentve."
 
 #: bp-settings/actions/general.php:231
 msgid "No changes were made to your account."
-msgstr "Nem történt változás a fiók adataiban."
+msgstr "Nem történt változás a fiókodban."
 
 #: bp-settings/actions/general.php:233
 msgid "No changes were made to this account."
@@ -16371,16 +16369,16 @@ msgstr "Nem történt változás a fiókban."
 
 #: bp-settings/actions/general.php:288
 msgid "You have successfully verified your new email address."
-msgstr "Az új email címed sikeresen hitelesítve."
+msgstr "Az új e-mail címed sikeresen hitelesítve."
 
 #: bp-settings/actions/general.php:291
 msgid "There was a problem verifying your new email address. Please try again."
 msgstr ""
-"Hiba történt az új email cím ellenőrzése során. Kérjük, próbáld meg újra."
+"Hiba történt az új e-mail cím ellenőrzése során. Kérjük, próbáld meg újra."
 
 #: bp-settings/actions/general.php:303
 msgid "You have successfully dismissed your pending email change."
-msgstr "Sikeresen elvetetted a függőben lévő email cím módosítást."
+msgstr "Sikeresen elvetetted a függőben lévő e-mail cím módosítást."
 
 #: bp-settings/actions/notifications.php:41
 msgid "Your notification settings have been saved."
@@ -16392,14 +16390,14 @@ msgstr "A felhasználó értesítési beállításai mentésre kerültek."
 
 #: bp-settings/bp-settings-template.php:89
 msgid "There is a pending change of your email address to %s."
-msgstr "Az email címed változtatása függőben %s."
+msgstr "Az e-mail címed változtatása függőben %s."
 
 #: bp-settings/bp-settings-template.php:94
 msgid ""
 "Check your email (%1$s) for the verification link, or <a href=\"%2$s"
 "\">cancel the pending change</a>."
 msgstr ""
-"Ellenőrizd az emailjeid (%1$s) az ellenőrző link miatt, vagy <a href=\"%2$s"
+"Ellenőrizd az e-mailjeid (%1$s) az ellenőrző link miatt, vagy <a href=\"%2$s"
 "\">töröld a függőben lévő változást</a>."
 
 #: bp-settings/classes/class-bp-settings-component.php:150
@@ -16432,7 +16430,7 @@ msgstr "Állapotfrissítés"
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:15
 msgid "Your browser does not support this feature."
-msgstr "A böngésző nem támogatja ezt a szolgáltatást."
+msgstr "A böngésződ nem támogatja ezt a szolgáltatást."
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:22
 msgid "Capture"
@@ -16449,17 +16447,17 @@ msgid ""
 "If you'd like to delete your current profile photo, use the delete profile "
 "photo button."
 msgstr ""
-"Ha törölni szeretnéd aktuális profil fotód, használd a profilfotó törlése "
+"Ha törölni szeretnéd aktuális profilképed, használd a profilkép törlése "
 "gombot."
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/index.php:36
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:47
 msgid "Delete My Profile Photo"
-msgstr "Adatlap képem törlése"
+msgstr "Profilképem törlése"
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/index.php:39
 msgid "Delete Group Profile Photo"
-msgstr "Csoport adatlap kép törlése"
+msgstr "Csoport profilkép törlése"
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/cover-images/index.php:24
 msgid ""
@@ -16478,12 +16476,12 @@ msgid ""
 "If you'd like to remove the existing group cover photo but not upload a new "
 "one, please use the delete group cover photo button."
 msgstr ""
-"Ha el szeretnéd távolítani a meglévő csoportborító fotót, de nem szeretnél "
-"feltölteni egy újat, használd a csoportborító fotó törlése gombot."
+"Ha el szeretnéd távolítani a meglévő csoport borítóképet, de nem szeretnél "
+"feltölteni egy újat, használd a csoport borítókép törlése gombot."
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/cover-images/index.php:34
 msgid "Delete Group Cover Photo"
-msgstr "Csoport borító kép törlése"
+msgstr "Csoport borítókép törlése"
 
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/uploader.php:14
 msgid "The web browser on your device cannot be used to upload files."
@@ -16508,7 +16506,7 @@ msgstr "új üzenetet küldött"
 
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:417
 msgid "If you don't want to receive these emails in the future, please "
-msgstr "Ha a jövőben nem szeretnél ilyen emaileket kapni iratkozz le - "
+msgstr "Ha a jövőben nem szeretnél ilyen e-maileket kapni iratkozz le - "
 
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:417
 msgid "unsubscribe"
@@ -16620,7 +16618,7 @@ msgstr "Elkezdett"
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:40
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:42
 msgid "Delete conversation"
-msgstr "Beszélgetés törtlése"
+msgstr "Beszélgetés törlése"
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-load-more.php:2
 msgid "Load previous messages"
@@ -16730,7 +16728,7 @@ msgstr "Év kiválastása"
 
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:130
 msgid "To"
-msgstr "Részére"
+msgstr "Címzett"
 
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:297
 msgid "Reset"
@@ -16810,12 +16808,12 @@ msgstr "Fénykép kiválasztása"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:51
 msgid "Upload Photo"
-msgstr "Fotó feltöltése"
+msgstr "Fénykép feltöltése"
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:56
 msgid "To skip the group photo upload process select \"Next Step\"."
 msgstr ""
-"A csoport fotó feltöltésének kihagyásához kattints a \"Következő lépés\"-re."
+"A csoportkép feltöltésének kihagyásához kattints a \"Következő lépés\"-re."
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:61
 #: bp-templates/bp-nouveau/includes/functions.php:871
@@ -16823,7 +16821,7 @@ msgid ""
 "To remove the existing group photo, please use the delete group profile "
 "photo button."
 msgstr ""
-"A meglévő csoportkép eltávolításához használd a csoportprofil törlése gombot."
+"A meglévő csoportkép eltávolításához használd a csoportkép törlése gombot."
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:71
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:72
@@ -17115,8 +17113,8 @@ msgid ""
 "Your account was activated successfully! Your account details have been sent "
 "to you in a separate email."
 msgstr ""
-"Fiókod sikeresen aktiválva lett! A fiókod részleteit külön emailben kerülnek "
-"elküldésre."
+"Fiókod sikeresen aktiválva lett! A fiókod részleteit külön e-mailben "
+"kerülnek elküldésre."
 
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:23
 msgid ""
@@ -17169,7 +17167,7 @@ msgid ""
 "Invite non-members to create an account. They will receive an email with a "
 "link to register."
 msgstr ""
-"Nem tagok meghívása a fiók létrehozáshoz. Kapni fognak egy email-t a "
+"Nem tagok meghívása a fiók létrehozáshoz. Kapni fognak egy e-mail-t a "
 "regisztrációs linkkel."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:57
@@ -17182,15 +17180,15 @@ msgstr "Szabd testre a meghívó tárgy szövegét."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:87
 msgid "Are you sure you want to send the invite without a subject?"
-msgstr "Biztos benne, hogy tárgy nélkül küldöd el a meghívót?"
+msgstr "Biztos vagy benne, hogy tárgy nélkül küldöd el a meghívót?"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:94
 msgid ""
 "Customize the text of the invitation email. A link to register will be sent "
 "with the email."
 msgstr ""
-"Testreszabhatod a meghívó email szövegét. A regisztráció linkjét elküldjük "
-"az emailben."
+"Testreszabhatod a meghívó e-mail szövegét. A regisztráció linkjét elküldjük "
+"az e-mailben."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:114
 msgid "Are you sure you want to send the invite without adding a message?"
@@ -17204,7 +17202,7 @@ msgstr "Biztos benne, hogy tárgy és üzenet nélkül küldöd el a meghívót?
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:124
 msgid "Enter a valid email address"
-msgstr "Valós email címet adj meg"
+msgstr "Valós e-mail címet adj meg"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:125
 msgid "Enter name"
@@ -17212,16 +17210,16 @@ msgstr "Írj be egy nevet"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:126
 msgid "Please fill out all required fields to invite a new member."
-msgstr "Új tag meghívásához töltd ki az összes kötelező mezőt."
+msgstr "Új tag meghívásához töltsd ki az összes kötelező mezőt."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:13
 msgid "Invitations were sent successfully to the following email addresses:"
-msgstr "A meghívókat sikeresen elküldtük az alábbi email címekre:"
+msgstr "A meghívókat sikeresen elküldtük az alábbi e-mail címekre:"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:28
 msgid "Invitations did not send because these email addresses are invalid:"
 msgstr ""
-"A meghívók nem kerültek elküldésre, mivel az alábbi email címek "
+"A meghívók nem kerültek elküldésre, mivel az alábbi e-mail címek "
 "érvénytelenek:"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:44
@@ -17229,7 +17227,7 @@ msgid ""
 "Invitations did not send to the following email addresses, because they are "
 "already members:"
 msgstr ""
-"A meghívók nem kerültek elküldésre, mivel az alábbi email címekkel már "
+"A meghívók nem kerültek elküldésre, mivel az alábbi e-mail címekkel már "
 "vannak tagok:"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:59
@@ -17287,7 +17285,7 @@ msgstr "Ki láthatja ennek a mezőnek a tartalmát?"
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:27
 msgid ""
 "Your profile photo will be used on your profile and throughout the site."
-msgstr "A profilfotód a profilodban és az egész webhelyen lesz használva."
+msgstr "A profilképed a profilodban és az egész webhelyen lesz használva."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:36
 msgid ""
@@ -17312,11 +17310,11 @@ msgstr "Új adatlapkép körbevágása"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:56
 msgid "Profile photo to crop"
-msgstr "Adatlap-kép körbevágása"
+msgstr "Profilkép körbevágása"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:59
 msgid "Profile photo preview"
-msgstr "Adatlap kép előnézet"
+msgstr "Profilkép előnézet"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:62
 msgid "Crop Image"
@@ -17366,14 +17364,14 @@ msgstr "Adatid exportálásának kérése"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:17
 msgid "Update your email and or password."
-msgstr "Frissítsd email címedet vagy jelszavad."
+msgstr "Frissítsd e-mail címedet és/vagy jelszavad."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:24
 msgid ""
 "Current Password <span>(required to update email or change current "
 "password)</span>"
 msgstr ""
-"Jelenlegi jelszó <span>(kötelező megadni az email cím vagy jelszó "
+"Jelenlegi jelszó <span>(kötelező megadni az e-mail cím vagy jelszó "
 "változtatáskor)</span>"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:25
@@ -17382,7 +17380,7 @@ msgstr "Elfelejtetted a jelszavad?"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:29
 msgid "Account Email"
-msgstr "Fiók email"
+msgstr "Fiók e-mail"
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/general.php:34
 msgid "Leave password fields blank for no change"
@@ -17402,7 +17400,7 @@ msgstr "Csoport meghívás korlátozása a kapcsolatban lévő tagjok számára.
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:16
 msgid "Choose your email notification preferences."
-msgstr "Válaszd ki az email értesítési beállításokat."
+msgstr "Válaszd ki az e-mail értesítési beállításokat."
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:12
 msgid "Profile Visibility Settings"
@@ -17429,7 +17427,7 @@ msgstr "óta"
 msgid "%d topic"
 msgid_plural "%d topics"
 msgstr[0] "%d téma"
-msgstr[1] "%d téma"
+msgstr[1] "%d témák"
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/forum.php:33
 #: bp-templates/bp-nouveau/buddypress/search/loop/topic-ajax.php:20
@@ -17437,7 +17435,7 @@ msgstr[1] "%d téma"
 msgid "%d reply"
 msgid_plural "%d replies"
 msgstr[0] "%d válasz"
-msgstr[1] "%d válasz"
+msgstr[1] "%d válaszok"
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/message-ajax.php:9
 msgid "From:"
@@ -17477,7 +17475,7 @@ msgstr[1] "%s leckék"
 msgid "%d quiz"
 msgid_plural "%d quizzes"
 msgstr[0] "%d kvíz"
-msgstr[1] "%s kvíz"
+msgstr[1] "%d kvízek"
 
 #: bp-templates/bp-nouveau/buddypress/search/no-results-groups.php:1
 msgid "No groups found!"
@@ -17497,7 +17495,7 @@ msgstr "Nincsenek eredmények erre: '%s'"
 
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:21
 msgid "Search Network&hellip;"
-msgstr "Gálózat keresése&hellip;"
+msgstr "Hálózat keresése&hellip;"
 
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:21
 msgid "Try different keywords&hellip;"
@@ -17515,7 +17513,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress-functions.php:560
 msgid "Are you sure you want to remove your connection with this member?"
-msgstr "Biztosan el akarja megszűnteted a kapcsolatod ezzel a taggal?"
+msgstr "Biztosan megszűnteted a kapcsolatod ezzel a taggal?"
 
 #: bp-templates/bp-nouveau/buddypress-functions.php:562
 msgid "Are you sure you want to delete this set? This cannot be undone."
@@ -17555,7 +17553,7 @@ msgstr "Sajnáljuk, nem található tevékenység."
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:203
 msgid "There was a problem when deleting. Please try again."
-msgstr "Hiba a törlés során, a műveletet meg kell ismételni."
+msgstr "Probléma volt a törlés során. Kérlek próbáld újra."
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
 #: bp-templates/bp-nouveau/includes/media/ajax.php:722
@@ -17611,7 +17609,7 @@ msgstr "Írj újdonságokat"
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:187
 msgid "Post in"
-msgstr "Bejegyzés (Post in)"
+msgstr "Bejegyzés"
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:190
 msgid "%d Comment"
@@ -17643,11 +17641,11 @@ msgstr "Új említések"
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:543
 msgid "New update replies"
-msgstr "Új frissítés válaszok"
+msgstr "Új bejegyzés válaszok"
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:548
 msgid "New update comment replies"
-msgstr "Új frissítési megjegyzés válaszok"
+msgstr "Új bejegyzési megjegyzés válaszok"
 
 #. translators: 1: user profile link, 2: user name, 3: activity permalink, 4:
 #. activity recorded date, 5: activity timestamp, 6: activity human time since
@@ -17698,11 +17696,12 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:69
 msgid "Drag and drop each tab to change the group navigation order."
-msgstr "Mozgasd a füleket, hogy megváltoztasd a csoport navigáció sorrendjét."
+msgstr ""
+"Fogd és vidd a füleket, hogy megváltoztasd a csoport navigáció sorrendjét."
 
 #: bp-templates/bp-nouveau/includes/customizer-controls.php:77
 msgid "Drag and drop each tab to change the profile navigation order."
-msgstr "Mozgasd a füleket, hogy megváltoztasd a profil navigáció sorrendjét."
+msgstr "Fog és vidd füleket, hogy megváltoztasd a profil navigáció sorrendjét."
 
 #: bp-templates/bp-nouveau/includes/customizer.php:26
 msgid "Customize the appearance of the BuddyBoss Platform."
@@ -17744,7 +17743,7 @@ msgstr "A tag elsődleges navigációjának újrarendezése."
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:89
 msgid "No member found with that ID."
-msgstr "Nem található tag ezzel az ID-vel."
+msgstr "Nem található tag ezzel az azonosítóval."
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:104
 msgid "There was a problem when trying to unfollow this user."
@@ -17761,7 +17760,7 @@ msgstr "Függő kérések"
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:107
 msgid "No member found by that ID."
-msgstr "Nem található tag ezzel az ID-vel."
+msgstr "Nem található tag ezzel az azonosítóval."
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:121
 msgid "There was a problem accepting that request. Please try again."
@@ -17769,7 +17768,7 @@ msgstr "Hiba történt a felkérés elfogadása közben. Kérjük, próbáld meg
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:130
 msgid "Connection accepted."
-msgstr "Elfogadott kapcsolat."
+msgstr "Ismerős elfogadva."
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:146
 msgid "There was a problem rejecting that request. Please try again."
@@ -17777,7 +17776,7 @@ msgstr "Probléma történt a kérés visszautasításakor. Kérjük próbáld �
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:155
 msgid "Connection rejected."
-msgstr "Kapcsolat visszautasítva."
+msgstr "Ismerős visszautasítva."
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:169
 msgid "Connection could not be cancelled."
@@ -17785,7 +17784,7 @@ msgstr "Kapcsolat nem vonható vissza."
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:185
 msgid "Connection removed."
-msgstr "Kapcsolat eltávolítva."
+msgstr "Ismerős eltávolítva."
 
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:222
 msgid "Connection request could not be cancelled."
@@ -17793,11 +17792,11 @@ msgstr "Kapcsolat kérelem nem szakítható meg."
 
 #: bp-templates/bp-nouveau/includes/friends/loader.php:101
 msgid "Accepted connection requests"
-msgstr "Elfogadott kapcsolati kérések"
+msgstr "Elfogadott ismerős kérések"
 
 #: bp-templates/bp-nouveau/includes/friends/loader.php:106
 msgid "Pending connection requests"
-msgstr "Függő kapcsolati kérések"
+msgstr "Függőben lévő ismerős kérések"
 
 #: bp-templates/bp-nouveau/includes/functions.php:499
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:53
@@ -17813,8 +17812,8 @@ msgid ""
 "You have successfully created your account! Please log in using the email "
 "and password you have just created."
 msgstr ""
-"Sikeresen létrehoztad a fiókod! Kérjük, jelentkezz be az éppen létrehozott "
-"email és jelszó segítségével."
+"Sikeresen létrehoztad a fiókod! Kérjük, jelentkezz be az éppen létrehozott e-"
+"mail és jelszó segítségével."
 
 #: bp-templates/bp-nouveau/includes/functions.php:791
 msgid "Loading community updates. Please wait."
@@ -17882,7 +17881,7 @@ msgstr "Nincsenek függő tagsági kérelmek."
 
 #: bp-templates/bp-nouveau/includes/functions.php:859
 msgid "You have already requested to join this group."
-msgstr "Már kérted a csoport csatlakozási kérelmet."
+msgstr "Már kérted a csoport csatlakozási kérelmét."
 
 #: bp-templates/bp-nouveau/includes/functions.php:863
 msgid "Loading the members who requested to join the group. Please wait."
@@ -17893,7 +17892,7 @@ msgid ""
 "WARNING: Deleting this group will completely remove ALL content associated "
 "with it. There is no way back. Please be careful with this option."
 msgstr ""
-"FIGYELEM: Törli a csoportot teljesen eltávolít MINDEN tartalmat. Nincs "
+"FIGYELEM: Ha törli a csoportot, teljesen eltávolít MINDEN tartalmat. Nincs "
 "visszaút, kérlek, légy óvatos ezzel az opcióval."
 
 #: bp-templates/bp-nouveau/includes/functions.php:875
@@ -17906,7 +17905,7 @@ msgstr "Nincsenek függőben lévő kéréseid."
 
 #: bp-templates/bp-nouveau/includes/functions.php:887
 msgid "You have no mutual connections with this member."
-msgstr "Kölcsönös kapcsolatban vagy ezzel a taggal."
+msgstr "Nincsenek közös ismerőseitek ezzel a taggal."
 
 #: bp-templates/bp-nouveau/includes/functions.php:891
 msgid "You have no outstanding group invites."
@@ -17942,7 +17941,7 @@ msgstr "Tag barátainak betöltése. Kérlek várj."
 
 #: bp-templates/bp-nouveau/includes/functions.php:919
 msgid "Loading member's mutual connections. Please wait."
-msgstr "Tagok kölcsönös kapcsolatainak betöltése. Kérlek várj."
+msgstr "Tagok közös ismerőseinek betöltése. Kérlek várj."
 
 #: bp-templates/bp-nouveau/includes/functions.php:923
 msgid "Loading member's groups. Please wait."
@@ -17966,8 +17965,8 @@ msgid ""
 "Currently only your connections may invite you to join a group. Uncheck this "
 "box to allow any member to send invites."
 msgstr ""
-"Jelenleg csak a kapcsolatok kérhetnek fel téged egy csoporthoz. Jelöld be "
-"ezt a négyzetet, hogy bármely tag meghívásokat küldhessen."
+"Jelenleg csak az ismerősök hívhatnak meg téged egy csoportba. Jelöld be ezt "
+"a négyzetet, hogy bármely tag meghívásokat küldhessen."
 
 #: bp-templates/bp-nouveau/includes/functions.php:939
 msgid ""
@@ -17977,9 +17976,9 @@ msgid ""
 "approved, a zip file will be generated and emailed to you."
 msgstr ""
 "Letöltheted a platformon létrehozott összes adat egy példányát. Új kérés "
-"elindításához kattints az alábbi gombra. Emailt küldünk Neked a kérés "
+"elindításához kattints az alábbi gombra. E-mailt küldünk Neked a kérés "
 "ellenőrzésére. Ezután a webhely adminisztrátora felülvizsgálja kérését, és "
-"ha jóváhagyja, létrehoz egy ZIP-fájlt, és emailben küldi el Neked."
+"ha jóváhagyja, létrehoz egy ZIP-fájlt, és e-mailben küldi el Neked."
 
 #: bp-templates/bp-nouveau/includes/functions.php:943
 msgid "Loading member's photos. Please wait."
@@ -18007,7 +18006,7 @@ msgid ""
 "Before you can login, you need to confirm your email address via the email "
 "we just sent to you."
 msgstr ""
-"A bejelentkezés előtt meg kell erősítened az email címedet, az általunk "
+"A bejelentkezés előtt meg kell erősítened az e-mail címedet, az általunk "
 "elküldött e-mailen keresztül."
 
 #: bp-templates/bp-nouveau/includes/functions.php:980
@@ -18040,7 +18039,7 @@ msgstr "Blogok betöltése. Kérlek várj."
 
 #: bp-templates/bp-nouveau/includes/functions.php:997
 msgid "Loading your connections. Please wait."
-msgstr "Kapcsolatok betöltése. Kérlek várj."
+msgstr "Ismerősök betöltése. Kérlek várj."
 
 #: bp-templates/bp-nouveau/includes/functions.php:999
 msgid "Loading your groups. Please wait."
@@ -18049,7 +18048,7 @@ msgstr "Csoportok betöltése. Kérlek várj."
 #: bp-templates/bp-nouveau/includes/functions.php:1052
 #: bp-templates/bp-nouveau/includes/functions.php:1186
 msgid "Confirm Email"
-msgstr "Email megerősítése"
+msgstr "E-mail megerősítése"
 
 #: bp-templates/bp-nouveau/includes/functions.php:1068
 #: bp-templates/bp-nouveau/includes/functions.php:1131
@@ -18151,7 +18150,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:406
 msgid "You have no connections."
-msgstr "Nincsenek kapcsolataid."
+msgstr "Nincsenek ismerőseid."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:437
 msgid "Invites could not be sent. Please try again."
@@ -18166,11 +18165,11 @@ msgstr "Nem küldhetsz meghívót ebbe a csoportba."
 msgid "Invitation failed for %s user."
 msgid_plural "Invitation failed for %s users."
 msgstr[0] "Sikertelen meghívás %s felhasználónak."
-msgstr[1] "Sikertelen meghívás %s felhasználónak."
+msgstr[1] "Sikertelen meghívás %s felhasználóknak."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:513
 msgid "Invitations sent."
-msgstr "Elküldött meghívók."
+msgstr "Meghívók elküldve."
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:532
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:552
@@ -18198,7 +18197,7 @@ msgid ""
 "Use the \"Send\" button to send your invite or the \"Cancel\" button to "
 "abort."
 msgstr ""
-"A \"Küldés\" gombra kattintva küldheted el a meghívót vagy a megszakításhoz "
+"A \"Küldés\" gombra kattintva elküldheted a meghívót vagy a megszakításhoz "
 "használd a \"Mégsem\" gombot."
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:152
@@ -18272,7 +18271,7 @@ msgstr "Elfogadott csoport tagsági kérések"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1145
 msgid "Rejected Group membership requests"
-msgstr "Elutasított a csoport tagsági kérést"
+msgstr "Elutasított a csoport tagsági kérések"
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1150
 msgid "Group Organizer promotions"
@@ -18339,7 +18338,7 @@ msgstr "widgetek (tartalom blokkok)"
 
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:1381
 msgid "Notify group members of these changes via email"
-msgstr "Csoporttagok értesítése emailben a változásokról"
+msgstr "Csoporttagok értesítése e-mailben a változásokról"
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:154
 msgid "There was a problem when trying to upload this file."
@@ -18381,11 +18380,11 @@ msgstr "Probléma merült fel az album létrehozásakor."
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:684
 msgid "Please provide ID of album to delete."
-msgstr "Kérjük, add meg az album azonosítóját ID a törléshez."
+msgstr "Kérjük, add meg az album azonosítóját a törléshez."
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:771
 msgid "Please provide attachment id to delete."
-msgstr "Kérjük, add meg a melléklet azonosítóját ID a törléshez."
+msgstr "Kérjük, add meg a melléklet azonosítóját a törléshez."
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:121
 msgid "Unselect"
@@ -18415,7 +18414,7 @@ msgstr "Biztosan törlöd ezt az albumot? Az album fotói is törlésre kerülne
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:129
 msgid "There was a problem deleting the album."
-msgstr "Hiba történ az album törlése során."
+msgstr "Hiba történt az album törlése során."
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:150
 msgid "All Photos"
@@ -18660,11 +18659,11 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:28
 msgid "Member changed profile photo"
-msgstr "Tag megváltoztatta profil fotóját"
+msgstr "Tag megváltoztatta profilképét"
 
 #: bp-xprofile/bp-xprofile-activity.php:30
 msgid "Updated Profile Photos"
-msgstr "Adatlap kép frissítve"
+msgstr "Profilkép frissítve"
 
 #: bp-xprofile/bp-xprofile-activity.php:36
 msgid "Updated Profile"
@@ -19087,7 +19086,7 @@ msgstr "Férfi"
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:330
 msgid "Female"
-msgstr "Ná"
+msgstr "Nő"
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:351
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:308
@@ -19308,7 +19307,7 @@ msgstr "Ki láthatja ennek a mezőnek a tartalmát?"
 
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:527
 msgid "Delete Profile Photo"
-msgstr "Adatlap kép törlés"
+msgstr "Profilkép törlés"
 
 #: bp-xprofile/screens/edit.php:86
 msgid ""
@@ -19351,7 +19350,7 @@ msgid ""
 "The BuddyBoss Platform adds community features to WordPress. Member "
 "Profiles, Activity Feeds, Direct Messaging, Notifications, and more!"
 msgstr ""
-"A BuddyBoss Platform közösségi funkciókat ad hozzá a a WordPress-hez. Tag "
+"A BuddyBoss Platform közösségi funkciókat ad hozzá a WordPress-hez. Tag "
 "profilok, tevékenységi hírcsatornák, közvetlen üzenetküldés, értesítések és "
 "így tovább!"
 
@@ -19398,7 +19397,7 @@ msgstr "Kedvelések"
 #: bp-activity/classes/class-bp-activity-component.php:428
 msgctxt "My Account Activity sub nav"
 msgid "Connections"
-msgstr "Kapcsolatok"
+msgstr "Ismerősök"
 
 #: bp-activity/classes/class-bp-activity-component.php:439
 msgctxt "My Account Activity sub nav"

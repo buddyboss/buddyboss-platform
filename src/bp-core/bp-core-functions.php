@@ -483,6 +483,7 @@ function bp_core_get_packaged_component_ids() {
 		'xprofile',
 		'friends',
 		'media',
+		'document',
 		'messages',
 		'settings',
 		'notifications',
@@ -506,7 +507,7 @@ function bp_core_get_packaged_component_ids() {
 function bp_core_get_directory_page_ids( $status = 'active' ) {
 	$page_ids = bp_get_option( 'bp-pages', array() );
 
-	// Loop through pages
+	// Loop through pages.
 	foreach ( $page_ids as $component_name => $page_id ) {
 
 		// Ensure that empty indexes are unset. Should only matter in edge cases.
@@ -515,7 +516,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// Trashed pages should never appear in results.
-		if ( 'trash' == get_post_status( $page_id ) ) {
+		if ( 'trash' === get_post_status( $page_id ) ) {
 			unset( $page_ids[ $component_name ] );
 		}
 
@@ -705,7 +706,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	// check for privacy page if already exists in WP settings > privacy
+	// check for privacy page if already exists in WP settings > privacy.
 	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
 	$static_pages   = array( 'terms' );
 
@@ -715,7 +716,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		$pages_to_create['privacy'] = $page_titles['privacy'];
 	}
 
-	// Create terms and privacy pages
+	// Create terms and privacy pages.
 	foreach ( $static_pages as $slug ) {
 		if ( ! isset( $pages[ $slug ] ) ) {
 			$pages_to_create[ $slug ] = $page_titles[ $slug ];
@@ -734,13 +735,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 
 	// Create the pages.
 	foreach ( $pages_to_create as $component_name => $page_name ) {
-		$exists = get_page_by_path( $component_name );
+		$exists     = get_page_by_path( $component_name );
 		$page_exist = post_exists( $page_name, '', '', 'page' );
 
 		// If page already exists, use it.
 		if ( ! empty( $exists ) ) {
 			$pages[ $component_name ] = $exists->ID;
-		} else if ( ! empty( $page_exist ) ) {
+		} elseif ( ! empty( $page_exist ) ) {
 			$pages[ $component_name ] = $page_exist;
 		} else {
 			$pages[ $component_name ] = wp_insert_post(
@@ -779,6 +780,7 @@ function bp_core_get_directory_page_default_titles() {
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
+		'document'        => __( 'Documents', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
 		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
@@ -1236,6 +1238,12 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		 */
 	} else {
 
+		/**
+		 * Initializing the count variable to avoid undefined notice
+		 */
+		$count = 0;
+		$count2 = 0;
+
 		// Step one: the first chunk.
 		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
 			$seconds = $chunks[ $i ];
@@ -1314,7 +1322,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			}
 
 			// No output, so happened right now.
-			if ( ! (int) trim( $output ) ) {
+			if ( ! (int) $count && ! (int) $count2 ) {
 				$output = $right_now_text;
 			}
 		}
@@ -1375,8 +1383,8 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 /**
  * Return the Default date format
  *
- * @param bool $date
- * @param bool $time
+ * @param bool   $date
+ * @param bool   $time
  * @param string $symbol
  *
  * @return mixed
@@ -1447,8 +1455,8 @@ function bp_core_add_message( $message, $type = '' ) {
 	}
 
 	// Send the values to the cookie for page reload display.
-	@setcookie( 'bp-message', $message, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp-message-type', $type, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message', rawurlencode( $message ), time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message-type', rawurlencode( $type ), time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 
 	// Get BuddyPress.
 	$bp = buddypress();
@@ -1479,11 +1487,11 @@ function bp_core_setup_message() {
 	$bp = buddypress();
 
 	if ( empty( $bp->template_message ) && isset( $_COOKIE['bp-message'] ) ) {
-		$bp->template_message = stripslashes( $_COOKIE['bp-message'] );
+		$bp->template_message = stripslashes( rawurldecode( $_COOKIE['bp-message'] ) );
 	}
 
 	if ( empty( $bp->template_message_type ) && isset( $_COOKIE['bp-message-type'] ) ) {
-		$bp->template_message_type = stripslashes( $_COOKIE['bp-message-type'] );
+		$bp->template_message_type = stripslashes( rawurldecode( $_COOKIE['bp-message-type'] ) );
 	}
 
 	add_action( 'template_notices', 'bp_core_render_message' );
@@ -2347,7 +2355,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages'  ),
+			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
 
@@ -2581,6 +2589,20 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'document'      => array(
+			'title'       => __( 'Document Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
+			'default'     => false,
+		),
 		'messages'      => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
 			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
@@ -2722,11 +2744,13 @@ function bp_nav_menu_get_loggedin_pages() {
 
 	foreach ( $bp_menu_items as $bp_item ) {
 
+		$nav_counter = hexdec( uniqid() );
+
 		// Remove <span>number</span>.
 		$item_name = _bp_strip_spans_from_title( $bp_item['name'] );
 
 		$page_args[ $bp_item['slug'] ] = (object) array(
-			'ID'             => -1,
+			'ID'             => $nav_counter,
 			'post_title'     => $item_name,
 			'post_author'    => 0,
 			'post_date'      => 0,
@@ -2735,7 +2759,157 @@ function bp_nav_menu_get_loggedin_pages() {
 			'post_status'    => 'publish',
 			'comment_status' => 'closed',
 			'guid'           => $bp_item['link'],
+			'post_parent'    => 0,
 		);
+
+		$nav_sub = buddypress()->members->nav->get_secondary(
+			array(
+				'parent_slug' => $bp_item['slug'],
+			)
+		);
+
+		if ( 'messages' === $bp_item['slug'] && bp_is_active( 'messages' ) ) {
+			$page_args['compose-messages'] =
+			(object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'New Messages', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'compose-messages',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose',
+				'post_parent'    => $nav_counter,
+			);
+
+			if ( bp_current_user_can( 'bp_moderate' ) ) {
+				$page_args['site-notice'] = (object) array(
+					'ID'             => hexdec( uniqid() ),
+					'post_title'     => __( 'Site Notices', 'buddyboss' ),
+					'object_id'      => hexdec( uniqid() ),
+					'post_author'    => 0,
+					'post_date'      => 0,
+					'post_excerpt'   => 'site-notice',
+					'post_type'      => 'page',
+					'post_status'    => 'publish',
+					'comment_status' => 'closed',
+					'guid'           => admin_url( '/admin.php?page=bp-notices' ),
+					'post_parent'    => $nav_counter,
+				);
+			}
+		}
+
+		if ( 'groups' === $bp_item['slug'] && bp_is_active( 'groups' ) && bp_user_can_create_groups() ) {
+			$page_args['groups-create'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Create Group', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'groups-create',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
+				'post_parent'    => $nav_counter,
+			);
+		}
+
+		if ( 'activity' === $bp_item['slug'] ) {
+			$page_args['activity-posts'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Posts', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'activity-posts',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_activity_slug() ),
+				'post_parent'    => $nav_counter,
+			);
+		}
+
+		if ( ! empty( $nav_sub ) ) {
+			foreach ( $nav_sub as $s_nav ) {
+
+				$sub_name          = preg_replace( '/^(.*)(<(.*)<\/(.*)>)/', '$1', $s_nav['name'] );
+				$sub_name          = trim( $sub_name );
+				$nav_counter_child = hexdec( uniqid() );
+
+				$key = $s_nav['slug'];
+
+				if ( in_array( $key, array( 'capabilities', 'delete-account' ), true ) ) {
+					continue;
+				}
+
+				if ( 'settings' === $bp_item['slug'] && 'notifications' === $key ) {
+					$key = 'settings-notifications';
+				}
+
+				if ( 'profile' === $key ) {
+					$key = 'view';
+				} elseif ( 'groups' === $bp_item['slug'] && 'invites' === $key ) {
+					$key = 'group-invites';
+				}
+
+				if ( 'my-friends' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Connections', 'buddyboss' );
+				}
+
+				if ( 'my-document' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Documents', 'buddyboss' );
+				}
+
+				if ( 'my-media' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Photos', 'buddyboss' );
+				}
+
+				if ( 'my-courses' === $s_nav['slug'] ) {
+					$sub_name = sprintf( __( 'My  %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+				}
+
+				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
+					$key = 'group-invites-settings';
+				}
+
+				$link = $s_nav['link'];
+				$arr_key = $key . '-sub';
+				$page_args[ $arr_key ] =
+					(object) array(
+						'ID'             => $nav_counter_child,
+						'post_title'     => $sub_name,
+						'object_id'      => $nav_counter_child,
+						'post_author'    => 0,
+						'post_date'      => 0,
+						'post_excerpt'   => $arr_key,
+						'post_type'      => 'page',
+						'post_status'    => 'publish',
+						'comment_status' => 'closed',
+						'guid'           => $link,
+						'post_parent'    => $nav_counter,
+					);
+			}
+		}
+
+		if ( 'settings' === $bp_item['slug'] && ! bp_disable_account_deletion() ) {
+			$page_args['delete-account'] = (object) array(
+				'ID'             => hexdec( uniqid() ),
+				'post_title'     => __( 'Delete Account', 'buddyboss' ),
+				'object_id'      => hexdec( uniqid() ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_excerpt'   => 'delete-account',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'comment_status' => 'closed',
+				'guid'           => trailingslashit( bp_loggedin_user_domain() . bp_get_settings_slug() . '/delete-account' ),
+				'post_parent'    => $nav_counter,
+			);
+		}
 	}
 
 	if ( empty( buddypress()->wp_nav_menu_items ) ) {
@@ -3371,7 +3545,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
 		 * }
 		 * @since BuddyPress 2.5.0
-		 *
 		 */
 		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
 		if ( ! class_exists( $delivery_class ) ) {
@@ -3391,7 +3564,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			 * @param BP_Email $email The email we tried to send.
 			 *
 			 * @since BuddyPress 2.5.0
-			 *
 			 */
 			do_action( 'bp_send_email_failure', $status, $email );
 
@@ -3404,7 +3576,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			 * @param BP_Email $email The email sent.
 			 *
 			 * @since BuddyPress 2.5.0
-			 *
 			 */
 			do_action( 'bp_send_email_success', $status, $email );
 		}
@@ -3447,7 +3618,7 @@ function bp_email_get_appearance_settings() {
 		'footer_text_color'         => '#7F868F',
 		'footer_text_size'          => 12,
 		'highlight_color'           => '#007CFF',
-		'site_title_logo_size'      => 150,
+		'site_title_logo_size'      => 180,
 		'site_title_text_color'     => '#122B46',
 		'site_title_text_size'      => 20,
 		'recipient_text_color'      => '#7F868F',
@@ -3888,9 +4059,9 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	$group_message_email = array(
 		'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
 		'unsubscribe' => array(
-		'meta_key' => 'notification_group_messages_new_message',
-		'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
-	),
+			'meta_key' => 'notification_group_messages_new_message',
+			'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+		),
 	);
 
 	$types = array(
@@ -4386,8 +4557,6 @@ function bp_ajax_get_suggestions() {
 
 	if ( ! empty( $_GET['only_friends'] ) ) {
 		$args['only_friends'] = absint( $_GET['only_friends'] );
-	} else if ( bp_is_active( 'messages' ) && bp_is_active( 'friends' ) && bp_force_friendship_to_message() ) {
-		$args['only_friends'] = true;
 	}
 
 	// Support per-Group suggestions.
@@ -4411,7 +4580,7 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *
  * @since BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Content
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.
@@ -4507,6 +4676,20 @@ function bp_unique_id( $prefix = '' ) {
 	return $prefix . (string) ++$id_counter;
 }
 
+function bp_array_flatten( $array ) {
+	if ( ! is_array( $array ) ) {
+		return false;
+	}
+	$result = array();
+	foreach ( $array as $key => $value ) {
+		if ( is_array( $value ) ) {
+			$result = array_merge( $result, bp_array_flatten( $value ) );
+		} else {
+			$result[ $key ] = $value;
+		}
+	}
+	return $result;
+}
 /**
  * Get Group avatar.
  *
@@ -4615,7 +4798,7 @@ function bp_core_parse_url( $url ) {
 
 			// Load HTML to DOM Object
 			$dom = new DOMDocument();
-			@$dom->loadHTML( $body );
+			@$dom->loadHTML( mb_convert_encoding( $body, 'HTML-ENTITIES', 'UTF-8' ) );
 
 			$meta_tags   = array();
 			$images      = array();
@@ -4719,13 +4902,12 @@ function bp_core_parse_url( $url ) {
 /**
  * Format file size units
  *
- * @param int $bytes
- * @param bool $unit_label
+ * @param int    $bytes
+ * @param bool   $unit_label
  * @param string $type
  *
  * @return string
  * @since BuddyBoss 1.3.5
- *
  */
 function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 
@@ -4743,11 +4925,11 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 
 	if ( empty( $type ) ) {
 		if ( $bytes >= 1073741824 ) {
-			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
 		} elseif ( $bytes >= 1048576 ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
 		} elseif ( $bytes >= 1024 ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
 		} elseif ( $bytes > 1 ) {
 			$bytes = $bytes . ' bytes';
 		} elseif ( $bytes == 1 ) {
@@ -4757,11 +4939,11 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 		}
 	} else {
 		if ( 'GB' === $type ) {
-			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '') . ' GB';
+			$bytes = number_format( ( $bytes / 1073741824 ), 2, '.', '' ) . ' GB';
 		} elseif ( 'MB' === $type ) {
-			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '') . ' MB';
+			$bytes = number_format( ( $bytes / 1048576 ), 2, '.', '' ) . ' MB';
 		} elseif ( 'KB' === $type ) {
-			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '') . ' KB';
+			$bytes = number_format( ( $bytes / 1024 ), 2, '.', '' ) . ' KB';
 		} elseif ( 'bytes' === $type ) {
 			$bytes = $bytes . ' bytes';
 		} elseif ( 1 === $bytes ) {
@@ -4772,4 +4954,141 @@ function bp_core_format_size_units( $bytes, $unit_label = false, $type = '' ) {
 	}
 
 	return $bytes;
+}
+
+/**
+ * Whether or not profile field is hidden.
+ *
+ * @since BuddyBoss 1.4.7
+ *
+ * @param int $field_id ID for the profile field.
+ *
+ * @return bool Whether or not profile field is hidden.
+ */
+function bp_core_hide_display_name_field( $field_id = 0 ) {
+	if (
+		! function_exists( 'bp_is_active' )
+		|| ! bp_is_active( 'xprofile' )
+		|| empty( $field_id )
+	) {
+		return false;
+	}
+
+	$retval = false;
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+			$retval = true;
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_lastname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+			$retval = true;
+		}
+	} elseif ( 'nickname' === $current_value && $field_id === bp_xprofile_firstname_field_id() ) {
+		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+			$retval = true;
+		}
+	}
+
+	/**
+	 * Filters Hide Display name field.
+	 *
+	 * @since BuddyBoss 1.4.7
+	 *
+	 * @param bool $retval   Return value.
+	 * @param int  $field_id ID for the profile field.
+	 */
+	return ( bool ) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
+}
+
+/**
+ * Return the file upload max size in bytes.
+ *
+ * @return mixed|void
+ *
+ * @since BuddyBoss 1.4.8
+ */
+function bp_core_upload_max_size() {
+
+	static $max_size = - 1;
+
+	if ( $max_size < 0 ) {
+		// Start with post_max_size.
+		$size = @ini_get( 'post_max_size' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$post_max_size = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$post_max_size = round( $size );
+		}
+
+		if ( $post_max_size > 0 ) {
+			$max_size = $post_max_size;
+		}
+
+		// If upload_max_size is less, then reduce. Except if upload_max_size is
+		// zero, which indicates no limit.
+		$size = @ini_get( 'upload_max_filesize' );
+		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
+		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
+		if ( $unit ) {
+			$upload_max = round( $size * pow( 1024, stripos( 'bkmgtpezy', $unit[0] ) ) );
+		} else {
+			$upload_max = round( $size );
+		}
+		if ( $upload_max > 0 && $upload_max < $max_size ) {
+			$max_size = $upload_max;
+		}
+	}
+
+	/**
+	 * Filters file upload max limit.
+	 *
+	 * @param mixed $max_size file upload max limit.
+	 *
+	 * @since BuddyBoss 1.4.8
+	 */
+	return apply_filters( 'bp_core_upload_max_size', $max_size );
+
+}
+
+/**
+ * Function deletes Transient based on the transient name specified.
+ *
+ * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
+ *
+ * @global type $wpdb
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_delete_transient_query( $transient_name_prefix ) {
+	global $wpdb;
+	$sql = $wpdb->prepare(
+			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
+			$transient_name_prefix
+	);
+
+	$keys = $wpdb->get_col( $sql );
+
+	if ( ! empty( $keys ) ) {
+		foreach ( $keys as $transient ) {
+			delete_transient( str_replace( '_transient_', '', $transient ) );
+		}
+	}
+}
+
+/**
+ * Function which return the profile completion key.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_get_profile_completion_key() {
+
+	return 'bbprofilecompletion';
 }

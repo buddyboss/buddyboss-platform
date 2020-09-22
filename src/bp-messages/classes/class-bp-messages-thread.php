@@ -415,7 +415,7 @@ class BP_Messages_Thread {
 
 		if ( false === $messages || static::$noCache ) {
 			// if current user isn't the recpient, then return empty array
-			if ( ! static::is_thread_recipient( $thread_id ) ) {
+			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
 				return array();
 			}
@@ -630,49 +630,68 @@ class BP_Messages_Thread {
 
 		// Update the message subject & content of particular user messages.
 		$update_message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id = %d", $thread_id, $user_id ) ); // WPCS: db call ok. // WPCS: cache ok.
-		foreach ( $update_message_ids as $message_id ) {
-			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
-			$wpdb->query( $query ); // db call ok; no-cache ok;
-			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+
+		/**
+		 * Fires before user messages content update.
+		 *
+		 * @param int   $thread_id          ID of the thread being deleted.
+		 * @param array $message_ids        IDs of messages being deleted.
+		 * @param int   $user_id            ID of the user the threads messages update for.
+		 * @param array $update_message_ids IDs of messages being updated.
+		 *
+		 * @since BuddyPress 2.2.0
+		 */
+		do_action( 'bp_messages_thread_messages_before_update', $thread_id, $message_ids, $user_id, $update_message_ids );
+
+		if ( ! empty( $update_message_ids ) ) {
+			foreach ( $update_message_ids as $message_id ) {
+				$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+				$wpdb->query( $query ); // db call ok; no-cache ok;
+				bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+			}
 		}
 
 		/**
-		 * Fires before an entire message thread is deleted.
+		 * Fires after user messages content update.
+		 *
+		 * @param int   $thread_id          ID of the thread being deleted.
+		 * @param array $message_ids        IDs of messages being deleted.
+		 * @param int   $user_id            ID of the user the threads messages update for.
+		 * @param array $update_message_ids IDs of messages being updated.
 		 *
 		 * @since BuddyPress 2.2.0
-		 *
-		 * @param int   $thread_id   ID of the thread being deleted.
-		 * @param array $message_ids IDs of messages being deleted.
 		 */
-		do_action( 'bp_messages_thread_before_delete', $thread_id, $message_ids );
-
-		/**
-		 * Fires after a message thread is either marked as deleted or deleted.
-		 *
-		 * @since BuddyPress 2.2.0
-		 * @since BuddyPress 2.7.0 The $user_id parameter was added.
-		 *
-		 * @param int   $thread_id   ID of the thread being deleted.
-		 * @param array $message_ids IDs of messages being deleted.
-		 * @param int   $user_id     ID of the user the threads were deleted for.
-		 */
-		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, $user_id );
+		do_action( 'bp_messages_thread_messages_after_update', $thread_id, $message_ids, $user_id, $update_message_ids );
 
 		// If there is no any messages in thread then delete the complete thread.
 		$thread_delete = true;
-		foreach ( $message_ids as $message_id ) {
-			$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
-			if ( '' === $is_deleted ) {
-				$thread_delete = false;
-				break;
+
+		if ( ! empty( $message_ids ) ) {
+			foreach ( $message_ids as $message_id ) {
+				$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
+				if ( '' === $is_deleted ) {
+					$thread_delete = false;
+					break;
+				}
 			}
 		}
 
 		if ( $thread_delete ) {
 
+			/**
+			 * Fires before an entire message thread is deleted.
+			 *
+			 * @param int   $thread_id     ID of the thread being deleted.
+			 * @param array $message_ids   IDs of messages being deleted.
+			 * @param bool  $thread_delete True entire thread will be deleted.
+			 *
+			 * @since BuddyPress 2.2.0
+			 */
+			do_action( 'bp_messages_thread_before_delete', $thread_id, $message_ids, $thread_delete );
+
 			// Removed the thread id from the group meta.
 			if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) &&  true === bp_disable_group_messages() ) {
-				// Get the group id from the first message
+				// Get the group id from the first message.
 				$first_message    = BP_Messages_Thread::get_first_message( (int) $thread_id );
 				$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
 				if ( $message_group_id > 0 ) {
@@ -683,7 +702,7 @@ class BP_Messages_Thread {
 				}
 			}
 
-			// Delete Message Notifications
+			// Delete Message Notifications.
 			bp_messages_message_delete_notifications( $thread_id, $message_ids );
 
 			// Delete thread messages.
@@ -698,8 +717,19 @@ class BP_Messages_Thread {
 			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
 			$wpdb->query( $query ); // db call ok; no-cache ok;
 
-		}
+			/**
+			 * Fires before an entire message thread is deleted.
+			 *
+			 * @param int   $thread_id     ID of the thread being deleted.
+			 * @param array $message_ids   IDs of messages being deleted.
+			 * @param int   $user_id       ID of the user the threads were deleted for.
+			 * @param bool  $thread_delete True entire thread will be deleted.
+			 *
+			 * @since BuddyPress 2.2.0
+			 */
+			do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, $user_id, $thread_delete );
 
+		}
 
 		return true;
 	}
@@ -726,10 +756,11 @@ class BP_Messages_Thread {
 	public static function get_current_threads_for_user( $args = array() ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp             = buddypress();
+		$function_args  = func_get_args();
 
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -741,7 +772,7 @@ class BP_Messages_Thread {
 				5 => 'search_terms',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$r = bp_parse_args(
@@ -778,7 +809,7 @@ class BP_Messages_Thread {
 		} else {
 
 			// Do not include hidden threads.
-			if ( false === $r['is_hidden'] && '' === $r['search_terms'] ) {
+			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
 				$user_threads_query = $wpdb->prepare(
 					"
 			SELECT DISTINCT(thread_id)

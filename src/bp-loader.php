@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.3.4
+ * Version:     1.5.1.1
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -21,7 +21,11 @@ defined( 'ABSPATH' ) || exit;
 
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '1.3.4' );
+	define( 'BP_PLATFORM_VERSION', '1.5.1.1' );
+}
+
+if ( ! defined( 'BP_PLATFORM_API' ) ) {
+	define( 'BP_PLATFORM_API', plugin_dir_url( __FILE__ ) );
 }
 
 global $bp_incompatible_plugins;
@@ -147,12 +151,42 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			if ( '' !== $new_admin_path ) {
 				$plugins_path = '/' . $new_admin_path . '/plugins.php';
+
+				/**
+				 * Admin plugins directory path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $plugins_path Admin plugins directory path.
+				 *
+				 */
+				$plugins_path = apply_filters( 'bp_admin_plugins_path', $plugins_path );
 			}
 
 			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
 				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
+
+				/**
+				 * admin-ajax.php path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
+				 */
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
 				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
+
+				/**
+				 * admin-ajax.php path.
+				 *
+				 * @since BuddyBoss 1.4.7
+				 *
+				 * @param string $ajax_path admin-ajax.php path.
+				 *
+				 */
+				$ajax_path = apply_filters( 'bp_admin_ajax_path', $ajax_path );
 			}
 		}
 

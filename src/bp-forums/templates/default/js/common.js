@@ -53,9 +53,7 @@ jQuery( document ).ready(
 			jQuery('body #bbp_topic_tags').val(tags);
 
 			jQuery( 'body .select2-search__field' ).trigger( 'click' );
-			console.log('1');
 			jQuery( 'body .select2-search__field' ).trigger( 'click' );
-			console.log('111');
 		});
 
 		// Remove element into the Arrdata array.
@@ -139,26 +137,5 @@ jQuery( document ).ready(
 				});
 			}
 		}
-
-		//Add Click event to show / hide text formatting Toolbar
-		
-		jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .show-toolbar, .bbp-topic-form #whats-new-toolbar .show-toolbar', function(e) {
-			e.preventDefault();
-			var medium_editor = jQuery(e.currentTarget).closest('.bbp-form').find('.medium-editor-toolbar');
-			jQuery(e.currentTarget).find('.toolbar-button').toggleClass('active');
-			if( jQuery(e.currentTarget).find('.toolbar-button').hasClass('active') ) {
-				jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-hide'));
-			} else {
-				jQuery(e.currentTarget).attr('data-bp-tooltip',jQuery(e.currentTarget).attr('data-bp-tooltip-show'));
-			}
-			medium_editor.toggleClass('active');
-
-		});
-
-		jQuery( 'body' ).on('click', '.bbp-reply-form #whats-new-toolbar .medium-editor-toolbar-actions, .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar-actions', function(e) {
-			e.preventDefault();
-			jQuery( e.currentTarget ).closest( 'form' ).find( '.bbp-the-content-wrapper .bbp-the-content' ).focus();
-		});
-
 	}
 );

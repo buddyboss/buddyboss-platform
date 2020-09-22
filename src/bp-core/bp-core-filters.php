@@ -702,6 +702,11 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
  * @return WP_Post The modified WP_Post object.
  */
 function bp_setup_nav_menu_item( $menu_item ) {
+
+	if ( isset( $menu_item->classes ) && is_array( $menu_item->classes ) && in_array( 'bp-menu', $menu_item->classes, true ) ) {
+		$menu_item->type_label = __( 'BuddyBoss', 'buddyboss' );
+	}
+
 	if ( is_admin() ) {
 		return $menu_item;
 	}
@@ -809,7 +814,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => __( 'Custom Link', 'buddyboss' ),
+			'type_label' => __( 'BuddyBoss', 'buddyboss' ),
 			'object'     => $object,
 			'object_id'  => -1,
 		);
@@ -832,12 +837,12 @@ function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 		$item_types,
 		array(
 			'bp_loggedin_nav'  => array(
-				'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-in)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedin_nav',
 			),
 			'bp_loggedout_nav' => array(
-				'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
+				'title'  => __( 'BuddyBoss (logged-out)', 'buddyboss' ),
 				'type'   => 'bp_nav',
 				'object' => 'bp_loggedout_nav',
 			),
@@ -1402,3 +1407,41 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 	return $pages;
 }
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+
+/**
+ * Filter to change cover image dimensions to original for group and profile.
+ *
+ * @param $wh        array
+ * @param $settings  array
+ * @param $component string
+ *
+ * @return array
+ * @since BuddyBoss 1.5.1
+ */
+function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if ( did_action( 'wp_ajax_bp_cover_image_upload' ) && ( 'xprofile' === $component || 'groups' === $component ) ) {
+		return array(
+			'width'  => 99999,
+			'height' => 99999,
+		);
+	}
+
+	return $wh;
+}
+
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_image_dimensions', 10, 3 );
+
+/**
+ * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.
+ */
+if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
+	function buddyboss_platform_plugin_update_notice() {
+		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+			$class   = 'notice notice-error';
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+		}
+	}
+	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
+}

@@ -228,19 +228,21 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				'item_css_id'     => 'replies',
 			);
 
-			// Favorite topics
-			$sub_nav[] = array(
-				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
-				'slug'            => bbp_get_user_favorites_slug(),
-				'parent_url'      => $forums_link,
-				'parent_slug'     => $this->slug,
-				'screen_function' => 'bbp_member_forums_screen_favorites',
-				'position'        => 60,
-				'item_css_id'     => 'favorites',
-			);
+			if ( bbp_is_favorites_active() ) {
+				// Favorite topics
+				$sub_nav[] = array(
+					'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
+					'slug'            => bbp_get_user_favorites_slug(),
+					'parent_url'      => $forums_link,
+					'parent_slug'     => $this->slug,
+					'screen_function' => 'bbp_member_forums_screen_favorites',
+					'position'        => 60,
+					'item_css_id'     => 'favorites',
+				);
+			}
 
 			// Subscribed topics (my profile only)
-			if ( bp_is_my_profile() ) {
+			if ( ( is_admin() || bp_is_my_profile() ) && bbp_is_subscriptions_active() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Subscriptions', 'buddyboss' ),
 					'slug'            => bbp_get_user_subscriptions_slug(),
@@ -337,6 +339,30 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			}
 
 			parent::setup_title();
+		}
+
+		/**
+		 * Init the BuddyBoss REST API.
+		 *
+		 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
+		 *
+		 * @since BuddyBoss 1.3.5
+		 */
+		public function rest_api_init( $controllers = array() ) {
+
+			$path = buddypress()->plugin_dir . 'bp-forums/classes/class-bp-rest-bbp-walker-reply.php';
+
+			if ( file_exists( $path ) ) {
+				require_once $path;
+			}
+
+			parent::rest_api_init( array(
+				'BP_REST_Forums_Endpoint',
+				'BP_REST_Topics_Endpoint',
+				'BP_REST_Topics_Actions_Endpoint',
+				'BP_REST_Reply_Endpoint',
+				'BP_REST_Reply_Actions_Endpoint',
+			) );
 		}
 	}
 endif;

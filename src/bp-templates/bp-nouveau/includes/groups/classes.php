@@ -78,6 +78,22 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			return $this->group_member_ids;
 		}
 
+		// Fetch **all** invited users.
+		$pending_invites = groups_get_invites( array(
+			'item_id'     => $this->query_vars['group_id'],
+			'invite_sent' => 'sent',
+			'fields'      => 'user_ids'
+		) );
+
+		// This is a clue that we only want the invitations.
+		if ( false === $this->query_vars['is_confirmed'] ) {
+			return $pending_invites;
+		}
+
+		/**
+		 * Otherwise, we want group members _and_ users with outstanding invitations,
+		 * because we're doing an "exclude" query.
+		 */
 		$bp  = buddypress();
 		$sql = array(
 			'select'  => "SELECT user_id FROM {$bp->groups->table_name_members}",
@@ -107,7 +123,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		/** LIMIT clause ******************************************************/
 		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" );
 
-		return $this->group_member_ids;
+		return array_merge( $this->group_member_ids, $pending_invites );
 	}
 
 	/**
@@ -138,9 +154,12 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			return array();
 		}
 
-		$bp = buddypress();
-
-		return $wpdb->get_col( $wpdb->prepare( "SELECT inviter_id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $user_id, $group_id ) );
+		return groups_get_invites( array(
+			'user_id'     => $user_id,
+			'item_id'     => $group_id,
+			'invite_sent' => 'sent',
+			'fields'      => 'inviter_ids'
+		) );
 	}
 }
 
@@ -353,6 +372,15 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			);
 		}
 
+		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+			$nav_items['documents'] = array(
+				'name'        => __( 'Documents', 'buddyboss' ),
+				'slug'        => 'documents',
+				'parent_slug' => $this->group->slug,
+				'position'    => 21,
+			);
+		}
+
 		// Required params
 		$required_params = array(
 			'slug'              => true,
@@ -375,6 +403,13 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				}
 			}
 		}
+
+		/**
+		 * Filters group customizer navigation items.
+		 *
+		 * @since BuddyBoss 1.4.4
+		 */
+		$nav_items = apply_filters( 'bp_nouveau_customizer_group_nav_items', $nav_items, $this->group );
 
 		// Now we got all, create the temporary nav.
 		foreach ( $nav_items as $nav_item ) {

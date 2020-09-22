@@ -83,6 +83,13 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
+		'bp_nouveau_appearance[user_nav_hide]' => array(
+			'index'             => 'user_nav_hide',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'bp_nouveau_sanitize_nav_hide',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
 		'bp_nouveau_appearance[activity_dir_layout]' => array(
 			'index'             => 'activity_dir_layout',
 			'capability'        => 'bp_moderate',
@@ -175,6 +182,9 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	if ( bp_is_active( 'media' ) ) {
 		$options['media'] = __( 'Photos', 'buddyboss' );
 	}
+	if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
+		$options['document'] = __( 'Documents', 'buddyboss' );
+	}
 
 	$controls = array(
 		'user_nav_display' => array(
@@ -196,6 +206,13 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'label'    => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
 			'section'  => 'bp_nouveau_user_primary_nav',
 			'settings' => 'bp_nouveau_appearance[user_nav_order]',
+			'type'     => 'user',
+		),
+		'user_nav_hide'   => array(
+			'class'    => 'BP_Nouveau_Nav_Customize_Control',
+			'label'    => __( 'Hide the primary navigation for a member.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_primary_nav',
+			'settings' => 'bp_nouveau_appearance[user_nav_hide]',
 			'type'     => 'user',
 		),
 		'mail_layout'      => array(
