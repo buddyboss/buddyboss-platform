@@ -3419,31 +3419,49 @@ function bp_document_ie_nocache_headers_fix( $headers ) {
 function bp_document_default_scope( $scope = 'all' ) {
 	$new_scope = array();
 
+	$allowed_scopes = array( 'public', 'all' );
+	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_document_support_enabled() ) {
+		$allowed_scopes[] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() ) {
+		$allowed_scopes[] = 'groups';
+	}
+
+	if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
+		$allowed_scopes[] = 'personal';
+	}
+
 	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_document_directory() ) {
 		$new_scope[] = 'public';
-		if ( is_user_logged_in() ) {
-			$new_scope[] = 'personal';
 
-			if ( bp_is_active( 'friends' ) ) {
-				$new_scope[] = 'friends';
-			}
+		if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_document_support_enabled() ) {
+			$new_scope[] = 'friends';
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() ) {
 			$new_scope[] = 'groups';
 		}
 
-	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) ) {
+		if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
+			$new_scope[] = 'personal';
+		}
+
+	} elseif ( bp_is_user_document() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'personal';
 	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'groups';
 	}
 
-	$new_scope = array_unique( $new_scope );
-
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
 	}
+
+	// Remove duplicate scope if added.
+	$new_scope = array_unique( $new_scope );
+
+	// Remove all unwanted scope.
+	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
 	/**
 	 * Filter to update default scope.
