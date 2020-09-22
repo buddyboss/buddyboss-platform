@@ -5358,7 +5358,7 @@ function bp_activity_default_scope( $scope = 'all' ) {
 /**
  * Get the Activity edit data.
  *
- * @since BuddyBoss 1.5.0
+ * @since BuddyBoss 1.5.1
  *
  * @param int $activity_id Activity ID.
  *
@@ -5414,7 +5414,7 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	/**
 	 * Filter here to edit the activity edit data.
 	 *
-	 * @since BuddyBoss 1.5.0
+	 * @since BuddyBoss 1.5.1
 	 *
 	 * @param string $activity_data The Activity edit data.
 	 */

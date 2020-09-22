@@ -711,6 +711,8 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @param array|object $post              Request object.
  *
  * @return bool
+ * 
+ * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
 	// check if media is enabled in messages or not and empty media in object request or not.
