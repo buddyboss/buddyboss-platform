@@ -1417,27 +1417,3 @@ if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	}
 	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
 }
-
-/**
- * Set the default value checked "Show Avatars" in Settings > Discussion > Avatars > Avatar Display.
- *
- * @param $value
- * @param $option
- * @param $default
- *
- * @return mixed|void
- *
- * @since BuddyBoss 1.5.1
- */
-function bp_core_set_default_show_avatars( $value, $option, $default ) {
-	$value = true;
-
-	/**
-	 * Set the default value checked "Show Avatars" in Settings > Discussion > Avatars > Avatar Display.
-	 *
-	 * @since BuddyPress 1.5.1
-	 *
-	 */
-	return apply_filters( 'bp_core_set_default_show_avatars', $value, $option, $default );
-}
-add_filter( 'pre_option_show_avatars', 'bp_core_set_default_show_avatars', 999, 3 );
