@@ -931,7 +931,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			// Determine friends of user.
 			$friends = friends_get_friend_user_ids( $user_id );
 
-			if ( bp_is_my_profile() || bp_is_activity_directory() ) {
+			if ( $user_id === bp_loggedin_user_id() || bp_is_activity_directory() ) {
 				$friends[] = bp_loggedin_user_id();
 			}
 

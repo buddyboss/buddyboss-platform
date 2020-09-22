@@ -103,6 +103,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'media_size_error_description' => __( 'This file type is too large.', 'buddyboss' ),
 		'dictFileTooBig'               => __( "File is too large ({{filesize}} MB). Max filesize: {{maxFilesize}} MB.", 'buddyboss' ),
 		'maxFiles'                     => apply_filters( 'bp_media_upload_chunk_limit', 10 ),
+		'cover_photo_size_error_header'=> __( 'Unable to reposition the image ', 'buddyboss' ),
+		'cover_photo_size_error_description'=> __( 'To reposition your cover photo, please upload a larger image and then try again.', 'buddyboss' ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -240,7 +242,7 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
  * @since BuddyBoss 1.5.1
  */
 function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
-	if ( isset( $buttons['activity_edit'] ) && bp_is_media_component() && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
+	if ( isset( $buttons['activity_edit'] ) && ( bp_is_media_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'media' !== $activity->privacy ) {

@@ -70,8 +70,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		bp_core_install( $bp->active_components );
 		bp_core_add_page_mappings( $bp->active_components );
 		bp_update_option( 'bp-active-components', $bp->active_components );
-		// Reset the permalink to fix the 404 on some pages.
-		flush_rewrite_rules();
 
 	}
 
