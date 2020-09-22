@@ -5,11 +5,11 @@
  * @since BuddyBoss 1.0.0
  */
 ?>
-<div id="bp-media-uploader" style="display: none;">
+<div id="bp-media-uploader" style="display: none;" class="bp-media-photo-uploader">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
             <div class="modal-wrapper">
-                <div class="modal-container">
+                <div class="modal-container has-folderlocationUI">
 
                     <header class="bb-model-header">
                         <a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
@@ -25,18 +25,22 @@
 						</a>
                     </header>
 
-                    <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-                        <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
-							<div class="media-uploader-post-content">
-								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? _e( 'Write something about your photos, to be shown on the group feed', 'buddyboss' ) : _e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
-							</div>
-                        <?php endif; ?>
+                    <div class="bb-field-steps bb-field-steps-1">
 
-						<div class="bb-field-wrap">
-							<div class="media-uploader-wrapper">
-								<div class="dropzone" id="media-uploader"></div>
-							</div>
-						</div>
+                        <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
+                            <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
+                                <div class="media-uploader-post-content">
+                                    <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? _e( 'Write something about your photos, to be shown on the group feed', 'buddyboss' ) : _e( 'Write something about your photos, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+                                </div>
+                            <?php endif; ?>
+
+                                <div class="bb-field-wrap">
+                                    <div class="media-uploader-wrapper">
+                                        <div class="dropzone" id="media-uploader"></div>
+                                    </div>
+                                    <a id="bp-media-photo-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
+                                </div>
+                            </div>						
                     </div>
 
 	                <?php if ( bp_is_single_album() ) : ?>
@@ -70,9 +74,19 @@
                             <?php endif; ?>
 
                         </div>
-	                <?php endif; ?>
 
-                    <footer class="bb-model-footer flex align-items-center">
+                       
+
+                    <?php endif; ?>
+                    
+                    <div class="bb-field-steps bb-field-steps-2">
+						<div class="bb-field-wrap">
+							<?php bp_get_template_part( 'media/location-move' ); ?>
+							<?php bp_get_template_part( 'media/media-create-album' ); ?>
+						</div>
+					</div>
+
+                    <footer class="bb-model-footer media-uploader-footer">
                         <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
 
 	                    <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
@@ -85,7 +99,10 @@
 				                    } ?>
                                 </select>
                             </div>
-	                    <?php endif; ?>
+                        <?php endif; ?>
+                        
+                        <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">Create new album</a>
+                        <a id="bp-media-prev" class="button bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
 
                         <a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
                     </footer>

@@ -13988,16 +13988,28 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #buddypress .bp-media-document-uploader .bb-field-steps-2 {
-  padding-top: 30px;
+  padding-top: 15px;
 }
 
 #buddypress .bp-media-document-uploader #bp-media-document-next {
   float: left;
+  margin-top: 20px;
+  min-width: 130px;
 }
 
 #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
   float: right;
-  margin-bottom: 0;
+  margin-bottom: 15px;
+}
+
+#buddypress .bp-media-document-uploader .document-uploader-footer .bp-document-open-create-popup-folder {
+  display: block;
+  margin-bottom: 15px;
+  clear: both;
+}
+
+#buddypress .bp-media-document-uploader .document-uploader-footer #bp-media-document-prev {
+  float: right;
 }
 
 #buddypress .bp-media-document-uploader .document-uploader-footer #bp-media-document-submit {
@@ -14006,6 +14018,46 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 @media screen and (max-width: 420px) {
   #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
+    margin-bottom: 10px;
+  }
+}
+
+#buddypress .bp-media-photo-uploader #bp-media-prev,
+#buddypress .bp-media-photo-uploader #bp-media-photo-next {
+  display: none;
+}
+
+#buddypress .bp-media-photo-uploader .location-album-list-wrap {
+  margin-top: 15px;
+}
+
+#buddypress .bp-media-photo-uploader #bp-media-photo-next {
+  float: left;
+  margin-top: 20px;
+  min-width: 130px;
+}
+
+#buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap {
+  float: right;
+  margin-bottom: 15px;
+}
+
+#buddypress .bp-media-photo-uploader .media-uploader-footer .bp-media-open-create-popup-folder {
+  display: block;
+  margin-bottom: 15px;
+  clear: both;
+}
+
+#buddypress .bp-media-photo-uploader .media-uploader-footer #bp-media-prev {
+  float: right;
+}
+
+#buddypress .bp-media-photo-uploader .media-uploader-footer #bp-media-submit {
+  float: left;
+}
+
+@media screen and (max-width: 420px) {
+  #buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap {
     margin-bottom: 10px;
   }
 }
@@ -15514,6 +15566,19 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .bp-media-move-file .close-create-popup-album,
 .bp-media-move-folder .ac-media-close-button,
 .bp-media-move-folder .close-create-popup-album {
+  color: #a5a7ab;
+}
+
+.bp-media-photo-uploader .bb-model-header p {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.bp-media-photo-uploader .close-create-popup-album {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 0 20px;
   color: #a5a7ab;
 }
 
