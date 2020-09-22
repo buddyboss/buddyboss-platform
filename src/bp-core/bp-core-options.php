@@ -1464,7 +1464,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
 }
 
 /**
