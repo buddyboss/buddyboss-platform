@@ -111,7 +111,7 @@ window.wp = window.wp || {};
 				} );
 
 				if ( order.length ) {
-					$( '#bp_profile_header_order' ).val( order.join() ).trigger( 'change' );
+					$( '#bp_user_profile_actions_order' ).val( order.join() ).trigger( 'change' );
 				}
 
 			}

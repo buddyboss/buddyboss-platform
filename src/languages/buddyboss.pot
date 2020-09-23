@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.4.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-17 15:29:27+00:00\n"
+"POT-Creation-Date: 2020-09-23 11:06:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1027,7 +1027,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:4127
 #: bp-core/admin/settings/bp-admin-setting-activity.php:88
-#: bp-templates/bp-nouveau/includes/customizer.php:322
+#: bp-templates/bp-nouveau/includes/customizer.php:324
 msgid "Follow"
 msgstr ""
 
@@ -1116,7 +1116,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:288
 #: bp-activity/classes/class-bp-activity-component.php:423
-#: bp-templates/bp-nouveau/includes/customizer.php:196
+#: bp-templates/bp-nouveau/includes/customizer.php:193
 msgid "Timeline"
 msgstr ""
 
@@ -1242,7 +1242,7 @@ msgstr ""
 #: bp-media/bp-media-filters.php:1091 bp-media/bp-media-settings.php:208
 #: bp-media/bp-media-settings.php:215 bp-media/bp-media-settings.php:222
 #: bp-media/bp-media-settings.php:229 bp-search/bp-search-functions.php:369
-#: bp-templates/bp-nouveau/includes/customizer.php:205
+#: bp-templates/bp-nouveau/includes/customizer.php:202
 msgid "Forums"
 msgstr ""
 
@@ -3246,7 +3246,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:22
-#: bp-templates/bp-nouveau/includes/customizer.php:211
+#: bp-templates/bp-nouveau/includes/customizer.php:208
 #: bp-templates/bp-nouveau/includes/document/functions.php:81
 #: bp-templates/bp-nouveau/includes/groups/classes.php:377
 #: bp-templates/bp-nouveau/includes/groups/functions.php:863
@@ -3317,7 +3317,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:177
 #: bp-settings/classes/class-bp-rest-account-settings-options-endpoint.php:734
 #: bp-templates/bp-nouveau/includes/activity/functions.php:276
-#: bp-templates/bp-nouveau/includes/customizer.php:199
+#: bp-templates/bp-nouveau/includes/customizer.php:196
 msgid "Connections"
 msgstr ""
 
@@ -3348,7 +3348,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:159 bp-media/bp-media-settings.php:166
 #: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:715
 #: bp-templates/bp-nouveau/includes/activity/functions.php:289
-#: bp-templates/bp-nouveau/includes/customizer.php:202
+#: bp-templates/bp-nouveau/includes/customizer.php:199
 msgid "Groups"
 msgstr ""
 
@@ -4740,7 +4740,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:330
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
-#: bp-templates/bp-nouveau/includes/customizer.php:208
+#: bp-templates/bp-nouveau/includes/customizer.php:205
 #: bp-templates/bp-nouveau/includes/groups/classes.php:281
 #: bp-templates/bp-nouveau/includes/groups/classes.php:361
 #: bp-templates/bp-nouveau/includes/groups/functions.php:855
@@ -8583,7 +8583,7 @@ msgstr ""
 #: bp-document/classes/class-bp-document.php:722
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:72
 #: bp-messages/bp-messages-template.php:1455
-#: bp-templates/bp-nouveau/includes/customizer.php:323
+#: bp-templates/bp-nouveau/includes/customizer.php:333
 msgid "Message"
 msgstr ""
 
@@ -13589,7 +13589,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:833
 #: bp-members/classes/class-bp-members-admin.php:1046
 #: bp-members/classes/class-bp-members-component.php:349
-#: bp-templates/bp-nouveau/includes/customizer.php:193
+#: bp-templates/bp-nouveau/includes/customizer.php:190
 #: bp-xprofile/classes/class-bp-xprofile-component.php:254
 #: bp-xprofile/classes/class-bp-xprofile-component.php:374
 msgid "Profile"
@@ -14262,7 +14262,7 @@ msgid "Remove Connection"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:460
-#: bp-templates/bp-nouveau/includes/customizer.php:321
+#: bp-templates/bp-nouveau/includes/customizer.php:320
 msgid "Connect"
 msgstr ""
 
@@ -18632,7 +18632,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-switching.php:533
 #: bp-members/classes/class-bp-core-members-switching.php:576
 #: bp-members/classes/class-bp-core-members-switching.php:609
-#: bp-templates/bp-nouveau/includes/customizer.php:324
+#: bp-templates/bp-nouveau/includes/customizer.php:337
 msgid "View As"
 msgstr ""
 
@@ -22360,32 +22360,32 @@ msgid "Profile Header"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:51
-msgid "Re-order the profile header menu."
+msgid "Customize the user profile header."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:216
+#: bp-templates/bp-nouveau/includes/customizer.php:213
 msgid "Display the profile navigation vertically."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:222
+#: bp-templates/bp-nouveau/includes/customizer.php:219
 msgid "Profile navigation order"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:223
+#: bp-templates/bp-nouveau/includes/customizer.php:220
 msgid ""
 "Set the default navigation tab when viewing a member profile. The dropdown "
 "only shows tabs that are available to all members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:231
+#: bp-templates/bp-nouveau/includes/customizer.php:228
 msgid "Reorder the primary navigation for a member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:238
+#: bp-templates/bp-nouveau/includes/customizer.php:235
 msgid "Hide the primary navigation for a member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:246
+#: bp-templates/bp-nouveau/includes/customizer.php:243
 msgid "Reorder the profile header buttons."
 msgstr ""
 
@@ -23398,7 +23398,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:727
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:783
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:300
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:299
 msgid "Accept"
 msgstr ""
 
@@ -23546,11 +23546,11 @@ msgstr ""
 msgid "Newest Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:316
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:315
 msgid "Ignore"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/members/template-tags.php:696
+#: bp-templates/bp-nouveau/includes/members/template-tags.php:695
 msgid "Joined %s"
 msgstr ""
 
