@@ -187,9 +187,9 @@ function bp_media_file_upload_max_size() {
 
 	/**
 	 * Filters file media upload max limit.
-	 * 
+	 *
 	 * @param mixed $max_size media upload max limit.
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.1
 	 */
 	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
@@ -479,7 +479,7 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
- * 
+ *
  * @param array $medias
  * @param string $privacy
  * @param string $content
@@ -505,13 +505,36 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
-				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
-			) );
+			// Update media if existing
+			if ( ! empty( $media['media_id'] ) ) {
+				$bp_media = new BP_Media( $media['media_id'] );
+
+				if ( ! empty( $bp_media->id ) ) {
+					$media_id = bp_media_add( array(
+						'id'            => $bp_media->id,
+						'blog_id'       => $bp_media->blog_id,
+						'attachment_id' => $bp_media->attachment_id,
+						'user_id'       => $bp_media->user_id,
+						'title'         => $bp_media->title,
+						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'activity_id'   => $bp_media->activity_id,
+						'privacy'       => $bp_media->privacy,
+						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+						'date_created'  => $bp_media->date_created,
+					) );
+				}
+			} else {
+
+				$media_id = bp_media_add( array(
+					'attachment_id' => $media['id'],
+					'title'         => $media['name'],
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+					'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+					'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
+				) );
+			}
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
@@ -821,7 +844,7 @@ function bp_get_total_media_count() {
 function bp_media_object_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = bp_media_default_scope( 'all' );
+	$querystring['scope'] = 'all';
 
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
@@ -859,7 +882,7 @@ function bp_media_object_template_results_media_groups_scope( $querystring ) {
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
-	$querystring['user_id']     = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['user_id']     = false;
 	$querystring['count_total'] = true;
 
 	return http_build_query( $querystring );
@@ -2274,7 +2297,21 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
+	$allowed_scopes = array( 'public' );
+	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
+		$allowed_scopes[] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) && bp_is_group_media_support_enabled() ) {
+		$allowed_scopes[] = 'groups';
+	}
+
+	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+		$allowed_scopes[] = 'personal';
+	}
+
 	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_media_directory() ) {
+
 		$new_scope[] = 'public';
 
 		if ( bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
@@ -2293,11 +2330,15 @@ function bp_media_default_scope( $scope ) {
 		$new_scope[] = 'personal';
 	}
 
-	$new_scope = array_unique( $new_scope );
-
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
 	}
+
+	// Remove duplicate scope if added.
+	$new_scope = array_unique( $new_scope );
+
+	// Remove all unwanted scope.
+	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
 	/**
 	 * Filter to update default scope.
@@ -2389,7 +2430,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $media->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -2769,7 +2815,12 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $album->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $album->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_add      = true;
 				$can_view     = true;

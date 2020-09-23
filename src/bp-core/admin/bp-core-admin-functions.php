@@ -1202,7 +1202,8 @@ function bp_admin_wp_nav_menu_meta_box() {
 function bp_admin_do_wp_nav_menu_meta_box() {
 	global $nav_menu_selected_id;
 
-	$walker = new BP_Walker_Nav_Menu_Checklist( false );
+	$db_fields = array('parent' => 'post_parent', 'id' => 'ID');
+	$walker = new BP_Walker_Nav_Menu_Checklist( $db_fields );
 	$args   = array( 'walker' => $walker );
 
 	$post_type_name = 'buddypress';

@@ -486,6 +486,28 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				$buttons['activity_conversation']['button_attr']['role'] = 'button';
 			}
 
+			// Add activity edit button.
+			if ( bp_is_activity_edit_enabled() ) {
+				$buttons['activity_edit'] = array(
+					'id'                => 'activity_edit',
+					'position'          => 30,
+					'component'         => 'activity',
+					'parent_element'    => $parent_element,
+					'parent_attr'       => $parent_attr,
+					'must_be_logged_in' => true,
+					'button_element'    => $button_element,
+					'button_attr'       => array(
+						'href'  => '#',
+						'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
+						'title' => __( 'Edit Activity', 'buddyboss' ),
+					),
+					'link_text'         => sprintf(
+						'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+						__( 'Edit Activity', 'buddyboss' ),
+						__( 'Edit', 'buddyboss' )
+					),
+				);
+			}
 		}
 
 		// The delete button is always created, and removed later on if needed.
@@ -643,6 +665,11 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 		// Remove the Delete button if the user can't delete
 		if ( ! bp_activity_user_can_delete() ) {
 			unset( $return['activity_delete'] );
+		}
+
+		// Remove the Edit button if the user can't edit
+		if ( ! bp_activity_user_can_edit() ) {
+			unset( $return['activity_edit'] );
 		}
 
 		if ( isset( $return['activity_spam'] ) && ! in_array( $activity_type, BP_Akismet::get_activity_types() ) ) {
@@ -1005,7 +1032,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  *
  */
 function bp_nouveau_activity_privacy() {
-	if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+	if ( bp_activity_user_can_edit( false, true ) && ! bp_is_group() ) {
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
 			return;
@@ -1195,6 +1222,44 @@ function bp_nouveau_activity_privacy() {
 }
 
 /**
+ * Get log is edited activity.
+ *
+ * @param int  $activity_id
+ * @param bool $echo
+ *
+ * @return mixed
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_nouveau_activity_is_edited( $activity_id = 0, $echo = true ) {
+
+	if ( empty( $activity_id ) ) {
+		$activity_id = bp_get_activity_id();
+	}
+
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	$is_edited   = bp_activity_get_meta( $activity_id, '_is_edited', true );
+
+	if ( $is_edited ) {
+		$activity_text = '<span class="bb-activity-edited-text"> ' . __( '(edited)', 'buddyboss' ) . ' </span>';
+
+	} else {
+		$activity_text = null;
+	}
+
+	$rendered_text = apply_filters( 'bp_nouveau_activity_is_edited', $activity_text, $activity_id );
+
+	if ( $echo ) {
+		echo $rendered_text;
+	} else {
+		return $rendered_text;
+	}
+}
+
+/**
  * Fetch and update the media description.
  *
  * @param int $activity_id The current activity ID.
@@ -1222,7 +1287,7 @@ function bp_nouveau_activity_description( $activity_id = 0 ) {
 	echo '<div class="activity-media-description">' .
 	     '<div class="bp-media-activity-description">' . $content . '</div>';
 
-	if ( bp_activity_user_can_edit() ) {
+	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
@@ -1299,7 +1364,7 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
 	echo '<div class="activity-media-description">' .
 	     '<div class="bp-media-activity-description">' . $content . '</div>';
 
-	if ( bp_activity_user_can_edit() ) {
+	if ( bp_activity_user_can_edit( false, true ) ) {
 		?>
 
 		<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
@@ -1359,4 +1424,24 @@ function bp_nouveau_document_activity_description( $activity_id = 0 ) {
  */
 function bp_nouveau_clear_activity_content_body( $content, $activity ) {
 	return false;
+}
+
+/**
+ * Output the Activity timestamp into the bp-timestamp attribute.
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_nouveau_edit_activity_data() {
+	echo bp_nouveau_get_edit_activity_data();
+}
+
+/**
+ * Get the Activity edit data.
+ *
+ * @since BuddyBoss 1.5.0
+ *
+ * @return string The Activity edit data.
+ */
+function bp_nouveau_get_edit_activity_data() {
+	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
 }
