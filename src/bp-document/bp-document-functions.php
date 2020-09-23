@@ -558,53 +558,82 @@ function bp_document_add( $args = '' ) {
 /**
  * Document add handler function
  *
- * @param array $documents
+ * @param array  $documents
+ * @param string $privacy
+ * @param string $content
+ * @param int    $group_id
+ * @param int    $folder_id
  *
  * @return mixed|void
  * @since BuddyBoss 1.4.0
  */
-function bp_document_add_handler( $documents = array() ) {
-	global $bp_document_upload_count;
+function bp_document_add_handler( $documents = array(), $privacy = 'public', $content = '', $group_id = false, $folder_id = false ) {
+	global $bp_document_upload_count, $bp_document_upload_activity_content;
 	$document_ids = array();
 
-	if ( ! is_user_logged_in() ) {
-		return false;
-	}
-
-	if ( empty( $documents ) && ! empty( $_POST['document'] ) ) {
-		$documents = $_POST['document'];
-	}
-
-	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_document_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
+	$privacy = in_array( $privacy, array_keys( bp_document_get_visibility_levels() ) ) ? $privacy : 'public';
 
 	if ( ! empty( $documents ) && is_array( $documents ) ) {
 
 		// update count of documents for later use.
 		$bp_document_upload_count = count( $documents );
 
-		// save  document.
+		// update the content of medias for later use.
+		$bp_document_upload_activity_content = $content;
+
+		// save document.
 		foreach ( $documents as $document ) {
 
-			$attachment_data = get_post( $document['id'] );
-			$file            = get_attached_file( $document['id'] );
-			$file_type       = wp_check_filetype( $file );
-			$file_name       = basename( $file );
+			// Update document if existing
+			if ( ! empty( $document['document_id'] ) ) {
 
-			$document_id = bp_document_add(
-				array(
-					'attachment_id' => $document['id'],
-					'title'         => $document['name'],
-					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
-					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
-					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
-					'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
-					'error_type'    => 'wp_error',
-				)
-			);
+				$bp_document = new BP_Document( $document['document_id'] );
 
-			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
-				bp_document_update_meta( $document_id, 'file_name', $file_name );
-				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
+				if ( ! empty( $bp_document->id ) ) {
+					$document_id = bp_document_add( array(
+						'id'            => $bp_document->id,
+						'blog_id'       => $bp_document->blog_id,
+						'attachment_id' => $bp_document->attachment_id,
+						'user_id'       => $bp_document->user_id,
+						'title'         => $bp_document->title,
+						'folder_id'      => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
+						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
+						'activity_id'   => $bp_document->activity_id,
+						'privacy'       => $bp_document->privacy,
+						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : false,
+						'date_modified'  => bp_core_current_time(),
+					) );
+
+					$file            = get_attached_file( $bp_document->attachment_id );
+					$file_type       = wp_check_filetype( $file );
+					$file_name       = basename( $file );
+
+					if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
+						bp_document_update_meta( $document_id, 'file_name', $file_name );
+						bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
+					}
+				}
+			} else {
+				$file            = get_attached_file( $document['id'] );
+				$file_type       = wp_check_filetype( $file );
+				$file_name       = basename( $file );
+
+				$document_id = bp_document_add(
+					array(
+						'attachment_id' => $document['id'],
+						'title'         => $document['name'],
+						'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : $folder_id,
+						'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : $group_id,
+						'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
+						'menu_order'    => ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0,
+						'error_type'    => 'wp_error',
+					)
+				);
+
+				if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
+					bp_document_update_meta( $document_id, 'file_name', $file_name );
+					bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
+				}
 			}
 
 			if ( $document_id ) {
@@ -3390,31 +3419,49 @@ function bp_document_ie_nocache_headers_fix( $headers ) {
 function bp_document_default_scope( $scope = 'all' ) {
 	$new_scope = array();
 
+	$allowed_scopes = array( 'public', 'all' );
+	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_document_support_enabled() ) {
+		$allowed_scopes[] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() ) {
+		$allowed_scopes[] = 'groups';
+	}
+
+	if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
+		$allowed_scopes[] = 'personal';
+	}
+
 	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_document_directory() ) {
 		$new_scope[] = 'public';
-		if ( is_user_logged_in() ) {
-			$new_scope[] = 'personal';
 
-			if ( bp_is_active( 'friends' ) ) {
-				$new_scope[] = 'friends';
-			}
+		if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_document_support_enabled() ) {
+			$new_scope[] = 'friends';
 		}
 
-		if ( bp_is_active( 'groups' ) ) {
+		if ( bp_is_active( 'groups' ) && bp_is_group_document_support_enabled() ) {
 			$new_scope[] = 'groups';
 		}
 
-	} elseif ( bp_is_user() && ( 'all' === $scope || empty( $scope ) ) ) {
+		if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
+			$new_scope[] = 'personal';
+		}
+
+	} elseif ( bp_is_user_document() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'personal';
 	} elseif ( bp_is_active( 'groups' ) && bp_is_group() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'groups';
 	}
 
-	$new_scope = array_unique( $new_scope );
-
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
 	}
+
+	// Remove duplicate scope if added.
+	$new_scope = array_unique( $new_scope );
+
+	// Remove all unwanted scope.
+	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
 	/**
 	 * Filter to update default scope.

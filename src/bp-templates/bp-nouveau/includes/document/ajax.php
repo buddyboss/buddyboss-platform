@@ -277,7 +277,6 @@ function bp_nouveau_ajax_document_get_activity() {
 
 	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$author_id 	= filter_input( INPUT_POST, 'author', FILTER_VALIDATE_INT );
 
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
@@ -294,7 +293,7 @@ function bp_nouveau_ajax_document_get_activity() {
 			'scope'       => 'document',
 		);
 	} else {
-		if ( $group_id > 0 ) {
+		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
 			$args = array(
 				'include'     => $post_id,
 				'object'      => buddypress()->groups->id,
@@ -503,7 +502,7 @@ function bp_nouveau_ajax_document_delete_attachment() {
 }
 
 /**
- * Save media
+ * Save document
  *
  * @since BuddyBoss 1.4.0
  */
@@ -520,10 +519,6 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -533,7 +528,8 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['documents'] ) ) {
+	$documents = filter_input( INPUT_POST, 'documents', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	if ( empty( $documents ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please upload a document before saving.', 'buddyboss' )
@@ -550,8 +546,7 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['documents'] ) && ! empty( $_POST['documents'] ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
-		$documents = $_POST['documents'];
+	if ( isset( $documents ) && ! empty( $documents ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
 		$folder_id  = (int) $_POST['folder_id'];
 		if ( ! empty( $documents ) && is_array( $documents ) ) {
 			// set folder id for document.
@@ -563,8 +558,11 @@ function bp_nouveau_ajax_document_document_save() {
 		}
 	}
 
-	// handle media uploaded.
-	$document_ids = bp_document_add_handler( $_POST['documents'] );
+	$privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
+	// handle document uploaded.
+	$document_ids = bp_document_add_handler( $documents, $privacy, $content );
 	$document     = '';
 	if ( ! empty( $document_ids ) ) {
 		ob_start();
@@ -625,7 +623,7 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	// save media.
+	// save document.
 	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
 	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
 	$title     = wp_strip_all_tags( $_POST['title'] );
