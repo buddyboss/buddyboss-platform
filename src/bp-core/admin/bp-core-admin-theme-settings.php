@@ -63,31 +63,17 @@ if ( ! function_exists( 'buddyboss_theme_update_transient_update_themes' ) ) {
 
 if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 	function buddyboss_theme_get_theme_sudharo() {
-		$whitelist_addr = array(
-			'127.0.0.1',
-			'::1'
-		);
-
-		if ( in_array( $_SERVER['REMOTE_ADDR'], $whitelist_addr ) ) {
-			return false;
-		}
-
 		$whitelist_domain = array(
 			'.test',
 			'.dev',
 			'staging.',
-			'localhost',
+			'localhost'
 		);
 
-		$return = true;
 		foreach ( $whitelist_domain as $domain ) {
 			if ( false !== strpos( $_SERVER['SERVER_NAME'], $domain ) ) {
-				$return = false;
+				return true;
 			}
-		}
-
-		if ( $return ) {
-			return false;
 		}
 
 		if ( is_multisite() ) {
