@@ -16600,6 +16600,13 @@ span.CodeMirror-selectedtext {
   text-align: center;
 }
 
+.dropzone .dz-default button {
+  background-color: transparent;
+  border: 0;
+  color: #767676;
+  font-size: 110%;
+}
+
 .dz-details {
   display: none;
 }
