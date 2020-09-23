@@ -1,6 +1,6 @@
 <?php
 /**
- * Customizer controls
+ * Profile header actions customizer controls class
  *
  * @since BuddyBoss 1.5.2
  */
@@ -9,14 +9,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * This control let users change the order of the BuddyPress
- * single items navigation items.
+ * This control let users change the user profile header actions order of the BuddyBoss
  *
  * NB: this is a first pass to improve by using Javascript templating as explained here:
  * https://developer.wordpress.org/themes/advanced-topics/customizer-api/#putting-the-pieces-together
  *
  * @since BuddyBoss 1.5.2
  */
+
 class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 
 	/**
@@ -27,19 +27,19 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 	/**
 	 * Render the control's content.
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.5.2
 	 */
 	public function render_content() {
 		$id      = 'customize-control-profile-header';
 		$hide    = false;
 		$setting = "bp_nouveau_appearance[user_profile_actions_order]";
 
-		$order = bp_nouveau_get_user_profile_actions();
+		$order           = bp_nouveau_get_user_profile_actions();
 		$profile_buttons = bp_nouveau_customizer_user_profile_actions();
 
-		uksort($profile_buttons, function($key1, $key2) use ($order) {
-			return (array_search($key1, $order) > array_search($key2, $order));
-		});
+		uksort( $profile_buttons, function ( $key1, $key2 ) use ( $order ) {
+			return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+		} );
 
 		?>
 
@@ -75,10 +75,11 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 			</ul>
 		<?php endif; ?>
 
-		<input id="bp_user_profile_actions_order" type="hidden" value="<?php echo bp_nouveau_get_user_profile_actions(); ?>" data-customize-setting-link="<?php echo esc_attr( $setting ); ?>"/>
+		<input id="bp_user_profile_actions_order" type="hidden"
+		       value="<?php echo bp_nouveau_get_user_profile_actions(); ?>"
+		       data-customize-setting-link="<?php echo esc_attr( $setting ); ?>"/>
 
 		<?php
 	}
-
 
 }
