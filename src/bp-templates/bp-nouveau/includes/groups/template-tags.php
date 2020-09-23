@@ -151,7 +151,7 @@ function bp_nouveau_groups_activity_post_form() {
 	 */
 	do_action( 'bp_before_group_activity_post_form' );
 
-	if ( is_user_logged_in() && bp_group_is_member() && bp_group_is_member_allowed_posting() ) {
+	if ( is_user_logged_in() && bp_group_is_member() && bp_group_is_member_allowed_posting() && apply_filters( 'bp_is_user_can_create_activity', true ) ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
 
