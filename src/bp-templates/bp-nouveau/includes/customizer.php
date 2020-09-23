@@ -336,7 +336,7 @@ function bp_nouveau_customizer_user_profile_actions() {
 	//Member switch button
 	$buttons['member_switch'] = __( 'View As', 'buddyboss' );
 
-	$buttons = apply_filters( 'bp_get_user_profile_actions_display', $buttons );
+	$buttons = apply_filters( 'bp_nouveau_customizer_user_profile_actions', $buttons );
 
 	return $buttons;
 }

@@ -2,8 +2,7 @@
 /**
  * Customizer controls
  *
- * @since BuddyPress 3.0.0
- * @version 3.1.0
+ * @since BuddyBoss 1.5.2
  */
 
 // Exit if accessed directly.
@@ -16,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * NB: this is a first pass to improve by using Javascript templating as explained here:
  * https://developer.wordpress.org/themes/advanced-topics/customizer-api/#putting-the-pieces-together
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.5.2
  */
 class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 
