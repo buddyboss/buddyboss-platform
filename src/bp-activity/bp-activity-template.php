@@ -4195,6 +4195,12 @@ function bp_activity_entry_css_class() {
 			if( ! empty( $document_ids ) ){
 				$class .= ' documemt-activity';
 			}
+
+			$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+			if( ! empty( $media_ids ) ){
+				$class .= ' media-activity-wrap';
+			}
+			
 		}
 
 		/**
