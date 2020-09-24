@@ -1068,7 +1068,12 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 		$fields_id[] = bp_xprofile_firstname_field_id();
 	}
 
-	$args['exclude_fields'] = $fields_id;
+	if ( ! empty( $fields_id ) ) {
+		if ( empty( $args['exclude_fields'] ) ) {
+			$args['exclude_fields'] = [];
+		}
+		$args['exclude_fields'] = array_merge( $args['exclude_fields'], $fields_id );
+	}
 
 	return $args;
 }
