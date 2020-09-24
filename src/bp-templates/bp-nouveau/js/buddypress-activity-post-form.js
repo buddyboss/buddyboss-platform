@@ -2859,6 +2859,14 @@ window.bp = window.bp || {};
 							 toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || 'group' === self.model.get( 'object' ) ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
 						}
 
+						/**
+						 * In the user activity timeline, user is posting on other user's timeline
+						 * it will not have activity to prepend/append because of scope and privacy.
+						 */
+						if ( '' === response.activity && response.is_user_activity && response.is_active_activity_tabs ) {
+							toPrepend = false;
+						}
+
 						var medias = self.model.get( 'media' );
 						if ( ! _.isUndefined( medias ) && medias.length ) {
 							for ( var k = 0; k < medias.length; k++ ) {
@@ -2879,11 +2887,6 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'document', documents );
 						}
-
-						// Reset formatting of editor
-
-						//window.activity_editor.execAction( 'selectAll' );
-						//window.activity_editor.execAction( 'removeFormate' );
 
 						// Reset the form.
 						self.resetForm();
