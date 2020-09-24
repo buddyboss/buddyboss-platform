@@ -1524,6 +1524,10 @@ ul.bb-albums-list {
 	margin-bottom: 20px;
 	max-height: 68vh;
 	overflow: auto;
+
+	.media-list li .media-action-wrap {
+		display: none;
+	}
 }
 
 .bb-model-close-button .bb-icon-close {
@@ -3482,6 +3486,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	@media screen and (max-width: 520px) {
 
+		.bb-model-footer a.bp-media-open-create-popup-folder,
 		.bb-model-footer a.bp-document-open-create-popup-folder {
 			display: block;
 			float: none;
