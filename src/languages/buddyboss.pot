@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-22 08:05:45+00:00\n"
+"POT-Creation-Date: 2020-09-24 14:01:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -584,6 +584,7 @@ msgid " Read more"
 msgstr ""
 
 #: bp-activity/bp-activity-filters.php:571
+#: bp-activity/bp-activity-filters.php:581
 msgid "&hellip;"
 msgstr ""
 
@@ -952,9 +953,9 @@ msgstr ""
 #: bp-messages/bp-messages-functions.php:991
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:768
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:816
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1637
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1700
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1828
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1639
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1702
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1830
 msgid "Group logo of %s"
 msgstr ""
 
@@ -1870,7 +1871,7 @@ msgid "New post published"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:365
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:367
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:119
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
@@ -2911,9 +2912,9 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:1215
 #: bp-core/admin/bp-core-admin-settings.php:1280
 #: bp-core/admin/settings/bp-admin-setting-friends.php:95
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:409
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:461
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:539
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:411
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:541
 #: bp-core/classes/class-bp-admin-tab.php:250
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
@@ -2981,7 +2982,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:962
 #: bp-core/admin/bp-core-admin-settings.php:990
 #: bp-core/admin/bp-core-admin-settings.php:1018
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:245
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:247
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
@@ -2997,7 +2998,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:972
 #: bp-core/admin/bp-core-admin-settings.php:1000
 #: bp-core/admin/bp-core-admin-settings.php:1037
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:247
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:249
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -3240,21 +3241,21 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1149
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:474
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:476
 msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1150
 #: bp-core/admin/bp-core-admin-settings.php:1181
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:475
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:506
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:477
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:508
 msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1151
 #: bp-core/admin/bp-core-admin-settings.php:1182
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:476
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:507
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:478
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:509
 msgid "List"
 msgstr ""
 
@@ -3897,12 +3898,12 @@ msgid "Group Directories"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:95
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:185
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:187
 msgid "Enabled View(s)"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:102
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:192
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:194
 msgid "Default View"
 msgstr ""
 
@@ -3995,16 +3996,16 @@ msgstr ""
 msgid "Profile Avatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:129
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:130
 msgid "Profile Gravatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:133
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:135
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:151
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:154
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:153
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:156
 #: bp-members/bp-members-functions.php:3055
 #: bp-members/bp-members-functions.php:3058
 #: bp-xprofile/bp-xprofile-admin.php:1100
@@ -4013,16 +4014,16 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:159
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:161
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:164
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:166
 msgid "Default Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:171
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:174
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:173
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:176
 #: bp-core/profile-search/bps-start.php:59
 #: bp-core/profile-search/bps-start.php:62
 #: bp-core/profile-search/bps-start.php:247
@@ -4030,53 +4031,53 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:180
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:182
 msgid "Profile Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:215
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:220
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:239
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:241
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:246
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:248
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:266
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:268
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:292
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:294
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:303
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:305
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:316
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:318
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:334
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:336
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:349
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:351
 #: bp-members/classes/class-bp-members-admin.php:1348
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:240
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:263
@@ -4088,7 +4089,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:375
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:377
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -4096,15 +4097,15 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:428
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:430
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:441
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:493
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:495
 msgid ""
 "Display profile/member directories in Grid View, List View, or allow "
 "toggling between both views."
@@ -8549,7 +8550,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/document/functions.php:94
 #: bp-templates/bp-nouveau/includes/media/ajax.php:1015
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:583
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2136
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2138
 msgid "Download"
 msgstr ""
 
@@ -8878,14 +8879,14 @@ msgstr ""
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1174
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:161
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:524
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2077
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2079
 msgid "Your browser does not support the audio element."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1197
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:187
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:549
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2102
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2104
 msgid "Click to expand"
 msgstr ""
 
@@ -20255,7 +20256,7 @@ msgid "You need to be connected with this member in order to send a message."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:269
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1596
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1598
 msgid "You need to be connected with this member to continue this conversation."
 msgstr ""
 
@@ -20266,7 +20267,7 @@ msgid ""
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:271
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1591
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1593
 msgid "You need to be connected with all recipients to continue this conversation."
 msgstr ""
 
@@ -20428,8 +20429,8 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:2174
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1205
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1884
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1942
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1886
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1944
 msgid "This message was deleted."
 msgstr ""
 
@@ -20678,44 +20679,44 @@ msgstr ""
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1402
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:797
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:846
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1667
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1729
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1858
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1669
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1731
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1860
 msgid "Deleted Group"
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1143
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1860
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1862
 #. translators: %s: Group name
 msgid "Sent from group %s to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1149
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1862
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1864
 #. translators: %s: Group name
 msgid "Sent from group %s to the people in this conversation."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1155
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1864
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1866
 #. translators: %s: Group name
 msgid "Sent from group %s individually to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1161
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1866
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1868
 #. translators: %s: Group name
 msgid "Sent from group %s to individual members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1169
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1870
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1872
 #. translators: 1: Group link. 2: Group name.
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1176
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1872
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1874
 #. translators: 1: Group link. 2: Group name.
 msgid ""
 "Sent from group <a href=\"%1$s\">%2$s</a> to the people in this "
@@ -20723,13 +20724,13 @@ msgid ""
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1183
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1874
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1876
 #. translators: 1: Group link. 2: Group name.
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> individually to all group members."
 msgstr ""
 
 #: bp-messages/classes/class-bp-rest-messages-endpoint.php:1190
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1876
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1878
 #. translators: 1: Group link. 2: Group name.
 msgid "Sent from group <a href=\"%1$s\">%2$s</a> to individual members."
 msgstr ""
@@ -21828,7 +21829,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:116
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:584
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2137
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2139
 msgid "Collapse"
 msgstr ""
 
@@ -21836,14 +21837,14 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:31
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:26
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:586
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2139
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2141
 msgid "More actions"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:130
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:218
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:585
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2138
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2140
 msgid "Copy Download Link"
 msgstr ""
 
@@ -24156,7 +24157,7 @@ msgid "Please provide thread id."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:581
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2134
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2136
 #. translators: %s: download url
 msgid "Click to view"
 msgstr ""
@@ -24198,7 +24199,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1113
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1155
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:2200
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:2202
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 
@@ -24238,23 +24239,23 @@ msgstr ""
 msgid "Sitewide notice dismissed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1882
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1940
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1884
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1942
 msgid "<p class=\"joined\">Left \"%s\"</p>"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1886
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1944
-msgid "<p class=\"joined\">Removed Ban \"%s\"</p>"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1888
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1946
-msgid "<p class=\"joined\">Ban \"%s\"</p>"
+msgid "<p class=\"joined\">Removed Ban \"%s\"</p>"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1890
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:1948
+msgid "<p class=\"joined\">Ban \"%s\"</p>"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1892
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1950
 msgid "<p class=\"joined\">Joined \"%s\"</p>"
 msgstr ""
 

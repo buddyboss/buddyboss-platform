@@ -1070,6 +1070,10 @@ window.bp = window.bp || {};
 								$('#buddypress .media-list').prepend(response.data.feedback);
 							}
 						}
+
+						// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLo11ad.
+						jQuery( window ).scroll();
+
 					}
 				}
 			);
