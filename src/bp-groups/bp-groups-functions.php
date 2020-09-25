@@ -3337,9 +3337,46 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
  *
  * @param int $user_id The user ID.
  * @param int $group_id The group ID.
+ * @return string invitation message.
+ *
  */
 function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
-	return get_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, true );
+	global $groups_template;
+
+	if ( empty( $user_id ) && bp_displayed_user_id() ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( empty( $group_id ) ) {
+		$group =& $groups_template->group;
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	if ( empty( $user_id ) || empty( $group ) ) {
+		return '';
+	}
+
+	//Check invitation is exists or not
+	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
+
+	if ( empty( $invite_id ) ) {
+		return '';
+	}
+
+	//Get invitation by id
+	$member = new BP_Invitation( $invite_id );
+
+	$message  = $member->content;
+	$group_id = $group->id;
+
+	/**
+	 * Filters will give you the invitation text.
+	 *
+	 * @param string $message  invitation message.
+	 * @param int    $group_id group id.
+	 */
+	return apply_filters( 'bp_groups_get_invite_messsage_for_user', $message, $group_id );
 }
 
 /**
