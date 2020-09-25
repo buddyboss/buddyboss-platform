@@ -76,7 +76,7 @@ class Sync {
 		$settings = bp_ld_sync( 'settings' );
 
 		// on the group creation first step, and create tab is enabled, we create sync group in later step
-		if ( 'group-details' == bp_get_groups_current_create_step() && $settings->get( 'buddypress.show_in_bp_create' ) ) {
+		if ( apply_filters( 'bp_group_details_slug', 'group-details' ) == bp_get_groups_current_create_step() && $settings->get( 'buddypress.show_in_bp_create' ) ) {
 			return false;
 		}
 

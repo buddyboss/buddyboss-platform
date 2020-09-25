@@ -208,8 +208,18 @@ class BP_Groups_Component extends BP_Component {
 				if ( bp_is_item_admin() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/admin.php';
 
-					if ( in_array( bp_get_group_current_admin_tab(), array( 'edit-details', 'group-settings', 'group-avatar', 'group-cover-image', 'manage-members', 'membership-requests', 'delete-group' ), true ) ) {
-						require $this->path . 'bp-groups/screens/single/admin/' . bp_get_group_current_admin_tab() . '.php';
+					if ( in_array( bp_get_group_current_admin_tab(), array( 'edit-details', apply_filters( 'bp_group_settings_slug', 'group-settings' ), apply_filters( 'bp_group_avatar_slug', 'group-avatar' ), apply_filters( 'bp_group_cover_image_slug', 'group-cover-image'), 'manage-members', 'membership-requests', apply_filters( 'bp_group_delete_slug', 'delete-group') ), true ) ) {
+						if ( apply_filters( 'bp_group_settings_slug', 'group-settings' ) === bp_get_group_current_admin_tab() ) {
+							require $this->path . 'bp-groups/screens/single/admin/group-settings.php';
+						} elseif ( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) === bp_get_group_current_admin_tab() ) {
+							require $this->path . 'bp-groups/screens/single/admin/group-avatar.php';
+						} elseif ( apply_filters( 'bp_group_delete_slug', 'delete-group') === bp_get_group_current_admin_tab() ) {
+							require $this->path . 'bp-groups/screens/single/admin/delete-group.php';
+						} elseif ( apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') === bp_get_group_current_admin_tab() ) {
+							require $this->path . 'bp-groups/screens/single/admin/group-cover-image.php';
+						} else {
+							require $this->path . 'bp-groups/screens/single/admin/' . bp_get_group_current_admin_tab() . '.php';
+						}
 					}
 				}
 			}
@@ -401,11 +411,11 @@ class BP_Groups_Component extends BP_Component {
 		$this->group_creation_steps = apply_filters(
 			'groups_create_group_steps',
 			array(
-				'group-details'  => array(
+				apply_filters( 'bp_group_details_slug', 'group-details' )  => array(
 					'name'     => __( 'Details', 'buddyboss' ),
 					'position' => 0,
 				),
-				'group-settings' => array(
+				apply_filters( 'bp_group_settings_slug', 'group-settings' ) => array(
 					'name'     => __( 'Settings', 'buddyboss' ),
 					'position' => 10,
 				),
@@ -415,14 +425,14 @@ class BP_Groups_Component extends BP_Component {
 		// If avatar uploads are not disabled, add avatar option.
 		$disabled_avatar_uploads = (int) bp_disable_group_avatar_uploads();
 		if ( ! $disabled_avatar_uploads && $bp->avatar->show_avatars ) {
-			$this->group_creation_steps['group-avatar'] = array(
+			$this->group_creation_steps[apply_filters( 'bp_group_avatar_slug', 'group-avatar' )] = array(
 				'name'     => __( 'Photo', 'buddyboss' ),
 				'position' => 20,
 			);
 		}
 
 		if ( bp_group_use_cover_image_header() ) {
-			$this->group_creation_steps['group-cover-image'] = array(
+			$this->group_creation_steps[apply_filters( 'bp_group_cover_image_slug', 'group-cover-image')] = array(
 				'name'     => __( 'Cover Photo', 'buddyboss' ),
 				'position' => 25,
 			);
@@ -430,7 +440,7 @@ class BP_Groups_Component extends BP_Component {
 
 		// If friends component is active, add invitations.
 		if ( bp_is_active( 'friends' ) ) {
-			$this->group_creation_steps['group-invites'] = array(
+			$this->group_creation_steps[apply_filters( 'bp_group_invite_slug', 'group-invites')] = array(
 				'name'     => __( 'Invites', 'buddyboss' ),
 				'position' => 30,
 			);
@@ -880,7 +890,7 @@ class BP_Groups_Component extends BP_Component {
 				$sub_nav[] = array_merge(
 					array(
 						'name'     => __( 'Settings', 'buddyboss' ),
-						'slug'     => 'group-settings',
+						'slug'     => apply_filters( 'bp_group_settings_slug', 'group-settings' ),
 						'position' => 10,
 					),
 					$default_params
@@ -890,7 +900,7 @@ class BP_Groups_Component extends BP_Component {
 					$sub_nav[] = array_merge(
 						array(
 							'name'     => __( 'Photo', 'buddyboss' ),
-							'slug'     => 'group-avatar',
+							'slug'     => apply_filters( 'bp_group_avatar_slug', 'group-avatar' ),
 							'position' => 20,
 						),
 						$default_params
@@ -901,7 +911,7 @@ class BP_Groups_Component extends BP_Component {
 					$sub_nav[] = array_merge(
 						array(
 							'name'     => __( 'Cover Photo', 'buddyboss' ),
-							'slug'     => 'group-cover-image',
+							'slug'     => apply_filters( 'bp_group_cover_image_slug', 'group-cover-image'),
 							'position' => 25,
 						),
 						$default_params
@@ -931,7 +941,7 @@ class BP_Groups_Component extends BP_Component {
 				$sub_nav[] = array_merge(
 					array(
 						'name'     => __( 'Delete', 'buddyboss' ),
-						'slug'     => 'delete-group',
+						'slug'     => apply_filters( 'bp_group_delete_slug', 'delete-group'),
 						'position' => 1000,
 					),
 					$default_params

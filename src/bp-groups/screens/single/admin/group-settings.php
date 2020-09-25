@@ -13,7 +13,7 @@
  */
 function groups_screen_group_admin_settings() {
 
-	if ( 'group-settings' != bp_get_group_current_admin_tab() ) {
+	if ( apply_filters( 'bp_group_settings_slug', 'group-settings' ) != bp_get_group_current_admin_tab() ) {
 		return false;
 	}
 
@@ -110,7 +110,7 @@ function groups_screen_group_admin_settings() {
 		 */
 		do_action( 'groups_group_settings_edited', $bp->groups->current_group->id );
 
-		bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'admin/group-settings/' );
+		bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'admin/' . apply_filters( 'bp_group_settings_slug', 'group-settings' ) . '/' );
 	}
 
 	/**

@@ -499,7 +499,7 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 
 		// Specific case for the activity dropdown
 		$filters = array_merge( array( '-1' => __( '- View All -', 'buddyboss' ) ), $filters );
-	} elseif ( 'groups' === $component ) {
+	} elseif ( 'groups' === $component || BP_GROUPS_SLUG === $component ) {
 		$filters = bp_nouveau_get_groups_filters( $context );
 	} elseif ( 'blogs' === $component ) {
 		$filters = bp_nouveau_get_blogs_filters( $context );

@@ -8,8 +8,8 @@
 
 $group_link               = bp_get_group_permalink();
 $admin_link               = trailingslashit( $group_link . 'admin' );
-$group_avatar             = trailingslashit( $admin_link . 'group-avatar' );
-$group_cover_link         = trailingslashit( $admin_link . 'group-cover-image' );
+$group_avatar             = trailingslashit( $admin_link . apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) );
+$group_cover_link         = trailingslashit( $admin_link . apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') );
 $group_cover_image        = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups', 'item_id'    => bp_get_group_id() ) );
 $has_cover_image          = '';
 $has_cover_image_position = '';
@@ -40,7 +40,7 @@ $has_cover_image_position = '';
 				<i class="bb-icon-edit-thin"></i>
 			</a>
 			<?php } ?>
-			
+
 			<?php if ( ! empty( $group_cover_image ) && bp_is_item_admin() ) { ?>
 				<a href="#" class="position-change-cover-image bp-tooltip" data-bp-tooltip-pos="right" data-bp-tooltip="<?php _e('Reposition Cover Photo', 'buddyboss'); ?>">
 					<i class="bb-icon-move"></i>

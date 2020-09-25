@@ -68,7 +68,7 @@ function bp_groups_group_admin_menu() {
 			$title = sprintf( __( 'Edit Group %s', 'buddyboss' ), $menu->name );
 
 			// Title is specific for delete.
-			if ( 'delete-group' == $menu->slug ) {
+			if ( apply_filters( 'bp_group_delete_slug', 'delete-group') == $menu->slug ) {
 				$title = sprintf( __( '%s Group', 'buddyboss' ), $menu->name );
 
 				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {

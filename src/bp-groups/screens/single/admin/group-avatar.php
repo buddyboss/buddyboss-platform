@@ -13,7 +13,7 @@
  */
 function groups_screen_group_admin_avatar() {
 
-	if ( 'group-avatar' != bp_get_group_current_admin_tab() ) {
+	if ( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) != bp_get_group_current_admin_tab() ) {
 		return false;
 	}
 

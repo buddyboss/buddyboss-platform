@@ -277,6 +277,7 @@ function bp_nouveau_group_manage_screen() {
 	}
 
 	$screen_id = sanitize_file_name( $action );
+
 	if ( ! bp_is_group_admin_screen( $screen_id ) && ! bp_is_group_creation_step( $screen_id ) ) {
 		return;
 	}
@@ -331,7 +332,17 @@ function bp_nouveau_group_manage_screen() {
 			do_action( 'bp_before_' . $core_screen['hook'] );
 		}
 
-		$template = 'groups/single/admin/' . $screen_id;
+		if ( apply_filters( 'bp_group_settings_slug', 'group-settings' ) === $screen_id ) {
+			$template = 'groups/single/admin/group-settings';
+		} elseif ( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) === $screen_id ) {
+			$template = 'groups/single/admin/group-avatar';
+		} elseif ( apply_filters( 'bp_group_delete_slug', 'delete-group') === $screen_id ) {
+			$template = 'groups/single/admin/delete-group';
+		} elseif ( apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') === $screen_id ) {
+			$template = 'groups/single/admin/group-cover-image';
+		} else {
+			$template = 'groups/single/admin/' . $screen_id;
+		}
 
 		if ( ! empty( $core_screen['template'] ) ) {
 			$template = $core_screen['template'];
@@ -365,7 +376,7 @@ function bp_nouveau_group_manage_screen() {
 				$output = sprintf( '<p><input type="submit" value="%s" id="save" name="save" /></p>', esc_attr__( 'Save Changes', 'buddyboss' ) );
 
 				// Specific case for the delete group screen
-				if ( 'delete-group' === $screen_id ) {
+				if ( apply_filters( 'bp_group_delete_slug', 'delete-group') === $screen_id ) {
 					$output = sprintf(
 						'<div class="submit">
 							<input type="submit" disabled="disabled" value="%s" id="delete-group-button" name="delete-group-button" />
@@ -432,7 +443,7 @@ function bp_nouveau_group_manage_screen() {
 	/**
 	 * Avoid nested forms with the Backbone views for the group invites step.
 	 */
-	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
+	if ( apply_filters( 'bp_group_invite_slug', 'group-invites') === bp_get_groups_current_create_step() ) {
 		printf(
 			'<form action="%s" method="post" enctype="multipart/form-data">',
 			bp_get_group_creation_form_action()
@@ -471,7 +482,7 @@ function bp_nouveau_group_manage_screen() {
 	/**
 	 * Avoid nested forms with the Backbone views for the group invites step.
 	 */
-	if ( 'group-invites' === bp_get_groups_current_create_step() ) {
+	if ( apply_filters( 'bp_group_invite_slug', 'group-invites') === bp_get_groups_current_create_step() ) {
 		echo '</form>';
 	}
 }

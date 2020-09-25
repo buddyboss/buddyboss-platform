@@ -76,7 +76,7 @@ function groups_action_create_group() {
 		// Check the nonce.
 		check_admin_referer( 'groups_create_save_' . bp_get_groups_current_create_step() );
 
-		if ( 'group-details' == bp_get_groups_current_create_step() ) {
+		if ( apply_filters( 'bp_group_details_slug', 'group-details' ) == bp_get_groups_current_create_step() ) {
 			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) {
 				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
@@ -99,7 +99,7 @@ function groups_action_create_group() {
 			}
 		}
 
-		if ( 'group-settings' == bp_get_groups_current_create_step() ) {
+		if ( apply_filters( 'bp_group_settings_slug', 'group-settings' ) == bp_get_groups_current_create_step() ) {
 			$group_status       = 'public';
 			$group_enable_forum = 1;
 
@@ -209,7 +209,7 @@ function groups_action_create_group() {
 
 		}
 
-		if ( 'group-invites' === bp_get_groups_current_create_step() ) {
+		if ( apply_filters( 'bp_group_invite_slug', 'group-invites') === bp_get_groups_current_create_step() ) {
 			if ( ! empty( $_POST['friends'] ) ) {
 				foreach ( (array) $_POST['friends'] as $friend ) {
 					groups_invite_user(
@@ -308,7 +308,7 @@ function groups_action_create_group() {
 	}
 
 	// Remove invitations.
-	if ( 'group-invites' === bp_get_groups_current_create_step() && ! empty( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) {
+	if ( apply_filters( 'bp_group_invite_slug', 'group-invites') === bp_get_groups_current_create_step() && ! empty( $_REQUEST['user_id'] ) && is_numeric( $_REQUEST['user_id'] ) ) {
 		if ( ! check_admin_referer( 'groups_invite_uninvite_user' ) ) {
 			return false;
 		}
@@ -326,7 +326,7 @@ function groups_action_create_group() {
 	}
 
 	// Group avatar is handled separately.
-	if ( 'group-avatar' == bp_get_groups_current_create_step() && isset( $_POST['upload'] ) ) {
+	if ( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) == bp_get_groups_current_create_step() && isset( $_POST['upload'] ) ) {
 		if ( ! isset( $bp->avatar_admin ) ) {
 			$bp->avatar_admin = new stdClass();
 		}

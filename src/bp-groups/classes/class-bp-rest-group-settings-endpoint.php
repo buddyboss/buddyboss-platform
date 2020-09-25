@@ -38,7 +38,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$this->namespace       = bp_rest_namespace() . '/' . bp_rest_version();
 		$this->rest_base       = buddypress()->groups->id;
 		$this->groups_endpoint = new BP_REST_Groups_Endpoint();
-		$this->nav             = array( 'group-settings' );
+		$this->nav             = array( apply_filters( 'bp_group_settings_slug', 'group-settings' ) );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$nav    = $request->get_param( 'nav' );
 		$fields = array();
 		switch ( $nav ) {
-			case 'group-settings':
+			case apply_filters( 'bp_group_settings_slug', 'group-settings' ):
 				$fields = $this->get_settings_fields( $group->id );
 				break;
 
@@ -269,7 +269,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$updated = array();
 
 		switch ( $nav ) {
-			case 'group-settings':
+			case apply_filters( 'bp_group_settings_slug', 'group-settings' ):
 				$updated = $this->update_settings_fields( $request );
 				$fields  = $this->get_settings_fields( $group->id );
 				break;

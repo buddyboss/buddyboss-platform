@@ -537,6 +537,10 @@ function bp_nouveau_get_loop_classes() {
 		'bp-list',
 	);
 
+	if ( BP_GROUPS_SLUG === $component ) {
+		$classes[] = 'groups-list';
+	}
+
 	if ( bp_is_user() && 'my-friends' === bp_current_action() ) {
 		$classes[] = 'members-list';
 	}
@@ -1681,7 +1685,7 @@ function bp_nouveau_get_single_item_subnav_classes() {
 		$classes[] = 'group-subnav';
 	}
 
-	if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
+	if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && apply_filters( 'bp_group_invite_slug', 'group-invites') === bp_get_groups_current_create_step() ) ) {
 		$classes[] = 'bp-invites-nav';
 	}
 

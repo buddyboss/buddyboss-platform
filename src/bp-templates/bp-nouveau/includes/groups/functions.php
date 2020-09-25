@@ -79,7 +79,7 @@ function bp_nouveau_groups_enqueue_scripts() {
 		' );
 	}
 
-	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
+	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( apply_filters( 'bp_group_invite_slug', 'group-invites') ) ) ) {
 		return;
 	}
 
@@ -120,7 +120,7 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
  * @return array The same array with specific strings for the Group's Invite UI if needed.
  */
 function bp_nouveau_groups_localize_scripts( $params = array() ) {
-	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
+	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( apply_filters( 'bp_group_invite_slug', 'group-invites') ) ) ) {
 		return $params;
 	}
 
@@ -334,14 +334,14 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_invites_create_steps( $steps = array() ) {
-	if ( bp_is_active( 'friends' ) && isset( $steps['group-invites'] ) ) {
+	if ( bp_is_active( 'friends' ) && isset( $steps[apply_filters( 'bp_group_invite_slug', 'group-invites')] ) ) {
 		// Simply change the name
-		$steps['group-invites']['name'] = __( 'Invite', 'buddyboss' );
+		$steps[apply_filters( 'bp_group_invite_slug', 'group-invites')]['name'] = __( 'Invite', 'buddyboss' );
 		return $steps;
 	}
 
 	// Add the create step if friends component is not active
-	$steps['group-invites'] = array(
+	$steps[apply_filters( 'bp_group_invite_slug', 'group-invites')] = array(
 		'name'     => __( 'Invite', 'buddyboss' ),
 		'position' => 30,
 	);
@@ -1131,26 +1131,26 @@ function bp_nouveau_groups_remove_home_widget_filters() {
 function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 	// screen id => dynamic part of the hooks, nonce & specific template to use.
 	$screens = array(
-		'group-details' => array(
+		apply_filters( 'bp_group_details_slug', 'group-details' ) => array(
 			'hook'     => 'group_details_creation_step',
-			'nonce'    => 'groups_create_save_group-details',
+			'nonce'    => 'groups_create_save_' . apply_filters( 'bp_group_details_slug', 'group-details' ),
 			'template' => 'groups/single/admin/edit-details',
 		),
-		'group-settings' => array(
+		apply_filters( 'bp_group_settings_slug', 'group-settings' ) => array(
 			'hook'  => 'group_settings_creation_step',
-			'nonce' => 'groups_create_save_group-settings',
+			'nonce' => 'groups_create_save_' . apply_filters( 'bp_group_settings_slug', 'group-settings' ),
 		),
-		'group-avatar' => array(
+		apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) => array(
 			'hook'  => 'group_avatar_creation_step',
-			'nonce' => 'groups_create_save_group-avatar',
+			'nonce' => 'groups_create_save_' . apply_filters( 'bp_group_avatar_slug', 'group-avatar' ),
 		),
-		'group-cover-image' => array(
+		apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') => array(
 			'hook'  => 'group_cover_image_creation_step',
-			'nonce' => 'groups_create_save_group-cover-image',
+			'nonce' => 'groups_create_save_' . apply_filters( 'bp_group_cover_image_slug', 'group-cover-image'),
 		),
-		'group-invites' => array(
+		apply_filters( 'bp_group_invite_slug', 'group-invites') => array(
 			'hook'     => 'group_invites_creation_step',
-			'nonce'    => 'groups_create_save_group-invites',
+			'nonce'    => 'groups_create_save_' . apply_filters( 'bp_group_invite_slug', 'group-invites'),
 			'template' => 'groups/single/invite/send-invites',
 		),
 	);
@@ -1176,12 +1176,12 @@ function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
 	// screen id => dynamic part of the hooks & nonce.
 	$screens = array(
 		'edit-details'        => array( 'hook' => 'group_details_admin',             'nonce' => 'groups_edit_group_details'  ),
-		'group-settings'      => array( 'hook' => 'group_settings_admin',            'nonce' => 'groups_edit_group_settings' ),
-		'group-avatar'        => array(),
-		'group-cover-image'   => array( 'hook' => 'group_settings_cover_image',      'nonce' => ''                           ),
+		apply_filters( 'bp_group_settings_slug', 'group-settings' )      => array( 'hook' => 'group_settings_admin',            'nonce' => 'groups_edit_group_settings' ),
+		apply_filters( 'bp_group_avatar_slug', 'group-avatar' )        => array(),
+		apply_filters( 'bp_group_cover_image_slug', 'group-cover-image')   => array( 'hook' => 'group_settings_cover_image',      'nonce' => ''                           ),
 		'manage-members'      => array( 'hook' => 'group_manage_members_admin',      'nonce' => ''                           ),
 		'membership-requests' => array( 'hook' => 'group_membership_requests_admin', 'nonce' => ''                           ),
-		'delete-group'        => array( 'hook' => 'group_delete_admin',              'nonce' => 'groups_delete_group'        ),
+		apply_filters( 'bp_group_delete_slug', 'delete-group')        => array( 'hook' => 'group_delete_admin',              'nonce' => 'groups_delete_group'        ),
 	);
 
 	if ( isset( $screens[ $id ] ) ) {

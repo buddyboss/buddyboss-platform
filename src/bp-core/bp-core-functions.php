@@ -2853,7 +2853,7 @@ function bp_nav_menu_get_loggedin_pages() {
 				if ( 'profile' === $key ) {
 					$key = 'view';
 				} elseif ( 'groups' === $bp_item['slug'] && 'invites' === $key ) {
-					$key = 'group-invites';
+					$key = apply_filters( 'bp_group_invite_slug', 'group-invites');
 				}
 
 				if ( 'my-friends' === $s_nav['slug'] ) {
@@ -2873,7 +2873,7 @@ function bp_nav_menu_get_loggedin_pages() {
 				}
 
 				if ( 'settings' === $bp_item['slug'] && 'invites' === $s_nav['slug'] ) {
-					$key = 'group-invites-settings';
+					$key = apply_filters( 'bp_group_invites_settings_slug', 'group-invites-settings');
 				}
 
 				$link = $s_nav['link'];
