@@ -45,10 +45,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_profile_header' => array(
-			'title'       => __( 'Profile Header', 'buddyboss' ),
+			'title'       => __( 'Profile Action Buttons', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
-			'description' => __( 'Customize the user profile header.', 'buddyboss' ),
+			'description' => __( 'Custommize to Re-Order profile action buttons.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
 			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
@@ -240,7 +240,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 		'user_profile_actions_display'   => array(
 			'class'    => 'BP_Nouveau_Profile_Header_Customize_Control',
-			'label'    => __( 'Reorder the profile header buttons.', 'buddyboss' ),
+			'label'    => __( 'Reorder the profile action buttons.', 'buddyboss' ),
 			'section'  => 'bp_nouveau_user_profile_header',
 			'settings' => 'bp_nouveau_appearance[user_profile_actions_display]',
 			'type'     => 'header_button',
