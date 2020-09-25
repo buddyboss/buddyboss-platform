@@ -1255,8 +1255,6 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 		return false;
 	}
 
-	error_log( print_r( $dimensions, 1 ) );
-
 	// Resize the image so that it fit with the cover photo dimensions.
 	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
 	$is_too_small = false;
