@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Requires PHP: 5.6.20
-Stable tag: 1.4.6
+Stable tag: 1.5.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,85 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.1.1 =
+* Photos - Fixed private messages photos and documents attachments security issue
+
+= 1.5.1 =
+* Profiles - Provided 'Cover Photo Repositioning' support in Profiles and Groups
+* Profiles - Fixed profile completion widget profile photo issue to consider gravatar
+* Profiles - Fixed profile completion widget social network field count issue
+* Profiles - Fixed display name format, field visibility, and field requirement logical issue
+* Groups - Provided options to Hide subgroups from Groups Directory & Group Type Shortcode
+* Groups - Fixed invites module to allow sending invites to group members in bulk
+* Forums - Fixed forums page not working when configured as a child page
+* Forums - Fixed reply editor HTML formatting issue
+* Activity - Fixed 'Edit Activity' module related critical bugs
+* Activity - Fixed activity form focus issue on click
+* Activity - Fixed activity form @mention delete issue
+* Activity - Fixed 404 Page issue when activity settings are updated
+* Media - Fixed issue to allow sending just emoji in messaging, activity, forums, etc
+* REST API - Small API fixes and code enhancement in media
+* REST API - New endpoints added for 'Edit Activity' feature
+
+= 1.5.0 =
+* Activity - Provided 'Edit Activity' support
+* Activity - Provided settings to allow members to edit their activity posts for a duration specified
+* Activity - Provided 'Edit Activity' compatibility with photos, documents, permissions, emoji, giphy, etc
+* Profiles - Provided option to setup Custom Profile dropdown
+* Profiles - Provided option to Hide Profile navigation
+* Profiles - Fixed profile completion issue with Repeater Field Set
+* Forums - Fixed discussion nested replies notification issue
+* Forums - Fixed discussion reply editor formatting issue
+* Media - Fixed album edit/save/cancel button layout issue
+* Documents - Fixed document download link privacy issue
+* Documents - Fixed document sub-folder download issue
+* Messages - Improved message thread delete logic
+* Messages - Fixed deleted message thread count issue
+* Templates - Profile navigation template enhancement for new profile navigation hide feature
+* REST API - Fixed API issues in profile, media, and social groups
+* LearnDash - Fixed Social groups and LearnDash groups sync conflict
+* Compatibility - Fixed frontend page conflict with Elementor plugin
+* Compatibility - Fixed activity date conflict with TranslatePress plugin
+* Compatibility - Fixed document layout issues with Wallstreet Theme
+
+= 1.4.9 =
+* Profiles - Fixed profile completion logic to reuse the same feature in Elementor
+* Media - Fixed logic to delete GIF attachments when entry deleted
+* Documents - Improved the logic to support BuddyBoss REST API
+* Compatibility - Fixes for WordPress 5.5 and PHP 7.*
+
+= 1.4.8 =
+* Media - New settings to set maximum file upload size for Photos and Documents
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
+* Media - Improved the logic to support BuddyBoss REST API
+
+= 1.4.7 =
+* Profiles - Fixed profile field type Gender default options unable to re-order
+* Profiles - Fixed profile completion widget does not update with object caching ON
+* Profiles - Fixed profile repeater fieldset, delete repeater field not working
+* Groups - Fixed documents and folders add/edit/delete/move permissions for group organizer/moderator/member
+* Groups - Fixed performance issue when group members increases
+* Groups - Fixed hidden groups not showing for group type shortcode
+* Forums - Fixed discussion reply text formatting validation
+* Activity - Fixed photo comment email notification on the activity feed
+* Activity - Fixed Privacy for activity attached photo
+* Activity - Fixed activity preview to allow German characters
+* Activity - Fixed activity post update formatting issues
+* Documents - Fixed document rename does not allow non-English characters
+* Messages - Improved the avatar display for multi-user message threads
+* Network Search - Fixed search members based on members profile field-specific privacy
+* Multisite - Fixed repair and import tools inaccessible/broken in multi-site
+* REST API - Fixed API issues in activity, private messages, connection, and site permissions
+* REST API - New endpoints added for Email invites profile types changes
+* Compatibility - Fixed register and activate page title when RankMath plugin is active
+* Compatibility - Fixed social groups and LearnDash group slug conflict
+* Compatibility - Fixed courses access based on membership expiry from MemberPress plugin
+* Translations - Fixed 'TB, GB, MB, KB' text not translatable for memory unit
+* Translations - Fixed text for document file extension descriptions not available for translation
+* Translations - Fixed admin dashboard text not translatable
+* Translations - Added Hungarian language files
+* Translations - Updated German (formal) language files
 
 = 1.4.6 =
 * Groups - Fixed 'Pending Invites' page unable to display more than 20 invites

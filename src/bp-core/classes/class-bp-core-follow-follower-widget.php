@@ -186,7 +186,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 			return;
 		}
 
-		$format = bp_get_option( 'bp-display-name-format' );
+		$format = bp_core_display_name_format();
 
 		if (
 			'first_name' === $format

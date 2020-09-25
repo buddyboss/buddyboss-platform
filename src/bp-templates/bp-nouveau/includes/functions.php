@@ -575,9 +575,11 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
  *
  */
 function bp_nouveau_get_appearance_settings( $option = '' ) {
+
 	$default_args = array(
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
 		'user_nav_order'     => array(),
+		'user_nav_hide'      => array(),
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
@@ -643,6 +645,23 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  *
  */
 function bp_nouveau_sanitize_nav_order( $option = '' ) {
+	if ( ! is_array( $option ) ) {
+		$option = explode( ',', $option );
+	}
+
+	return array_map( 'sanitize_key', $option );
+}
+
+/**
+ * Sanitize a list of slugs to save it as an array
+ *
+ * @param string $option A comma separated list of nav items slugs.
+ *
+ * @return array An array of nav items slugs.
+ * @since BuddyPress 3.0.0
+ *
+ */
+function bp_nouveau_sanitize_nav_hide( $option = '' ) {
 	if ( ! is_array( $option ) ) {
 		$option = explode( ',', $option );
 	}

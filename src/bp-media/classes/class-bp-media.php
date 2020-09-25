@@ -1007,7 +1007,7 @@ class BP_Media {
 					}
 				}
 
-				if ( empty( $from ) ) {
+				if ( empty( $from ) || 'activity' === $from ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
@@ -1031,16 +1031,17 @@ class BP_Media {
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
-						// Deleting an activity.
+					// Deleting an activity.
 					} else {
-						if ( bp_activity_delete(
-							array(
-								'id'      => $activity->id,
-								'user_id' => $activity->user_id,
-							)
-						) ) {
-							/** This action is documented in bp-activity/bp-activity-actions.php */
-							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+						// Do not delete the activity if action did via edit.
+						if ( bp_is_active( 'activity' ) && 'activity' !== $from ) {
+							if ( bp_activity_delete( array(
+									'id'      => $activity->id,
+									'user_id' => $activity->user_id,
+								) ) ) {
+								/** This action is documented in bp-activity/bp-activity-actions.php */
+								do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+							}
 						}
 					}
 				}

@@ -98,7 +98,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$document_options = array(
 		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'max_upload_size'           => bp_document_file_upload_max_size( false, 'MB' ),
+		'max_upload_size'           => bp_document_file_upload_max_size(),
 		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
 		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
@@ -946,9 +946,10 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 		return;
 	}
 
-	//$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE FIND_IN_SET(id,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$document_folder_table} WHERE parent IN (@pv)) AS lv FROM {$document_folder_table} JOIN (SELECT @pv:=%d)tmp WHERE parent IN (@pv)) a))", $folder_id );
-	//$documents_folder_query = $wpdb->prepare( "SELECT * FROM (select * from  {$document_folder_table}  order by parent, id) {$document_folder_table},(select @pv := %d ) initialisation WHERE find_in_set(parent, @pv) > 0 and @pv := concat(@pv, ',', id)", $folder_id );
-	$documents_folder_query = $wpdb->prepare( "SELECT DATA.* FROM( SELECT @ids as _ids, (   SELECT @ids := GROUP_CONCAT(id) FROM {$document_folder_table} WHERE FIND_IN_SET(parent, @ids) ) as cids, @l := @l+1 as level FROM {$document_folder_table}, (SELECT @ids :=%d, @l := 0 ) b WHERE @ids IS NOT NULL ) id, {$document_folder_table} DATA WHERE FIND_IN_SET(DATA.id, ID._ids) AND parent > 0 ORDER BY level, id", $folder_id );
+
+	$query_where            = "find_in_set(parent, @pv) and length(@pv := concat(@pv, ',', id))";
+	$query_from             = $wpdb->prepare( "( select * from {$document_folder_table} order by parent, id) folder_sorted, (select @pv := %d) initialisation", $folder_id );
+	$documents_folder_query = "select * from $query_from where $query_where";
 	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
 	// Build array of item references.
@@ -1175,4 +1176,32 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+}
+
+/**
+ * Edit button alter when document activity other than activity page.
+ *
+ * @param array $buttons     Array of Buttons visible on activity entry.
+ * @param int   $activity_id Activity ID.
+ *
+ * @return mixed
+ * @since BuddyBoss 1.5.1
+ */
+function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
+	if ( isset( $buttons['activity_edit'] ) && ( bp_is_document_component() || ! bp_is_activity_component() ) && ! empty( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( ! empty( $activity->id ) && 'document' !== $activity->privacy ) {
+			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+
+			$classes  = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
+			$edit_key = array_search( 'edit', $classes, true );
+			if ( ! empty( $edit_key ) ) {
+				unset( $classes[ $edit_key ] );
+			}
+			$buttons['activity_edit']['button_attr']['class'] = implode( ' ', $classes );
+		}
+	}
+
+	return $buttons;
 }

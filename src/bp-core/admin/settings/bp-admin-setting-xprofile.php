@@ -41,10 +41,32 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		// Set requirement for last name based on display format
-		if ( isset( $_POST['bp-display-name-format'] ) && $_POST['bp-display-name-format'] == 'first_last_name' ) {
-			if ( $last_name_field = xprofile_get_field( bp_xprofile_lastname_field_id() ) ) {
-				// $last_name_field->is_required = true;
-				$last_name_field->save();
+		if ( isset( $_POST['bp-display-name-format'] ) ) {
+			if ( $_POST['bp-display-name-format'] == 'first_last_name' ){
+				$lastname_field_id = bp_xprofile_lastname_field_id();
+				bp_xprofile_update_field_meta( $lastname_field_id, 'default_visibility', 'public' );
+
+				$firstname_field_id = bp_xprofile_firstname_field_id();
+				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+
+				// Make the first name field to required if not in required list.
+				$field              = xprofile_get_field( $firstname_field_id );
+				$field->is_required = true;
+				$field->save();
+			} elseif ( $_POST['bp-display-name-format'] == 'first_name' ){
+				$firstname_field_id = bp_xprofile_firstname_field_id();
+				bp_xprofile_update_field_meta( $firstname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $firstname_field_id, 'allow_custom_visibility', 'disabled' );
+
+				// Make the first name field to required if not in required list.
+				$field              = xprofile_get_field( $firstname_field_id );
+				$field->is_required = true;
+				$field->save();
+			} elseif ( $_POST['bp-display-name-format'] == 'nickname' ){
+				$nickname_field_id = bp_xprofile_nickname_field_id();
+				bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+				bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 			}
 		}
 
@@ -103,8 +125,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
-		// Gravatars.
-		$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
+		if ( bp_get_option( 'show_avatars' ) ) {
+			// Gravatars.
+			$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
+		}
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
@@ -225,7 +249,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			'nickname'        => __( 'Nickname', 'buddyboss' ),
 		);
 
-		$current_value = bp_get_option( 'bp-display-name-format' );
+		$current_value = bp_core_display_name_format();
 
 		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
 		foreach ( $options as $key => $value ) {

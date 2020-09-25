@@ -450,7 +450,18 @@ function bbp_settings_integration( $default = 0 ) {
  * @return string
  */
 function bbp_get_root_slug( $default = 'forums' ) {
-	return apply_filters( 'bbp_get_root_slug', get_option( '_bbp_root_slug', $default ) );
+	$forum_page_id = get_option( '_bbp_root_slug_custom_slug', 0 );
+	$root_slug     = get_option( '_bbp_root_slug', $default );
+	if ( ! empty( $forum_page_id ) ) {
+		$default_slug = $root_slug;
+		$root_slug    = get_page_uri( $forum_page_id );
+		if ( $default_slug !== $root_slug ) {
+			update_option( '_bbp_root_slug', $root_slug );
+			flush_rewrite_rules( true );
+		}
+	}
+
+	return apply_filters( 'bbp_get_root_slug', $root_slug );
 }
 
 /**
