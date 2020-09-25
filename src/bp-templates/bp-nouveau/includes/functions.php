@@ -1551,7 +1551,7 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 function bp_nouveau_get_user_profile_actions() {
 	$bp_nouveau_appearance     = bp_get_option( 'bp_nouveau_appearance' );
 	$profile_header_btn_orders = isset( $bp_nouveau_appearance['user_profile_actions_order'] )
-		? $bp_nouveau_appearance['user_profile_actions_order'] : '';
+		? $bp_nouveau_appearance['user_profile_actions_order'] : array();
 
 	/**
 	 * Filter the header buttons
