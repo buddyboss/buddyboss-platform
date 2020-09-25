@@ -75,8 +75,15 @@ class BP_Nouveau_Profile_Header_Customize_Control extends WP_Customize_Control {
 			</ul>
 		<?php endif; ?>
 
+		<?php
+		if ( is_array( bp_nouveau_get_user_profile_actions() ) ) {
+			$bp_user_profile_actions_order_value = implode( ',', bp_nouveau_get_user_profile_actions() );
+		} else {
+			$bp_user_profile_actions_order_value = bp_nouveau_get_user_profile_actions();
+		}
+		?>
 		<input id="bp_user_profile_actions_order" type="hidden"
-		       value="<?php echo bp_nouveau_get_user_profile_actions(); ?>"
+		       value="<?php echo $bp_user_profile_actions_order_value; ?>"
 		       data-customize-setting-link="<?php echo esc_attr( $setting ); ?>"/>
 
 		<?php
