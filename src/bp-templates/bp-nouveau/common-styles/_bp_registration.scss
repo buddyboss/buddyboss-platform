@@ -226,3 +226,28 @@ body.register {
 	border-color: #ef3e46;
 	color: #fff;
 }
+
+
+.bb-password-wrap {
+	position: relative;
+
+	a.bb-toggle-password {
+		color: rgba(18, 43, 70, 0.5);
+		position: absolute;
+		right: 0;
+		top: 0;
+		height: 100%;
+		width: 50px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-decoration: none !important;
+	}
+
+	.bb-show-pass {
+
+		.bb-icon-eye:before {
+			content: "\e8fc";
+		}
+	}
+}

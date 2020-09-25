@@ -33,7 +33,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$bp                = buddypress();
 		$active_components = $bp->active_components;
 
-		// Flag for activate the blogs component
+		// Flag for activate the blogs component only if any CPT OR blog posts have enabled the activity feed.
 		$is_blog_component_active = false;
 
 		// Get all active custom post type.
@@ -55,6 +55,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			}
 		}
 
+		// Add blogs component to $active_components list.
 		if ( $is_blog_component_active ) {
 			$active_components['blogs'] = '1';
 		} else {
@@ -74,6 +75,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 	public function register_fields() {
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ) );
+
+		// Allow Activity edit setting.
+		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
+		$this->add_field( '_bp_activity_edit_time', __( 'Edit Activity Time Limit', 'buddyboss' ), '__return_true', 'intval', array(
+			'class' => 'hidden',
+		) );
 
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
@@ -178,7 +185,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		 */
 		do_action( 'bp_admin_setting_activity_register_fields', $this );
 	}
-
 }
 
 return new BP_Admin_Setting_Activity();

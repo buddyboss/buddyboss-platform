@@ -228,12 +228,8 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce
-	$nonce = $_POST['_wpnonce'];
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
 	// Nonce check!
@@ -241,7 +237,9 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['medias'] ) ) {
+	$medias = filter_input( INPUT_POST, 'medias', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+
+	if ( empty( $medias ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please upload media before saving.', 'buddyboss' )
@@ -250,8 +248,11 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
+	$privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
 	// handle media uploaded.
-	$media_ids = bp_media_add_handler();
+	$media_ids = bp_media_add_handler( $medias, $privacy, $content );
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
@@ -524,10 +525,10 @@ function bp_nouveau_ajax_media_album_save() {
 		foreach ( $_POST['medias'] as $key => $media ) {
 			$_POST['medias'][ $key ]['album_id'] = $album_id;
 		}
-	}
 
-	// save all media uploaded
-	bp_media_add_handler();
+		// save all media uploaded
+		bp_media_add_handler( $_POST['medias'], $privacy );
+	}
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -635,8 +636,11 @@ function bp_nouveau_ajax_media_get_activity() {
 		wp_send_json_error( $response );
 	}
 
+	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+
 	// check activity is media or not.
-	$media_activity = bp_activity_get_meta( $_POST['id'], 'bp_media_activity', true );
+	$media_activity = bp_activity_get_meta( $post_id, 'bp_media_activity', true );
 
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 	add_action( 'bp_before_activity_activity_content', 'bp_nouveau_activity_description' );
@@ -644,17 +648,28 @@ function bp_nouveau_ajax_media_get_activity() {
 
 	if ( ! empty( $media_activity ) ) {
 		$args = array(
-			'include'     => $_POST['id'],
+			'include'     => $post_id,
 			'show_hidden' => true,
 			'scope'       => 'media',
 			'privacy'     => false,
 		);
 	} else {
-		$args = array(
-			'include' => $_POST['id'],
-			'privacy' => false,
-			'scope'   => false,
-		);
+		if ( $group_id > 0 && bp_is_active( 'groups' ) ) {
+			$args = array(
+				'include'     => $post_id,
+				'object'      => buddypress()->groups->id,
+				'primary_id'  => $group_id,
+				'privacy'     => false,
+				'scope'       => false,
+				'show_hidden' => (bool) ( groups_is_user_member( bp_loggedin_user_id(), $group_id ) || bp_current_user_can( 'bp_moderate' ) ),
+			);
+		} else {
+			$args = array(
+				'include' => $post_id,
+				'privacy' => false,
+				'scope'   => false,
+			);
+		}
 	}
 
 	ob_start();

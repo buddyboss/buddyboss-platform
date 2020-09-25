@@ -585,6 +585,19 @@ define({ "api": [
             "optional": false,
             "field": "id",
             "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "stream",
+              "threaded",
+              "false"
+            ],
+            "optional": true,
+            "field": "display_comments",
+            "defaultValue": "false",
+            "description": "<p>No comments by default, stream for within stream display, threaded for below each activity item.</p>"
           }
         ]
       }
@@ -1302,6 +1315,751 @@ define({ "api": [
   },
   {
     "type": "POST",
+    "url": "/wp-json/buddyboss/v1/document",
+    "title": "Create Document",
+    "name": "CreateBBDocument",
+    "group": "Document",
+    "description": "<p>Create Document.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "document_ids",
+            "description": "<p>Document specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "activity_id",
+            "description": "<p>A unique numeric ID for the activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "folder_id",
+            "description": "<p>A unique numeric ID for the Document Folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Document Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "friends",
+              "onlyme",
+              "grouponly",
+              "message"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "defaultValue": "public",
+            "description": "<p>Privacy of the Document.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/document/folder",
+    "title": "Create Folder",
+    "name": "CreateBBFolder",
+    "group": "Document",
+    "description": "<p>Create Document Folder.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Folder Title.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "parent",
+            "description": "<p>A unique numeric ID for the Parent Folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "friends",
+              "onlyme",
+              "grouponly"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "defaultValue": "public",
+            "description": "<p>Privacy of the Folder.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-folder-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/document/:id",
+    "title": "Delete Document",
+    "name": "DeleteBBDocument",
+    "group": "Document",
+    "description": "<p>Delete a single Document.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the document.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "DELETE",
+    "url": "/wp-json/buddyboss/v1/document/folder/:id",
+    "title": "Delete Folder",
+    "name": "DeleteBBFolder",
+    "group": "Document",
+    "description": "<p>Delete a single Folder.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the folder.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-folder-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/document/:id",
+    "title": "Get Document",
+    "name": "GetBBDocument",
+    "group": "Document",
+    "description": "<p>Retrieve a single document.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the document.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/document/details",
+    "title": "Document Details",
+    "name": "GetBBDocumentDetails",
+    "group": "Document",
+    "description": "<p>Retrieve Document details(includes tabs and privacy options)</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "filename": "src/bp-document/classes/class-bp-rest-document-details-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/document",
+    "title": "Get Documents",
+    "name": "GetBBDocuments",
+    "group": "Document",
+    "description": "<p>Retrieve Documents.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "search",
+            "description": "<p>Limit results to those matching a string.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "asc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "title",
+              "date_created",
+              "date_modified",
+              "group_id",
+              "privacy"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "title",
+            "description": "<p>Order by a specific parameter.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>Limit result set to items created by a specific user (ID).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "max",
+            "description": "<p>Maximum number of results to return.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "folder_id",
+            "description": "<p>A unique numeric ID for the Folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "activity_id",
+            "description": "<p>A unique numeric ID for the Document's Activity.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "friends",
+              "onlyme",
+              "grouponly",
+              "message",
+              "forums"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "defaultValue": "public",
+            "description": "<p>Privacy of the Document.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "public",
+              "friends",
+              "groups",
+              "personal"
+            ],
+            "optional": true,
+            "field": "scope",
+            "description": "<p>Scope of the Document.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "count_total",
+            "defaultValue": "true",
+            "description": "<p>Show total count or not.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/document/folder/:id",
+    "title": "Get Folder",
+    "name": "GetBBFolder",
+    "group": "Document",
+    "description": "<p>Retrieve a single folder.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the folder.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-folder-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/document/folder",
+    "title": "Get Folders",
+    "name": "GetBBFolders",
+    "group": "Document",
+    "description": "<p>Retrieve Folders.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "description": "<p>Current page of the collection.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "per_page",
+            "defaultValue": "10",
+            "description": "<p>Maximum number of items to be returned in result set.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "search",
+            "description": "<p>Limit results to those matching a string.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "asc",
+              "desc"
+            ],
+            "optional": true,
+            "field": "order",
+            "defaultValue": "desc",
+            "description": "<p>Order sort attribute ascending or descending.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "allowedValues": [
+              "id",
+              "title",
+              "date_created",
+              "user_id",
+              "group_id",
+              "privacy"
+            ],
+            "optional": true,
+            "field": "orderby",
+            "defaultValue": "date_created",
+            "description": "<p>Order by a specific parameter.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "max",
+            "description": "<p>Maximum number of results to return.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "user_id",
+            "description": "<p>Limit result set to items created by a specific user (ID).</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "parent",
+            "description": "<p>A unique numeric ID for the Folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "friends",
+              "onlyme",
+              "grouponly"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "defaultValue": "public",
+            "description": "<p>Privacy of the Folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "exclude",
+            "description": "<p>Ensure result set excludes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "include",
+            "description": "<p>Ensure result set includes specific IDs.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Boolean",
+            "optional": true,
+            "field": "count_total",
+            "defaultValue": "true",
+            "description": "<p>Show total count or not.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-folder-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/document/folder/tree",
+    "title": "Folder tree",
+    "name": "GetBBFoldersTree",
+    "group": "Document",
+    "description": "<p>Retrieve Folder tree</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-folder-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/document/:id",
+    "title": "Update Document",
+    "name": "UpdateBBDocument",
+    "group": "Document",
+    "description": "<p>Update a single Document.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the document.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "folder_id",
+            "description": "<p>A unique numeric ID for the folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "title",
+            "description": "<p>Document title.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "onlyme",
+              "friends",
+              "grouponly",
+              "message"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "description": "<p>Privacy of the document.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "PATCH",
+    "url": "/wp-json/buddyboss/v1/document/folder/:id",
+    "title": "Update Folder",
+    "name": "UpdateBBFolder",
+    "group": "Document",
+    "description": "<p>Update a folder.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>A unique numeric ID for the folder</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "title",
+            "description": "<p>Folder title.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "parent",
+            "description": "<p>A unique numeric ID for the parent folder.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "group_id",
+            "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "allowedValues": [
+              "public",
+              "loggedin",
+              "onlyme",
+              "friends",
+              "grouponly"
+            ],
+            "optional": true,
+            "field": "privacy",
+            "description": "<p>Privacy of the folder.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-folder-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "POST",
+    "url": "/wp-json/buddyboss/v1/document/upload",
+    "title": "Upload Document",
+    "name": "UploadBBDocument",
+    "group": "Document",
+    "description": "<p>Upload Document.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "file",
+            "description": "<p>File object which is going to upload.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-document/classes/class-bp-rest-document-endpoint.php",
+    "groupTitle": "Document"
+  },
+  {
+    "type": "POST",
     "url": "/wp-json/buddyboss/v1/invites",
     "title": "Send Invites",
     "name": "CreateBBInvites",
@@ -1432,6 +2190,22 @@ define({ "api": [
         ]
       }
     },
+    "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
+    "groupTitle": "Email_Invites"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/invites/profile-type",
+    "title": "Invites Profile Type",
+    "name": "GetBBInvitesProfileType",
+    "group": "Email_Invites",
+    "description": "<p>Retrieve Sent Invites Profile Type.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
     "filename": "src/bp-invites/classes/class-bp-rest-invites-endpoint.php",
     "groupTitle": "Email_Invites"
   },
@@ -4042,6 +4816,20 @@ define({ "api": [
             "optional": true,
             "field": "types",
             "description": "<p>Set type(s) for a group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "append_types",
+            "description": "<p>Append type(s) for a group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": true,
+            "field": "remove_types",
+            "description": "<p>Remove type(s) for a group.</p>"
           }
         ]
       }
@@ -4698,6 +5486,13 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Media Content.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
             "allowedValues": [
               "public",
               "loggedin",
@@ -4957,6 +5752,22 @@ define({ "api": [
       }
     },
     "filename": "src/bp-media/classes/class-bp-rest-media-albums-endpoint.php",
+    "groupTitle": "Media"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/media/details",
+    "title": "Media Details",
+    "name": "GetBBMediaDetails",
+    "group": "Media",
+    "description": "<p>Retrieve Media details(includes tabs and privacy options)</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser if the site is in Private Network."
+      }
+    ],
+    "filename": "src/bp-media/classes/class-bp-rest-media-details-endpoint.php",
     "groupTitle": "Media"
   },
   {
@@ -5227,6 +6038,13 @@ define({ "api": [
             "optional": true,
             "field": "group_id",
             "description": "<p>A unique numeric ID for the Group.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "content",
+            "description": "<p>Media Content.</p>"
           },
           {
             "group": "Parameter",
@@ -5729,6 +6547,22 @@ define({ "api": [
     "groupTitle": "Members"
   },
   {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/members/profile-dropdown",
+    "title": "Profile Dropdown",
+    "name": "GetBBMembersProfileDropdown",
+    "group": "Members",
+    "description": "<p>Retrieve Member Profile Dropdown.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "filename": "src/bp-members/classes/class-bp-rest-members-details-endpoint.php",
+    "groupTitle": "Members"
+  },
+  {
     "type": "POST",
     "url": "/wp-json/buddyboss/v1/messages/group",
     "title": "Create Group Thread",
@@ -6079,6 +6913,42 @@ define({ "api": [
             "optional": false,
             "field": "group_id",
             "description": "<p>Group id to search members.</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/bp-messages/classes/class-bp-rest-messages-endpoint.php",
+    "groupTitle": "Messages"
+  },
+  {
+    "type": "GET",
+    "url": "/wp-json/buddyboss/v1/messages/search-thread",
+    "title": "Search Thread",
+    "name": "SearchBBThread",
+    "group": "Messages",
+    "description": "<p>Search Existing thread by user and recipient for the message.</p>",
+    "version": "1.0.0",
+    "permission": [
+      {
+        "name": "LoggedInUser"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>Sender users ID.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "number",
+            "optional": false,
+            "field": "recipient_id",
+            "description": "<p>Thread recipient ID.</p>"
           }
         ]
       }
@@ -7379,7 +8249,7 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
+            "type": "Array",
             "optional": true,
             "field": "value",
             "description": "<p>The list of values for the field data.</p>"

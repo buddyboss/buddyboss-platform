@@ -127,6 +127,11 @@ function bp_search_get_settings_fields() {
 				);
 
 				foreach ( $group->fields as $field ) {
+
+				    if ( true === bp_core_hide_display_name_field( $field->id ) ) {
+						continue;
+					}
+
 					$fields['bp_search_settings_community'][ "bp_search_xprofile_{$field->id}" ] = array(
 						'title'             => '&#65279;',
 						'callback'          => 'bp_search_settings_callback_xprofile',

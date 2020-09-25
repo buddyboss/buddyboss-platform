@@ -337,9 +337,9 @@
 					var checkbox = document.getElementById( 'bp-enable-group-hierarchies' );
 
 				if (checkbox.checked) {
-					$( '.bp-enable-group-restrict-invites' ).show();
+					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
 				} else {
-					$( '.bp-enable-group-restrict-invites' ).hide();
+					$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
 				}
 
 					$( document ).on(
@@ -347,10 +347,10 @@
 						'#bp-enable-group-hierarchies',
 						function () {
 							if ( true === this.checked ) {
-								$( '.bp-enable-group-restrict-invites' ).show();
+								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).show();
 							} else {
-								$( '.bp-enable-group-restrict-invites' ).hide();
-								$( '#bp-enable-group-restrict-invites' ).prop( 'checked', false );
+								$( '.bp-enable-group-restrict-invites, .bp-enable-group-hide-subgroups' ).hide();
+								$( '#bp-enable-group-restrict-invites, #bp-enable-group-hide-subgroups' ).prop( 'checked', false );
 							}
 						}
 					);

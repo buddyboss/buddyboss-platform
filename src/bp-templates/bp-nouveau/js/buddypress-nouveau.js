@@ -56,6 +56,9 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
+			// Toggle password text
+			this.togglePassword();
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on(
@@ -367,6 +370,16 @@ window.bp = window.bp || {};
 				data.scope = 'all';
 			}
 
+			// if object is media and object nav does not exists fallback to scope = all
+			if ( data.object == 'media' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
+			// if object is document and object nav does not exists fallback to scope = all
+			if ( data.object == 'document' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -525,6 +538,11 @@ window.bp = window.bp || {};
 			$.each(
 				this.objects,
 				function( o, object ) {
+					// Continue when ajax is blocked for object request.
+					if ( $( '#buddypress [data-bp-list="' + object + '"][data-ajax="false"]' ).length ) {
+						return;
+					}
+
 					objectData = self.getStorage( 'bp-' + object );
 
 					var typeType = window.location.hash.substr( 1 );
@@ -660,6 +678,10 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
+
+			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper);
+
+			$( document ).on( 'click', '#cover-photo-alert .bb-model-close-button', this.coverPhotoCropperAlert);
 		},
 
 		/**
@@ -1371,7 +1393,16 @@ window.bp = window.bp || {};
 					if ( false === response.success ) {
 						  item_inner.prepend( response.data.feedback );
 						  target.removeClass( 'pending loading' );
-						  item.find( '.bp-feedback' ).fadeOut( 6000 );
+						  if ( item.find( '.bp-feedback' ).length ) {
+							  item.find( '.bp-feedback' ).show();
+							  item.find( '.bp-feedback' ).fadeOut( 6000 );
+						  } else {
+						  	if ( 'groups' === object && 'join_group' === action ) {
+								item.append(response.data.feedback);
+								item.find('.bp-feedback').fadeOut(6000);
+							}
+						  }
+
 					} else {
 						  // Specific cases for groups
 						if ( 'groups' === object ) {
@@ -1654,6 +1685,20 @@ window.bp = window.bp || {};
 				page         : self.getLinkParams( navLink.prop( 'href' ), pagArg ) || 1
 			};
 
+			// Set group type with pagination.
+			if ( $( '#buddypress [data-bp-group-type-filter]' ).length ) {
+				/* jshint ignore:start */
+				queryData['group_type'] = $( '#buddypress [data-bp-group-type-filter]' ).val();
+				/* jshint ignore:end */
+			}
+
+			// Set member type with pagination.
+			if ( $( '#buddypress [data-bp-member-type-filter]' ).length ) {
+				/* jshint ignore:start */
+				queryData['member_type_id'] = $( '#buddypress [data-bp-member-type-filter]' ).val();
+				/* jshint ignore:end */
+			}
+
 			// Request the page
 			self.objectRequest( queryData );
 		},
@@ -1696,6 +1741,19 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+		togglePassword: function() {
+                    $( document ).on( 'click', '.bb-toggle-password', function ( e ) {
+                        e.preventDefault();
+                        var $this = $( this );
+                        var $input = $this.next( 'input' );
+                        $this.toggleClass( 'bb-show-pass' );
+                        if ( $this.hasClass( 'bb-show-pass' ) ) {
+                                $input.attr( 'type', 'text' );
+                        } else {
+                                $input.attr( 'type', 'password' );
+                        }
+                    } );
 		},
 
 		/**
@@ -1765,7 +1823,85 @@ window.bp = window.bp || {};
 					}
 				}
 			}
+		},
+		/**
+		 *  Cover photo Cropper
+		 */
+		coverPhotoCropper: function ( e ){
+
+			var picture, guillotineHeight, guillotineWidth, guillotineTop, guillotineScale;
+
+			if($( e.currentTarget ).hasClass( 'position-change-cover-image' )){
+				var imageHeight  = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).height();
+				var imageCenter = ( imageHeight - $( e.currentTarget ).closest( '#header-cover-image' ).height() ) / 2;
+				var currentTarget = $( e.currentTarget );
+				if(imageHeight <= currentTarget.closest( '#header-cover-image' ).height()){
+					$( 'body' ).append( '<div id="cover-photo-alert" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.cover_photo_size_error_header + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + BP_Nouveau.media.cover_photo_size_error_description + '</p></div></div></div></div></transition></div>' );
+					e.preventDefault();
+					return;
+				}
+				guillotineHeight = $( e.currentTarget ).closest( '#header-cover-image' ).height();
+				guillotineWidth = $( e.currentTarget ).closest( '#header-cover-image' ).width();
+				guillotineTop = Number( $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).css('top').replace('px','') );
+
+				guillotineScale = $( e.currentTarget ).closest( '#header-cover-image' ).width() / $( e.currentTarget ).closest( '#header-cover-image' ).find('.header-cover-reposition-wrap img')[0].width;
+				currentTarget.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).show();
+				picture = $( '.header-cover-reposition-wrap img' );
+				picture.guillotine({
+					width: guillotineWidth,
+					height: guillotineHeight,
+					eventOnChange: 'guillotinechange',
+					init: { scale: guillotineScale, y: guillotineTop && $( e.currentTarget ).closest( '#header-cover-image' ).hasClass('has-position') ? -guillotineTop : imageCenter, w: guillotineWidth, h: guillotineHeight }
+				});
+				// picture.guillotine('fit');
+				picture.on('guillotinechange', function(e, data) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y); });
+			} else if( $( e.currentTarget ).hasClass( 'cover-image-save' ) ){
+				var saveButton = $( e.currentTarget );
+				var coverImage = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' );
+				saveButton.addClass('loading');
+
+				$.post(
+					BP_Nouveau.ajaxurl,
+					{
+						'action': 'save_cover_position',
+						'position': coverImage.attr( 'data-top' ),
+					}
+				).done( function ( $response ) {
+					if ( $response.success && $response.data && '' !== $response.data.content ) {
+						saveButton.removeClass('loading');
+						saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+						saveButton.closest('#header-cover-image:not(.has-position)').addClass('has-position');
+						coverImage.css( { 'top': $response.data.content + 'px' } );
+					} else {
+						saveButton.removeClass('loading');
+						saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+				}
+				} ).fail( function () {
+					saveButton.removeClass('loading');
+					saveButton.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+				} );
+
+			} else if( $( e.currentTarget ).hasClass( 'cover-image-cancel' ) ){
+				picture = $( '.header-cover-reposition-wrap img' );
+				picture.guillotine({
+					width: 0,
+					height: 0,
+					init: { scale: 1, y: 0, w: 0, h: 0 }
+				});
+				picture.guillotine('remove');
+				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).attr( 'data-top', '' );
+			}
+			e.preventDefault();
+		},
+		/**
+		 *  Cover photo Cropper Alert close
+		 */
+		coverPhotoCropperAlert: function ( e ) {
+			e.preventDefault();
+			$('#cover-photo-alert').remove();
 		}
+
 	};
 
 	// Launch BP Nouveau

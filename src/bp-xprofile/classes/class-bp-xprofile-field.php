@@ -1647,6 +1647,24 @@ class BP_XProfile_Field {
 	 * @return void If default field id 1.
 	 */
 	private function visibility_metabox() {
+
+		// Remove visibility settings for display field
+		if ( ! empty( $this->id ) ) {
+
+			$first_name_id        = bp_xprofile_firstname_field_id();
+			$nick_name_id         = bp_xprofile_nickname_field_id();
+			$display_name_format = bp_core_display_name_format();
+
+			if ( $this->id === $nick_name_id ) {
+				return;
+			}
+
+			if ( 'first_last_name' === $display_name_format || 'first_name' === $display_name_format ){
+				if ( $this->id && in_array( $this->id, array( $first_name_id ) ) ) {
+					return;
+				}
+			}
+		}
 		?>
 
 		<div class="postbox">
@@ -1793,13 +1811,11 @@ class BP_XProfile_Field {
 		}
 
 		$synced_fields = array(
-			bp_xprofile_firstname_field_id(),
 			bp_xprofile_nickname_field_id(),
-			// bp_xprofile_lastname_field_id()
 		);
 
-		if ( bp_get_option( 'bp-display-name-format' ) == 'first_last_name' ) {
-			// $synced_fields[] = bp_xprofile_lastname_field_id();
+		if (  'first_last_name' === bp_core_display_name_format() || 'first_name' === bp_core_display_name_format() ) {
+			$synced_fields[] = bp_xprofile_firstname_field_id();
 		}
 
 		// Compare & return.

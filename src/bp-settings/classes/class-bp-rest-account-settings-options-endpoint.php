@@ -796,10 +796,16 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 
 				if ( isset( $group->fields ) && ! empty( $group->fields ) ) {
 					foreach ( $group->fields as $field ) {
+
+						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+							continue;
+						}
+
 						$fields[] = array(
 							'name'        => 'field_' . $field->id,
 							'label'       => $field->name,
-							'field'       => ( ! empty( $field->__get( 'allow_custom_visibility' ) ) && 'allowed' === $field->__get( 'allow_custom_visibility' ) ) ? 'select' : '',
+							'field'       => ( ! empty( $this->bp_rest_get_xprofile_field_visibility( $field ) ) && 'allowed' === $this->bp_rest_get_xprofile_field_visibility( $field ) ) ? 'select' : '',
 							'value'       => xprofile_get_field_visibility_level( $field->id, bp_loggedin_user_id() ),
 							'options'     => array_column( bp_xprofile_get_visibility_levels(), 'label', 'id' ),
 							'group_label' => '',
@@ -1376,6 +1382,37 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 			__( 'There is a pending change of your email address to %1$s. Check your email (%2$s) for the verification link.', 'buddyboss' ),
 			'<strong>' . esc_html( $pending_email['newemail'] ) . '</strong>',
 			'<strong>' . esc_html( bp_get_displayed_user_email() ) . '</strong>'
+		);
+	}
+
+	/**
+	 * Check current user can edit the visibility or not.
+	 *
+	 * @param BP_XProfile_Field $field_object Field Object.
+	 *
+	 * @return string
+	 */
+	public function bp_rest_get_xprofile_field_visibility( $field_object ) {
+		global $field;
+
+		// Get the field id into for user check.
+		$GLOBALS['profile_template']              = new stdClass();
+		$GLOBALS['profile_template']->in_the_loop = true;
+
+		// Setup current user id into global.
+		$field = $field_object;
+
+		return (
+		! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
+			? 'disabled'
+			: (
+		(
+			! empty( $field->__get( 'allow_custom_visibility' ) )
+			&& 'allowed' === $field->__get( 'allow_custom_visibility' )
+			)
+			? $field->__get( 'allow_custom_visibility' )
+			: 'disabled'
+		)
 		);
 	}
 }
