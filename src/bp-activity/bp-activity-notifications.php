@@ -480,7 +480,7 @@ add_action( 'bp_notification_settings', 'bp_activity_screen_notification_setting
 /**
  * Mark notifications as read when a user visits an single post.
  *
- * @since BuddyBoss 1.4.8
+ * @since BuddyBoss 1.5.2
  */
 function bp_activity_remove_screen_notifications_single_post() {
 
