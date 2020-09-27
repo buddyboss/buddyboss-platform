@@ -2294,6 +2294,17 @@ function bp_is_document_component() {
 }
 
 /**
+ * Check whether the current page is part of the Moderation component.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is part of the Moderation component.
+ */
+function bp_is_moderation_component() {
+	return (bool) bp_is_current_component( 'moderation' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an

@@ -703,6 +703,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 		    require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
+		    require_once $this->admin_dir . '/settings/bp-admin-setting-moderation.php';
 		}
 
 		/**

@@ -620,6 +620,7 @@ class BuddyPress {
 			'document',
 			'gdpr',
 			'invites',
+			'moderation',
 		);
 
 		// These classes don't have a name that matches their component.

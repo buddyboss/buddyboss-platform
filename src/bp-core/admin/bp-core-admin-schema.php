@@ -89,6 +89,10 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_document();
 	}
 
+	if ( ! empty( $active_components['moderation'] ) ) {
+		bp_core_install_moderation();
+	}
+
 	do_action( 'bp_core_install', $active_components );
 
 	// Reset the permalink to fix the 404 on some pages.
@@ -1102,4 +1106,48 @@ function bp_core_install_invitations() {
 	 * @since BuddyPress 5.0.0
 	 */
 	do_action( 'bp_core_install_invitations' );
+}
+
+/** Moderation *********************************************************/
+/**
+ * Install database tables for the Moderation
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @uses bp_core_set_charset()
+ * @uses bp_core_get_table_prefix()
+ * @uses dbDelta()
+ */
+function bp_core_install_moderation() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   user_id bigint(20) NOT NULL,
+	   item_id bigint(20) NOT NULL,
+	   content longtext NOT NULL,
+	   item_type varchar(120) NOT NULL,
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   hide_sitewide tinyint(1) NOT NULL,
+	   category_id bigint(20) NOT NULL,
+	   blog_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY moderation_report_id (item_id,user_id,item_type),
+	   KEY moderation_report_item (item_id,item_type),
+	   KEY user_id (user_id),
+	   KEY item_id (item_id)
+   ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_meta (
+		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		moderation_id bigint(20) NOT NULL,
+		meta_key varchar(255) DEFAULT NULL,
+		meta_value longtext DEFAULT NULL,
+		KEY moderation_id (moderation_id),
+		KEY meta_key (meta_key(191))
+	) {$charset_collate};";
+
+	dbDelta( $sql );
 }
