@@ -1413,7 +1413,7 @@ window.bp = window.bp || {};
 				this.linkTimeout = setTimeout(
 					function () {
 						this.linkTimeout = null;
-						self.scrapURL( window.group_messages_editor.getContent() );
+						self.scrapURL( window.activity_editor.getContent() );
 					},
 					500
 				);
@@ -1604,7 +1604,7 @@ window.bp = window.bp || {};
 
 							if ( ! $( this ).closest( '.edit-activity-modal-body' ).length ) {
 
-									window.group_messages_editor = new window.MediumEditor(
+									window.activity_editor = new window.MediumEditor(
 										$this,
 										{
 											placeholder: {
@@ -1884,7 +1884,7 @@ window.bp = window.bp || {};
 			},
 
 			focusEditor: function ( e ) {
-				if ( window.group_messages_editor.exportSelection() === null ) {
+				if ( window.activity_editor.exportSelection() === null ) {
 					$( e.currentTarget ).closest( '#whats-new-form' ).find( '#whats-new-textarea > div' ).focus();
 				}
 				e.preventDefault();
@@ -2232,16 +2232,17 @@ window.bp = window.bp || {};
 				$( e.currentTarget ).find( '.toolbar-button' ).toggleClass( 'active' );
 				if ( $( e.currentTarget ).find( '.toolbar-button' ).hasClass( 'active' ) ) {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-hide' ) );
-					if ( window.group_messages_editor.exportSelection() != null ) {
+					if ( window.activity_editor.exportSelection() != null ) {
 						medium_editor.addClass( 'medium-editor-toolbar-active' );
 					}
 				} else {
 					$( e.currentTarget ).attr( 'data-bp-tooltip',jQuery( e.currentTarget ).attr( 'data-bp-tooltip-show' ) );
-					if ( window.group_messages_editor.exportSelection() === null ) {
+					if ( window.activity_editor.exportSelection() === null ) {
 						medium_editor.removeClass( 'medium-editor-toolbar-active' );
 					}
 				}
-				medium_editor.toggleClass( 'active' );
+				$(window.activity_editor.elements[0]).focus();
+				medium_editor.toggleClass( 'medium-editor-toolbar-active active' );
 			}
 		}
 	);
@@ -2858,6 +2859,14 @@ window.bp = window.bp || {};
 							 toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || 'group' === self.model.get( 'object' ) ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
 						}
 
+						/**
+						 * In the user activity timeline, user is posting on other user's timeline
+						 * it will not have activity to prepend/append because of scope and privacy.
+						 */
+						if ( '' === response.activity && response.is_user_activity && response.is_active_activity_tabs ) {
+							toPrepend = false;
+						}
+
 						var medias = self.model.get( 'media' );
 						if ( ! _.isUndefined( medias ) && medias.length ) {
 							for ( var k = 0; k < medias.length; k++ ) {
@@ -2878,11 +2887,6 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'document', documents );
 						}
-
-						// Reset formatting of editor
-
-						//window.group_messages_editor.execAction( 'selectAll' );
-						//window.group_messages_editor.execAction( 'removeFormate' );
 
 						// Reset the form.
 						self.resetForm();

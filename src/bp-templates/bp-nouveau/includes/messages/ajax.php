@@ -1513,7 +1513,9 @@ function bp_nouveau_ajax_dsearch_recipients() {
  */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
-		$user_query['exclude'] = [];
+		$user_query['exclude'] = array();
+	} else if ( ! empty( $user_query['exclude'] ) ) {
+		$user_query['exclude'] = wp_parse_id_list( $user_query['exclude'] );
 	}
 
 	$user_query['exclude'][] = get_current_user_id();

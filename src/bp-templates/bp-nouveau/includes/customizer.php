@@ -19,7 +19,9 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	}
 
 	require_once( trailingslashit( bp_nouveau()->includes_dir ) . 'customizer-controls.php' );
+	require_once( trailingslashit( bp_nouveau()->includes_dir ) . 'profile-header-customizer-controls.php' );
 	$wp_customize->register_control_type( 'BP_Nouveau_Nav_Customize_Control' );
+	$wp_customize->register_control_type( 'BP_Nouveau_Profile_Header_Customize_Control' );
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 	//@todo is the BuddyBoss Platform really translatable?
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
@@ -41,6 +43,12 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
 			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
+		),
+		'bp_nouveau_user_profile_header' => array(
+			'title'       => __( 'Profile Action Buttons', 'buddyboss' ),
+			'panel'       => 'bp_nouveau_panel',
+			'priority'    => 50,
+			'description' => __( 'Custommize to Re-Order profile action buttons.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
 			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
@@ -83,10 +91,24 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
+		'bp_nouveau_appearance[user_profile_actions_order]' => array(
+			'index'             => 'user_profile_actions_order',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
 		'bp_nouveau_appearance[user_nav_hide]' => array(
 			'index'             => 'user_nav_hide',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'bp_nouveau_sanitize_nav_hide',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[user_profile_actions_display]' => array(
+			'index'             => 'user_profile_actions_display',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
@@ -215,6 +237,15 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'settings' => 'bp_nouveau_appearance[user_nav_hide]',
 			'type'     => 'user',
 		),
+
+		'user_profile_actions_display'   => array(
+			'class'    => 'BP_Nouveau_Profile_Header_Customize_Control',
+			'label'    => __( 'Reorder the profile action buttons.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_profile_header',
+			'settings' => 'bp_nouveau_appearance[user_profile_actions_display]',
+			'type'     => 'header_button',
+		),
+
 		'mail_layout'      => array(
 			'section'  => 'bp_nouveau_mail',
 			'settings' => 'bp_nouveau_appearance[bp_emails]',
@@ -229,6 +260,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer controls.
 	 */
 	$controls = apply_filters( 'bp_nouveau_customizer_controls', $controls );
+
 
 	// Add the controls to the customizer's section
 	foreach ( $controls as $id_control => $control_args ) {
@@ -270,3 +302,41 @@ function bp_nouveau_customizer_enqueue_scripts() {
 	do_action( 'bp_nouveau_customizer_enqueue_scripts' );
 }
 add_action( 'customize_controls_enqueue_scripts', 'bp_nouveau_customizer_enqueue_scripts' );
+
+
+/**
+ * Return profile header buttons
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return mixed|void
+ */
+
+function bp_nouveau_customizer_user_profile_actions() {
+
+	$buttons = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+		$buttons['member_friendship'] = __( 'Connect', 'buddyboss' );
+	}
+
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) { // add follow button
+		$buttons['member_follow'] = __( 'Follow', 'buddyboss' );
+	}
+
+	$bp_force_friendship_to_message = bp_force_friendship_to_message();
+
+	if ( bp_is_active( 'messages' )
+	     && ( ! $bp_force_friendship_to_message
+	          || ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) ) )
+	) {
+		$buttons['private_message'] = __( 'Message', 'buddyboss' );
+	}
+
+	//Member switch button
+	$buttons['member_switch'] = __( 'View As', 'buddyboss' );
+
+	$buttons = apply_filters( 'bp_nouveau_customizer_user_profile_actions', $buttons );
+
+	return $buttons;
+}

@@ -68,7 +68,7 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 add_action( 'init', 'bp_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
-	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+	$avatar = bp_enable_profile_gravatar();
 
 	if ( false === $avatar ) {
 		// Avatars
