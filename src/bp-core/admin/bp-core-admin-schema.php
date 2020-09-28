@@ -1125,19 +1125,29 @@ function bp_core_install_moderation() {
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
-	   user_id bigint(20) NOT NULL,
 	   item_id bigint(20) NOT NULL,
-	   content longtext NOT NULL,
 	   item_type varchar(120) NOT NULL,
-	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   hide_sitewide tinyint(1) NOT NULL,
-	   category_id bigint(20) NOT NULL,
+	   updated_by bigint(20) NOT NULL,
+	   date_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   blog_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
-	   KEY moderation_report_id (item_id,user_id,item_type),
+	   KEY moderation_report_id (item_id,item_type,blog_id),
 	   KEY moderation_report_item (item_id,item_type),
-	   KEY user_id (user_id),
-	   KEY item_id (item_id)
+	   KEY item_id (item_id),
+	   KEY updated_by (updated_by)
+   ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_reports (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   moderation_id bigint(20) NOT NULL,
+	   user_id bigint(20) NOT NULL,
+	   content longtext NOT NULL,
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   category_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY moderation_report_id (moderation_id,user_id),
+	   KEY user_id (user_id)
    ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_meta (

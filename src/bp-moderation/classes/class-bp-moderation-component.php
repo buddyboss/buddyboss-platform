@@ -93,8 +93,9 @@ class BP_Moderation_Component extends BP_Component {
 
 		// Global tables for activity component.
 		$global_tables = array(
-			'table_name'      => $bp->table_prefix . 'bp_moderation',
-			'table_name_meta' => $bp->table_prefix . 'bp_moderation_meta',
+			'table_name'         => $bp->table_prefix . 'bp_moderation',
+			'table_name_reports' => $bp->table_prefix . 'bp_moderation_reports',
+			'table_name_meta'    => $bp->table_prefix . 'bp_moderation_meta',
 		);
 
 		// Fetch the default directory title.

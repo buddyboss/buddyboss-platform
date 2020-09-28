@@ -46,13 +46,10 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 */
 	public $db_columns = array(
 		'id',
-		'user_id',
 		'item_id',
-		'content',
 		'item_type',
-		'date_created',
+		'date_updated',
 		'hide_sitewide',
-		'category_id',
 		'blog_id',
 	);
 
