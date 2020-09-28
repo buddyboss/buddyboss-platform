@@ -101,7 +101,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// All arguments for forums component
 			$args = array(
 				'path'          => BP_PLUGIN_DIR,
-				'slug'          => bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ),
+				'slug'          => BP_FORUMS_SLUG,
 				'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BP_FORUMS_SLUG,
 				'has_directory' => false,
 				'search_string' => __( 'Search Forums&hellip;', 'buddyboss' ),
