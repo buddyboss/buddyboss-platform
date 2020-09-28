@@ -33,9 +33,14 @@
 	},
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash"
-    },
+        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
+	  	"lint-setup": "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs --standard=phpcs.xml",
+	    "lint": "phpcs --standard=phpcs.xml"
+	},
 	"require-dev": {
-		"symfony/var-dumper": "^4.2"
+		"symfony/var-dumper": "^4.2",
+		"squizlabs/php_codesniffer": "*",
+		"wp-coding-standards/wpcs": "^2.3",
+		"phpcompatibility/phpcompatibility-wp": "^2.1"
 	}
 }
