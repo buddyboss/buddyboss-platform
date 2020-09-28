@@ -43,7 +43,7 @@ if ( bp_has_albums( array( 'include' => $album_id ) ) ) : ?>
                         </a>
 
 						<?php
-						if ( $can_add ) { ?>
+						if ( $can_add && apply_filters( 'bp_user_can_create_media', true ) ) { ?>
                         <a class="bb-add-photos button small outline" id="bp-add-media" href="#" >
                             <?php _e( 'Add Photos', 'buddyboss' ); ?>
                         </a>

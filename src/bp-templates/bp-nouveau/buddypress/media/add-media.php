@@ -6,7 +6,7 @@
  */
 ?>
 
-<?php if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
+<?php if ( ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) && apply_filters( 'bp_user_can_create_media', true ) ) : ?>
 
     <div class="bb-media-actions-wrap">
 		<h2 class="bb-title"><?php _e( 'Photos', 'buddyboss' ); ?></h2>
