@@ -12,7 +12,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 
 	if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
 
-		if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
+		if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) && apply_filters( 'bp_user_can_create_document', true ) ) {
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">
@@ -20,7 +20,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 				</div>
 			</div>
 			<?php
-		} elseif ( ! bp_is_group() ) {
+		} elseif ( ! bp_is_group() && apply_filters( 'bp_user_can_create_document', true ) ) {
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">

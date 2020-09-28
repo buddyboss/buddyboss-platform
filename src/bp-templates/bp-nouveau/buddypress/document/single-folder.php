@@ -47,7 +47,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 
 								$active_extensions = bp_document_get_allowed_extension();
 								if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
-									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_add_btn ) {
+									if ( bp_is_active( 'groups' ) && bp_is_group() && $can_add_btn && apply_filters( 'bp_user_can_create_document', true ) ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
@@ -56,7 +56,7 @@ if ( bp_has_folders( array( 'include' => $folder_id ) ) ) :
 											<i class="bb-icon-plus"></i><?php esc_html_e( 'Create Folder', 'buddyboss' ); ?>
 										</a>
 										<?php
-									} elseif ( ! bp_is_group() && $can_add_btn ) {
+									} elseif ( ! bp_is_group() && $can_add_btn && apply_filters( 'bp_user_can_create_document', true ) ) {
 										?>
 										<a class="bp-add-document button small outline" id="bp-add-document" href="#" >
 											<i class="bb-icon-upload"></i><?php esc_html_e( 'Upload Files', 'buddyboss' ); ?>
