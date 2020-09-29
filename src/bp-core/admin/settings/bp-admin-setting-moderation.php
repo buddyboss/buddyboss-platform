@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore
 /**
  * Add admin Moderation settings page in Dashboard->BuddyBoss->Settings
  *
@@ -17,6 +17,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
+	/**
+	 * Moderation setting initialize.
+	 */
 	public function initialize() {
 
 		$this->tab_label = __( 'Moderation', 'buddyboss' );
@@ -24,16 +27,24 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 		$this->tab_order = 90;
 	}
 
+	/**
+	 * Moderation component is active or not.
+	 *
+	 * @return bool
+	 */
 	public function is_active() {
 		return bp_is_active( 'moderation' );
 	}
 
+	/**
+	 * Register setting Fields.
+	 */
 	public function register_fields() {
 		$sections = bp_moderation_get_settings_sections();
 
 		foreach ( (array) $sections as $section_id => $section ) {
 
-			// Only add section and fields if section has fields
+			// Only add section and fields if section has fields.
 			$fields = bp_moderation_get_settings_fields_for_section( $section_id );
 
 			if ( empty( $fields ) ) {
@@ -43,10 +54,10 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
 
-			// Add the section
+			// Add the section.
 			$this->add_section( $section_id, $section_title, $section_callback );
 
-			// Loop through fields for this section
+			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
 
 				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();

@@ -743,7 +743,6 @@ function bp_core_install_document() {
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
 
-
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_document (
 		id bigint(20) NOT NULL AUTO_INCREMENT ,
 		blog_id bigint(20) NULL DEFAULT NULL,
@@ -773,7 +772,6 @@ function bp_core_install_document() {
 				KEY document_id (document_id),
 				KEY meta_key (meta_key(191))
 			) {$charset_collate};";
-
 
 	dbDelta( $sql );
 }
@@ -1075,7 +1073,7 @@ function bp_core_install_invitations() {
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 	$bp_prefix       = bp_core_get_table_prefix();
-	$sql[] = "CREATE TABLE {$bp_prefix}bp_invitations (
+	$sql[]           = "CREATE TABLE {$bp_prefix}bp_invitations (
 		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		user_id bigint(20) NOT NULL,
 		inviter_id bigint(20) NOT NULL,
