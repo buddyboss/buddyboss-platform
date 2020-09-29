@@ -1134,7 +1134,7 @@ function bp_core_install_moderation() {
 	   KEY moderation_report_item (item_id,item_type),
 	   KEY item_id (item_id),
 	   KEY updated_by (updated_by)
-   ) {$charset_collate};";
+    ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_reports (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1146,7 +1146,7 @@ function bp_core_install_moderation() {
 	   PRIMARY KEY  (id),
 	   KEY moderation_report_id (moderation_id,user_id),
 	   KEY user_id (user_id)
-   ) {$charset_collate};";
+   	) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_meta (
 		id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
