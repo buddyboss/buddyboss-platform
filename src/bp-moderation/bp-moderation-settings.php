@@ -6,7 +6,7 @@
  * @since BuddyBoss 1.5.4
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bp_moderation_get_settings_sections() {
 
 	$settings = array(
-		'bp_moderation_settings_reporting'    => array(
+		'bp_moderation_settings_reporting' => array(
 			'page'  => 'moderation',
 			'title' => __( 'Reporting', 'buddyboss' ),
 		),
@@ -47,14 +47,14 @@ function bp_moderation_get_settings_fields() {
 /**
  * Get settings fields by section.
  *
- * @param string $section_id
+ * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
  * @since BuddyBoss 1.5.4
  */
 function bp_moderation_get_settings_fields_for_section( $section_id = '' ) {
 
-	// Bail if section is empty
+	// Bail if section is empty.
 	if ( empty( $section_id ) ) {
 		return false;
 	}

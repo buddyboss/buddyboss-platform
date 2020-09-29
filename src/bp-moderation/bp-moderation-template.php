@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.4
  */
 function bp_moderation_slug() {
-	echo bp_get_moderation_slug();
+	echo esc_html( bp_get_moderation_slug() );
 }
 	/**
 	 * Return the moderation component slug.
@@ -42,7 +42,7 @@ function bp_get_moderation_slug() {
  * @since BuddyBoss 1.5.4
  */
 function bp_moderation_root_slug() {
-	echo bp_get_moderation_root_slug();
+	echo esc_html( bp_get_moderation_root_slug() );
 }
 	/**
 	 * Return the moderation component root slug.

@@ -59,7 +59,6 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
  * Set up the Moderation admin page.
  *
  * @since BuddyBoss 1.5.4
- *
  */
 function bp_moderation_admin_load() {
 

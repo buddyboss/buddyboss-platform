@@ -24,7 +24,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $id;
+	public $id = null;
 
 	/**
 	 * ID of the moderation data.
@@ -32,7 +32,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $data_id;
+	public $data_id = null;
 
 	/**
 	 * User ID who reported moderation item recently.
@@ -40,7 +40,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $updated_by;
+	public $updated_by = null;
 
 	/**
 	 * ID of the moderation report item.
@@ -48,7 +48,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $item_id;
+	public $item_id = null;
 
 	/**
 	 * The description for the Moderation report.
@@ -56,7 +56,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var string
 	 */
-	var $content;
+	public $content = '';
 
 	/**
 	 * Moderation report item type, eg 'moderation, group, message etc'.
@@ -64,7 +64,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var string
 	 */
-	var $item_type;
+	public $item_type = '';
 
 	/**
 	 * The date the Moderation report was recorded or updated, in 'Y-m-d h:i:s' format.
@@ -72,7 +72,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var string
 	 */
-	var $date_updated;
+	public $date_updated = '';
 
 	/**
 	 * Whether the Moderation report item should be hidden sitewide.
@@ -80,7 +80,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $hide_sitewide = 0;
+	public $hide_sitewide = 0;
 
 	/**
 	 * Report category id for Moderation report.
@@ -88,7 +88,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $category_id = 0;
+	public $category_id = 0;
 
 	/**
 	 * Blog id for Moderation report.
@@ -96,7 +96,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 * @var int
 	 */
-	var $blog_id = 0;
+	public $blog_id = 0;
 
 	/**
 	 * Error holder.
@@ -105,7 +105,7 @@ class BP_Moderation {
 	 *
 	 * @var WP_Error
 	 */
-	public $errors;
+	public $errors = array();
 
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
@@ -121,8 +121,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param bool $item_id    Moderation item id
-	 * @param bool $item_type  Moderation item type
+	 * @param bool $item_id    Moderation item id.
+	 * @param bool $item_type  Moderation item type.
 	 */
 	public function __construct( $item_id = false, $item_type = false ) {
 		// Instantiate errors object.
@@ -147,7 +147,7 @@ class BP_Moderation {
 
 		if ( false === $row ) {
 			$bp  = buddypress();
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} WHERE id = %d", $this->id ) );
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} WHERE id = %d", $this->id ) ); // phpcs:ignore
 
 			wp_cache_set( $this->id, $row, 'bb_moderation' );
 		}
@@ -220,12 +220,12 @@ class BP_Moderation {
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		$this->id = self::check_moderation_exist( $this->item_id, $this->item_type );
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->moderation->table_name} SET hide_sitewide = %d, updated_by = %d, date_updated = %s WHERE id = %d", $this->hide_sitewide, $this->updated_by, $this->date_updated, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->moderation->table_name} SET hide_sitewide = %d, updated_by = %d, date_updated = %s WHERE id = %d", $this->hide_sitewide, $this->updated_by, $this->date_updated, $this->id ); // phpcs:ignore
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name} ( item_id, item_type, hide_sitewide, updated_by, date_updated, blog_id ) VALUES ( %d, %s, %d, %d, %s, %d )", $this->item_id, $this->item_type, $this->hide_sitewide, $this->updated_by, $this->date_updated, $this->blog_id );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name} ( item_id, item_type, hide_sitewide, updated_by, date_updated, blog_id ) VALUES ( %d, %s, %d, %d, %s, %d )", $this->item_id, $this->item_type, $this->hide_sitewide, $this->updated_by, $this->date_updated, $this->blog_id ); // phpcs:ignore
 		}
 
-		if ( false === $wpdb->query( $q ) ) {
+		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore
 			return false;
 		}
 
@@ -243,14 +243,14 @@ class BP_Moderation {
 		 */
 		$this->data_id = self::check_moderation_data_exist( $this->id, $this->updated_by );
 		if ( ! empty( $this->data_id ) ) {
-			$q_data = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_updated, $this->category_id, $this->data_id, $this->id, $this->updated_by );
+			$q_data = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_updated, $this->category_id, $this->data_id, $this->id, $this->updated_by ); // phpcs:ignore
 		} else {
-			$q_data = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->updated_by, $this->content, $this->date_updated, $this->category_id );
+			$q_data = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->updated_by, $this->content, $this->date_updated, $this->category_id ); // phpcs:ignore
 
-			// Todo: Count update
+			// Todo: Count update.
 		}
 
-		if ( false === $wpdb->query( $q_data ) ) {
+		if ( false === $wpdb->query( $q_data ) ) { // phpcs:ignore
 			return false;
 		}
 
@@ -333,9 +333,11 @@ class BP_Moderation {
 				'in'                => false,           // Array of ids to limit query by (IN).
 				'exclude_types'     => false,           // Array of type to exclude.
 				'in_types'          => false,           // Array of type to limit query by (IN).
+				// phpcs:ignore
 				'meta_query'        => false,           // Filter by moderationmeta.
 				'date_query'        => false,           // Filter by date.
 				'filter_query'      => false,           // Advanced filtering - see BP_Moderation_Query.
+				// phpcs:ignore
 				'filter'            => false,           // See self::get_filter_sql().
 				'display_reporters' => false,           // Whether or not to fetch user data.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
@@ -363,13 +365,14 @@ class BP_Moderation {
 		}
 
 		// Regular filtering.
-		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
+		$filter_sql = self::get_filter_sql( $r['filter'] );
+		if ( $r['filter'] && $filter_sql ) {
 			$where_conditions['filter_sql'] = $filter_sql;
 		}
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -390,7 +393,7 @@ class BP_Moderation {
 
 		// The specific user_ids to which you want to limit the query.
 		if ( ! empty( $r['user_id'] ) ) {
-			$join_sql                    .= "INNER JOIN {$bp->moderation->table_name_reports} mr ON mo.id = mr.moderation_id ";
+			$join_sql                   .= "INNER JOIN {$bp->moderation->table_name_reports} mr ON mo.id = mr.moderation_id ";
 			$user_ids                    = implode( ',', wp_parse_id_list( $r['user_id'] ) );
 			$where_conditions['user_id'] = "mr.user_id IN ({$user_ids})";
 		}
@@ -409,13 +412,13 @@ class BP_Moderation {
 
 		// Exclude specified items type.
 		if ( ! empty( $r['exclude_types'] ) ) {
-			$not_in                             = "'" . implode( "', '", wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
+			$not_in                            = "'" . implode( "', '", wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
 			$where_conditions['exclude_types'] = "mo.item_type NOT IN ({$not_in})";
 		}
 
 		// The specified items type to which you want to limit the query..
 		if ( ! empty( $r['in_types'] ) ) {
-			$not_in                             = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
+			$not_in                       = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
 			$where_conditions['in_types'] = "mo.item_type IN ({$not_in})";
 		}
 
@@ -496,9 +499,9 @@ class BP_Moderation {
 		$moderation_ids_sql = apply_filters( 'bp_moderation_paged_moderations_sql', $moderation_ids_sql, $r );
 
 		$cache_group = 'bp_moderation';
-		$cached = bp_core_get_incremented_cache( $moderation_ids_sql, $cache_group );
+		$cached      = bp_core_get_incremented_cache( $moderation_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$moderation_ids = $wpdb->get_col( $moderation_ids_sql );
+			$moderation_ids = $wpdb->get_col( $moderation_ids_sql ); // phpcs:ignore
 			bp_core_set_incremented_cache( $moderation_ids_sql, $cache_group, $moderation_ids );
 		} else {
 			$moderation_ids = $cached;
@@ -528,9 +531,11 @@ class BP_Moderation {
 				$moderation_ids[] = $moderation->id;
 			}
 
+			/**
+			 * Todo: Need to create function.
 			if ( ! empty( $moderation_ids ) && $r['update_meta_cache'] ) {
-				// bp_moderation_update_meta_cache( $moderation_ids ); // todo:
-			}
+				bp_moderation_update_meta_cache( $moderation_ids );
+			}*/
 
 			if ( $moderations && $r['display_reporters'] ) {
 				$moderations = self::append_reporters( $moderations );
@@ -555,9 +560,9 @@ class BP_Moderation {
 			 * @param string $sort      Sort direction for query.
 			 */
 			$total_moderations_sql = apply_filters( 'bp_moderation_total_moderations_sql', "SELECT count(DISTINCT mo.id) FROM {$bp->moderation->table_name} mo {$join_sql} {$where_sql}", $where_sql, $sort );
-			$cached               = bp_core_get_incremented_cache( $total_moderations_sql, $cache_group );
+			$cached                = bp_core_get_incremented_cache( $total_moderations_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_moderations = $wpdb->get_var( $total_moderations_sql );
+				$total_moderations = $wpdb->get_var( $total_moderations_sql ); // phpcs:ignore
 				bp_core_set_incremented_cache( $total_moderations_sql, $cache_group, $total_moderations );
 			} else {
 				$total_moderations = $cached;
@@ -594,7 +599,7 @@ class BP_Moderation {
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		$moderations   = array();
+		$moderations  = array();
 		$uncached_ids = bp_get_non_cached_ids( $moderation_ids, 'bp_moderation' );
 
 		// Prime caches as necessary.
@@ -603,7 +608,7 @@ class BP_Moderation {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from moderation table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->moderation->table_name} WHERE id IN ({$uncached_ids_sql})" );
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->moderation->table_name} WHERE id IN ({$uncached_ids_sql})" ); // phpcs:ignore
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
@@ -645,7 +650,6 @@ class BP_Moderation {
 	 *
 	 * @return array $moderations Array of moderations.
 	 * @since BuddyBoss 1.5.4
-	 *
 	 */
 	protected static function prefetch_object_data( $moderations ) {
 
@@ -664,7 +668,7 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $moderations Moderations/Moderations data array.
+	 * @param array  $moderations Moderations/Moderations data array.
 	 * @param string $user_key   User key name.
 	 *
 	 * @return array*
@@ -698,10 +702,9 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @global wpdb $wpdb        WordPress database abstraction object.
-	 *
 	 */
 	public static function append_reporters( $moderations ) {
-		$moderations_reporters = [];
+		$moderations_reporters = array();
 
 		// Now fetch the activity comments and parse them into the correct position in the activities array.
 		foreach ( (array) $moderations as $moderation ) {
@@ -724,7 +727,7 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param int $moderation_id Moderation id
+	 * @param int $moderation_id Moderation id.
 	 * @return array reporters data.
 	 */
 	public static function get_moderation_reporters( $moderation_id ) {
@@ -734,9 +737,9 @@ class BP_Moderation {
 		if ( empty( $reporters ) ) {
 			$bp = buddypress();
 
-			$sql       = $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d ORDER BY mr.date_created DESC", $moderation_id );
+			$sql       = $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d ORDER BY mr.date_created DESC", $moderation_id ); // phpcs:ignore
 			$sql       = apply_filters( 'bp_moderation_reports_sql', $sql, $moderation_id );
-			$reporters = $wpdb->get_results( $sql );
+			$reporters = $wpdb->get_results( $sql ); // phpcs:ignore
 			foreach ( $reporters as $key => $reporter ) {
 				unset( $reporters[ $key ]->id );
 				unset( $reporters[ $key ]->moderation_id );
@@ -908,8 +911,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param int $item_id    Moderation item id
-	 * @param int $item_type  Moderation item type
+	 * @param int $item_id    Moderation item id.
+	 * @param int $item_type  Moderation item type.
 	 *
 	 * @return false
 	 */
@@ -918,7 +921,7 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} mo WHERE mo.item_id = %d AND mo.item_type = %s", $item_id, $item_type ) );
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} mo WHERE mo.item_id = %d AND mo.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
 
 		return is_numeric( $result ) ? (int) $result : false;
 	}
@@ -928,8 +931,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param int $moderation_id Moderation report id
-	 * @param int $user_id       Moderation reporter id
+	 * @param int $moderation_id Moderation report id.
+	 * @param int $user_id       Moderation reporter id.
 	 *
 	 * @return false
 	 */
@@ -938,7 +941,7 @@ class BP_Moderation {
 
 		$bp = buddypress();
 
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $moderation_id, $user_id ) );
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $moderation_id, $user_id ) ); // phpcs:ignore
 
 		return is_numeric( $result ) ? (int) $result : false;
 	}

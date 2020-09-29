@@ -99,18 +99,18 @@ class BP_Moderation_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles         = bp_core_get_directory_page_default_titles();
-		$default_directory_title          = $default_directory_titles[ $this->id ];
+		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for moderation component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                                    => 'moderation',
-				'root_slug'                               => isset( $bp->pages->moderation->slug ) ? $bp->pages->moderation->slug : BP_MODERATION_SLUG,
-				'has_directory'                           => false,
-				'global_tables'                           => $global_tables,
-				'directory_title'                         => isset( $bp->pages->moderation->title ) ? $bp->pages->moderation->title : $default_directory_title,
+				'slug'            => 'moderation',
+				'root_slug'       => isset( $bp->pages->moderation->slug ) ? $bp->pages->moderation->slug : BP_MODERATION_SLUG,
+				'has_directory'   => false,
+				'global_tables'   => $global_tables,
+				'directory_title' => isset( $bp->pages->moderation->title ) ? $bp->pages->moderation->title : $default_directory_title,
 			)
 		);
 	}
@@ -143,7 +143,7 @@ class BP_Moderation_Component extends BP_Component {
 			'name'                => __( 'Moderation', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 100,
-			'screen_function'     => 'bp_moderation_screen_my_reporting', //Todo: Add function
+			'screen_function'     => 'bp_moderation_screen_my_reporting', // Todo: Add function.
 			'default_subnav_slug' => 'my-reporting',
 			'item_css_id'         => $this->id,
 		);
@@ -153,7 +153,7 @@ class BP_Moderation_Component extends BP_Component {
 			'slug'            => 'my-reporting',
 			'parent_url'      => $moderation_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_moderation_screen_my_reporting', //Todo: Add function
+			'screen_function' => 'bp_moderation_screen_my_reporting', // Todo: Add function.
 			'position'        => 10,
 			'item_css_id'     => 'moderation-reporting',
 		);
