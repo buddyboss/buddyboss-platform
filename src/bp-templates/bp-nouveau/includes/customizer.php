@@ -48,7 +48,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'title'       => __( 'Profile Action Buttons', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
-			'description' => __( 'Custommize to Re-Order profile action buttons.', 'buddyboss' ),
+			'description' => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
 			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
