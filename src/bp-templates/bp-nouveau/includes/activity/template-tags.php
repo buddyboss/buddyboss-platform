@@ -498,7 +498,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'button_element'    => $button_element,
 					'button_attr'       => array(
 						'href'  => '#',
-						'class' => 'button edit-activity bp-secondary-action bp-tooltip',
+						'class' => 'button edit edit-activity bp-secondary-action bp-tooltip',
 						'title' => __( 'Edit Activity', 'buddyboss' ),
 					),
 					'link_text'         => sprintf(
@@ -1440,124 +1440,8 @@ function bp_nouveau_edit_activity_data() {
  *
  * @since BuddyBoss 1.5.0
  *
- * @return json The Activity edit data.
+ * @return string The Activity edit data.
  */
 function bp_nouveau_get_edit_activity_data() {
-	global $activities_template;
-
-
-	$can_edit_privacy = true;
-	$album_id         = 0;
-	$folder_id        = 0;
-	$group_id         = 0;
-
-	if ( bp_activity_user_can_edit() ) {
-
-		$privacy                   = bp_get_activity_privacy();
-		$media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
-		$document_activity         = ( 'document' === $privacy || ( isset( $_REQUEST['action'] ) && 'document_get_activity' === $_REQUEST['action'] ) );
-		$parent_activity_id        = false;
-		$parent_activity_permalink = false;
-		$album_url                 = '';
-		$folder_url                = '';
-
-		// Get media privacy to show.
-		if ( bp_is_active( 'media' ) ) {
-			if ( $media_activity ) {
-				$media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
-				$media    = new BP_Media( $media_id );
-				if ( ! empty( $media ) ) {
-					$album_id = $media->album_id;
-					$group_id = $media->group_id;
-					if ( ! empty( $album_id ) ) {
-						$album     = new BP_Media_Album( $album_id );
-						$album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-					} else {
-						$parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
-						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
-					}
-				}
-			}
-
-			if ( $document_activity ) {
-				$document_id = BP_Document::get_activity_document_id( bp_get_activity_id() );
-				$document    = new BP_Document( $document_id );
-				if ( ! empty( $document ) ) {
-					$folder_id = $document->folder_id;
-					$group_id  = $document->group_id;
-					if ( ! empty( $folder_id ) ) {
-						$folder     = new BP_Document_Folder( $folder_id );
-						$folder_id_url  = bp_document_get_root_parent_id( $folder_id );
-						$folder_url = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id_url );
-					} else {
-						$parent_activity_id        = get_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', true );
-						$parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
-					}
-				}
-			}
-
-			$activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
-			if ( ! empty( $activity_album_id ) ) {
-				$album_id       = $activity_album_id;
-				$album          = new BP_Media_Album( $album_id );
-				$album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
-				$media_activity = true;
-			}
-
-			$activity_folder_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_document_folder_activity', true );
-			if ( ! empty( $activity_folder_id ) ) {
-				$folder_id         = $activity_folder_id;
-				$folder_id_url     = bp_document_get_root_parent_id( $folder_id );
-				$folder            = new BP_Document_Folder( $folder_id );
-				$folder_url        = trailingslashit( bp_core_get_user_domain( $folder->user_id ) . bp_get_document_slug() . '/folders/' . $folder_id_url );
-				$document_activity = true;
-			}
-		}
-
-		if ( $media_activity && empty( $group_id ) && $parent_activity_id ) {
-			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
-
-			if ( ! empty( $parent_activity->id ) ) {
-				$group_id = $parent_activity->item_id;
-			}
-		}
-
-		if ( $document_activity && empty( $group_id ) && $parent_activity_id ) {
-			$parent_activity = new BP_Activity_Activity( $parent_activity_id );
-
-			if ( ! empty( $parent_activity->id ) ) {
-				$group_id = $parent_activity->item_id;
-			}
-		}
-
-		if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
-			$can_edit_privacy = false;
-		} elseif ( $document_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $folder_id && ! empty( $folder_url ) ) ) ) {
-			$can_edit_privacy = false;
-		}
-
-	}
-
-	$activity = apply_filters(
-			'bp_nouveau_get_edit_activity_data',
-			array(
-				'id'               => bp_get_activity_id(),
-				'can_edit_privacy' => $can_edit_privacy,
-				'album_id'         => $album_id,
-				'group_id'         => $group_id,
-				'folder_id'        => $folder_id,
-				'content'          => stripslashes( $activities_template->activity->content ),
-				'item_id'          => bp_get_activity_item_id(),
-				'object'           => bp_get_activity_object_name(),
-				'privacy'          => bp_get_activity_privacy(),
-			) );
-
-	/**
-	 * Filter here to edit the activity edit data.
-	 *
-	 * @since BuddyBoss 1.5.0
-	 *
-	 * @param json $activity The Activity edit data.
-	 */
-	return htmlentities( wp_json_encode( $activity ) );
+	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
 }

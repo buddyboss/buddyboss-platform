@@ -20,6 +20,7 @@ add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
 add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_privacy', 2 );
+add_filter( 'bp_activity_get_edit_data', 'bp_document_get_edit_activity_data' );
 
 // Search.
 add_action( 'bp_search_after_result', 'bp_document_add_theatre_template', 99999 );
@@ -37,6 +38,7 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 add_action( 'bp_messages_thread_messages_after_update', 'bp_document_user_messages_delete_attached_document', 10, 4 );
+add_filter( 'bp_messages_message_validated_content', 'bp_document_message_validated_content', 10, 3 );
 
 // Download Document.
 add_action( 'init', 'bp_document_download_url_file' );
@@ -699,6 +701,25 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
 			}
 		}
 	}
+}
+
+/**
+ * Validate message if document is not empty.
+ *
+ * @param bool         $validated_content Boolean from filter.
+ * @param string       $content           Message content.
+ * @param array|object $post              Request object.
+ *
+ * @return bool
+ * 
+ * @since BuddyBoss 1.5.1
+ */
+function bp_document_message_validated_content( $validated_content, $content, $post ) {
+	// check if media is enabled in messages or not and empty media in object request or not.
+	if ( bp_is_messages_document_support_enabled() && ! empty( $post['document'] ) ) {
+		$validated_content = true;
+	}
+	return $validated_content;
 }
 
 /**
@@ -1621,4 +1642,48 @@ function bp_document_activity_after_email_content( $activity ) {
 		);
 		echo wpautop( $content );
 	}
+}
+
+/**
+ * Adds activity document data for the edit activity
+ *
+ * @param $activity
+ *
+ * @return array $activity Returns the activity with document if document saved otherwise no documents.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_document_get_edit_activity_data( $activity ) {
+
+	if ( ! empty( $activity['id'] ) ) {
+
+		// Fetch document ids of activity.
+		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+
+		if ( ! empty( $document_ids ) ) {
+			$activity['document'] = array();
+
+			$document_ids = explode( ',', $document_ids );
+
+			foreach( $document_ids as $document_id ) {
+				$document = new BP_Document( $document_id );
+
+				$activity['document'][] = array(
+						'id'            => $document_id,
+						'doc_id'        => $document->attachment_id,
+						'name'          => $document->title,
+						'group_id'      => $document->group_id,
+						'folder_id'      => $document->folder_id,
+						'activity_id'   => $document->activity_id,
+						'type'          => 'document',
+						'url'           => wp_get_attachment_url( $document->attachment_id ),
+						'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
+						'saved'         => true,
+						'menu_order'    => $document->menu_order,
+				);
+			}
+		}
+	}
+
+	return $activity;
 }

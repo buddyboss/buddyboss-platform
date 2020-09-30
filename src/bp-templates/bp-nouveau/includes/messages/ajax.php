@@ -131,8 +131,20 @@ function bp_nouveau_ajax_messages_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	// Validate subject and message content.
-	if ( empty( $_POST['message_content'] ) || ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['message_content'] ) ) ) ) ) {
+	$content = filter_input( INPUT_POST, 'message_content', FILTER_SANITIZE_STRING );
+
+	/**
+	 * Filter to validate message content.
+	 *
+	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param string $content           Content of the message.
+	 * @param array  $_POST             POST Request Object.
+	 *
+	 * @return bool True if message is not valid, false otherwise.
+	 */
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+
+	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 
 		wp_send_json_error( $response );
@@ -313,7 +325,26 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['content'] ) || ! strlen( trim( html_entity_decode( wp_strip_all_tags( $_POST['content'] ) ) ) ) || empty( $_POST['thread_id'] ) ) {
+	if ( empty( $_POST['thread_id'] ) ) {
+		$response['feedback'] = __( 'Please provide thread id.', 'buddyboss' );
+
+		wp_send_json_error( $response );
+	}
+
+	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+
+	/**
+	 * Filter to validate message content.
+	 *
+	 * @param bool   $validated_content True if message is not valid, false otherwise.
+	 * @param string $content           Content of the message.
+	 * @param array  $_POST             POST Request Object.
+	 *
+	 * @return bool True if message is not valid, false otherwise.
+	 */
+	$validated_content = (bool) apply_filters( 'bp_messages_message_validated_content', ! empty( $content ) && strlen( trim( html_entity_decode( wp_strip_all_tags( $content ) ) ) ), $content, $_POST );
+
+	if ( ! $validated_content ) {
 		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
 
 		wp_send_json_error( $response );
@@ -1482,7 +1513,9 @@ function bp_nouveau_ajax_dsearch_recipients() {
  */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
-		$user_query['exclude'] = [];
+		$user_query['exclude'] = array();
+	} else if ( ! empty( $user_query['exclude'] ) ) {
+		$user_query['exclude'] = wp_parse_id_list( $user_query['exclude'] );
 	}
 
 	$user_query['exclude'][] = get_current_user_id();

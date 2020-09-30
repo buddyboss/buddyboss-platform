@@ -1203,17 +1203,28 @@ a.layout-grid-view {
   top: 15px;
 }
 
+@media screen and (max-width: 646px) {
+  #buddypress .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar, #buddypress
+  .activity-update-form.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 111px;
+  }
+}
+
 @media screen and (max-width: 603px) {
   #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
   .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 58px;
+    bottom: 112px;
   }
 }
 
 @media screen and (max-width: 544px) {
   #buddypress > .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar, #buddypress >
   .activity-update-form.modal-popup.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
-    bottom: 112px;
+    bottom: 146px;
+  }
+  #buddypress .bp-nouveau-activity-form-placeholder-.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar, #buddypress
+  .activity-update-form.modal-popup.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+    bottom: 146px;
   }
 }
 
@@ -2792,15 +2803,15 @@ span.dashicons.dashicons-admin-file:before {
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list {
   position: relative;
-  display: inline-block;
+  float: right;
 }
 
 #bbpress-forums .bb-media-model-container .activity-list.bp-list .activity-item,
 #buddypress .bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item,
 #buddypress.bb-media-model-wrapper.media-theatre .activity-list.bp-list .activity-item {
-  margin-bottom: 40px;
-  max-height: calc(90vh - 40px);
-  min-height: calc(90vh - 40px);
+  padding-bottom: 40px;
+  max-height: 90vh;
+  min-height: 90vh;
   position: static;
 }
 
@@ -4286,7 +4297,7 @@ body.no-js .single-item-header .js-self-profile-button {
   position: relative;
 }
 
-#header-cover-image {
+#buddypress #header-cover-image {
   background-color: #555;
   background-position: center top;
   background-repeat: no-repeat;
@@ -4300,6 +4311,96 @@ body.no-js .single-item-header .js-self-profile-button {
   top: 0;
   width: 100%;
   z-index: 1;
+  overflow: hidden;
+}
+
+#buddypress #header-cover-image .header-cover-img {
+  max-width: 100%;
+  min-width: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  min-height: 100%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  display: none;
+}
+
+#buddypress #header-cover-image.has-position .header-cover-img {
+  -webkit-transform: translateY(0);
+  transform: translateY(0);
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap {
+  overflow: hidden;
+  height: 100%;
+  display: none;
+  width: 100%;
+  text-align: right;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap .drag-element-helper {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 119;
+  top: 50%;
+  color: #fff;
+  background-color: rgba(134, 132, 132, 0.6);
+  padding: 10px 15px;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap .drag-element-helper > i {
+  margin-right: 5px;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap > .button {
+  position: relative;
+  z-index: 1;
+  float: none;
+  margin: 12px 12px 0 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #939597;
+  border-radius: 5px;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 6px 11px;
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap > .button.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-left: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap > .button:hover, #buddypress #header-cover-image .header-cover-reposition-wrap > .button:focus {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: none;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap .guillotine-window {
+  position: absolute;
+  top: 0;
+}
+
+#buddypress #header-cover-image .header-cover-reposition-wrap img {
+  max-width: initial;
+  perspective: none !important;
+  backface-visibility: initial !important;
 }
 
 #item-header-cover-image {
@@ -4331,6 +4432,77 @@ body.no-js .single-item-header .js-self-profile-button {
 /*
 * end cover photo block
 */
+/*
+* Cover photo cropper
+*/
+body.guillotine-dragging,
+body.guillotine-dragging * {
+  cursor: move !important;
+  cursor: -webkit-grabbing !important;
+  cursor: -moz-grabbing !important;
+  cursor: grabbing !important;
+  cursor: grabbing, move;
+  /* IE hack */
+}
+
+.guillotine-window {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: move;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+  cursor: grab, move;
+  /* IE hack */
+}
+
+.guillotine-canvas {
+  position: absolute;
+  top: 0;
+  text-align: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  width: 100% !important;
+  left: 0 !important;
+}
+
+.guillotine-canvas > img {
+  height: auto;
+  min-height: 100%;
+  object-fit: cover;
+}
+
+.guillotine-canvas > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.guillotine-sample {
+  position: absolute !important;
+  top: -100000px !important;
+  left: -100000px !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+#cover-photo-alert .bb-field-wrap {
+  margin-bottom: 0;
+}
+
+#cover-photo-alert .bb-field-wrap p {
+  margin-bottom: 0;
+}
+
 /**
 *-----------------------------------------------------
 * @subsection 5.1.1 - item-header Groups
@@ -5350,6 +5522,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #item-header a.link-change-cover-image,
+#item-header a.position-change-cover-image,
 #item-header a.link-change-profile-image {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
@@ -5364,9 +5537,37 @@ body.register .buddypress-wrap .page ul {
   z-index: 3;
   opacity: 0;
   transition: all 0.2s;
+  text-decoration: none;
   -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+#item-header a.link-change-cover-image > i,
+#item-header a.position-change-cover-image > i,
+#item-header a.link-change-profile-image > i {
+  font-size: 20px;
+}
+
+#item-header a.link-change-cover-image > i {
+  font-size: 16px;
+}
+
+#item-header a.position-change-cover-image {
+  top: 55px;
+  display: none;
+}
+
+@media screen and (min-width: 1220px) {
+  #buddypress #item-header a.position-change-cover-image {
+    display: flex;
+  }
+  #buddypress #item-header .header-cover-img {
+    display: block;
+  }
+  #buddypress #item-header #header-cover-image.has-cover-image {
+    background-image: none;
+  }
 }
 
 #item-header-avatar a.link-change-profile-image {
@@ -5376,7 +5577,8 @@ body.register .buddypress-wrap .page ul {
 }
 
 #header-cover-image:hover a.link-change-cover-image,
-#item-header-avatar:hover a.link-change-profile-image {
+#item-header-avatar:hover a.link-change-profile-image,
+#header-cover-image:hover a.position-change-cover-image {
   opacity: 1;
 }
 
@@ -13012,6 +13214,7 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   #buddypress .bb-document-theater {
     width: calc(100% - 60px);
+    min-width: initial;
     margin: 0 30px;
     height: 100%;
   }
