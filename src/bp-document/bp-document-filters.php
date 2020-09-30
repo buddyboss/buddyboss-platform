@@ -314,6 +314,10 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {
+
+				// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
+
 				foreach ( $old_document_ids as $document_id ) {
 					if ( ! in_array( $document_id, $document_ids ) ) {
 						bp_document_delete( array( 'id' => $document_id ) );
@@ -711,7 +715,7 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @param array|object $post              Request object.
  *
  * @return bool
- * 
+ *
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
