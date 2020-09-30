@@ -2027,6 +2027,11 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 		// Get logged in user Progress.
 		$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_phototype );
 
+		// Do not proceed if no fields found based on settings.
+		if( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0  ){
+			return $user_progress;
+		}
+
 		// Format User Progress array to pass on to the template.
 		$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_arr );
 
