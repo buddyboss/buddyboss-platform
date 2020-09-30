@@ -580,7 +580,7 @@ class BP_Groups_Component extends BP_Component {
 			'slug'                => $slug,
 			'position'            => 70,
 			'screen_function'     => 'groups_screen_my_groups',
-			'default_subnav_slug' => 'my-groups',
+			'default_subnav_slug' => apply_filters( 'bp_group_my_groups_slug', 'my-groups' ),
 			'item_css_id'         => $this->id,
 		);
 
@@ -591,7 +591,7 @@ class BP_Groups_Component extends BP_Component {
 			// Add the My Groups nav item.
 			$sub_nav[] = array(
 				'name'            => __( 'My Groups', 'buddyboss' ),
-				'slug'            => 'my-groups',
+				'slug'            => apply_filters( 'bp_group_my_groups_slug', 'my-groups' ),
 				'parent_url'      => $groups_link,
 				'parent_slug'     => $slug,
 				'screen_function' => 'groups_screen_my_groups',
