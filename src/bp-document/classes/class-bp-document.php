@@ -1741,7 +1741,7 @@ class BP_Document {
 
 					// Deleting an activity.
 					} else {
-						if ( bp_activity_delete( array(
+						if ( 'activity' !== $from && bp_activity_delete( array(
 								'id'      => $activity->id,
 								'user_id' => $activity->user_id,
 							) ) ) {

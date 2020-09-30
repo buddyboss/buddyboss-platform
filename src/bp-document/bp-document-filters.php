@@ -273,7 +273,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 				$old_document_ids = explode( ',', $old_document_ids );
 				if ( ! empty( $old_document_ids ) ) {
 					foreach ( $old_document_ids as $document_id ) {
-						bp_document_delete( array( 'id' => $document_id ) );
+						bp_document_delete( array( 'id' => $document_id ), 'activity' );
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_document_ids' );
