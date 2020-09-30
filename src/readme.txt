@@ -58,7 +58,19 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.2 =
-* 
+* Profiles - Provided option to re-order profile action buttons, visible when viewing other member's profiles
+* Profiles - Fixed profile completion widget issue when first or last name field disabled
+* Profiles - Fixed registration duplicate field issue when profile type enabled
+* Forums - Fixed forums 404 issue when configured as a child page
+* Activity - Fixed URL preview for Cloudflare sites not allowing default 'user-agent'
+* Activity - Fixed activity editor, formatting toolbar focus issue
+* Activity - Improved activity update in other member's profile
+* Photos - Fixed add photos popup layout issues
+* Documents - Fixed document sub-folder download issue
+* Messages - Fixed invalid gravatar issue in private messages module
+* Messages - Allowing admin always to send private messages to all members on the site
+* Compatibility - Fixed profile cropping compatibility issue with Jetpack plugin
+* Translations - Updated German (formal) language files
 
 = 1.5.1.1 =
 * Photos - Fixed private messages photos and documents attachments security issue
