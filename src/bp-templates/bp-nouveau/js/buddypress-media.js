@@ -4012,6 +4012,9 @@ window.bp = window.bp || {};
 
 							// Update the current page.
 							self.current_page_existing_media = next_page;
+
+							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							jQuery( window ).scroll();
 						}
 					}
 				);
