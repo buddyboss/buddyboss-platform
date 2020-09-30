@@ -1309,9 +1309,7 @@ function bp_ajax_querystring( $object = false ) {
  */
 function bp_current_component() {
 	$bp                = buddypress();
-	$current_component = ! empty( $bp->current_component )
-		? $bp->current_component
-		: false;
+	$current_component = ! empty( $bp->current_component ) ? $bp->current_component : false;
 
 	/**
 	 * Filters the name of the current component.

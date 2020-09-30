@@ -488,6 +488,10 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 		}
 	}
 
+	if ( bp_is_active( 'groups' ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component ) {
+		$component = 'groups';
+	}
+
 	if ( ! bp_is_active( $component ) ) {
 		return $filters;
 	}

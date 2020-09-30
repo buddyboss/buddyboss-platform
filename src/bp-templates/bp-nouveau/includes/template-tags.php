@@ -531,6 +531,10 @@ function bp_nouveau_get_loop_classes() {
 		$component = sanitize_key( bp_current_component() );
 	}
 
+	if ( apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component ) {
+		$component = 'groups';
+	}
+
 	$classes = array(
 		'item-list',
 		sprintf( '%s-list', str_replace( '_', '-', $component ) ),
@@ -1839,6 +1843,10 @@ function bp_nouveau_search_container_class() {
 function bp_nouveau_search_object_data_attr( $attr = '' ) {
 	$objects = bp_nouveau_get_search_objects();
 
+	if ( bp_is_active( 'groups' ) && is_array( $objects ) && isset( $objects['secondary'] ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $objects['secondary'] ) {
+		$objects['secondary'] = 'groups';
+	}
+
 	if ( ! isset( $objects['secondary'] ) ) {
 		return $attr;
 	}
@@ -2050,6 +2058,11 @@ function bp_nouveau_current_object() {
 		if ( 'activity' !== bp_current_action() ) {
 			$component['data_filter'] = 'group_' . bp_current_action();
 		}
+
+		if ( bp_is_active( 'groups' ) && is_array( $component) && isset( $component['object'] ) && isset( $component['data_filter'] ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['data_filter'] && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['object'] ) {
+			$component['object'] = 'groups';
+			$component['data_filter'] = 'groups';
+		}
 	} else {
 		$component['members_select']   = 'members-order-select';
 		$component['members_order_by'] = 'members-order-by';
@@ -2078,6 +2091,11 @@ function bp_nouveau_filter_container_id() {
 	 */
 function bp_nouveau_get_filter_container_id() {
 	$component = bp_nouveau_current_object();
+
+	if ( bp_is_active( 'groups' ) && is_array( $component) && isset( $component['object'] ) && isset( $component['data_filter'] ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['data_filter'] && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['object'] ) {
+		$component['object'] = 'groups';
+		$component['data_filter'] = 'groups';
+	}
 
 	$ids = array(
 		'members'       => $component['members_select'],
@@ -2122,10 +2140,15 @@ function bp_nouveau_filter_id() {
 function bp_nouveau_get_filter_id() {
 	$component = bp_nouveau_current_object();
 
+	if ( bp_is_active( 'groups' ) && is_array( $component ) && isset( $component['object'] ) && isset( $component['data_filter'] ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['data_filter'] && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['object'] ) {
+		$component['object']      = 'groups';
+		$component['data_filter']  = 'groups';
+	}
+
 	$ids = array(
 		'members'       => $component['members_order_by'],
 		'friends'       => 'members-friends',
-		'notifications' => 'notifications-filter-by',
+		'notifications'  => 'notifications-filter-by',
 		'activity'      => 'activity-filter-by',
 		'groups'        => 'groups-order-by',
 		'blogs'         => 'blogs-order-by',
@@ -2188,6 +2211,12 @@ function bp_nouveau_get_filter_label() {
  */
 function bp_nouveau_filter_component() {
 	$component = bp_nouveau_current_object();
+
+	if ( bp_is_active( 'groups' ) && is_array( $component) && isset( $component['object'] ) && isset( $component['data_filter'] ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['data_filter'] && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component['object'] ) {
+		$component['object'] = 'groups';
+		$component['data_filter'] = 'groups';
+	}
+
 	echo esc_attr( $component['data_filter'] );
 }
 

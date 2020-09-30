@@ -376,7 +376,7 @@ class BP_Groups_Component extends BP_Component {
 		$this->forbidden_names = apply_filters(
 			'groups_forbidden_names',
 			array(
-				'my-groups',
+				apply_filters( 'bp_group_my_groups_slug', 'my-groups' ),
 				'create',
 				'invites',
 				'send-invites',
