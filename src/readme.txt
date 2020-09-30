@@ -64,7 +64,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed forums 404 issue when configured as a child page
 * Activity - Fixed URL preview for Cloudflare sites not allowing default 'user-agent'
 * Activity - Fixed activity editor, formatting toolbar focus issue
-* Activity - Improved activity update in other member's profile
+* Activity - Fixed activity update in other member's profile
 * Photos - Fixed add photos popup layout issues
 * Documents - Fixed document sub-folder download issue
 * Messages - Fixed invalid gravatar issue in private messages module
