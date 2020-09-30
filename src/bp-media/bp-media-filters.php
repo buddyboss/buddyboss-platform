@@ -322,7 +322,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 				$old_media_ids = explode( ',', $old_media_ids );
 				if ( ! empty( $old_media_ids ) ) {
 					foreach ( $old_media_ids as $media_id ) {
-						bp_media_delete( array( 'id' => $media_id ), 'activity' );
+						bp_media_delete( array( 'id' => $media_id ) );
 					}
 				}
 				bp_activity_delete_meta( $activity_id, 'bp_media_ids' );
@@ -358,11 +358,17 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
     //save media meta for activity.
     if ( ! empty( $activity_id ) ) {
+
     	// Delete media if not exists in current media ids
     	if ( isset( $_POST['edit'] ) ) {
 		    $old_media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
 		    $old_media_ids = explode( ',', $old_media_ids );
+
 		    if ( ! empty( $old_media_ids ) ) {
+
+		    	// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', array_unique( array_merge( $media_ids, $old_media_ids ) ) ) );
+
 		    	foreach ( $old_media_ids as $media_id ) {
 
 		    		if ( ! in_array( $media_id, $media_ids ) ) {
@@ -371,7 +377,9 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 			    }
 		    }
 	    }
-        bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
+
+    	// update new media ids here in the activity meta.
+		bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
     }
 }
 
@@ -917,7 +925,7 @@ function bp_media_messages_save_gif_data( &$message ) {
  * @param array|object $post              Request object.
  *
  * @return bool
- * 
+ *
  * @since BuddyBoss 1.5.1
  */
 function bp_media_message_validated_content( $validated_content, $content, $post ) {
@@ -936,7 +944,7 @@ function bp_media_message_validated_content( $validated_content, $content, $post
  * @param array|object $post              Request object.
  *
  * @return bool
- * 
+ *
  * @since BuddyBoss 1.5.1
  */
 function bp_media_gif_message_validated_content( $validated_content, $content, $post ) {
