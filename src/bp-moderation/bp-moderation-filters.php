@@ -8,3 +8,5 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
+
+new BP_Moderation_Activity();

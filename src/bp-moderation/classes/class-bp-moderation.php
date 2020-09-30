@@ -359,8 +359,13 @@ class BP_Moderation {
 		if ( ! empty( $r['filter_query'] ) ) {
 			$filter_query = new BP_Moderation_Query( $r['filter_query'] );
 			$sql          = $filter_query->get_sql();
-			if ( ! empty( $sql ) ) {
-				$where_conditions['filter_query_sql'] = $sql;
+
+			if ( ! empty( $sql['where'] ) ) {
+				$where_conditions['filter_query_sql'] = $sql['where'];
+			}
+
+			if ( ! empty( $sql['join'] ) ) {
+				$join_sql .= $sql['join'];
 			}
 		}
 
@@ -378,9 +383,9 @@ class BP_Moderation {
 
 		switch ( $r['order_by'] ) {
 			case 'id':
-			case 'user_id':
 			case 'item_type':
 			case 'item_id':
+			case 'updated_by':
 			case 'date_updated':
 			case 'hide_sitewide':
 				break;
@@ -393,7 +398,12 @@ class BP_Moderation {
 
 		// The specific user_ids to which you want to limit the query.
 		if ( ! empty( $r['user_id'] ) ) {
-			$join_sql                   .= "INNER JOIN {$bp->moderation->table_name_reports} mr ON mo.id = mr.moderation_id ";
+
+			// we added Report table user_id field support in BP_Moderation_Query so we need to take case care if table already added in joined query.
+			if ( ! strpos( "{$bp->moderation->table_name_reports} mr", $join_sql ) ) {
+				$join_sql .= "INNER JOIN {$bp->moderation->table_name_reports} mr ON mo.id = mr.moderation_id ";
+			}
+
 			$user_ids                    = implode( ',', wp_parse_id_list( $r['user_id'] ) );
 			$where_conditions['user_id'] = "mr.user_id IN ({$user_ids})";
 		}
@@ -412,14 +422,14 @@ class BP_Moderation {
 
 		// Exclude specified items type.
 		if ( ! empty( $r['exclude_types'] ) ) {
-			$not_in                            = "'" . implode( "', '", wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
-			$where_conditions['exclude_types'] = "mo.item_type NOT IN ({$not_in})";
+			$not_in_types                      = "'" . implode( "', '", wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
+			$where_conditions['exclude_types'] = "mo.item_type NOT IN ({$not_in_types})";
 		}
 
 		// The specified items type to which you want to limit the query..
 		if ( ! empty( $r['in_types'] ) ) {
-			$not_in                       = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
-			$where_conditions['in_types'] = "mo.item_type IN ({$not_in})";
+			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
+			$where_conditions['in_types'] = "mo.item_type IN ({$in_types})";
 		}
 
 		// Process meta_query into SQL.
@@ -847,7 +857,7 @@ class BP_Moderation {
 			}
 		}
 
-		if ( ! empty( $filter_array['hide_sitewide'] ) ) {
+		if ( isset( $filter_array['hide_sitewide'] ) ) {
 			$hide_sitewide_sql = self::get_in_operator_sql( 'mo.hide_sitewide', $filter_array['hide_sitewide'] );
 			if ( ! empty( $hide_sitewide_sql ) ) {
 				$filter_sql[] = $hide_sitewide_sql;

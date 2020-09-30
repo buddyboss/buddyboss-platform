@@ -47,6 +47,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	public $db_columns = array(
 		'id',
 		'item_id',
+		'user_id',
 		'item_type',
 		'date_updated',
 		'hide_sitewide',
@@ -90,7 +91,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
 	 *                      Default: 'a'. BP_Moderation::get() uses 'a', so we default to that.
-	 * @return string SQL fragment to append to the main WHERE clause.
+	 * @return array SQL fragment to append to the main query.
 	 */
 	public function get_sql( $alias = 'mo' ) {
 		if ( ! empty( $alias ) ) {
@@ -99,11 +100,10 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 
 		$sql = $this->get_sql_clauses();
 
-		// We only need the 'where' clause.
-		//
 		// Also trim trailing "AND" clause from parent BP_Recursive_Query class
 		// since it's not necessary for our needs.
-		return preg_replace( '/^\sAND/', '', $sql['where'] );
+		$sql['where'] = preg_replace( '/^\sAND/', '', $sql['where'] );
+		return $sql;
 	}
 
 	/**
@@ -120,6 +120,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 */
 	protected function get_sql_for_clause( $clause, $parent_query ) {
 		global $wpdb;
+		$bp = buddypress();
 
 		$sql_chunks = array(
 			'where' => array(),
@@ -166,6 +167,11 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 		$compare = $clause['compare'];
 
 		$alias = ! empty( $this->table_alias ) ? "{$this->table_alias}." : '';
+
+		if ( in_array( $column, array( 'user_id' ), true ) ) {
+			$sql_chunks['join'][] = "LEFT JOIN {$bp->moderation->table_name_reports} mr ON mo.id = mr.moderation_id ";
+			$alias                = 'mr.';
+		}
 
 		// Next, Build the WHERE clause.
 		$where = '';
