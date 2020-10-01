@@ -268,8 +268,8 @@ function bp_nouveau_ajax_document_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	// check activity is document or not.
 	$document_activity = bp_activity_get_meta( $post_id, 'bp_document_activity', true );
@@ -347,8 +347,8 @@ function bp_nouveau_ajax_document_get_document_description() {
 		wp_send_json_error( $response );
 	}
 
-	$document_id	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$attachment_id 	= filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
+	$document_id   = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
 
 	if ( empty( $document_id ) || empty( $attachment_id ) ) {
 		wp_send_json_error( $response );
@@ -360,20 +360,22 @@ function bp_nouveau_ajax_document_get_document_description() {
 
 	$content = get_post_field( 'post_content', $attachment_id );
 
-	$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-	$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage_btn    = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
-	$can_view          = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
+	$document_privacy = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+	$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage_btn   = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_view         = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 
 	$document     = new BP_Document( $document_id );
 	$user_domain  = bp_core_get_user_domain( $document->user_id );
 	$display_name = bp_core_get_user_displayname( $document->user_id );
 	$time_since   = bp_core_time_since( $document->date_created );
-	$avatar       = bp_core_fetch_avatar( array(
-					'item_id' => $document->user_id,
-					'object'  => 'user',
-					'type'    => 'full',
-			) );
+	$avatar       = bp_core_fetch_avatar(
+		array(
+			'item_id' => $document->user_id,
+			'object'  => 'user',
+			'type'    => 'full',
+		)
+	);
 
 	ob_start();
 
@@ -413,8 +415,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 										role="textbox"><?php echo $content; ?></textarea>
 					</div>
 					<div class="in-profile description-new-submit">
-						<?php ?>
-						<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
+												<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
 						<input type="submit" id="bp-activity-description-new-submit" class="button small"
 							name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
 						<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
@@ -426,21 +427,21 @@ function bp_nouveau_ajax_document_get_document_description() {
 			?>
 		</div>
 		<?php
-			if ( ! empty( $document_id ) ) {
-				$document_privacy  = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
-				$can_download_btn  = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-				if ( $can_download_btn ) {
-					$download_url      = bp_document_download_link( $attachment_id, $document_id );
-					if ( $download_url ) {
-						?>
+		if ( ! empty( $document_id ) ) {
+			$document_privacy = bp_document_user_can_manage_document( $document_id, bp_loggedin_user_id() );
+			$can_download_btn = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+			if ( $can_download_btn ) {
+				$download_url = bp_document_download_link( $attachment_id, $document_id );
+				if ( $download_url ) {
+					?>
 						<a class="download-document"
 							href="<?php echo esc_url( $download_url ); ?>">
-							<?php _e( 'Download', 'buddyboss' ); ?>
+						<?php _e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
-					}
 				}
 			}
+		}
 		?>
 	</li>
 		<?php
@@ -533,8 +534,8 @@ function bp_nouveau_ajax_document_document_save() {
 
 	if ( ! is_user_logged_in() ) {
 		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'Please login to upload a document.', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please login to upload a document.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -610,8 +611,8 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
-		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
+		$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -721,8 +722,8 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
-		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
+		$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -906,7 +907,6 @@ function bp_nouveau_ajax_document_move() {
 				</div> <!-- #media-folder-document-data-table -->
 				<?php
 			}
-
 		} else {
 			bp_nouveau_user_feedback( 'media-loop-document-none' );
 		}
@@ -982,7 +982,7 @@ function bp_nouveau_ajax_document_update_file_name() {
 				wp_send_json_error( $response );
 			} else {
 				$response = array(
-						'feedback' => $document,
+					'feedback' => $document,
 				);
 				wp_send_json_error( $response );
 			}
@@ -992,8 +992,8 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 
-		if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
-			$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
+		if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
+			$response['feedback'] = esc_html__( 'Invalid folder name', 'buddyboss' );
 			wp_send_json_error( $response );
 		}
 
@@ -1063,10 +1063,10 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
+	if ( strpbrk( $title, '\\/?%*:|"<>' ) !== false ) {
 		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'Invalid folder name', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Invalid folder name', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -1421,7 +1421,7 @@ function bp_nouveau_ajax_document_get_folder_view() {
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Documents', 'buddyboss' );
 	} else {
-		if ( bp_is_active( 'groups') ) {
+		if ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( (int) $id );
 			$first_text = bp_get_group_name( $group );
 		}
@@ -1439,8 +1439,8 @@ function bp_nouveau_ajax_document_get_folder_view() {
 function bp_nouveau_ajax_document_save_privacy() {
 	$response = array(
 		'feedback' => sprintf(
-				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
 

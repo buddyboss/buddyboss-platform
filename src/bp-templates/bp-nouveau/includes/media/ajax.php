@@ -316,7 +316,7 @@ function bp_nouveau_ajax_media_delete() {
 		}
 	}
 
-	if ( count( $media_ids ) != count( $media ) ) {
+	if ( count( $media_ids ) !== count( $media ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem deleting media.', 'buddyboss' )
@@ -482,7 +482,7 @@ function bp_nouveau_ajax_media_album_save() {
 
 	$user_id = bp_loggedin_user_id();
 	if ( $id ) {
-		$album = new BP_Media_Album( $id );
+		$album   = new BP_Media_Album( $id );
 		$user_id = $album->user_id;
 	}
 
@@ -631,8 +631,8 @@ function bp_nouveau_ajax_media_get_activity() {
 		wp_send_json_error( $response );
 	}
 
-	$post_id 	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$group_id 	= filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$post_id  = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	// check activity is media or not.
 	$media_activity = bp_activity_get_meta( $post_id, 'bp_media_activity', true );
@@ -817,8 +817,8 @@ function bp_nouveau_ajax_media_description_save() {
 	// check description empty.
 	if ( empty( $description ) ) {
 		$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was an error for updating a description. Please try again.', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was an error for updating a description. Please try again.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -850,7 +850,7 @@ add_filter( 'bp_nouveau_object_template_result', 'bp_nouveau_object_template_res
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
-	if ( $object != 'media' ) {
+	if ( 'media' !== $object ) {
 		return $results;
 	}
 
@@ -905,10 +905,10 @@ function bp_nouveau_ajax_media_get_media_description() {
 	$media_description = '';
 
 	$response = array(
-			'feedback' => sprintf(
-					'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
-			),
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
 	);
 
 	// Nonce check!
@@ -917,8 +917,8 @@ function bp_nouveau_ajax_media_get_media_description() {
 		wp_send_json_error( $response );
 	}
 
-	$media_id		= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$attachment_id 	= filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
+	$media_id      = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
 
 	if ( empty( $media_id ) || empty( $attachment_id ) ) {
 		wp_send_json_error( $response );
@@ -930,20 +930,22 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 	$content = get_post_field( 'post_content', $attachment_id );
 
-	$media_privacy  	= bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
-	$can_download_btn  	= ( true === (bool) $media_privacy['can_download'] ) ? true : false;
-	$can_manage_btn    	= ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
-	$can_view          	= ( true === (bool) $media_privacy['can_view'] ) ? true : false;
+	$media_privacy    = bp_media_user_can_manage_media( $media_id, bp_loggedin_user_id() );
+	$can_download_btn = ( true === (bool) $media_privacy['can_download'] ) ? true : false;
+	$can_manage_btn   = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
+	$can_view         = ( true === (bool) $media_privacy['can_view'] ) ? true : false;
 
-	$media     		= new BP_Media( $media_id );
-	$user_domain  	= bp_core_get_user_domain( $media->user_id );
-	$display_name 	= bp_core_get_user_displayname( $media->user_id );
-	$time_since   	= bp_core_time_since( $media->date_created );
-	$avatar       	= bp_core_fetch_avatar( array(
+	$media        = new BP_Media( $media_id );
+	$user_domain  = bp_core_get_user_domain( $media->user_id );
+	$display_name = bp_core_get_user_displayname( $media->user_id );
+	$time_since   = bp_core_time_since( $media->date_created );
+	$avatar       = bp_core_fetch_avatar(
+		array(
 			'item_id' => $media->user_id,
 			'object'  => 'user',
 			'type'    => 'full',
-	) );
+		)
+	);
 
 	ob_start();
 
@@ -965,8 +967,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 				<?php
 				if ( $can_manage_btn ) {
 					?>
-					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>"
-					   href="#">
+					<a class="bp-add-media-activity-description <?php echo( ! empty( $content ) ? 'show-edit' : 'show-add' ); ?>" href="#">
 						<span class="bb-icon-edit-thin"></span>
 						<span class="add"><?php _e( 'Add a description', 'buddyboss' ); ?></span>
 						<span class="edit"><?php _e( 'Edit', 'buddyboss' ); ?></span>
@@ -974,20 +975,12 @@ function bp_nouveau_ajax_media_get_media_description() {
 
 					<div class="bp-edit-media-activity-description" style="display: none;">
 						<div class="innerWrap">
-								<textarea id="add-activity-description"
-										  title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-										  class="textInput"
-										  name="caption_text"
-										  placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>"
-										  role="textbox"><?php echo $content; ?></textarea>
+							<textarea id="add-activity-description" title="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" class="textInput" name="caption_text" placeholder="<?php esc_html_e( 'Add a description', 'buddyboss' ); ?>" role="textbox"><?php echo $content; ?></textarea>
 						</div>
 						<div class="in-profile description-new-submit">
-							<?php ?>
 							<input type="hidden" id="bp-attachment-id" value="<?php echo $attachment_id; ?>">
-							<input type="submit" id="bp-activity-description-new-submit" class="button small"
-								   name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
-							<input type="reset" id="bp-activity-description-new-reset" class="text-button small"
-								   value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
+							<input type="submit" id="bp-activity-description-new-submit" class="button small" name="description-new-submit" value="<?php esc_html_e( 'Done Editing', 'buddyboss' ); ?>">
+							<input type="reset" id="bp-activity-description-new-reset" class="text-button small" value="<?php esc_html_e( 'Cancel', 'buddyboss' ); ?>">
 						</div>
 					</div>
 					<?php
@@ -997,11 +990,10 @@ function bp_nouveau_ajax_media_get_media_description() {
 			<?php
 			if ( ! empty( $media_id ) ) {
 				if ( $can_download_btn ) {
-					$download_url      = bp_media_download_link( $attachment_id, $media_id );
+					$download_url = bp_media_download_link( $attachment_id, $media_id );
 					if ( $download_url ) {
 						?>
-						<a class="download-media"
-						   href="<?php echo esc_url( $download_url ); ?>">
+						<a class="download-media" href="<?php echo esc_url( $download_url ); ?>">
 							<?php _e( 'Download', 'buddyboss' ); ?>
 						</a>
 						<?php
