@@ -16235,6 +16235,26 @@ span.CodeMirror-selectedtext {
   background: none;
 }
 
+html[dir="rtl"] .widgets-php .CodeMirror-sizer,
+html[dir="rtl"] .wp-customizer .CodeMirror-sizer {
+  border-left: 0;
+}
+
+html[dir="rtl"] .widgets-php .CodeMirror-scroll,
+html[dir="rtl"] .wp-customizer .CodeMirror-scroll {
+  margin-left: 0;
+}
+
+html[dir="rtl"] .widgets-php .CodeMirror-gutters,
+html[dir="rtl"] .wp-customizer .CodeMirror-gutters {
+  right: initial;
+}
+
+html[dir="rtl"] .widgets-php .CodeMirror-line,
+html[dir="rtl"] .wp-customizer .CodeMirror-line {
+  text-align: left;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone
