@@ -145,10 +145,6 @@ function bp_nouveau_ajax_document_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response, 500 );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -201,10 +197,6 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -214,7 +206,9 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['folder_id'] ) ) {
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+
+	if ( empty( $folder_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide ID of folder to delete.', 'buddyboss' )
@@ -223,7 +217,6 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 	if ( ! bp_folder_user_can_delete( $folder_id ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -240,7 +233,7 @@ function bp_nouveau_ajax_document_folder_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -355,7 +348,7 @@ function bp_nouveau_ajax_document_get_document_description() {
 	}
 
 	$document_id	= filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$attachment_id 	= filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
+	$attachment_id 	= filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
 
 	if ( empty( $document_id ) || empty( $attachment_id ) ) {
 		wp_send_json_error( $response );
@@ -546,13 +539,14 @@ function bp_nouveau_ajax_document_document_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $documents ) && ! empty( $documents ) && isset( $_POST['folder_id'] ) && (int) $_POST['folder_id'] > 0 ) {
-		$folder_id  = (int) $_POST['folder_id'];
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+
+	if ( isset( $documents ) && ! empty( $documents ) && $folder_id > 0 ) {
 		if ( ! empty( $documents ) && is_array( $documents ) ) {
 			// set folder id for document.
 			foreach ( $documents as $key => $document ) {
 				if ( 0 === (int) $document['folder_id'] ) {
-					$_POST['documents'][ $key ]['folder_id'] = $folder_id;
+					$documents[ $key ]['folder_id'] = $folder_id;
 				}
 			}
 		}
@@ -594,10 +588,6 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -612,24 +602,27 @@ function bp_nouveau_ajax_document_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['title'] ) ) {
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+
+	if ( empty( $title ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
 		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
 	// save document.
-	$id        = ! empty( $_POST['folder_id'] ) ? filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : false;
-	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = wp_strip_all_tags( $_POST['title'] );
-	$privacy   = ! empty( $_POST['privacy'] ) ? filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING ) : 'public';
-	$parent    = ! empty( $_POST['parent'] ) ? (int) filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT ) : 0;
-	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
+	$id        = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	$group_id  = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$title     = wp_strip_all_tags( $title );
+	$privacy   = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$privacy   = ! empty( $privacy ) ? $privacy : 'public';
+	$parent    = filter_input( INPUT_POST, 'parent', FILTER_VALIDATE_INT );
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 
 	if ( $parent > 0 ) {
 		$id = false;
@@ -707,10 +700,6 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -720,7 +709,9 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['title'] ) ) {
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+
+	if ( empty( $title ) ) {
 		$response['feedback'] = esc_html__( 'Please enter title of folder.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
@@ -730,16 +721,15 @@ function bp_nouveau_ajax_document_child_folder_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
 		$response['feedback'] = esc_html__( "Invalid folder name", 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
 	// save folder.
-	$id        = 0;
-	$group_id  = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-	$title     = wp_strip_all_tags( $_POST['title'] );
-	$folder_id = ! empty( $_POST['folder_id'] ) ? (int) filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT ) : 0;
+	$group_id  = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$title     = wp_strip_all_tags( $title );
+	$folder_id = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
 	$privacy   = '';
 
 	if ( $folder_id > 0 ) {
@@ -816,10 +806,6 @@ function bp_nouveau_ajax_document_move() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -830,9 +816,9 @@ function bp_nouveau_ajax_document_move() {
 	}
 
 	// Move document.
-	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) $_POST['folder_id'] : 0;
-	$document_id = ! empty( $_POST['document_id'] ) ? (int) $_POST['document_id'] : 0;
-	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$folder_id   = filter_input( INPUT_POST, 'folder_id', FILTER_VALIDATE_INT );
+	$document_id = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+	$group_id    = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $document_id ) {
 		wp_send_json_error( $response );
@@ -856,14 +842,16 @@ function bp_nouveau_ajax_document_move() {
 
 	$document = bp_document_move_document_to_folder( $document_id, $folder_id, $group_id );
 
+	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+
 	if ( $document > 0 ) {
 
 		$content = '';
 		ob_start();
 
-		if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
+		if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) {
 
-			if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+			if ( empty( $page ) || 1 === $page ) {
 				?>
 
 				<div class="document-data-table-head">
@@ -894,17 +882,16 @@ function bp_nouveau_ajax_document_move() {
 				<?php
 				bp_get_template_part( 'document/activity-document-move' );
 				bp_get_template_part( 'document/activity-document-folder-move' );
+			}
 
-			endif;
-
-			while ( bp_document() ) :
+			while ( bp_document() ) {
 				bp_the_document();
 
 				bp_get_template_part( 'document/document-entry' );
 
-			endwhile;
+			}
 
-			if ( bp_document_has_more_items() ) :
+			if ( bp_document_has_more_items() ) {
 				?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
@@ -912,19 +899,17 @@ function bp_nouveau_ajax_document_move() {
 					</div>
 				</div>
 				<?php
-			endif;
+			}
 
-			if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+			if ( empty( $page ) || 1 === $page ) {
 				?>
 				</div> <!-- #media-folder-document-data-table -->
 				<?php
-			endif;
+			}
 
-		else :
-
+		} else {
 			bp_nouveau_user_feedback( 'media-loop-document-none' );
-
-		endif;
+		}
 
 		$content .= ob_get_clean();
 
@@ -938,7 +923,6 @@ function bp_nouveau_ajax_document_move() {
 	} else {
 		wp_send_json_error( $response );
 	}
-
 }
 
 /**
@@ -957,10 +941,19 @@ function bp_nouveau_ajax_document_update_file_name() {
 		wp_send_json_error( $response );
 	}
 
-	$document_id            = ! empty( $_POST['document_id'] ) ? (int) filter_input( INPUT_POST, 'document_id', FILTER_SANITIZE_STRING ) : 0;
-	$attachment_document_id = ! empty( $_POST['attachment_document_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_document_id', FILTER_SANITIZE_STRING ) : 0;
-	$title                  = ! empty( $_POST['name'] ) ? filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING ) : '';
-	$type                   = ! empty( $_POST['document_type'] ) ? filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING ) : '';
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$document_id            = filter_input( INPUT_POST, 'document_id', FILTER_VALIDATE_INT );
+	$attachment_document_id = filter_input( INPUT_POST, 'attachment_document_id', FILTER_VALIDATE_INT );
+	$title                  = filter_input( INPUT_POST, 'name', FILTER_SANITIZE_STRING );
+	$type                   = filter_input( INPUT_POST, 'document_type', FILTER_SANITIZE_STRING );
 
 	if ( 'document' === $type ) {
 		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
@@ -1030,7 +1023,6 @@ function bp_nouveau_ajax_document_update_file_name() {
 			wp_send_json_error( $response );
 		}
 	}
-
 }
 
 /**
@@ -1051,10 +1043,6 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
-	}
-
 	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
@@ -1064,7 +1052,9 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['title'] ) ) {
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+
+	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please enter title of folder.', 'buddyboss' )
@@ -1073,7 +1063,7 @@ function bp_nouveau_ajax_document_edit_folder() {
 		wp_send_json_error( $response );
 	}
 
-	if ( strpbrk( $_POST['title'], "\\/?%*:|\"<>" ) !== false ) {
+	if ( strpbrk( $title, "\\/?%*:|\"<>" ) !== false ) {
 		$response['feedback'] = sprintf(
 				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'Invalid folder name', 'buddyboss' )
@@ -1082,9 +1072,9 @@ function bp_nouveau_ajax_document_edit_folder() {
 	}
 
 	// save folder.
-	$title    = $_POST['title'];
-	$id       = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$id       = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$privacy  = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 
 	if ( (int) $id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $id );
@@ -1094,9 +1084,7 @@ function bp_nouveau_ajax_document_edit_folder() {
 		}
 	}
 
-	if ( ! empty( $_POST['privacy'] ) ) {
-		$privacy = $_POST['privacy'];
-	} else {
+	if ( empty( $privacy ) ) {
 		$folder_id = bp_document_get_root_parent_id( $_POST['id'] );
 		$folder    = new BP_Document_Folder( $folder_id );
 		$privacy   = $folder->privacy;
@@ -1142,10 +1130,19 @@ function bp_nouveau_ajax_document_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$id            = ! empty( $_POST['id'] ) ? (int) filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT ) : 0;
-	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT ) : 0;
-	$type          = ! empty( $_POST['type'] ) ? filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ) : '';
-	$scope         = ! empty( $_POST['scope'] ) ? filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING ) : '';
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id            = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
+	$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$scope         = filter_input( INPUT_POST, 'scope', FILTER_SANITIZE_STRING );
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );
@@ -1173,9 +1170,11 @@ function bp_nouveau_ajax_document_delete() {
 		$string = '&scope=' . $scope;
 	}
 
+	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) . $string ) ) :
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 
 			<div class="document-data-table-head">
@@ -1226,7 +1225,7 @@ function bp_nouveau_ajax_document_delete() {
 			<?php
 		endif;
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 			</div> <!-- #media-folder-document-data-table -->
 			<?php
@@ -1268,9 +1267,18 @@ function bp_nouveau_ajax_document_folder_move() {
 		wp_send_json_error( $response );
 	}
 
-	$destination_folder_id = ! empty( $_POST['folderMoveToId'] ) ? (int) filter_input( INPUT_POST, 'folderMoveToId', FILTER_VALIDATE_INT ) : 0;
-	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) filter_input( INPUT_POST, 'currentFolderId', FILTER_VALIDATE_INT ) : 0;
-	$group_id              = ! empty( $_POST['group'] ) ? (int) filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ) : 0;
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$destination_folder_id = filter_input( INPUT_POST, 'folder_move_to_id', FILTER_VALIDATE_INT );
+	$folder_id             = filter_input( INPUT_POST, 'current_folder_id', FILTER_VALIDATE_INT );
+	$group_id              = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 
 	if ( (int) $folder_id > 0 ) {
 		$has_access = bp_folder_user_can_edit( $folder_id );
@@ -1317,12 +1325,14 @@ function bp_nouveau_ajax_document_folder_move() {
 
 	bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, $group_id );
 
+	$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+
 	$content = '';
 	ob_start();
 
 	if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 
 			<div class="document-data-table-head">
@@ -1373,7 +1383,7 @@ function bp_nouveau_ajax_document_folder_move() {
 			<?php
 		endif;
 
-		if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
+		if ( empty( $page ) || 1 === $page ) :
 			?>
 			</div> <!-- #media-folder-document-data-table -->
 			<?php
@@ -1398,8 +1408,8 @@ function bp_nouveau_ajax_document_folder_move() {
 
 function bp_nouveau_ajax_document_get_folder_view() {
 
-	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
+	$type = filter_input( INPUT_GET, 'type', FILTER_SANITIZE_STRING );
+	$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 
 	if ( 'profile' === $type ) {
 		$ul = bp_document_user_document_folder_tree_view_li_html( $id, 0 );
@@ -1427,14 +1437,33 @@ function bp_nouveau_ajax_document_get_folder_view() {
 }
 
 function bp_nouveau_ajax_document_save_privacy() {
-	global $wpdb, $bp;
+	$response = array(
+		'feedback' => sprintf(
+				'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+				esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
 
 	if ( ! is_user_logged_in() ) {
 		$response['feedback'] = esc_html__( 'Please login to edit a privacy.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
-	$id      = filter_input( INPUT_POST, 'itemId', FILTER_VALIDATE_INT );
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id      = filter_input( INPUT_POST, 'item_id', FILTER_VALIDATE_INT );
 	$type    = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$privacy = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
 
@@ -1487,10 +1516,19 @@ function bp_nouveau_ajax_document_activity_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$id            = ! empty( $_POST['id'] ) ? (int) $_POST['id'] : 0;
-	$attachment_id = ! empty( $_POST['attachment_id'] ) ? (int) $_POST['attachment_id'] : 0;
-	$type          = ! empty( $_POST['type'] ) ? $_POST['type'] : '';
-	$activity_id   = ! empty( $_POST['activity_id'] ) ? $_POST['activity_id'] : 0;
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$id            = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
+	$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$activity_id   = filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT );
 
 	if ( '' === $type ) {
 		wp_send_json_error( $response );
