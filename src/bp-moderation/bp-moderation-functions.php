@@ -118,3 +118,25 @@ function bp_moderation_get( $args = '' ) {
 		)
 	);
 }
+
+/**
+ * Retrieve sitewide hidden items ids of particular item type.
+ *
+ * @param string $type Moderation items type.
+ *
+ * @return array $moderation See BP_Moderation::get() for description.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
+	return bp_moderation_get(
+		array(
+			'in_types'          => $type,
+			'per_page'          => - 1,
+			'update_meta_cache' => false,
+			'filter'            => array(
+				'hide_sitewide' => 1,
+			),
+		)
+	);
+}

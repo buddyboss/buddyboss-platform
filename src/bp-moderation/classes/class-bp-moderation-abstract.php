@@ -24,31 +24,18 @@ abstract class BP_Moderation_Abstract {
 	public $item_type;
 
 	/**
-	 * Items ID field name with alias for Join sql conditions
-	 *
-	 * @var string
-	 */
-	protected $item_id_field;
-
-	/**
-	 * User ID field name with alias for Join sql conditions
-	 *
-	 * @var string
-	 */
-	protected $user_id_field;
-
-	/**
 	 * Prepare Join sql for exclude Blocked items
 	 *
-	 * @return string|void
-	 *
 	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param string $item_id_field Items ID field name with alias of table.
+	 *
+	 * @return string|void
 	 */
-	protected function bp_moderation_exclude_joint_query() {
+	protected function exclude_joint_query( $item_id_field ) {
 		global $wpdb;
 		$bp = buddypress();
-
-		return $wpdb->prepare( "LEFT JOIN {$bp->moderation->table_name} mo ON ( mo.item_id = $this->item_id_field AND mo.item_type = %s )", $this->item_type ); // phpcs:ignore
+		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->moderation->table_name} mo ON ( mo.item_id = $item_id_field AND mo.item_type = %s )", $this->item_type ); // phpcs:ignore
 	}
 
 	/**
@@ -58,10 +45,26 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 */
-	protected function bp_moderation_exclude_where_query() {
-		global $wpdb;
-
+	protected function exclude_where_query() {
 		return '( mo.hide_sitewide = 0 OR mo.hide_sitewide IS NULL )';
 	}
 
+	/**
+	 * Retrieve sitewide hidden items ids of particular item type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param string $type Moderation items type.
+	 *
+	 * @return array $moderation See BP_Moderation::get() for description.
+	 */
+	protected function get_sitewide_hidden_item_ids( $type ) {
+		$hidden_ids  = array();
+		$moderations = bp_moderation_get_sitewide_hidden_item_ids( $type );
+
+		if ( ! empty( $moderations ) && ! empty( $moderations['moderations'] ) ) {
+			$hidden_ids = wp_list_pluck( $moderations['moderations'], 'item_id' );
+		}
+		return $hidden_ids;
+	}
 }

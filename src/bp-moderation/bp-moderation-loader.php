@@ -19,4 +19,4 @@ defined( 'ABSPATH' ) || exit;
 function bp_setup_moderation() {
 	buddypress()->moderation = new BP_Moderation_Component();
 }
-add_action( 'bp_setup_components', 'bp_setup_moderation', 6 );
+add_action( 'bp_setup_components', 'bp_setup_moderation', 1 );
