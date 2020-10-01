@@ -818,6 +818,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 	if ( 'document' === $type ) {
 
 		$the_file = wp_get_attachment_url( $attachment_id );
+		$the_file = strtok( $the_file, '?' );
 
 		if ( ! $the_file ) {
 			return;
@@ -849,7 +850,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
 
-		$file_arr = explode( '.', $file_name_lower );
+		$file_arr  = explode( '.', $file_name_lower );
 		$needle   = end( $file_arr );
 		if ( ! in_array( $needle, $whitelist ) ) {
 			exit( 'Invalid file!' );
