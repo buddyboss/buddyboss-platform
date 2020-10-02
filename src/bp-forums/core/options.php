@@ -454,8 +454,7 @@ function bbp_get_root_slug( $default = 'forums' ) {
 	$root_slug     = get_option( '_bbp_root_slug', $default );
 	if ( ! empty( $forum_page_id ) ) {
 		$default_slug = $root_slug;
-		$permalink    = get_permalink( $forum_page_id );
-		$root_slug    = untrailingslashit( str_replace( get_site_url() . '/', '', $permalink ) );
+		$root_slug    = get_page_uri( $forum_page_id );
 		if ( $default_slug !== $root_slug ) {
 			update_option( '_bbp_root_slug', $root_slug );
 			flush_rewrite_rules( true );

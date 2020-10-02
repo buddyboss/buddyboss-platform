@@ -288,6 +288,8 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.gif-image-container', this.playVideo.bind( this ) );
 
+			$( '.bp-existing-media-wrap' ).on( 'scroll', this.loadExistingMedia.bind( this ) );
+
 			document.addEventListener( 'keyup', this.closePopup.bind( this ) );
 			document.addEventListener( 'keyup', this.submitPopup.bind( this ) );
 
@@ -330,6 +332,11 @@ window.bp = window.bp || {};
 				$('#bp-media-edit-child-folder').show();
 			}
 
+		},
+
+		loadExistingMedia: function() {
+			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+			$( window ).scroll();
 		},
 
 		resetPageDocumentDirectory: function( event ) {
@@ -4563,6 +4570,9 @@ window.bp = window.bp || {};
 
 							// Update the current page.
 							self.current_page_existing_media = next_page;
+
+							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							jQuery( window ).scroll();
 						}
 					}
 				);

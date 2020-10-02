@@ -99,7 +99,7 @@ add_filter( 'bp_user_can', 'bp_xprofile_grant_bp_xprofile_change_field_visibilit
  */
 function bp_xprofile_remove_bp_xprofile_change_field_visibility( $user_can, $user_id, $capability ) {
 
-	if ( empty( $GLOBALS['profile_template'] ) ) {
+	if ( empty( $GLOBALS['profile_template'] ) || 'bp_xprofile_change_field_visibility' !== $capability ) {
 		return $user_can;
 	}
 

@@ -93,6 +93,31 @@ window.wp = window.wp || {};
 		$( '#sub-accordion-panel-bp_mailtpl' ).on( 'click', '.customize-panel-back', function() {
 			location.replace( BP_Customizer.platformCustomizerUrl );
 		} );
+
+
+		$( 'ul#customize-control-profile-header' ).sortable( {
+			cursor    : 'move',
+			axis      : 'y',
+			opacity   : 1,
+			items     : 'li:not(.ui-sortable-disabled)',
+			tolerance : 'intersect',
+
+			update: function() {
+
+				var order = [];
+
+				$( this ).find( '[data-bp-nav]' ).each( function( s, slug ) {
+					order.push( $( slug ).data( 'bp-nav' ) );
+				} );
+
+				if ( order.length ) {
+					$( '#bp_user_profile_actions_order' ).val( order.join() ).trigger( 'change' );
+				}
+
+			}
+		} ).disableSelection();
+
 	} );
+
 
 } )( window.wp, jQuery );
