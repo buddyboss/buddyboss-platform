@@ -918,7 +918,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 	}
 
 	$media_id      = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
-	$attachment_id = filter_input( INPUT_POST, 'id1', FILTER_VALIDATE_INT );
+	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
 
 	if ( empty( $media_id ) || empty( $attachment_id ) ) {
 		wp_send_json_error( $response );

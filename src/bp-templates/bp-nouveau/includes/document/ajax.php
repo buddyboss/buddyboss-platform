@@ -1085,7 +1085,7 @@ function bp_nouveau_ajax_document_edit_folder() {
 	}
 
 	if ( empty( $privacy ) ) {
-		$folder_id = bp_document_get_root_parent_id( $_POST['id'] );
+		$folder_id = bp_document_get_root_parent_id( $id );
 		$folder    = new BP_Document_Folder( $folder_id );
 		$privacy   = $folder->privacy;
 	}

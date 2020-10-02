@@ -2559,7 +2559,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						url : BP_Nouveau.ajaxurl,
-						type : 'post',
+						type : 'GET',
 						data : {
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
@@ -4510,10 +4510,10 @@ window.bp = window.bp || {};
 					type	: 'POST',
 					url		: BP_Nouveau.ajaxurl,
 					data	: {
-						action		: 'media_get_media_description',
-						id			: self.current_media.id,
-						id1			: self.current_media.attachment_id,
-						nonce		: BP_Nouveau.nonces.media
+						action		        : 'media_get_media_description',
+						id			          : self.current_media.id,
+						attachment_id			: self.current_media.attachment_id,
+						nonce		          : BP_Nouveau.nonces.media
 					},
 					success: function (response) {
 						if (response.success) {
