@@ -912,6 +912,10 @@ span.dashicons.dashicons-admin-file:before {
 .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner {
 	overflow: initial;
 
+	.no_more_option .media-action-wrap {
+		display: none;
+	}
+
 	@media screen and (max-width: 544px) {
 
 		.bb-activity-media-elem {
@@ -1119,7 +1123,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before,
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
 	content: "\e963";
-	font-size: 15px;
+	font-size: 14px;
 }
 
 @media screen and ( max-width: 799px ) {

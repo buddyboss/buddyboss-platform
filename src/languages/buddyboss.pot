@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-10-02 11:07:15+00:00\n"
+"POT-Creation-Date: 2020-10-02 11:51:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -988,7 +988,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:148
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:268
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:12
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:40
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:42
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:35
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:555
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:556
@@ -13508,7 +13508,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:136
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:262
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:37
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:39
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:32
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:29
 msgid "Move"
@@ -21839,7 +21839,7 @@ msgid "Collapse"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:121
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:31
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:33
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:26
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:586
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2141
@@ -22277,7 +22277,7 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:61
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:63
 msgid "More Photos"
 msgstr ""
 

@@ -24,9 +24,11 @@ if ( $group_id > 0 ) {
 	$move_id   = bp_get_media_user_id();
 	$move_type = 'profile';
 }
+
+$more_media = $media_template->media_count > 5 ? true : false;
 ?>
 
-<div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>" data-id="<?php echo esc_attr( bp_get_media_id() ); ?>">
+<div class="bb-activity-media-elem media-activity <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; echo ( $more_media && $media_template->current_media === 4 ) ? ' no_more_option ' : ''; ?>" data-id="<?php echo esc_attr( bp_get_media_id() ); ?>">
 	<div class="media-action-wrap">
 		<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 			<i class="bb-icon-menu-dots-v"></i>
