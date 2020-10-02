@@ -2872,6 +2872,16 @@ span.dashicons.dashicons-admin-file:before {
   overflow: initial;
 }
 
+@media screen and (max-width: 544px) {
+  .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .activity-list .activity-item .activity-content.media-activity-wrap .activity-inner .bb-activity-media-elem.hideact-grid-1-2 {
+    flex: 0;
+  }
+}
+
 #media-stream.media .bb-photo-thumb,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity {
   position: relative;
@@ -3069,8 +3079,8 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before,
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before {
-  content: "\e8a8";
-  font-size: 17px;
+  content: "\e963";
+  font-size: 15px;
 }
 
 @media screen and (max-width: 799px) {
@@ -16148,8 +16158,8 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 }
 
 .location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
-  content: "\e8a8";
-  font-size: 17px;
+  content: "\e963";
+  font-size: 15px;
 }
 
 .modal-container .bb-field-steps {
