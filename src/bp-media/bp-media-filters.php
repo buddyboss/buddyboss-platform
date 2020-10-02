@@ -333,6 +333,16 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 		return false;
 	}
 
+	// Add in description in attachment when only one media uploaded.
+	if ( is_array( $_POST['media'] ) && 1 === count( $_POST['media'] ) ) {
+		foreach ( $_POST['media'] as $media ) {
+			$media_attachment_post = array();
+			$media_attachment_post['ID']           = $media['id'];
+			$media_attachment_post['post_content'] = wp_strip_all_tags( $content );
+			wp_update_post( $media_attachment_post );
+		}
+	}
+
 	$bp_activity_post_update    = true;
 	$bp_activity_post_update_id = $activity_id;
 
