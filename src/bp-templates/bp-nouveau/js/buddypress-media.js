@@ -631,10 +631,11 @@ window.bp = window.bp || {};
 
 			if ( itemId > 0 ) {
 				var data = {
-					'action'	: 'document_save_privacy',
-					'itemId'	: itemId,
-					'type'		: type,
-					'value'		: value,
+					'action': 'document_save_privacy',
+					'item_id': itemId,
+					'type': type,
+					'value': value,
+					'_wpnonce': BP_Nouveau.nonces.media
 				};
 
 				$.ajax(
@@ -675,10 +676,11 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var data = {
-				'action'			: 'document_folder_move',
-				'currentFolderId'	: currentFolderId,
-				'folderMoveToId'	: folderMoveToId,
-				'group'				: self.group_id
+				'action': 'document_folder_move',
+				'current_folder_id': currentFolderId,
+				'folder_move_to_id': folderMoveToId,
+				'group_id': self.group_id,
+				'_wpnonce': BP_Nouveau.nonces.media,
 			};
 
 			$.ajax(
@@ -742,11 +744,12 @@ window.bp = window.bp || {};
 				}
 
 				data = {
-					'action'				: 'document_delete',
-					'id'					: id,
-					'preview_attachment_id'	: preview_attachment_id,
-					'type'					: type,
-					'attachment_id'			: attachment_id
+					'action': 'document_delete',
+					'id': id,
+					'preview_attachment_id': preview_attachment_id,
+					'type': type,
+					'attachment_id': attachment_id,
+					'_wpnonce': BP_Nouveau.nonces.media,
 				};
 
 				if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
@@ -785,12 +788,13 @@ window.bp = window.bp || {};
 				var activityId = target.attr( 'data-item-activity-id' );
 
 				data = {
-					'action'				: 'document_activity_delete',
-					'id'					: id,
-					'preview_attachment_id'	: preview_attachment_id,
-					'type'					: type,
-					'activity_id'			: activityId,
-					'attachment_id'			: attachment_id
+					'action': 'document_activity_delete',
+					'id': id,
+					'preview_attachment_id': preview_attachment_id,
+					'type': type,
+					'activity_id': activityId,
+					'attachment_id': attachment_id,
+					'_wpnonce': BP_Nouveau.nonces.media,
 				};
 
 				$.ajax(
@@ -3081,7 +3085,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						url : BP_Nouveau.ajaxurl,
-						type : 'post',
+						type : 'GET',
 						data : {
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
@@ -3277,12 +3281,13 @@ window.bp = window.bp || {};
 					{
 						url 	: BP_Nouveau.ajaxurl,
 						type 	: 'post',
-						data 	: {
-							action					: 'document_update_file_name',
-							document_id				: document_id,
-							attachment_document_id	: attachment_document_id,
-							document_type			: documentType,
-							name					: document_name_val,
+						data: {
+							action: 'document_update_file_name',
+							document_id: document_id,
+							attachment_document_id: attachment_document_id,
+							document_type: documentType,
+							name: document_name_val,
+							_wpnonce: BP_Nouveau.nonces.media
 						},
 						success : function( response ) {
 							if (response.success) {
@@ -3380,7 +3385,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					url	: BP_Nouveau.ajaxurl,
-					type: 'post',
+					type: 'GET',
 					data: {
 						action	: 'document_get_folder_view',
 						id		: id,
@@ -5069,10 +5074,10 @@ window.bp = window.bp || {};
 					type	: 'POST',
 					url		: BP_Nouveau.ajaxurl,
 					data	: {
-						action		: 'media_get_media_description',
-						id			: self.current_media.id,
-						id1			: self.current_media.attachment_id,
-						nonce		: BP_Nouveau.nonces.media
+						action		        : 'media_get_media_description',
+						id			          : self.current_media.id,
+						attachment_id			: self.current_media.attachment_id,
+						nonce		          : BP_Nouveau.nonces.media
 					},
 					success: function (response) {
 						if (response.success) {
@@ -5676,11 +5681,11 @@ window.bp = window.bp || {};
 				{
 					type	: 'POST',
 					url		: BP_Nouveau.ajaxurl,
-					data	: {
-						action	: 'document_get_document_description',
-						id		: self.current_document.id,
-						id1		: self.current_document.attachment_id,
-						nonce	: BP_Nouveau.nonces.media
+					data: {
+						action: 'document_get_document_description',
+						id: self.current_document.id,
+						attachment_id: self.current_document.attachment_id,
+						nonce: BP_Nouveau.nonces.media
 					},
 					success: function (response) {
 						if (response.success) {
