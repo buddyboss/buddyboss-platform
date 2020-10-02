@@ -488,6 +488,10 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 		}
 	}
 
+	if ( bp_is_active( 'groups' ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component ) {
+		$component = 'groups';
+	}
+
 	if ( ! bp_is_active( $component ) ) {
 		return $filters;
 	}
@@ -499,7 +503,7 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 
 		// Specific case for the activity dropdown
 		$filters = array_merge( array( '-1' => __( '- View All -', 'buddyboss' ) ), $filters );
-	} elseif ( 'groups' === $component ) {
+	} elseif ( 'groups' === $component || BP_GROUPS_SLUG === $component ) {
 		$filters = bp_nouveau_get_groups_filters( $context );
 	} elseif ( 'blogs' === $component ) {
 		$filters = bp_nouveau_get_blogs_filters( $context );

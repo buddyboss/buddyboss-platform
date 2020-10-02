@@ -1162,8 +1162,8 @@ function bp_attachments_cover_image_is_edit() {
 		$retval = ! bp_disable_cover_image_uploads();
 	}
 
-	if ( ( bp_is_group_admin_page() && 'group-cover-image' == bp_get_group_current_admin_tab() )
-		|| ( bp_is_group_create() && bp_is_group_creation_step( 'group-cover-image' ) ) ) {
+	if ( ( bp_is_group_admin_page() && apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') == bp_get_group_current_admin_tab() )
+		|| ( bp_is_group_create() && bp_is_group_creation_step( apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') ) ) ) {
 		$retval = ! bp_disable_group_cover_image_uploads();
 	}
 

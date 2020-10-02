@@ -353,7 +353,7 @@ function bp_has_groups( $args = '' ) {
 	$search_terms = false;
 
 	// When looking your own groups, check for two action variables.
-	if ( bp_is_current_action( 'my-groups' ) ) {
+	if ( bp_is_current_action( apply_filters( 'bp_group_my_groups_slug', 'my-groups' ) ) ) {
 		if ( bp_is_action_variable( 'most-popular', 0 ) ) {
 			$type = 'popular';
 		} elseif ( bp_is_action_variable( 'alphabetically', 0 ) ) {

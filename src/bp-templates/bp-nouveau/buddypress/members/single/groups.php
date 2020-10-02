@@ -23,7 +23,7 @@
 switch ( bp_current_action() ) :
 
 	// Home/My Groups
-	case 'my-groups':
+	case apply_filters( 'bp_group_my_groups_slug', 'my-groups' ):
 		bp_nouveau_member_hook( 'before', 'groups_content' );
 		?>
 

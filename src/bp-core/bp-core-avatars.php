@@ -2043,7 +2043,7 @@ function bp_core_avatar_reset_query( $posts_query = null ) {
 
 	// Group's avatar edit screen.
 	if ( bp_is_group_admin_page() ) {
-		$reset_w = bp_is_group_admin_screen( 'group-avatar' );
+		$reset_w = bp_is_group_admin_screen( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) );
 
 		// Group's avatar create screen.
 	} elseif ( bp_is_group_create() ) {
@@ -2051,7 +2051,7 @@ function bp_core_avatar_reset_query( $posts_query = null ) {
 		 * We can't use bp_get_groups_current_create_step().
 		 * as it's not set yet
 		 */
-		$reset_w = 'group-avatar' === bp_action_variable( 1 );
+		$reset_w = apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) === bp_action_variable( 1 );
 
 		// User's change avatar screen.
 	} else {
@@ -2086,11 +2086,11 @@ function bp_avatar_is_front_edit() {
 
 	if ( bp_is_active( 'groups' ) ) {
 		// Group creation.
-		if ( bp_is_group_create() && bp_is_group_creation_step( 'group-avatar' ) && 'crop-image' !== bp_get_avatar_admin_step() ) {
+		if ( bp_is_group_create() && bp_is_group_creation_step( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) ) && 'crop-image' !== bp_get_avatar_admin_step() ) {
 			$retval = ! bp_disable_group_avatar_uploads();
 
 			// Group Manage.
-		} elseif ( bp_is_group_admin_page() && bp_is_group_admin_screen( 'group-avatar' ) && 'crop-image' !== bp_get_avatar_admin_step() ) {
+		} elseif ( bp_is_group_admin_page() && bp_is_group_admin_screen( apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) ) && 'crop-image' !== bp_get_avatar_admin_step() ) {
 			$retval = ! bp_disable_group_avatar_uploads();
 		}
 	}

@@ -8,7 +8,7 @@
 ?>
 <div id="group-invites-container">
 	<?php
-	if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
+	if ( ! bp_is_group_creation_step( apply_filters( 'bp_group_invite_slug', 'group-invites') ) ) {
 		bp_get_template_part( 'groups/single/parts/invite-subnav' );
 	}
 	?>

@@ -19,15 +19,12 @@ if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && 
 	$current_value = bp_get_option( 'bp-group-layout-format', 'list_grid' );
 }
 if ( 'list_grid' === $current_value ) {
-
-
 	$list                  = false;
 	$default_current_value = '';
 	if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' === $_POST['extras']['layout'] ) {
 		$list                  = true;
 		$default_current_value = 'list';
 	}
-
 	if ( ! $list ) {
 		if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile' ) ) ) {
 			if ( ! bp_is_user_groups() ) {
@@ -49,25 +46,15 @@ if ( 'list_grid' === $current_value ) {
 	if ( bp_is_group() && 'members' === bp_current_action() ) {
 		$component = 'group_members';
 	}
-	?>
-<div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">
-	<a href="#" class="layout-view layout-grid-view bp-tooltip <?php echo ( 'grid' === $default_current_value ) ? 'active' : ''; ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="
-																		  <?php
-																			_e(
-																				'Grid View',
-																				'buddyboss'
-																			);
-																			?>
-		"> <i class="bb-icon-grid-view-small" aria-hidden="true"></i> </a>
 
-	<a href="#" class="layout-view layout-list-view bp-tooltip <?php echo ( 'list' === $default_current_value ) ? 'active' : ''; ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="
-																		  <?php
-																			_e(
-																				'List View',
-																				'buddyboss'
-																			);
-																			?>
-		"> <i class="bb-icon-list-view-small" aria-hidden="true"></i> </a>
+	if ( bp_is_active( 'groups' ) && apply_filters( 'bp_get_groups_slug', buddypress()->groups->slug ) === $component ) {
+		$component = 'groups';
+	}
+
+	?>
+	<div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">
+		<a href="#" class="layout-view layout-grid-view bp-tooltip <?php echo ( 'grid' === $default_current_value ) ? 'active' : ''; ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Grid View','buddyboss' ); ?>"> <i class="bb-icon-grid-view-small" aria-hidden="true"></i> </a>
+		<a href="#" class="layout-view layout-list-view bp-tooltip <?php echo ( 'list' === $default_current_value ) ? 'active' : ''; ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('List View','buddyboss' ); ?>"> <i class="bb-icon-list-view-small" aria-hidden="true"></i> </a>
 	</div>
 	<?php
 }

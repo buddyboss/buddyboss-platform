@@ -8,8 +8,8 @@
 
 $group_link = bp_get_group_permalink();
 $admin_link = trailingslashit( $group_link . 'admin' );
-$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
-$group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
+$group_avatar = trailingslashit( $admin_link . apply_filters( 'bp_group_avatar_slug', 'group-avatar' ) );
+$group_cover_link = trailingslashit( $admin_link . apply_filters( 'bp_group_cover_image_slug', 'group-cover-image') );
 ?>
 
 <div class="item-header-wrap">

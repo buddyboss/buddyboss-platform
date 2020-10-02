@@ -13,7 +13,7 @@
  */
 function groups_screen_group_admin_delete_group() {
 
-	if ( 'delete-group' != bp_get_group_current_admin_tab() ) {
+	if ( apply_filters( 'bp_group_delete_slug', 'delete-group') != bp_get_group_current_admin_tab() ) {
 		return false;
 	}
 
