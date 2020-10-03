@@ -63,6 +63,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	public function update_where_sql( $where_conditions ) {
 		$where                 = array();
 		$where['groups_where'] = $this->exclude_where_query();
+		$where['members_where'] = $this->exclude_member_activity_query();
 
 		/**
 		 * Filters the groups Moderation Where SQL statement.
@@ -76,6 +77,21 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Get Exclude Blocked Members SQL
+	 *
+	 * @return string|void
+	 */
+	private function exclude_member_activity_query() {
+		$sql              = '';
+		$hidden_group_ids = $this->get_sitewide_hidden_item_ids( BP_Moderation_Members::$moderation_type );
+		if ( ! empty( $hidden_group_ids ) ) {
+			$sql = "( g.creator_id NOT IN ( " . implode( ',', $hidden_group_ids ) . " ) )";
+		}
+
+		return $sql;
 	}
 
 }

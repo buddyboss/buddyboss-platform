@@ -365,6 +365,15 @@ class BP_User_Query {
 				break;
 		}
 
+		/**
+		 * Filters the Join SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'] );
+
 		/* WHERE *************************************************************/
 
 		// 'include' - User ids to include in the results.
@@ -466,6 +475,15 @@ class BP_User_Query {
 				$sql['where'][] = '1 = 0';
 			}
 		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['where'] = apply_filters( 'bp_user_query_where_sql', $sql['where'] );
 
 		// 'per_page', 'page' - handles LIMIT.
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
