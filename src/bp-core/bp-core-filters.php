@@ -1419,10 +1419,10 @@ add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
  * @since BuddyBoss 1.5.1
  */
 function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
-	if ( did_action( 'wp_ajax_bp_cover_image_upload' ) && ( 'xprofile' === $component || 'groups' === $component ) ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
 		return array(
-			'width'  => 99999,
-			'height' => 99999,
+			'width'  => 1950,
+			'height' => 450,
 		);
 	}
 
