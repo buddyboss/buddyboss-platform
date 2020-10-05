@@ -61,7 +61,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return mixed Where SQL
 	 */
 	public function update_where_sql( $where_conditions ) {
-		$where                 = array();
+		$where                = array();
 		$where['users_where'] = $this->exclude_where_query();
 
 		/**
@@ -73,7 +73,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_groups_get_where_conditions', $where );
 
-		$where_conditions['moderation_where'] =  '( ' . implode( ' AND ', $where ) . ' )';
+		$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 
 		return $where_conditions;
 	}

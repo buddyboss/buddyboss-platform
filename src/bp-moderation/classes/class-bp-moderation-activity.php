@@ -63,7 +63,14 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	public function update_where_sql( $where_conditions ) {
 		$where                   = array();
 		$where['activity_where'] = $this->exclude_where_query();
-		$where['members_where'] = $this->exclude_member_activity_query();
+
+		/**
+		 * Exclude Blocked Member activity
+		 */
+		$members_where = $this->exclude_member_activity_query();
+		if ( $members_where ) {
+			$where['members_where'] = $members_where;
+		}
 
 		/**
 		 * Exclude Blocked Groups activity
@@ -95,7 +102,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return string|void
 	 */
 	private function exclude_group_activity_query() {
-		$sql              = '';
+		$sql              = false;
 		$hidden_group_ids = $this->get_sitewide_hidden_item_ids( BP_Moderation_Groups::$moderation_type );
 		if ( ! empty( $hidden_group_ids ) ) {
 			$sql = "( ( a.component = 'groups' AND a.item_id NOT IN ( " . implode( ',', $hidden_group_ids ) . " ) ) OR a.component != 'groups' )";
@@ -110,10 +117,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return string|void
 	 */
 	private function exclude_member_activity_query() {
-		$sql              = '';
+		$sql              = false;
 		$hidden_group_ids = $this->get_sitewide_hidden_item_ids( BP_Moderation_Members::$moderation_type );
 		if ( ! empty( $hidden_group_ids ) ) {
-			$sql = "( a.user_id NOT IN ( " . implode( ',', $hidden_group_ids ) . " ) )";
+			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_group_ids ) . ' ) )';
 		}
 
 		return $sql;
