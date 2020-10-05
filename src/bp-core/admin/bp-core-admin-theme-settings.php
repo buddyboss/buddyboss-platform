@@ -67,7 +67,8 @@ if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 			'.test',
 			'.dev',
 			'staging.',
-			'localhost'
+			'localhost',
+			'.local',
 		);
 
 		foreach ( $whitelist_domain as $domain ) {
