@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 			// Document move option.
 			var mediaStream = $( '#bb-media-model-container .activity-list, #media-stream' );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-media-move', this.openMediaMove.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream, .group-media #media-stream' ).on( 'click', '.ac-media-move', this.openMediaMove.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-media-close-button', this.closeMediaMove.bind( this ) );
 			mediaStream.on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
@@ -1177,8 +1177,8 @@ window.bp = window.bp || {};
 
 			if (currentPopup.find( '.bb-field-steps' ).length) {
 				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
-				currentPopup.find( '.bb-field-steps-1 #bp-media-photo-next').hide();
-				currentPopup.find( '#bp-media-prev, #bp-media-submit, .bp-media-open-create-popup-folder' ).hide();
+				currentPopup.find( '.bb-field-steps-1 #bp-media-photo-next, .bb-field-steps-1 #bp-media-document-next ').hide();
+				currentPopup.find( '#bp-media-document-prev, #bp-media-prev, #bp-media-document-submit, #bp-media-submit, .bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder' ).hide();
 			}
 
 			this.clearFolderLocationUI( event );
@@ -2559,35 +2559,36 @@ window.bp = window.bp || {};
 				$( '#bp-media-uploader' ).addClass( 'open-popup' ).show();
 
 				if ( $( '#bp-media-uploader' ).find( '.bb-field-steps.bb-field-steps-2' ).length ) {
-
 					var parentsOpen = 0;
 					currentTarget = '#bp-media-uploader';
 					if ( '' !== this.moveToIdPopup ) {
-					$.ajax(
-						{
-							url : BP_Nouveau.ajaxurl,
-							type : 'post',
-							data : {
-								action: 'media_get_album_view',
-								id: this.move_to_id_popup ,
-							},success : function( response ) {
-								$( document ).find( '.location-album-list-wrap h4 span.where-to-move-profile-or-group-media' ).html( response.data.first_span_text );
-								if ( '' === response.data.html ) {
-									$( document ).find( '.open-popup .location-album-list-wrap' ).hide();
-									$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).show();
-								} else {
-									$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).hide();
-									$( document ).find( '.open-popup .location-album-list-wrap' ).show();
+						$.ajax(
+							{
+								url : BP_Nouveau.ajaxurl,
+								type : 'post',
+								data : {
+									action: 'media_get_album_view',
+									id: this.move_to_id_popup ,
+								},success : function( response ) {
+									console.log( response.data.first_span_text );
+									$( document ).find( '.location-album-list-wrap h4 span.where-to-move-profile-or-group-media' ).html( response.data.first_span_text );
+									if ( '' === response.data.html ) {
+										$( document ).find( '.open-popup .location-album-list-wrap' ).hide();
+										$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).show();
+									} else {
+										$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).hide();
+										$( document ).find( '.open-popup .location-album-list-wrap' ).show();
+									}
+									
+									$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show').show();
+									$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
+									
+									$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
+									$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
+									$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
 								}
-								
-								$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show').show();
-								$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
-								
-								$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
-								$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
-								$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
 							}
-						});
+						);
 					}
 				}
 

@@ -14,7 +14,7 @@
 
 		<input type="hidden" class="bb-album-destination" value="<?php esc_html_e( 'Select Album', 'buddyboss' ); ?>" readonly/>
 		<div class="location-album-list-wrap">
-			<h4><span class="where-to-move-profile-or-group-document"></span></h4>
+			<h4><span class="where-to-move-profile-or-group-media"></span></h4>
 			<div class="breadcrumbs-append-ul-li">
 				<div class="breadcrumb">
 					<div class="item">
