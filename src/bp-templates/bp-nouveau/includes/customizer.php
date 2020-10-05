@@ -48,7 +48,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'title'       => __( 'Profile Action Buttons', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
-			'description' => __( 'Custommize to Re-Order profile action buttons.', 'buddyboss' ),
+			'description' => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
 			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
@@ -240,7 +240,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 		'user_profile_actions_display'   => array(
 			'class'    => 'BP_Nouveau_Profile_Header_Customize_Control',
-			'label'    => __( 'Reorder the profile action buttons.', 'buddyboss' ),
+			'label'    => __( 'Customize the order of the action buttons in profile headers, visible when viewing other member\'s profiles.', 'buddyboss' ),
 			'section'  => 'bp_nouveau_user_profile_header',
 			'settings' => 'bp_nouveau_appearance[user_profile_actions_display]',
 			'type'     => 'header_button',
