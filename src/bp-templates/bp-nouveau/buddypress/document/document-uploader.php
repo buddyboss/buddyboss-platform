@@ -35,17 +35,6 @@
 							</div>
 							<a id="bp-media-document-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
 						</div>
-					</div>
-
-					<div class="bb-field-steps bb-field-steps-2">
-						<div class="bb-field-wrap">
-							<?php bp_get_template_part( 'document/location-move' ); ?>
-							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
-						</div>
-					</div>
-
-					<footer class="bb-model-footer document-uploader-footer">
-
 						<?php if ( ! bp_is_group() && ! bp_is_single_folder() ) : ?>
 							<div class="bb-dropdown-wrap">
 								<select id="bb-document-privacy">
@@ -60,7 +49,16 @@
 								</select>
 							</div>
 						<?php endif; ?>
+					</div>
 
+					<div class="bb-field-steps bb-field-steps-2">
+						<div class="bb-field-wrap">
+							<?php bp_get_template_part( 'document/location-move' ); ?>
+							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
+						</div>
+					</div>
+
+					<footer class="bb-model-footer document-uploader-footer">
 						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" ><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
 						<a id="bp-media-document-prev" class="button bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
 

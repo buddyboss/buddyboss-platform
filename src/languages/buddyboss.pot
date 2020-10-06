@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-10-06 09:12:46+00:00\n"
+"POT-Creation-Date: 2020-10-06 12:53:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7651,13 +7651,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -21447,7 +21447,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:47
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:63
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:76
 #: bp-templates/bp-nouveau/includes/document/ajax.php:899
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1222
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1380
@@ -21820,7 +21820,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:17
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:31
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:64
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:62
 msgid "Create new folder"
 msgstr ""
 
@@ -21943,16 +21943,16 @@ msgstr ""
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:65
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:105
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:63
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:106
 msgid "Previous"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:67
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:65
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:59
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:107
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:108
 msgid "Done"
 msgstr ""
 

@@ -40,7 +40,20 @@
                                     </div>
                                     <a id="bp-media-photo-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
                                 </div>
-                            </div>						
+                            </div>
+
+                            <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
+                            <div class="bb-dropdown-wrap">
+                                <select id="bb-media-privacy">
+				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
+					                    ?>
+                                        <option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
+					                    <?php
+				                    } ?>
+                                </select>
+                            </div>
+                        <?php endif; ?>
+
                     </div>
 
 	                <?php if ( bp_is_single_album() ) : ?>
@@ -88,18 +101,6 @@
 
                     <footer class="bb-model-footer media-uploader-footer">
                         <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
-
-	                    <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
-                            <div class="bb-dropdown-wrap">
-                                <select id="bb-media-privacy">
-				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
-					                    ?>
-                                        <option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
-					                    <?php
-				                    } ?>
-                                </select>
-                            </div>
-                        <?php endif; ?>
                         
                         <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">Create new album</a>
                         <a id="bp-media-prev" class="button bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
