@@ -2562,6 +2562,19 @@ function bp_is_user_groups() {
 }
 
 /**
+ * Is the current page part of a user's Groups invite page?
+ *
+ * Eg http://example.com/members/joe/groups/invites/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.5.2
+ *
+ * @return bool True if the current page is a user's Groups invite page.
+ */
+function bp_is_user_groups_invites(){
+	return (bool) ( bp_is_user_groups() && bp_is_current_action( 'invites' ) );
+}
+
+/**
  * Is the current page part of a user's Blogs page?
  *
  * Eg http://example.com/members/joe/blogs/ (or a subpage thereof).
