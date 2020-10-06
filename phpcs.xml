@@ -6,12 +6,9 @@
 	<file>bp-loader.php</file>
 
 	<!-- Exclude paths -->
-	<exclude-pattern>*/node_modules/*</exclude-pattern>
-	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/languages/*</exclude-pattern>
 	<exclude-pattern>*/lib/*</exclude-pattern>
-	<exclude-pattern>*.min.*</exclude-pattern>
-	<exclude-pattern>*.css</exclude-pattern>
-	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/deprecated/*</exclude-pattern>
 	<exclude-pattern>*/bp-integrations/*</exclude-pattern>
 	<exclude-pattern>*/bp-core/classes/class-bp-phpmailer.php</exclude-pattern>
@@ -21,38 +18,31 @@
 	<exclude-pattern>awpcp_ad_listing-ajax.php</exclude-pattern>
 	<exclude-pattern>*/cli/*</exclude-pattern>
 
-	<!-- Configs -->
-	<config name="minimum_supported_wp_version" value="4.7" />
-	<config name="testVersion" value="5.6-" />
+	<!-- Third-party code -->
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+
+	<!-- Ensure certain file types aren't sniffed -->
+	<exclude-pattern>*\.(css|js)</exclude-pattern>
 
 	<arg name="colors"/>
 	<arg value="p"/>
 
 	<ini name="memory_limit" value="1024M"/>
 
-	<!--<rule ref="PSR1"/>-->
-	<rule ref="PSR1">
-		<exclude name="PSR1.Files.SideEffects.FoundWithSymbols" />
-	</rule>
+	<!-- Configs -->
 
-	<!--<rule ref="PSR2"/>-->
-<!--	<rule ref="PSR2">-->
-<!--		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>-->
-<!--	</rule>-->
-<!--	<rule ref="Generic.Files.LineLength">-->
-<!--		<properties>-->
-<!--			<property name="lineLimit" value="160"/>-->
-<!--		</properties>-->
-<!--	</rule>-->
+	<!-- Loads the PHP Compatibility ruleset. -->
+	<rule ref="PHPCompatibilityWP" />
+
+	<!-- PHP version check. -->
+	<config name="minimum_supported_wp_version" value="4.7" />
+	<config name="testVersion" value="5.6-" />
 
 	<!-- Rules -->
-	<rule ref="WordPress-Core">
-		<exclude name="WordPress.PHP.StrictInArray" />
-		<exclude name="WordPress.DB.PreparedSQL" />
-		<exclude name="WordPress.WP.I18n" />
-		<exclude name="WordPress.DateTime.RestrictedFunctions.date_date" />
-		<exclude name="WordPress.DateTime.CurrentTimeTimestamp.RequestedUTC" />
-		<type>error</type>
+	<rule ref="WordPress">
+		<exclude name="WordPress.DB.SlowDBQuery.slow_db_query_meta_query" />
+		<exclude name="WordPress.DB.PreparedSQL.InterpolatedNotPrepared" />
 	</rule>
 
 	<rule ref="WordPress.WP.I18n">
