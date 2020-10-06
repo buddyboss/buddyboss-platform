@@ -84,6 +84,10 @@ function bp_core_set_uri_globals() {
 
 	// Take GET variables off the URL to avoid problems.
 	$path = strtok( $path, '?' );
+	
+	// Convert upper case to lower to avoid problem with assigning component
+	$path = strtolower( $path );
+	
 
 	// Fetch current URI and explode each part separated by '/' into an array.
 	$bp_uri = explode( '/', $path );
