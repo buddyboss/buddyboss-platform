@@ -2919,14 +2919,14 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 
 	// Set items as children of the relevant parent item.
 	foreach ( $data as $key => &$item ) {
-		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+		if ( isset( $item['parent'] ) && $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
 			$itemsByReference [ $item['parent'] ]['children'][] = &$item;
 		}
 	}
 
 	// Remove items that were added to parents elsewhere:
 	foreach ( $data as $key => &$item ) {
-		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+		if ( isset( $item['parent'] ) && $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
 			unset( $data[ $key ] );
 		}
 	}

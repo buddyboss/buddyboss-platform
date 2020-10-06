@@ -531,7 +531,7 @@ window.bp = window.bp || {};
 							if ( '' !== privacySelector ) {
 								privacySelector.val( 'public' );
 							}
-							
+
 							$( event.currentTarget ).removeClass( 'loading' );
 						}
 					}
@@ -2568,7 +2568,8 @@ window.bp = window.bp || {};
 								type : 'post',
 								data : {
 									action: 'media_get_album_view',
-									id: this.move_to_id_popup ,
+									id: this.moveToIdPopup,
+									type: this.moveToTypePopup,
 								},success : function( response ) {
 									console.log( response.data.first_span_text );
 									$( document ).find( '.location-album-list-wrap h4 span.where-to-move-profile-or-group-media' ).html( response.data.first_span_text );
@@ -2579,10 +2580,10 @@ window.bp = window.bp || {};
 										$( document ).find( '.open-popup .location-album-list-wrap-main span.no-folder-exists' ).hide();
 										$( document ).find( '.open-popup .location-album-list-wrap' ).show();
 									}
-									
+
 									$( document ).find( '.popup-on-fly-create-album .privacy-field-wrap-hide-show').show();
 									$( document ).find( '.open-popup .bb-album-create-from' ).val( 'profile' );
-									
+
 									$( currentTarget ).find( '.location-album-list-wrap .location-album-list' ).remove();
 									$( currentTarget ).find( '.location-album-list-wrap' ).append( response.data.html );
 									$( currentTarget ).find( 'ul.location-album-list span#' + parentsOpen ).trigger( 'click' );
@@ -2597,13 +2598,10 @@ window.bp = window.bp || {};
 					if( $(this).parent().hasClass('is_active') ){
 						return;
 					}
-	
 					if( $( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).data( 'id' ) != 0 ) {
 						$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).remove();
 					}
-	
 					$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item' ).append( '<span class="is-disabled" data-id="'+ $( this ).attr( 'id' ) +'">'+ $( this ).text() +'</span>' );
-	
 					$(this).addClass('selected').parent().addClass('is_active').siblings().removeClass('is_active').children('span').removeClass('selected');
 					if( parentsOpen == $( e.currentTarget ).data('id') ){
 						$( e.currentTarget ).closest( '.bb-field-wrap' ).find('.bb-model-footer .bp-media-move').addClass('is-disabled');
@@ -2615,26 +2613,26 @@ window.bp = window.bp || {};
 					}
 					$( e.currentTarget ).closest( '.bb-field-wrap' ).find('.bb-album-selected-id').val( $(e.currentTarget).data('id') );
 				});
-	
+
 				$( document ).on( 'click', currentTarget + ' .breadcrumb .item > span' , function( e ) {
-	
+
 					if( $( this ).hasClass( 'is-disabled' ) ){
 						return;
 					}
-	
+
 					$( e.currentTarget ).closest( '.bb-field-wrap' ).find( '.bb-album-selected-id' ).val( 0 );
 					$( e.currentTarget ).closest( '.bb-field-wrap' ).find( '.location-album-list li span' ).removeClass( 'selected' ).parent().removeClass( 'is_active' );
-	
+
 					if( $( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).hasClass( 'is-disabled' ) ) {
 						$( this ).closest( '.location-album-list-wrap' ).find( '.breadcrumb .item span:last-child' ).remove();
 					}
-	
+
 					if( parentsOpen == $( e.currentTarget ).data('id') ){
 						$( e.currentTarget ).closest( '.bb-field-wrap' ).find('.bb-model-footer .bp-media-move').addClass('is-disabled');
 					} else {
 						$( e.currentTarget ).closest( '.bb-field-wrap' ).find('.bb-model-footer .bp-media-move').removeClass('is-disabled');
 					}
-	
+
 				});
 
 				self.dropzone_obj = new Dropzone( 'div#media-uploader', self.options );
@@ -2704,7 +2702,7 @@ window.bp = window.bp || {};
 							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 							this.removeFile(file);
 						}
-						
+
 						if( $( event.currentTarget ).closest( '#bp-media-single-album' ).length ) {
 							$( '#bp-media-submit' ).show();
 						} else {
@@ -2712,7 +2710,7 @@ window.bp = window.bp || {};
 						}
 
 						$( '#bp-media-add-more' ).show();
-						
+
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
 						$( '#bp-media-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length ) ).show();
 					}
@@ -2855,7 +2853,7 @@ window.bp = window.bp || {};
 						} else {
 							$( '.bb-field-steps-1 #bp-media-document-next' ).show();
 						}
-						
+
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
 						$( '#bp-media-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length ) ).show();
 					}
@@ -3752,12 +3750,26 @@ window.bp = window.bp || {};
 			if (self.current_tab === 'bp-dropzone-content') {
 
 				var post_content = $( '#bp-media-post-content' ).val();
+
+				var targetPopup   =  $( event.currentTarget ).closest( '.open-popup' );
+				var selectedAlbum = targetPopup.find( '.bb-album-selected-id' ).val();
+				if ( selectedAlbum.length && parseInt( selectedAlbum ) > 0 ) {
+					selectedAlbum = selectedAlbum;
+					for ( var i = 0; i < self.dropzone_media.length; i++ ) {
+						self.dropzone_media[i].album_id = selectedAlbum;
+					}
+
+				} else {
+					selectedAlbum = self.album_id;
+				}
+
+
 				data             = {
 					'action'	: 'media_save',
 					'_wpnonce'	: BP_Nouveau.nonces.media,
 					'medias'	: self.dropzone_media,
 					'content'	: post_content,
-					'album_id'	: self.album_id,
+					'album_id'	: selectedAlbum,
 					'group_id'	: self.group_id,
 					'privacy'	: privacy.val()
 				};
@@ -3784,6 +3796,9 @@ window.bp = window.bp || {};
 								for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 									self.dropzone_media[i].saved = true;
 								}
+
+								// Reset the selector album_id
+								targetPopup.find( '.bb-album-selected-id' ).val(0);
 
 								self.closeUploader( event );
 
