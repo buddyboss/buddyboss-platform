@@ -29,7 +29,7 @@ $tooltip_position = bp_disable_group_cover_image_uploads() ? 'down' : 'up';
 
 	<div id="item-header-content">
 
-		<p class="highlight group-status bp-tooltip" data-bp-tooltip-length="large" data-bp-tooltip-pos="<?php echo $tooltip_position; ?>" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
+		<p class="highlight group-status bp-tooltip" data-bp-tooltip-length="large" data-bp-tooltip-pos="<?php echo esc_attr( $tooltip_position ); ?>" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
 
 		<p class="activity">
 			<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
