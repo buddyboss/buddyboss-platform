@@ -486,6 +486,8 @@ function bbp_maybe_get_root_slug() {
 	if ( bbp_get_root_slug() && bbp_include_root_slug() )
 		$retval = trailingslashit( bbp_get_root_slug() );
 
+	$retval = urldecode_deep( $retval) ;
+	
 	return apply_filters( 'bbp_maybe_get_root_slug', $retval );
 }
 
