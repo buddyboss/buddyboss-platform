@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-10-05 09:03:42+00:00\n"
+"POT-Creation-Date: 2020-10-06 07:16:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -685,10 +685,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:222
 #: bp-core/admin/bp-core-admin-tools.php:863
-#: bp-core/classes/class-bp-admin.php:511
 #: bp-core/classes/class-bp-admin.php:512
-#: bp-core/classes/class-bp-admin.php:534
-#: bp-core/classes/class-bp-admin.php:535 bp-forums/admin/settings.php:1464
+#: bp-core/classes/class-bp-admin.php:513
+#: bp-core/classes/class-bp-admin.php:535
+#: bp-core/classes/class-bp-admin.php:536 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1748
 #: bp-media/bp-media-filters.php:1185
 msgid "Tools"
@@ -2033,7 +2033,7 @@ msgstr ""
 #: bp-blogs/bp-blogs-template.php:1334 bp-blogs/bp-blogs-template.php:1433
 #: bp-blogs/classes/class-bp-blogs-component.php:299
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:184
-#: bp-core/bp-core-template.php:3481
+#: bp-core/bp-core-template.php:3494
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:53
 msgid "Create a Site"
 msgstr ""
@@ -2253,8 +2253,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:27
 #: bp-core/admin/bp-core-admin-functions.php:656
-#: bp-core/classes/class-bp-admin.php:314
-#: bp-core/classes/class-bp-admin.php:462
+#: bp-core/classes/class-bp-admin.php:315
+#: bp-core/classes/class-bp-admin.php:463
 msgid "Components"
 msgstr ""
 
@@ -2368,9 +2368,9 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:340
 #: bp-core/admin/bp-core-admin-functions.php:666
 #: bp-core/admin/bp-core-admin-settings.php:643
-#: bp-core/classes/class-bp-admin.php:332
-#: bp-core/classes/class-bp-admin.php:480
-#: bp-core/classes/class-bp-admin.php:743
+#: bp-core/classes/class-bp-admin.php:333
+#: bp-core/classes/class-bp-admin.php:481
+#: bp-core/classes/class-bp-admin.php:744
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:427
 #: bp-groups/bp-groups-admin.php:166
@@ -2444,36 +2444,36 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:661
 #: bp-core/admin/bp-core-admin-pages.php:25
-#: bp-core/classes/class-bp-admin.php:322
 #: bp-core/classes/class-bp-admin.php:323
-#: bp-core/classes/class-bp-admin.php:470
-#: bp-core/classes/class-bp-admin.php:471 bp-forums/admin/settings.php:1670
+#: bp-core/classes/class-bp-admin.php:324
+#: bp-core/classes/class-bp-admin.php:471
+#: bp-core/classes/class-bp-admin.php:472 bp-forums/admin/settings.php:1670
 #: bp-search/bp-search-functions.php:362
 msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:671
 #: bp-core/admin/bp-core-admin-settings.php:668
-#: bp-core/classes/class-bp-admin.php:341
-#: bp-core/classes/class-bp-admin.php:489
+#: bp-core/classes/class-bp-admin.php:342
+#: bp-core/classes/class-bp-admin.php:490
 msgid "Integrations"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:681
 #: bp-core/admin/bp-core-admin-help.php:56
-#: bp-core/classes/class-bp-admin.php:433
-#: bp-core/classes/class-bp-admin.php:543
+#: bp-core/classes/class-bp-admin.php:434
 #: bp-core/classes/class-bp-admin.php:544
+#: bp-core/classes/class-bp-admin.php:545
 msgid "Help"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:686
 #: bp-core/admin/settings/bp-admin-setting-credit.php:21
-#: bp-core/classes/class-bp-admin.php:350
 #: bp-core/classes/class-bp-admin.php:351
-#: bp-core/classes/class-bp-admin.php:498
+#: bp-core/classes/class-bp-admin.php:352
 #: bp-core/classes/class-bp-admin.php:499
-#: bp-core/classes/class-bp-admin.php:592
+#: bp-core/classes/class-bp-admin.php:500
+#: bp-core/classes/class-bp-admin.php:593
 msgid "Credits"
 msgstr ""
 
@@ -2782,12 +2782,12 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2573
 #: bp-core/admin/bp-core-admin-functions.php:2744
-#: bp-core/bp-core-functions.php:3189 bp-core/classes/class-bp-admin.php:644
-#: bp-core/classes/class-bp-admin.php:645
-#: bp-core/classes/class-bp-admin.php:655
+#: bp-core/bp-core-functions.php:3189 bp-core/classes/class-bp-admin.php:645
+#: bp-core/classes/class-bp-admin.php:646
 #: bp-core/classes/class-bp-admin.php:656
-#: bp-core/classes/class-bp-admin.php:674
+#: bp-core/classes/class-bp-admin.php:657
 #: bp-core/classes/class-bp-admin.php:675
+#: bp-core/classes/class-bp-admin.php:676
 msgid "Emails"
 msgstr ""
 
@@ -5188,7 +5188,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3284 bp-core/classes/class-bp-admin.php:867
+#: bp-core/bp-core-functions.php:3284 bp-core/classes/class-bp-admin.php:868
 msgid "Situations"
 msgstr ""
 
@@ -6029,21 +6029,21 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3461
+#: bp-core/bp-core-template.php:3474
 msgid "Directory"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3469
+#: bp-core/bp-core-template.php:3482
 #: bp-members/classes/class-bp-registration-theme-compat.php:102
 msgid "Create an Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3473
+#: bp-core/bp-core-template.php:3486
 #: bp-members/classes/class-bp-registration-theme-compat.php:110
 msgid "Activate Your Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3477 bp-groups/bp-groups-template.php:4364
+#: bp-core/bp-core-template.php:3490 bp-groups/bp-groups-template.php:4364
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:544
 #: bp-templates/bp-nouveau/includes/groups/functions.php:603
 msgid "Create a Group"
@@ -6565,48 +6565,48 @@ msgstr ""
 msgid "Select site to repair the forums"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:313
-#: bp-core/classes/class-bp-admin.php:461
+#: bp-core/classes/class-bp-admin.php:314
+#: bp-core/classes/class-bp-admin.php:462
 msgid "BuddyBoss Components"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:331
-#: bp-core/classes/class-bp-admin.php:479
+#: bp-core/classes/class-bp-admin.php:332
+#: bp-core/classes/class-bp-admin.php:480
 msgid "BuddyBoss Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:340
-#: bp-core/classes/class-bp-admin.php:488
+#: bp-core/classes/class-bp-admin.php:341
+#: bp-core/classes/class-bp-admin.php:489
 msgid "Plugin Integrations"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:432
+#: bp-core/classes/class-bp-admin.php:433
 msgid "BuddyBoss Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:452
+#: bp-core/classes/class-bp-admin.php:453
 msgid "BuddyPress Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:453
+#: bp-core/classes/class-bp-admin.php:454
 #: bp-integrations/compatibility/bp-compatibility-integration.php:21
 msgid "BuddyPress"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:522
 #: bp-core/classes/class-bp-admin.php:523
+#: bp-core/classes/class-bp-admin.php:524
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:744 bp-forums/admin/admin.php:432
+#: bp-core/classes/class-bp-admin.php:745 bp-forums/admin/admin.php:432
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:812
+#: bp-core/classes/class-bp-admin.php:813
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:813
+#: bp-core/classes/class-bp-admin.php:814
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -6665,27 +6665,27 @@ msgstr ""
 msgid "That image is too big. Please upload one smaller than %s"
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-cover-image.php:217
+#: bp-core/classes/class-bp-attachment-cover-image.php:234
 msgid "Your new cover photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-cover-image.php:218
+#: bp-core/classes/class-bp-attachment-cover-image.php:235
 msgid "There was a problem deleting your cover photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-cover-image.php:219
+#: bp-core/classes/class-bp-attachment-cover-image.php:236
 msgid "Your cover photo was deleted successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-cover-image.php:235
+#: bp-core/classes/class-bp-attachment-cover-image.php:252
 msgid "The group cover photo was uploaded successfully."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-cover-image.php:236
+#: bp-core/classes/class-bp-attachment-cover-image.php:253
 msgid "There was a problem deleting the group cover photo. Please try again."
 msgstr ""
 
-#: bp-core/classes/class-bp-attachment-cover-image.php:237
+#: bp-core/classes/class-bp-attachment-cover-image.php:254
 msgid "The group cover photo was deleted successfully!"
 msgstr ""
 
@@ -7651,13 +7651,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
