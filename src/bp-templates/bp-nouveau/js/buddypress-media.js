@@ -4987,18 +4987,20 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			var userIsEditing = ( $('#add-activity-description').length && $('#add-activity-description').is(':focus') ) || ( $('.ac-reply-content .ac-textarea > .ac-input').length && $('.ac-reply-content .ac-textarea > .ac-input').hasClass('focus-visible') );
+
 			switch (e.keyCode) {
 				case 27: // escape key.
 					self.closeTheatre( e );
 					break;
 				case 37: // left arrow key code.
-					if (typeof self.medias[self.current_index - 1] === 'undefined') {
+					if (typeof self.medias[self.current_index - 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.previous( e );
 					break;
 				case 39: // right arrow key code.
-					if (typeof self.medias[self.current_index + 1] === 'undefined') {
+					if (typeof self.medias[self.current_index + 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.next( e );
@@ -5013,18 +5015,21 @@ window.bp = window.bp || {};
 			if ( ! self.is_open_document ) {
 				return false;
 			}
+
+			var userIsEditing = ( $('#add-activity-description').length && $('#add-activity-description').is(':focus') ) || ( $('.ac-reply-content .ac-textarea > .ac-input').length && $('.ac-reply-content .ac-textarea > .ac-input').hasClass('focus-visible') );
+
 			switch (e.keyCode) {
 				case 27: // escape key.
 					self.closeDocumentTheatre( e );
 					break;
 				case 37: // left arrow key code.
-					if (typeof self.documents[self.current_document_index - 1] === 'undefined') {
+					if (typeof self.documents[self.current_document_index - 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.previousDocument( e );
 					break;
 				case 39: // right arrow key code.
-					if (typeof self.documents[self.current_document_index + 1] === 'undefined') {
+					if (typeof self.documents[self.current_document_index + 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.nextDocument( e );
