@@ -1271,6 +1271,7 @@ function bp_nouveau_nav_has_count() {
 	$bp_nouveau = bp_nouveau();
 	$nav_item   = $bp_nouveau->current_nav_item;
 	$count      = false;
+	$coursesSlug     = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
@@ -1282,7 +1283,7 @@ function bp_nouveau_nav_has_count() {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_album_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'courses' === $nav_item->slug ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && $coursesSlug === $nav_item->slug ) {
 		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
 			$count = 0 !== count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
 		}
@@ -1324,6 +1325,7 @@ function bp_nouveau_get_nav_count() {
 	$bp_nouveau = bp_nouveau();
 	$nav_item   = $bp_nouveau->current_nav_item;
 	$count      = 0;
+	$coursesSlug     = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
@@ -1337,7 +1339,7 @@ function bp_nouveau_get_nav_count() {
 		$count = bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = bp_media_get_total_group_album_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'courses' === $nav_item->slug ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && $coursesSlug === $nav_item->slug ) {
 		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
 			$count = count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
 		}
