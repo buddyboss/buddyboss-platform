@@ -1268,10 +1268,10 @@ function bp_nouveau_get_nav_link_text() {
  * @return bool
  */
 function bp_nouveau_nav_has_count() {
-	$bp_nouveau = bp_nouveau();
-	$nav_item   = $bp_nouveau->current_nav_item;
-	$count      = false;
-	$coursesSlug     = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+	$bp_nouveau     = bp_nouveau();
+	$nav_item       = $bp_nouveau->current_nav_item;
+	$count          = false;
+	$coursesSlug    = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav && isset( $nav_item->count ) ) {
 		$count = $nav_item->count;
@@ -1322,22 +1322,27 @@ function bp_nouveau_nav_count() {
 	 * @return int The count attribute for the nav item.
 	 */
 function bp_nouveau_get_nav_count() {
-	$bp_nouveau = bp_nouveau();
-	$nav_item   = $bp_nouveau->current_nav_item;
-	$count      = 0;
-	$coursesSlug     = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+	$bp_nouveau  = bp_nouveau();
+	$nav_item    = $bp_nouveau->current_nav_item;
+	$count       = 0;
+	$coursesSlug = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = (int) str_replace( ',', '', $nav_item->count );
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav
+	           && ( 'members' === $nav_item->slug
+	                || 'all-members' === $nav_item->slug ) ) {
 		$count = groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
-	//} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
+		//} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_document_support_enabled() && 'documents' === $nav_item->slug ) {
 		//$count = bp_document_get_total_group_document_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled()
+	           && 'photos' === $nav_item->slug ) {
 		$count = bp_media_get_total_group_media_count();
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' )
+	           && bp_is_group_albums_support_enabled()
+	           && 'albums' === $nav_item->slug ) {
 		$count = bp_media_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && $coursesSlug === $nav_item->slug ) {
 		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
@@ -1366,9 +1371,9 @@ function bp_nouveau_get_nav_count() {
 	 *
 	 * @since BuddyPress 3.0.0
 	 *
-	 * @param int $count    The count attribute for the nav item.
-	 * @param object $nav_item The current nav item object.
-	 * @param string $value    The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
+	 * @param  int  $count  The count attribute for the nav item.
+	 * @param  object  $nav_item  The current nav item object.
+	 * @param  string  $value  The current nav in use (eg: 'directory', 'groups', 'personal', etc..).
 	 */
 	return (int) apply_filters( 'bp_nouveau_get_nav_count', $count, $nav_item, $bp_nouveau->displayed_nav );
 }
