@@ -3993,7 +3993,9 @@ window.bp = window.bp || {};
 
 				var targetPopup   =  $( event.currentTarget ).closest( '.open-popup' );
 				var selectedAlbum = targetPopup.find( '.bb-folder-selected-id' ).val();
+				var hasNotAlbum = true;
 				if ( selectedAlbum.length && parseInt( selectedAlbum ) > 0 ) {
+					hasNotAlbum = false;
 					selectedAlbum = selectedAlbum;
 					for ( var i = 0; i < self.dropzone_media.length; i++ ) {
 						self.dropzone_media[i].folder_id = selectedAlbum;
@@ -4040,11 +4042,12 @@ window.bp = window.bp || {};
 											$( document ).find( 'li#document-personal' ).trigger( 'click' );
 										} else {
 											// Prepend the activity.
-											bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+											hasNotAlbum ? bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' ) : '';
+											
 										}
 									} else {
 										// Prepend the activity.
-										bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' );
+										hasNotAlbum ? bp.Nouveau.inject( '#media-stream div#media-folder-document-data-table', response.data.document, 'prepend' ) : '';
 									}
 								} else {
 									location.reload( true );
