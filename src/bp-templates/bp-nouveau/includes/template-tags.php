@@ -1282,6 +1282,10 @@ function bp_nouveau_nav_has_count() {
 		$count = 0 !== (int) bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = 0 !== (int) bp_media_get_total_group_album_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'courses' === $nav_item->slug ) {
+		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
+			$count = 0 !== count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = 0 !== (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
@@ -1333,6 +1337,10 @@ function bp_nouveau_get_nav_count() {
 		$count = bp_media_get_total_group_media_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
 		$count = bp_media_get_total_group_album_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'courses' === $nav_item->slug ) {
+		if ( function_exists( 'bp_learndash_get_group_courses' ) ) {
+			$count = count( bp_learndash_get_group_courses( bp_get_current_group_id() ) );
+		}
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
 		$group  = groups_get_current_group();
 		$admins = groups_get_group_admins( $group->id );
