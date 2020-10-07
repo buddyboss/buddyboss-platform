@@ -157,7 +157,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		$hidden_reply_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
 
 		$hidden_topic_ids = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_forum_ids ) ) {
+		if ( ! empty( $hidden_topic_ids ) ) {
 			$replies_query = new WP_Query(
 				array(
 					'fields'                 => 'ids',
