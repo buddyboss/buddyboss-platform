@@ -30,6 +30,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		/**
+		 * Moderation code should not add for WordPress backend
+		 */
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return;
+		}
+
 		$this->item_type = self::$moderation_type;
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10 );
@@ -76,6 +83,15 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Get blocked Member ids
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
 	}
 
 }

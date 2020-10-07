@@ -24,6 +24,13 @@ abstract class BP_Moderation_Abstract {
 	public $item_type;
 
 	/**
+	 * Item type
+	 *
+	 * @var string
+	 */
+	public $alias = 'mo';
+
+	/**
 	 * Prepare Join sql for exclude Blocked items
 	 *
 	 * @since BuddyBoss 1.5.4
@@ -35,7 +42,7 @@ abstract class BP_Moderation_Abstract {
 	protected function exclude_joint_query( $item_id_field ) {
 		global $wpdb;
 		$bp = buddypress();
-		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->moderation->table_name} mo ON ( mo.item_id = $item_id_field AND mo.item_type = %s )", $this->item_type ); // phpcs:ignore
+		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->moderation->table_name} {$this->alias} ON ( {$this->alias}.item_id = $item_id_field AND {$this->alias}.item_type = %s )", $this->item_type ); // phpcs:ignore
 	}
 
 	/**
@@ -46,7 +53,7 @@ abstract class BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 */
 	protected function exclude_where_query() {
-		return '( mo.hide_sitewide = 0 OR mo.hide_sitewide IS NULL )';
+		return "( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
 	}
 
 	/**
@@ -58,7 +65,7 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @return array $moderation See BP_Moderation::get() for description.
 	 */
-	protected function get_sitewide_hidden_item_ids( $type ) {
+	public static function get_sitewide_hidden_item_ids( $type ) {
 		$hidden_ids  = array();
 		$moderations = bp_moderation_get_sitewide_hidden_item_ids( $type );
 

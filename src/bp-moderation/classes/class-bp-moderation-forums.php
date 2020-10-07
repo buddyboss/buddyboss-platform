@@ -30,7 +30,15 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		/**
+		 * Moderation code should not add for WordPress backend & IF component is not active
+		 */
+		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'forums' ) ) {
+			return;
+		}
+
 		$this->item_type = self::$moderation_type;
+		$this->alias     = $this->alias . 'f'; // f = Forum.
 
 		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
@@ -73,7 +81,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		$forum_slug = bbp_get_forum_post_type();
 		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 
-		if ( ! empty( $post_types ) && in_array( $forum_slug, $post_types. true ) ) {
+		if ( ! empty( $post_types ) && in_array( $forum_slug, $post_types, true ) ) {
 			$where                 = array();
 			$where['forums_where'] = $this->exclude_where_query();
 
@@ -101,19 +109,28 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Exclude Blocked Members SQL
+	 * Get SQL for Exclude Blocked Members related forums
 	 *
-	 * @return string|void
+	 * @return string|bool
 	 */
 	private function exclude_member_forum_query() {
 		global $wpdb;
 		$sql              = false;
-		$hidden_forum_ids = $this->get_sitewide_hidden_item_ids( BP_Moderation_Members::$moderation_type );
+		$hidden_forum_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_forum_ids ) ) {
 			$sql = "( {$wpdb->posts}.post_author NOT IN ( " . implode( ',', $hidden_forum_ids ) . ' ) )';
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Get Blocked Forums ids
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
 	}
 
 }

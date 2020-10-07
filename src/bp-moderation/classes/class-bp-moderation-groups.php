@@ -30,6 +30,13 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		/**
+		 * Moderation code should not add for WordPress backend & IF component is not active
+		 */
+		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'groups' ) ) {
+			return;
+		}
+
 		$this->item_type = self::$moderation_type;
 
 		add_filter( 'bp_groups_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
@@ -89,16 +96,25 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get Exclude Blocked Members SQL
 	 *
-	 * @return string|void
+	 * @return string|bool
 	 */
 	private function exclude_member_group_query() {
 		$sql              = false;
-		$hidden_group_ids = $this->get_sitewide_hidden_item_ids( BP_Moderation_Members::$moderation_type );
+		$hidden_group_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_group_ids ) ) {
 			$sql = '( g.creator_id NOT IN ( ' . implode( ',', $hidden_group_ids ) . ' ) )';
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Get blocked Groups ids
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
 	}
 
 }
