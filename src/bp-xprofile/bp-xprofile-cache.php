@@ -288,8 +288,3 @@ add_action( 'xprofile_field_before_save', 'bp_xprofile_reset_fields_by_name_cach
 
 // List actions to clear super cached pages on, if super cache is installed.
 add_action( 'xprofile_updated_profile', 'bp_core_clear_cache' );
-
-function testtttttttt() {
-	wp_cache_delete( 'all', 'bp_xprofile_groups' );
-}
-add_action( 'xprofile_updated_profile', 'testtttttttt' );
