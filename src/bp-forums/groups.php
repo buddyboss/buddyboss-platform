@@ -787,11 +787,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 
 					case false:
 					case 'page':
-						// Strip the super stickies from topic query
-						add_filter( 'bbp_get_super_stickies', array( $this, 'no_super_stickies' ), 10, 1 );
-
-						// Unset the super sticky option on topic form
-						add_filter( 'bbp_get_topic_types', array( $this, 'unset_super_sticky' ), 10, 1 );
 
 						// Query forums and show them if they exist
 						if ( bbp_forums() ) :
@@ -820,8 +815,6 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 					/** Single Topic */
 
 					case $this->topic_slug:
-						// hide the 'to front' admin links
-						add_filter( 'bbp_get_topic_stick_link', array( $this, 'hide_super_sticky_admin_link' ), 10, 2 );
 
 						// Get the topic
 						bbp_has_topics(
