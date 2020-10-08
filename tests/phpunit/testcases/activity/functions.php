@@ -142,6 +142,10 @@ class BP_Tests_Activity_Functions extends BP_UnitTestCase {
 		// now fetch activity meta for the deleted activity entries
 		$m1 = bp_activity_get_meta( $activity );
 
+		if ( array_key_exists( '_link_embed', $m1 ) ) {
+			unset( $m1['_link_embed'] );
+		}
+
 		// test if activity meta entries still exist
 		$this->assertEmpty( $m1 );
 	}
@@ -428,6 +432,11 @@ Bar!';
 		bp_activity_update_meta( $a, 'foo', 'bar' );
 		bp_activity_update_meta( $a, 'foo1', 'bar1' );
 
+		$m2 = bp_activity_get_meta( $a );
+		if ( array_key_exists( '_link_embed', $m2 ) ) {
+			unset( $m2['_link_embed'] );
+		}
+
 		$expected = array(
 			'foo' => array(
 				'bar',
@@ -437,7 +446,7 @@ Bar!';
 			),
 		);
 
-		$this->assertEquals( $expected, bp_activity_get_meta( $a ) );
+		$this->assertEquals( $expected, $m2 );
 	}
 
 	/**
@@ -733,7 +742,7 @@ Bar!';
 
 		$a_obj = new BP_Activity_Activity( $a );
 
-		$expected = sprintf( '%s', bp_core_get_userlink( $u ) );
+		$expected = sprintf( '%s posted an update', bp_core_get_userlink( $u ) );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}
