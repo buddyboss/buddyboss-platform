@@ -114,6 +114,14 @@ if ( ! class_exists( 'BP_Component' ) ) :
 		public $root_slug = '';
 
 		/**
+		 * Permalink slug for the component.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 * @var string $permalink_slug
+		 */
+		public $permalink_slug = '';
+
+		/**
 		 * Metadata tables for the component (if applicable).
 		 *
 		 * @since BuddyPress 2.0.0
@@ -235,6 +243,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 				array(
 					'slug'                  => $this->id,
 					'root_slug'             => $default_root_slug,
+					'permalink_slug'        => $default_root_slug,
 					'has_directory'         => false,
 					'directory_title'       => '',
 					'notification_callback' => '',
@@ -261,6 +270,15 @@ if ( ! class_exists( 'BP_Component' ) ) :
 			 * @param string $value Root directory slug.
 			 */
 			$this->root_slug = apply_filters( 'bp_' . $this->id . '_root_slug', $r['root_slug'] );
+
+			/**
+			 * Filters the slug used for directory permalink.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param string $value Permalink directory slug.
+			 */
+			$this->permalink_slug = apply_filters( 'bp_' . $this->id . '_permalink_slug', $r['permalink_slug'] );
 
 			/**
 			 * Filters the component's top-level directory if available.

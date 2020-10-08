@@ -101,7 +101,8 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// All arguments for forums component
 			$args = array(
 				'path'          => BP_PLUGIN_DIR,
-				'slug'          => BP_FORUMS_SLUG,
+				'slug'          => bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ),
+				'permalink_slug'=> apply_filters( '_bbb_permalink_slug', 'community' ),
 				'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BP_FORUMS_SLUG,
 				'has_directory' => false,
 				'search_string' => __( 'Search Forums&hellip;', 'buddyboss' ),
@@ -187,7 +188,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// Add 'Forums' to the main navigation
 			$main_nav = array(
 				'name'                => __( 'Forums', 'buddyboss' ),
-				'slug'                => $this->slug,
+				'slug'                => $this->permalink_slug,
 				'position'            => 80,
 				'screen_function'     => 'bbp_member_forums_screen_topics',
 				'default_subnav_slug' => bbp_get_topic_archive_slug(),
@@ -204,14 +205,14 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			}
 
 			// User link
-			$forums_link = trailingslashit( $user_domain . $this->slug );
+			$forums_link = trailingslashit( $user_domain . $this->permalink_slug );
 
 			// Topics started
 			$sub_nav[] = array(
 				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Discussions', 'buddyboss' ) : __( 'Discussions', 'buddyboss' ) ),
 				'slug'            => bbp_get_topic_archive_slug(),
 				'parent_url'      => $forums_link,
-				'parent_slug'     => $this->slug,
+				'parent_slug'     => $this->permalink_slug,
 				'screen_function' => 'bbp_member_forums_screen_topics',
 				'position'        => 20,
 				'item_css_id'     => 'topics',
@@ -222,7 +223,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Replies', 'buddyboss' ) : __( 'Replies', 'buddyboss' ) ),
 				'slug'            => bbp_get_reply_archive_slug(),
 				'parent_url'      => $forums_link,
-				'parent_slug'     => $this->slug,
+				'parent_slug'     => $this->permalink_slug,
 				'screen_function' => 'bbp_member_forums_screen_replies',
 				'position'        => 40,
 				'item_css_id'     => 'replies',
@@ -234,7 +235,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
 					'slug'            => bbp_get_user_favorites_slug(),
 					'parent_url'      => $forums_link,
-					'parent_slug'     => $this->slug,
+					'parent_slug'     => $this->permalink_slug,
 					'screen_function' => 'bbp_member_forums_screen_favorites',
 					'position'        => 60,
 					'item_css_id'     => 'favorites',
@@ -247,7 +248,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 					'name'            => __( 'Subscriptions', 'buddyboss' ),
 					'slug'            => bbp_get_user_subscriptions_slug(),
 					'parent_url'      => $forums_link,
-					'parent_slug'     => $this->slug,
+					'parent_slug'     => $this->permalink_slug,
 					'screen_function' => 'bbp_member_forums_screen_subscriptions',
 					'position'        => 60,
 					'item_css_id'     => 'subscriptions',
