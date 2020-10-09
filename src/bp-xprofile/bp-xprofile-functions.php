@@ -2002,26 +2002,17 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  *
  * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields added/updated/deleted.
  *
- * @param array $profile_groups - set of fieldset selected to show in progress
- * @param array $profile_photo_type - profile or cover photo selected to show in progress
- * @param int $widget_id - Widget id specific user progress
+ * @param array $settings - set of fieldset selected to show in progress & profile or cover photo selected to show in progress.
  *
  * @return array $user_progress - user progress to render profile completion
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_xprofile_get_user_progress_data( $profile_groups, $profile_photo_type ) {
+function bp_xprofile_get_user_progress_data( $settings  ) {
 
 	$user_progress = array();
 
-	// Get logged in user Progress.
-	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
-	if ( ! $get_user_data ) {
-		bp_core_xprofile_update_profile_completion_user_progress();
-		$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
-	}
-
-	$user_progress_arr = bp_xprofile_get_selected_options_user_progress( $profile_groups, $profile_photo_type, $get_user_data );
+	$user_progress_arr = bp_xprofile_get_selected_options_user_progress( $settings );
 
 	// Do not proceed if no fields found based on settings.
 	if( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0  ){

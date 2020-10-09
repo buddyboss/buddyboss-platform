@@ -5105,13 +5105,21 @@ function bp_core_xprofile_update_profile_completion_user_progress() {
 /**
  * Function will return the user progress based on the settings you provided.
  *
- * @param $profile_groups
- * @param $profile_phototype
- * @param $get_user_data
+ * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in progress.
  *
  * @return array $response user progress based on widget settings.
  */
-function bp_xprofile_get_selected_options_user_progress( $profile_groups, $profile_phototype, $get_user_data ) {
+function bp_xprofile_get_selected_options_user_progress( $settings ) {
+
+	$profile_groups     = $settings['profile_groups'];
+	$profile_photo_type = $settings['profile_photo_type'];
+
+	// Get logged in user Progress.
+	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	if ( ! $get_user_data ) {
+		bp_core_xprofile_update_profile_completion_user_progress();
+		$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	}
 
 	$response                     = array();
 	$response['photo_type']       = array();
@@ -5121,8 +5129,8 @@ function bp_xprofile_get_selected_options_user_progress( $profile_groups, $profi
 	$total_count                  = 0;
 	$total_completed_count        = 0;
 
-	if ( ! empty( $profile_phototype ) ) {
-		foreach ( $profile_phototype as $option ) {
+	if ( ! empty( $profile_photo_type ) ) {
+		foreach ( $profile_photo_type as $option ) {
 			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
 				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
 				$total_count = $total_count + 1;
@@ -5160,6 +5168,6 @@ function bp_xprofile_get_selected_options_user_progress( $profile_groups, $profi
 		$response['completed_fields'] = $total_completed_count;
 	}
 
-	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_phototype, $get_user_data );
+	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
 
 }
