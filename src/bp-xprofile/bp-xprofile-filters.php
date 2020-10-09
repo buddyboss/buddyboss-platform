@@ -1025,6 +1025,9 @@ function bp_xprofile_delete_profile_completion_user_transient() {
 	$user_id               = get_current_user_id();
 	$transient_name_prefix  = '%_transient_' . bp_core_get_profile_completion_key() . $user_id . '%';
 	bp_core_delete_transient_query( $transient_name_prefix );
+
+	// Remove all the widget cache based on widget id.
+	bp_core_profile_completion_widget_delete_transient();
 }
 
 /**
@@ -1038,6 +1041,9 @@ function bp_xprofile_delete_profile_completion_transient() {
 	// Delete all users all widget transients from options table.
 	$transient_name_prefix = '%_transient_' . bp_core_get_profile_completion_key() . '%';
 	bp_core_delete_transient_query( $transient_name_prefix );
+
+	// Remove all the widget cache based on widget id.
+	bp_core_profile_completion_widget_delete_transient();
 }
 
 /**

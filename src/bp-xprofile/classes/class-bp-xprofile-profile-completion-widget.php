@@ -100,9 +100,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance                           = $old_instance;
 		$instance['title']                  = wp_strip_all_tags( $new_instance['title'] );
-		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
-		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
-		$instance['profile_hide_widget']    = $new_instance['profile_hide_widget'];
+		$instance['profile_groups_enabled'] = ( isset( $new_instance['profile_groups_enabled'] ) ) ? $new_instance['profile_groups_enabled'] : '';
+		$instance['profile_photos_enabled'] = ( isset( $new_instance['profile_photos_enabled'] ) ) ? $new_instance['profile_photos_enabled'] : '';
+		$instance['profile_hide_widget']    = ( isset( $new_instance['profile_hide_widget'] ) ) ? $new_instance['profile_hide_widget'] : '';
 
 		// Delete Transient.
 		bp_xprofile_delete_profile_completion_transient();

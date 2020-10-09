@@ -2012,11 +2012,18 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  */
 function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype, $widget_id ) {
 
-	$user_progress = array();
+	$user_progress                 = array();
+	$bp_profile_completion_widgets = bp_get_option( 'bp_profile_completion_widgets', array() );
 
 	// Check if data avail in transient.
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
+
+	// Set the every widget id cache key into the "bp_profile_completion_widgets" options.
+	if ( ! in_array( $pc_transient_name, $bp_profile_completion_widgets, true ) ) {
+		$bp_profile_completion_widgets[] = $pc_transient_name;
+		bp_update_option( 'bp_profile_completion_widgets', $bp_profile_completion_widgets );
+	}
 
 	if ( ! empty( $pc_transient_data ) ) {
 

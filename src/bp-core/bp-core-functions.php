@@ -5094,3 +5094,17 @@ function bp_core_get_profile_completion_key() {
 
 	return 'bbprofilecompletion';
 }
+
+/**
+ * Remove profile completion widget transient.
+ *
+ * @since BuddyBoss 1.5.3
+ */
+function bp_core_profile_completion_widget_delete_transient() {
+	$transient_keys = bp_get_option( 'bp_profile_completion_widgets', array() );
+	if ( ! empty( $transient_keys ) ) {
+		foreach ( $transient_keys as $transient_key ) {
+			delete_transient( $transient_key );
+		}
+	}
+}
