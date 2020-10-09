@@ -781,8 +781,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
 		} else {
-			$domain_arr = array( bp_loggedin_user_domain() );
-			if ( in_array( $current, $domain_arr ) ) {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
 				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
 					$tab = bp_nouveau_get_appearance_settings( 'user_default_tab' );
 					$component = $tab;
