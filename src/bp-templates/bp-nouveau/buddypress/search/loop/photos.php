@@ -66,7 +66,7 @@ $link = trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_
 								$group_status = bp_get_group_status( $group );
 								?>
 								<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
-								<span class="media-folder_status"><?php echo ucfirst( $group_status ); ?></span>
+								<span class="media-album_status"><?php echo ucfirst( $group_status ); ?></span>
 								<?php
 							} else {
 								?>

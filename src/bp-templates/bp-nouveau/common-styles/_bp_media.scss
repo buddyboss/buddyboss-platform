@@ -2710,6 +2710,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		color: #4d5c6d;
 	}
 
+	.media-album_group_name a {
+		color: #4d5c6d;
+	}
+
+	.media-album_status {
+		display: block;
+		font-size: 13px;
+		color: #939597;
+	}
+
 	@media screen and (max-width: 540px) {
 
 		.media-album_items {

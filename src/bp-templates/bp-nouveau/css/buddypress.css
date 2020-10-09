@@ -14679,6 +14679,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   color: #4d5c6d;
 }
 
+.search-media-list .media-album_group_name a {
+  color: #4d5c6d;
+}
+
+.search-media-list .media-album_status {
+  display: block;
+  font-size: 13px;
+  color: #939597;
+}
+
 @media screen and (max-width: 540px) {
   .search-media-list .media-album_items {
     flex-flow: column;

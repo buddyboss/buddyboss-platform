@@ -28,15 +28,37 @@ $albums_link = bp_get_album_link();
 
 			<div class="media-album_group">
 				<div class="media-album_details__bottom">
-					<span class="media-album_group_name">Group Name</span>
+					<span class="media-album_group_name"><a href="#">Group Name</a></span>
+					<span class="media-album_status">Public</span>
 				</div>
 			</div>
 
 			<div class="media-album_visibility">
 				<div class="media-album_details__bottom">
-					<span>
-						<?php echo bp_get_album_privacy(); ?>
-					</span>
+					<?php
+						if ( bp_is_active( 'groups' ) ) {
+							$group_id = bp_get_media_group_id();
+							if ( $group_id > 0 ) {
+							?>
+								<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+									<?php bp_media_privacy(); ?>
+								</span>
+								<?php
+							} else {
+							?>
+								<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
+									<?php bp_media_privacy(); ?>
+								</span>
+							<?php
+							}
+						} else {
+						?>
+							<span>
+								<?php bp_media_privacy(); ?>
+							</span>
+						<?php
+						}
+					?>
 				</div>
 			</div>
 
