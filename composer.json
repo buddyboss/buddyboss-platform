@@ -39,9 +39,12 @@
 	  "wp-coding-standards/wpcs": "*"
 	},
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
-		"lint": "vendor/bin/phpcs -s",
-		"lint-fix": "vendor/bin/phpcbf"
+		"test": "vendor/bin/phpunit",
+		"test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
+		"lint-php": "vendor/bin/phpcs -s",
+		"lint-php-fix": "vendor/bin/phpcbf",
+		"lint-js": "grunt jsvalidate jshint",
+		"lint-css": "grunt stylelint",
+		"lint": ["@lint-php", "@lint-js", "@lint-css"]
 	}
 }
