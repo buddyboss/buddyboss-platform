@@ -2348,6 +2348,17 @@ function bp_is_single_activity() {
 	return (bool) ( bp_is_activity_component() && is_numeric( bp_current_action() ) );
 }
 
+/**
+ * Is the current page a single activity item edit permalink?
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return bool True if the current page is a single activity item edit permalink.
+ */
+function bp_is_activity_edit() {
+	return (bool) ( bp_is_activity_component() && is_numeric( bp_current_action() ) && 'edit' === bp_action_variable() );
+}
+
 /** User **********************************************************************/
 
 /**
@@ -2548,6 +2559,19 @@ function bp_is_user_change_cover_image() {
  */
 function bp_is_user_groups() {
 	return (bool) ( bp_is_user() && bp_is_groups_component() );
+}
+
+/**
+ * Is the current page part of a user's Groups invite page?
+ *
+ * Eg http://example.com/members/joe/groups/invites/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.5.2
+ *
+ * @return bool True if the current page is a user's Groups invite page.
+ */
+function bp_is_user_groups_invites(){
+	return (bool) ( bp_is_user_groups() && bp_is_current_action( 'invites' ) );
 }
 
 /**

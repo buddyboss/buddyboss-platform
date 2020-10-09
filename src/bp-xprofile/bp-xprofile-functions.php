@@ -1430,6 +1430,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
+	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
+		$user_visibility_levels = array();
+	}
 
 	// Parse the user-provided visibility levels with the default levels, which may take
 	// precedence.
@@ -1450,8 +1453,9 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		}
 	}
 
-	// Never allow the fullname field to be excluded.
-	if ( in_array( 1, $field_ids ) ) {
+	// Never allow the Nickname field to be excluded.
+	$nickname_field_id = bp_xprofile_nickname_field_id();
+	if ( in_array( $nickname_field_id, $field_ids ) ) {
 		$key = array_search( 1, $field_ids );
 		unset( $field_ids[ $key ] );
 	}
@@ -1786,7 +1790,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 		return false;
 	}
 
-	$format = bp_get_option( 'bp-display-name-format' );
+	$format = bp_core_display_name_format();
 
 	$display_name = '';
 
@@ -2014,7 +2018,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
 	$pc_transient_data = get_transient( $pc_transient_name );
 
-	if ( false && ! empty( $pc_transient_data ) ) {
+	if ( ! empty( $pc_transient_data ) ) {
 
 		$user_progress = $pc_transient_data;
 
@@ -2022,6 +2026,11 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 
 		// Get logged in user Progress.
 		$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_phototype );
+
+		// Do not proceed if no fields found based on settings.
+		if( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0  ){
+			return $user_progress;
+		}
 
 		// Format User Progress array to pass on to the template.
 		$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_arr );
@@ -2067,6 +2076,26 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
 		if ( $is_profile_photo_uploaded ) {
 			++ $grand_completed_fields;
+		} else {
+
+			// check if profile gravatar option enabled.
+			// blank setting will remove gravatar also
+			if ( bp_enable_profile_gravatar() && 'blank' !== get_option( 'avatar_default', 'mystery' ) ) {
+
+				/**
+				 * There is not any direct way to check gravatar set for user.
+				 * Need to check $profile_url is send 200 status or not.
+				 */
+				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
+				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
+				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
+
+				$headers = get_headers($profile_url, 1);
+				if ($headers[0] === 'HTTP/1.1 200 OK') {
+					$is_profile_photo_uploaded = 1;
+					++ $grand_completed_fields;
+				}
+			}
 		}
 
 		$progress_details['photo_type']['profile_photo'] = array(
@@ -2106,6 +2135,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 			'fetch_field_data'               => true,
 			'user_id'                        => $user_id,
 			'repeater_show_main_fields_only' => false,
+			'fetch_social_network_fields'    => true,
 		)
 	);
 
@@ -2133,6 +2163,14 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 		$group_completed_fields = 0;
 		foreach ( $single_group_details->fields as $group_single_field ) {
 
+			/**
+			 * Added support for display name format support from platform.
+			 * Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+			 */
+			if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $group_single_field->id ) ) {
+				continue;
+			}
+
 			// If current group is repeater then only consider first set of fields.
 			if ( $is_group_repeater ) {
 
@@ -2144,13 +2182,25 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				}
 			}
 
-			$field_data_value = maybe_unserialize( $group_single_field->data->value );
+			// For Social networks field check child field is completed or not
+			if  ( 'socialnetworks' == $group_single_field->type ){
+				$field_data_value = maybe_unserialize( $group_single_field->data->value );
+				$children = $group_single_field->type_obj->field_obj->get_children();
+				foreach ( $children as $child ){
+					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
+						++ $group_completed_fields;
+					}
+					++ $group_total_fields;
+				}
+			} else{
+				$field_data_value = maybe_unserialize( $group_single_field->data->value );
 
-			if ( ! empty( $field_data_value ) ) {
-				++ $group_completed_fields;
+				if ( ! empty( $field_data_value ) ) {
+					++ $group_completed_fields;
+				}
+
+				++ $group_total_fields;
 			}
-
-			++ $group_total_fields;
 		}
 
 		/* Prepare array to return group specific progress details */
@@ -2262,3 +2312,18 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 	 */
 	return apply_filters( 'xprofile_pc_user_progress_formatted', $user_prgress_formatted );
 }
+
+/**
+ * Reset cover image position while uploading/deleting profile cover photo.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $user_id User ID.
+ */
+function bp_xprofile_reset_cover_image_position( $user_id ) {
+	if ( ! empty( (int) $user_id ) ) {
+		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
+	}
+}
+add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
+add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );

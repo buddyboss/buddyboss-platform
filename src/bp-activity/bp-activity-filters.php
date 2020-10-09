@@ -578,7 +578,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * been truncated), add the "Read More" link. Note that bp_create_excerpt() is stripping
 	 * shortcodes, so we have strip them from the $text before the comparison.
 	 */
-	if ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, '&hellip;' ) ) {
+	if ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
 		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 
 		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );
@@ -931,7 +931,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 			// Determine friends of user.
 			$friends = friends_get_friend_user_ids( $user_id );
 
-			if ( bp_is_my_profile() || bp_is_activity_directory() ) {
+			if ( $user_id === bp_loggedin_user_id() || bp_is_activity_directory() ) {
 				$friends[] = bp_loggedin_user_id();
 			}
 
@@ -1875,6 +1875,25 @@ function bp_activity_edit_update_media( $media_ids ) {
 					//save parent activity id in attachment meta.
 					update_post_meta( $new_media->attachment_id, 'bp_media_parent_activity_id', $bp_activity_post_update_id );
 				}
+
+				// old media and new media count is same and old media and new media are different.
+			} else if ( 1 === count( $old_media_ids ) && 1 === count( $media_ids ) ) {
+				$new_media_id = $media_ids[0];
+
+				// check if new media is not in old media uploaded and.
+				if ( ! in_array( $new_media_id, $old_media_ids ) ) {
+					$old_media_id = $old_media_ids[0];
+					$old_media    = new BP_Media( $old_media_id );
+
+					// unset the activity id for old media and save it to save activity from deleting after.
+					if ( ! empty( $old_media->id ) ) {
+						$old_media->activity_id = false;
+						$old_media->save();
+
+						// delete attachment activity id meta.
+						delete_post_meta( $old_media->attachment_id, 'bp_media_parent_activity_id' );
+					}
+				}
 			}
 		}
 	}
@@ -2168,6 +2187,25 @@ function bp_activity_edit_update_document( $document_ids ) {
 
 					//save parent activity id in attachment meta.
 					update_post_meta( $new_document->attachment_id, 'bp_document_parent_activity_id', $bp_activity_post_update_id );
+				}
+
+				// old document and new document count is same and old document and new document are different.
+			} else if ( 1 === count( $old_document_ids ) && 1 === count( $document_ids ) ) {
+				$new_document_id = $document_ids[0];
+
+				// check if new document is not in old document uploaded and.
+				if ( ! in_array( $new_document_id, $old_document_ids ) ) {
+					$old_document_id = $old_document_ids[0];
+					$old_document    = new BP_Document( $old_document_id );
+
+					// unset the activity id for old document and save it to save activity from deleting after.
+					if ( ! empty( $old_document->id ) ) {
+						$old_document->activity_id = false;
+						$old_document->save();
+
+						// delete attachment activity id meta.
+						delete_post_meta( $old_document->attachment_id, 'bp_document_parent_activity_id' );
+					}
 				}
 			}
 		}

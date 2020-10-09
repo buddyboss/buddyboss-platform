@@ -82,6 +82,9 @@ class BP_Nouveau_Document {
 
 		// Localize Scripts.
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_document_localize_scripts', 11, 1 );
+
+		// Redirect edit button document popup activity to parent activity edit.
+		add_filter( 'bp_nouveau_get_activity_entry_buttons', 'bp_nouveau_document_activity_edit_button', 10, 2 );
 	}
 }
 
