@@ -5065,7 +5065,7 @@ function bp_core_upload_max_size() {
  *
  * @since BuddyBoss 1.5.3
  */
-function bp_core_profile_completion_widget_options() {
+function bp_core_profile_completion_steps_options() {
 
 	/* Profile Groups and Profile Cover Photo VARS. */
 	$options                              = array();
@@ -5073,7 +5073,7 @@ function bp_core_profile_completion_widget_options() {
 	$options['is_profile_photo_disabled'] = bp_disable_avatar_uploads();
 	$options['is_cover_photo_disabled']   = bp_disable_cover_image_uploads();
 
-	return apply_filters( 'bp_core_profile_completion_widget_options', $options );
+	return apply_filters( 'bp_core_profile_completion_steps_options', $options );
 }
 
 /**
@@ -5085,14 +5085,14 @@ function bp_core_profile_completion_widget_options() {
 function bp_core_xprofile_update_profile_completion_user_progress() {
 
 	$user_id            = get_current_user_id();
-	$widget_options     = bp_core_profile_completion_widget_options();
-	$profile_groups     = wp_list_pluck( $widget_options['profile_groups'], 'id' );
+	$steps_options     = bp_core_profile_completion_steps_options();
+	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
 	$profile_photo_type = array();
 
-	if ( ! $widget_options['is_profile_photo_disabled'] ) {
+	if ( ! $steps_options['is_profile_photo_disabled'] ) {
 		$profile_photo_type[] = 'profile_photo';
 	}
-	if ( ! $widget_options['is_cover_photo_disabled'] ) {
+	if ( ! $steps_options['is_cover_photo_disabled'] ) {
 		$profile_photo_type[] = 'cover_photo';
 	}
 

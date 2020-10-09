@@ -126,12 +126,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				)
 		);
 
-		$widget_options            = bp_core_profile_completion_widget_options();
-		$profile_groups            = $widget_options['profile_groups'];
+		$steps_options            = bp_core_profile_completion_steps_options();
+		$profile_groups            = $steps_options['profile_groups'];
 		$photos_enabled_arr        = array();
 		$widget_enabled_arr        = array();
-		$is_profile_photo_disabled = $widget_options['is_profile_photo_disabled'];
-		$is_cover_photo_disabled   = $widget_options['is_cover_photo_disabled'];
+		$is_profile_photo_disabled = $steps_options['is_profile_photo_disabled'];
+		$is_cover_photo_disabled   = $steps_options['is_cover_photo_disabled'];
 
 		// Show Options only when Profile Photo and Cover option enabled in the Profile Settings.
 		if ( ! $is_profile_photo_disabled ) {
