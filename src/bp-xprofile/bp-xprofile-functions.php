@@ -8,7 +8,7 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss\XProfile
- * @since   BuddyPress 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,6 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.1.0
  *
  * @param array $args See {@link BP_XProfile_Group::get()} for description of arguments.
- *
  * @return array $groups
  */
 function bp_xprofile_get_groups( $args = array() ) {
@@ -64,13 +63,13 @@ function bp_xprofile_get_groups( $args = array() ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param array|string $args           {
- *                                     Array of arguments for field group insertion.
+ * @param array|string $args {
+ *    Array of arguments for field group insertion.
  *
- * @type int|bool      $field_group_id ID of the field group to insert into.
- * @type string|bool   $name           Name of the group.
- * @type string        $description    Field group description.
- * @type bool          $can_delete     Whether or not the field group can be deleted.
+ *    @type int|bool    $field_group_id ID of the field group to insert into.
+ *    @type string|bool $name           Name of the group.
+ *    @type string      $description    Field group description.
+ *    @type bool        $can_delete     Whether or not the field group can be deleted.
  * }
  * @return boolean
  */
@@ -108,7 +107,6 @@ function xprofile_insert_field_group( $args = '' ) {
  * @since BuddyPress 1.0.0
  *
  * @param int $field_group_id Field group ID to fetch.
- *
  * @return false|BP_XProfile_Group
  */
 function xprofile_get_field_group( $field_group_id = 0 ) {
@@ -131,7 +129,6 @@ function xprofile_get_field_group( $field_group_id = 0 ) {
  * @since BuddyPress 1.0.0
  *
  * @param int $field_group_id Field group ID to delete.
- *
  * @return boolean
  */
 function xprofile_delete_field_group( $field_group_id = 0 ) {
@@ -155,7 +152,6 @@ function xprofile_delete_field_group( $field_group_id = 0 ) {
  *
  * @param int $field_group_id Field group ID to update.
  * @param int $position       Field group position to update to.
- *
  * @return boolean
  */
 function xprofile_update_field_group_position( $field_group_id = 0, $position = 0 ) {
@@ -209,7 +205,6 @@ function bp_xprofile_get_field_types() {
  * @since BuddyPress 2.0.0
  *
  * @param string $type Type of profile field to create. See {@link bp_xprofile_get_field_types()} for default core values.
- *
  * @return object $value If field type unknown, returns BP_XProfile_Field_Type_Textarea.
  *                       Otherwise returns an instance of the relevant child class of BP_XProfile_Field_Type.
  */
@@ -233,26 +228,25 @@ function bp_xprofile_create_field_type( $type ) {
  *
  * @since BuddyPress 1.1.0
  *
- * @param array|string $args              {
- *                                        Array of arguments.
- *
- * @type int           $field_id          Optional. Pass the ID of an existing field to edit that field.
- * @type int           $field_group_id    ID of the associated field group.
- * @type int           $parent_id         Optional. ID of the parent field.
- * @type string        $type              Field type. Checked against a field_types whitelist.
- * @type string        $name              Name of the new field.
- * @type string        $description       Optional. Descriptive text for the field.
- * @type bool          $is_required       Optional. Whether users must provide a value for the field. Default: false.
- * @type bool          $can_delete        Optional. Whether admins can delete this field in the Dashboard interface.
+ * @param array|string $args {
+ *     Array of arguments.
+ *     @type int    $field_id          Optional. Pass the ID of an existing field to edit that field.
+ *     @type int    $field_group_id    ID of the associated field group.
+ *     @type int    $parent_id         Optional. ID of the parent field.
+ *     @type string $type              Field type. Checked against a field_types whitelist.
+ *     @type string $name              Name of the new field.
+ *     @type string $description       Optional. Descriptive text for the field.
+ *     @type bool   $is_required       Optional. Whether users must provide a value for the field. Default: false.
+ *     @type bool   $can_delete        Optional. Whether admins can delete this field in the Dashboard interface.
  *                                     Generally this is false only for the Name field, which is required throughout BP.
  *                                     Default: true.
- * @type string        $order_by          Optional. For field types that support options (such as 'radio'), this flag
+ *     @type string $order_by          Optional. For field types that support options (such as 'radio'), this flag
  *                                     determines whether the sort order of the options will be 'default'
  *                                     (order created) or 'custom'.
- * @type bool          $is_default_option Optional. For the 'option' field type, setting this value to true means that
+ *     @type bool   $is_default_option Optional. For the 'option' field type, setting this value to true means that
  *                                     it'll be the default value for the parent field when the user has not yet
  *                                     overridden. Default: true.
- * @type int           $option_order      Optional. For the 'option' field type, this determines the order in which the
+ *     @type int    $option_order      Optional. For the 'option' field type, this determines the order in which the
  *                                     options appear.
  * }
  * @return bool|int False on failure, ID of new field on success.
@@ -326,7 +320,6 @@ function xprofile_insert_field( $args = '' ) {
  *                             true, but no `$user_id` is provided, defaults to
  *                             logged-in user ID.
  * @param bool       $get_data Whether to fetch data for the specified `$user_id`.
- *
  * @return BP_XProfile_Field|null Field object if found, otherwise null.
  */
 function xprofile_get_field( $field, $user_id = null, $get_data = true ) {
@@ -352,12 +345,10 @@ function xprofile_get_field( $field, $user_id = null, $get_data = true ) {
  * @since BuddyPress 1.1.0
  *
  * @param int|object $field_id ID of the field or object representing field data.
- *
  * @return bool Whether or not the field was deleted.
  */
 function xprofile_delete_field( $field_id ) {
 	$field = new BP_XProfile_Field( $field_id );
-
 	return $field->delete();
 }
 
@@ -376,7 +367,6 @@ function xprofile_delete_field( $field_id ) {
  * @param int    $user_id      The ID of the user.
  * @param string $multi_format How should array data be returned? 'comma' if you want a
  *                             comma-separated string; 'array' if you want an array.
- *
  * @return mixed The profile field data.
  */
 function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' ) {
@@ -437,7 +427,6 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
  * @param int        $user_id     The ID of the user.
  * @param mixed      $value       The value for the field you want to set for the user.
  * @param bool       $is_required Whether or not the field is required.
- *
  * @return bool True on success, false on failure.
  */
 function xprofile_set_field_data( $field, $user_id, $value, $is_required = false ) {
@@ -489,7 +478,6 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	// where null values are semantically meaningful.
 	if ( empty( $value ) && ! is_integer( $value ) && $value !== '0' && ! $field_type_obj->accepts_null_value ) {
 		xprofile_delete_field_data( $field_id, $user_id );
-
 		return true;
 	}
 
@@ -521,7 +509,6 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
  * @param int    $field_id         The ID of the xprofile field.
  * @param int    $user_id          The ID of the user to whom the data belongs.
  * @param string $visibility_level What the visibity setting should be.
- *
  * @return bool True on success
  */
 function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visibility_level = '' ) {
@@ -553,8 +540,7 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
  * @since BuddyPress 2.0.0
  *
  * @param int $field_id The ID of the xprofile field.
- * @param int $user_id  The ID of the user to whom the data belongs.
- *
+ * @param int $user_id The ID of the user to whom the data belongs.
  * @return string
  */
 function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
@@ -589,7 +575,6 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
  *
  * @param string $field   Field to delete.
  * @param int    $user_id User ID to delete field from.
- *
  * @return bool Whether or not the field was deleted.
  */
 function xprofile_delete_field_data( $field = '', $user_id = 0 ) {
@@ -619,7 +604,6 @@ function xprofile_delete_field_data( $field = '', $user_id = 0 ) {
  * @since BuddyPress 1.1.0
  *
  * @param int $field_id ID of the field to check for.
- *
  * @return bool Whether or not field is required.
  */
 function xprofile_check_is_required_field( $field_id ) {
@@ -648,7 +632,6 @@ function xprofile_validate_field( $field_id, $value, $UserId ) {
  * @since BuddyPress 1.0.0
  *
  * @param string $field_name The name of the field to get the ID for.
- *
  * @return int|null $field_id on success, false on failure.
  */
 function xprofile_get_field_id_from_name( $field_name ) {
@@ -660,15 +643,14 @@ function xprofile_get_field_id_from_name( $field_name ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param int         $user_id          User ID of the user to get random data for.
- * @param bool        $exclude_fullname Optional; whether or not to exclude the full name field as random data.
- *                                      Defaults to true.
+ * @global BuddyPress $bp           The one true BuddyPress instance.
+ * @global wpdb $wpdb WordPress database abstraction object.
+ * @global object     $current_user WordPress global variable containing current logged in user information.
  *
+ * @param int  $user_id          User ID of the user to get random data for.
+ * @param bool $exclude_fullname Optional; whether or not to exclude the full name field as random data.
+ *                               Defaults to true.
  * @return string|bool The fetched random data for the user, or false if no data or no match.
- * @global BuddyPress $bp               The one true BuddyPress instance.
- * @global wpdb       $wpdb             WordPress database abstraction object.
- * @global object     $current_user     WordPress global variable containing current logged in user information.
- *
  */
 function xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) {
 	$field_data = BP_XProfile_ProfileData::get_random( $user_id, $exclude_fullname );
@@ -700,7 +682,6 @@ function xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) 
  *
  * @param string $field_type  The type of field: datebox, selectbox, textbox etc.
  * @param string $field_value The actual value.
- *
  * @return string|bool The formatted value, or false if value is empty.
  */
 function xprofile_format_profile_field( $field_type, $field_value ) {
@@ -727,7 +708,6 @@ function xprofile_format_profile_field( $field_type, $field_value ) {
  * @param int $field_id       ID of the field to update.
  * @param int $position       Position to update the field to.
  * @param int $field_group_id Group ID for group the field is in.
- *
  * @return bool
  */
 function xprofile_update_field_position( $field_id, $position, $field_group_id ) {
@@ -761,19 +741,17 @@ function xprofile_override_user_fullnames() {
 		buddypress()->displayed_user->fullname = bp_core_get_user_displayname( bp_displayed_user_id() );
 	}
 }
-
 add_action( 'bp_setup_globals', 'xprofile_override_user_fullnames', 100 );
 
 /**
  * Setup the avatar upload directory for a user.
  *
- * @package BuddyBoss Core
+ * @since BuddyPress 1.0.0
  *
- * @since   BuddyPress 1.0.0
+ * @package BuddyBoss Core
  *
  * @param string $directory The root directory name. Optional.
  * @param int    $user_id   The user ID. Optional.
- *
  * @return array Array containing the path, URL, and other helpful settings.
  */
 function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
@@ -821,7 +799,6 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
  *
  * @param array         $sql   Clauses in the user_id SQL query.
  * @param BP_User_Query $query User query object.
- *
  * @return array
  */
 function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
@@ -889,7 +866,6 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	return $sql;
 }
-
 add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10, 2 );
 
 /**
@@ -898,7 +874,6 @@ add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10,
  * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the user to sync.
- *
  * @return bool
  */
 function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
@@ -938,7 +913,6 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 
 	bp_xprofile_update_display_name( $user_id );
 }
-
 add_action( 'bp_core_signup_user', 'xprofile_sync_wp_profile' );
 add_action( 'bp_core_activated_user', 'xprofile_sync_wp_profile' );
 
@@ -968,7 +942,6 @@ function bp_xprofile_update_display_name( $user_id ) {
 function xprofile_remove_data( $user_id ) {
 	BP_XProfile_ProfileData::delete_data_for_user( $user_id );
 }
-
 add_action( 'wpmu_delete_user', 'xprofile_remove_data' );
 add_action( 'delete_user', 'xprofile_remove_data' );
 add_action( 'bp_make_spam_user', 'xprofile_remove_data' );
@@ -990,7 +963,6 @@ add_action( 'bp_make_spam_user', 'xprofile_remove_data' );
  *                                 for all objects, ignoring the specified object_id. Otherwise, only
  *                                 delete matching metadata entries for the specified object.
  *                                 Default: false.
- *
  * @return bool True on success, false on failure.
  */
 function bp_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $meta_value = false, $delete_all = false ) {
@@ -1042,7 +1014,6 @@ function bp_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $
  * @param bool   $single      Optional. If true, return only the first value of the
  *                            specified meta_key. This parameter has no effect if meta_key is not
  *                            specified. Default: true.
- *
  * @return mixed Meta value if found. False on failure.
  */
 function bp_xprofile_get_meta( $object_id, $object_type, $meta_key = '', $single = true ) {
@@ -1072,7 +1043,6 @@ function bp_xprofile_get_meta( $object_id, $object_type, $meta_key = '', $single
  * @param mixed  $prev_value  Optional. If specified, only update existing
  *                            metadata entries with the specified value.
  *                            Otherwise update all entries.
- *
  * @return bool|int Returns false on failure. On successful update of existing
  *                  metadata, returns true. On successful creation of new metadata,
  *                  returns the integer ID of the new metadata row.
@@ -1100,7 +1070,6 @@ function bp_xprofile_update_meta( $object_id, $object_type, $meta_key, $meta_val
  *                            for the given key. If true, and the object already
  *                            has a value for the key, no change will be made.
  *                            Default false.
- *
  * @return int|bool The meta ID on successful update, false on failure.
  */
 function bp_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value, $unique = false ) {
@@ -1121,7 +1090,6 @@ function bp_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value,
  * @param int    $field_group_id Group ID for the group field belongs to.
  * @param string $meta_key       Meta key to update.
  * @param string $meta_value     Meta value to update to.
- *
  * @return bool|int
  */
 function bp_xprofile_update_fieldgroup_meta( $field_group_id, $meta_key, $meta_value ) {
@@ -1136,7 +1104,6 @@ function bp_xprofile_update_fieldgroup_meta( $field_group_id, $meta_key, $meta_v
  * @param int    $field_id   Field ID to update.
  * @param string $meta_key   Meta key to update.
  * @param string $meta_value Meta value to update to.
- *
  * @return bool|int
  */
 function bp_xprofile_update_field_meta( $field_id, $meta_key, $meta_value ) {
@@ -1151,7 +1118,6 @@ function bp_xprofile_update_field_meta( $field_id, $meta_key, $meta_value ) {
  * @param int    $field_data_id Field ID to update.
  * @param string $meta_key      Meta key to update.
  * @param string $meta_value    Meta value to update to.
- *
  * @return bool|int
  */
 function bp_xprofile_update_fielddata_meta( $field_data_id, $meta_key, $meta_value ) {
@@ -1303,7 +1269,6 @@ function bp_xprofile_fullname_field_name() {
  * @since BuddyPress 2.4.0
  *
  * @param int|null $field_id Optional. Default current field ID.
- *
  * @return bool
  */
 function bp_xprofile_is_richtext_enabled_for_field( $field_id = null ) {
@@ -1358,13 +1323,12 @@ function bp_xprofile_get_visibility_levels() {
  *
  * @since BuddyPress 1.6.0
  *
+ * @see BP_XProfile_Group::get()
+ *   or if you have added your own custom levels.
+ *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
  * @param int $current_user_id   The id of the user viewing the profile.
- *
  * @return array An array of field ids that should be excluded from the profile query
- * @see   BP_XProfile_Group::get()
- *        or if you have added your own custom levels.
- *
  */
 function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
 	if ( ! $displayed_user_id ) {
@@ -1406,12 +1370,11 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
  *
  * @since BuddyPress 1.8.2
  *
+ * @see bp_xprofile_get_hidden_fields_for_user()
+ *
  * @param int $displayed_user_id The id of the user the profile fields belong to.
  * @param int $current_user_id   The id of the user viewing the profile.
- *
  * @return array An array of visibility levels hidden to the current user.
- * @see   bp_xprofile_get_hidden_fields_for_user()
- *
  */
 function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
 
@@ -1454,13 +1417,12 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
  *
  * @since BuddyPress 1.6.0
  *
+ * @see bp_xprofile_get_hidden_fields_for_user()
+ *
  * @param int   $user_id The id of the profile owner.
  * @param array $levels  An array of visibility levels ('public', 'friends', 'loggedin', 'adminsonly' etc) to be
  *                       checked against.
- *
  * @return array $field_ids The fields that match the requested visibility levels for the given user.
- * @see   bp_xprofile_get_hidden_fields_for_user()
- *
  */
 function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array() ) {
 	if ( ! is_array( $levels ) ) {
@@ -1468,7 +1430,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	}
 
 	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
-	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ) {
+	if ( empty( $user_visibility_levels ) && ! is_array( $user_visibility_levels ) ){
 		$user_visibility_levels = array();
 	}
 
@@ -1507,7 +1469,6 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
  * @since BuddyPress 2.8.0
  *
  * @param int $field_id The id of the current field being looped through.
- *
  * @return void This function only changes the global $_POST that should contain
  *              the datebox data.
  */
@@ -1535,7 +1496,6 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
  * @since BuddyPress 1.9.0
  *
  * @param int|string $user_id ID of the user to get @-mention name for.
- *
  * @return string $mentionname User name appropriate for @-mentions.
  */
 function bp_activity_get_user_mentionname( $user_id ) {
@@ -1563,12 +1523,7 @@ function bp_at_mention_default_options() {
 	return apply_filters(
 		'bp_at_mention_js_options',
 		array(
-			'selectors'     => array(
-				'.bp-suggestions',
-				'#comments form textarea',
-				'.wp-editor-area',
-				'.bbp-the-content'
-			),
+			'selectors'     => array( '.bp-suggestions', '#comments form textarea', '.wp-editor-area', '.bbp-the-content' ),
 			'insert_tpl'    => '@${ID}',
 			'display_tpl'   => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>',
 			'extra_options' => array(),
@@ -1720,8 +1675,8 @@ function bp_xprofile_social_network_provider() {
 /**
  * Add social networks button to the member header area.
  *
- * @since BuddyBoss 1.0.0
  * @return string
+ * @since BuddyBoss 1.0.0
  */
 function bp_get_user_social_networks_urls( $user_id = null ) {
 
@@ -1740,7 +1695,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 		$providers = bp_xprofile_social_network_provider();
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
-		
+
 		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
@@ -1976,7 +1931,6 @@ function bp_xprofile_sync_bp_profile( $user_id ) {
 	}
 
 }
-
 add_action( 'profile_update', 'bp_xprofile_sync_bp_profile', 999, 1 );
 
 /**
@@ -2022,20 +1976,17 @@ function bp_xprofile_sync_wp_profile( $user_id, $posted_field_ids, $errors, $old
 
 	bp_xprofile_update_display_name( $user_id );
 }
-
 add_action( 'xprofile_updated_profile', 'bp_xprofile_sync_wp_profile', 999, 5 );
 
 /**
  * Return Transient name using logged in User ID.
  *
- * @since BuddyBoss 1.4.9
- *
- * @param int    $widget_id - Widget id part of transient name string
- *
- * @param string $key       - Transient prefix key
+ * @param string $key - Transient prefix key
+ * @param int $widget_id - Widget id part of transient name string
  *
  * @return string $transient_name
  *
+ * @since BuddyBoss 1.4.9
  */
 function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
 
@@ -2051,15 +2002,13 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  *
  * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields added/updated/deleted.
  *
- * @since BuddyBoss 1.4.9
- *
+ * @param array $profile_groups - set of fieldset selected to show in progress
  * @param array $profile_phototype - profile or cover photo selected to show in progress
- * @param int   $widget_id         - Widget id specific user progress
- *
- * @param array $profile_groups    - set of fieldset selected to show in progress
+ * @param int $widget_id - Widget id specific user progress
  *
  * @return array $user_progress - user progress to render profile completion
  *
+ * @since BuddyBoss 1.4.9
  */
 function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype, $widget_id ) {
 
@@ -2079,7 +2028,7 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 		$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_phototype );
 
 		// Do not proceed if no fields found based on settings.
-		if ( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0 ) {
+		if( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0  ){
 			return $user_progress;
 		}
 
@@ -2096,18 +2045,16 @@ function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype
 /**
  * Function returns logged in user progress based on options selected in the widget form.
  *
- * @since BuddyBoss 1.4.9
- *
+ * @param array $group_ids - set of fieldset selected to show in progress
  * @param array $photo_types - profile or cover photo selected to show in progress
- *
- * @param array $group_ids   - set of fieldset selected to show in progress
  *
  * @return array progress_details - raw details to calculate user progress
  *
+ * @since BuddyBoss 1.4.9
  */
 function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 
-	if ( empty( $group_ids ) ) {
+	if( empty($group_ids) ){
 		$group_ids = array();
 	}
 
@@ -2140,11 +2087,11 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				 * Need to check $profile_url is send 200 status or not.
 				 */
 				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
-				$profile_url = get_avatar_url( $user_id, [ 'default' => '404' ] );
+				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
 				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
-				$headers = get_headers( $profile_url, 1 );
-				if ( $headers[0] === 'HTTP/1.1 200 OK' ) {
+				$headers = get_headers($profile_url, 1);
+				if ($headers[0] === 'HTTP/1.1 200 OK') {
 					$is_profile_photo_uploaded = 1;
 					++ $grand_completed_fields;
 				}
@@ -2236,16 +2183,16 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 			}
 
 			// For Social networks field check child field is completed or not
-			if ( 'socialnetworks' == $group_single_field->type ) {
+			if  ( 'socialnetworks' == $group_single_field->type ){
 				$field_data_value = maybe_unserialize( $group_single_field->data->value );
-				$children         = $group_single_field->type_obj->field_obj->get_children();
-				foreach ( $children as $child ) {
-					if ( isset( $field_data_value[ $child->name ] ) && ! empty( $field_data_value[ $child->name ] ) ) {
+				$children = $group_single_field->type_obj->field_obj->get_children();
+				foreach ( $children as $child ){
+					if ( isset( $field_data_value[$child->name] ) &&  ! empty( $field_data_value[$child->name] ) ) {
 						++ $group_completed_fields;
 					}
 					++ $group_total_fields;
 				}
-			} else {
+			} else{
 				$field_data_value = maybe_unserialize( $group_single_field->data->value );
 
 				if ( ! empty( $field_data_value ) ) {
@@ -2283,19 +2230,18 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 /**
  * Function formats user progress to pass on to templates.
  *
- * @since BuddyBoss 1.4.9
- *
  * @param array $user_progress_arr - raw details to calculate user progress
  *
  * @return array $user_prgress_formatted - user progress to render profile completion
  *
+ * @since BuddyBoss 1.4.9
  */
 function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 	/* Groups */
 
 	$loggedin_user_domain = bp_loggedin_user_domain();
-	$profile_slug         = bp_get_profile_slug();
+	$profile_slug          = bp_get_profile_slug();
 
 	// Calculate Total Progress percentage.
 	$profile_completion_percentage = round( ( $user_progress_arr['completed_fields'] * 100 ) / $user_progress_arr['total_fields'] );
@@ -2305,7 +2251,7 @@ function bp_xprofile_get_user_progress_formatted( $user_progress_arr ) {
 
 	// Group specific details
 	$listing_number = 1;
-	if ( isset( $user_progress_arr['groups'] ) ) {
+	if( isset( $user_progress_arr['groups'] ) ){
 		foreach ( $user_progress_arr['groups'] as $group_id => $group_details ) {
 
 			$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/' . $group_id );
@@ -2379,6 +2325,5 @@ function bp_xprofile_reset_cover_image_position( $user_id ) {
 		bp_delete_user_meta( (int) $user_id, 'bp_cover_position' );
 	}
 }
-
 add_action( 'xprofile_cover_image_uploaded', 'bp_xprofile_reset_cover_image_position', 10, 1 );
 add_action( 'xprofile_cover_image_deleted', 'bp_xprofile_reset_cover_image_position', 10, 1 );
