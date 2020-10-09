@@ -14597,6 +14597,112 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   }
 }
 
+.search-media-list .item {
+  width: 100%;
+}
+
+.search-media-list .media-album_items {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-media-list .media-album_thumb {
+  width: 100px;
+  padding: 0 10px 0 15px;
+}
+
+.search-media-list .media-album_thumb img {
+  border-radius: 4px !important;
+  max-width: 100%;
+  height: auto;
+}
+
+.search-media-list .media-album_details {
+  width: calc(35% - 107px);
+  line-height: 1;
+}
+
+.bp-search-ac-header .search-media-list .media-album_details {
+  width: calc(35% - 90px);
+}
+
+.search-media-list .media-album_details .media-album_name {
+  color: #122b46;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  max-width: 90%;
+}
+
+.search-media-list .media-album_details .media-photo_count {
+  color: #939597;
+  font-size: 13px;
+  display: block;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.search-media-list .media-album_modified {
+  width: 20%;
+}
+
+.search-media-list .media-album_modified .media-album_details__bottom {
+  display: block;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #4d5c6d;
+}
+
+.search-media-list .media-album_modified .media-album_details__bottom .media-album_date {
+  display: inset-block;
+  vertical-align: middle;
+}
+
+.search-media-list .media-album_modified .media-album_details__bottom .media-album_author {
+  display: block;
+  font-size: 13px;
+  color: #939597;
+}
+
+.search-media-list .media-album_modified .media-album_details__bottom .media-album_author a {
+  color: #939597;
+}
+
+.search-media-list .media-album_group,
+.search-media-list .media-album_visibility {
+  width: 20%;
+  display: block;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #4d5c6d;
+}
+
+@media screen and (max-width: 540px) {
+  .search-media-list .media-album_items {
+    flex-flow: column;
+  }
+  .search-media-list .media-album_thumb {
+    margin-bottom: 15px;
+    padding: 0;
+  }
+  .search-media-list .media-album_thumb,
+  .search-media-list .media-album_details,
+  .search-media-list .media-album_modified,
+  .search-media-list .media-album_group,
+  .search-media-list .media-album_visibility {
+    -ms-flex-preferred-size: 100% !important;
+    flex-basis: 100% !important;
+    width: 100% !important;
+    line-height: inherit;
+  }
+  .search-media-list .media-album_details .media-photo_count {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+}
+
 .search-document-list .item {
   width: 100%;
 }
