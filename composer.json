@@ -31,11 +31,17 @@
 		"php": ">=5.3.0",
 		"phpunit/phpunit": "6.1.0"
 	},
+	"require-dev": {
+	  "symfony/var-dumper": "^4.2",
+	  "dealerdirect/phpcodesniffer-composer-installer": "*",
+	  "phpcompatibility/phpcompatibility-wp": "^2.1",
+	  "squizlabs/php_codesniffer": "^3.4.0",
+	  "wp-coding-standards/wpcs": "*"
+	},
     "scripts": {
         "test": "vendor/bin/phpunit",
-        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash"
-    },
-	"require-dev": {
-		"symfony/var-dumper": "^4.2"
+        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
+		"lint": "vendor/bin/phpcs -s",
+		"lint-fix": "vendor/bin/phpcbf"
 	}
 }
