@@ -271,6 +271,7 @@ function bp_core_set_uri_globals() {
 
 	// This is not a BuddyPress page, so just return.
 	if ( empty( $matches ) ) {
+		do_action( 'bp_not_a_page' );
 		return false;
 	}
 
