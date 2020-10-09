@@ -5061,50 +5061,105 @@ function bp_core_upload_max_size() {
 }
 
 /**
- * Function deletes Transient based on the transient name specified.
- *
- * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
- *
- * @global type $wpdb
- *
- * @since BuddyBoss 1.4.9
- */
-function bp_core_delete_transient_query( $transient_name_prefix ) {
-	global $wpdb;
-	$sql = $wpdb->prepare(
-			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
-			$transient_name_prefix
-	);
-
-	$keys = $wpdb->get_col( $sql );
-
-	if ( ! empty( $keys ) ) {
-		foreach ( $keys as $transient ) {
-			delete_transient( str_replace( '_transient_', '', $transient ) );
-		}
-	}
-}
-
-/**
- * Function which return the profile completion key.
- *
- * @since BuddyBoss 1.4.9
- */
-function bp_core_get_profile_completion_key() {
-
-	return 'bbprofilecompletion';
-}
-
-/**
  * Remove profile completion widget transient.
  *
  * @since BuddyBoss 1.5.3
  */
-function bp_core_profile_completion_widget_delete_transient() {
-	$transient_keys = bp_get_option( 'bp_profile_completion_widgets', array() );
-	if ( ! empty( $transient_keys ) ) {
-		foreach ( $transient_keys as $transient_key ) {
-			delete_transient( $transient_key );
+function bp_core_profile_completion_widget_options() {
+
+	/* Profile Groups and Profile Cover Photo VARS. */
+	$options                              = array();
+	$options['profile_groups']            = bp_xprofile_get_groups();
+	$options['is_profile_photo_disabled'] = bp_disable_avatar_uploads();
+	$options['is_cover_photo_disabled']   = bp_disable_cover_image_uploads();
+
+	return apply_filters( 'bp_core_profile_completion_widget_options', $options );
+}
+
+/**
+ * Function trigger when profile updated. Profile field added/updated/deleted.
+ * Deletes Profile Completion Transient here.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_core_xprofile_update_profile_completion_user_progress() {
+
+	$user_id            = get_current_user_id();
+	$widget_options     = bp_core_profile_completion_widget_options();
+	$profile_groups     = wp_list_pluck( $widget_options['profile_groups'], 'id' );
+	$profile_photo_type = array();
+
+	if ( ! $widget_options['is_profile_photo_disabled'] ) {
+		$profile_photo_type[] = 'profile_photo';
+	}
+	if ( ! $widget_options['is_cover_photo_disabled'] ) {
+		$profile_photo_type[] = 'cover_photo';
+	}
+
+	// Get logged in user Progress.
+	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
+	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
+
+}
+
+/**
+ * Function will return the user progress based on the settings you provided.
+ *
+ * @param $profile_groups
+ * @param $profile_phototype
+ * @param $get_user_data
+ *
+ * @return array $response user progress based on widget settings.
+ */
+function bp_xprofile_get_selected_options_user_progress( $profile_groups, $profile_phototype, $get_user_data ) {
+
+	$response                     = array();
+	$response['photo_type']       = array();
+	$response['groups']           = array();
+	$response['total_fields']     = 0;
+	$response['completed_fields'] = 0;
+	$total_count                  = 0;
+	$total_completed_count        = 0;
+
+	if ( ! empty( $profile_phototype ) ) {
+		foreach ( $profile_phototype as $option ) {
+			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
+				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
+				$total_count = $total_count + 1;
+				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) &&  1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
+					$total_completed_count = $total_completed_count + 1;
+				}
+			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
+				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
+				$total_count = $total_count + 1;
+				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) &&  1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
+					$total_completed_count = $total_completed_count + 1;
+				}
+			}
 		}
 	}
+
+	if ( ! empty( $profile_groups ) ) {
+		foreach ( $profile_groups as $group ) {
+			if ( isset( $get_user_data['groups'][$group] ) ) {
+				$response['groups'][$group] = $get_user_data['groups'][$group];
+				$total_count = $total_count + (int) $get_user_data['groups'][$group]['group_total_fields'];
+				if ( isset( $get_user_data['groups'][$group]['group_completed_fields'] ) && (int) $get_user_data['groups'][$group]['group_completed_fields'] > 0 ) {
+					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][$group]['group_completed_fields'];
+				}
+			}
+
+		}
+	}
+
+	if ( $total_count > 0 ) {
+		$response['total_fields'] = $total_count;
+	}
+
+	if ( $total_completed_count > 0 ) {
+		$response['completed_fields'] = $total_completed_count;
+	}
+
+	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_phototype, $get_user_data );
+
 }
