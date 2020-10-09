@@ -41,9 +41,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
-		"install-hooks": ["sh ./contrib/setup.sh"],
-		"post-install-cmd": ["@install-hooks"],
-		"post-update-cmd": ["@install-hooks"],
 		"lint": "vendor/bin/phpcs -s",
 		"lint-fix": "vendor/bin/phpcbf"
 	}
