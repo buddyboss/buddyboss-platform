@@ -371,8 +371,9 @@ class BP_User_Query {
 		 * @since BuddyBoss 1.5.4
 		 *
 		 * @param string $sql From SQL statement.
+		 * @param string $uid_name User ID field name.
 		 */
-		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'] );
+		$sql['select'] = apply_filters( 'bp_user_query_join_sql', $sql['select'], $this->uid_name );
 
 		/* WHERE *************************************************************/
 

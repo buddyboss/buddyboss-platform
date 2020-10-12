@@ -39,7 +39,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10 );
 	}
 
@@ -49,11 +49,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param string $join_sql Members sql.
+	 * @param string $uid_name User ID field name
 	 *
 	 * @return string Join sql
 	 */
-	public function update_join_sql( $join_sql ) {
-		$join_sql .= $this->exclude_joint_query( 'u.ID' );
+	public function update_join_sql( $join_sql, $uid_name ) {
+		$join_sql .= $this->exclude_joint_query( 'u.' . $uid_name );
 
 		return $join_sql;
 	}
