@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_register_appboss_integration() {
-	require_once dirname( __FILE__ ) . '/bp-appboss-integration.php';
+	require_once dirname( __FILE__ ) . '/bp-buddyboss-app-integration.php';
 	buddypress()->integrations['appboss'] = new BP_App_Integration();
 }
 add_action( 'bp_setup_integrations', 'bp_register_appboss_integration' );

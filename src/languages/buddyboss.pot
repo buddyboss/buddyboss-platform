@@ -3151,7 +3151,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:690
-#: bp-integrations/appboss/bp-appboss-integration.php:22
+#: bp-integrations/appboss/bp-buddyboss-app-integration.php:22
 #: bp-integrations/appboss/templates/admin/integration-tab-intro.php:12
 msgid "AppBoss"
 msgstr ""
