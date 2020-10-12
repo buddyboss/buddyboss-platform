@@ -1,8 +1,8 @@
 <?php
 /**
- * AppBoss integration admin tab
+ * BuddyBoss App integration admin tab
  *
- * @package BuddyBoss\AppBoss
+ * @package BuddyBoss\App
  * @since BuddyBoss 1.0.0
  */
 
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup AppBoss integration admin tab class.
+ * Setup BuddyBoss App integration admin tab class.
  *
  * @since BuddyBoss 1.0.0
  */

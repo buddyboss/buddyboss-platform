@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss AppBoss Integration Loader.
+ * BuddyBoss App Integration Loader.
  *
- * @package BuddyBoss\AppBoss
+ * @package BuddyBoss\App
  * @since BuddyBoss 1.0.0
  */
 

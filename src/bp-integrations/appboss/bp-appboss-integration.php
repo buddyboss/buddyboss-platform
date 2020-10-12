@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss AppBoss Integration Class.
+ * BuddyBoss App Integration Class.
  *
- * @package BuddyBoss\AppBoss
+ * @package BuddyBoss\App
  * @since BuddyBoss 1.0.0
  */
 
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup the bp appboss class.
+ * Setup the bp app class.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -19,7 +19,7 @@ class BP_Appboss_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'appboss',
-			__( 'AppBoss', 'buddyboss' ),
+			__( 'BuddyBoss App', 'buddyboss' ),
 			'appboss',
 			array(
 				'required_plugin' => 'appboss/appboss.php',
@@ -28,7 +28,7 @@ class BP_Appboss_Integration extends BP_Integration {
 	}
 
 	/**
-	 * Register admin setting tab, only if AppBoss plugin is disabled
+	 * Register admin setting tab, only if AppBoss or BuddyBoss App plugin is disabled
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
