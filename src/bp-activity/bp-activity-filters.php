@@ -534,7 +534,7 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
  * @param array  $args {
  *     Optional parameters. See $options argument of {@link bp_create_excerpt()}
  *     for all available parameters.
- * }
+ * }.
  * @return string $excerpt The truncated text.
  */
 function bp_activity_truncate_entry( $text, $args = array() ) {
@@ -578,8 +578,10 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * been truncated), add the "Read More" link. Note that bp_create_excerpt() is stripping
 	 * shortcodes, so we have strip them from the $text before the comparison.
 	 */
-	if ( 'new_blog_post' === $activities_template->activity->type ) {
-		$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, get_the_permalink( $activities_template->activity->secondary_item_id ), $append_text );
+	if ( in_array( $activities_template->activity->type, array( 'new_blog_post', 'new_blog_comment' ), true ) ) {
+		$excerpt_link = 'new_blog_post' === $activities_template->activity->type ? get_the_permalink( $activities_template->activity->secondary_item_id ) : bp_get_activity_thread_permalink();
+
+		$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
 	} elseif ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
 		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 
