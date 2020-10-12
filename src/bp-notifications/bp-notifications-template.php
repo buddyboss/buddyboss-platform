@@ -185,10 +185,11 @@ function bp_get_notifications_read_permalink( $user_id = 0 ) {
  */
 function bp_has_notifications( $args = '' ) {
 
+	$notification_read_flag = bp_parse_args( $args );
 	// Get the default is_new argument.
-	if ( bp_is_current_action( 'unread' ) ) {
+	if ( bp_is_current_action( 'unread' ) || isset( $notification_read_flag[ 'unread' ] ) ) {
 		$is_new = 1;
-	} elseif ( bp_is_current_action( 'read' ) ) {
+	} elseif ( bp_is_current_action( 'read' ) || isset( $notification_read_flag[ 'read' ] ) ) {
 		$is_new = 0;
 
 		// Not on a notifications page? default to fetch new notifications.
