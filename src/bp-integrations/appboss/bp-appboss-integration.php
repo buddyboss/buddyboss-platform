@@ -36,7 +36,7 @@ class BP_App_Integration extends BP_Integration {
 
 		if ( ! is_plugin_active( $this->required_plugin ) ) {
 
-			require_once trailingslashit( $this->path ) . 'bp-admin-appboss-tab.php';
+			require_once trailingslashit( $this->path ) . 'bp-admin-buddyboss-app-tab.php';
 
 			new BP_App_Admin_Integration_Tab(
 				"bp-{$this->id}",
