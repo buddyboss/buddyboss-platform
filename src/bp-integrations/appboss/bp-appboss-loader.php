@@ -10,12 +10,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the bp appboss integration.
+ * Set up the bp app integration.
  *
  * @since BuddyBoss 1.0.0
  */
 function bp_register_appboss_integration() {
 	require_once dirname( __FILE__ ) . '/bp-appboss-integration.php';
-	buddypress()->integrations['appboss'] = new BP_Appboss_Integration();
+	buddypress()->integrations['appboss'] = new BP_App_Integration();
 }
 add_action( 'bp_setup_integrations', 'bp_register_appboss_integration' );

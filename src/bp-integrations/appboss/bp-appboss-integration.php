@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_Appboss_Integration extends BP_Integration {
+class BP_App_Integration extends BP_Integration {
 
 	public function __construct() {
 		$this->start(
@@ -38,7 +38,7 @@ class BP_Appboss_Integration extends BP_Integration {
 
 			require_once trailingslashit( $this->path ) . 'bp-admin-appboss-tab.php';
 
-			new BP_Appboss_Admin_Integration_Tab(
+			new BP_App_Admin_Integration_Tab(
 				"bp-{$this->id}",
 				$this->name,
 				array(
