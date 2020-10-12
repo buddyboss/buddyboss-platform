@@ -1,6 +1,6 @@
 <?php
 /**
- * @todo add description
+ * BuddyBoss Albums Search Class
  *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.5.0
@@ -15,6 +15,12 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 	 * BuddyPress Global Search  - search albums class
 	 */
 	class Bp_Search_Albums extends Bp_Search_Type {
+
+		/**
+		 * Search item type name
+		 *
+		 * @var string
+		 */
 		private $type = 'albums';
 
 		/**
@@ -47,6 +53,14 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			/* Do nothing here */
 		}
 
+		/**
+		 * Prepare SQL query for albums search.
+		 *
+		 * @param string $search_term Search terms.
+		 * @param false  $only_totalrow_count Total row count.
+		 *
+		 * @return mixed|void
+		 */
 		public function sql( $search_term, $only_totalrow_count = false ) {
 
 			global $wpdb, $bp;
@@ -94,19 +108,18 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 				array_push( $friends, bp_loggedin_user_id() );
 			}
 
-
 			$sql = ' SELECT ';
 
 			if ( $only_totalrow_count ) {
 				$sql .= ' COUNT( DISTINCT ma.id ) ';
 			} else {
-				$sql .= $wpdb->prepare(" DISTINCT ma.id, 'albums' as type, ma.title LIKE %s AS relevance, ma.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql .= $wpdb->prepare( " DISTINCT ma.id, 'albums' as type, ma.title LIKE %s AS relevance, ma.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
 			$sql .= " FROM {$bp->media->table_name_albums} ma WHERE";
 
 			$privacy = array( 'public' );
-			if( is_user_logged_in() ) {
+			if ( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
 			}
 
@@ -117,12 +130,12 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 					)
 					AND
 					(
-							( ma.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ma.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ma.privacy = 'grouponly' )" : '' ) .
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ma.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ma.privacy = 'friends' )" : '' ) .
-							( is_user_logged_in() ? " OR ( ma.user_id = '" . bp_loggedin_user_id() . "' AND ma.privacy = 'onlyme' )" : '' ) .
-					")
-				)",
+							( ma.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( ma.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND ma.privacy = 'grouponly' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( ma.user_id IN ( '" . implode( "','", $friends ) . "' ) AND ma.privacy = 'friends' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedDynamicPlaceholderGeneration
+							( is_user_logged_in() ? " OR ( ma.user_id = '" . bp_loggedin_user_id() . "' AND ma.privacy = 'onlyme' )" : '' ) . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					')
+				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
 
@@ -136,14 +149,19 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			);
 		}
 
+		/**
+		 * Generare Html for albums search
+		 *
+		 * @param string $template_type Template type.
+		 */
 		protected function generate_html( $template_type = '' ) {
 			$document_ids = array();
 			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
 				$document_ids[] = $item_id;
 			}
 
-			// now we have all the posts
-			// lets do a albums loop
+			// now we have all the posts.
+			// lets do a albums loop.
 			$args = array(
 				'include'      => implode( ',', $document_ids ),
 				'per_page'     => count( $document_ids ),

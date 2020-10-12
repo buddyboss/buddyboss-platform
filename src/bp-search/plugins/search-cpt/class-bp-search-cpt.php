@@ -88,7 +88,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 
 			// If post is not attachment Post should be publish &
 			// else attachment should be inherit and that not include media and document as we have separate search for that
-			$sql .= " ) AND p.post_type = %s";
+			$sql .= ' ) AND p.post_type = %s';
 			if ( 'attachment' == $this->cpt_name ) {
 				$sql .= " AND p.post_status = 'inherit' AND p.ID NOT IN ( SELECT post_id FROM {$wpdb->postmeta} pm WHERE pm.`meta_key` IN ('bp_media_upload','bp_document_upload') )";
 			} else {
@@ -122,7 +122,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 				array(
 					'post_type'      => $this->cpt_name,
 					'post__in'       => $post_ids,
-					'post_status'    => ( 'attachment' === $this->cpt_name  ) ? 'inherit' : 'publish',
+					'post_status'    => ( 'attachment' === $this->cpt_name ) ? 'inherit' : 'publish',
 					'posts_per_page' => 20,
 				)
 			);

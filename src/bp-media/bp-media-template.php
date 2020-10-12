@@ -1008,6 +1008,39 @@ function bp_get_media_parent_activity_id() {
 	return apply_filters( 'bp_get_media_privacy', get_post_meta( $media_template->media->attachment_id, 'bp_media_parent_activity_id', true ) );
 }
 
+/**
+ * Return the media link.
+ *
+ * @since BuddyBoss 1.5.3
+ *
+ * @return string The media link.
+ * @global object $media_template {@link \BP_Media_Template}
+ *
+ */
+function bp_get_media_link() {
+	global $media_template;
+
+	if ( ! empty( $media_template->media->group_id ) ) {
+		$group = buddypress()->groups->current_group;
+		if ( ! isset( $group->id ) || $group->id !== $media_template->media->group_id ) {
+			$group = groups_get_group( $media_template->media->group_id );
+		}
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . bp_get_media_slug() );
+	} else {
+		$url = trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_get_media_slug() );
+	}
+
+	/**
+	 * Filters the media link being displayed.
+	 *
+	 * @since BuddyBoss 1.5.3
+	 *
+	 * @param int $id The media link.
+	 */
+	return apply_filters( 'bp_get_media_link', $url );
+}
+
 // ****************************** Media Albums *********************************//
 
 /**
@@ -1495,11 +1528,15 @@ function bp_album_link() {
 function bp_get_album_link() {
 	global $media_album_template;
 
-	if ( bp_is_group() && ! empty( $media_album_template->album->group_id ) ) {
-		$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
-		$url        = trailingslashit( $group_link . '/albums/' . bp_get_album_id() );
+	if ( ! empty( $media_album_template->album->group_id ) ) {
+		$group = buddypress()->groups->current_group;
+		if ( ! isset( $group->id ) || $group->id !== $media_album_template->album->group_id ) {
+			$group = groups_get_group( $media_album_template->album->group_id );
+		}
+		$group_link = bp_get_group_permalink( $group );
+		$url        = trailingslashit( $group_link . 'albums/' . bp_get_album_id() );
 	} else {
-		$url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' . bp_get_album_id() );
+		$url = trailingslashit( bp_core_get_user_domain( bp_get_album_user_id() ) . bp_get_media_slug() . '/albums/' . bp_get_album_id() );
 	}
 
 	/**
