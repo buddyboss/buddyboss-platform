@@ -3151,8 +3151,8 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:690
-#: bp-integrations/appboss/bp-buddyboss-app-integration.php:22
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:12
+#: bp-integrations/buddyboss-app/bp-buddyboss-app-integration.php:22
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:12
 msgid "AppBoss"
 msgstr ""
 
@@ -4106,13 +4106,13 @@ msgid ""
 "toggling between both views."
 msgstr ""
 
-#: bp-core/admin/templates/about-appboss.php:20
+#: bp-core/admin/templates/about-buddyboss-app.php:20
 #: bp-core/admin/templates/about-buddyboss.php:20
 #: bp-core/admin/templates/check-document-mime-type.php:18
 msgid "Close pop-up"
 msgstr ""
 
-#: bp-core/admin/templates/about-appboss.php:21
+#: bp-core/admin/templates/about-buddyboss-app.php:21
 #: bp-core/admin/templates/about-buddyboss.php:21
 #: bp-core/admin/templates/check-document-mime-type.php:19
 #: bp-forums/admin/topics.php:847 bp-forums/topics/template.php:2818
@@ -4124,11 +4124,11 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: bp-core/admin/templates/about-appboss.php:26
+#: bp-core/admin/templates/about-buddyboss-app.php:26
 msgid "Say hello to AppBoss"
 msgstr ""
 
-#: bp-core/admin/templates/about-appboss.php:45
+#: bp-core/admin/templates/about-buddyboss-app.php:45
 msgid "<span>Native mobile apps by </span><a href=\"%s\">AppBoss</a><span>.</span>"
 msgstr ""
 
@@ -17199,11 +17199,11 @@ msgstr ""
 msgid "Group invite rejected"
 msgstr ""
 
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:4
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:4
 msgid "AppBoss <span>&mdash; contact sales to activate</span>"
 msgstr ""
 
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:8
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:8
 msgid ""
 "Access your community from a native mobile app using %s. AppBoss is a paid "
 "service built by BuddyBoss, providing native iOS and Android apps for "
@@ -17213,7 +17213,7 @@ msgid ""
 "your members can also take their courses in the app."
 msgstr ""
 
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:22
+#: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:22
 msgid "Watch the video"
 msgstr ""
 

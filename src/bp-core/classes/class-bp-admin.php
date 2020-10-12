@@ -173,10 +173,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_filter( 'manage_' . bp_get_email_post_type() . '_posts_columns', array( $this, 'emails_register_situation_column' ) );
 			add_action( 'manage_' . bp_get_email_post_type() . '_posts_custom_column', array( $this, 'emails_display_situation_column_data' ), 10, 2 );
 
-			// Hello BuddyBoss/AppBoss.
+			// Hello BuddyBoss/App.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
 			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
-			add_action( 'admin_footer', array( $this, 'about_appboss_screen' ) );
+			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
 
 			/* Filters ***********************************************************/
 
@@ -779,7 +779,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			// Hello AppBoss
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'appboss' ) {
+			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
@@ -844,12 +844,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 *
 		 * @since BuddyBoss 1.0.0 Output the Hello AppBoss template.
 		 */
-		public function about_appboss_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'appboss' ) {
+		public function about_buddyboss_app_screen() {
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss-app' ) {
 				return;
 			}
 
-			include $this->admin_dir . 'templates/about-appboss.php';
+			include $this->admin_dir . 'templates/about-buddyboss-app.php';
 		}
 
 		/** Emails ****************************************************************/

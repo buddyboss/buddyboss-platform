@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
-<div id="bp-hello-container" class="bp-hello-appboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+<div id="bp-hello-container" class="bp-hello-buddyboss-app" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
 			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 				<?php
 				printf(
 					__( '<span>Native mobile apps by </span><a href="%s">AppBoss</a><span>.</span>', 'buddyboss' ),
-					esc_url( 'https://appboss.com/' )
+					esc_url( 'https://buddyboss-app.com/' )
 				);
 				?>
 			</p>

@@ -20,7 +20,7 @@ class BP_App_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function initialize() {
 		$this->tab_order       = 10;
 		$this->intro_template  = $this->root_path . '/templates/admin/integration-tab-intro.php';
-		$this->current_section = 'bp_appboss-integration';
+		$this->current_section = 'bp_buddyboss_app-integration';
 	}
 
 	public function form_html() {

@@ -1,6 +1,6 @@
 <div class="wrap">
 	
-	<div class="bp-admin-card section-bp_appboss-integration">
+	<div class="bp-admin-card section-bp_buddyboss_app-integration">
 		<h2><?php _e( 'BuddyBoss App <span>&mdash; contact sales to activate</span>', 'buddyboss' ); ?></h2>
 		<p>
 		<?php
@@ -8,7 +8,7 @@
 				__( 'Access your community from a native mobile app using %s. AppBoss is a paid service built by BuddyBoss, providing native iOS and Android apps for WordPress, published under your own Apple and Google Play accounts. The apps are branded to match your site, and sync community data (members, groups, forums, etc.) back and forth with WordPress. If using LearnDash your members can also take their courses in the app.', 'buddyboss' ),
 				sprintf(
 					'<a href="%s">%s</a>',
-					'https://appboss.com',
+					'https://buddyboss.com',
 					__( 'AppBoss', 'buddyboss' )
 				)
 			);
@@ -18,7 +18,7 @@
 		<?php
 			printf(
 				'<a href="%s" class="button-secondary">%s</a>',
-				esc_url( bp_get_admin_url( '?hello=appboss' ) ),
+				esc_url( bp_get_admin_url( '?hello=buddyboss-app' ) ),
 				__( 'Watch the video', 'buddyboss' )
 			);
 			?>
