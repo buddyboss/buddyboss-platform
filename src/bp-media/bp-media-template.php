@@ -538,6 +538,41 @@ function bp_get_media_user_id() {
 }
 
 /**
+ * Output the Media author name.
+ *
+ * @since BuddyBoss 1.5.3
+ */
+function bp_media_author() {
+	echo bp_get_media_author();
+}
+
+/**
+ * Return the Media author name.
+ *
+ * @since BuddyBoss 1.5.3
+ *
+ * @global object $media_template {@link \BP_Media_Template}
+ *
+ * @return int The Media author name.
+ */
+function bp_get_media_author() {
+	global $media_template;
+
+	if ( isset( $media_template ) && isset( $media_template->media ) && isset( $media_template->media->user_id ) ) {
+		$author = bp_core_get_user_displayname( $media_template->media->user_id );
+	}
+
+	/**
+	 * Filters the Media author name being displayed.
+	 *
+	 * @since BuddyBoss 1.5.3
+	 *
+	 * @param int $id The Media author id.
+	 */
+	return apply_filters( 'bp_get_media_author', $author );
+}
+
+/**
  * Output the media attachment ID.
  *
  * @since BuddyBoss 1.0.0
@@ -1529,4 +1564,101 @@ function bp_album_user_can_delete( $album = false ) {
 	 * @param object $album   Current album item object.
 	 */
 	return (bool) apply_filters( 'bp_album_user_can_delete', $can_delete, $album );
+}
+
+/**
+ * Output the album user ID.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_album_user_id() {
+	echo bp_get_album_user_id();
+}
+
+/**
+ * Return the album user ID.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_album_template {@link \BP_Media_Album_Template}
+ *
+ * @return int The album user ID.
+ */
+function bp_get_album_user_id() {
+	global $media_album_template;
+
+	/**
+	 * Filters the album ID being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The album user ID.
+	 */
+	return apply_filters( 'bp_get_album_user_id', $media_album_template->album->user_id );
+}
+
+/**
+ * Output the album author name.
+ *
+ * @since BuddyBoss 1.5.3
+ */
+function bp_album_author() {
+	echo bp_get_album_author();
+}
+
+/**
+ * Return the album author name.
+ *
+ * @since BuddyBoss 1.5.3
+ *
+ * @global object $media_album_template {@link \BP_Media_Album_Template}
+ *
+ * @return int The album author name.
+ */
+function bp_get_album_author() {
+	global $media_album_template;
+
+	if ( isset( $media_album_template ) && isset( $media_album_template->album ) && isset( $media_album_template->album->user_id ) ) {
+		$author = bp_core_get_user_displayname( $media_album_template->album->user_id );
+	}
+
+	/**
+	 * Filters the album author name being displayed.
+	 *
+	 * @since BuddyBoss 1.5.3
+	 *
+	 * @param int $id The album author id.
+	 */
+	return apply_filters( 'bp_get_album_author', $author );
+}
+
+/**
+ * Output the album group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_album_group_id() {
+	echo bp_get_album_group_id();
+}
+
+/**
+ * Return the album group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $media_album_template {@link BP_Media_Album_Template}
+ *
+ * @return int The album group ID.
+ */
+function bp_get_album_group_id() {
+	global $media_album_template;
+
+	/**
+	 * Filters the album group ID being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param int $id The album group ID.
+	 */
+	return apply_filters( 'bp_get_album_group_id', $media_album_template->album->group_id );
 }

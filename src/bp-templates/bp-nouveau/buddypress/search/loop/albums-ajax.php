@@ -1,5 +1,6 @@
 <?php
-$albums_link = bp_get_album_link();
+global $media_album_template;
+$albums_link = trailingslashit( bp_core_get_user_domain( bp_get_album_user_id() ) . bp_get_album_link() );
 
 ?>
 <div class="bp-search-ajax-item bboss_ajax_search_media search-media-list">
@@ -7,29 +8,50 @@ $albums_link = bp_get_album_link();
 
 		<div class="media-album_items ac-album-list">
 			<div class="media-album_thumb">
-				<a href="<?php echo esc_url( $albums_link ); ?>">
-					<img src="https://picsum.photos/400/270" alt="<?php echo bp_get_album_title(); ?>" />
-				</a>
+				<?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
+					<a href="<?php echo esc_url( $albums_link ); ?>">
+						<img src="<?php echo $media_album_template->album->media['medias'][0]->attachment_data->thumb; ?>" alt="<?php echo bp_get_album_title(); ?>" />
+					</a>
+				<?php endif; ?>
 			</div>
 
 			<div class="media-album_details">
 				<a class="media-album_name " href="<?php echo esc_url( $albums_link ); ?>">
 					<span><?php echo bp_get_album_title(); ?></span>
 				</a>
-					<span class="media-photo_count">2 photos</span> <!-- Get the count of photos in that album -->
+					<span class="media-photo_count"><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span> <!-- Get the count of photos in that album -->
 			</div>
 
 			<div class="media-album_modified">
 				<div class="media-album_details__bottom">
-					<span class="media-album_date">October 9, 2020</span>
-					<span class="media-album_author">by <a href="http://localhost/buddyboss/members/john/documents/">John Smith</a></span>
+					<span class="media-album_date"><?php echo bp_core_format_date( $media_album_template->album->date_created ); ?></span>
+					<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+								<a href="<?php echo esc_url( $albums_link ); ?>"><?php bp_album_author(); ?></a></span>
 				</div>
 			</div>
 
 			<div class="media-album_group">
 				<div class="media-album_details__bottom">
-					<span class="media-album_group_name"><a href="#">Group Name</a></span>
-					<span class="media-album_status">Public</span>
+					<?php
+					if ( bp_is_active( 'groups' ) ) {
+						$group_id = bp_get_album_group_id();
+						if ( $group_id > 0 ) {
+							// Get the group from the database.
+							$group 		  = groups_get_group( $group_id );
+							$group_name   = isset( $group->name ) ? bp_get_group_name( $group ) : '';
+							$group_link   = sprintf( '<a href="%s" class="bp-group-home-link %s-home-link">%s</a>', esc_url( $albums_link ), esc_attr( bp_get_group_slug( $group ) ), esc_html( bp_get_group_name( $group ) ) );
+							$group_status = bp_get_group_status( $group );
+							?>
+							<span class="media-album_group_name"><?php echo wp_kses_post( $group_link ); ?></span>
+							<span class="media-album_status"><?php echo ucfirst( $group_status ); ?></span>
+							<?php
+						} else {
+							?>
+							<span class="media-album_group_name"> </span>
+							<?php
+						}
+					}
+					?>
 				</div>
 			</div>
 

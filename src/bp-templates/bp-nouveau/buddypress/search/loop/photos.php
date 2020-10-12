@@ -20,7 +20,7 @@ if ( $attachment_id && bp_get_media_activity_id() ) {
 	$class = ''; // used.
 }
 $link = trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_get_media_slug() );
-
+$media_created = bp_get_media_date_created();
 ?>
 
 <li data-bp-item-id="<?php bp_get_media_id(); ?>" data-bp-item-component="media" class="search-media-list">
@@ -28,25 +28,25 @@ $link = trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_
 		<div class="item">
 			<div class="media-album_items ac-album-list">
 				<div class="media-album_thumb">
-					<a href="<?php echo esc_url( $albums_link ); ?>">
-						<img src="https://picsum.photos/400/270" alt="<?php echo esc_html( $photo_title ); ?>" />
+					<a href="<?php echo esc_url( $link ); ?>">
+						<img src="<?php echo esc_url( $attachment_url ); ?>" alt="<?php echo esc_html( $photo_title ); ?>" />
 					</a>
 				</div>
 
 				<div class="media-album_details">
-					<a class="media-album_name " href="<?php echo esc_url( $albums_link ); ?>">
+					<a class="media-album_name " href="<?php echo esc_url( $link ); ?>">
 						<span><?php echo esc_html( $photo_title ); ?></span>
 					</a>
 				</div>
 
 				<div class="media-album_modified">
 					<div class="media-album_details__bottom">
-						<span class="media-album_date"><?php bp_media_date_created(); ?></span>
+						<span class="media-album_date"><?php echo bp_core_format_date( $media_created ); ?></span>
 						<?php
 							if ( ! bp_is_user() ) {
 								?>
 								<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
-								<a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_get_media_slug() ); ?>"><?php bp_media_user_id(); ?></a></span>
+								<a href="<?php echo trailingslashit( bp_core_get_user_domain( bp_get_media_user_id() ) . bp_get_media_slug() ); ?>"><?php bp_media_author(); ?></a></span>
 								<?php
 							}
 						?>
