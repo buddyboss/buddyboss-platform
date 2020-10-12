@@ -684,10 +684,10 @@ function bp_core_admin_integrations() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_appboss() {
+function bp_core_admin_buddyboss_app() {
 	?>
 		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
 			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-appboss.php'; ?>
 		</div>
 		<?php
