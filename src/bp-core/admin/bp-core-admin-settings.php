@@ -268,6 +268,18 @@ function bp_admin_setting_callback_enable_activity_edit() {
 	<?php
 }
 
+function bp_admin_setting_callback_show_relevant_feed() {
+	?>
+
+	<input id="_bp_show_relevant_feed" name="_bp_show_relevant_feed" type="checkbox"
+	       value="1" <?php checked( bp_is_show_relevant_feed_enabled( false ) ); ?> />
+	<label for="_bp_show_relevant_feed"><?php _e( 'Show only relevant feed to members timeline',
+			'buddyboss' ); ?></label>
+
+	<?php
+}
+
+
 /**
  * Enable activity scopes like groups, friends, mentions, following etc.
  *
