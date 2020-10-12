@@ -845,7 +845,7 @@ function bp_core_get_admin_integration_active_tab() {
 
 	if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
 
-		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-appboss' );
+		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-buddyboss-app' );
 		return isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 
 	} else {
