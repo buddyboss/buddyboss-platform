@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-09-30 14:22:04+00:00\n"
+"POT-Creation-Date: 2020-10-13 00:02:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3153,7 +3153,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:690
 #: bp-integrations/buddyboss-app/bp-buddyboss-app-integration.php:22
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:12
-msgid "AppBoss"
+msgid "BuddyBoss App"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:765
@@ -4125,11 +4125,13 @@ msgid "Close"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss-app.php:26
-msgid "Say hello to AppBoss"
+msgid "Video Demo of BuddyBoss App"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss-app.php:45
-msgid "<span>Native mobile apps by </span><a href=\"%s\">AppBoss</a><span>.</span>"
+msgid ""
+"<span>Native mobile apps by </span><a "
+"href=\"%s\">BuddyBoss</a><span>.</span>"
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:31
@@ -17200,21 +17202,21 @@ msgid "Group invite rejected"
 msgstr ""
 
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:4
-msgid "AppBoss <span>&mdash; contact sales to activate</span>"
+msgid "BuddyBoss App <span>&mdash; requires plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:8
 msgid ""
-"Access your community from a native mobile app using %s. AppBoss is a paid "
-"service built by BuddyBoss, providing native iOS and Android apps for "
-"WordPress, published under your own Apple and Google Play accounts. The "
+"Access your community from a native mobile app using the %s. BuddyBoss App "
+"is a paid product built by BuddyBoss, providing native iOS and Android apps "
+"for WordPress, published under your own Apple and Google Play accounts. The "
 "apps are branded to match your site, and sync community data (members, "
 "groups, forums, etc.) back and forth with WordPress. If using LearnDash "
 "your members can also take their courses in the app."
 msgstr ""
 
 #: bp-integrations/buddyboss-app/templates/admin/integration-tab-intro.php:22
-msgid "Watch the video"
+msgid "Watch the demo"
 msgstr ""
 
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:4
