@@ -28,7 +28,7 @@ class BP_App_Integration extends BP_Integration {
 	}
 
 	/**
-	 * Register admin setting tab, only if AppBoss or BuddyBoss App plugin is disabled
+	 * Register admin setting tab, only if BuddyBoss App plugin is disabled
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

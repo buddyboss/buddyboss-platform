@@ -30,7 +30,7 @@ TABLE OF CONTENTS:
 5.0 Tools
 6.0 Help
 7.0 Plugins page
-8.0 AppBoss page
+8.0 BuddyBoss App page
 9.0 Miscellaneous
 ------------------------------------------------------------------------------*/
 
@@ -563,7 +563,7 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 	background-image: url(../../images/admin/icons/fontawesome/solid/wrench.svg);
 }
 
-/* Integrations - AppBoss */
+/* Integrations - BuddyBoss App */
 .bp-admin-card.section-bp_buddyboss_app-integration h2:before {
 	background-image: url(../../images/admin/icons/logos/buddyboss.png);
 	background-size: 100% 100%;
@@ -1665,7 +1665,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 8.0 AppBoss page
+ * 8.0 BuddyBoss App page
  *----------------------------------------------------------------------------*/
 .bp_buddyboss_app_wrap {
 	min-width: 255px;

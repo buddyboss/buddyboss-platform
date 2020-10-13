@@ -680,7 +680,7 @@ function bp_core_admin_integrations() {
 }
 
 /**
- * Load the AppBoss integration admin screen.
+ * Load the BuddyBoss App integration admin screen.
  *
  * @since BuddyBoss 1.0.0
  */

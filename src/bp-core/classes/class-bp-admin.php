@@ -767,7 +767,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * Add some general styling to the admin area.
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss 1.0.0 Added support for Hello AppBoss
+		 * @since BuddyBoss 1.0.0 Added support for Hello BuddyBoss App
 		 */
 		public function enqueue_scripts() {
 			wp_enqueue_style( 'bp-admin-common-css' );
@@ -778,7 +778,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			// Hello AppBoss
+			// Hello BuddyBoss App
 			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
@@ -815,7 +815,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 		}
 
-		/** About BuddyBoss and AppBoss ********************************************/
+		/** About BuddyBoss and BuddyBoss App ********************************************/
 
 		/**
 		 * Output the Hello BuddyBoss template.
@@ -840,9 +840,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		}
 
 		/**
-		 * Output the Hello AppBoss template.
+		 * Output the Hello BuddyBoss App template.
 		 *
-		 * @since BuddyBoss 1.0.0 Output the Hello AppBoss template.
+		 * @since BuddyBoss 1.0.0 Output the Hello BuddyBoss App template.
 		 */
 		public function about_buddyboss_app_screen() {
 			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss-app' ) {
