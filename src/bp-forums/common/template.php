@@ -1516,15 +1516,18 @@ function bbp_get_dropdown( $args = '' ) {
 	$retval = '';
 	$posts  = get_posts(
 		array(
-			'post_type'          => $r['post_type'],
-			'post_status'        => $r['post_status'],
-			'exclude'            => $r['exclude'],
-			'post_parent'        => $r['post_parent'],
-			'numberposts'        => $r['numberposts'],
-			'orderby'            => $r['orderby'],
-			'order'              => $r['order'],
-			'walker'             => $r['walker'],
-			'disable_categories' => $r['disable_categories'],
+			'post_type'              => $r['post_type'],
+			'post_status'            => $r['post_status'],
+			'exclude'                => $r['exclude'],
+			'post_parent'            => $r['post_parent'],
+			'numberposts'            => $r['numberposts'],
+			'orderby'                => $r['orderby'],
+			'order'                  => $r['order'],
+			'walker'                 => $r['walker'],
+			'disable_categories'     => $r['disable_categories'],
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 

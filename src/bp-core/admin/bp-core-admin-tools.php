@@ -919,11 +919,13 @@ function bp_admin_reinstall_emails() {
 
 	$emails = get_posts(
 		array(
-			'fields'           => 'ids',
-			'post_status'      => 'publish',
-			'post_type'        => bp_get_email_post_type(),
-			'posts_per_page'   => 200,
-			'suppress_filters' => false,
+			'fields'                 => 'ids',
+			'post_status'            => 'publish',
+			'post_type'              => bp_get_email_post_type(),
+			'posts_per_page'         => 200,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 

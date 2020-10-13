@@ -407,10 +407,12 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		// Get the replies of the source topic.
 		$replies = (array) get_posts(
 			array(
-				'post_parent'    => $source_topic->ID,
-				'post_type'      => bbp_get_reply_post_type(),
-				'posts_per_page' => - 1,
-				'order'          => 'ASC',
+				'post_parent'            => $source_topic->ID,
+				'post_type'              => bbp_get_reply_post_type(),
+				'posts_per_page'         => - 1,
+				'order'                  => 'ASC',
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 

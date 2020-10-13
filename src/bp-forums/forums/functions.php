@@ -1208,11 +1208,14 @@ function bbp_update_forum_last_topic_id( $forum_id = 0, $topic_id = 0 ) {
 
 		// Setup recent topic query vars
 		$post_vars = array(
-			'post_parent' => $forum_id,
-			'post_type'   => bbp_get_topic_post_type(),
-			'meta_key'    => '_bbp_last_active_time',
-			'orderby'     => 'meta_value',
-			'numberposts' => 1,
+			'post_parent'            => $forum_id,
+			'post_type'              => bbp_get_topic_post_type(),
+			'meta_key'               => '_bbp_last_active_time',
+			'orderby'                => 'meta_value',
+			'numberposts'            => 1,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 
 		// Get the most recent topic in this forum_id

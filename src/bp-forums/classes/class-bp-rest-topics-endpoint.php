@@ -369,12 +369,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 					// Query to use in get_posts to get sticky posts.
 					$sticky_query = array(
-						'post_type'   => bbp_get_topic_post_type(),
-						'post_parent' => 'any',
-						'meta_key'    => '_bbp_last_active_time', // phpcs:ignore
-						'orderby'     => 'meta_value',
-						'order'       => 'DESC',
-						'include'     => $stickies,
+						'post_type'              => bbp_get_topic_post_type(),
+						'post_parent'            => 'any',
+						'meta_key'               => '_bbp_last_active_time', // phpcs:ignore
+						'orderby'                => 'meta_value',
+						'order'                  => 'DESC',
+						'include'                => $stickies,
+						'suppress_filters'       => false,
+						'update_post_term_cache' => false,
 					);
 
 					// Cleanup.

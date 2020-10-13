@@ -1983,10 +1983,13 @@ function bbp_get_forums_for_current_user( $args = array() ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'post_type'   => bbp_get_forum_post_type(),
-			'post_status' => bbp_get_public_status_id(),
-			'numberposts' => -1,
-			'exclude'     => $post__not_in,
+			'post_type'              => bbp_get_forum_post_type(),
+			'post_status'            => bbp_get_public_status_id(),
+			'numberposts'            => - 1,
+			'exclude'                => $post__not_in,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		),
 		'get_forums_for_current_user'
 	);

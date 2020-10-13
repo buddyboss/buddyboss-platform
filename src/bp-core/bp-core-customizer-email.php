@@ -91,7 +91,7 @@ add_action( 'bp_customize_register', 'bp_email_init_customizer' );
  * @return bool
  */
 function bp_is_email_customizer() {
-	return isset( $_GET['bp_customizer'] ) && $_GET['bp_customizer'] === 'email';
+	return isset( $_GET['bp_customizer'] ) && 'email' === $_GET['bp_customizer']; //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 }
 
 /**
@@ -312,13 +312,13 @@ function bp_email_get_customizer_controls() {
 		'bp_email_get_customizer_controls',
 		array(
 			'bp_mailtpl_logo'                      => array(
-				'class'    => 'WP_Customize_Cropped_Image_Control',
-				'label'    => __( 'Upload Logo', 'buddyboss' ),
-				'section'  => 'section_bp_mailtpl_header',
-				'settings' => 'bp_email_options[logo]',
-				'width'    => 180,
-				'height'   => 45,
-				'flex_width' => true,
+				'class'       => 'WP_Customize_Cropped_Image_Control',
+				'label'       => __( 'Upload Logo', 'buddyboss' ),
+				'section'     => 'section_bp_mailtpl_header',
+				'settings'    => 'bp_email_options[logo]',
+				'width'       => 180,
+				'height'      => 45,
+				'flex_width'  => true,
 				'flex_height' => true,
 			),
 
@@ -488,12 +488,14 @@ function bp_email_get_redirect_to_customizer_url() {
 
 	$email = get_posts(
 		array(
-			'fields'           => 'ids',
-			// 'orderby'          => 'rand',
-			'post_status'      => 'publish',
-			'post_type'        => bp_get_email_post_type(),
-			'posts_per_page'   => 1,
-			'suppress_filters' => false,
+			'fields'                 => 'ids',
+			// 'orderby'                => 'rand',
+			'post_status'            => 'publish',
+			'post_type'              => bp_get_email_post_type(),
+			'posts_per_page'         => 1,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 

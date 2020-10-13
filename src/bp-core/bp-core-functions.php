@@ -3319,11 +3319,13 @@ function bp_get_email( $email_type ) {
 	}
 
 	$args = array(
-		'no_found_rows'    => true,
-		'numberposts'      => 1,
-		'post_status'      => 'publish',
-		'post_type'        => bp_get_email_post_type(),
-		'suppress_filters' => false,
+		'no_found_rows'          => true,
+		'numberposts'            => 1,
+		'post_status'            => 'publish',
+		'post_type'              => bp_get_email_post_type(),
+		'suppress_filters'       => false,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
 
 		'tax_query'        => array(
 			array(
@@ -4490,10 +4492,13 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 	function bp_core_get_post_id_by_slug( $slug ) {
 		$post_id = array();
 		$args    = array(
-			'posts_per_page' => 1,
-			'post_type'      => 'docs',
-			'name'           => $slug,
-			'post_parent'    => 0,
+			'posts_per_page'         => 1,
+			'post_type'              => 'docs',
+			'name'                   => $slug,
+			'post_parent'            => 0,
+			'suppress_filters'       => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		);
 		$docs    = get_posts( $args );
 		if ( ! empty( $docs ) ) {
