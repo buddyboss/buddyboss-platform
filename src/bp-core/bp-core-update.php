@@ -313,6 +313,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16000 ) {
 			bp_update_to_1_4_3();
 		}
+
+		if ( $raw_db_version < 16201 ) {
+			bp_update_to_1_5_1();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -640,6 +644,19 @@ function bp_update_to_1_4_3() {
 	}
 }
 
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_update_to_1_5_1() {
+	if ( bp_is_active( 'xprofile' ) ) {
+		$nickname_field_id = bp_xprofile_nickname_field_id();
+		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
+	}
+}
+
 function bp_update_default_doc_extensions() {
 
 	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
@@ -870,7 +887,7 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug = get_post_field( 'post_name', $page_id );
+				$slug    = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
 				bp_update_option( '_bbp_root_slug', $slug );

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Running Grunt..."
+grunt pre-commit
+if [ $? -ne 0 ]; then
+ echo "Grunt failed, please fix code and recommit"
+ exit 1
+fi
+
+exit $?

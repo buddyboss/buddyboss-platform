@@ -702,6 +702,27 @@ function bp_enable_group_hierarchies( $default = false ) {
 }
 
 /**
+ * Are group hide subgroups from the main Groups Directory?
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group hide subgroups from the main Groups Directory, otherwise false.
+ */
+function bp_enable_group_hide_subgroups( $default = false ) {
+
+	/**
+	 * Filters whether or not group hide subgroups from the main Groups Directory
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param bool $value whether or not group hide subgroups from the main Groups Directory.
+	 */
+	return (bool) apply_filters( 'bp_enable_group_hide_subgroups', (bool) bp_get_option( 'bp-enable-group-hide-subgroups', $default ) );
+}
+
+/**
  * Are group restrict invites to members who already in specific parent group?
  *
  * @since BuddyBoss 1.0.0
@@ -1126,6 +1147,11 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
  */
 function bp_force_friendship_to_message( $default = false ) {
 
+	$value = (bool) bp_get_option( 'bp-force-friendship-to-message', $default );
+	if ( ( ! is_admin() && bp_current_user_can( 'bp_moderate' ) ) || ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && bp_current_user_can( 'bp_moderate' ) ) ) {
+		$value = false;
+	}
+
 	/**
 	 * Filters whether or not friendship is forced to message each other.
 	 *
@@ -1133,7 +1159,7 @@ function bp_force_friendship_to_message( $default = false ) {
 	 *
 	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
-	return (bool) apply_filters( 'bp_force_friendship_to_message', (bool) bp_get_option( 'bp-force-friendship-to-message', $default ) );
+	return (bool) apply_filters( 'bp_force_friendship_to_message', $value );
 }
 
 /**
@@ -1459,7 +1485,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 *
 	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
-	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) ( bp_get_option( 'bp-enable-profile-gravatar', $default ) && bp_get_option( 'show_avatars' ) ) );
 }
 
 /**
@@ -1672,4 +1698,25 @@ function bp_disable_group_messages( $default = false ) {
 	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
+}
+
+/**
+ * Default display name format.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: first_name.
+ * @return string display name format.
+ */
+function bp_core_display_name_format( $default = 'first_name' ) {
+
+	/**
+	 * Filters default display name format.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $value Default display name format.
+	 */
+	return apply_filters( 'bp_core_display_name_format', bp_get_option( 'bp-display-name-format', $default ) );
 }

@@ -294,7 +294,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	$group->description = $r['description'];
 
-	if ( $r['parent_id'] ) {
+	// Update the parent ID if necessary.
+	if ( false !== $r['parent_id'] ) {
 		$group->parent_id = $r['parent_id'];
 	}
 
@@ -959,6 +960,11 @@ function bp_group_object_template_results_groups_all_scope( $querystring, $objec
 	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id']  = 0;
+
+	if ( true === (bool) bp_enable_group_hide_subgroups() ) {
+		$querystring['parent_id'] = 0;
+    }
+
 	return http_build_query( $querystring );
 }
 
@@ -3332,9 +3338,46 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
  *
  * @param int $user_id The user ID.
  * @param int $group_id The group ID.
+ * @return string invitation message.
+ *
  */
 function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
-	return get_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, true );
+	global $groups_template;
+
+	if ( empty( $user_id ) && bp_displayed_user_id() ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( empty( $group_id ) ) {
+		$group =& $groups_template->group;
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	if ( empty( $user_id ) || empty( $group ) ) {
+		return '';
+	}
+
+	//Check invitation is exists or not
+	$invite_id = groups_check_user_has_invite( $user_id, $group->id );
+
+	if ( empty( $invite_id ) ) {
+		return '';
+	}
+
+	//Get invitation by id
+	$member = new BP_Invitation( $invite_id );
+
+	$message  = $member->content;
+	$group_id = $group->id;
+
+	/**
+	 * Filters will give you the invitation text.
+	 *
+	 * @param string $message  invitation message.
+	 * @param int    $group_id group id.
+	 */
+	return apply_filters( 'bp_groups_get_invite_messsage_for_user', $message, $group_id );
 }
 
 /**
@@ -4216,3 +4259,20 @@ function bp_groups_migrate_invitations() {
 		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
 	}
 }
+
+
+/**
+ * Reset cover image position while uploading/deleting groups cover photo.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $group_id Group ID.
+ */
+function bp_groups_reset_cover_image_position( $group_id ) {
+	if ( ! empty( (int) $group_id ) ) {
+		groups_delete_groupmeta( $group_id, 'bp_cover_position' );
+	}
+}
+
+add_action( 'groups_cover_image_uploaded', 'bp_groups_reset_cover_image_position', 10, 1 );
+add_action( 'groups_cover_image_deleted', 'bp_groups_reset_cover_image_position', 10, 1 );

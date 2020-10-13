@@ -725,7 +725,7 @@ window.bp = window.bp || {};
 						],
 						cleanAttrs: ['class', 'style', 'dir', 'id'],
 						cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-						unwrapTags: []
+						unwrapTags: [ 'ul', 'ol', 'li' ]
 					},
 					imageDragging: false
 				});
@@ -1409,6 +1409,7 @@ window.bp = window.bp || {};
 					}
 				}
 
+				$(bp.Nouveau.Messages.mediumEditor.elements[0]).focus();
 				medium_editor_toolbar.toggleClass( 'active' );
 
 				var gif_box = $( e.currentTarget ).parents( '#bp-message-content' ).find( '#whats-new-messages-attachments .messages-attached-gif-container' );

@@ -5572,3 +5572,83 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	return implode( ',', $new_scope );
 
 }
+
+/**
+ * Get the Activity edit data.
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @param int $activity_id Activity ID.
+ *
+ * @return array|bool The Activity edit data or false otherwise.
+ */
+function bp_activity_get_edit_data( $activity_id = 0 ) {
+	global $activities_template;
+
+	// check activity empty or not.
+	if ( empty( $activity_id ) && empty( $activities_template ) ) {
+		return false;
+	}
+	// get activity.
+	if ( ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	} else {
+		$activity = new BP_Activity_Activity( $activity_id );
+	}
+
+	// check activity exists.
+	if ( empty( $activity->id ) ) {
+		return false;
+	}
+
+	$can_edit_privacy = true;
+	$album_id         = 0;
+	$folder_id        = 0;
+	$group_id         = bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ? $activity->item_id : 0;
+	$group_name       = '';
+
+	$album_activity_id = bp_activity_get_meta( $activity_id, 'bp_media_album_activity', true );
+	if ( ! empty( $album_activity_id ) ) {
+		$album_id = $album_activity_id;
+	}
+
+	$folder_activity_id = bp_activity_get_meta( $activity_id, 'bp_document_folder_activity', true );
+	if ( ! empty( $folder_activity_id ) ) {
+		$folder_id = $folder_activity_id;
+	}
+
+	// if album or folder activity then set privacy edit to always false.
+	if ( $album_id || $folder_id ) {
+		$can_edit_privacy = false;
+	}
+
+	// if group activity then set privacy edit to always false.
+	if ( 0 < (int) $group_id ) {
+		$can_edit_privacy = false;
+		$group      = groups_get_group( $group_id );
+		$group_name = bp_get_group_name( $group );
+	}
+
+	/**
+	 * Filter here to edit the activity edit data.
+	 *
+	 * @since BuddyBoss 1.5.1
+	 *
+	 * @param string $activity_data The Activity edit data.
+	 */
+	return apply_filters(
+		'bp_activity_get_edit_data',
+		array(
+			'id'               => $activity_id,
+			'can_edit_privacy' => $can_edit_privacy,
+			'album_id'         => $album_id,
+			'group_id'         => $group_id,
+			'group_name'       => $group_name,
+			'folder_id'        => $folder_id,
+			'content'          => stripslashes( $activity->content ),
+			'item_id'          => $activity->item_id,
+			'object'           => $activity->component,
+			'privacy'          => $activity->privacy,
+		)
+	);
+}
