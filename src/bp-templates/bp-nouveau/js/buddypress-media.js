@@ -2813,6 +2813,9 @@ window.bp = window.bp || {};
 
 									$( currentTarget ).find( '.location-folder-list-wrap .location-folder-list' ).remove();
 									$( currentTarget ).find( '.location-folder-list-wrap' ).append( response.data.html );
+									if (bp.Nouveau.Media.folderLocationUI) {
+										bp.Nouveau.Media.folderLocationUI( currentTarget, parentsOpen );
+									}
 									$( currentTarget ).find( 'ul.location-folder-list span#' + parentsOpen ).trigger( 'click' );
 								}
 							}
