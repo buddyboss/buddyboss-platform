@@ -264,6 +264,21 @@ class BP_Attachment_Avatar extends BP_Attachment {
 					'avatar_path' => $avatar_folder_dir,
 				)
 			);
+
+			if ( 'user' === $args['object'] ) {
+				// get user attachment id.
+				$attachment_id = get_user_meta( $args['item_id'], 'profile_photo_attachment_id', true );
+				if ( $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
+			} elseif ( 'group' === $args['object'] ) {
+				// get group attachment id.
+				$attachment_id = groups_get_groupmeta( $args['item_id'], 'group_photo_attachment_id', true );
+				if ( $attachment_id ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
+			}
+
 		}
 
 		// Make sure we at least have minimal data for cropping.
@@ -286,6 +301,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			'thumb' => '',
 		);
 
+		$attachment = array();
 		foreach ( $avatar_types as $key_type => $type ) {
 			if ( 'thumb' === $key_type ) {
 				$args['dst_w'] = bp_core_avatar_thumb_width();
@@ -299,6 +315,52 @@ class BP_Attachment_Avatar extends BP_Attachment {
 			$args['dst_file'] = $avatar_folder_dir . '/' . $filename;
 
 			$avatar_types[ $key_type ] = parent::crop( $args );
+
+			$upload_dir = wp_upload_dir();
+
+			$attachment[ $key_type ] = array(
+				'width'              => $args['dst_w'],
+				'height'             => $args['dst_h'],
+				'absolute_path'      => $avatar_types[ $key_type ],
+				'file_name'           => $filename,
+				'absolute_path_path' => $absolute_path,
+				'ext'                => $ext,
+				'avatar_folder_dir'  => $avatar_folder_dir,
+				'item_id'            => $args['item_id'],
+				'object'             => $args['object'],
+				'avatar_dir'         => $avatar_dir,
+				'avatar_short_url'   => $avatar_dir . '/' . $args['item_id'] . '/' . $filename,
+				'avatar_full_url'    => trailingslashit( $upload_dir['baseurl'] ) . $avatar_dir . '/' . $args['item_id'] . '/' . $filename
+			);
+
+		}
+		$data = @getimagesize( $attachment['full']['absolute_path'] );
+		$attachment_args = array(
+			'guid'           => $attachment['full']['avatar_full_url'],
+			'post_mime_type' => $data['mime'],
+			'post_title'     => sanitize_title( preg_replace( '/\\.[^.\\s]{3,4}$/', '', $attachment['full']['file_name'] ) ),
+			'post_content'   => '',
+			'post_status'    => 'inherit',
+		);
+
+		// Insert the attachment into the database.
+		$attachment_id = wp_insert_attachment( $attachment_args, $attachment['full']['absolute_path'] );
+		// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
+		// Generate the metadata for the attachment, and update the database record.
+		$attach_data = wp_generate_attachment_metadata( $attachment_id, $attachment['full']['absolute_path'] );
+		wp_update_attachment_metadata( $attachment_id, $attach_data );
+
+		update_post_meta( $attachment_id, 'item_id', $attachment['full']['item_id'] );
+		update_post_meta( $attachment_id, 'object', $attachment['full']['object'] );
+
+		if ( 'user' === $attachment['full']['object'] ) {
+			// Update user meta.
+			update_user_meta( $attachment['full']['item_id'], 'profile_photo_attachment_id', $attachment_id );
+		} elseif ( 'group' === $attachment['full']['object'] ) {
+			// Update group meta.
+			groups_update_groupmeta( $attachment['full']['item_id'], 'group_photo_attachment_id', $attachment_id );
 		}
 
 		// Remove the original.

@@ -131,12 +131,15 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 	return apply_filters(
 		'bp_attachments_cover_image_upload_dir',
 		array(
-			'path'    => $upload_dir['basedir'] . $subdir,
-			'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
-			'subdir'  => $subdir,
-			'basedir' => $upload_dir['basedir'],
-			'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
-			'error'   => false,
+			'path'               => $upload_dir['basedir'] . $subdir,
+			'url'                => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
+			'dir'                => $upload_dir['dir'],
+			'subdir'             => $subdir,
+			'basedir'            => $upload_dir['basedir'],
+			'baseurl'            => set_url_scheme( $upload_dir['baseurl'] ),
+			'error'              => false,
+			'object_id'          => $object_id,
+			'object_directory'   => $object_directory,
 		),
 		$upload_dir
 	);
@@ -1257,6 +1260,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 
 	// Resize the image so that it fit with the cover photo dimensions.
 	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
+
 	$is_too_small = false;
 
 	// Image is too small in width and height.
@@ -1290,6 +1294,76 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 				@unlink( $args['cover_image_dir'] . '/' . $attachment_file );
 			}
 		}
+	}
+
+	if ( 'members' === $upload_dir['object_directory'] ) {
+		// get user attachment id.
+		$attachment_id = get_user_meta( $upload_dir['object_id'], 'profile_cover_attachment_id', true );
+		if ( $attachment_id ) {
+			wp_delete_attachment( $attachment_id, true );
+		}
+	} elseif ( 'groups' === $upload_dir['object_directory'] ) {
+		// get group attachment id.
+		$attachment_id = groups_get_groupmeta( $upload_dir['object_id'], 'group_cover_attachment_id', true );
+		if ( $attachment_id ) {
+			wp_delete_attachment( $attachment_id, true );
+		}
+	}
+
+	$data = @getimagesize( $cover_file );
+	$attachment_args = array(
+		'post_title'     => sanitize_title( preg_replace( '/\\.[^.\\s]{3,4}$/', '', $cover_basename ) ),
+		'post_status'    => 'inherit',
+		'comment_status' => 'closed',
+		'post_type'      => 'attachment',
+		'guid'           => $upload_dir['baseurl'] . '/' . $upload_dir['subdir'] . '/' . $cover_basename,
+		'post_mime_type' => $data['mime'],
+	);
+
+	// Insert the attachment into the database.
+	$attachment_id = wp_insert_post( $attachment_args );
+	$data          = @getimagesize( $cover_file );
+
+	$meta_data = array(
+		'width'  => $data[0],
+		'height' => $data[1],
+		'file'    => $upload_dir['dir'] . $upload_dir['subdir'] . '/' . $cover_basename,
+		'sizes'  => array(
+			'thumbnail' => array(
+				'file'       => $cover_basename,
+				'width'     => $data[0],
+				'height'    => $data[1],
+				'mime-type' => $data['mime'],
+			),
+		),
+		'image_meta' => array(
+			'aperture'          => 0,
+			'credit'            => '',
+			'camera'            => '',
+			'caption'           => '',
+			'created_timestamp' => 0,
+			'copyright'         => '',
+			'focal_length'      => 0,
+			'iso'               => 0,
+			'shutter_speed'     => 0,
+			'title'             => '',
+			'orientation'       => '',
+			'keywords'          => array()
+		)
+	);
+
+	// Add attachment meta.
+	update_post_meta( $attachment_id, '_wp_attached_file', $upload_dir['dir'] . $upload_dir['subdir'] . '/' . $cover_basename );
+	update_post_meta( $attachment_id, '_wp_attachment_metadata', $meta_data );
+	update_post_meta( $attachment_id, 'item_id', $upload_dir['object_id'] );
+	update_post_meta( $attachment_id, 'object', $upload_dir['object_directory'] );
+
+	if ( 'members' === $upload_dir['object_directory'] ) {
+		// Update user meta.
+		update_user_meta( $upload_dir['object_id'], 'profile_cover_attachment_id', $attachment_id );
+	} elseif ( 'groups' === $upload_dir['object_directory'] ) {
+		// Update group meta.
+		groups_update_groupmeta( $upload_dir['object_id'], 'group_cover_attachment_id', $attachment_id );
 	}
 
 	// Finally return needed data.

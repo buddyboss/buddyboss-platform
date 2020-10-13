@@ -487,13 +487,16 @@ function bp_core_fetch_avatar( $args = '' ) {
 	$legacy_user_avatar_name  = ( 'full' == $params['type'] ) ? '-avatar2' : '-avatar1';
 	$legacy_group_avatar_name = ( 'full' == $params['type'] ) ? '-groupavatar-full' : '-groupavatar-thumb';
 
+	$avatar_attachment_url = apply_filters( 'bp_s3_avatar_url', true  );
+
+
 	// Check for directory.
-	if ( file_exists( $avatar_folder_dir ) ) {
+	if ( $avatar_attachment_url || file_exists( $avatar_folder_dir ) ) {
 
 		$avatar_url = '';
 
 		// Open directory.
-		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+		if ( file_exists( $avatar_folder_dir ) && $av_dir = opendir( $avatar_folder_dir ) ) {
 
 			// Stash files in an array once to check for one that matches.
 			$avatar_files = array();
@@ -532,10 +535,10 @@ function bp_core_fetch_avatar( $args = '' ) {
 					}
 				}
 			}
-		}
 
-		// Close the avatar directory.
-		closedir( $av_dir );
+			// Close the avatar directory.
+			closedir( $av_dir );
+		}
 
 		/**
 		 * Filters a locally uploaded avatar URL.
