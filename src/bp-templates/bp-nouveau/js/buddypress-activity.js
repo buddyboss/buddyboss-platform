@@ -72,6 +72,7 @@ window.bp = window.bp || {};
 				this.dropzone_options = {
 					url					: BP_Nouveau.ajaxurl,
 					timeout				: 3 * 60 * 60 * 1000,
+					dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
 					dictDefaultMessage 	: BP_Nouveau.media.dropzone_media_message,
 					acceptedFiles		: 'image/*',
 					autoProcessQueue	: true,
