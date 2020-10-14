@@ -1,7 +1,7 @@
 <div class="wrap">
 	
 	<div class="bp-admin-card section-bp_buddyboss_app-integration">
-		<h2><?php _e( 'BuddyBoss App <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
+		<h2><?php _e( 'BuddyBoss App <span>&mdash; coming soon</span>', 'buddyboss' ); ?></h2>
 		<p>
 		<?php
 			printf(
