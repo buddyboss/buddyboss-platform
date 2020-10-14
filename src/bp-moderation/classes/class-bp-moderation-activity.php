@@ -74,11 +74,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		/**
 		 * Exclude Blocked Member activity
 		 */
-		if ( bp_is_active( 'groups' ) ) {
-			$members_where = $this->exclude_member_activity_query();
-			if ( $members_where ) {
-				$where['members_where'] = $members_where;
-			}
+		$members_where = $this->exclude_member_activity_query();
+		if ( $members_where ) {
+			$where['members_where'] = $members_where;
 		}
 
 		/**
@@ -137,9 +135,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	private function exclude_member_activity_query() {
 		$sql              = false;
-		$hidden_group_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_group_ids ) ) {
-			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_group_ids ) . ' ) )';
+		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
 		return $sql;
@@ -165,4 +163,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		return $sql;
 	}
 
+	/**
+	 * Get blocked Activity ids
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
 }

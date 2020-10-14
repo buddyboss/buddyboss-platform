@@ -99,10 +99,10 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_member_group_query() {
-		$sql              = false;
-		$hidden_group_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_group_ids ) ) {
-			$sql = '( g.creator_id NOT IN ( ' . implode( ',', $hidden_group_ids ) . ' ) )';
+		$sql                = false;
+		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = '( g.creator_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
 		return $sql;

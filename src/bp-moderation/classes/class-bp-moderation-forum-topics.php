@@ -124,9 +124,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	private function exclude_member_topic_query() {
 		global $wpdb;
 		$sql              = false;
-		$hidden_topic_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_topic_ids ) ) {
-			$sql = "( {$wpdb->posts}.post_author NOT IN ( " . implode( ',', $hidden_topic_ids ) . ' ) )';
+		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = "( {$wpdb->posts}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
 		return $sql;

@@ -103,10 +103,10 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 */
 	private function exclude_member_message_query() {
 		global $wpdb;
-		$sql              = false;
-		$hidden_forum_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_forum_ids ) ) {
-			$sql = '( m.sender_id NOT IN ( ' . implode( ',', $hidden_forum_ids ) . ' ) )';
+		$sql                = false;
+		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = '( m.sender_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
 		return $sql;
