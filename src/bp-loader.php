@@ -133,8 +133,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 
-		$plugins_path = '/wp-admin/plugins.php';
-		$ajax_path    = '/wp-admin/admin-ajax.php';
+		$admin_url    = admin_url();
+		$site_url     = site_url();
+		$root_path    = str_replace( $site_url, '', $admin_url );
+		$plugins_path = $root_path . 'plugins.php';
+		$ajax_path    = $root_path . 'admin-ajax.php';
 
 		// Hide My WP plugin compatibility
 		if ( class_exists( 'HideMyWP' ) ) {

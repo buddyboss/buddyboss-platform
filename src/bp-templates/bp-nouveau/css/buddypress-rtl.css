@@ -16791,6 +16791,13 @@ span.CodeMirror-selectedtext {
   text-align: center;
 }
 
+.dropzone .dz-default button {
+  background-color: transparent;
+  border: 0;
+  color: #767676;
+  font-size: 110%;
+}
+
 .dz-details {
   display: none;
 }
@@ -16811,11 +16818,10 @@ span.CodeMirror-selectedtext {
   margin: 0 5px 10px;
 }
 
-.dropzone.dz-started .dz-default.dz-message span:before {
-  background-size: 30px;
-  height: 26px;
-  width: 30px;
-  margin: 0 auto 10px;
+.dropzone.dz-started .dz-default.dz-message .dz-button {
+  background-size: 30px !important;
+  font-size: 12px !important;
+  padding-top: 35px !important;
 }
 
 /*
