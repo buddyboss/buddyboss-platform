@@ -3,7 +3,7 @@
  * BuddyBoss Messages Classes.
  *
  * @package BuddyBoss\Messages\Classes
- * @since BuddyPress 1.0.0
+ * @since   BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -253,7 +253,7 @@ class BP_Messages_Message {
 		 *
 		 * @since BuddyPress 2.8.0
 		 *
-		 * @param array $recipient_ids Array of recipients IDs that were retrieved based on submitted usernames.
+		 * @param array $recipient_ids       Array of recipients IDs that were retrieved based on submitted usernames.
 		 * @param array $recipient_usernames Array of recipients usernames that were submitted by a user.
 		 */
 		return apply_filters( 'messages_message_get_recipient_ids', $recipient_ids, $recipient_usernames );
@@ -279,7 +279,7 @@ class BP_Messages_Message {
 	/**
 	 * Check whether a user is the sender of a message.
 	 *
-	 * @param int $user_id ID of the user.
+	 * @param int $user_id    ID of the user.
 	 * @param int $message_id ID of the message.
 	 *
 	 * @return int|null Returns the ID of the message if the user is the
@@ -367,8 +367,8 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param  array   $recipient_ids
-	 * @param  integer $sender
+	 * @param array   $recipient_ids
+	 * @param integer $sender
 	 */
 	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
@@ -415,8 +415,8 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param  array   $recipient_ids
-	 * @param  integer $sender
+	 * @param array   $recipient_ids
+	 * @param integer $sender
 	 */
 	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
@@ -490,6 +490,10 @@ class BP_Messages_Message {
 			'orderby'    => '',
 			'pagination' => '',
 		);
+
+		if ( 'thread_ids' === $r['fields'] ) {
+			$sql['select'] = 'SELECT DISTINCT m.thread_id';
+		}
 
 		$where_conditions = array();
 
@@ -571,7 +575,7 @@ class BP_Messages_Message {
 
 		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 
-		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 !== $r['per_page'] ) {
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
 
@@ -596,12 +600,13 @@ class BP_Messages_Message {
 		 *
 		 * @since BuddyBoss 1.5.4
 		 *
-		 * @param array $r    Array of parsed arguments for the get method.
+		 * @param array  $r   Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
 		 */
 		$sql['from'] = apply_filters( 'bp_messages_get_join_sql', $sql['from'], $r );
 
 		$paged_messages_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
+
 
 		/**
 		 * Filters the pagination SQL statement.
@@ -616,7 +621,7 @@ class BP_Messages_Message {
 
 		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		if ( 'ids' === $r['fields'] ) {
+		if ( 'ids' === $r['fields'] || 'thread_ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} else {
@@ -661,6 +666,7 @@ class BP_Messages_Message {
 	 *
 	 * @param array $meta_query An array of meta_query filters. See the
 	 *                          documentation for {@link WP_Meta_Query} for details.
+	 *
 	 * @return array $sql_array 'join' and 'where' clauses.
 	 */
 	protected static function get_meta_query_sql( $meta_query = array() ) {
@@ -692,6 +698,7 @@ class BP_Messages_Message {
 	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $orderby Orderby term as passed to get().
+	 *
 	 * @return string $order_by_term SQL-friendly orderby term.
 	 */
 	protected static function convert_orderby_to_order_by_term( $orderby ) {
@@ -716,6 +723,7 @@ class BP_Messages_Message {
 	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $s String.
+	 *
 	 * @return string
 	 */
 	protected static function strip_leading_and( $s ) {
