@@ -2006,9 +2006,9 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  *
  * @return array $user_progress - user progress to render profile completion
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.3
  */
-function bp_xprofile_get_user_progress_data( $settings  ) {
+function bp_xprofile_get_user_profile_progress_data( $settings  ) {
 
 	$user_progress = array();
 
