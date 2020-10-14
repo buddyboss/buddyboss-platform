@@ -567,7 +567,7 @@ class BP_Messages_Message {
 		 * @param string $orderby Original orderby value.
 		 * @param string $value   Parsed 'type' value for the get method.
 		 */
-		$orderby = apply_filters( 'bp_messages_get_orderby_converted_by_term', self::convert_orderby_to_order_by_term( $orderby ), $orderby, $r['type'] );
+		$orderby = apply_filters( 'bp_messages_get_orderby_converted_by_term', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
 
 		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 
