@@ -16,8 +16,6 @@
  * PHP supported by WordPress.
  */
 
-/* Start this module */
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
