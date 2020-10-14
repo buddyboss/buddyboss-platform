@@ -3,7 +3,7 @@
  * BuddyBoss Messages Classes.
  *
  * @package BuddyBoss\Messages\Classes
- * @since BuddyPress 1.0.0
+ * @since   BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -98,17 +98,14 @@ class BP_Messages_Message {
 	 * @param int $id ID of the message.
 	 */
 	public function populate( $id ) {
-		global $wpdb;
 
-		$bp = buddypress();
-
-		if ( $message = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE id = %d", $id ) ) ) {
-			$this->id        = (int) $message->id;
-			$this->thread_id = (int) $message->thread_id;
-			$this->sender_id = (int) $message->sender_id;
-			$this->subject   = $message->subject;
-			$this->message   = $message->message;
-			$this->date_sent = $message->date_sent;
+		if ( $message = self::get( array( 'selector' => 'row', 'id' => $id, ) ) ) {
+			$this->id        = (int) $message['result']->id;
+			$this->thread_id = (int) $message['result']->thread_id;
+			$this->sender_id = (int) $message['result']->sender_id;
+			$this->subject   = $message['result']->subject;
+			$this->message   = $message['result']->message;
+			$this->date_sent = $message['result']->date_sent;
 		}
 	}
 
@@ -150,7 +147,13 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$this->thread_id = (int) $wpdb->get_var( "SELECT MAX(thread_id) FROM {$bp->messages->table_name_messages}" ) + 1;
+			$max_thread      = self::get( array(
+				'selector' => 'var',
+				'fields'   => 'thread_id',
+				'order_by' => 'date_sent',
+				'order'    => array( 'date_sent' => 'DESC' ),
+			) );
+			$this->thread_id = (int) $max_thread['results'] + 1;
 			$new_thread      = true;
 		}
 
@@ -253,7 +256,7 @@ class BP_Messages_Message {
 		 *
 		 * @since BuddyPress 2.8.0
 		 *
-		 * @param array $recipient_ids Array of recipients IDs that were retrieved based on submitted usernames.
+		 * @param array $recipient_ids       Array of recipients IDs that were retrieved based on submitted usernames.
 		 * @param array $recipient_usernames Array of recipients usernames that were submitted by a user.
 		 */
 		return apply_filters( 'messages_message_get_recipient_ids', $recipient_ids, $recipient_usernames );
@@ -267,32 +270,39 @@ class BP_Messages_Message {
 	 * @return int|null ID of the message if found, otherwise null.
 	 */
 	public static function get_last_sent_for_user( $thread_id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$query = self::get( array(
+			'selector'  => 'var',
+			'fields'    => 'ids',
+			'sender_id' => bp_loggedin_user_id(),
+			'thread_id' => $thread_id,
+			'order_by'  => 'date_sent',
+			'order'     => array( 'date_sent' => 'DESC' ),
+			'per_page'  => 1,
+		) );
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND thread_id = %d ORDER BY date_sent DESC LIMIT 1", bp_loggedin_user_id(), $thread_id ) );
-
-		return is_numeric( $query ) ? (int) $query : $query;
+		return is_numeric( $query['results'] ) ? (int) $query['results'] : $query['results'];
 	}
 
 	/**
 	 * Check whether a user is the sender of a message.
 	 *
-	 * @param int $user_id ID of the user.
+	 * @param int $user_id    ID of the user.
 	 * @param int $message_id ID of the message.
 	 *
 	 * @return int|null Returns the ID of the message if the user is the
 	 *                  sender, otherwise null.
 	 */
 	public static function is_user_sender( $user_id, $message_id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$query = self::get( array(
+			'selector'  => 'var',
+			'fields'    => 'ids',
+			'id'        => $message_id,
+			'sender_id' => $user_id,
+		) );
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND id = %d", $user_id, $message_id ) );
-
-		return is_numeric( $query ) ? (int) $query : $query;
+		return is_numeric( $query['results'] ) ? (int) $query['results'] : $query['results'];
 	}
 
 	/**
@@ -303,13 +313,14 @@ class BP_Messages_Message {
 	 * @return int|null The ID of the sender if found, otherwise null.
 	 */
 	public static function get_message_sender( $message_id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$query = self::get( array(
+			'selector' => 'var',
+			'fields'   => 'sender_id',
+			'id'       => $message_id,
+		) );
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
-
-		return is_numeric( $query ) ? (int) $query : $query;
+		return is_numeric( $query['results'] ) ? (int) $query['results'] : $query['results'];
 	}
 
 	/**
@@ -325,9 +336,24 @@ class BP_Messages_Message {
 		$bp = buddypress();
 
 		// Get the message ids in order to delete their metas.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$messages = self::get( array(
+			'selector'  => 'column',
+			'fields'    => 'ids',
+			'sender_id' => $user_id,
+			'distinct'  => true,
+		) );
+
+		$message_ids = $messages['results'];
+
 		//Get the all thread ids for unread messages
-		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$threads = self::get( array(
+			'selector'  => 'column',
+			'fields'    => 'thread_id',
+			'sender_id' => $user_id,
+			'distinct'  => true,
+		) );
+
+		$thread_ids = $threads['results'];
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
@@ -367,8 +393,8 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param  array   $recipient_ids
-	 * @param  integer $sender
+	 * @param array   $recipient_ids
+	 * @param integer $sender
 	 */
 	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
@@ -415,8 +441,8 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param  array   $recipient_ids
-	 * @param  integer $sender
+	 * @param array   $recipient_ids
+	 * @param integer $sender
 	 */
 	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
@@ -449,5 +475,135 @@ class BP_Messages_Message {
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Function to get messages
+	 *
+	 * @param array $args arguments array
+	 */
+	public static function get( $args = array() ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$defaults = array(
+			'per_page'   => - 1,
+			'page'       => 1,
+			'id'         => false,
+			'thread_id'  => false,
+			'sender_id'  => false,
+			'subject'    => '',
+			'fields'     => 'all',
+			'group_by'   => '',
+			'order_by'   => '',
+			'order'      => false,
+			'selector'   => 'results',
+			'distinct'   => false,
+			'meta_query' => false
+		);
+
+		$r = bp_parse_args( $args, $defaults, 'messages_get_messages' );
+
+		$sql = array(
+			'select'     => 'SELECT *',
+			'from'       => $bp->messages->table_name_messages,
+			'where'      => '',
+			'orderby'    => '',
+			'order'      => '',
+			'pagination' => '',
+		);
+
+		if ( ! empty( $r['fields'] ) && in_array( $r['fields'], array( 'ids', 'thread_id', 'sender_id' ) ) ) {
+			$sql['select'] = ( 'ids' === $r['fields'] ) ? 'SELECT id' : 'SELECT ' . $r['fields'];
+		}
+
+		if ( ! empty( $r['distinct'] ) && true === (bool) $r['distinct'] ) {
+			$sql['select'] = ( 'ids' === $r['fields'] ) ? 'SELECT DISTINCT (id)' : "SELECT DISTINCT ({$r['fields']})";
+		}
+
+		if ( ! empty( $r['order_by'] ) ) {
+			$sql['orderby'] = 'ORDER BY ';
+		}
+
+		if ( ! empty( $r['order'] ) && is_array( $r['order'] ) && ! empty( $r['order_by'] ) ) {
+			$order_arr = array();
+			$count     = 1;
+			foreach ( $r['order'] as $key => $order_type ) {
+				if ( 1 === $count ) {
+					$order_arr[] = $r['order_by'] . ' ' . $order_type;
+				} else {
+					$order_arr[] = $key . ' ' . $order_type;
+				}
+				$count ++;
+			}
+			$sql['order'] = implode( ', ', $order_arr );
+		}
+
+		$where_conditions = array();
+
+		// Get message with specific id
+		if ( ! empty( $r['id'] ) && is_array( $r['id'] ) ) {
+			$imploded_message_ids = implode( ', ', $r['id'] );
+			$where_conditions[]   = "id IN ({$imploded_message_ids})";
+		} elseif ( ! empty( $r['id'] ) ) {
+			$where_conditions[] = "id=" . $r['id'];
+		}
+
+		// Get messages with speciif thread id
+		if ( ! empty( $r['thread_id'] ) && is_array( $r['thread_id'] ) ) {
+			$imploded_thread_ids = implode( ', ', $r['thread_id'] );
+			$where_conditions[]  = "thread_id IN ({$imploded_thread_ids})";
+		} elseif ( ! empty( $r['thread_id'] ) ) {
+			$where_conditions[] = "thread_id=" . $r['thread_id'];
+		}
+
+		// Get messages with specific sender
+		if ( ! empty( $r['sender_id'] ) && is_array( $r['sender_id'] ) ) {
+			$imploded_sender_ids = implode( ', ', $r['sender_id'] );
+			$where_conditions[]  = "sender_id IN ({$imploded_sender_ids})";
+		} elseif ( ! empty( $r['sender_id'] ) ) {
+			$where_conditions[] = "sender_id=" . $r['sender_id'];
+		}
+
+		//Get the message with not matching subject
+		if ( ! empty( $r['subject'] ) ) {
+			$where_conditions[] = "subject !='{$r['subject']}'";
+		}
+
+		$where_conditions = apply_filters( 'bp_messages_where_clause', $where_conditions );
+		$where            = '';
+
+		if ( ! empty( $where_conditions ) && is_array( $where_conditions ) ) {
+			$sql['where'] = implode( ' AND ', $where_conditions );
+			$where        = "WHERE {$sql['where']}";
+		}
+
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $r['per_page'] != - 1 ) {
+			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		$messages_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['order']} {$sql['pagination']}";
+		echo "<pre>";
+		print_r( $messages_sql );
+		echo "</pre>";
+
+		if ( 'column' === $r['selector'] ) {
+			$message_results['results'] = $wpdb->get_col( $messages_sql );
+		} elseif ( 'row' === $r['selector'] ) {
+			$message_results['results'] = $wpdb->get_row( $messages_sql );
+		} elseif ( 'var' === $r['selector'] ) {
+			$message_results['results'] = $wpdb->get_var( $messages_sql );
+		} else {
+			$message_results['results'] = $wpdb->get_results( $messages_sql );
+		}
+
+		if ( is_object( $message_results['results'] ) || is_array( $message_results['results'] ) ) {
+			$message_results['count'] = count( $message_results['results'] );
+		} else {
+			$message_results['count'] = 0;
+		}
+
+		return $message_results;
 	}
 }
