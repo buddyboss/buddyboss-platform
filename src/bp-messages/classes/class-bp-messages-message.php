@@ -450,4 +450,234 @@ class BP_Messages_Message {
 
 		return $results;
 	}
+
+	/**
+	 * Function to get messages
+	 *
+	 * @param array $args arguments array.
+	 */
+	public static function get( $args = array() ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$defaults = array(
+			'orderby'           => 'date_sent',
+			'order'             => 'DESC',
+			'per_page'          => null,
+			'page'              => null,
+			'user_id'           => 0,
+			'meta_query'        => false,
+			'include'           => false,
+			'exclude'           => false,
+			'include_threads'   => null,
+			'exclude_threads'   => null,
+			'update_meta_cache' => true,
+			'fields'            => 'all',
+			'group_by'          => '',
+			'subject'           => '',
+		);
+
+		$r = bp_parse_args( $args, $defaults, 'bp_messages_message_get' );
+
+		$sql = array(
+			'select'     => 'SELECT DISTINCT m.id',
+			'from'       => "{$bp->messages->table_name_messages} m",
+			'where'      => '',
+			'orderby'    => '',
+			'pagination' => '',
+		);
+
+		$where_conditions = array();
+
+		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
+
+		if ( ! empty( $meta_query_sql['join'] ) ) {
+			$sql['from'] .= $meta_query_sql['join'];
+		}
+
+		if ( ! empty( $meta_query_sql['where'] ) ) {
+			$where_conditions['meta'] = $meta_query_sql['where'];
+		}
+
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions['user'] = $wpdb->prepare( 'm.sender_id = %d', $r['user_id'] );
+		}
+
+		if ( ! empty( $r['include'] ) ) {
+			$include                     = implode( ',', wp_parse_id_list( $r['include'] ) );
+			$where_conditions['include'] = "m.id IN ({$include})";
+		}
+
+		if ( ! empty( $r['exclude'] ) ) {
+			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
+			$where_conditions['exclude'] = "m.id NOT IN ({$exclude})";
+		}
+
+		if ( ! empty( $r['include_threads'] ) ) {
+			$include_threads                     = implode( ',', wp_parse_id_list( $r['include_threads'] ) );
+			$where_conditions['include_threads'] = "m.thread_id IN ({$include_threads})";
+		}
+
+		if ( ! empty( $r['exclude_threads'] ) ) {
+			$exclude_threads                     = implode( ',', wp_parse_id_list( $r['exclude_threads'] ) );
+			$where_conditions['exclude_threads'] = "m.thread_id NOT IN ({$exclude_threads})";
+		}
+
+		// Get the message with not matching subject.
+		if ( ! empty( $r['subject'] ) ) {
+			$where_conditions['subject'] = $wpdb->prepare( 'm.subject != %s', $r['subject'] );
+		}
+
+		/* Order/orderby ********************************************/
+
+		$order   = $r['order'];
+		$orderby = $r['orderby'];
+
+		// Sanitize 'order'.
+		$order = bp_esc_sql_order( $order );
+
+		/**
+		 * Filters the converted 'orderby' term.
+		 *
+		 * @since BuddyPress 2.1.0
+		 *
+		 * @param string $value   Converted 'orderby' term.
+		 * @param string $orderby Original orderby value.
+		 * @param string $value   Parsed 'type' value for the get method.
+		 */
+		$orderby = apply_filters( 'bp_messages_get_orderby_converted_by_term', self::convert_orderby_to_order_by_term( $orderby ), $orderby, $r['type'] );
+
+		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
+
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 === $r['per_page'] ) {
+			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$where_conditions = apply_filters( 'bp_messages_get_where_conditions', $where_conditions, $r );
+
+		$where = '';
+		if ( ! empty( $where_conditions ) ) {
+			$sql['where'] = implode( ' AND ', $where_conditions );
+			$where        = "WHERE {$sql['where']}";
+		}
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array $r    Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['from'] = apply_filters( 'bp_messages_get_join_sql', $sql['from'], $r );
+
+		$paged_messages_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
+
+		/**
+		 * Filters the pagination SQL statement.
+		 *
+		 * @since BuddyPress 1.5.0
+		 *
+		 * @param string $value Concatenated SQL statement.
+		 * @param array  $sql   Array of SQL parts before concatenation.
+		 * @param array  $r     Array of parsed arguments for the get method.
+		 */
+		$paged_messages_sql = apply_filters( 'bp_messages_get_paged_messages_sql', $paged_messages_sql, $sql, $r );
+
+		$paged_message_ids = $wpdb->get_col( $paged_messages_sql );
+
+		if ( 'ids' === $r['fields'] ) {
+			// We only want the IDs.
+			$paged_messages = array_map( 'intval', $paged_message_ids );
+		} else {
+			//todo: Need to write logic
+		}
+
+		// Find the total number of groups in the results set.
+		$total_messages_sql = "SELECT COUNT(DISTINCT g.id) FROM {$sql['from']} $where";
+
+		/**
+		 * Filters the SQL used to retrieve total group results.
+		 *
+		 * @since BuddyPress 1.5.0
+		 *
+		 * @param string $t_sql     Concatenated SQL statement used for retrieving total group results.
+		 * @param array  $total_sql Array of SQL parts for the query.
+		 * @param array  $r         Array of parsed arguments for the get method.
+		 */
+		$total_messages_sql = apply_filters( 'bp_messages_get_total_groups_sql', $total_messages_sql, $sql, $r );
+
+		$total_messages = (int) $wpdb->get_var( $total_messages_sql );
+
+		return array(
+			'messages' => $paged_messages,
+			'total'    => $total_messages,
+		);
+	}
+
+	/**
+	 * Get the SQL for the 'meta_query' param in BP_Messages_Message::get()
+	 *
+	 * We use WP_Meta_Query to do the heavy lifting of parsing the
+	 * meta_query array and creating the necessary SQL clauses.
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param array $meta_query An array of meta_query filters. See the
+	 *                          documentation for {@link WP_Meta_Query} for details.
+	 * @return array $sql_array 'join' and 'where' clauses.
+	 */
+	protected static function get_meta_query_sql( $meta_query = array() ) {
+		global $wpdb;
+
+		$sql_array = array(
+			'join'  => '',
+			'where' => '',
+		);
+
+		if ( ! empty( $meta_query ) ) {
+			$message_meta_query = new WP_Meta_Query( $meta_query );
+
+			// WP_Meta_Query expects the table name at
+			// $wpdb->group.
+			$wpdb->messagemeta = buddypress()->messages->table_name_meta;
+
+			$meta_sql           = $message_meta_query->get_sql( 'message', 'm', 'id' );
+			$sql_array['join']  = $meta_sql['join'];
+			$sql_array['where'] = self::strip_leading_and( $meta_sql['where'] );
+		}
+
+		return $sql_array;
+	}
+
+	/**
+	 * Convert the 'orderby' param into a proper SQL term/column.
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param string $orderby Orderby term as passed to get().
+	 * @return string $order_by_term SQL-friendly orderby term.
+	 */
+	protected static function convert_orderby_to_order_by_term( $orderby ) {
+		$order_by_term = '';
+
+		switch ( $orderby ) {
+			case 'date_sent':
+			default:
+				$order_by_term = 'm.date_sent';
+				break;
+		}
+
+		return $order_by_term;
+	}
+
 }
