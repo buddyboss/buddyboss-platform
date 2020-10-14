@@ -584,9 +584,6 @@ class BP_Messages_Message {
 		}
 
 		$messages_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['order']} {$sql['pagination']}";
-		echo "<pre>";
-		print_r( $messages_sql );
-		echo "</pre>";
 
 		if ( 'column' === $r['selector'] ) {
 			$message_results['results'] = $wpdb->get_col( $messages_sql );
