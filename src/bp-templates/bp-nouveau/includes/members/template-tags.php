@@ -306,7 +306,8 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 							'class'           => 'button accept',
 							'rel'             => '',
 						),
-					), 'reject_friendship' => array(
+					),
+					'reject_friendship' => array(
 						'id'                => 'reject_friendship',
 						'position'          => 15,
 						'component'         => 'friends',
@@ -353,19 +354,21 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					$button_args = bp_nouveau()->members->button_args;
 
 					$buttons['member_friendship'] = array(
-						'id'                => 'member_friendship',
-						'position'          => 5,
-						'component'         => $button_args['component'],
-						'must_be_logged_in' => $button_args['must_be_logged_in'],
-						'block_self'        => $button_args['block_self'],
-						'parent_element'    => $parent_element,
-						'link_text'         => $button_args['link_text'],
-						'parent_attr'       => array(
+						'id'                  => 'member_friendship',
+						'position'            => 5,
+						'component'           => $button_args['component'],
+						'key'                 => $button_args['id'],
+						'must_be_logged_in'   => $button_args['must_be_logged_in'],
+						'block_self'          => $button_args['block_self'],
+						'potential_friend_id' => $button_args['potential_friend_id'],
+						'parent_element'      => $parent_element,
+						'link_text'           => $button_args['link_text'],
+						'parent_attr'         => array(
 							'id'    => $button_args['wrapper_id'],
 							'class' => $parent_class . ' ' . $button_args['wrapper_class'],
 						),
-						'button_element'    => $button_element,
-						'button_attr'       => array(
+						'button_element'      => $button_element,
+						'button_attr'         => array(
 							'id'    => $button_args['link_id'],
 							'class' => $button_args['link_class'],
 							'rel'   => $button_args['link_rel'],
