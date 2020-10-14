@@ -98,17 +98,20 @@ class BP_Messages_Message {
 	 * @param int $id ID of the message.
 	 */
 	public function populate( $id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$message = BP_Messages_Message::get(
+			array(
+				'include' => array( $id ),
+			)
+		);
 
-		if ( $message = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE id = %d", $id ) ) ) {
-			$this->id        = (int) $message->id;
-			$this->thread_id = (int) $message->thread_id;
-			$this->sender_id = (int) $message->sender_id;
-			$this->subject   = $message->subject;
-			$this->message   = $message->message;
-			$this->date_sent = $message->date_sent;
+		if ( $message['messages'][0] ) {
+			$this->id        = (int) $message['messages'][0]->id;
+			$this->thread_id = (int) $message['messages'][0]->thread_id;
+			$this->sender_id = (int) $message['messages'][0]->sender_id;
+			$this->subject   = $message['messages'][0]->subject;
+			$this->message   = $message['messages'][0]->message;
+			$this->date_sent = $message['messages'][0]->date_sent;
 		}
 	}
 
