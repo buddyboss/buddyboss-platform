@@ -368,12 +368,30 @@ class BP_Messages_Thread {
 
 		$is_group_thread = self::get_first_message( $thread_id );
 		if ( $is_group_thread->id > 0 ) {
-			$query = $wpdb->prepare("SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent DESC, m.id DESC LIMIT 1", $thread_id );
+			$args = array(
+				'include_threads'  => $thread_id,
+				'meta_key__not_in' => array(
+					'group_message_group_joined',
+					'group_message_group_left',
+				),
+				'per_page'         => 1,
+				'page'             => 1,
+				'count_total'      => false,
+			);
 		} else {
-			$query = $wpdb->prepare("SELECT * FROM {$bp->messages->table_name_messages} WHERE thread_id = %d ORDER BY date_sent DESC, id DESC LIMIT 1", $thread_id );
+			$args = array(
+				'include_threads' => $thread_id,
+				'per_page'        => 1,
+				'page'            => 1,
+				'count_total'     => false,
+			);
 		}
 
-		$messages = $wpdb->get_results( $query );
+		$messages = BP_Messages_Message::get( $args );
+
+		if ( ! empty( $messages ) ) {
+			$messages = $messages['messages'];
+		}
 
 		return $messages ? (object) $messages[0] : null;
 	}
