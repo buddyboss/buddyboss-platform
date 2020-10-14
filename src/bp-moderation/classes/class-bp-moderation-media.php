@@ -39,8 +39,8 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		$this->alias     = $this->alias . 'm'; // m = media.
 		$this->item_type = self::$moderation_type;
 
-		/*add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );*/
-		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		/*add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10 );*/
+		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
@@ -146,8 +146,9 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	private function exclude_activity_media_query() {
 		$sql                 = false;
 		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_activity_ids ) ) {
-			$sql = '( m.activity_id NOT IN ( ' . implode( ',', $hidden_activity_ids ) . ' ) )';
+		$hidden_document_ids = self::get_media_ids_meta( $hidden_activity_ids, 'bp_activity_get_meta' );
+		if ( ! empty( $hidden_document_ids ) ) {
+			$sql = '( m.id NOT IN ( ' . implode( ',', $hidden_document_ids ) . ' ) )';
 		}
 
 		return $sql;
@@ -197,15 +198,21 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	/**
 	 * Get media ids of blocked posts [ Forums/topics/replies ] from meta
 	 *
-	 * @param array $posts_ids Posts ids.
+	 * @param array  $posts_ids Posts ids.
+	 * @param string $function Function Name to get meta.
 	 *
 	 * @return array Media IDs
 	 */
-	private static function get_media_ids_meta( $posts_ids ) {
+	private static function get_media_ids_meta( $posts_ids, $function = 'get_post_meta' ) {
 		$media_ids = array();
+
+		if ( ! function_exists( $function ) ) {
+			return $media_ids;
+		}
+
 		if ( ! empty( $posts_ids ) ) {
 			foreach ( $posts_ids as $post_id ) {
-				$post_media = get_post_meta( $post_id, 'bp_media_ids', true );
+				$post_media = $function( $post_id, 'bp_media_ids', true );
 				$post_media = wp_parse_id_list( $post_media );
 				if ( ! empty( $post_media ) ) {
 					$media_ids = array_merge( $media_ids, $post_media );

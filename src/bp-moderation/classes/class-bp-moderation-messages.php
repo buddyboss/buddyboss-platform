@@ -39,11 +39,11 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-		add_filter( 'bp_messages_thread_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_messages_thread_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_messages_thread_get_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_messages_thread_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
-		add_filter( 'bp_messages_thread_messages_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_messages_thread_messages_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+		add_filter( 'bp_messages_thread_messages_get_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_messages_thread_messages_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
