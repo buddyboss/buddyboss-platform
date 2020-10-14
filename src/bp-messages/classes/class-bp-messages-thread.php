@@ -388,12 +388,23 @@ class BP_Messages_Thread {
 	 * @return object|stdClass
 	 */
 	public static function get_first_message( $thread_id ) {
-		global $wpdb;
+		$messages = BP_Messages_Message::get(
+			array(
+				'include_threads'  => $thread_id,
+				'meta_key__not_in' => array(
+					'group_message_group_joined',
+					'group_message_group_left',
+				),
+				'per_page'         => 1,
+				'page'             => 1,
+				'count_total'      => false,
+			)
+		);
 
-		$bp = buddypress();
+		if ( ! empty( $messages ) ) {
+			$messages = $messages['messages'];
+		}
 
-		$query            = $wpdb->prepare( "SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent ASC, m.id ASC LIMIT 1", $thread_id );
-		$messages         = $wpdb->get_results( $query );
 		$blank_object     = new stdClass();
 		$blank_object->id = 0;
 		return $messages ? (object) $messages[0] : $blank_object;

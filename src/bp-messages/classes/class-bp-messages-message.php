@@ -326,7 +326,7 @@ class BP_Messages_Message {
 
 		// Get the message ids in order to delete their metas.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
-		//Get the all thread ids for unread messages
+		// Get the all thread ids for unread messages
 		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
@@ -359,7 +359,7 @@ class BP_Messages_Message {
 		}
 
 		// delete all the meta recipients from user table.
-		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
+		// $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}
 
 	/**
@@ -470,12 +470,15 @@ class BP_Messages_Message {
 			'meta_query'        => false,
 			'include'           => false,
 			'exclude'           => false,
-			'include_threads'   => null,
-			'exclude_threads'   => null,
+			'include_threads'   => false,
+			'exclude_threads'   => false,
+			'meta_key__in'      => false,
+			'meta_key__not_in'  => false,
 			'update_meta_cache' => true,
 			'fields'            => 'all',
 			'group_by'          => '',
 			'subject'           => '',
+			'count_total'       => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_messages_message_get' );
@@ -498,6 +501,24 @@ class BP_Messages_Message {
 
 		if ( ! empty( $meta_query_sql['where'] ) ) {
 			$where_conditions['meta'] = $meta_query_sql['where'];
+		}
+
+		/**
+		 * Meta key IN and NOT IN query
+		 */
+
+		if ( ! empty( $r['meta_key__in'] ) || ! empty( $r['meta_key__not_in'] ) ) {
+			$sql['from'] .= ", {$bp->messages->table_name_meta} mm";
+		}
+
+		if ( ! empty( $r['meta_key__in'] ) ) {
+			$meta_key_in                 = implode( "','", wp_parse_slug_list( $r['meta_key__in'] ) );
+			$where_conditions['meta_in'] = "mm.meta_key IN ('{$meta_key_in}')";
+		}
+
+		if ( ! empty( $r['meta_key__not_in'] ) ) {
+			$meta_key_not_in                 = implode( "','", wp_parse_slug_list( $r['meta_key__not_in'] ) );
+			$where_conditions['meta_not_in'] = "mm.meta_key NOT IN ('{$meta_key_not_in}')";
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
@@ -550,7 +571,7 @@ class BP_Messages_Message {
 
 		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 
-		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 === $r['per_page'] ) {
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 !== $r['per_page'] ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
 
@@ -593,35 +614,41 @@ class BP_Messages_Message {
 		 */
 		$paged_messages_sql = apply_filters( 'bp_messages_get_paged_messages_sql', $paged_messages_sql, $sql, $r );
 
-		$paged_message_ids = $wpdb->get_col( $paged_messages_sql );
+		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		if ( 'ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} else {
-			//todo: Need to write logic
+			$message_ids_sql = implode( ',', array_map( 'intval', $paged_message_ids ) );
+			$paged_messages  = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		}
 
-		// Find the total number of groups in the results set.
-		$total_messages_sql = "SELECT COUNT(DISTINCT g.id) FROM {$sql['from']} $where";
-
-		/**
-		 * Filters the SQL used to retrieve total group results.
-		 *
-		 * @since BuddyPress 1.5.0
-		 *
-		 * @param string $t_sql     Concatenated SQL statement used for retrieving total group results.
-		 * @param array  $total_sql Array of SQL parts for the query.
-		 * @param array  $r         Array of parsed arguments for the get method.
-		 */
-		$total_messages_sql = apply_filters( 'bp_messages_get_total_groups_sql', $total_messages_sql, $sql, $r );
-
-		$total_messages = (int) $wpdb->get_var( $total_messages_sql );
-
-		return array(
+		$retval = array(
 			'messages' => $paged_messages,
-			'total'    => $total_messages,
+			'total'    => 0,
 		);
+
+		if ( ! empty( $r['count_total'] ) ) {
+			// Find the total number of groups in the results set.
+			$total_messages_sql = "SELECT COUNT(DISTINCT m.id) FROM {$sql['from']} $where";
+
+			/**
+			 * Filters the SQL used to retrieve total group results.
+			 *
+			 * @since BuddyPress 1.5.0
+			 *
+			 * @param string $t_sql     Concatenated SQL statement used for retrieving total group results.
+			 * @param array  $total_sql Array of SQL parts for the query.
+			 * @param array  $r         Array of parsed arguments for the get method.
+			 */
+			$total_messages_sql = apply_filters( 'bp_messages_get_total_groups_sql', $total_messages_sql, $sql, $r );
+
+			$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$retval['total'] = $total_messages;
+		}
+
+		return $retval;
 	}
 
 	/**
@@ -680,4 +707,18 @@ class BP_Messages_Message {
 		return $order_by_term;
 	}
 
+	/**
+	 * Strips the leading AND and any surrounding whitespace from a string.
+	 *
+	 * Used here to normalize SQL fragments generated by `WP_Meta_Query` and
+	 * other utility classes.
+	 *
+	 * @since BuddyPress 2.7.0
+	 *
+	 * @param string $s String.
+	 * @return string
+	 */
+	protected static function strip_leading_and( $s ) {
+		return preg_replace( '/^\s*AND\s*/', '', $s );
+	}
 }
