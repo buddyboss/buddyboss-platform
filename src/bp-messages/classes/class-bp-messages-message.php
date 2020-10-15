@@ -323,13 +323,15 @@ class BP_Messages_Message {
 	 * @return int|null The ID of the sender if found, otherwise null.
 	 */
 	public static function get_message_sender( $message_id ) {
-		global $wpdb;
+		
+		$query = BP_Messages_Message::get(
+			array(
+				'fields'  => 'sender_ids',
+				'include' => array( $message_id ),
+			)
+		);
 
-		$bp = buddypress();
-
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
-
-		return is_numeric( $query ) ? (int) $query : $query;
+		return ( isset( $query['messages'][0] ) && is_numeric( $query ) ) ? (int) $query['messages'][0] : null;
 	}
 
 	/**
