@@ -1196,7 +1196,7 @@ function bp_nouveau_ajax_delete_thread() {
 				'order'           => 'ASC',
 			)
 		);
-		$message_ids = $messages['messages'];
+		$message_ids = ( isset( $messages['messages'] ) && is_array( $messages['messages'] ) ) ? $messages['messages'] : array();
 
 		if ( bp_is_active( 'notifications' ) ) {
 			// Delete Message Notifications.
