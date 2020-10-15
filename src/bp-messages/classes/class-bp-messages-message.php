@@ -301,13 +301,16 @@ class BP_Messages_Message {
 	 *                  sender, otherwise null.
 	 */
 	public static function is_user_sender( $user_id, $message_id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$query = self::get(
+			array(
+				'fields'  => 'ids',
+				'user_id' => $user_id,
+				'include' => array( $message_id ),
+			)
+		);
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND id = %d", $user_id, $message_id ) );
-
-		return is_numeric( $query ) ? (int) $query : $query;
+		return is_numeric( $query['messages'][0] ) ? (int) $query['messages'][0] : $query['messages'][0];
 	}
 
 	/**
