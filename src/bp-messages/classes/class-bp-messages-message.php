@@ -312,7 +312,7 @@ class BP_Messages_Message {
 			)
 		);
 
-		return is_numeric( $query['messages'][0] ) ? (int) $query['messages'][0] : $query['messages'][0];
+		return ( isset( $query['messages'][0]) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
 	}
 
 	/**
