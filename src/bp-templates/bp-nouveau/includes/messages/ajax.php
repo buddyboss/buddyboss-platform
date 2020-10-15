@@ -1762,7 +1762,15 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	}
 
 	$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-	$is_participated      = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id = %d AND subject != %s", $thread_template->thread->thread_id, bp_loggedin_user_id(), $subject_deleted_text ) ); // WPCS: db call ok. // WPCS: cache ok.
+	$participated         = BP_Messages_Message::get(
+		array(
+			'fields'          => 'ids',
+			'include_threads' => array( $thread_template->thread->thread_id ),
+			'user_id'         => bp_loggedin_user_id(),
+			'subject'         => $subject_deleted_text
+		)
+	);
+	$is_participated      = $participated['messages'];
 
 	$thread->thread = array(
 		'id'                        => bp_get_the_thread_id(),
