@@ -659,7 +659,14 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		// Get the message ids in order to pass to the action.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) ); // WPCS: db call ok. // WPCS: cache ok.
+		$messages    = BP_Messages_Message::get(
+			array(
+				'fields'          => 'ids',
+				'include_threads' => array( $thread_id ),
+			)
+		);
+
+		$message_ids = ( isset( $messages['messages'][0] ) ) ? $messages['messages'][0] : array();
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
