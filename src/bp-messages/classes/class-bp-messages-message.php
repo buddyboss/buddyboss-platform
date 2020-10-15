@@ -331,7 +331,7 @@ class BP_Messages_Message {
 			)
 		);
 
-		return ( isset( $query['messages'][0] ) && is_numeric( $query ) ) ? (int) $query['messages'][0] : null;
+		return ( isset( $query['messages'][0] ) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
 	}
 
 	/**
@@ -672,8 +672,8 @@ class BP_Messages_Message {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} else {
-			$message_ids_sql = implode( ',', array_map( 'intval', $paged_message_ids ) );
-			$message_data_objects  = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$message_ids_sql      = implode( ',', array_map( 'intval', $paged_message_ids ) );
+			$message_data_objects = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			foreach ( (array) $message_data_objects as $mdata ) {
 				$message_data_objects[ $mdata->id ] = $mdata;
 			}
@@ -758,6 +758,7 @@ class BP_Messages_Message {
 	 *
 	 * @param array $date_query An array of date_query parameters. See the
 	 *                          documentation for the first parameter of WP_Date_Query.
+	 *
 	 * @return string
 	 */
 	public static function get_date_query_sql( $date_query = array() ) {

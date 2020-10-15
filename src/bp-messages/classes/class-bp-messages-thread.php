@@ -672,7 +672,7 @@ class BP_Messages_Thread {
 			)
 		);
 
-		$message_ids = ( isset( $messages['messages'][0] ) ) ? $messages['messages'][0] : array();
+		$message_ids = ( isset( $messages['messages'] ) ) ? $messages['messages'] : array();
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
