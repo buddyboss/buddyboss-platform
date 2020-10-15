@@ -792,12 +792,10 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					}
 					if ( bp_is_active( $component ) ) {
 						if ( strpos( $menu_item->url, $tab ) !== false ) {
-							if ( is_array( $menu_item->classes ) ) {
+                                                                  $menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array() ;
 								$menu_item->classes[] = 'current_page_item';
 								$menu_item->classes[] = 'current-menu-item';
-							} else {
-								$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
-							}
+							
 						}
 					}
 				}
