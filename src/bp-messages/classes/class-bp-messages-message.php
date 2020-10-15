@@ -105,13 +105,15 @@ class BP_Messages_Message {
 			)
 		);
 
-		if ( $message['messages'][0] ) {
-			$this->id        = (int) $message['messages'][0]->id;
-			$this->thread_id = (int) $message['messages'][0]->thread_id;
-			$this->sender_id = (int) $message['messages'][0]->sender_id;
-			$this->subject   = $message['messages'][0]->subject;
-			$this->message   = $message['messages'][0]->message;
-			$this->date_sent = $message['messages'][0]->date_sent;
+		$fetched_message = ( isset( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : (object) array();
+
+		if ( $fetched_message ) {
+			$this->id        = (int) $fetched_message->id;
+			$this->thread_id = (int) $fetched_message->thread_id;
+			$this->sender_id = (int) $fetched_message->sender_id;
+			$this->subject   = $fetched_message->subject;
+			$this->message   = $fetched_message->message;
+			$this->date_sent = $fetched_message->date_sent;
 		}
 	}
 
