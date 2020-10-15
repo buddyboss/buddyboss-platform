@@ -105,7 +105,7 @@ class BP_Messages_Message {
 			)
 		);
 
-		$fetched_message = ( isset( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : array();
+		$fetched_message = ( !empty( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : array();
 
 		if ( $fetched_message ) {
 			$this->id        = (int) $fetched_message->id;
