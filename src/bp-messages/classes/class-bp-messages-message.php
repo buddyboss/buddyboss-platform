@@ -99,7 +99,7 @@ class BP_Messages_Message {
 	 */
 	public function populate( $id ) {
 
-		$message = BP_Messages_Message::get(
+		$message = self::get(
 			array(
 				'include' => array( $id ),
 			)
@@ -153,7 +153,7 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$max_thread      = BP_Messages_Message::get(
+			$max_thread      = self::get(
 				array(
 					'fields'   => 'thread_ids',
 					'per_page' => 1,
@@ -277,13 +277,18 @@ class BP_Messages_Message {
 	 * @return int|null ID of the message if found, otherwise null.
 	 */
 	public static function get_last_sent_for_user( $thread_id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$query = self::get(
+			array(
+				'fields'          => 'ids',
+				'user_id'         => bp_loggedin_user_id(),
+				'include_threads' => array( $thread_id ),
+				'page'            => 1,
+				'per_page'        => 1,
+			)
+		);
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND thread_id = %d ORDER BY date_sent DESC LIMIT 1", bp_loggedin_user_id(), $thread_id ) );
-
-		return is_numeric( $query ) ? (int) $query : $query;
+		return is_numeric( $query['messages'][0] ) ? (int) $query['messages'][0] : $query['messages'][0];
 	}
 
 	/**
