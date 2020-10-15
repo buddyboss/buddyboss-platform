@@ -1770,7 +1770,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			'subject'         => $subject_deleted_text
 		)
 	);
-	$is_participated      = $participated['messages'];
+	$is_participated      = ( !empty( $participated['messages'] ) ) ? $participated['messages'] : array();
 
 	$thread->thread = array(
 		'id'                        => bp_get_the_thread_id(),
