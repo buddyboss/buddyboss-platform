@@ -1278,7 +1278,19 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		if ( ! $sender_id = $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d GROUP BY sender_id ORDER BY date_sent LIMIT 1", $thread_id ) ) ) {
+		$senders   = BP_Messages_Message::get(
+			array(
+				'fields'          => 'sender_ids',
+				'include_threads' => array( $thread_id ),
+				'group_by'        => 'sender_id',
+				'per_page'        => 1,
+				'page'            => 1,
+				'order'           => 'ASC'
+			)
+		);
+		$sender_id = ( isset( $senders['messages'][0] ) ) ? $senders['messages'][0] : null;
+
+		if ( ! $sender_id ) {
 			return false;
 		}
 
