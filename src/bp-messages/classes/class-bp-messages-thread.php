@@ -673,7 +673,7 @@ class BP_Messages_Thread {
 				'order'           => 'ASC',
 			)
 		);
-		$update_message_ids = $update_messages['messages'];
+		$update_message_ids = ( isset( $update_messages['messages'] ) && is_array( $update_messages['messages'] ) ) ? $update_messages['messages'] : array();
 
 		/**
 		 * Fires before user messages content update.
