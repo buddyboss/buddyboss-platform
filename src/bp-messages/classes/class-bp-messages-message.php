@@ -349,7 +349,6 @@ class BP_Messages_Message {
 			array(
 				'fields'  => 'ids',
 				'user_id' => $user_id,
-				'order'   => 'ASC',
 			)
 		);
 		$message_ids  = $messages_arr['messages'];
@@ -359,7 +358,6 @@ class BP_Messages_Message {
 			array(
 				'fields'  => 'thread_ids',
 				'user_id' => $user_id,
-				'order'   => 'ASC',
 			)
 		);
 		$thread_ids  = $threads_arr['messages'];
