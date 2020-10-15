@@ -160,7 +160,7 @@ class BP_Messages_Message {
 					'page'     => 1,
 				)
 			);
-			$this->thread_id = (int) $max_thread['messages'][0] + 1;
+			$this->thread_id = ( isset( $max_thread['messages'][0] ) && is_numeric( $max_thread['messages'][0] ) ) ? (int) $max_thread['messages'][0] + 1 : 0 + 1;
 			$new_thread      = true;
 		}
 
@@ -528,6 +528,10 @@ class BP_Messages_Message {
 			$sql['select'] = 'SELECT DISTINCT m.thread_id';
 		}
 
+		if ( 'sender_ids' === $r['fields'] ) {
+			$sql['select'] = 'SELECT DISTINCT m.sender_id';
+		}
+
 		$where_conditions = array();
 
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
@@ -654,7 +658,7 @@ class BP_Messages_Message {
 
 		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		if ( 'ids' === $r['fields'] || 'thread_ids' === $r['fields'] ) {
+		if ( 'ids' === $r['fields'] || 'thread_ids' === $r['fields'] || 'sender_ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} else {
