@@ -312,7 +312,7 @@ class BP_Messages_Message {
 			)
 		);
 
-		return ( isset( $query['messages'][0]) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
+		return ( isset( $query['messages'][0] ) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
 	}
 
 	/**
@@ -351,7 +351,7 @@ class BP_Messages_Message {
 				'user_id' => $user_id,
 			)
 		);
-		$message_ids  = $messages_arr['messages'];
+		$message_ids  = ( isset( $messages_arr['messages'] ) ) ? $messages_arr['messages'] : array();
 
 		// Get the all thread ids for unread messages
 		$threads_arr = BP_Messages_Message::get(
@@ -360,7 +360,7 @@ class BP_Messages_Message {
 				'user_id' => $user_id,
 			)
 		);
-		$thread_ids  = $threads_arr['messages'];
+		$thread_ids  = isset( $threads_arr['messages'] ) ? $threads_arr['messages'] : array();
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
