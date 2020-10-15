@@ -105,9 +105,9 @@ class BP_Messages_Message {
 			)
 		);
 
-		$fetched_message = ( !empty( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : array();
+		$fetched_message = ( ! empty( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : array();
 
-		if ( $fetched_message ) {
+		if ( ! empty( $fetched_message ) ) {
 			$this->id        = (int) $fetched_message->id;
 			$this->thread_id = (int) $fetched_message->thread_id;
 			$this->sender_id = (int) $fetched_message->sender_id;
