@@ -464,9 +464,21 @@ class BP_Messages_Thread {
 				// $before = gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + 1 ) ) );
 			}
 
-			$query = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND id > %d AND date_sent > %s AND date_sent <= %s ORDER BY date_sent DESC, id DESC LIMIT %d", $thread_id, $last_deleted_id, $last_deleted_timestamp, $before, $perpage );
-			// Always sort by DESC by default.
-			$messages = $wpdb->get_results( $query );
+			$query = BP_Messages_Message::get(array(
+				'include_threads' => $thread_id,
+				'date_query' => array(
+					array(
+						'after' => $last_deleted_timestamp,
+					),
+					array(
+						'before' => $before,
+						'inclusive' => true,
+					)
+				),
+				'per_page' => $perpage
+			));
+
+			$messages = ( ! empty( $query['messages']  ) ) ? $query['messages']  : array();
 
 			wp_cache_set( $cache_key, (array) $messages, 'bp_messages_threads' );
 		}

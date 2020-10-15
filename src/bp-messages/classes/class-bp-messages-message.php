@@ -503,6 +503,7 @@ class BP_Messages_Message {
 			'page'              => null,
 			'user_id'           => 0,
 			'meta_query'        => false,
+			'date_query'        => false,
 			'include'           => false,
 			'exclude'           => false,
 			'include_threads'   => false,
@@ -544,6 +545,13 @@ class BP_Messages_Message {
 
 		if ( ! empty( $meta_query_sql['where'] ) ) {
 			$where_conditions['meta'] = $meta_query_sql['where'];
+		}
+
+		// Process date_query into SQL.
+		$date_query_sql = self::get_date_query_sql( $r['date_query'] );
+
+		if ( ! empty( $date_query_sql ) ) {
+			$where_conditions['date'] = $date_query_sql;
 		}
 
 		/**
@@ -665,7 +673,13 @@ class BP_Messages_Message {
 			$paged_messages = array_map( 'intval', $paged_message_ids );
 		} else {
 			$message_ids_sql = implode( ',', array_map( 'intval', $paged_message_ids ) );
-			$paged_messages  = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$message_data_objects  = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			foreach ( (array) $message_data_objects as $mdata ) {
+				$message_data_objects[ $mdata->id ] = $mdata;
+			}
+			foreach ( $paged_message_ids as $paged_message_id ) {
+				$paged_messages[] = $message_data_objects[ $paged_message_id ];
+			}
 		}
 
 		$retval = array(
@@ -729,6 +743,33 @@ class BP_Messages_Message {
 		}
 
 		return $sql_array;
+	}
+
+	/**
+	 * Get the SQL for the 'date_query' param in BP_Messages_Message::get().
+	 *
+	 * We use BP_Date_Query, which extends WP_Date_Query, to do the heavy lifting
+	 * of parsing the date_query array and creating the necessary SQL clauses.
+	 * However, since BP_Messages_Message::get() builds its SQL differently than
+	 * WP_Query, we have to alter the return value (stripping the leading AND
+	 * keyword from the query).
+	 *
+	 * @since BuddyPress 2.1.0
+	 *
+	 * @param array $date_query An array of date_query parameters. See the
+	 *                          documentation for the first parameter of WP_Date_Query.
+	 * @return string
+	 */
+	public static function get_date_query_sql( $date_query = array() ) {
+		$sql = '';
+
+		// Date query.
+		if ( ! empty( $date_query ) && is_array( $date_query ) ) {
+			$date_query = new BP_Date_Query( $date_query, 'date_sent' );
+			$sql        = preg_replace( '/^\sAND/', '', $date_query->get_sql() );
+		}
+
+		return $sql;
 	}
 
 	/**
