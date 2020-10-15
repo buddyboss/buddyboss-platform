@@ -343,9 +343,24 @@ class BP_Messages_Message {
 		$bp = buddypress();
 
 		// Get the message ids in order to delete their metas.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$messages_arr = BP_Messages_Message::get(
+			array(
+				'fields'  => 'ids',
+				'user_id' => $user_id,
+				'order'   => 'ASC',
+			)
+		);
+		$message_ids  = $messages_arr['messages'];
+
 		// Get the all thread ids for unread messages
-		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$threads_arr = BP_Messages_Message::get(
+			array(
+				'fields'  => 'thread_ids',
+				'user_id' => $user_id,
+				'order'   => 'ASC',
+			)
+		);
+		$thread_ids  = $threads_arr['messages'];
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
