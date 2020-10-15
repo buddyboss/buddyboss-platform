@@ -1247,11 +1247,15 @@ class BP_Messages_Thread {
 	 * @return bool
 	 */
 	public static function user_is_sender( $thread_id ) {
-		global $wpdb;
 
-		$bp = buddypress();
+		$senders = BP_Messages_Message::get(
+			array(
+				'fields'          => 'sender_ids',
+				'include_threads' => array( $thread_id ),
+			)
+		);
 
-		$sender_ids = $wpdb->get_col( $wpdb->prepare( "SELECT sender_id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) );
+		$sender_ids = ( ! empty( $senders['messages'] ) ) ? $senders['messages'] : array();
 
 		if ( empty( $sender_ids ) ) {
 			return false;
