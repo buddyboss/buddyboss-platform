@@ -105,7 +105,7 @@ class BP_Messages_Message {
 			)
 		);
 
-		$fetched_message = ( isset( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : (object) array();
+		$fetched_message = ( isset( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : array();
 
 		if ( $fetched_message ) {
 			$this->id        = (int) $fetched_message->id;
@@ -162,7 +162,7 @@ class BP_Messages_Message {
 					'page'     => 1,
 				)
 			);
-			$this->thread_id = ( isset( $max_thread['messages'][0] ) && is_numeric( $max_thread['messages'][0] ) ) ? (int) $max_thread['messages'][0] + 1 : 0 + 1;
+			$this->thread_id = ( isset( $max_thread['messages'][0] ) && is_numeric( $max_thread['messages'][0] ) ) ? (int) $max_thread['messages'][0] + 1 : 1;
 			$new_thread      = true;
 		}
 
