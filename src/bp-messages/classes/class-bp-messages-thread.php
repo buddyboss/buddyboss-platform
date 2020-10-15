@@ -466,16 +466,16 @@ class BP_Messages_Thread {
 
 			$query = BP_Messages_Message::get(array(
 				'include_threads' => $thread_id,
-				'date_query' => array(
+				'date_query'      => array(
 					array(
 						'after' => $last_deleted_timestamp,
 					),
 					array(
-						'before' => $before,
+						'before'    => $before,
 						'inclusive' => true,
-					)
+					),
 				),
-				'per_page' => $perpage
+				'per_page'        => $perpage,
 			));
 
 			$messages = ( ! empty( $query['messages']  ) ) ? $query['messages']  : array();
@@ -510,15 +510,15 @@ class BP_Messages_Thread {
 		$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 		$results = BP_Messages_Message::get(array(
-			'fields' => 'ids',
-			'per_page' => '1',
+			'fields'          => 'ids',
+			'per_page'        => '1',
 			'include_threads' => $thread_id,
-			'date_query' => array(
+			'date_query'      => array(
 				array(
 					'after' => $last_deleted_timestamp,
 				),
 			),
-			'count_total' => true
+			'count_total'     => true,
 		));
 
 		return ( ! empty( $results['total']  ) ) ? intval( $results['total'] )  : 0;
@@ -533,27 +533,23 @@ class BP_Messages_Thread {
 	 * @param int $thread_id
 	 */
 	public static function get_messages_started( $thread_id ) {
-		global $wpdb;
-
-		$bp        = buddypress();
 		$thread_id = (int) $thread_id;
 
 		$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
-		$results = $wpdb->get_col(
-			$sql = $wpdb->prepare(
-				"SELECT date_sent FROM {$bp->messages->table_name_messages}
-			WHERE thread_id = %d
-			AND date_sent > %s
-			ORDER BY date_sent ASC, id ASC
-			LIMIT 1
-		",
-				$thread_id,
-				$last_deleted_timestamp
-			)
-		);
+		$results = BP_Messages_Message::get(array(
+			'per_page'        => 1,
+			'include_threads' => $thread_id,
+			'date_query'      => array(
+				array(
+					'after' => $last_deleted_timestamp,
+				),
+			),
+			'order'           => 'asc',
+		));
+		$results =  ! empty( $results['messages'] ) ? $results['messages'][0] : false;
 
-		return $results[0];
+		return isset( $results->date_sent ) ? $results->date_sent  : '';
 	}
 
 	/**
@@ -1299,10 +1295,8 @@ class BP_Messages_Thread {
 			array(
 				'fields'          => 'sender_ids',
 				'include_threads' => array( $thread_id ),
-				'group_by'        => 'sender_id',
 				'per_page'        => 1,
 				'page'            => 1,
-				'order'           => 'ASC'
 			)
 		);
 		$sender_id = ( isset( $senders['messages'][0] ) ) ? $senders['messages'][0] : null;

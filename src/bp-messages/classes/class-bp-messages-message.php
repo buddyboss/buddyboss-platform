@@ -323,7 +323,7 @@ class BP_Messages_Message {
 	 * @return int|null The ID of the sender if found, otherwise null.
 	 */
 	public static function get_message_sender( $message_id ) {
-		
+
 		$query = BP_Messages_Message::get(
 			array(
 				'fields'  => 'sender_ids',
@@ -499,8 +499,8 @@ class BP_Messages_Message {
 		$defaults = array(
 			'orderby'           => 'date_sent',
 			'order'             => 'DESC',
-			'per_page'          => null,
-			'page'              => null,
+			'per_page'          => 20,
+			'page'              => 1,
 			'user_id'           => 0,
 			'meta_query'        => false,
 			'date_query'        => false,
