@@ -501,9 +501,6 @@ class BP_Messages_Thread {
 	 * @param int $thread_id
 	 */
 	public static function get_messages_count( $thread_id ) {
-		global $wpdb;
-
-		$bp        = buddypress();
 		$thread_id = (int) $thread_id;
 
 		if ( ! static::is_thread_recipient( $thread_id ) ) {
@@ -512,18 +509,19 @@ class BP_Messages_Thread {
 
 		$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
-		$results = $wpdb->get_col(
-			$sql = $wpdb->prepare(
-				"SELECT COUNT(*) FROM {$bp->messages->table_name_messages}
-			WHERE thread_id = %d
-			AND date_sent > %s
-		",
-				$thread_id,
-				$last_deleted_timestamp
-			)
-		);
+		$results = BP_Messages_Message::get(array(
+			'fields' => 'ids',
+			'per_page' => '1',
+			'include_threads' => $thread_id,
+			'date_query' => array(
+				array(
+					'after' => $last_deleted_timestamp,
+				),
+			),
+			'count_total' => true
+		));
 
-		return intval( $results[0] );
+		return ( ! empty( $results['total']  ) ) ? intval( $results['total'] )  : 0;
 	}
 
 	/**
