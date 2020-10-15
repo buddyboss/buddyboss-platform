@@ -1604,6 +1604,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
+	$thread = apply_filters( 'bp_membership_allow_messages', $thread, $thread_template );
+
 	$last_message_id           = $thread_template->thread->messages[0]->id;
 	$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 	$group_name                = '';

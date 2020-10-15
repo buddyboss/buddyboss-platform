@@ -517,25 +517,26 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					 * Hardcode the use of anchor elements if button arg passed in for other elements.
 					 */
 					$buttons['private_message'] = array(
-						'id'                => $button_args['id'],
-						'position'          => 25,
-						'component'         => $button_args['component'],
-						'must_be_logged_in' => $button_args['must_be_logged_in'],
-						'block_self'        => $button_args['block_self'],
-						'parent_element'    => $parent_element,
-						'button_element'    => 'a',
-						'link_text'         => $button_args['link_text'],
-						'parent_attr'       => array(
+						'id'                       => $button_args['id'],
+						'position'                 => 25,
+						'component'                => $button_args['component'],
+						'must_be_logged_in'        => $button_args['must_be_logged_in'],
+						'message_receiver_user_id' => $button_args['message_receiver_user_id'],
+						'block_self'               => $button_args['block_self'],
+						'parent_element'           => $parent_element,
+						'button_element'           => 'a',
+						'link_text'                => $button_args['link_text'],
+						'parent_attr'              => array(
 							'id'    => $button_args['wrapper_id'],
 							'class' => $parent_class,
 						),
-						'button_attr'       => array(
+						'button_attr'              => array(
 							'href'  => wp_nonce_url( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ) ),
 							'id'    => false,
 							'class' => $button_args['link_class'],
 							'rel'   => '',
 							'title' => '',
-							),
+						),
 					);
 
 					unset( bp_nouveau()->members->button_args );
