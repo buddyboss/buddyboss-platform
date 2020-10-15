@@ -153,7 +153,14 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$this->thread_id = (int) $wpdb->get_var( "SELECT MAX(thread_id) FROM {$bp->messages->table_name_messages}" ) + 1;
+			$max_thread      = BP_Messages_Message::get(
+				array(
+					'fields'   => 'thread_ids',
+					'per_page' => 1,
+					'page'     => 1,
+				)
+			);
+			$this->thread_id = (int) $max_thread['messages'][0] + 1;
 			$new_thread      = true;
 		}
 
