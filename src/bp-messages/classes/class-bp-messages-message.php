@@ -705,10 +705,12 @@ class BP_Messages_Message {
 
 		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
+		$paged_messages = array();
+
 		if ( 'ids' === $r['fields'] || 'thread_ids' === $r['fields'] || 'sender_ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_messages = array_map( 'intval', $paged_message_ids );
-		} else {
+		} elseif ( ! empty( $paged_message_ids ) ) {
 			$message_ids_sql      = implode( ',', array_map( 'intval', $paged_message_ids ) );
 			$message_data_objects = $wpdb->get_results( "SELECT m.* FROM {$bp->messages->table_name_messages} m WHERE m.id IN ({$message_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			foreach ( (array) $message_data_objects as $mdata ) {
