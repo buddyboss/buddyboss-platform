@@ -840,8 +840,11 @@ function bp_add_activation_redirect() {
 		// Check if there is any topics their in DB.
 		$topics = get_posts(
 			array(
-				'post_type'   => 'topic',
-				'numberposts' => 1,
+				'post_type'              => 'topic',
+				'numberposts'            => 1,
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 
@@ -887,7 +890,7 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug = get_post_field( 'post_name', $page_id );
+				$slug    = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
 				bp_update_option( '_bbp_root_slug', $slug );

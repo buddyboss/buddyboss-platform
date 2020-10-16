@@ -1036,11 +1036,14 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 			$forums = get_posts(
 				array(
-					'post_type'          => 'forum',
-					'numberposts'        => -1,
-					'orderby'            => 'menu_order title',
-					'order'              => 'ASC',
-					'disable_categories' => true,
+					'post_type'              => 'forum',
+					'numberposts'            => - 1,
+					'orderby'                => 'menu_order title',
+					'order'                  => 'ASC',
+					'disable_categories'     => true,
+					'suppress_filters'       => false,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 

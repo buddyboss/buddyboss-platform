@@ -1065,7 +1065,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		if ( bp_is_active( 'forums' ) ) {
 			$user_domain = bp_loggedin_user_domain();
-			$forums_link = trailingslashit( $user_domain . bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ) );
+			$forums_link = trailingslashit( $user_domain . BP_FORUMS_SLUG );
 
 			$item_forums = array(
 				'ID'       => 'forums',
