@@ -1465,13 +1465,16 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$defaults = array(
-			'orderby'  => 'id',
-			'order'    => 'DESC',
-			'per_page' => 20,
-			'page'     => 1,
-			'user_id'  => 0,
-			'include'  => false,
-			'exclude'  => false,
+			'orderby'         => 'id',
+			'order'           => 'DESC',
+			'per_page'        => 20,
+			'page'            => 1,
+			'user_id'         => 0,
+			'include'         => false,
+			'exclude'         => false,
+			'include_threads' => false,
+			'exclude_threads' => false,
+			'fields'          => 'all',
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1494,6 +1497,16 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['exclude'] ) ) {
 			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
 			$where_conditions['exclude'] = "r.id NOT IN ({$exclude})";
+		}
+
+		if ( ! empty( $r['include_threads'] ) ) {
+			$include_threads                     = implode( ',', wp_parse_id_list( $r['include_threads'] ) );
+			$where_conditions['include_threads'] = "r.thread_id IN ({$include_threads})";
+		}
+
+		if ( ! empty( $r['exclude_threads'] ) ) {
+			$exclude_threads                     = implode( ',', wp_parse_id_list( $r['exclude_threads'] ) );
+			$where_conditions['exclude_threads'] = "r.thread_id NOT IN ({$exclude_threads})";
 		}
 
 		/* Order/orderby ********************************************/
@@ -1561,12 +1574,13 @@ class BP_Messages_Thread {
 
 		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
-		if ( 'ids' === $r['fields'] || 'thread_ids' === $r['fields'] || 'sender_ids' === $r['fields'] ) {
+		if ( 'ids' === $r['fields'] ) {
 			// We only want the IDs.
 			$paged_recipients = array_map( 'intval', $paged_recipient_ids );
 		} elseif ( ! empty( $paged_recipient_ids ) ) {
 			$recipient_ids_sql      = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
 			$recipient_data_objects = $wpdb->get_results( "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
 			foreach ( (array) $recipient_data_objects as $mdata ) {
 				$recipient_data_objects[ $mdata->id ] = $mdata;
 			}
