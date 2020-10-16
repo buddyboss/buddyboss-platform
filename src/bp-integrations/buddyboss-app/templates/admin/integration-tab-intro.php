@@ -16,19 +16,21 @@
 		</p>
 		<br />
 		<?php
+			/*
 			printf(
 				'<a href="%s" class="button-primary">%s</a>',
 				esc_url( bp_get_admin_url( '?hello=buddyboss-app' ) ),
 				__( 'Video Demo', 'buddyboss' )
 			);
-			?>
+			*/
+		?>
 		<?php
 			printf(
 				'<a href="%s" target="_blank" class="button-secondary">%s</a>',
 				'https://buddyboss.com/app',
 				__( 'More Info', 'buddyboss' )
 			);
-			?>
+		?>
 	</div>
 
 </div>
