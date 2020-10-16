@@ -367,6 +367,17 @@
 				}
 			);
 
+			$( '#_bp_enable_activity_like' ).change(
+				function () {
+					if ( ! this.checked ) {
+						$( '#_bp_enable_activity_reaction' ).prop( 'disabled', true );
+						$( '#_bp_enable_activity_reaction' ).attr( 'checked', false );
+					} else {
+						$( '#_bp_enable_activity_reaction' ).prop( 'disabled', false );
+					}
+				}
+			);
+
 			$( '#bp_media_group_media_support' ).change(
 				function () {
 					if ( ! this.checked) {

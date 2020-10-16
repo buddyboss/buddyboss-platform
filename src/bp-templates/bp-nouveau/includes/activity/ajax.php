@@ -32,6 +32,12 @@ add_action(
 				),
 			),
 			array(
+				'activity_mark_react' => array(
+					'function' => 'bp_nouveau_ajax_mark_activity_reaction',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'activity_mark_unfav' => array(
 					'function' => 'bp_nouveau_ajax_unmark_activity_favorite',
 					'nopriv'   => false,
@@ -114,6 +120,52 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
 		$response = array(
 			'content'    => __( 'Unlike', 'buddyboss' ),
+			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
+			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
+		); // here like_count is for activity total like count
+
+		if ( ! bp_is_user() ) {
+			$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
+
+			if ( 1 === $fav_count ) {
+				$response['directory_tab'] = '<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
+					<a href="' . bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/">
+						' . esc_html__( 'Likes', 'buddyboss' ) . '
+					</a>
+				</li>';
+			} else {
+				$response['fav_count'] = $fav_count;
+			}
+		}
+
+		wp_send_json_success( $response );
+	} else {
+		wp_send_json_error();
+	}
+}
+
+/**
+ * Mark an activity as a react via a POST request.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return string JSON reply
+ */
+function bp_nouveau_ajax_mark_activity_reaction() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	$react_type = isset( $_POST['type'] ) ? $_POST['type'] : "like";
+
+	if ( bp_activity_add_user_reaction( $_POST['id'], $_POST['type'] ) ) {
+		$response = array(
+			'content'    => __( ucfirst( $react_type ), 'buddyboss' ),
 			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
 			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
 		); // here like_count is for activity total like count

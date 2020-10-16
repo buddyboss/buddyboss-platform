@@ -930,6 +930,138 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 }
 
 /**
+ * Add an activity feed item as a react for a user.
+ *
+ * @since BuddyPress 1.8.0
+ *
+ * @param int $activity_id ID of the activity item being favorited.
+ * @param int $user_id     ID of the user favoriting the activity item.
+ * @return bool True on success, false on failure.
+ */
+function bp_activity_add_user_reaction( $activity_id, $react_type = 'like', $user_id = 0 ) {
+
+	// Fallback to logged in user if no user_id is passed.
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+	if ( empty( $my_favs ) || ! is_array( $my_favs ) ) {
+		$my_favs = array();
+	}
+
+	$my_reactions = bp_get_user_meta( $user_id, 'bp_reaction_activities', true );
+	if ( empty( $my_reactions ) || ! is_array( $my_reactions ) ) {
+		$my_reactions = array();
+	}
+
+	// Bail if the user has already favorited this activity item.
+	if ( in_array( $activity_id, $my_favs ) ) {
+		unset($my_favs[ array_search( $activity_id , $my_favs) ]);
+	}
+	foreach ( $my_reactions as $key => $val ) {
+		if ( in_array( $activity_id, $my_reactions[ $key ] ) ) {
+			$react_count_key = "reacted_count_" . $key;
+			$react_count = bp_activity_get_meta( $activity_id, $react_count_key );
+			if ( ! empty( $react_count ) ) {
+				bp_activity_update_meta( $activity_id, $react_count_key, (int) $react_count - 1 );
+			}
+			unset($my_reactions[ $key ][ array_search( $activity_id , $my_reactions[ $key ] ) ]);
+		}
+	}
+
+	// Add to user's favorites.
+	$my_favs[] = $activity_id;
+	$my_reactions[ $react_type ][] = $activity_id;
+
+	// Update the total number of users who have favorited this activity.
+	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+	$fav_count = ! empty( $fav_count ) ? (int) $fav_count + 1 : 1;
+
+	// Update the total number of users who have reacted this activity.
+	$react_count_key = "reacted_count_" . $react_type;
+	$react_count = bp_activity_get_meta( $activity_id, $react_count_key );
+	$react_count = ! empty( $react_count ) ? (int) $react_count + 1 : 1;
+
+	// Update the users who have favorited this activity.
+	$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+	if ( empty( $users ) || ! is_array( $users ) ) {
+		$users = array();
+	}
+	// Add to activity's favorited users.
+	$users[] = $user_id;
+
+	// Update the users who have favorited this activity.
+	$users_react = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+	foreach ( $users_react as $key => $val ) {
+		if ( in_array( $user_id, $users_react[ $key ] ) ) {
+			unset( $users_react[ $key ][ array_search( $user_id, $users_react[ $key ] ) ] );
+		}
+	}
+	// Add to activity's favorited users.
+	$users_react[ $react_type ][] = $user_id;
+
+	if( $react_type === 'like' ) {
+		// Update user meta.
+		bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
+		bp_update_user_meta( $user_id, 'bp_reaction_activities', $my_reactions );
+
+		// Update activity meta
+		bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
+		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+	} else {
+		// Update user meta.
+		unset($my_favs[ array_search( $activity_id , $my_favs) ]);
+		bp_update_user_meta( $user_id, 'bp_reaction_activities', $my_reactions );
+		bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
+
+		// Update activity meta
+		$users = array_unique( $users );
+		unset( $users[ array_search( $user_id , $users) ] );
+		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+		bp_activity_update_meta( $activity_id, 'bp_favorite_users', $users );
+
+		// Update activity meta counts.
+		bp_activity_update_meta( $activity_id, $react_count_key, $react_count );
+
+		return true;
+	}
+
+
+	// Update activity meta counts.
+	if ( bp_activity_update_meta( $activity_id, 'favorite_count', $fav_count ) ) {
+
+		/**
+		 * Fires if bp_activity_update_meta() for favorite_count is successful and before returning a true value for success.
+		 *
+		 * @since BuddyPress 1.2.1
+		 *
+		 * @param int $activity_id ID of the activity item being favorited.
+		 * @param int $user_id     ID of the user doing the favoriting.
+		 */
+		do_action( 'bp_activity_add_user_favorite', $activity_id, $user_id );
+
+		// Success.
+		return true;
+
+		// Saving meta was unsuccessful for an unknown reason.
+	} else {
+
+		/**
+		 * Fires if bp_activity_update_meta() for favorite_count is unsuccessful and before returning a false value for failure.
+		 *
+		 * @since BuddyPress 1.5.0
+		 *
+		 * @param int $activity_id ID of the activity item being favorited.
+		 * @param int $user_id     ID of the user doing the favoriting.
+		 */
+		do_action( 'bp_activity_add_user_favorite_fail', $activity_id, $user_id );
+
+		return false;
+	}
+}
+
+/**
  * Add an activity feed item as a favorite for a user.
  *
  * @since BuddyPress 1.2.0
@@ -1029,8 +1161,39 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 	$my_favs = array_flip( (array) $my_favs );
 
 	// Bail if the user has not previously favorited the item.
-	if ( ! isset( $my_favs[ $activity_id ] ) ) {
+	if ( ! isset( $my_favs[ $activity_id ] ) && ! bp_is_activity_reaction_active() ) {
 		return false;
+	}
+
+	// Check if user has not previously favorited the item but reaction on the item.
+	if ( ! isset( $my_favs[ $activity_id ] ) && bp_is_activity_reaction_active() ) {
+		$react_count_key = "";
+		// Update user meta.
+		$my_reactions = bp_get_user_meta( $user_id, 'bp_reaction_activities', true );
+		foreach ( $my_reactions as $key => $val ) {
+			if ( in_array( $activity_id, $my_reactions[ $key ] ) ) {
+				unset($my_reactions[ $key ][ array_search( $activity_id , $my_reactions[ $key ] ) ]);
+			}
+		}
+		bp_update_user_meta( $user_id, 'bp_reaction_activities', $my_reactions );
+
+		// Update activity meta
+		$users_react = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+		foreach ( $users_react as $key => $val ) {
+			if ( in_array( $user_id, $users_react[ $key ] ) ) {
+				$react_count_key = "reacted_count_" . $key;
+				unset( $users_react[ $key ][ array_search( $user_id, $users_react[ $key ] ) ] );
+			}
+		}
+		bp_activity_update_meta( $activity_id, 'bp_reaction_users', $users_react );
+
+		// Update activity meta counts.
+		$react_count = bp_activity_get_meta( $activity_id, $react_count_key );
+		if ( ! empty( $react_count ) ) {
+			bp_activity_update_meta( $activity_id, $react_count_key, (int) $react_count - 1 );
+		}
+
+		return true;
 	}
 
 	// Remove the fav from the user's favs.
@@ -1109,6 +1272,26 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 	$like_count      = bp_activity_get_meta( $activity_id, 'favorite_count', true );
 	$like_count      = ( isset( $like_count ) && ! empty( $like_count ) ) ? $like_count : 0;
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+
+	if ( bp_is_activity_reaction_active() ) {
+		$reacted_data	= [];
+		$reacted_users 	= bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+		if ($like_count > sizeof( $favorited_users ) ) {
+			$like_count = sizeof( $favorited_users );
+		}
+		if ( (empty( $reacted_users ) || ! is_array( $reacted_users )) && $like_count == 0 ) {
+			return 0;
+		}
+		foreach ( $reacted_users as $react_type => $react_user ) {
+			$reacted_data[ $react_type ] = count( $react_user );
+		}
+		$reacted_data['like'] = $like_count;
+		arsort( $reacted_data, SORT_STRING );
+		$reacted_data = array_filter( $reacted_data );
+		return implode(", ",  array_map( function ( $key, $val ) {
+			return $val . " " . __( ucfirst( $key ), 'buddyboss' );
+		}, array_keys( $reacted_data ), $reacted_data ) );
+	}
 
 	if ( empty( $favorited_users ) || ! is_array( $favorited_users ) ) {
 		return 0;
@@ -1225,6 +1408,41 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 	$current_user_id = get_current_user_id();
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
 
+	if ( bp_is_activity_reaction_active() ) {
+		$reacted_users = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
+		if ( count( $favorited_users ) ) {
+			$favorited_users_text = __( 'Like', 'buddyboss' ) . ": ";
+			if( in_array( $current_user_id, $favorited_users ) ) {
+				$favorited_users_text .= __( 'You', 'buddyboss' ) . "&#10;";
+			}
+			$favorited_users_text .= array_reduce (
+				$favorited_users,
+				function ( $carry, $user_id ) use ( $current_user_id ) {
+					if ( $user_id != $current_user_id ) {
+						$user_display_name = bp_core_get_user_displayname( $user_id );
+						$carry .= $user_display_name . '&#10;';
+					}
+					return $carry;
+				}
+			);
+		}
+		$reacted_users = array_filter( $reacted_users );
+		unset( $reacted_users['like'] );
+		foreach ( $reacted_users as $react => $user_ids ) {
+			$favorited_users_text .= ! empty( $favorited_users_text ) ? ", " : "";
+			$favorited_users_text .= __( ucfirst( $react ), 'buddyboss' ) . ": ";
+			if( in_array( $current_user_id, $user_ids ) && strpos( $favorited_users_text, __( 'You', 'buddyboss' ) ) === false  ) {
+				$favorited_users_text .= __( 'You', 'buddyboss' ) . "&#10;";
+			}
+			foreach ( $user_ids as $user_id ) {
+				if ( $user_id != $current_user_id ) {
+					$user_display_name = bp_core_get_user_displayname( $user_id );
+					$favorited_users_text .= $user_display_name . '&#10;';
+				}
+			}
+		}
+		return $favorited_users_text;
+	}
 	if ( ! empty( $favorited_users ) ) {
 		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
 		$favorited_users = array_reduce(

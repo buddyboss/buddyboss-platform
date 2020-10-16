@@ -1872,6 +1872,33 @@ function bp_get_activity_is_favorite() {
 }
 
 /**
+	 * Return whether the current activity is in a current user's reactions.
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @global object $activities_template {@link BP_Activity_Template}
+	 *
+	 * @return string if user reacted, false otherwise.
+	 */
+	function bp_get_activity_is_reacted() {
+		global $activities_template;
+		$react = false;
+		foreach ($activities_template->my_reactions as $key => $value ) {
+			if( in_array( $activities_template->activity->id, (array) $value ) ) {
+				$react = $key;
+			}
+		}
+		/**
+		 * Filters whether the current activity item is in the current user's reaction.
+		 *
+		 * @since BuddyPress 1.2.0
+		 *
+		 * @param bool $value Whether or not the current activity item is in the current user's reaction.
+		 */
+		return apply_filters( 'bp_get_activity_is_reacted', $react );
+	}
+
+/**
  * Output the comment markup for an activity item.
  *
  * @since BuddyPress 1.2.0
@@ -2627,6 +2654,37 @@ function bp_get_activity_favorite_link() {
 	 * @param string $value Constructed link for favoriting the activity comment.
 	 */
 	return apply_filters( 'bp_get_activity_favorite_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/favorite/' . $activities_template->activity->id . '/' ), 'mark_favorite' ) );
+}
+
+/**
+ * Output the activity favorite link.
+ *
+ * @since BuddyBoss 1.8.0
+ */
+function bp_activity_reaction_link() {
+	echo bp_get_activity_reaction_link();
+}
+
+/**
+ * Return the reaction link.
+ *
+ * @since BuddyBoss 1.8.0
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity reaction link.
+ */
+function bp_get_activity_reaction_link( $react = "like" ) {
+	global $activities_template;
+
+	/**
+	 * Filters the activity reaction link.
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param string $value Constructed link for favoriting the activity comment.
+	 */
+	return apply_filters( 'bp_get_activity_reaction_link', wp_nonce_url( home_url( bp_get_activity_root_slug() . '/reaction/' . $activities_template->activity->id . '/' ), 'mark_' . $react ) );
 }
 
 /**

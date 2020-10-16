@@ -733,8 +733,71 @@ window.bp = window.bp || {};
 								}
 							}
 
+							target.removeClass (function (index, className) {
+								return (className.match (/(^|\s)react-\S+/g) || []).join(' ');
+							});
 							target.removeClass( 'unfav' );
 							target.addClass( 'fav' );
+						}
+					}
+				);
+			}
+
+			// Reacting.
+			if ( target.hasClass( 'react' ) || target.hasClass( 'react' ) ) {
+				var reactionType = target.data( 'react' );
+
+				// Stop event propagation.
+				event.preventDefault();
+
+				target.addClass( 'loading' );
+
+				parent.ajax( { action: 'activity_mark_react', 'id': activity_id, 'type' : reactionType }, 'activity' ).done(
+					function( response ) {
+						target.removeClass( 'loading' );
+
+						if ( false === response.success ) {
+							return;
+						} else {
+							var buttom_ele = target.parent().parent().parent().find( '.reactions-button a' );
+							buttom_ele.fadeOut(
+								200,
+								function() {
+									if ( $( this ).find( 'span' ).first().length ) {
+										$( this ).find( 'span' ).first().html( response.data.content );
+									} else {
+										$( this ).html( response.data.content );
+									}
+
+									if ('false' === $( this ).attr( 'aria-pressed' ) ) {
+										$( this ).attr( 'aria-pressed', 'true' );
+									} else {
+										$( this ).attr( 'aria-pressed', 'false' );
+									}
+
+									if ( likes_text.length ) {
+										response.data.like_count ?
+										likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
+										likes_text.empty() && activity_state.removeClass( 'has-likes' );
+
+										// Update like tooltip.
+										var decoded = $( '<textarea/>' ).html( response.data.tooltip ).text();
+										likes_text.attr( 'data-hint', decoded );
+									}
+
+									if ( $( this ).find( '.like-count' ).length ) {
+										$( this ).find( '.like-count' ).html( response.data.content );
+									}
+
+									$( this ).fadeIn( 200 );
+								}
+							);
+							buttom_ele.removeClass( 'fav' );
+							buttom_ele.addClass( 'unfav' );
+							buttom_ele.removeClass (function (index, className) {
+								return (className.match (/(^|\s)react-\S+/g) || []).join(' ');
+							});
+							buttom_ele.addClass( 'react-' + reactionType );
 						}
 					}
 				);
