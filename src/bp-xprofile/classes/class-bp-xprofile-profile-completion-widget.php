@@ -49,12 +49,14 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		}
 
 		/* Widget VARS */
-
-		$profile_groups_selected       = $instance['profile_groups_enabled'];
-		$this->widget_id              = $args['widget_id'];
-		$profile_phototype_selected    = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
-		$profile_hide_widget_selected  = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
-		$user_progress                = bp_xprofile_get_user_progress_data( $profile_groups_selected, $profile_phototype_selected, $this->widget_id );
+		$profile_groups_selected         = $instance['profile_groups_enabled'];
+		$this->widget_id                = $args['widget_id'];
+		$profile_phototype_selected      = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
+		$profile_hide_widget_selected    = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
+		$settings                       = array();
+		$settings['profile_groups']      = $profile_groups_selected;
+		$settings['profile_photo_type']  = $profile_phototype_selected;
+		$user_progress                  = bp_xprofile_get_user_profile_progress_data( $settings );
 
 		// IF nothing selected then return and nothing to display.
 		if ( empty( $profile_groups_selected ) && empty( $profile_phototype_selected ) ) {
@@ -100,12 +102,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance                           = $old_instance;
 		$instance['title']                  = wp_strip_all_tags( $new_instance['title'] );
-		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
-		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
-		$instance['profile_hide_widget']    = $new_instance['profile_hide_widget'];
-
-		// Delete Transient.
-		bp_xprofile_delete_profile_completion_transient();
+		$instance['profile_groups_enabled'] = ( isset( $new_instance['profile_groups_enabled'] ) ) ? $new_instance['profile_groups_enabled'] : '';
+		$instance['profile_photos_enabled'] = ( isset( $new_instance['profile_photos_enabled'] ) ) ? $new_instance['profile_photos_enabled'] : '';
+		$instance['profile_hide_widget']    = ( isset( $new_instance['profile_hide_widget'] ) ) ? $new_instance['profile_hide_widget'] : '';
 
 		/**
 		 * Fires when updating widget form settings.
@@ -127,12 +126,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				)
 		);
 
-		/* Profile Groups and Profile Cover Photo VARS. */
-		$profile_groups 			   = bp_xprofile_get_groups();
+		$steps_options            = bp_core_profile_completion_steps_options();
+		$profile_groups            = $steps_options['profile_groups'];
 		$photos_enabled_arr        = array();
 		$widget_enabled_arr        = array();
-		$is_profile_photo_disabled  = bp_disable_avatar_uploads();
-		$is_cover_photo_disabled   = bp_disable_cover_image_uploads();
+		$is_profile_photo_disabled = $steps_options['is_profile_photo_disabled'];
+		$is_cover_photo_disabled   = $steps_options['is_cover_photo_disabled'];
 
 		// Show Options only when Profile Photo and Cover option enabled in the Profile Settings.
 		if ( ! $is_profile_photo_disabled ) {

@@ -2002,42 +2002,25 @@ function bp_xprofile_get_profile_completion_transient_name( $key, $widget_id ) {
  *
  * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields added/updated/deleted.
  *
- * @param array $profile_groups - set of fieldset selected to show in progress
- * @param array $profile_phototype - profile or cover photo selected to show in progress
- * @param int $widget_id - Widget id specific user progress
+ * @param array $settings - set of fieldset selected to show in progress & profile or cover photo selected to show in progress.
  *
  * @return array $user_progress - user progress to render profile completion
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.3
  */
-function bp_xprofile_get_user_progress_data( $profile_groups, $profile_phototype, $widget_id ) {
+function bp_xprofile_get_user_profile_progress_data( $settings  ) {
 
 	$user_progress = array();
 
-	// Check if data avail in transient.
-	$pc_transient_name = bp_xprofile_get_profile_completion_transient_name( bp_core_get_profile_completion_key(), $widget_id );
-	$pc_transient_data = get_transient( $pc_transient_name );
+	$user_progress_arr = bp_xprofile_get_selected_options_user_progress( $settings );
 
-	if ( ! empty( $pc_transient_data ) ) {
-
-		$user_progress = $pc_transient_data;
-
-	} else {
-
-		// Get logged in user Progress.
-		$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_phototype );
-
-		// Do not proceed if no fields found based on settings.
-		if( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0  ){
-			return $user_progress;
-		}
-
-		// Format User Progress array to pass on to the template.
-		$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_arr );
-
-		// set Transient here with 3hours expiration.
-		set_transient( $pc_transient_name, $user_progress, HOUR_IN_SECONDS * 3 );
+	// Do not proceed if no fields found based on settings.
+	if( isset( $user_progress_arr['total_fields'] ) && $user_progress_arr['total_fields'] <= 0  ){
+		return $user_progress;
 	}
+
+	// Format User Progress array to pass on to the template.
+	$user_progress = bp_xprofile_get_user_progress_formatted( $user_progress_arr );
 
 	return $user_progress;
 }
@@ -2087,7 +2070,7 @@ function bp_xprofile_get_user_progress( $group_ids, $photo_types ) {
 				 * Need to check $profile_url is send 200 status or not.
 				 */
 				remove_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10 );
-				$profile_url      = get_avatar_url( $user_id, [ 'default' => '404' ] );
+				$profile_url      = get_avatar_url( $user_id, array( 'default' => '404' ) );
 				add_filter( 'get_avatar_url', 'bp_core_get_avatar_data_url_filter', 10, 3 );
 
 				$headers = get_headers($profile_url, 1);
