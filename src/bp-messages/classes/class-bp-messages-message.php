@@ -487,9 +487,46 @@ class BP_Messages_Message {
 	}
 
 	/**
-	 * Function to get messages
+	 * Query for messages
 	 *
-	 * @param array $args arguments array.
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $args              {
+	 *                                 Array of parameters. All items are optional.
+	 *
+	 * @type string $orderby           Optional. Property to sort by. 'date_sent', 'id', 'thread_id', 'sender_id'.
+	 * @type string $order             Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
+	 * @type int    $per_page          Optional. Number of items to return per page of results.
+	 *                                Default: null (no limit).
+	 * @type int    $page              Optional. Page offset of results to return.
+	 *                                Default: 1.
+	 * @type int    $user_id           Optional. If provided, results will be limited to messages of which the specified user is a sender.
+	 *                                Default: null.
+	 * @type array  $meta_query        Optional. An array of meta_query conditions. See {@link WP_Meta_Query::queries} for description.
+	 * @type array  $date_query        Optional. An array of meta_query conditions. See {@link BP_Date_Query::queries} for description.
+	 * @type array  $include           Optional. Array of message IDs. Results will exclude the listed messages.
+	 *                                Default: false.
+	 * @type array  $exclude           Optional. Array of message IDs. Results will exclude the listed messages.
+	 *                                Default: false.
+	 * @type array  $include_threads   Optional. Array of thread IDs. Results will include the listed threads.
+	 *                                Default: false.
+	 * @type array  $exclude           Optional. Array of thread IDs. Results will exclude the listed threads.
+	 *                                Default: false.
+	 * @type array  $meta_key__in      Optional. Array of meta keys. Results will include the listed meta keys.
+	 *                                Default: false.
+	 * @type array  $meta_key__in      Optional. Array of meta keys. Results will exclude the listed meta keys.
+	 *                                Default: false.
+	 * @type bool   $update_meta_cache Whether to pre-fetch messagemeta for the returned messages.
+	 *                                 Default: true.
+	 * @type string $fields            Which fields to return. Specify 'ids' to fetch a list of IDs.
+	 *                                 Default: 'all' (return BP_Messages_Message objects).
+	 * @type string $group_by          Which fields to group by. Specify 'id' to group messages by IDs.
+	 * @type string $subject           Specific results with not matching the subject.
+	 * @type int    $total             Total count of all messages matching non-paginated query params.
+	 *
+	 * }
+	 *
+	 * @return array
 	 */
 	public static function get( $args = array() ) {
 		global $wpdb;
@@ -612,7 +649,7 @@ class BP_Messages_Message {
 		/**
 		 * Filters the converted 'orderby' term.
 		 *
-		 * @since BuddyPress 2.1.0
+		 * @since BuddyBoss 1.5.4
 		 *
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
@@ -658,7 +695,7 @@ class BP_Messages_Message {
 		/**
 		 * Filters the pagination SQL statement.
 		 *
-		 * @since BuddyPress 1.5.0
+		 * @since BuddyBoss 1.5.4
 		 *
 		 * @param string $value Concatenated SQL statement.
 		 * @param array  $sql   Array of SQL parts before concatenation.
@@ -688,19 +725,19 @@ class BP_Messages_Message {
 		);
 
 		if ( ! empty( $r['count_total'] ) ) {
-			// Find the total number of groups in the results set.
+			// Find the total number of messages in the results set.
 			$total_messages_sql = "SELECT COUNT(DISTINCT m.id) FROM {$sql['from']} $where";
 
 			/**
-			 * Filters the SQL used to retrieve total group results.
+			 * Filters the SQL used to retrieve total message results.
 			 *
-			 * @since BuddyPress 1.5.0
+			 * @since BuddyBoss 1.5.4
 			 *
-			 * @param string $t_sql     Concatenated SQL statement used for retrieving total group results.
+			 * @param string $t_sql     Concatenated SQL statement used for retrieving total messages results.
 			 * @param array  $total_sql Array of SQL parts for the query.
 			 * @param array  $r         Array of parsed arguments for the get method.
 			 */
-			$total_messages_sql = apply_filters( 'bp_messages_get_total_groups_sql', $total_messages_sql, $sql, $r );
+			$total_messages_sql = apply_filters( 'bp_messages_get_total_messages_sql', $total_messages_sql, $sql, $r );
 
 			$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total'] = $total_messages;
@@ -734,7 +771,6 @@ class BP_Messages_Message {
 			$message_meta_query = new WP_Meta_Query( $meta_query );
 
 			// WP_Meta_Query expects the table name at
-			// $wpdb->group.
 			$wpdb->messagemeta = buddypress()->messages->table_name_meta;
 
 			$meta_sql           = $message_meta_query->get_sql( 'message', 'm', 'id' );
