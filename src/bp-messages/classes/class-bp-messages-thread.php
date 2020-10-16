@@ -558,27 +558,19 @@ class BP_Messages_Thread {
 	 * @param int $thread_id
 	 */
 	public static function get_user_last_deleted_message( $thread_id ) {
-		global $wpdb;
-		$bp = buddypress();
+		$results = BP_Messages_Message::get( array(
+			'include_threads' => $thread_id,
+			'meta_query'      => array(
+				array(
+					'key'   => 'deleted_by',
+					'value' => bp_loggedin_user_id(),
+				),
+			),
+			'per_page'        => 1,
+		) );
 
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT m.* FROM {$bp->messages->table_name_messages} m
-			LEFT JOIN {$bp->messages->table_name_meta} mm ON m.id = mm.message_id
-			WHERE m.thread_id = %d
-			AND (
-				mm.meta_key = 'deleted_by' AND mm.meta_value = %d
-			)
-			ORDER BY m.date_sent DESC, m.id DESC
-			LIMIT 1
-		",
-				$thread_id,
-				bp_loggedin_user_id()
-			)
-		);
-
-		if ( ! empty( $results ) ) {
-			static::$last_deleted_message = (object) $results[0];
+		if ( ! empty( $results['messages'] ) ) {
+			static::$last_deleted_message = (object) $results['messages'][0];
 		}
 
 		return static::$last_deleted_message;
