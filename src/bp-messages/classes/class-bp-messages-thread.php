@@ -1458,4 +1458,170 @@ class BP_Messages_Thread {
 
 		return (bool) ! $errors;
 	}
+
+	public static function get( $args ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$defaults = array(
+			'orderby'  => 'id',
+			'order'    => 'DESC',
+			'per_page' => 20,
+			'page'     => 1,
+			'user_id'  => 0,
+			'include'  => false,
+			'exclude'  => false,
+		);
+
+		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
+
+		$sql = array(
+			'select'     => 'SELECT DISTINCT r.id',
+			'from'       => "{$bp->messages->table_name_recipients} r",
+			'where'      => '',
+			'orderby'    => '',
+			'pagination' => '',
+		);
+
+		$where_conditions = array();
+
+		if ( ! empty( $r['include'] ) ) {
+			$include                     = implode( ',', wp_parse_id_list( $r['include'] ) );
+			$where_conditions['include'] = "r.id IN ({$include})";
+		}
+
+		if ( ! empty( $r['exclude'] ) ) {
+			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
+			$where_conditions['exclude'] = "r.id NOT IN ({$exclude})";
+		}
+
+		/* Order/orderby ********************************************/
+
+		$order   = $r['order'];
+		$orderby = $r['orderby'];
+
+		// Sanitize 'order'.
+		$order = bp_esc_sql_order( $order );
+
+		/**
+		 * Filters the converted 'orderby' term.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $value   Converted 'orderby' term.
+		 * @param string $orderby Original orderby value.
+		 * @param string $value   Parsed 'type' value for the get method.
+		 */
+		$orderby = apply_filters( 'bp_recipients_recipient_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
+
+		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
+
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && - 1 !== $r['per_page'] ) {
+			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
+		}
+
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$where_conditions = apply_filters( 'bp_recipients_recipient_get_where_conditions', $where_conditions, $r );
+
+		$where = '';
+		if ( ! empty( $where_conditions ) ) {
+			$sql['where'] = implode( ' AND ', $where_conditions );
+			$where        = "WHERE {$sql['where']}";
+		}
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array  $r   Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['from'] = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
+
+		$paged_recipients_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
+
+		/**
+		 * Filters the pagination SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $value Concatenated SQL statement.
+		 * @param array  $sql   Array of SQL parts before concatenation.
+		 * @param array  $r     Array of parsed arguments for the get method.
+		 */
+		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
+
+		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		if ( 'ids' === $r['fields'] || 'thread_ids' === $r['fields'] || 'sender_ids' === $r['fields'] ) {
+			// We only want the IDs.
+			$paged_recipients = array_map( 'intval', $paged_recipient_ids );
+		} elseif ( ! empty( $paged_recipient_ids ) ) {
+			$recipient_ids_sql      = implode( ',', array_map( 'intval', $paged_recipient_ids ) );
+			$recipient_data_objects = $wpdb->get_results( "SELECT r.* FROM {$bp->messages->table_name_recipients} r WHERE r.id IN ({$recipient_ids_sql})" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			foreach ( (array) $recipient_data_objects as $mdata ) {
+				$recipient_data_objects[ $mdata->id ] = $mdata;
+			}
+			foreach ( $paged_recipient_ids as $paged_recipient_id ) {
+				$paged_recipients[] = $recipient_data_objects[ $paged_recipient_id ];
+			}
+		}
+
+		$retval = array(
+			'messages' => $paged_recipients,
+			'total'    => 0,
+		);
+
+		if ( ! empty( $r['count_total'] ) ) {
+			// Find the total number of messages in the results set.
+			$total_recipients_sql = "SELECT COUNT(DISTINCT r.id) FROM {$sql['from']} $where";
+
+			/**
+			 * Filters the SQL used to retrieve total message results.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param string $t_sql     Concatenated SQL statement used for retrieving total messages results.
+			 * @param array  $total_sql Array of SQL parts for the query.
+			 * @param array  $r         Array of parsed arguments for the get method.
+			 */
+			$total_recipients_sql = apply_filters( 'bp_recipients_recipient_get_total_sql', $total_recipients_sql, $sql, $r );
+
+			$total_recipients_ = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$retval['total']   = $total_recipients_;
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Convert the 'orderby' param into a proper SQL term/column.
+	 *
+	 * @since BuddyPress 1.8.0
+	 *
+	 * @param string $orderby Orderby term as passed to get().
+	 *
+	 * @return string $order_by_term SQL-friendly orderby term.
+	 */
+	protected static function convert_orderby_to_order_by_term( $orderby ) {
+		$order_by_term = '';
+
+		switch ( $orderby ) {
+			case 'id':
+			default:
+				$order_by_term = 'r.id';
+				break;
+		}
+
+		return $order_by_term;
+	}
 }
