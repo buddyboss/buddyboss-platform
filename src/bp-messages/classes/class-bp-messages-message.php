@@ -522,7 +522,7 @@ class BP_Messages_Message {
 	 *                                 Default: 'all' (return BP_Messages_Message objects).
 	 * @type string $group_by          Which fields to group by. Specify 'id' to group messages by IDs.
 	 * @type string $subject           Specific results with not matching the subject.
-	 * @type int    $total             Total count of all messages matching non-paginated query params.
+	 * @type int    $count_total       Total count of all messages matching non-paginated query params.
 	 *
 	 * }
 	 *

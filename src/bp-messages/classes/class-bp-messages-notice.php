@@ -215,31 +215,26 @@ class BP_Messages_Notice {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array       $args      {
-	 *                               Array of parameters. All items are optional.
+	 * @param array       $args        {
+	 * Array of parameters. All items are optional.
 	 *
-	 * @type string       $orderby   Optional. Property to sort by.
-	 *                                    Default: 'date_sent'.
-	 * @type string       $order     Optional. Sort order. 'ASC' or 'DESC'.
-	 *                                    Default: 'DESC'.
-	 * @type int          $per_page  Optional. Number of items to return perpage of results.
-	 *                                        Default: 20.
-	 * @type int          $page      Optional. Page offset of results to return.
-	 *                                    Default: 1.
-	 * @type string       $fields    Which fields to return. Specify 'ids' to
-	 *                                        fetch a list of IDs. Default: 'all' (return BP_Groups_Group objects).
-	 * @type array|string $include   Array or comma-separated list of notice
-	 *                                        ids to limit results to.
-	 * @type array|string $exclude   Array or comma-separated list of notice
-	 *                                        ids that will be
-	 * @type int          $is_active Fetch only Active notice or not Default null
+	 * @type string       $orderby     Optional. Property to sort by. Default: 'date_sent'.
+	 * @type string       $order       Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
+	 * @type int          $per_page    Optional. Number of items to return perpage of results. Default: 20.
+	 * @type int          $page        Optional. Page offset of results to return. Default: 1.
+	 * @type string       $fields      Which fields to return. Specify 'ids' to fetch a list of IDs. Default: 'all'
+	 *                                 (return BP_Groups_Group objects).
+	 * @type array|string $include     Array or comma-separated list of notice ids to limit results to.
+	 * @type array|string $exclude     Array or comma-separated list of notice ids that will be
+	 * @type int          $is_active   Fetch only Active notice or not Default null
+	 * @type int          $count_total Total count of all Notices matching non-paginated query params.
 	 * }
 	 *
 	 * @return array {
-	 * @type array        $notices   Array of notice objects returned by the
+	 * @type array        $notices     Array of notice objects returned by the
 	 *                                    paginated query. (IDs only if `fields` is set
 	 *                                    to `ids`.)
-	 * @type int          $total     Total count of all notices matching non-
+	 * @type int          $total       Total count of all notices matching non-
 	 *                                        paginated query params.
 	 * }
 	 */
