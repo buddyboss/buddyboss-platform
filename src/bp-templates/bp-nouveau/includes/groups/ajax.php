@@ -1137,6 +1137,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				$total_threads = BP_Messages_Thread::get(
 					array(
 						'include_threads' => array( $group_thread ),
+						'per_page'        => - 1
 					)
 				);
 

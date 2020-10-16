@@ -158,6 +158,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					$total_threads = BP_Messages_Thread::get(
 						array(
 							'include_threads' => array( $group_thread ),
+							'per_page'        => - 1
 						)
 					);
 
