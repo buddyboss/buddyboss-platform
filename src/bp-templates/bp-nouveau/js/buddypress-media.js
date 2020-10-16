@@ -3182,7 +3182,6 @@ window.bp = window.bp || {};
 		closeCreateFolderModal: function (event) {
 			event.preventDefault();
 			$( '#bp-media-create-folder, #bp-media-create-child-folder' ).hide();
-			$( '#bb-album-title, #bb-album-child-title' ).val( '' );
 			$( '#bp-media-create-child-folder-submit' ).removeClass( 'loading' );
 		},
 
