@@ -497,25 +497,25 @@ class BP_Messages_Message {
 	 * @type string $orderby           Optional. Property to sort by. 'date_sent', 'id', 'thread_id', 'sender_id'.
 	 * @type string $order             Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 	 * @type int    $per_page          Optional. Number of items to return per page of results.
-	 *                                Default: null (no limit).
+	 *                                 Default: null (no limit).
 	 * @type int    $page              Optional. Page offset of results to return.
-	 *                                Default: 1.
+	 *                                 Default: 1.
 	 * @type int    $user_id           Optional. If provided, results will be limited to messages of which the specified user is a sender.
-	 *                                Default: null.
+	 *                                 Default: null.
 	 * @type array  $meta_query        Optional. An array of meta_query conditions. See {@link WP_Meta_Query::queries} for description.
 	 * @type array  $date_query        Optional. An array of meta_query conditions. See {@link BP_Date_Query::queries} for description.
 	 * @type array  $include           Optional. Array of message IDs. Results will exclude the listed messages.
-	 *                                Default: false.
+	 *                                 Default: false.
 	 * @type array  $exclude           Optional. Array of message IDs. Results will exclude the listed messages.
-	 *                                Default: false.
+	 *                                 Default: false.
 	 * @type array  $include_threads   Optional. Array of thread IDs. Results will include the listed threads.
-	 *                                Default: false.
+	 *                                 Default: false.
 	 * @type array  $exclude           Optional. Array of thread IDs. Results will exclude the listed threads.
-	 *                                Default: false.
+	 *                                 Default: false.
 	 * @type array  $meta_key__in      Optional. Array of meta keys. Results will include the listed meta keys.
-	 *                                Default: false.
+	 *                                 Default: false.
 	 * @type array  $meta_key__in      Optional. Array of meta keys. Results will exclude the listed meta keys.
-	 *                                Default: false.
+	 *                                 Default: false.
 	 * @type bool   $update_meta_cache Whether to pre-fetch messagemeta for the returned messages.
 	 *                                 Default: true.
 	 * @type string $fields            Which fields to return. Specify 'ids' to fetch a list of IDs.
