@@ -655,7 +655,7 @@ class BP_Messages_Message {
 		 * @param string $orderby Original orderby value.
 		 * @param string $value   Parsed 'type' value for the get method.
 		 */
-		$orderby = apply_filters( 'bp_messages_get_orderby_converted_by_term', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
+		$orderby = apply_filters( 'bp_messages_message_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
 
 		$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 
@@ -671,7 +671,7 @@ class BP_Messages_Message {
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
 		 */
-		$where_conditions = apply_filters( 'bp_messages_get_where_conditions', $where_conditions, $r );
+		$where_conditions = apply_filters( 'bp_messages_message_get_where_conditions', $where_conditions, $r );
 
 		$where = '';
 		if ( ! empty( $where_conditions ) ) {
@@ -687,7 +687,7 @@ class BP_Messages_Message {
 		 * @param array  $r   Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
 		 */
-		$sql['from'] = apply_filters( 'bp_messages_get_join_sql', $sql['from'], $r );
+		$sql['from'] = apply_filters( 'bp_messages_message_get_join_sql', $sql['from'], $r );
 
 		$paged_messages_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
@@ -701,7 +701,7 @@ class BP_Messages_Message {
 		 * @param array  $sql   Array of SQL parts before concatenation.
 		 * @param array  $r     Array of parsed arguments for the get method.
 		 */
-		$paged_messages_sql = apply_filters( 'bp_messages_get_paged_messages_sql', $paged_messages_sql, $sql, $r );
+		$paged_messages_sql = apply_filters( 'bp_messages_message_get_paged_sql', $paged_messages_sql, $sql, $r );
 
 		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
@@ -739,7 +739,7 @@ class BP_Messages_Message {
 			 * @param array  $total_sql Array of SQL parts for the query.
 			 * @param array  $r         Array of parsed arguments for the get method.
 			 */
-			$total_messages_sql = apply_filters( 'bp_messages_get_total_messages_sql', $total_messages_sql, $sql, $r );
+			$total_messages_sql = apply_filters( 'bp_messages_message_get_total_sql', $total_messages_sql, $sql, $r );
 
 			$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total'] = $total_messages;
