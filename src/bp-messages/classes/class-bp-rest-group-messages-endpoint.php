@@ -157,7 +157,6 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 					//$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
 					$total_threads = BP_Messages_Thread::get(
 						array(
-							'fields'          => 'is_deleted',
 							'include_threads' => array( $group_thread ),
 						)
 					);
