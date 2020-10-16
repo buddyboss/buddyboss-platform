@@ -5336,6 +5336,7 @@ window.bp = window.bp || {};
 
 							target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).hide().removeClass( 'open' );
 							target.parents( '.activity-media-description' ).find( '.bp-media-activity-description' ).show();
+							target.parents( '.activity-media-description' ).find( '.bp-feedback.error' ).remove();
 						} else {
 							target.parents( '.activity-media-description' ).prepend( response.data.feedback );
 						}
