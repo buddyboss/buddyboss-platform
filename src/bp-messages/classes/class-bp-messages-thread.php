@@ -1576,8 +1576,8 @@ class BP_Messages_Thread {
 		}
 
 		$retval = array(
-			'messages' => $paged_recipients,
-			'total'    => 0,
+			'recipients' => $paged_recipients,
+			'total'      => 0,
 		);
 
 		if ( ! empty( $r['count_total'] ) ) {
@@ -1595,8 +1595,8 @@ class BP_Messages_Thread {
 			 */
 			$total_recipients_sql = apply_filters( 'bp_recipients_recipient_get_total_sql', $total_recipients_sql, $sql, $r );
 
-			$total_recipients_ = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$retval['total']   = $total_recipients_;
+			$total_recipients = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$retval['total']  = $total_recipients;
 		}
 
 		return $retval;
