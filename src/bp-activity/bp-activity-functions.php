@@ -1282,15 +1282,30 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 		if ( (empty( $reacted_users ) || ! is_array( $reacted_users )) && $like_count == 0 ) {
 			return 0;
 		}
+		$current_user_fav = false;
 		foreach ( $reacted_users as $react_type => $react_user ) {
-			$reacted_data[ $react_type ] = count( $react_user );
+			if( $react_type !== 'like' ) {
+				if ( bp_loggedin_user_id() && in_array( bp_loggedin_user_id(), $react_user ) ) {
+					$current_user_fav = true;
+				}
+				$reacted_data[ $react_type ] = count( $react_user );
+			}
 		}
 		$reacted_data['like'] = $like_count;
-		arsort( $reacted_data, SORT_STRING );
-		$reacted_data = array_filter( $reacted_data );
-		return implode(", ",  array_map( function ( $key, $val ) {
-			return $val . " " . __( ucfirst( $key ), 'buddyboss' );
-		}, array_keys( $reacted_data ), $reacted_data ) );
+		if ( bp_loggedin_user_id() && in_array( bp_loggedin_user_id(), $favorited_users ) ) {
+			$current_user_fav = true;
+		}
+		if( $current_user_fav ) {
+			$return_str  = __( 'You and', 'buddyboss' ) . ' ';
+			$return_str .= array_sum( $reacted_data ) - 1;
+			$return_str .= ' ' . __( 'others', 'buddyboss' );
+			if ( array_sum( $reacted_data ) === 1 ) {
+				$return_str  = bp_core_get_user_displayname( bp_loggedin_user_id() );
+			}
+		} else {
+			$return_str = array_sum( $reacted_data );
+		}
+		return $return_str;
 	}
 
 	if ( empty( $favorited_users ) || ! is_array( $favorited_users ) ) {
@@ -1409,19 +1424,21 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
 
 	if ( bp_is_activity_reaction_active() ) {
+		$max_count = 10;
+		$toatl_count = 0;
+		$current_user_fav = false;
+		$favorited_users_text = "";
 		$reacted_users = bp_activity_get_meta( $activity_id, 'bp_reaction_users', true );
 		if ( count( $favorited_users ) ) {
-			$favorited_users_text = __( 'Like', 'buddyboss' ) . ": ";
-			if( in_array( $current_user_id, $favorited_users ) ) {
-				$favorited_users_text .= __( 'You', 'buddyboss' ) . "&#10;";
-			}
+			$current_user_fav = in_array( $current_user_id, $favorited_users ) ? true : $current_user_fav ;
 			$favorited_users_text .= array_reduce (
 				$favorited_users,
-				function ( $carry, $user_id ) use ( $current_user_id ) {
-					if ( $user_id != $current_user_id ) {
+				function ( $carry, $user_id ) use ( $current_user_id, &$toatl_count, $max_count ) {
+					if ( $user_id != $current_user_id  && $toatl_count < $max_count ) {
 						$user_display_name = bp_core_get_user_displayname( $user_id );
 						$carry .= $user_display_name . '&#10;';
 					}
+					$toatl_count++;
 					return $carry;
 				}
 			);
@@ -1429,17 +1446,20 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		$reacted_users = array_filter( $reacted_users );
 		unset( $reacted_users['like'] );
 		foreach ( $reacted_users as $react => $user_ids ) {
-			$favorited_users_text .= ! empty( $favorited_users_text ) ? ", " : "";
-			$favorited_users_text .= __( ucfirst( $react ), 'buddyboss' ) . ": ";
-			if( in_array( $current_user_id, $user_ids ) && strpos( $favorited_users_text, __( 'You', 'buddyboss' ) ) === false  ) {
-				$favorited_users_text .= __( 'You', 'buddyboss' ) . "&#10;";
-			}
+			$current_user_fav = in_array( $current_user_id, $user_ids ) ? true : $current_user_fav ;
 			foreach ( $user_ids as $user_id ) {
-				if ( $user_id != $current_user_id ) {
+				if ( $user_id != $current_user_id && $toatl_count < $max_count ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					$favorited_users_text .= $user_display_name . '&#10;';
 				}
+				$toatl_count++;
 			}
+		}
+		if ( $current_user_fav ) {
+			$favorited_users_text = bp_core_get_user_displayname( $current_user_id ) . '&#10;' . $favorited_users_text;
+		}
+		if ( $toatl_count > $max_count ) {
+			$favorited_users_text .= ( $toatl_count - $max_count ) . " " . __( 'more', 'buddyboss' );
 		}
 		return $favorited_users_text;
 	}
