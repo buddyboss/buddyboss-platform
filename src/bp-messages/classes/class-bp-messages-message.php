@@ -497,7 +497,7 @@ class BP_Messages_Message {
 	 * @type string $orderby           Optional. Property to sort by. 'date_sent', 'id', 'thread_id', 'sender_id'.
 	 * @type string $order             Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
 	 * @type int    $per_page          Optional. Number of items to return per page of results.
-	 *                                 Default: null (no limit).
+	 *                                 Default: 20.
 	 * @type int    $page              Optional. Page offset of results to return.
 	 *                                 Default: 1.
 	 * @type int    $user_id           Optional. If provided, results will be limited to messages of which the specified user is a sender.
@@ -653,7 +653,6 @@ class BP_Messages_Message {
 		 *
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
-		 * @param string $value   Parsed 'type' value for the get method.
 		 */
 		$orderby = apply_filters( 'bp_messages_message_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
 

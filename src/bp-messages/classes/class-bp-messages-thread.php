@@ -1511,7 +1511,6 @@ class BP_Messages_Thread {
 		 *
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
-		 * @param string $value   Parsed 'type' value for the get method.
 		 */
 		$orderby = apply_filters( 'bp_recipients_recipient_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
 

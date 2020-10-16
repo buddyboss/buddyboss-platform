@@ -294,7 +294,6 @@ class BP_Messages_Notice {
 		 *
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
-		 * @param string $value   Parsed 'type' value for the get method.
 		 *
 		 * @since BuddyBoss 1.5.4
 		 *
