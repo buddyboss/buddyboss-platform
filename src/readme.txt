@@ -58,21 +58,21 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.3 =
-* Profiles - Improved profiles and Groups cover photo size after upload
+* Profiles - Improved profile and Groups cover photo upload
 * Profiles - Fixed fieldset caching issue based on profile types
 * Groups - Fixed issue to show hidden groups in the group directory page
 * Groups - Fixed group tooltip UI issue when cover photo settings disabled
-* Groups - Fixed group invites message do not show
+* Groups - Fixed group invite message do not show
 * Groups - Fixed groups parent setting issue in the dashboard
-* Forums - Fixed forums tab in profile when configured Forums as a child page
+* Forums - Fixed forums tab in profile when configured Forums directory as a child page
 * Forums - Fixed forums reply editor formatting issue
 * Activity - Fixed issue to show 'read more' link for blog posts activity
 * Media - Updated Dropzone 5.7.2 library
 * Media - Improved security
 * Photos - Fixed photo description editing issue in the popup
 * Messages - Fixed messages thread formatting
-* Network Search - Fixed minor network search logical issue
-* BuddyPanel - Fixed current profile tab issue
+* Network Search - Fixed minor network search issue
+* BuddyPanel - Fixed selected profile tab issue
 * Performance - Improved DB queries
 * Translations - Updated German (formal) language files
 
