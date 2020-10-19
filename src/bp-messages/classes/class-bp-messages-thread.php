@@ -895,74 +895,41 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['search_terms'] ) ) {
 
 			// Search in xprofile field.
+			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
+
+			$participants_sql               = array();
+			$participants_sql['select']     = "SELECT DISTINCT(r.user_id), u.display_name";
+			$participants_sql['from']       = "FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID";
+			$participants_sql['where']      = "WHERE r.thread_id IN ($user_threads_query)";
+			$participants_sql['where_like'] = "u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s";
+
+			$participants_args = array(
+				$search_terms_like,
+				$search_terms_like,
+				$search_terms_like
+			);
+
+			// Search in xprofile field
 			if ( bp_is_active( 'xprofile' ) ) {
 				// Explode the value if there is a space in search term.
 				$split_name = explode( ' ', $r['search_terms'] );
 
-				// If space found then add spd.value 2 times in {$bp->profile->table_name_data} table due to first & last name.
+				$participants_sql['from'] .= ' LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id';
+
 				if ( isset( $split_name ) && isset( $split_name[0] ) && isset( $split_name[1] ) && ! empty( $split_name ) && ! empty( trim( $split_name[0] ) ) && ! empty( trim( $split_name[1] ) ) ) {
-					$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-					$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
-
-					$current_user_participants = $wpdb->get_results(
-						$q = $wpdb->prepare(
-							"
-				SELECT DISTINCT(r.user_id), u.display_name, spd.value
-				FROM {$bp->messages->table_name_recipients} r
-				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
-				LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id
-				WHERE r.thread_id IN ($user_threads_query) AND
-				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s OR spd.value LIKE %s OR spd.value LIKE %s )
-			",
-							$search_terms_like,
-							$search_terms_like,
-							$search_terms_like,
-							$split_name[0],
-							$split_name[1]
-						)
-					);
-					// else single search without space in search_terms
+					$participants_sql['where_like'] .= ' OR spd.value LIKE %s OR spd.value LIKE %s';
+					$participants_args[] = $split_name[0];
+					$participants_args[] = $split_name[1];
 				} else {
-					$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-					$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
-
-					$current_user_participants = $wpdb->get_results(
-						$q = $wpdb->prepare(
-							"
-				SELECT DISTINCT(r.user_id), u.display_name, spd.value
-				FROM {$bp->messages->table_name_recipients} r
-				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
-				LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id
-				WHERE r.thread_id IN ($user_threads_query) AND
-				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s OR spd.value LIKE %s )
-			",
-							$search_terms_like,
-							$search_terms_like,
-							$search_terms_like,
-							$search_terms_like
-						)
-					);
+					$participants_sql['where_like'] .= ' OR spd.value LIKE %s';
+					$participants_args[] = $search_terms_like;
 				}
-				// Default search if xprofile not active.
-			} else {
-				$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-				$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
-
-				$current_user_participants = $wpdb->get_results(
-					$q = $wpdb->prepare(
-						"
-				SELECT DISTINCT(r.user_id), u.display_name
-				FROM {$bp->messages->table_name_recipients} r
-				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
-				WHERE r.thread_id IN ($user_threads_query) AND
-				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s )
-			",
-						$search_terms_like,
-						$search_terms_like,
-						$search_terms_like
-					)
-				);
 			}
+
+			$participants_sql['where'] .= " AND ( {$participants_sql['where_like']} )";
+			$participants_sql = "{$participants_sql['select']} {$participants_sql['form']} {$participants_sql['where']}";
+			$current_user_participants = $wpdb->get_results( $wpdb->prepare( $participants_sql, $participants_args ) );
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
 			$current_user_participants_ids = array_diff( $current_user_participants_ids, array( bp_loggedin_user_id() ) );
@@ -981,7 +948,7 @@ class BP_Messages_Thread {
 				}
 			}
 
-			// Search for deleted Group OR Deleted Users.
+			// Search for deleted Group OR Deleted Users. Todo: Need refactor code
 			$value = "(deleted)|(group)|(Deleted)|(group)|(user)|(User)|(del)|(Del)|(dele)|(Dele)|(dele)|(Dele)|(delet)|(Delet)|(use)|(Use)";
 			if ( preg_match_all( '/\b' . $value . '\b/i', $r['search_terms'], $dest ) ) {
 
@@ -1023,23 +990,12 @@ class BP_Messages_Thread {
 
 			if ( $current_user_participants_ids ) {
 				$user_ids = implode( ',', array_unique( $current_user_participants_ids ) );
+				$where_sql = '( ' . $wpdb->prepare( "m.message LIKE %s OR r.user_id IN ({$user_ids})", $search_terms_like );
 				if ( ! empty( $group_thread_in ) ) {
 					$thread_in = implode( ',', $group_thread_in );
-					$where_sql = $wpdb->prepare(
-						"
-					(m.message LIKE %s OR r.user_id IN ({$user_ids}) OR r.thread_id IN ({$thread_in}) )
-				",
-						$search_terms_like
-					);
-				} else {
-					$where_sql = $wpdb->prepare(
-						"
-					(m.message LIKE %s OR r.user_id IN ({$user_ids}))
-				",
-						$search_terms_like
-					);
+					$where_sql .= " OR r.thread_id IN ({$thread_in})";
 				}
-
+				$where_sql .= ' )';
 			}
 		}
 

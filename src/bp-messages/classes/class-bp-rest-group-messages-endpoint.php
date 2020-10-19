@@ -162,7 +162,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 						)
 					);
 
-					$is_deleted = ( ! empty( $total_threads['total'] ) ) ? true : false;
+					$is_deleted = ! empty( $total_threads['total'] );
 
 					if ( $is_deleted || empty( $total_threads['recipients'] ) ) {
 						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
