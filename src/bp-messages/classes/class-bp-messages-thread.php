@@ -1322,8 +1322,6 @@ class BP_Messages_Thread {
 
 		if ( false === $unread_count ) {
 
-			// $unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0 AND sender_only = 0", $user_id ) );
-			//$unread_count  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0", $user_id ) ); // WPCS: db call ok.
 			$unread_counts = BP_Messages_Thread::get(
 				array(
 					'user_id'    => $user_id,
