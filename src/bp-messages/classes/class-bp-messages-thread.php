@@ -889,30 +889,11 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['include'] ) ) {
 			$user_threads_query = $r['include'];
 		} elseif ( ! empty( $r['user_id'] ) ) {
-
-			// Do not include hidden threads.
+			$user_threads_sql = "SELECT DISTINCT(thread_id) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0";
 			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
-				$user_threads_query = $wpdb->prepare(
-				"
-					SELECT DISTINCT(thread_id)
-					FROM {$bp->messages->table_name_recipients}
-					WHERE user_id = %d
-					AND is_deleted = 0
-					AND is_hidden = 0
-					",
-					$r['user_id']
-				);
-			} else {
-				$user_threads_query = $wpdb->prepare(
-					"
-						SELECT DISTINCT(thread_id)
-						FROM {$bp->messages->table_name_recipients}
-						WHERE user_id = %d
-						AND is_deleted = 0
-					",
-					$r['user_id']
-				);
+				$user_threads_sql .= " AND is_hidden = 0";
 			}
+			$user_threads_query = $wpdb->prepare( $user_threads_sql, $r['user_id'] );
 		}
 
 		$group_thread_in = array();
