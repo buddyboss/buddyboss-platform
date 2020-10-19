@@ -269,7 +269,7 @@ class BP_Messages_Thread {
 		if ( false === $recipients ) {
 
 			$recipients = array();
-			
+
 			$results = BP_Messages_Thread::get(
 				array(
 					'per_page'        => - 1,
@@ -1492,6 +1492,7 @@ class BP_Messages_Thread {
 			'include_threads' => false,
 			'exclude_threads' => false,
 			'fields'          => 'all',
+			'count_total'     => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
