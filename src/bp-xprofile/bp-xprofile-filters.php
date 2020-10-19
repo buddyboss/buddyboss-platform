@@ -1072,7 +1072,7 @@ function bp_xprofile_exclude_display_name_profile_fields( $args ){
 		if ( empty( $args['exclude_fields'] ) ) {
 			$args['exclude_fields'] = [];
 		}
-		$args['exclude_fields'] = array_merge( $args['exclude_fields'], $fields_id );
+		$args['exclude_fields'] = array_merge( wp_parse_id_list( $args['exclude_fields'] ), $fields_id );
 	}
 
 	return $args;

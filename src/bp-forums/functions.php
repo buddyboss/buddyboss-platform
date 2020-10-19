@@ -128,10 +128,12 @@ function bbp_filter_modify_page_title( $new_title = '', $old_title = '', $sep = 
 			// Get the topic.
 			$topic = get_posts(
 				array(
-					'name'        => bp_action_variable( 1 ),
-					'post_status' => 'publish',
-					'post_type'   => bbp_get_topic_post_type(),
-					'numberposts' => 1,
+					'name'                   => bp_action_variable( 1 ),
+					'post_status'            => 'publish',
+					'post_type'              => bbp_get_topic_post_type(),
+					'numberposts'            => 1,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 
