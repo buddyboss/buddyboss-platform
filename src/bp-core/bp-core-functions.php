@@ -5176,3 +5176,20 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
 
 }
+
+/**
+ * Function trigger when admin make an profile field or settings changes on backend.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_core_xprofile_clear_all_user_progress_cache() {
+
+	delete_metadata(
+		'user',        // the meta type
+		0,             // this doesn't actually matter in this call
+		'bp_profile_completion_widgets', // the meta key to be removed everywhere
+		'',            // this also doesn't actually matter in this call
+		true           // tells the function "yes, please remove them all"
+	);
+
+}
