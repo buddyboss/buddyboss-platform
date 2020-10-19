@@ -1308,7 +1308,6 @@ class BP_Messages_Thread {
 	 * @return int $unread_count Total inbox unread count for user.
 	 */
 	public static function get_inbox_count( $user_id = 0 ) {
-		global $wpdb;
 
 		if ( empty( $user_id ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -1317,10 +1316,22 @@ class BP_Messages_Thread {
 		$unread_count = wp_cache_get( $user_id, 'bp_messages_unread_count' );
 
 		if ( false === $unread_count ) {
-			$bp = buddypress();
 
 			// $unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0 AND sender_only = 0", $user_id ) );
-			$unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0", $user_id ) ); // WPCS: db call ok.
+			//$unread_count  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0", $user_id ) ); // WPCS: db call ok.
+			$unread_counts = BP_Messages_Thread::get(
+				array(
+					'user_id'    => $user_id,
+					'per_page'   => - 1,
+					'is_deleted' => 0,
+				)
+			);
+			$unread_count  = 0;
+			if ( ! empty( $unread_counts['recipients'] ) ) {
+				foreach ( $unread_counts['recipients'] as $unread_count_item ) {
+					$unread_count += $unread_count_item->unread_count;
+				}
+			}
 
 			wp_cache_set( $user_id, $unread_count, 'bp_messages_unread_count' );
 		}
@@ -1470,6 +1481,7 @@ class BP_Messages_Thread {
 			'per_page'        => 20,
 			'page'            => 1,
 			'user_id'         => 0,
+			'is_deleted'      => '',
 			'include'         => false,
 			'exclude'         => false,
 			'include_threads' => false,
@@ -1507,6 +1519,14 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['exclude_threads'] ) ) {
 			$exclude_threads                     = implode( ',', wp_parse_id_list( $r['exclude_threads'] ) );
 			$where_conditions['exclude_threads'] = "r.thread_id NOT IN ({$exclude_threads})";
+		}
+
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions['user'] = $wpdb->prepare( 'r.user_id = %d', $r['user_id'] );
+		}
+
+		if ( isset( $r['is_deleted'] ) ) {
+			$where_conditions['is_deleted'] = $wpdb->prepare( 'r.is_deleted = %d', $r['is_deleted'] );
 		}
 
 		/* Order/orderby ********************************************/
