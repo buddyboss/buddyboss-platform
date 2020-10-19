@@ -811,6 +811,30 @@ class BP_Messages_Thread {
 	 * @return array|bool Array on success. Boolean false on failure.
 	 */
 	public static function get_current_threads_for_user( $args = array() ) {
+		return self::get_threads_for_user( $args );
+	}
+
+	/**
+	 * Get message threads.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param array $args         {
+	 *                            Array of arguments.
+	 *
+	 * @type int    $user_id      The user ID.
+	 * @type string $box          The type of mailbox to get. Either 'inbox' or 'sentbox'.
+	 *                                Defaults to 'inbox'.
+	 * @type string $type         The type of messages to get. Either 'all' or 'unread'
+	 *                                or 'read'. Defaults to 'all'.
+	 * @type int    $limit        The number of messages to get. Defaults to null.
+	 * @type int    $page         The page number to get. Defaults to null.
+	 * @type string $search_terms The search term to use. Defaults to ''.
+	 * @type array  $meta_query   Meta query arguments. See WP_Meta_Query for more details.
+	 * }
+	 * @return array|bool Array on success. Boolean false on failure.
+	 */
+	public static function get_threads_for_user( $args = array() ) {
 		global $wpdb;
 
 		$bp            = buddypress();
@@ -844,11 +868,12 @@ class BP_Messages_Thread {
 				'include'      => false,
 				'is_hidden'    => false,
 				'meta_query'   => array(),
+				'fields'       => 'all',
+				'having_sql'   => false,
 			)
 		);
 
-		$pag_sql                       = $type_sql = $search_sql = $user_id_sql = $sender_sql = $having_sql = '';
-		$current_user_participants_ids = array();
+		$pag_sql                       = $user_threads_query = $having_sql = '';
 		$meta_query_sql                = array(
 			'join'  => '',
 			'where' => '',
@@ -863,32 +888,31 @@ class BP_Messages_Thread {
 
 		if ( ! empty( $r['include'] ) ) {
 			$user_threads_query = $r['include'];
-		} else {
+		} elseif ( ! empty( $r['user_id'] ) ) {
 
 			// Do not include hidden threads.
 			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
 				$user_threads_query = $wpdb->prepare(
-					"
-			SELECT DISTINCT(thread_id)
-			FROM {$bp->messages->table_name_recipients}
-			WHERE user_id = %d
-			AND is_deleted = 0
-			AND is_hidden = 0
-		",
+				"
+					SELECT DISTINCT(thread_id)
+					FROM {$bp->messages->table_name_recipients}
+					WHERE user_id = %d
+					AND is_deleted = 0
+					AND is_hidden = 0
+					",
 					$r['user_id']
 				);
 			} else {
 				$user_threads_query = $wpdb->prepare(
 					"
-			SELECT DISTINCT(thread_id)
-			FROM {$bp->messages->table_name_recipients}
-			WHERE user_id = %d
-			AND is_deleted = 0
-		",
+						SELECT DISTINCT(thread_id)
+						FROM {$bp->messages->table_name_recipients}
+						WHERE user_id = %d
+						AND is_deleted = 0
+					",
 					$r['user_id']
 				);
 			}
-
 		}
 
 		$group_thread_in = array();
@@ -898,10 +922,13 @@ class BP_Messages_Thread {
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
 
-			$participants_sql               = array();
-			$participants_sql['select']     = "SELECT DISTINCT(r.user_id), u.display_name";
-			$participants_sql['from']       = "FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID";
-			$participants_sql['where']      = "WHERE r.thread_id IN ($user_threads_query)";
+			$participants_sql           = array();
+			$participants_sql['select'] = "SELECT DISTINCT(r.user_id), u.display_name";
+			$participants_sql['from']   = "FROM {$bp->messages->table_name_recipients} r LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID";
+			$participants_sql['where']  = "WHERE 1=1";
+			if ( ! empty( $user_threads_query ) ) {
+				$participants_sql['where'] .= " AND r.thread_id IN ($user_threads_query)";
+			}
 			$participants_sql['where_like'] = "u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s";
 
 			$participants_args = array(
@@ -999,7 +1026,9 @@ class BP_Messages_Thread {
 			}
 		}
 
-		$where_sql .= " AND r.thread_id IN ($user_threads_query)";
+		if ( ! empty( $user_threads_query ) ) {
+			$where_sql .= " AND r.thread_id IN ($user_threads_query)";
+		}
 
 		// Process meta query into SQL.
 		$meta_query = self::get_meta_query_sql( $r['meta_query'] );
@@ -1008,6 +1037,10 @@ class BP_Messages_Thread {
 		}
 		if ( ! empty( $meta_query['where'] ) ) {
 			$meta_query_sql['where'] = $meta_query['where'];
+		}
+
+		if ( ! empty( $r['having_sql'] ) ) {
+			$having_sql = $r['having_sql'];
 		}
 
 		// Set up SQL array.
@@ -1037,14 +1070,20 @@ class BP_Messages_Thread {
 		arsort( $sorted_threads );
 
 		$threads = array();
-		foreach ( (array) $sorted_threads as $thread_id => $date_sent ) {
-			$threads[] = new BP_Messages_Thread(
-				$thread_id,
-				'ASC',
-				array(
-					'update_meta_cache' => false,
-				)
-			);
+		if ( 'ids' === $r['fields'] ) {
+			$threads = array_keys( $sorted_threads );
+		} elseif ( 'select' === $r['fields'] ){
+			$threads = $thread_ids;
+		} else {
+			foreach ( (array) $sorted_threads as $thread_id => $date_sent ) {
+				$threads[] = new BP_Messages_Thread(
+					$thread_id,
+					'ASC',
+					array(
+						'update_meta_cache' => false,
+					)
+				);
+			}
 		}
 
 		/**
