@@ -429,29 +429,19 @@ class BP_Messages_Message {
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$results = $wpdb->get_results(
-			$sql = $wpdb->prepare(
-				"SELECT
-				r.thread_id as thread_id,
-				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
-				MAX(m.date_sent) AS date_sent
-			FROM {$bp->messages->table_name_recipients} r
-			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
-			GROUP BY r.thread_id
-			HAVING recipient_list = %s
-			ORDER BY date_sent DESC
-			LIMIT 1
-			",
-				implode( ',', $recipient_ids )
-			)
-		);
+		$having_sql = $wpdb->prepare( "HAVING recipient_list = %s", implode( ',', $recipient_ids ) );
+		$results = BP_Messages_Thread::get_threads_for_user( array(
+			'fields'     => 'ids',
+			'having_sql' => $having_sql,
+			'limit'      => 1,
+			'page'       => 1
+		) );
 
-		if ( ! $results ) {
+		if ( empty( $results['threads'] ) ) {
 			return null;
 		}
 
-		$thread_id = $results[0]->thread_id;
-
+		$thread_id = $results['threads'][0];
 		if ( ! $is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender ) ) {
 			return null;
 		}
@@ -470,34 +460,22 @@ class BP_Messages_Message {
 	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
 
-		$bp = buddypress();
-
 		// add the sender into the recipient list and order by id ascending
 		$recipient_ids[] = $sender;
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$results = $wpdb->get_results(
-			$sql = $wpdb->prepare(
-				"SELECT
-				r.thread_id as thread_id,
-				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
-				MAX(m.date_sent) AS date_sent
-			FROM {$bp->messages->table_name_recipients} r
-			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
-			GROUP BY r.thread_id
-			HAVING recipient_list = %s
-			ORDER BY date_sent DESC
-			",
-				implode( ',', $recipient_ids )
-			)
-		);
+		$having_sql = $wpdb->prepare( "HAVING recipient_list = %s", implode( ',', $recipient_ids ) );
+		$results = BP_Messages_Thread::get_threads_for_user( array(
+			'fields'     => 'select',
+			'having_sql' => $having_sql,
+		) );
 
-		if ( ! $results ) {
+		if ( empty( $results['threads'] ) ) {
 			return null;
 		}
 
-		return $results;
+		return $results['threads'];
 	}
 
 	/**
