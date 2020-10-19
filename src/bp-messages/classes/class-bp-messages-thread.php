@@ -258,7 +258,6 @@ class BP_Messages_Thread {
 	 * @return array
 	 */
 	public function get_recipients( $thread_id = 0 ) {
-		global $wpdb;
 
 		if ( empty( $thread_id ) ) {
 			$thread_id = $this->thread_id;
@@ -268,13 +267,18 @@ class BP_Messages_Thread {
 
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
 		if ( false === $recipients ) {
-			$bp = buddypress();
 
 			$recipients = array();
-			$sql        = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
-			$results    = $wpdb->get_results( $sql );
+			/*$sql        = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+			$results    = $wpdb->get_results( $sql );*/
+			$results = BP_Messages_Thread::get(
+				array(
+					'per_page'        => - 1,
+					'include_threads' => array( $thread_id )
+				)
+			);
 
-			foreach ( (array) $results as $recipient ) {
+			foreach ( (array) $results['recipients'] as $recipient ) {
 				$recipients[ $recipient->user_id ] = $recipient;
 			}
 
@@ -1481,7 +1485,7 @@ class BP_Messages_Thread {
 			'per_page'        => 20,
 			'page'            => 1,
 			'user_id'         => 0,
-			'is_deleted'      => '',
+			'is_deleted'      => false,
 			'include'         => false,
 			'exclude'         => false,
 			'include_threads' => false,
@@ -1525,7 +1529,7 @@ class BP_Messages_Thread {
 			$where_conditions['user'] = $wpdb->prepare( 'r.user_id = %d', $r['user_id'] );
 		}
 
-		if ( isset( $r['is_deleted'] ) ) {
+		if ( false !== $r['is_deleted'] ) {
 			$where_conditions['is_deleted'] = $wpdb->prepare( 'r.is_deleted = %d', $r['is_deleted'] );
 		}
 
