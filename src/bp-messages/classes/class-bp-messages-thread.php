@@ -961,9 +961,17 @@ class BP_Messages_Thread {
 			if ( preg_match_all( '/\b' . $value . '\b/i', $r['search_terms'], $dest ) ) {
 
 				// For deleted users.
-				$current_user_participants = $wpdb->get_results( 'SELECT DISTINCT user_id FROM ' . $bp->messages->table_name_recipients . ' WHERE user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')' );
+				$current_user_participants_query = self::get(
+					array(
+						'exclude_active_users' => true,
+						'per_page'             => - 1,
+					)
+				);
+
+				$current_user_participants = ( ! empty( $current_user_participants_query['recipients'] ) ) ? array_unique( array_map( 'intval', wp_list_pluck( $current_user_participants_query['recipients'], 'user_id' ) ) ) : array();
+
 				if ( ! empty( $current_user_participants ) ) {
-					$deleted_user_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
+					$deleted_user_ids = $current_user_participants;
 					if ( is_array( $current_user_participants_ids ) ) {
 						$current_user_participants_ids = array_merge( $current_user_participants_ids, $deleted_user_ids );
 					} else {
@@ -1222,8 +1230,7 @@ class BP_Messages_Thread {
 			$rec_args['include_unread_count'] = 0;
 		}
 
-
-		$recipients_query = BP_Messages_Thread::get( $rec_args );
+		$recipients_query = self::get( $rec_args );
 
 		return ( ! empty( $recipients_query['total'] ) ) ? $recipients_query['total'] : false;
 	}
@@ -1476,6 +1483,7 @@ class BP_Messages_Thread {
 			'exclude_unread_count' => false,
 			'fields'               => 'all',
 			'count_total'          => false,
+			'exclude_active_users' => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1526,6 +1534,10 @@ class BP_Messages_Thread {
 
 		if ( false !== $r['is_deleted'] ) {
 			$where_conditions['is_deleted'] = $wpdb->prepare( 'r.is_deleted = %d', $r['is_deleted'] );
+		}
+
+		if ( true === $r['exclude_active_users'] ) {
+			$where_conditions['exclude_active_users'] = 'user_id NOT IN (SELECT ID FROM ' . $wpdb->users . ')';
 		}
 
 		/* Order/orderby ********************************************/
@@ -1592,6 +1604,7 @@ class BP_Messages_Thread {
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
 
 		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$paged_recipients    = array();
 
 		if ( 'ids' === $r['fields'] ) {
 			// We only want the IDs.
