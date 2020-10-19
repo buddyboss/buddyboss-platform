@@ -1466,6 +1466,46 @@ class BP_Messages_Thread {
 		return (bool) ! $errors;
 	}
 
+	/**
+	 * Query for recipients.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param       $args                 {
+	 *                                    Array of parameters. All items are optional.
+	 *
+	 * @type string $orderby              Optional. Property to sort by. 'id'.
+	 * @type string $order                Optional. Sort order. 'ASC' or 'DESC'. Default: 'DESC'.
+	 * @type int    $per_page             Optional. Number of items to return per page of results.
+	 *                                 Default: 20.
+	 * @type int    $page                 Optional. Page offset of results to return.
+	 *                                 Default: 1.
+	 * @type int    $user_id              Optional. If provided, results will be limited to recipients of which the specified user id id provided.
+	 *                                 Default: null.
+	 * @type int    $is_deleted           Optional. whether to include deleted recipients or not.
+	 *                                 Default: null.
+	 * @type array  $include              Optional. Array of recipients IDs. Results will include the listed recipients.
+	 *                                 Default: false.
+	 * @type array  $exclude              Optional. Array of recipients IDs. Results will exclude the listed recipients.
+	 *                                 Default: false.
+	 * @type array  $include              Optional. Array of thread IDs. Results will include the listed recipients with given thread ids.
+	 *                                 Default: false.
+	 * @type array  $exclude              Optional. Array of thread IDs. Results will exclude the listed recipients with given thread ids.
+	 *                                 Default: false.
+	 * @type array  $include              Optional. Array of unread count IDs. Results will include the listed recipients with given unread count ids.
+	 *                                 Default: false.
+	 * @type array  $exclude              Optional. Array of unread count IDs. Results will exclude the listed recipients with given unread count ids.
+	 *                                 Default: false.
+	 * @type string $fields               Which fields to return. Specify 'ids' to fetch a list of IDs.
+	 *                                 Default: 'all' (return BP_Messages_Thread objects).
+	 * @type int    $count_total          Total count of all messages matching non-paginated query params.
+	 * @type bool   $exclude_active_users Special paramter to join with users table.
+	 *                                 Default: false.
+	 *
+	 * }
+	 *
+	 * @return array
+	 */
 	public static function get( $args ) {
 		global $wpdb;
 

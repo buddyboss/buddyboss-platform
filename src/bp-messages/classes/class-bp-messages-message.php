@@ -496,7 +496,7 @@ class BP_Messages_Message {
 	 *                                 Default: null.
 	 * @type array  $meta_query        Optional. An array of meta_query conditions. See {@link WP_Meta_Query::queries} for description.
 	 * @type array  $date_query        Optional. An array of meta_query conditions. See {@link BP_Date_Query::queries} for description.
-	 * @type array  $include           Optional. Array of message IDs. Results will exclude the listed messages.
+	 * @type array  $include           Optional. Array of message IDs. Results will include the listed messages.
 	 *                                 Default: false.
 	 * @type array  $exclude           Optional. Array of message IDs. Results will exclude the listed messages.
 	 *                                 Default: false.
