@@ -270,7 +270,7 @@ class BP_Messages_Thread {
 
 			$recipients = array();
 
-			$results = BP_Messages_Thread::get(
+			$results = self::get(
 				array(
 					'per_page'        => - 1,
 					'include_threads' => array( $thread_id )
@@ -997,8 +997,12 @@ class BP_Messages_Thread {
 				}
 
 				// For deleted groups fetch all thread first.
-				$threads    = $wpdb->get_results( "SELECT DISTINCT thread_id FROM {$bp->messages->table_name_recipients} " );
-				$thread_ids = array_map( 'intval', wp_list_pluck( $threads, 'thread_id' ) );
+				$threads    = self::get(
+					array(
+						'per_page' => - 1,
+					)
+				);
+				$thread_ids = ( ! empty( $threads['recipients'] ) ) ? array_map( 'intval', wp_list_pluck( $threads['recipients'], 'thread_id' ) ) : array();
 
 				// If Group Found
 				if ( ! empty( $thread_ids ) ) {
@@ -1322,7 +1326,7 @@ class BP_Messages_Thread {
 
 		if ( false === $unread_count ) {
 
-			$unread_counts = BP_Messages_Thread::get(
+			$unread_counts = self::get(
 				array(
 					'user_id'    => $user_id,
 					'per_page'   => - 1,
@@ -1479,18 +1483,20 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$defaults = array(
-			'orderby'         => 'id',
-			'order'           => 'DESC',
-			'per_page'        => 20,
-			'page'            => 1,
-			'user_id'         => 0,
-			'is_deleted'      => false,
-			'include'         => false,
-			'exclude'         => false,
-			'include_threads' => false,
-			'exclude_threads' => false,
-			'fields'          => 'all',
-			'count_total'     => false,
+			'orderby'              => 'id',
+			'order'                => 'DESC',
+			'per_page'             => 20,
+			'page'                 => 1,
+			'user_id'              => 0,
+			'is_deleted'           => false,
+			'include'              => false,
+			'exclude'              => false,
+			'include_threads'      => false,
+			'exclude_threads'      => false,
+			'include_unread_count' => false,
+			'exclude_unread_count' => false,
+			'fields'               => 'all',
+			'count_total'          => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1523,6 +1529,16 @@ class BP_Messages_Thread {
 		if ( ! empty( $r['exclude_threads'] ) ) {
 			$exclude_threads                     = implode( ',', wp_parse_id_list( $r['exclude_threads'] ) );
 			$where_conditions['exclude_threads'] = "r.thread_id NOT IN ({$exclude_threads})";
+		}
+
+		if ( ! empty( $r['include_unread_count'] ) ) {
+			$include_unread_count                     = implode( ',', wp_parse_id_list( $r['include_unread_count'] ) );
+			$where_conditions['include_unread_count'] = "r.unread_count IN ({$include_unread_count})";
+		}
+
+		if ( ! empty( $r['exclude_unread_count'] ) ) {
+			$exclude_unread_count                     = implode( ',', wp_parse_id_list( $r['exclude_unread_count'] ) );
+			$where_conditions['exclude_unread_count'] = "r.unread_count NOT IN ({$exclude_unread_count})";
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
