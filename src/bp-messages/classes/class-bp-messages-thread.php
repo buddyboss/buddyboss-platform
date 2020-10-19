@@ -1043,6 +1043,9 @@ class BP_Messages_Thread {
 		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
 		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
+		$sql['where'] = apply_filters( 'bp_recipients_recipient_get_where_conditions', $sql['where'], $r );
+		$sql['from']  = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
+
 		// Get thread IDs.
 		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) );
 		// print_r($qq);die();
