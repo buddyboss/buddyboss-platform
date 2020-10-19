@@ -873,8 +873,8 @@ class BP_Messages_Thread {
 			)
 		);
 
-		$pag_sql                       = $user_threads_query = $having_sql = '';
-		$meta_query_sql                = array(
+		$pag_sql        = $user_threads_query = $having_sql = '';
+		$meta_query_sql = array(
 			'join'  => '',
 			'where' => '',
 		);
@@ -927,16 +927,16 @@ class BP_Messages_Thread {
 
 				if ( isset( $split_name ) && isset( $split_name[0] ) && isset( $split_name[1] ) && ! empty( $split_name ) && ! empty( trim( $split_name[0] ) ) && ! empty( trim( $split_name[1] ) ) ) {
 					$participants_sql['where_like'] .= ' OR spd.value LIKE %s OR spd.value LIKE %s';
-					$participants_args[] = $split_name[0];
-					$participants_args[] = $split_name[1];
+					$participants_args[]            = $split_name[0];
+					$participants_args[]            = $split_name[1];
 				} else {
 					$participants_sql['where_like'] .= ' OR spd.value LIKE %s';
-					$participants_args[] = $search_terms_like;
+					$participants_args[]            = $search_terms_like;
 				}
 			}
 
 			$participants_sql['where'] .= " AND ( {$participants_sql['where_like']} )";
-			$participants_sql = "{$participants_sql['select']} {$participants_sql['form']} {$participants_sql['where']}";
+			$participants_sql          = "{$participants_sql['select']} {$participants_sql['form']} {$participants_sql['where']}";
 			$current_user_participants = $wpdb->get_results( $wpdb->prepare( $participants_sql, $participants_args ) );
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
@@ -1001,7 +1001,7 @@ class BP_Messages_Thread {
 			}
 
 			if ( $current_user_participants_ids ) {
-				$user_ids = implode( ',', array_unique( $current_user_participants_ids ) );
+				$user_ids  = implode( ',', array_unique( $current_user_participants_ids ) );
 				$where_sql = '( ' . $wpdb->prepare( "m.message LIKE %s OR r.user_id IN ({$user_ids})", $search_terms_like );
 				if ( ! empty( $group_thread_in ) ) {
 					$thread_in = implode( ',', $group_thread_in );
@@ -1057,7 +1057,7 @@ class BP_Messages_Thread {
 		$threads = array();
 		if ( 'ids' === $r['fields'] ) {
 			$threads = array_keys( $sorted_threads );
-		} elseif ( 'select' === $r['fields'] ){
+		} elseif ( 'select' === $r['fields'] ) {
 			$threads = $thread_ids;
 		} else {
 			foreach ( (array) $sorted_threads as $thread_id => $date_sent ) {
@@ -1209,20 +1209,23 @@ class BP_Messages_Thread {
 	 * @return int $value Total thread count for the provided user.
 	 */
 	public static function get_total_threads_for_user( $user_id, $box = 'inbox', $type = 'all' ) {
-		global $wpdb;
 
-		$exclude_sender = $type_sql = '';
-		// $exclude_sender = 'AND sender_only != 1';
+		$rec_args = array(
+			'count_total' => true,
+			'user_id'     => $user_id,
+			'is_deleted'  => 0,
+		);
 
 		if ( $type === 'unread' ) {
-			$type_sql = 'AND unread_count != 0';
+			$rec_args['exclude_unread_count'] = 0;
 		} elseif ( $type === 'read' ) {
-			$type_sql = 'AND unread_count = 0';
+			$rec_args['include_unread_count'] = 0;
 		}
 
-		$bp = buddypress();
 
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(thread_id) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0 {$exclude_sender} {$type_sql}", $user_id ) );
+		$recipients_query = BP_Messages_Thread::get( $rec_args );
+
+		return ( ! empty( $recipients_query['total'] ) ) ? $recipients_query['total'] : false;
 	}
 
 	/**
@@ -1507,12 +1510,12 @@ class BP_Messages_Thread {
 			$where_conditions['exclude_threads'] = "r.thread_id NOT IN ({$exclude_threads})";
 		}
 
-		if ( ! empty( $r['include_unread_count'] ) ) {
+		if ( false !== $r['include_unread_count'] ) {
 			$include_unread_count                     = implode( ',', wp_parse_id_list( $r['include_unread_count'] ) );
 			$where_conditions['include_unread_count'] = "r.unread_count IN ({$include_unread_count})";
 		}
 
-		if ( ! empty( $r['exclude_unread_count'] ) ) {
+		if ( false !== $r['exclude_unread_count'] ) {
 			$exclude_unread_count                     = implode( ',', wp_parse_id_list( $r['exclude_unread_count'] ) );
 			$where_conditions['exclude_unread_count'] = "r.unread_count NOT IN ({$exclude_unread_count})";
 		}
