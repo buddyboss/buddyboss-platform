@@ -227,11 +227,25 @@ class BP_Messages_Message {
 	 * @return object $value List of recipients for a message.
 	 */
 	public function get_recipients() {
-		global $wpdb;
 
-		$bp = buddypress();
+		$results = BP_Messages_Thread::get(
+			array(
+				'per_page'        => - 1,
+				'include_threads' => array( $this->thread_id )
+			)
+		);
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $this->thread_id ) );
+		$recipients_obj = array();
+
+		if ( ! empty( $results['recipients'] ) ) {
+			foreach ( $results['recipients'] as $recipient ) {
+				$recipients_obj[] = (object) array(
+					'user_id' => $recipient->user_id,
+				);
+			}
+		}
+
+		return $recipients_obj;
 	}
 
 	/** Static Functions **************************************************/
