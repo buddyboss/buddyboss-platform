@@ -269,8 +269,7 @@ class BP_Messages_Thread {
 		if ( false === $recipients ) {
 
 			$recipients = array();
-			/*$sql        = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
-			$results    = $wpdb->get_results( $sql );*/
+			
 			$results = BP_Messages_Thread::get(
 				array(
 					'per_page'        => - 1,
@@ -278,11 +277,13 @@ class BP_Messages_Thread {
 				)
 			);
 
-			foreach ( (array) $results['recipients'] as $recipient ) {
-				$recipients[ $recipient->user_id ] = $recipient;
-			}
+			if ( ! empty( $results['recipients'] ) ) {
+				foreach ( (array) $results['recipients'] as $recipient ) {
+					$recipients[ $recipient->user_id ] = $recipient;
+				}
 
-			wp_cache_set( 'thread_recipients_' . $thread_id, $recipients, 'bp_messages' );
+				wp_cache_set( 'thread_recipients_' . $thread_id, $recipients, 'bp_messages' );
+			}
 		}
 
 		// Cast all items from the messages DB table as integers.
