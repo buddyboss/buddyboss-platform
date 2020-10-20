@@ -1043,8 +1043,25 @@ class BP_Messages_Thread {
 		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
 		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
-		$sql['where'] = apply_filters( 'bp_recipients_recipient_get_where_conditions', $sql['where'], $r );
-		$sql['from']  = apply_filters( 'bp_recipients_recipient_get_join_sql', $sql['from'], $r );
+		/**
+		 * Filters the Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array $r                Array of parsed arguments for the get method.
+		 * @param array $where_conditions Where conditions SQL statement.
+		 */
+		$sql['where'] = apply_filters( 'bp_messages_recipient_get_where_conditions', $sql['where'], $r );
+
+		/**
+		 * Filters the From SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array  $r   Array of parsed arguments for the get method.
+		 * @param string $sql From SQL statement.
+		 */
+		$sql['from']  = apply_filters( 'bp_messages_recipient_get_join_sql', $sql['from'], $r );
 
 		// Get thread IDs.
 		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) );
@@ -1228,9 +1245,9 @@ class BP_Messages_Thread {
 		);
 
 		if ( $type === 'unread' ) {
-			$rec_args['exclude_unread_count'] = 0;
+			$rec_args['is_new'] = 1;
 		} elseif ( $type === 'read' ) {
-			$rec_args['include_unread_count'] = 0;
+			$rec_args['is_new'] = 0;
 		}
 
 		$recipients_query = self::get( $rec_args );
@@ -1488,14 +1505,12 @@ class BP_Messages_Thread {
 	 *                                 Default: false.
 	 * @type array  $exclude              Optional. Array of recipients IDs. Results will exclude the listed recipients.
 	 *                                 Default: false.
-	 * @type array  $include              Optional. Array of thread IDs. Results will include the listed recipients with given thread ids.
+	 * @type array  $include_threads   Optional. Array of thread IDs. Results will include the listed recipients with given thread ids.
 	 *                                 Default: false.
-	 * @type array  $exclude              Optional. Array of thread IDs. Results will exclude the listed recipients with given thread ids.
+	 * @type array  $exclude_threads   Optional. Array of thread IDs. Results will exclude the listed recipients with given thread ids.
 	 *                                 Default: false.
-	 * @type array  $include              Optional. Array of unread count IDs. Results will include the listed recipients with given unread count ids.
-	 *                                 Default: false.
-	 * @type array  $exclude              Optional. Array of unread count IDs. Results will exclude the listed recipients with given unread count ids.
-	 *                                 Default: false.
+	 * @type array  $is_new            Optional. Retried Thread which has unread_count not equal to zero ( unread thread ) if is_new is 1 otherwise return thread which has unread_count equal to zero ( read thread )
+	 *                                 Default: Null.
 	 * @type string $fields               Which fields to return. Specify 'ids' to fetch a list of IDs.
 	 *                                 Default: 'all' (return BP_Messages_Thread objects).
 	 * @type int    $count_total          Total count of all messages matching non-paginated query params.
@@ -1522,8 +1537,7 @@ class BP_Messages_Thread {
 			'exclude'              => false,
 			'include_threads'      => false,
 			'exclude_threads'      => false,
-			'include_unread_count' => false,
-			'exclude_unread_count' => false,
+			'is_new'               => null,
 			'fields'               => 'all',
 			'count_total'          => false,
 			'exclude_active_users' => false,
@@ -1561,14 +1575,12 @@ class BP_Messages_Thread {
 			$where_conditions['exclude_threads'] = "r.thread_id NOT IN ({$exclude_threads})";
 		}
 
-		if ( false !== $r['include_unread_count'] ) {
-			$include_unread_count                     = implode( ',', wp_parse_id_list( $r['include_unread_count'] ) );
-			$where_conditions['include_unread_count'] = "r.unread_count IN ({$include_unread_count})";
-		}
-
-		if ( false !== $r['exclude_unread_count'] ) {
-			$exclude_unread_count                     = implode( ',', wp_parse_id_list( $r['exclude_unread_count'] ) );
-			$where_conditions['exclude_unread_count'] = "r.unread_count NOT IN ({$exclude_unread_count})";
+		if ( null !== $r['is_new'] ) {
+			if ( 1 == $r['is_new'] ) {
+				$where_conditions['is_new'] = "r.unread_count != 0";
+			} else {
+				$where_conditions['is_new'] = "r.unread_count = 0";
+			}
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {
