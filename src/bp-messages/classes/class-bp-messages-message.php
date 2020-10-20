@@ -588,7 +588,7 @@ class BP_Messages_Message {
 		 */
 
 		if ( ! empty( $r['meta_key__in'] ) || ! empty( $r['meta_key__not_in'] ) ) {
-			$sql['from'] .= ", {$bp->messages->table_name_meta} mm";
+			$sql['from'] .= " INNER JOIN {$bp->messages->table_name_meta} mm ON m.id = mm.message_id";
 		}
 
 		if ( ! empty( $r['meta_key__in'] ) ) {
