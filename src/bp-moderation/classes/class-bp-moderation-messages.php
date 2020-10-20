@@ -39,11 +39,13 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-		add_filter( 'bp_messages_thread_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_messages_thread_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+		// Message
+		add_filter( 'bp_messages_message_get_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_messages_message_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
-		add_filter( 'bp_messages_thread_messages_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_messages_thread_messages_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+		// Recipient
+		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
@@ -56,7 +58,14 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @return string Join sql
 	 */
 	public function update_join_sql( $join_sql ) {
-		$join_sql .= $this->exclude_joint_query( 'm.thread_id' );
+		$actionName = current_filter();
+
+		$item_id_field = 'm.thread_id';
+		if ( 'bp_messages_recipient_get_join_sql' === $actionName ) {
+			$item_id_field = 'r.thread_id';
+		}
+
+		$join_sql .= $this->exclude_joint_query( $item_id_field );
 
 		return $join_sql;
 	}
@@ -66,11 +75,13 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param string $where_conditions Messages Where sql.
+	 * @param string|array $where_conditions Messages Where sql.
 	 *
 	 * @return mixed Where SQL
 	 */
 	public function update_where_sql( $where_conditions ) {
+		$actionName = current_filter();
+
 		$where                   = array();
 		$where['messages_where'] = $this->exclude_where_query();
 
@@ -91,7 +102,11 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_messages_get_where_conditions', $where );
 
-		$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+		if ( 'bp_messages_recipient_get_where_conditions' === $actionName ) {
+			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+		} else {
+			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
 	}
@@ -102,11 +117,17 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_member_message_query() {
-		global $wpdb;
+		$actionName = current_filter();
+
+		$user_id_field = 'm.sender_id';
+		if ( 'bp_messages_recipient_get_join_sql' === $actionName ) {
+			$user_id_field = 'r.user_id';
+		}
+
 		$sql                = false;
 		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_members_ids ) ) {
-			$sql = '( m.sender_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
+			$sql = "( {$user_id_field} NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
 		return $sql;
