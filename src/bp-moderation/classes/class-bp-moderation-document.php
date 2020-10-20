@@ -102,9 +102,19 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		 * Exclude Blocked Forum/Topic/Reply Document
 		 */
 		if ( bp_is_active( 'forums' ) ) {
-			$groups_where = $this->exclude_forum_document_query();
-			if ( ! empty( $groups_where ) ) {
-				$where['forums_where'] = $groups_where;
+			$forums_where = $this->exclude_forum_document_query();
+			if ( ! empty( $forums_where ) ) {
+				$where['forums_where'] = $forums_where;
+			}
+		}
+
+		/**
+		 * Exclude Blocked Messages Media
+		 */
+		if ( bp_is_active( 'messages' ) ) {
+			$messages_where = $this->exclude_message_document_query();
+			if ( ! empty( $messages_where ) ) {
+				$where['messages_where'] = $messages_where;
 			}
 		}
 
@@ -178,6 +188,22 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		$hidden_topic_ids    = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
 		$hidden_reply_ids    = BP_Moderation_Forum_Replies::get_sitewide_hidden_ids();
 		$hidden_document_ids = self::get_Document_ids_meta( array_merge( $hidden_topic_ids, $hidden_reply_ids ) );
+		if ( ! empty( $hidden_document_ids ) ) {
+			$sql = '( d.id NOT IN ( ' . implode( ',', $hidden_document_ids ) . ' ) )';
+		}
+
+		return $sql;
+	}
+
+	/**
+	 * Get Exclude Blocked Message SQL
+	 *
+	 * @return string|bool
+	 */
+	private function exclude_message_document_query() {
+		$sql              = false;
+		$hidden_message_ids = BP_Moderation_Messages::get_sitewide_messages_hidden_ids();
+		$hidden_document_ids = self::get_Document_ids_meta( $hidden_message_ids, 'bp_messages_get_meta' );
 		if ( ! empty( $hidden_document_ids ) ) {
 			$sql = '( d.id NOT IN ( ' . implode( ',', $hidden_document_ids ) . ' ) )';
 		}

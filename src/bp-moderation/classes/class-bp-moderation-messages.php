@@ -40,12 +40,12 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		$this->item_type = self::$moderation_type;
 
 		// Message
-		add_filter( 'bp_messages_message_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_messages_message_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+		add_filter( 'bp_messages_message_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_messages_message_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Recipient
-		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
 	/**
@@ -54,10 +54,16 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param string $join_sql Messages Join sql.
+	 * @param array  $args     Messages args.
 	 *
 	 * @return string Join sql
 	 */
-	public function update_join_sql( $join_sql ) {
+	public function update_join_sql( $join_sql, $args ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $join_sql;
+		}
+
 		$actionName = current_filter();
 
 		$item_id_field = 'm.thread_id';
@@ -76,10 +82,16 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param string|array $where_conditions Messages Where sql.
+	 * @param array        $args             Messages args.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions ) {
+	public function update_where_sql( $where_conditions, $args ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $where_conditions;
+		}
+
 		$actionName = current_filter();
 
 		$where                   = array();
@@ -140,6 +152,25 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 */
 	public static function get_sitewide_hidden_ids() {
 		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Blocked Messages ids
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_messages_hidden_ids() {
+		$messages_ids = array();
+		$threads = self::get_sitewide_hidden_item_ids( self::$moderation_type );
+		$results = BP_Messages_Message::get( array(
+			'fields'           => 'ids',
+			'include_threads'  => $threads,
+			'moderation_query' => false,
+		) );
+		if ( ! empty( $results['messages'] ) ){
+			$messages_ids = $results['messages'];
+		}
+		return $messages_ids;
 	}
 
 }

@@ -132,7 +132,6 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
 	return bp_moderation_get(
 		array(
 			'in_types'          => $type,
-			'per_page'          => - 1,
 			'update_meta_cache' => false,
 			'filter'            => array(
 				'hide_sitewide' => 1,
