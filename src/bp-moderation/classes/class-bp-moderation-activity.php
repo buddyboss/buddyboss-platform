@@ -41,6 +41,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_activity_get_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+
+		// Search Query
+		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
