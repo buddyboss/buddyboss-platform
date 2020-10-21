@@ -1445,11 +1445,11 @@ function bp_send_message_button( $args = '' ) {
 function bp_get_send_message_button( $args = '' ) {
 
 	if ( bp_displayed_user_id() > 0 ) {
-		$user_id = bp_displayed_user_id();
+		$receiver_user_id = bp_displayed_user_id();
 	} elseif ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ) {
-		$user_id = absint( $_GET['user'] );
+		$receiver_user_id = absint( $_GET['user'] );
 	} else {
-		$user_id = $GLOBALS['members_template']->member->ID;
+		$receiver_user_id = ( $GLOBALS['members_template']->member->ID ) ? $GLOBALS['members_template']->member->ID : 0;
 	}
 
 	$r = bp_parse_args(
@@ -1459,7 +1459,7 @@ function bp_get_send_message_button( $args = '' ) {
 			'component'                => 'messages',
 			'must_be_logged_in'        => true,
 			'block_self'               => true,
-			'message_receiver_user_id' => $user_id,
+			'message_receiver_user_id' => $receiver_user_id,
 			'wrapper_id'               => 'send-private-message',
 			'link_href'                => bp_get_send_private_message_link(),
 			'link_text'                => __( 'Message', 'buddyboss' ),
