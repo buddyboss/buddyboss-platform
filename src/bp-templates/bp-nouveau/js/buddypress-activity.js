@@ -1025,6 +1025,14 @@ window.bp = window.bp || {};
 				}
 			}
 
+
+			if ( target.hasClass( 'acomment-edit' ) ) {
+
+				console.log( 'Displaying Comment Edit...' );
+
+
+			}
+
 			// Removing the form.
 			if ( target.hasClass( 'ac-reply-cancel' ) ) {
 
