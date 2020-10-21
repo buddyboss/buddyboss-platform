@@ -330,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 16000;
+		$this->db_version = 16201;
 
 		/** Loading */
 
@@ -691,6 +691,10 @@ class BuddyPress {
 			'BP_REST_Signup_Endpoint'                      => 'members',
 			'BP_REST_Media_Endpoint'                       => 'media',
 			'BP_REST_Media_Albums_Endpoint'                => 'media',
+			'BP_REST_Media_Details_Endpoint'               => 'media',
+			'BP_REST_Document_Endpoint'                    => 'document',
+			'BP_REST_Document_Folder_Endpoint'             => 'document',
+			'BP_REST_Document_Details_Endpoint'            => 'document',
 			'BP_REST_Activity_Endpoint'                    => 'activity',
 			'BP_REST_Activity_Comment_Endpoint'            => 'activity',
 			'BP_REST_Activity_Details_Endpoint'            => 'activity',

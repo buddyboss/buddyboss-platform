@@ -20,6 +20,7 @@ add_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
 add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_privacy', 2 );
+add_filter( 'bp_activity_get_edit_data', 'bp_document_get_edit_activity_data' );
 
 // Search.
 add_action( 'bp_search_after_result', 'bp_document_add_theatre_template', 99999 );
@@ -313,6 +314,10 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {
+
+				// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
+
 				foreach ( $old_document_ids as $document_id ) {
 					if ( ! in_array( $document_id, $document_ids ) ) {
 						bp_document_delete( array( 'id' => $document_id ) );
@@ -710,6 +715,8 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @param array|object $post              Request object.
  *
  * @return bool
+ *
+ * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {
 	// check if media is enabled in messages or not and empty media in object request or not.
@@ -1639,4 +1646,48 @@ function bp_document_activity_after_email_content( $activity ) {
 		);
 		echo wpautop( $content );
 	}
+}
+
+/**
+ * Adds activity document data for the edit activity
+ *
+ * @param $activity
+ *
+ * @return array $activity Returns the activity with document if document saved otherwise no documents.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_document_get_edit_activity_data( $activity ) {
+
+	if ( ! empty( $activity['id'] ) ) {
+
+		// Fetch document ids of activity.
+		$document_ids = bp_activity_get_meta( $activity['id'], 'bp_document_ids', true );
+
+		if ( ! empty( $document_ids ) ) {
+			$activity['document'] = array();
+
+			$document_ids = explode( ',', $document_ids );
+
+			foreach( $document_ids as $document_id ) {
+				$document = new BP_Document( $document_id );
+
+				$activity['document'][] = array(
+						'id'            => $document_id,
+						'doc_id'        => $document->attachment_id,
+						'name'          => $document->title,
+						'group_id'      => $document->group_id,
+						'folder_id'      => $document->folder_id,
+						'activity_id'   => $document->activity_id,
+						'type'          => 'document',
+						'url'           => wp_get_attachment_url( $document->attachment_id ),
+						'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
+						'saved'         => true,
+						'menu_order'    => $document->menu_order,
+				);
+			}
+		}
+	}
+
+	return $activity;
 }

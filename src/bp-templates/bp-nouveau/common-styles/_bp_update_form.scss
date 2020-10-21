@@ -181,14 +181,26 @@
 
 		.dropzone .dz-preview.dz-complete .dz-progress {
 			display: none;
-		}
+    }
+
+    @media screen and (max-width: 646px) {
+
+			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+
+				#buddypress & {
+					bottom: 111px;
+				}
+
+			}
+
+    }
 
 		@media screen and (max-width: 603px) {
 
 			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
 
 				#buddypress > & {
-					bottom: 58px;
+					bottom: 112px;
 				}
 
 			}
@@ -200,7 +212,15 @@
 			&.activity-update-form .focus-in #whats-new-content .medium-editor-toolbar {
 
 				#buddypress > & {
-					bottom: 112px;
+					bottom: 146px;
+				}
+
+			}
+
+			&.activity-update-form.group-activity .focus-in #whats-new-content .medium-editor-toolbar {
+
+				#buddypress & {
+					bottom: 146px;
 				}
 
 			}

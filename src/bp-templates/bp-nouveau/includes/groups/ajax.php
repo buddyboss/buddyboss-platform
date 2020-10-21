@@ -1033,7 +1033,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
 	}
 
-	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.

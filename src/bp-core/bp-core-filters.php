@@ -68,7 +68,7 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 add_action( 'init', 'bp_enable_gravatar_callback' );
 // add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
-	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+	$avatar = bp_enable_profile_gravatar();
 
 	if ( false === $avatar ) {
 		// Avatars
@@ -780,6 +780,25 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			} else {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
+		} else {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
+				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+					$tab = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$component = $tab;
+					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
+						$component = 'xprofile';
+					}
+					if ( bp_is_active( $component ) ) {
+						if ( strpos( $menu_item->url, $tab ) !== false ) {
+							$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array() ;
+							$menu_item->classes[] = 'current_page_item';
+							$menu_item->classes[] = 'current-menu-item';
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1407,6 +1426,29 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 	return $pages;
 }
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+
+/**
+ * Filter to change cover image dimensions to original for group and profile.
+ *
+ * @param $wh        array
+ * @param $settings  array
+ * @param $component string
+ *
+ * @return array
+ * @since BuddyBoss 1.5.1
+ */
+function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
+		return array(
+			'width'  => 1950,
+			'height' => 450,
+		);
+	}
+
+	return $wh;
+}
+
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_image_dimensions', 10, 3 );
 
 /**
  * Admin notice to update to BuddyBoss Theme 1.5.0 to fix fonts issues.

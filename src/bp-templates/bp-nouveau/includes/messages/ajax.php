@@ -131,7 +131,7 @@ function bp_nouveau_ajax_messages_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	$content = filter_input( INPUT_POST, 'message_content', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'message_content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -331,7 +331,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
-	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -1513,7 +1513,9 @@ function bp_nouveau_ajax_dsearch_recipients() {
  */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
-		$user_query['exclude'] = [];
+		$user_query['exclude'] = array();
+	} else if ( ! empty( $user_query['exclude'] ) ) {
+		$user_query['exclude'] = wp_parse_id_list( $user_query['exclude'] );
 	}
 
 	$user_query['exclude'][] = get_current_user_id();

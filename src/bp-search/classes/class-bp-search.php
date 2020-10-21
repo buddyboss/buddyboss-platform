@@ -135,6 +135,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			if ( bp_is_search_post_type_enable( 'page' ) ) {
 				require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-posts.php';
 				$this->search_helpers['pages'] = new Bp_Search_Posts( 'page', 'pages' );
+				$this->searchable_items[]      = 'pages';
 			}
 
 			if ( bp_is_active( 'forums' ) && bp_is_search_post_type_enable( 'forum' ) ) {

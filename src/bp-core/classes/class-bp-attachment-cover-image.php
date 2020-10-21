@@ -117,16 +117,33 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		// Get image size.
 		$cover_data = parent::get_image_data( $file );
 
+		$image_width  = $cover_data['width'];
+		$image_height = $cover_data['height'];
+
+		$max_width = ( ! empty( $image_width ) && !empty( $image_height ) && $image_height > $dimensions['height'] ? ( $image_width * $dimensions['height'] ) / $image_height : 0 );
+		$max_height = ( ! empty( $image_width ) && !empty( $image_height ) && $image_width > $dimensions['width'] ? ( $image_height * $dimensions['width'] ) / $image_width : 0 );
+
 		// Init the edit args.
 		$edit_args = array();
 
 		// Do we need to resize the image?
-		if ( ( isset( $cover_data['width'] ) && $cover_data['width'] > $dimensions['width'] ) ||
-		( isset( $cover_data['height'] ) && $cover_data['height'] > $dimensions['height'] ) ) {
+		if (
+			isset( $cover_data['width'] )
+			&& $cover_data['width'] > $dimensions['width']
+			&& $max_height >= $dimensions['height']
+		) {
 			$edit_args = array(
 				'max_w' => $dimensions['width'],
+				'crop'  => false,
+			);
+		} else if (
+			isset( $cover_data['height'] )
+			&& $cover_data['height'] > $dimensions['height']
+			&& $max_width >= $dimensions['width']
+		) {
+			$edit_args = array(
 				'max_h' => $dimensions['height'],
-				'crop'  => true,
+				'crop'  => false,
 			);
 		}
 
