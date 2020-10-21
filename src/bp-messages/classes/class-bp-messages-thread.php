@@ -421,6 +421,7 @@ class BP_Messages_Thread {
 					'group_message_group_joined',
 					'group_message_group_left',
 				),
+				'order'            => 'ASC',
 				'per_page'         => 1,
 				'page'             => 1,
 				'count_total'      => false,
