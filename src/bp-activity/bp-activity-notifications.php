@@ -294,6 +294,42 @@ function bp_activity_remove_screen_notifications_single_activity_permalink( $act
 add_action( 'bp_activity_screen_single_activity_permalink', 'bp_activity_remove_screen_notifications_single_activity_permalink' );
 
 /**
+ * Mark notification read when user visit sing post page permalink
+ *
+ * @since BuddyPress 2.0.0
+ */
+function bp_activity_remove_screen_notifications_sing_post() {
+	global $post;
+
+	if ( ! is_user_logged_in() || empty( $post->post_type ) || ! bp_is_post_type_feed_enable( $post->post_type ) || ! is_singular( $post->post_type ) ) {
+		return;
+	}
+
+	$comment_id = 0;
+	// For replies to a parent update.
+	if ( ! empty( $_GET['rid'] ) ) {
+		$comment_id = (int) $_GET['rid'];
+
+		// For replies to an activity comment.
+	} elseif ( ! empty( $_GET['crid'] ) ) {
+		$comment_id = (int) $_GET['crid'];
+	}
+
+	// Mark individual activity reply notification as read.
+	if ( ! empty( $comment_id ) ) {
+		BP_Notifications_Notification::update(
+			array(
+				'is_new' => false,
+			),
+			array(
+				'user_id' => bp_loggedin_user_id(),
+				'id'      => $comment_id,
+			)
+		);
+	}
+}
+
+/**
  * Mark non-mention notifications as read when user visits our read permalink.
  *
  * In particular, 'update_reply' and 'comment_reply' notifications are handled
