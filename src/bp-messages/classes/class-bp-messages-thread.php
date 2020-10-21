@@ -1238,21 +1238,21 @@ class BP_Messages_Thread {
 	 */
 	public static function get_total_threads_for_user( $user_id, $box = 'inbox', $type = 'all' ) {
 
-		$rec_args = array(
+		$args = array(
 			'count_total' => true,
 			'user_id'     => $user_id,
 			'is_deleted'  => 0,
 		);
 
 		if ( $type === 'unread' ) {
-			$rec_args['is_new'] = 1;
+			$args['is_new'] = 1;
 		} elseif ( $type === 'read' ) {
-			$rec_args['is_new'] = 0;
+			$args['is_new'] = 0;
 		}
 
-		$recipients_query = self::get( $rec_args );
+		$recipients = self::get( $args );
 
-		return ( ! empty( $recipients_query['total'] ) ) ? $recipients_query['total'] : false;
+		return ( ! empty( $recipients['total'] ) ) ? $recipients['total'] : false;
 	}
 
 	/**

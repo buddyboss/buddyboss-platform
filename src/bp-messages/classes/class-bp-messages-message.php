@@ -235,17 +235,17 @@ class BP_Messages_Message {
 			)
 		);
 
-		$recipients_obj = array();
+		$recipients = array();
 
 		if ( ! empty( $results['recipients'] ) ) {
 			foreach ( $results['recipients'] as $recipient ) {
-				$recipients_obj[] = (object) array(
+				$recipients[] = (object) array(
 					'user_id' => $recipient->user_id,
 				);
 			}
 		}
 
-		return $recipients_obj;
+		return $recipients;
 	}
 
 	/** Static Functions **************************************************/
@@ -361,22 +361,22 @@ class BP_Messages_Message {
 		$bp = buddypress();
 
 		// Get the message ids in order to delete their metas.
-		$messages_arr = BP_Messages_Message::get(
+		$messages = BP_Messages_Message::get(
 			array(
 				'fields'  => 'ids',
 				'user_id' => $user_id,
 			)
 		);
-		$message_ids  = ( isset( $messages_arr['messages'] ) ) ? $messages_arr['messages'] : array();
+		$message_ids  = ( isset( $messages['messages'] ) ) ? $messages['messages'] : array();
 
 		// Get the all thread ids for unread messages
-		$threads_arr = BP_Messages_Message::get(
+		$threads = BP_Messages_Message::get(
 			array(
 				'fields'  => 'thread_ids',
 				'user_id' => $user_id,
 			)
 		);
-		$thread_ids  = isset( $threads_arr['messages'] ) ? $threads_arr['messages'] : array();
+		$thread_ids  = isset( $threads['messages'] ) ? $threads['messages'] : array();
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
