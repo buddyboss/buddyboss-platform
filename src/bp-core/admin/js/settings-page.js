@@ -492,9 +492,9 @@
 			}
 
 			// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
-			if ( $( '.display-options' ).length ) {
+			if ( $( 'tr .display-options' ).length ) {
 
-					var selectorAll    = $( '.display-options' );
+					var selectorAll    = $( 'tr .display-options' );
 					var displayOptions = $( 'select[name=bp-display-name-format]' );
 					var currentValue   = displayOptions.val();
 
