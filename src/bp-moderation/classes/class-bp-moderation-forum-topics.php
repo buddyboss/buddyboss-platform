@@ -57,9 +57,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	public function update_join_sql( $join_sql, $wp_query ) {
 		global $wpdb;
 
-		$topicslug  = bbp_get_topic_post_type();
+		$topic_slug  = bbp_get_topic_post_type();
 		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-		if ( ! empty( $post_types ) && in_array( $topicslug, $post_types, true ) ) {
+		if ( ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
 			$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
 		}
 
@@ -78,10 +78,10 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	public function update_where_sql( $where_conditions_str, $wp_query ) {
 
-		$topicslug  = bbp_get_topic_post_type();
+		$topic_slug  = bbp_get_topic_post_type();
 		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 
-		if ( ! empty( $post_types ) && in_array( $topicslug, $post_types, true ) ) {
+		if ( ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
 			$where                       = array();
 			$where['forum_topics_where'] = $this->exclude_where_query();
 

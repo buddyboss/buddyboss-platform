@@ -57,9 +57,9 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	public function update_join_sql( $join_sql, $wp_query ) {
 		global $wpdb;
 
-		$forum_slug = bbp_get_reply_post_type();
+		$reply_slug = bbp_get_reply_post_type();
 		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-		if ( ! empty( $post_types ) && in_array( $forum_slug, $post_types, true ) ) {
+		if ( ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
 			$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
 		}
 
@@ -78,10 +78,10 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 */
 	public function update_where_sql( $where_conditions_str, $wp_query ) {
 
-		$forum_slug = bbp_get_reply_post_type();
+		$reply_slug = bbp_get_reply_post_type();
 		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 
-		if ( ! empty( $post_types ) && in_array( $forum_slug, $post_types, true ) ) {
+		if ( ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
 			$where                        = array();
 			$where['forum_replies_where'] = $this->exclude_where_query();
 
