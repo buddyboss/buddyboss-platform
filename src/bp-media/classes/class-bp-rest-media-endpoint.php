@@ -1615,8 +1615,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$title = get_the_title( $wp_attachment_id );
 
 					$medias[] = array(
-						'id'   => $wp_attachment_id,
-						'name' => $title,
+						'id'   		=> $wp_attachment_id,
+						'name' 		=> $title,
+						'privacy'   => $media_privacy,
 					);
 				}
 			}
