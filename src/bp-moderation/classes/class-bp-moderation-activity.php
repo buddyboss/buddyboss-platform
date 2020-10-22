@@ -173,6 +173,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
+		//Todo: Get Group and forums Activity ids
+
 		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
 	}
 }

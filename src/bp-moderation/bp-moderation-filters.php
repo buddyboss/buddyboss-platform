@@ -10,6 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 new BP_Moderation_Activity();
+new BP_Moderation_Activity_Comment();
 new BP_Moderation_Groups();
 new BP_Moderation_Members();
 new BP_Moderation_Forums();

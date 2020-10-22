@@ -1546,6 +1546,34 @@ class BP_Activity_Activity {
 			 */
 			if ( apply_filters( 'bp_use_legacy_activity_query', false, __METHOD__, $function_args ) ) {
 
+				$sql['select'] = "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} ";
+				$sql['from']   = "FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} ";
+				$sql['where']  = "WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d";
+				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+
+				/**
+				 * Filters the MySQL From query for legacy activity comment.
+				 *
+				 * @since BuddyPress 1.5.0
+				 *
+				 * @param string $from Activity Comment from query
+				 *
+				 */
+				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
+
+				/**
+				 * Filters the MySQL Where query for legacy activity comment.
+				 *
+				 * @since BuddyPress 1.5.0
+				 *
+				 * @param string $where Activity Comment from query
+				 *
+				 */
+				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
+
+
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
+
 				/**
 				 * Filters the MySQL prepared statement for the legacy activity query.
 				 *
@@ -1557,14 +1585,42 @@ class BP_Activity_Activity {
 				 * @param int    $right       Right-most node boundary.
 				 * @param string $spam_sql    SQL Statement portion to differentiate between ham or spam.
 				 */
-				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( "SELECT a.*, u.user_email, u.user_nicename, u.user_login, u.display_name{$fullname_select} FROM {$bp->activity->table_name} a, {$wpdb->users} u{$fullname_from} WHERE u.ID = a.user_id {$fullname_where} AND a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d AND a.mptt_left > %d AND a.mptt_left < %d ORDER BY a.date_recorded ASC", $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
+				$sql = apply_filters( 'bp_activity_comments_user_join_filter', $wpdb->prepare( $sql, $top_level_parent_id, $left, $right ), $activity_id, $left, $right, $spam_sql );
 
 				$descendants = $wpdb->get_results( $sql );
 
 				// We use the mptt BETWEEN clause to limit returned
 				// descendants to the correct part of the tree.
 			} else {
-				$sql = $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name} a WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d ORDER BY a.date_recorded ASC", $top_level_parent_id, $left, $right );
+
+				$sql['select'] = "SELECT a.id";
+				$sql['from']   = "FROM {$bp->activity->table_name} a";
+				$sql['where']  = "WHERE a.type = 'activity_comment' {$spam_sql} AND a.item_id = %d and a.mptt_left > %d AND a.mptt_left < %d";
+				$sql['misc']   = "ORDER BY a.date_recorded ASC";
+
+				/**
+				 * Filters the MySQL From query for legacy activity comment.
+				 *
+				 * @since BuddyPress 1.5.0
+				 *
+				 * @param string $from Activity Comment from query
+				 *
+				 */
+				$sql['from'] = apply_filters( 'bp_activity_comments_get_join_sql', $sql['from'] );
+
+				/**
+				 * Filters the MySQL Where query for legacy activity comment.
+				 *
+				 * @since BuddyPress 1.5.0
+				 *
+				 * @param string $where Activity Comment from query
+				 *
+				 */
+				$sql['where'] = apply_filters( 'bp_activity_comments_get_where_conditions', $sql['where'] );
+
+				$sql = "{$sql['select']} {$sql['from']} {$sql['where']} {$sql['misc']}";
+
+				$sql = $wpdb->prepare( $sql, $top_level_parent_id, $left, $right );
 
 				$descendant_ids = $wpdb->get_col( $sql );
 				$descendants    = self::get_activity_data( $descendant_ids );
