@@ -4138,3 +4138,33 @@ function bp_is_group_messages() {
 
 	return $retval;
 }
+
+/**
+ * Checks if user can create a document or not.
+ *
+ * @return bool Is user can create document or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_document() {
+	return (bool) apply_filters( 'bp_user_can_create_document', true );
+}
+
+/**
+ * Checks if user can create a media or not.
+ *
+ * @return bool Is user can create media or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_media() {
+	return (bool) apply_filters( 'bp_user_can_create_media', true );
+}
+
+/**
+ * Checks if user can create a activity or not.
+ *
+ * @return bool Is user can create activity or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_activity() {
+	return (bool) apply_filters( 'bp_user_can_create_activity', true );
+}
