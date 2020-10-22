@@ -2238,3 +2238,69 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 	return $buttons;
 
 }
+
+/**
+ *
+ *
+ * @param  array  $retval
+ * @param  array  $filter
+ *
+ * @return array
+ */
+function bp_filter_activity_forum_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$forum_ids = bbp_get_user_subscribed_forum_ids( $user_id );
+
+	if ( empty( $forum_ids ) ) {
+		$forum_ids = array( 0 );
+	}
+
+	$forum_activities = array();
+
+	$forum_activities[] = array(
+		'relation' => 'AND',
+		array(
+			'column'  => 'component',
+			'compare' => '=',
+			'value'   => 'bbpress',
+		),
+		array(
+			'column'  => 'secondary_item_id',
+			'compare' => 'IN',
+			'value'   => (array) $forum_ids,
+		),
+	);
+
+	$retval = array(
+		'relation' => 'AND',
+		$forum_activities,
+
+		// we should only be able to view sitewide activity content for those the user
+		// is following.
+		array(
+			'column' => 'hide_sitewide',
+			'value'  => 0,
+		),
+
+		// overrides.
+		'override' => array(
+			'filter'      => array(
+				'user_id' => 0,
+			),
+			'show_hidden' => true,
+		),
+	);
+
+	return $retval;
+}
+
+add_filter( 'bp_activity_set_following_scope_args', 'bp_filter_activity_forum_scope', 10, 2 );
