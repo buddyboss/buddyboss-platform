@@ -42,7 +42,7 @@ add_action( 'wp_enqueue_scripts', 'bp_enqueue_scripts', 10 );
 add_action( 'enqueue_embed_scripts', 'bp_enqueue_embed_scripts', 10 );
 add_action( 'admin_bar_menu', 'bp_setup_admin_bar', 20 ); // After WP core.
 add_action( 'template_redirect', 'bp_template_redirect', 10 );
-add_action( 'template_redirect', 'bp_activity_remove_screen_notifications_sing_post', 10 );
+add_action( 'template_redirect', 'bp_activity_mark_blog_post_notification_read', 10 );
 add_action( 'widgets_init', 'bp_widgets_init', 10 );
 add_action( 'generate_rewrite_rules', 'bp_generate_rewrite_rules', 10 );
 

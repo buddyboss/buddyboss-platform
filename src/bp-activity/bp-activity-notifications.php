@@ -298,21 +298,24 @@ add_action( 'bp_activity_screen_single_activity_permalink', 'bp_activity_remove_
  *
  * @since BuddyPress 2.0.0
  */
-function bp_activity_remove_screen_notifications_sing_post() {
+function bp_activity_mark_blog_post_notification_read() {
 	global $post;
 
 	if ( ! is_user_logged_in() || empty( $post->post_type ) || ! bp_is_post_type_feed_enable( $post->post_type ) || ! is_singular( $post->post_type ) ) {
 		return;
 	}
 
+	$rid        = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
+	$crid       = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
 	$comment_id = 0;
+
 	// For replies to a parent update.
-	if ( ! empty( $_GET['rid'] ) ) {
-		$comment_id = (int) $_GET['rid'];
+	if ( ! empty( $rid ) ) {
+		$comment_id = $rid;
 
 		// For replies to an activity comment.
 	} elseif ( ! empty( $_GET['crid'] ) ) {
-		$comment_id = (int) $_GET['crid'];
+		$comment_id = $crid;
 	}
 
 	// Mark individual activity reply notification as read.
