@@ -1450,3 +1450,23 @@ function bp_media_allowed_upload_document_size() {
 	$default  =  bp_document_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_media_allowed_upload_document_size', (int) get_option( 'bp_document_allowed_size', $default ) );
 }
+
+/**
+ * Checks if user can create a document or not.
+ *
+ * @return bool Is user can create document or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_document() {
+	return (bool) apply_filters( 'bp_user_can_create_document', true );
+}
+
+/**
+ * Checks if user can create a media or not.
+ *
+ * @return bool Is user can create media or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_media() {
+	return (bool) apply_filters( 'bp_user_can_create_media', true );
+}
