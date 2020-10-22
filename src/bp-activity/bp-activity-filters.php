@@ -2240,14 +2240,19 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 }
 
 /**
+ * Set up activity arguments for use with the 'forum' scope.
  *
+ * For details on the syntax, see {@link BP_Activity_Query}.
  *
- * @param  array  $retval
- * @param  array  $filter
+ * @since BuddyBoss 1.5.4
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
  *
  * @return array
  */
-function bp_filter_activity_forum_scope( $retval = array(), $filter = array() ) {
+
+function bp_filter_activity_forums_scope( $retval = array(), $filter = array() ) {
 
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
@@ -2303,4 +2308,4 @@ function bp_filter_activity_forum_scope( $retval = array(), $filter = array() ) 
 	return $retval;
 }
 
-add_filter( 'bp_activity_set_following_scope_args', 'bp_filter_activity_forum_scope', 10, 2 );
+add_filter( 'bp_activity_set_following_scope_args', 'bp_filter_activity_forums_scope', 10, 2 );

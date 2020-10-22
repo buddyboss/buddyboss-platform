@@ -5347,7 +5347,12 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$show_relevant_feed = bp_is_show_relevant_feed_enabled();
 
 	if ( $show_relevant_feed ) {
-		$new_scope[] = 'forum';
+
+		$bp_forum_active = array_key_exists( 'forums', bp_get_option( 'bp-active-components', array() ) );
+
+		if ( $bp_forum_active ) {
+			$new_scope[] = 'forums';
+		}
 
 		if ( is_array( $new_scope ) && count( $new_scope ) ) {
 			if ( ( $key = array_search( 'public', $new_scope ) ) !== false ) {
