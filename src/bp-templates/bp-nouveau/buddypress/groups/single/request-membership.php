@@ -16,7 +16,7 @@ if ( groups_check_user_has_invite( bp_loggedin_user_id(), bp_get_current_group_i
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), groups_get_current_group() );
+			$inviter = bp_groups_get_invited_by( bp_loggedin_user_id(), bp_get_current_group_id() );
 			if ( ! empty( $inviter ) ) :
 				$groups_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() );
 				printf(
