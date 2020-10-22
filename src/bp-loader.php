@@ -20,6 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 
 
+
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
 	define( 'BP_PLATFORM_VERSION', '1.5.3' );
 }
