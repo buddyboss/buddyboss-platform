@@ -98,14 +98,6 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		$where['messages_where'] = $this->exclude_where_query();
 
 		/**
-		 * Exclude block member activity
-		 */
-		$members_where = $this->exclude_member_message_query();
-		if ( $members_where ) {
-			$where['members_where'] = $members_where;
-		}
-
-		/**
 		 * Filters the Messages Moderation Where SQL statement.
 		 *
 		 * @since BuddyBoss 1.5.4

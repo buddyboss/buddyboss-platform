@@ -86,12 +86,12 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			$where['forum_replies_where'] = $this->exclude_where_query();
 
 			/**
-			 * Exclude block member forum replies
+			 * Exclude block member forum replies [ it'll Show placeholder for blocked content ]
 			 */
-			$members_where = $this->exclude_member_reply_query();
+			/*$members_where = $this->exclude_member_reply_query();
 			if ( $members_where ) {
 				$where['members_where'] = $members_where;
-			}
+			}*/
 
 			/**
 			 * Exclude block Topic replies

@@ -73,12 +73,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$where['activity_comment_where'] = $this->exclude_where_query();
 
 		/**
-		 * Exclude Blocked Member activity Comment
+		 * Exclude Blocked Member activity Comment [ it'll Show placeholder for blocked content ]
 		 */
-		$members_where = $this->exclude_member_activity_comment_query();
+		/*$members_where = $this->exclude_member_activity_comment_query();
 		if ( $members_where ) {
 			$where['members_where'] = $members_where;
-		}
+		}*/
 
 		/**
 		 * Exclude Blocked activity's activity Comment
