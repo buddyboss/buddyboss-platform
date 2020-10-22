@@ -410,6 +410,12 @@ div.profile_completion_wrap {
 			float: right;
 			width: 50px;
 			text-align: center;
+
+			html[dir="rtl"] & {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
 		}
 	}
 

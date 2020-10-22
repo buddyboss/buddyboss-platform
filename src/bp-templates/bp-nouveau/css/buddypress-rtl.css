@@ -5636,6 +5636,12 @@ div.profile_completion_wrap ul.pc_detailed_progress li span.completed_staus {
   text-align: center;
 }
 
+html[dir="rtl"] div.profile_completion_wrap ul.pc_detailed_progress li span.completed_staus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 div.profile_completion_wrap ul.pc_detailed_progress li.completed span.completed_staus {
   background-color: #8a2;
 }
