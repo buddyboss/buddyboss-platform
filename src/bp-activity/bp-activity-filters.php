@@ -2308,4 +2308,4 @@ function bp_filter_activity_forums_scope( $retval = array(), $filter = array() )
 	return $retval;
 }
 
-add_filter( 'bp_activity_set_following_scope_args', 'bp_filter_activity_forums_scope', 10, 2 );
+add_filter( 'bp_activity_set_forums_scope_args', 'bp_filter_activity_forums_scope', 10, 2 );
