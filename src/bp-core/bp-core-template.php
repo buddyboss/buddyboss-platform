@@ -2566,7 +2566,7 @@ function bp_is_user_groups() {
  *
  * Eg http://example.com/members/joe/groups/invites/ (or a subpage thereof).
  *
- * @since BuddyBoss 1.5.2
+ * @since BuddyBoss 1.5.3
  *
  * @return bool True if the current page is a user's Groups invite page.
  */

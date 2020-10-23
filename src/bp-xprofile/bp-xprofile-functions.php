@@ -1696,7 +1696,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
-		if ( isset( $original_option_values ) && ! empty( $original_option_values ) ) {
+		if ( isset( $original_option_values ) && ! empty( $original_option_values ) && is_array( $original_option_values ) ) {
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
 					$key = bp_social_network_search_key( $key, $providers );
