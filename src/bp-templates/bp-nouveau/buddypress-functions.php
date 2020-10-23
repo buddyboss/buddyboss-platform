@@ -292,7 +292,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
 
 		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
-			$slug = get_post_field( 'post_name', $post_id );
+			$slug    = get_page_uri( $forum_page_id );
 			if ( '' !== $slug ) {
 				bp_update_option( '_bbp_root_slug', $slug );
 				bp_update_option( 'rewrite_rules', '' );
@@ -528,7 +528,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		wp_enqueue_script( 'bp-nouveau' );
 		wp_enqueue_script( 'guillotine-js' );
-		
+
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );

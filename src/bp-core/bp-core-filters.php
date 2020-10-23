@@ -780,6 +780,25 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			} else {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
+		} else {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
+				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+					$tab = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$component = $tab;
+					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
+						$component = 'xprofile';
+					}
+					if ( bp_is_active( $component ) ) {
+						if ( strpos( $menu_item->url, $tab ) !== false ) {
+							$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array() ;
+							$menu_item->classes[] = 'current_page_item';
+							$menu_item->classes[] = 'current-menu-item';
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1419,10 +1438,10 @@ add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
  * @since BuddyBoss 1.5.1
  */
 function bp_core_get_cover_image_dimensions( $wh, $settings, $component ) {
-	if ( did_action( 'wp_ajax_bp_cover_image_upload' ) && ( 'xprofile' === $component || 'groups' === $component ) ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
 		return array(
-			'width'  => 99999,
-			'height' => 99999,
+			'width'  => 1950,
+			'height' => 450,
 		);
 	}
 

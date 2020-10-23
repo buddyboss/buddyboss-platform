@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss AppBoss Integration Class.
+ * BuddyBoss App Integration Class.
  *
- * @package BuddyBoss\AppBoss
+ * @package BuddyBoss\App
  * @since BuddyBoss 1.0.0
  */
 
@@ -10,25 +10,25 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup the bp appboss class.
+ * Setup the bp app class.
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_Appboss_Integration extends BP_Integration {
+class BP_App_Integration extends BP_Integration {
 
 	public function __construct() {
 		$this->start(
-			'appboss',
-			__( 'AppBoss', 'buddyboss' ),
-			'appboss',
+			'buddyboss-app',
+			__( 'BuddyBoss App', 'buddyboss' ),
+			'buddyboss-app',
 			array(
-				'required_plugin' => 'appboss/appboss.php',
+				'required_plugin' => 'buddyboss-app/buddyboss-app.php',
 			)
 		);
 	}
 
 	/**
-	 * Register admin setting tab, only if AppBoss plugin is disabled
+	 * Register admin setting tab, only if BuddyBoss App plugin is disabled
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -36,9 +36,9 @@ class BP_Appboss_Integration extends BP_Integration {
 
 		if ( ! is_plugin_active( $this->required_plugin ) ) {
 
-			require_once trailingslashit( $this->path ) . 'bp-admin-appboss-tab.php';
+			require_once trailingslashit( $this->path ) . 'bp-admin-buddyboss-app-tab.php';
 
-			new BP_Appboss_Admin_Integration_Tab(
+			new BP_App_Admin_Integration_Tab(
 				"bp-{$this->id}",
 				$this->name,
 				array(
