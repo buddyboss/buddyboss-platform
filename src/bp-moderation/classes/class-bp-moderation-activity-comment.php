@@ -39,9 +39,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-//		add_filter( 'bp_activity_comments_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-//		add_filter( 'bp_activity_comments_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
-
+		// Search Component
+		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
@@ -69,16 +69,17 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return mixed Where SQL
 	 */
 	public function update_where_sql( $where_conditions ) {
-		$where                   = array();
+		$where                           = array();
 		$where['activity_comment_where'] = $this->exclude_where_query();
 
 		/**
 		 * Exclude Blocked Member activity Comment [ it'll Show placeholder for blocked content ]
+		 * Activity comment should be hidden if it's search query.
 		 */
-		/*$members_where = $this->exclude_member_activity_comment_query();
+		$members_where = $this->exclude_member_activity_comment_query();
 		if ( $members_where ) {
 			$where['members_where'] = $members_where;
-		}*/
+		}
 
 		/**
 		 * Exclude Blocked activity's activity Comment
@@ -97,7 +98,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_activity_comment_get_where_conditions', $where );
 
-		$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+		$where_conditions['moderation_where'] = ' ( ' . implode( ' AND ', $where ) . ' )';
 
 		return $where_conditions;
 	}
@@ -125,7 +126,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	private function exclude_activity_activity_comment_query() {
 		$sql              = false;
 		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
-		$hidden_activity_comment_ids = self::get_sitewide_hidden_ids();
+		$hidden_activity_comment_ids = BP_Moderation_Activity::get_sitewide_activity_comment_hidden_ids();
 		if ( ! empty( $hidden_activity_ids ) ) {
 			$sql = '( a.item_id NOT IN ( ' . implode( ',', $hidden_activity_ids ) . ' ) AND a.secondary_item_id NOT IN ( ' . implode( ',', $hidden_activity_comment_ids ) . ' ) )';
 		}
@@ -134,12 +135,18 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get blocked Activity Comments ids
+	 * Get All blocked Activity Comments ids.
 	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
-		//Todo : Merge comment of hidden activity & Inner comment ids
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+		$hidden_all_activity_comment_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
+
+		$hidden_activity_comments_ids = BP_Moderation_Activity::get_sitewide_activity_comment_hidden_ids();
+		if ( ! empty( $hidden_activity_comments_ids ) ){
+			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids, $hidden_activity_comments_ids );
+		}
+
+		return $hidden_all_activity_comment_ids;
 	}
 }

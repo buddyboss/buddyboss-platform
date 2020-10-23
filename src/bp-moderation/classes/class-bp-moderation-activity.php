@@ -177,4 +177,26 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
 	}
+
+	/**
+	 * Get blocked Activity's Comments ids related to blocked activity
+	 * Note: Below link Not include direct blocked Activity comment
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_activity_comment_hidden_ids() {
+		$hidden_activity_comment_ids = array();
+
+		$hidden_activity_ids = self::get_sitewide_hidden_ids();
+		foreach ( $hidden_activity_ids as $hidden_activity_id ){
+			$activity_comments = BP_Activity_Activity::get_child_comments( $hidden_activity_id );
+			$activity_comments_ids = wp_list_pluck( $activity_comments, 'id' );
+			if ( ! empty( $activity_comments_ids ) ){
+				$hidden_activity_ids = array_merge( $hidden_activity_ids, $activity_comments_ids );
+				$hidden_activity_comment_ids = array_merge( $hidden_activity_comment_ids, $activity_comments_ids );
+			}
+		}
+
+		return $hidden_activity_comment_ids;
+	}
 }
