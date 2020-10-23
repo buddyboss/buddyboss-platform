@@ -4168,3 +4168,16 @@ function bp_user_can_create_media() {
 function bp_user_can_create_activity() {
 	return (bool) apply_filters( 'bp_user_can_create_activity', true );
 }
+
+/**
+ * Checks if user can send messages or not.
+ *
+ * @param object $thread          The thread object.
+ * @param object $thread_template The thread template.
+ *
+ * @return bool Is user can send messages or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_send_messages( $thread, $thread_template ) {
+	return apply_filters( 'bp_user_can_send_messages', $thread, $thread_template );
+}
