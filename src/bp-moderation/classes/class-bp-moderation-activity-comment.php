@@ -126,7 +126,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	private function exclude_activity_activity_comment_query() {
 		$sql              = false;
 		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
-		$hidden_activity_comment_ids = BP_Moderation_Activity::get_sitewide_activity_comment_hidden_ids();
+		$hidden_activity_comment_ids = self::get_sitewide_activity_comments_hidden_ids();
 		if ( ! empty( $hidden_activity_ids ) ) {
 			$sql = '( a.item_id NOT IN ( ' . implode( ',', $hidden_activity_ids ) . ' ) AND a.secondary_item_id NOT IN ( ' . implode( ',', $hidden_activity_comment_ids ) . ' ) )';
 		}
@@ -142,11 +142,33 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	public static function get_sitewide_hidden_ids() {
 		$hidden_all_activity_comment_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
 
-		$hidden_activity_comments_ids = BP_Moderation_Activity::get_sitewide_activity_comment_hidden_ids();
+		$hidden_activity_comments_ids = self::get_sitewide_activity_comments_hidden_ids();
 		if ( ! empty( $hidden_activity_comments_ids ) ){
 			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids, $hidden_activity_comments_ids );
 		}
 
 		return $hidden_all_activity_comment_ids;
+	}
+
+	/**
+	 * Get blocked Activity's Comments ids related to blocked activity
+	 * Note: Below link Not include direct blocked Activity comment
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_activity_comments_hidden_ids() {
+		$hidden_activity_comment_ids = array();
+
+		$hidden_activity_ids = self::get_sitewide_hidden_ids();
+		foreach ( $hidden_activity_ids as $hidden_activity_id ){
+			$activity_comments = BP_Moderation_Activity::get_child_comments( $hidden_activity_id );
+			$activity_comments_ids = wp_list_pluck( $activity_comments, 'id' );
+			if ( ! empty( $activity_comments_ids ) ){
+				$hidden_activity_ids = array_merge( $hidden_activity_ids, $activity_comments_ids );
+				$hidden_activity_comment_ids = array_merge( $hidden_activity_comment_ids, $activity_comments_ids );
+			}
+		}
+
+		return $hidden_activity_comment_ids;
 	}
 }

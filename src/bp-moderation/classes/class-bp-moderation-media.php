@@ -154,9 +154,10 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_activity_media_query() {
-		$sql                 = false;
-		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
-		$hidden_media_ids = self::get_media_ids_meta( $hidden_activity_ids, 'bp_activity_get_meta' );
+		$sql                         = false;
+		$hidden_activity_ids         = BP_Moderation_Activity::get_sitewide_hidden_ids();
+		$hidden_activity_comment_ids = BP_Moderation_Activity_Comment::get_sitewide_hidden_ids();
+		$hidden_media_ids            = self::get_media_ids_meta( array_merge( $hidden_activity_ids, $hidden_activity_comment_ids ), 'bp_activity_get_meta' );
 		if ( ! empty( $hidden_media_ids ) ) {
 			$sql = '( m.id NOT IN ( ' . implode( ',', $hidden_media_ids ) . ' ) )';
 		}
