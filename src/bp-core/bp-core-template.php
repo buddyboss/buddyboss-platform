@@ -4181,3 +4181,16 @@ function bp_user_can_create_activity() {
 function bp_user_can_send_messages( $thread, $thread_template ) {
 	return apply_filters( 'bp_user_can_send_messages', $thread, $thread_template );
 }
+
+/**
+ * Checks if user can send group membership requests or not.
+ *
+ * @param bool $default  Default send the group membership requests.
+ * @param int $group_id  Group id to send membership requests.
+ *
+ * @return bool Is user can send group membership requests or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_groups_user_can_send_membership_requests( $default = true, $group_id ) {
+	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', $default, $group_id );
+}
