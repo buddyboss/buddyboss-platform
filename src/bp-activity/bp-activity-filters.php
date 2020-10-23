@@ -2269,9 +2269,7 @@ function bp_filter_activity_forums_scope( $retval = array(), $filter = array() )
 		$forum_ids = array( 0 );
 	}
 
-	$forum_activities = array();
-
-	$forum_activities[] = array(
+	$retval = array(
 		'relation' => 'AND',
 		array(
 			'column'  => 'component',
@@ -2283,11 +2281,6 @@ function bp_filter_activity_forums_scope( $retval = array(), $filter = array() )
 			'compare' => 'IN',
 			'value'   => (array) $forum_ids,
 		),
-	);
-
-	$retval = array(
-		'relation' => 'AND',
-		$forum_activities,
 
 		// we should only be able to view sitewide activity content for those the user
 		// is following.
@@ -2296,13 +2289,6 @@ function bp_filter_activity_forums_scope( $retval = array(), $filter = array() )
 			'value'  => 0,
 		),
 
-		// overrides.
-		'override' => array(
-			'filter'      => array(
-				'user_id' => 0,
-			),
-			'show_hidden' => true,
-		),
 	);
 
 	return $retval;
