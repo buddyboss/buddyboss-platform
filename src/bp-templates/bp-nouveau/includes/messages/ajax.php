@@ -1604,7 +1604,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		}
 	}
 
-	$thread                    = bp_user_can_send_messages( $thread, $thread_template );
+
 	$last_message_id           = $thread_template->thread->messages[0]->id;
 	$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 	$group_name                = '';
@@ -1615,6 +1615,10 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	$group_message_thread_type = '';
 	$group_message_fresh       = '';
 	$message_from              = '';
+
+	if ( ! $group_id ) {
+		$thread = bp_user_can_send_messages( $thread, (array) $thread_template->thread->recipients, '' );
+	}
 
 	$is_deleted_group = 0;
 	if ( ! empty( $group_id ) ) {
