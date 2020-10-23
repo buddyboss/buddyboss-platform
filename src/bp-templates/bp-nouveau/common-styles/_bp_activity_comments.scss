@@ -31,6 +31,21 @@
 
 		> ul > li > ul {
 			margin-left: 5%;
+
+			ul {
+				margin-left: 42px;
+
+				.elementor-top-column:not(.elementor-col-100) &,
+				&.depth-limit,
+				&.depth-limit ul {
+					margin-left: 0;
+				}
+
+				@media screen and (max-width: 544px) {
+					margin-left: 12px;
+				}
+			}
+
 		}
 
 		div.acomment-avatar {

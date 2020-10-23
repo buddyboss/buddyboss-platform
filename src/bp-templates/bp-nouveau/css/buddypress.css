@@ -3484,6 +3484,21 @@ span.dashicons.dashicons-admin-file:before {
   margin-left: 5%;
 }
 
+.buddypress-wrap .activity-comments > ul > li > ul ul {
+  margin-left: 42px;
+}
+
+.elementor-top-column:not(.elementor-col-100) .buddypress-wrap .activity-comments > ul > li > ul ul, .buddypress-wrap .activity-comments > ul > li > ul ul.depth-limit,
+.buddypress-wrap .activity-comments > ul > li > ul ul.depth-limit ul {
+  margin-left: 0;
+}
+
+@media screen and (max-width: 544px) {
+  .buddypress-wrap .activity-comments > ul > li > ul ul {
+    margin-left: 12px;
+  }
+}
+
 .buddypress-wrap .activity-comments div.acomment-avatar {
   width: auto;
 }
