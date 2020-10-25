@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="video-wrapper">
 			<div class="video-container">
-				<iframe width="560" height="315" src="https://www.youtube.com/embed/SZVB0_hmuoE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/X2DzBaij8os" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			</div>
 		</div>
 
