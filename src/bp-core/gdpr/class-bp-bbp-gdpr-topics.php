@@ -228,9 +228,11 @@ class BP_Bbp_Gdpr_Topics {
 			foreach ( (array) $topics as $topic ) {
 				$attachments = get_posts(
 					array(
-						'post_type'      => 'attachment',
-						'posts_per_page' => - 1,
-						'post_parent'    => $topic->ID,
+						'post_type'              => 'attachment',
+						'posts_per_page'         => - 1,
+						'post_parent'            => $topic->ID,
+						'update_post_meta_cache' => false,
+						'update_post_term_cache' => false,
 					)
 				);
 
