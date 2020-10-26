@@ -168,13 +168,66 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get blocked Activity ids
+	 * Get blocked Activity ids including Blocked group and Forum/topic/reply related activity.
 	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
-		//Todo: Get Group and forums Activity ids
+		$hidden_activity_id = self::get_sitewide_hidden_item_ids( self::$moderation_type );
 
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+		if ( bp_is_active( 'groups' ) ) {
+			$hidden_group_activity_ids = self::get_hidden_group_activity_ids();
+			$hidden_activity_id = array_merge( $hidden_activity_id, $hidden_group_activity_ids );
+		}
+
+		if ( bp_is_active( 'forums' ) ) {
+			$hidden_forum_activity_ids = self::get_hidden_forum_activity_ids();
+			$hidden_activity_id = array_merge( $hidden_activity_id, $hidden_forum_activity_ids );
+		}
+
+		return $hidden_activity_id;
+	}
+
+	/**
+	 * Get Blocked group's activity ids
+	 * @return array
+	 */
+	private static function get_hidden_group_activity_ids(){
+		global $wpdb, $bp;
+		$hidden_group_activity_ids = array();
+
+		if ( bp_is_active( 'forums' ) ) {
+			$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
+			if ( ! empty( $hidden_group_ids ) ) {
+				$sql                       = "Select a.id FROM {$bp->activity->table_name} a WHERE a.component = 'groups' AND a.item_id IN ( " . implode( ',', $hidden_group_ids ) . " ) ";
+				$hidden_group_activity_ids = $wpdb->get_col( $sql );
+			}
+		}
+
+		return $hidden_group_activity_ids;
+	}
+
+	/**
+	 * Get Blocked forum's activity ids
+	 *
+	 * @return array
+	 */
+	private static function get_hidden_forum_activity_ids(){
+		global $wpdb, $bp;
+		$hidden_forum_activity_ids = array();
+
+		if ( bp_is_active( 'groups' ) ) {
+			$hidden_forums_ids        = BP_Moderation_Forums::get_sitewide_hidden_ids();
+			$hidden_forum_topics_ids  = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
+			$hidden_forum_replies_ids = BP_Moderation_Forum_Replies::get_sitewide_hidden_ids();
+
+			$hidden_ids = array_merge( $hidden_forums_ids, $hidden_forum_topics_ids, $hidden_forum_replies_ids );
+			if ( ! empty( $hidden_ids ) ) {
+				$sql                       = "Select a.id FROM {$bp->activity->table_name} a WHERE a.component = 'bbpress' AND a.item_id IN ( " . implode( ',', $hidden_ids ) . " ) ";
+				$hidden_forum_activity_ids = $wpdb->get_col( $sql );
+			}
+		}
+
+		return $hidden_forum_activity_ids;
 	}
 }

@@ -128,7 +128,11 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
 		$hidden_activity_comment_ids = self::get_sitewide_activity_comments_hidden_ids();
 		if ( ! empty( $hidden_activity_ids ) ) {
-			$sql = '( a.item_id NOT IN ( ' . implode( ',', $hidden_activity_ids ) . ' ) AND a.secondary_item_id NOT IN ( ' . implode( ',', $hidden_activity_comment_ids ) . ' ) )';
+			$sql = '( a.item_id NOT IN ( ' . implode( ',', $hidden_activity_ids ) . ' ) ';
+			if ( ! empty( $hidden_activity_comment_ids ) ) {
+				$sql .= ' AND a.secondary_item_id NOT IN ( ' . implode( ',', $hidden_activity_comment_ids ) . ' ) ';
+			}
+			$sql .= ')';
 		}
 
 		return $sql;
@@ -159,9 +163,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	public static function get_sitewide_activity_comments_hidden_ids() {
 		$hidden_activity_comment_ids = array();
 
-		$hidden_activity_ids = self::get_sitewide_hidden_ids();
+		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
 		foreach ( $hidden_activity_ids as $hidden_activity_id ){
-			$activity_comments = BP_Moderation_Activity::get_child_comments( $hidden_activity_id );
+			$activity_comments = BP_Activity_Activity::get_child_comments( $hidden_activity_id );
 			$activity_comments_ids = wp_list_pluck( $activity_comments, 'id' );
 			if ( ! empty( $activity_comments_ids ) ){
 				$hidden_activity_ids = array_merge( $hidden_activity_ids, $activity_comments_ids );
