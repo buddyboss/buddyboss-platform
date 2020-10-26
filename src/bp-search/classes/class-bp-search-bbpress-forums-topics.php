@@ -25,13 +25,22 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$query_placeholder = array();
 
 			if ( $only_totalrow_count ) {
-				$columns = ' COUNT( DISTINCT id ) ';
+				$columns = ' COUNT( DISTINCT p.id ) ';
 			} else {
-				$columns             = " DISTINCT id , '{$this->type}' as type, post_title LIKE %s AS relevance, post_date as entry_date  ";
+				$columns             = " DISTINCT p.id , '{$this->type}' as type, p.post_title LIKE %s AS relevance, p.post_date as entry_date  ";
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
 			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_forum_id'";
+
+			/**
+			 * Filter the MySQL JOIN clause for the topic Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$from = apply_filters( 'bp_forum_topic_search_join_sql', $from );
 
 			$tax = array();
 
@@ -57,7 +66,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$tax_sql             .= " WHERE r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON 
+				$tax_sql             .= " WHERE r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON
 					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 				$query_placeholder[] = '%' . $search_term . '%';
 				$query_placeholder[] = '%' . $search_term . '%';
@@ -105,6 +114,14 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
 
+			/**
+			 * Filters the MySQL WHERE conditions for the forum topic Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 */
+			$where = apply_filters( 'bp_forum_topic_search_where_sql', $where );
 
 			$sql = 'SELECT ' . $columns . ' FROM ' . $from . $tax_sql . $where_clause . implode( ' AND ', $where );
 

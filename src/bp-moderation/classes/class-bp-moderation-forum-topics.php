@@ -42,6 +42,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_forum_topic_search_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_forum_topic_search_where_sql', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
@@ -54,13 +57,19 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 *
 	 * @return string Join sql
 	 */
-	public function update_join_sql( $join_sql, $wp_query ) {
+	public function update_join_sql( $join_sql, $wp_query = null ) {
 		global $wpdb;
 
-		$topic_slug  = bbp_get_topic_post_type();
-		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-		if ( ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
-			$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
+		$actionName = current_filter();
+
+		if ( 'bp_forum_topic_search_join_sql' === $actionName ) {
+			$join_sql .= $this->exclude_joint_query( "p.ID" );
+		} else {
+			$topic_slug = bbp_get_topic_post_type();
+			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+			if ( ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
+				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
+			}
 		}
 
 		return $join_sql;
@@ -71,49 +80,58 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param string $where_conditions_str Forum Topics Where sql.
-	 * @param object $wp_query             WP_Query object.
+	 * @param string $where_conditions Forum Topics Where sql.
+	 * @param object $wp_query         WP_Query object.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions_str, $wp_query ) {
+	public function update_where_sql( $where_conditions, $wp_query = null ) {
 
-		$topic_slug  = bbp_get_topic_post_type();
-		$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+		$actionName = current_filter();
 
-		if ( ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
-			$where                       = array();
-			$where['forum_topics_where'] = $this->exclude_where_query();
-
-			/**
-			 * Exclude block member forum topics
-			 */
-			$members_where = $this->exclude_member_topic_query();
-			if ( $members_where ) {
-				$where['members_where'] = $members_where;
+		if ( 'bp_forum_topic_search_where_sql' !== $actionName ) {
+			$topic_slug = bbp_get_topic_post_type();
+			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+			if ( empty( $post_types ) || ! in_array( $topic_slug, $post_types, true ) ) {
+				return $where_conditions;
 			}
-
-			/**
-			 * Exclude block Topic replies
-			 */
-			$forums_where = $this->exclude_forum_topic_query();
-			if ( $forums_where ) {
-				$where['forums_where'] = $forums_where;
-			}
-
-			/**
-			 * Filters the Forum Topics Moderation Where SQL statement.
-			 *
-			 * @since BuddyBoss 1.5.4
-			 *
-			 * @param array $where array of Forum Topics moderation where query.
-			 */
-			$where = apply_filters( 'bp_moderation_forum_topics_get_where_conditions', $where );
-
-			$where_conditions_str .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
 		}
 
-		return $where_conditions_str;
+		$where                       = array();
+		$where['forum_topics_where'] = $this->exclude_where_query();
+
+		/**
+		 * Exclude block member forum topics
+		 */
+		$members_where = $this->exclude_member_topic_query();
+		if ( $members_where ) {
+			$where['members_where'] = $members_where;
+		}
+
+		/**
+		 * Exclude block Topic replies
+		 */
+		$forums_where = $this->exclude_forum_topic_query();
+		if ( $forums_where ) {
+			$where['forums_where'] = $forums_where;
+		}
+
+		/**
+		 * Filters the Forum Topics Moderation Where SQL statement.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param array $where array of Forum Topics moderation where query.
+		 */
+		$where = apply_filters( 'bp_moderation_forum_topics_get_where_conditions', $where );
+
+		if ( 'bp_forum_topic_search_where_sql' === $actionName ) {
+			$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
+		} else {
+			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
 	}
 
 	/**
@@ -123,10 +141,12 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	private function exclude_member_topic_query() {
 		global $wpdb;
-		$sql              = false;
+		$sql                = false;
+		$actionName         = current_filter();
 		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_members_ids ) ) {
-			$sql = "( {$wpdb->posts}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
+			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $actionName ) ? 'p' : $wpdb->posts;
+			$sql         = "( {$topic_alias}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
 		return $sql;
@@ -140,9 +160,11 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	private function exclude_forum_topic_query() {
 		global $wpdb;
 		$sql              = false;
+		$actionName       = current_filter();
 		$hidden_forum_ids = BP_Moderation_Forums::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_forum_ids ) ) {
-			$sql = "( {$wpdb->posts}.post_parent NOT IN ( " . implode( ',', $hidden_forum_ids ) . ' ) )';
+			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $actionName ) ? 'p' : $wpdb->posts;
+			$sql         = "( {$topic_alias}.post_parent NOT IN ( " . implode( ',', $hidden_forum_ids ) . ' ) )';
 		}
 
 		return $sql;
