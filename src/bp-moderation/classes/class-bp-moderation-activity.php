@@ -39,8 +39,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-		add_filter( 'bp_activity_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+		add_filter( 'bp_activity_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_activity_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Search Query
 		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
@@ -53,10 +53,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param string $join_sql Activity Join sql.
+	 * @param array  $args
 	 *
 	 * @return string Join sql
 	 */
-	public function update_join_sql( $join_sql ) {
+	public function update_join_sql( $join_sql, $args = array() ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $join_sql;
+		}
+
 		$join_sql .= $this->exclude_joint_query( 'a.id' );
 
 		return $join_sql;
@@ -68,10 +74,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param array $where_conditions Activity Where sql.
+	 * @param array $args
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions ) {
+	public function update_where_sql( $where_conditions, $args = array() ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $where_conditions;
+		}
+
 		$where                   = array();
 		$where['activity_where'] = $this->exclude_where_query();
 
@@ -126,7 +138,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$sql              = false;
 		$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_group_ids ) ) {
-			$sql = "( ( a.component = 'groups' AND a.item_id NOT IN ( " . implode( ',', $hidden_group_ids ) . " ) ) OR a.component != 'groups' )";
+			$sql = "( a.component != 'groups' OR a.item_id NOT IN ( " . implode( ',', $hidden_group_ids ) . " ) )";
 		}
 
 		return $sql;
@@ -138,7 +150,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_member_activity_query() {
-		$sql              = false;
+		$sql                = false;
 		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_members_ids ) ) {
 			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
@@ -161,7 +173,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		$hidden_ids = array_merge( $hidden_forums_ids, $hidden_forum_topics_ids, $hidden_forum_replies_ids );
 		if ( ! empty( $hidden_ids ) ) {
-			$sql = "( a.component !='bbpress' OR a.item_id NOT IN ( " . implode( ',', $hidden_ids ) . ' ) )';
+			$sql = "( a.component != 'bbpress' OR a.item_id NOT IN ( " . implode( ',', $hidden_ids ) . ' ) )';
 		}
 
 		return $sql;
@@ -177,12 +189,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		if ( bp_is_active( 'groups' ) ) {
 			$hidden_group_activity_ids = self::get_hidden_group_activity_ids();
-			$hidden_activity_id = array_merge( $hidden_activity_id, $hidden_group_activity_ids );
+			$hidden_activity_id        = array_merge( $hidden_activity_id, $hidden_group_activity_ids );
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
 			$hidden_forum_activity_ids = self::get_hidden_forum_activity_ids();
-			$hidden_activity_id = array_merge( $hidden_activity_id, $hidden_forum_activity_ids );
+			$hidden_activity_id        = array_merge( $hidden_activity_id, $hidden_forum_activity_ids );
 		}
 
 		return $hidden_activity_id;
@@ -192,15 +204,26 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 * Get Blocked group's activity ids
 	 * @return array
 	 */
-	private static function get_hidden_group_activity_ids(){
-		global $wpdb, $bp;
+	private static function get_hidden_group_activity_ids() {
 		$hidden_group_activity_ids = array();
 
 		if ( bp_is_active( 'forums' ) ) {
 			$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
 			if ( ! empty( $hidden_group_ids ) ) {
-				$sql                       = "Select a.id FROM {$bp->activity->table_name} a WHERE a.component = 'groups' AND a.item_id IN ( " . implode( ',', $hidden_group_ids ) . " ) ";
-				$hidden_group_activity_ids = $wpdb->get_col( $sql );
+				$activities = BP_Activity_Activity::get( array(
+					'moderation_query' => false,
+					'per_page'         => 0,
+					'fields'           => 'ids',
+					'show_hidden'      => true,
+					'filter'           => array(
+						'primary_id' => $hidden_group_ids,
+						'object'     => 'groups',
+					)
+				) );
+
+				if ( ! empty( $activities['activities'] ) ) {
+					$hidden_group_activity_ids = $activities['activities'];
+				}
 			}
 		}
 
@@ -212,8 +235,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @return array
 	 */
-	private static function get_hidden_forum_activity_ids(){
-		global $wpdb, $bp;
+	private static function get_hidden_forum_activity_ids() {
 		$hidden_forum_activity_ids = array();
 
 		if ( bp_is_active( 'groups' ) ) {
@@ -223,8 +245,21 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 			$hidden_ids = array_merge( $hidden_forums_ids, $hidden_forum_topics_ids, $hidden_forum_replies_ids );
 			if ( ! empty( $hidden_ids ) ) {
-				$sql                       = "Select a.id FROM {$bp->activity->table_name} a WHERE a.component = 'bbpress' AND a.item_id IN ( " . implode( ',', $hidden_ids ) . " ) ";
-				$hidden_forum_activity_ids = $wpdb->get_col( $sql );
+
+				$activities = BP_Activity_Activity::get( array(
+					'moderation_query' => false,
+					'per_page'         => 0,
+					'fields'           => 'ids',
+					'show_hidden'      => true,
+					'filter'           => array(
+						'primary_id' => $hidden_ids,
+						'object'     => 'bbpress',
+					)
+				) );
+
+				if ( ! empty( $activities['activities'] ) ) {
+					$hidden_forum_activity_ids = $activities['activities'];
+				}
 			}
 		}
 
