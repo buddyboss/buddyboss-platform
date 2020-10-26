@@ -3451,13 +3451,19 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var content_tab = $( event.currentTarget ).data( 'content' );
+			var current_popup = $( event.currentTarget ).closest( '#bp-media-uploader' );
 			$( '.bp-media-upload-tab-content' ).hide();
 			$( '#' + content_tab ).show();
 			this.current_tab = content_tab;
-			$( event.currentTarget ).closest( '#bp-media-uploader' ).find( '.bp-media-upload-tab' ).removeClass( 'selected' );
+			current_popup.find( '.bp-media-upload-tab' ).removeClass( 'selected' );
 			$( event.currentTarget ).addClass( 'selected' );
 			this.toggleSubmitMediaButton();
-
+			current_popup.find( '.bb-field-steps-2' ).slideUp( 200 );
+			current_popup.find('.bp-media-open-create-popup-folder').hide();
+			if( content_tab === 'bp-dropzone-content' ) {
+				current_popup.find( '.bb-field-steps-1' ).show();
+				current_popup.find('.bp-media-open-create-popup-folder').hide();
+			}
 			jQuery( window ).scroll();
 		},
 
