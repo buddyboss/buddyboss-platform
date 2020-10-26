@@ -54,7 +54,6 @@ window.bp = window.bp || {};
 			this.privacySelectorSelect		 = '';
 			this.privacySelectorSpan		 = '';
 			this.currentAlbum				 = BP_Nouveau.media.current_album;
-			this.initialMediaPrivacy		 = null;
 			this.initialDocumentPrivacy		 = null;
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
@@ -525,6 +524,7 @@ window.bp = window.bp || {};
 							targetPopup.find( '.bp-media-open-create-popup-album' ).show();
 							targetPopup.find( '.location-album-list-wrap-main' ).show();
 							targetPopup.find( '.create-popup-album-wrap' ).hide();
+							targetPopup.find('.bb-field-steps-2 #bp-media-prev').show();
 							targetPopup.find( '.bb-album-selected-id' ).val();
 							targetPopup.find( '.bb-album-selected-id' ).val( newParent );
 							targetPopup.find( '.bb-model-header' ).children().show();
@@ -565,6 +565,7 @@ window.bp = window.bp || {};
 			$( '.bb-field-wrap-search' ).show();
 			$( '.bp-document-open-create-popup-folder' ).show();
 			$( '.location-album-list-wrap-main' ).show();
+			$('.bb-field-steps-2 #bp-media-prev').show();
 			$( '.create-popup-album-wrap' ).hide();
 			$( '.bp-media-create-popup-album-submit.loading' ).removeClass( 'loading' );
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().show();
@@ -606,6 +607,7 @@ window.bp = window.bp || {};
 			$( '.bb-field-wrap-search' ).hide();
 			$( '.bp-document-open-create-popup-folder' ).hide();
 			$( '.location-album-list-wrap-main' ).hide();
+			$('.bb-field-steps-2 #bp-media-prev').hide();
 			$( '.create-popup-album-wrap' ).show();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().hide();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).append('<p>Create Album</p>');
@@ -2623,9 +2625,11 @@ window.bp = window.bp || {};
 					if( Number( $(e.currentTarget).data('id') ) !== 0 ) {
 						mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
 						mediaPrivacy.val( $( e.currentTarget ).parent().data('privacy') );
+						mediaPrivacy.prop('disabled', true);
 					} else {
 						mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-						mediaPrivacy.val( bp.Nouveau.Media.initialMediaPrivacy !== null ? bp.Nouveau.Media.initialMediaPrivacy : 'public' );
+						mediaPrivacy.val( 'public' );
+						mediaPrivacy.prop('disabled', false);
 					}
 				});
 
@@ -2652,9 +2656,11 @@ window.bp = window.bp || {};
 					if( Number( $( e.currentTarget ).closest( '.bb-field-wrap' ).find('.bb-album-selected-id').val() ) !== 0 ) {
 						mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
 						mediaPrivacy.val( selectedAlbumPrivacy === undefined ? 'public' : selectedAlbumPrivacy );
+						mediaPrivacy.prop('disabled', true);
 					} else {
 						mediaPrivacy.find( 'option' ).removeAttr( 'selected' );
-						mediaPrivacy.val( bp.Nouveau.Media.initialMediaPrivacy !== null ? bp.Nouveau.Media.initialMediaPrivacy : 'public' );
+						mediaPrivacy.val( 'public' );
+						mediaPrivacy.prop('disabled', false);
 					}
 
 				});
@@ -2727,7 +2733,7 @@ window.bp = window.bp || {};
 							this.removeFile(file);
 						}
 						
-						$( '.bb-field-steps-1 #bp-media-photo-next' ).show();
+						$( '.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit' ).show();
 						$( '#bp-media-add-more' ).show();
 						$( '#bp-media-uploader-modal-title' ).text( BP_Nouveau.media.i18n_strings.uploading + '...' );
 						$( '#bp-media-uploader-modal-status-text' ).text( wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length ) ).show();
@@ -4671,10 +4677,9 @@ window.bp = window.bp || {};
 			if ( $( target ).hasClass( 'bb-field-uploader-next' ) ) {
 				currentPopup.find( '.bb-field-steps-1' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
 				currentPopup.find( '#bp-media-submit, #bp-media-prev, .bp-media-open-create-popup-folder' ).show();
-				this.initialMediaPrivacy = currentPopup.find( '#bb-media-privacy' ).val();
 			} else {
 				$( target ).hide();
-				currentPopup.find( '#bp-media-submit, #bp-media-prev, .bp-media-open-create-popup-folder' ).hide();
+				currentPopup.find( '#bp-media-prev, .bp-media-open-create-popup-folder' ).hide();
 				currentPopup.find( '.bb-field-steps-2' ).slideUp( 200 ).siblings( '.bb-field-steps' ).slideDown( 200 );
 			}
 

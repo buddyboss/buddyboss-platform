@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-10-07 13:29:59+00:00\n"
+"POT-Creation-Date: 2020-10-26 10:58:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17550,7 +17550,6 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:111
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:36
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:41
 msgid "Next"
 msgstr ""
 
@@ -21447,7 +21446,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:47
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:76
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:63
 #: bp-templates/bp-nouveau/includes/document/ajax.php:899
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1222
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1380
@@ -21944,7 +21943,7 @@ msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:63
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:106
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:83
 msgid "Previous"
 msgstr ""
 
@@ -21952,7 +21951,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:59
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:108
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:103
 msgid "Done"
 msgstr ""
 
@@ -22304,6 +22303,7 @@ msgid "You have not created any album yet to move this photo into."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/location-move.php:15
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:41
 msgid "Select Album"
 msgstr ""
 

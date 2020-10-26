@@ -14046,13 +14046,22 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 }
 
 #buddypress .bp-media-photo-uploader .location-album-list-wrap {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 #buddypress .bp-media-photo-uploader #bp-media-photo-next {
-  float: right;
-  margin-top: 20px;
-  min-width: 130px;
+  text-align: center;
+}
+
+#buddypress .bp-media-photo-uploader #bp-media-prev {
+  margin: 10px 0 0 -6px;
+  display: inline-block;
+  font-size: 15px;
+}
+
+#buddypress .bp-media-photo-uploader #bp-media-prev i {
+  font-size: 22px;
+  vertical-align: middle;
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap {

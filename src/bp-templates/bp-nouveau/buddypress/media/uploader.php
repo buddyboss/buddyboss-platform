@@ -38,22 +38,9 @@
                                     <div class="media-uploader-wrapper">
                                         <div class="dropzone" id="media-uploader"></div>
                                     </div>
-                                    <a id="bp-media-photo-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
+                                    <a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Select Album', 'buddyboss' ); ?></a>
                                 </div>
                             </div>
-
-                            <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
-                            <div class="bb-dropdown-wrap">
-                                <select id="bb-media-privacy">
-				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
-					                    ?>
-                                        <option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
-					                    <?php
-				                    } ?>
-                                </select>
-                            </div>
-                        <?php endif; ?>
-
                     </div>
 
 	                <?php if ( bp_is_single_album() ) : ?>
@@ -93,6 +80,7 @@
                     <?php endif; ?>
                     
                     <div class="bb-field-steps bb-field-steps-2">
+                        <a id="bp-media-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><i class="bb-icon-angle-left"></i><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
 						<div class="bb-field-wrap">
 							<?php bp_get_template_part( 'media/location-move' ); ?>
 							<?php bp_get_template_part( 'media/media-create-album' ); ?>
@@ -100,12 +88,23 @@
 					</div>
 
                     <footer class="bb-model-footer media-uploader-footer">
+                        <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">Create new album</a>
+                        <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
+                            <div class="bb-dropdown-wrap">
+                                <select id="bb-media-privacy">
+				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
+					                    ?>
+                                        <option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
+					                    <?php
+				                    } ?>
+                                </select>
+                            </div>
+                        <?php endif; ?>
+                        <a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
                         <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
                         
-                        <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">Create new album</a>
-                        <a id="bp-media-prev" class="button bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
+                        
 
-                        <a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
                     </footer>
 
                 </div>
