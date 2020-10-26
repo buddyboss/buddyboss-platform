@@ -514,6 +514,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			return $fields_update;
 		}
 
+		// Update current user's last activity.
+		bp_update_user_last_activity();
+
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $activity, $request )
 		);
@@ -1151,8 +1154,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Get comments (count).
 		if ( ! empty( $activity->children ) ) {
-			$comment_count         = wp_filter_object_list( $activity->children, array( 'type' => 'activity_comment' ), 'AND', 'id' );
-			$data['comment_count'] = ! empty( $comment_count ) ? count( $comment_count ) : 0;
+			$data['comment_count'] = bp_activity_recurse_comment_count( $activity );
 
 			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
 				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
@@ -2003,8 +2005,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @param int $activity_id Activity ID.
 	 *
 	 * @return array
-	 * 
-	 * @since BuddyBoss 1.5.1
 	 */
 	public function bp_rest_activitiy_edit_data( $activity_id = 0 ) {
 		if ( empty( $activity_id ) ) {

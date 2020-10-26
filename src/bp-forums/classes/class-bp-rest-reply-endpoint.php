@@ -1856,12 +1856,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			$this->forum_endpoint->prepare_password_response( $reply->post_password );
 		}
 
-		$content = apply_filters( 'the_content', $reply->post_content );
+		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		remove_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
 			'raw'      => $reply->post_content,
-			'rendered' => $content,
+			'rendered' => bbp_get_reply_content( $reply->ID ),
 		);
+
+		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 98, 2 );
+		add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
 		if ( ! empty( $reply->post_password ) ) {

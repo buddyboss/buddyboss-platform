@@ -369,14 +369,12 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 					// Query to use in get_posts to get sticky posts.
 					$sticky_query = array(
-						'post_type'              => bbp_get_topic_post_type(),
-						'post_parent'            => 'any',
-						'meta_key'               => '_bbp_last_active_time', // phpcs:ignore
-						'orderby'                => 'meta_value',
-						'order'                  => 'DESC',
-						'include'                => $stickies,
-						'suppress_filters'       => false,
-						'update_post_term_cache' => false,
+						'post_type'   => bbp_get_topic_post_type(),
+						'post_parent' => 'any',
+						'meta_key'    => '_bbp_last_active_time', // phpcs:ignore
+						'orderby'     => 'meta_value',
+						'order'       => 'DESC',
+						'include'     => $stickies,
 					);
 
 					// Cleanup.
@@ -1942,12 +1940,18 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$data['short_content'] = wp_trim_excerpt( $topic->post_content );
 
-		$content = apply_filters( 'the_content', $topic->post_content );
+		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
 			'raw'      => $topic->post_content,
-			'rendered' => $content,
+			'rendered' => bbp_get_topic_content( $topic->ID ),
 		);
+
+		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
 		if ( ! empty( $topic->post_password ) ) {

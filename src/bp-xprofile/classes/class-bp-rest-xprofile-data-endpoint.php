@@ -254,6 +254,21 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			$value = implode( ' ', $value );
 		}
 
+		if (
+			$field->type_obj->supports_multiple_defaults
+			&& in_array( $field->type, apply_filters( 'bp_rest_xprofile_serialize', array( 'checkbox', 'multiselectbox' ) ) )
+		) {
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			$value = json_decode( $value, true );
+
+			if ( ! is_array( $value ) ) {
+				$value = (array) $value;
+			}
+		}
+
 		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
 			return new WP_Error(
 				'rest_user_cannot_save_xprofile_data',
@@ -479,8 +494,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			'field_id'     => $field_data->field_id,
 			'user_id'      => $field_data->user_id,
 			'value'        => array(
-				'raw'          => $field_data->value,
-				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value ),
+				'raw'          => $this->fields_endpoint->get_profile_field_raw_value( $field_data->value, $field_data->field_id ),
+				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value, $field_data->field_id ),
 				'rendered'     => $this->fields_endpoint->get_profile_field_rendered_value( $field_data->value, $field_data->field_id ),
 			),
 			'last_updated' => bp_rest_prepare_date_response( $field_data->last_updated ),

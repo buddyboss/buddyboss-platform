@@ -110,12 +110,12 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				$field = xprofile_get_field( $field_id );
 
 				if ( isset( $field_post['value'] ) ) {
-					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type ) {
+					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
 						if ( is_serialized( $value ) ) {
 							$value = maybe_unserialize( $value );
 						}
 
-						$value = json_decode( $value, true );
+						$value = json_decode( json_encode( $value ), true );
 
 						if ( ! is_array( $value ) ) {
 							$value = (array) $value;
