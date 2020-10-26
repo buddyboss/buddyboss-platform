@@ -78,6 +78,16 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
 
+			/**
+			 * Filter the MySQL JOIN clause for the Member Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param string $join_sql JOIN clause.
+			 * @param string $uid_name User ID field name.
+			 */
+			$FROM = apply_filters( 'bp_user_search_join_sql', $FROM, 'id' );
+
 			$WHERE        = array();
 			$WHERE[]      = '1=1';
 			$WHERE[]      = 'u.user_status = 0';
@@ -259,6 +269,15 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			// other conditions
 			// $WHERE[] = " a.component = 'members' ";
 			// $WHERE[] = " a.type = 'last_activity' ";
+
+			/**
+			 * Filters the MySQL WHERE conditions for the member Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 */
+			$WHERE = apply_filters( 'bp_user_search_where_sql', $WHERE );
 
 			$sql = $COLUMNS . ' FROM ' . $FROM . ' WHERE ' . implode( ' AND ', $WHERE );
 			if ( ! $only_totalrow_count ) {

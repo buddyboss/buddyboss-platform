@@ -41,6 +41,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10 );
+
+		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
+		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
