@@ -421,6 +421,7 @@ class BP_Messages_Thread {
 					'group_message_group_joined',
 					'group_message_group_left',
 				),
+				'order'            => 'ASC',
 				'per_page'         => 1,
 				'page'             => 1,
 				'count_total'      => false,
@@ -923,7 +924,7 @@ class BP_Messages_Thread {
 				// Explode the value if there is a space in search term.
 				$split_name = explode( ' ', $r['search_terms'] );
 
-				$participants_sql['from'] .= ' LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id';
+				$participants_sql['from'] .= " LEFT JOIN {$bp->profile->table_name_data} spd ON r.user_id = spd.user_id";
 
 				if ( isset( $split_name ) && isset( $split_name[0] ) && isset( $split_name[1] ) && ! empty( $split_name ) && ! empty( trim( $split_name[0] ) ) && ! empty( trim( $split_name[1] ) ) ) {
 					$participants_sql['where_like'] .= ' OR spd.value LIKE %s OR spd.value LIKE %s';
@@ -936,7 +937,7 @@ class BP_Messages_Thread {
 			}
 
 			$participants_sql['where'] .= " AND ( {$participants_sql['where_like']} )";
-			$participants_sql          = "{$participants_sql['select']} {$participants_sql['form']} {$participants_sql['where']}";
+			$participants_sql          = "{$participants_sql['select']} {$participants_sql['from']} {$participants_sql['where']}";
 			$current_user_participants = $wpdb->get_results( $wpdb->prepare( $participants_sql, $participants_args ) );
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
