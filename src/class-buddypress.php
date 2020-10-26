@@ -95,6 +95,11 @@ class BuddyPress {
 	public $integrations = array();
 
 	/**
+	 * @var array Membership.
+	 */
+	public $membership = array();
+
+	/**
 	 * Whether autoload is in use.
 	 *
 	 * @since BuddyPress 2.5.0
