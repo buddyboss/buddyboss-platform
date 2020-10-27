@@ -115,13 +115,13 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
-			$sql['from'] = apply_filters( 'bp_folder_search_join_sql', $sql['from'] );
+			$sql['from'] = apply_filters( 'bp_document_search_join_sql_folder', $sql['from'] );
 
 			$where_conditions   = array( '1=1' );
 			$where_conditions[] = $wpdb->prepare(
 				"(
-                    f.title LIKE %s AND 
-                    ( 
+                    f.title LIKE %s AND
+                    (
                         f.privacy IN ( '" . implode( "','", $privacy ) . "' ) " .
 				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( f.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND f.privacy = 'grouponly' )" : '' ) .
 				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( f.user_id IN ( '" . implode( "','", $friends ) . "' ) AND f.privacy = 'friends' )" : '' ) .
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Bp_Search_Folders' ) ) :
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
 			 */
-			$where_conditions = apply_filters( 'bp_folder_search_where_conditions', $where_conditions, $search_term );
+			$where_conditions = apply_filters( 'bp_document_search_where_conditions_folder', $where_conditions, $search_term );
 
 			// Join the where conditions together.
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );

@@ -420,7 +420,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$where_conditions = apply_filters( 'bp_document_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
+		$where_conditions = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
 		if ( empty( $where_conditions ) ) {
 			$where_conditions['2'] = '2';
@@ -444,7 +444,7 @@ class BP_Document {
 		 *
 		 * @since BuddyBoss 1.4.0
 		 */
-		$join_sql = apply_filters( 'bp_document_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
+		$join_sql = apply_filters( 'bp_document_get_join_sql_document', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
 		// Sanitize page and per_page parameters.
 		$page     = absint( $r['page'] );

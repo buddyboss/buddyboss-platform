@@ -111,7 +111,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
-			$sql['from'] = apply_filters( 'bp_document_search_join_sql', $sql['from'] );
+			$sql['from'] = apply_filters( 'bp_document_search_join_sql_document', $sql['from'] );
 
 			$privacy = array( 'public' );
 			if ( is_user_logged_in() ) {
@@ -127,8 +127,8 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 						AND dm.meta_value LIKE %s
 						OR dm.meta_key = 'file_name'
 						AND dm.meta_value LIKE %s
-					) 
-					AND 
+					)
+					AND
 					(
 							( d.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
 				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
@@ -149,7 +149,7 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.
 			 */
-			$where_conditions = apply_filters( 'bp_document_search_where_conditions', $where_conditions, $search_term );
+			$where_conditions = apply_filters( 'bp_document_search_where_conditions_document', $where_conditions, $search_term );
 
 			// Join the where conditions together.
 			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );

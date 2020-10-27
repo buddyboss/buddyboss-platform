@@ -42,8 +42,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		add_filter( 'bp_document_get_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
 
 		// Search Query
-		add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_document_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+		//add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
