@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Document Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -40,6 +40,10 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 		/*add_filter( 'bp_document_get_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_document_get_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
+
+		// Search Query
+		add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );
+		add_filter( 'bp_document_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
 
 	/**
@@ -127,7 +131,9 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_document_get_where_conditions', $where );
 
-		$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		if ( ! empty( $where ) ) {
+			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
 	}
@@ -202,8 +208,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_message_document_query() {
-		$sql              = false;
-		$hidden_message_ids = BP_Moderation_Messages::get_sitewide_messages_hidden_ids();
+		$sql                 = false;
+		$hidden_message_ids  = BP_Moderation_Messages::get_sitewide_messages_hidden_ids();
 		$hidden_document_ids = self::get_Document_ids_meta( $hidden_message_ids, 'bp_messages_get_meta' );
 		if ( ! empty( $hidden_document_ids ) ) {
 			$sql = '( d.id NOT IN ( ' . implode( ',', $hidden_document_ids ) . ' ) )';
@@ -225,7 +231,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 * Get Document ids of blocked posts [ Forums/topics/replies ] from meta
 	 *
 	 * @param array  $posts_ids Posts ids.
-	 * @param string $function Function Name to get meta.
+	 * @param string $function  Function Name to get meta.
 	 *
 	 * @return array Document IDs
 	 */
@@ -245,6 +251,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 				}
 			}
 		}
+
 		return $document_ids;
 	}
 

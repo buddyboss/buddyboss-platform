@@ -1,9 +1,9 @@
 <?php
 /**
- * @todo add description
- *
  * @package BuddyBoss\Search
- * @since BuddyBoss 1.4.0
+ * @since   BuddyBoss 1.4.0
+ * @todo    add description
+ *
  */
 
 // Exit if accessed directly.
@@ -94,24 +94,33 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 				array_push( $friends, bp_loggedin_user_id() );
 			}
 
-
-			$sql = ' SELECT ';
+			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT d.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT d.id ) ';
 			} else {
-				$sql .= $wpdb->prepare(" DISTINCT d.id, 'documents' as type, d.title LIKE %s AS relevance, d.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT d.id, 'documents' as type, d.title LIKE %s AS relevance, d.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql .= " FROM {$bp->document->table_name} d, {$bp->document->table_name_meta} dm WHERE ( d.id = dm.document_id )";
+			$sql['from'] = "FROM {$bp->document->table_name} d INNER JOIN {$bp->document->table_name_meta} dm ON ( d.id = dm.document_id )";
+
+			/**
+			 * Filter the MySQL JOIN clause for the document Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_document_search_join_sql', $sql['from'] );
 
 			$privacy = array( 'public' );
-			if( is_user_logged_in() ) {
+			if ( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
 			}
 
-			$sql .= $wpdb->prepare(
-				" AND (
+			$where_conditions   = array( '1=1' );
+			$where_conditions[] = $wpdb->prepare(
+				" (
 					(
 						d.title LIKE %s
 						OR dm.meta_key = 'extension'
@@ -122,15 +131,33 @@ if ( ! class_exists( 'Bp_Search_Documents' ) ) :
 					AND 
 					(
 							( d.privacy IN ( '" . implode( "','", $privacy ) . "' ) ) " .
-							( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
-							( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' )" : '' ) .
-							( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
-					")
+				( isset( $user_groups ) && ! empty( $user_groups ) ? " OR ( d.group_id IN ( '" . implode( "','", $user_groups ) . "' ) AND d.privacy = 'grouponly' )" : '' ) .
+				( bp_is_active( 'friends' ) && ! empty( $friends ) ? " OR ( d.user_id IN ( '" . implode( "','", $friends ) . "' ) AND d.privacy = 'friends' )" : '' ) .
+				( is_user_logged_in() ? " OR ( d.user_id = '" . bp_loggedin_user_id() . "' AND d.privacy = 'onlyme' )" : '' ) .
+				")
 				)",
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
+
+			/**
+			 * Filters the MySQL WHERE conditions for the document Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_document_search_where_conditions', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
+
+			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
 				'bp_search_documents_sql',
