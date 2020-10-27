@@ -203,9 +203,9 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_message_media_query() {
-		$sql              = false;
+		$sql                = false;
 		$hidden_message_ids = BP_Moderation_Messages::get_sitewide_messages_hidden_ids();
-		$hidden_media_ids = self::get_media_ids_meta( $hidden_message_ids, 'bp_messages_get_meta' );
+		$hidden_media_ids   = self::get_media_ids_meta( $hidden_message_ids, 'bp_messages_get_meta' );
 		if ( ! empty( $hidden_media_ids ) ) {
 			$sql = '( m.id NOT IN ( ' . implode( ',', $hidden_media_ids ) . ' ) )';
 		}
