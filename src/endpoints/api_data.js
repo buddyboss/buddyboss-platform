@@ -3893,7 +3893,6 @@ define({ "api": [
             "type": "Number",
             "optional": true,
             "field": "inviter_id",
-            "defaultValue": "1",
             "description": "<p>The ID of the user who made the invite.</p>"
           },
           {
@@ -8540,10 +8539,10 @@ define({ "api": [
   {
     "type": "PATCH",
     "url": "/wp-json/buddyboss/v1/xprofile/repeater/order/:id",
-    "title": "Re-order xProfile Repeater",
+    "title": "Reorder xProfile Repeater",
     "name": "UpdateBBxProfileRepeaterFields",
     "group": "Profile_Fields",
-    "description": "<p>Update the order of the repeater.</p>",
+    "description": "<p>Reorder the order of the repeater.</p>",
     "version": "1.0.0",
     "permission": [
       {

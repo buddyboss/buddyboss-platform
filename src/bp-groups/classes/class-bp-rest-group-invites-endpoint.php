@@ -515,7 +515,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Array} user_id The ID of the users who is invited to join the Group.
-	 * @apiParam {Number} [inviter_id=1] The ID of the user who made the invite.
+	 * @apiParam {Number} [inviter_id] The ID of the user who made the invite.
 	 * @apiParam {Number} group_id The ID of the group to which the user has been invited.
 	 * @apiParam {String} [message] The optional message to send to the invited user.
 	 * @apiParam {Boolean} [send_invite=true] Whether the invite should be sent to the invitee.

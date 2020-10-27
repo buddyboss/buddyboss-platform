@@ -265,10 +265,10 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/repeater/order/:id Re-order xProfile Repeater
+	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/repeater/order/:id Reorder xProfile Repeater
 	 * @apiName        UpdateBBxProfileRepeaterFields
 	 * @apiGroup       Profile Fields
-	 * @apiDescription Update the order of the repeater.
+	 * @apiDescription Reorder the order of the repeater.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the group of profile fields.
