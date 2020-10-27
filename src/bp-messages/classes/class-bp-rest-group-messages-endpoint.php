@@ -3,7 +3,7 @@
  * BP REST: BP_REST_Group_Messages_Endpoint class
  *
  * @package BuddyBoss
- * @since 0.1.0
+ * @since   0.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -60,11 +60,11 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	 * Init a Messages Thread or add a reply to an existing Thread.
 	 * -- from bp_nouveau_ajax_groups_send_message();
 	 *
+	 * @since          0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
-	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/messages/group Create Group Thread
 	 * @apiName        CreateBBGroupThread
 	 * @apiGroup       Messages
@@ -148,21 +148,23 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$_POST['message_meta_users_list'] = $message_users_ids;
 
 				$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
-				$is_deleted                   = false;
 				$group_thread_id              = '';
 				$_POST['message_thread_type'] = '';
 
 				if ( '' !== $group_thread ) {
-					// phpcs:ignore
-					$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
-					foreach ( $total_threads as $thread ) {
-						if ( 1 === (int) $thread->is_deleted ) {
-							$is_deleted = true;
-							break;
-						}
-					}
 
-					if ( $is_deleted || empty( $total_threads ) ) {
+					$total_threads = BP_Messages_Thread::get(
+						array(
+							'include_threads' => array( $group_thread ),
+							'per_page'        => 1,
+							'count_total'     => true,
+							'is_deleted'      => 1
+						)
+					);
+
+					$is_deleted = ! empty( $total_threads['total'] );
+
+					if ( $is_deleted || empty( $total_threads['recipients'] ) ) {
 						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
@@ -929,11 +931,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			/**
 			 * Fires after a thread is fetched via the REST API.
 			 *
-			 * @param BP_Messages_Box_Template $messages_box Fetched thread.
+			 * @since 0.1.0
+			 *
 			 * @param WP_REST_Response         $response     The response data.
 			 * @param WP_REST_Request          $request      The request sent to the API.
 			 *
-			 * @since 0.1.0
+			 * @param BP_Messages_Box_Template $messages_box Fetched thread.
 			 */
 			do_action( 'bp_rest_group_messages_create_items', $message, $response, $request );
 
@@ -945,10 +948,11 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Check if a given request has access to create a message.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|bool
-	 * @since 0.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		$retval = true;
@@ -976,10 +980,11 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the messages `create_item` permissions check.
 		 *
-		 * @param bool|WP_Error   $retval  Returned value.
+		 * @since 0.1.0
+		 *
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 0.1.0
+		 * @param bool|WP_Error   $retval  Returned value.
 		 */
 		return apply_filters( 'bp_rest_messages_group_create_item_permissions_check', $retval, $request );
 	}
@@ -987,8 +992,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the message schema, conforming to JSON Schema.
 	 *
-	 * @return array
 	 * @since 0.1.0
+	 * @return array
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -1016,9 +1021,10 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filters the message schema.
 		 *
+		 * @since 0.1.0
+		 *
 		 * @param array $schema The endpoint schema.
 		 *
-		 * @since 0.1.0
 		 */
 		return apply_filters( 'bp_rest_message_schema', $this->add_additional_fields_schema( $schema ) );
 	}
@@ -1026,8 +1032,8 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 	/**
 	 * Get the query params for Messages collections.
 	 *
-	 * @return array
 	 * @since 0.1.0
+	 * @return array
 	 */
 	public function get_collection_params() {
 		$params                       = parent::get_collection_params();
@@ -1191,11 +1197,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			/**
 			 * Fires after a thread is fetched via the REST API.
 			 *
-			 * @param BP_Messages_Box_Template $messages_box Fetched thread.
+			 * @since 0.1.0
+			 *
 			 * @param WP_REST_Response         $response     The response data.
 			 * @param WP_REST_Request          $request      The request sent to the API.
 			 *
-			 * @since 0.1.0
+			 * @param BP_Messages_Box_Template $messages_box Fetched thread.
 			 */
 			do_action( 'bp_rest_group_messages_create_items', $thread, $response, $request );
 
