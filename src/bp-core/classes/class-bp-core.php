@@ -169,7 +169,7 @@ class BP_Core extends BP_Component {
 		$bp->available_integrations = apply_filters(
 			'bp_integrations',
 			array(
-				'appboss',
+				'buddyboss-app',
 				'learndash',
 				'compatibility',
 			)
