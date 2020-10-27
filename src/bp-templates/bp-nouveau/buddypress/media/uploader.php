@@ -89,7 +89,7 @@
 
                     <footer class="bb-model-footer media-uploader-footer">
                         <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">Create new album</a>
-                        <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
+                        <?php if ( ! bp_is_group() ) : ?>
                             <div class="bb-dropdown-wrap">
                                 <select id="bb-media-privacy">
 				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
