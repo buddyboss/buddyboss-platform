@@ -64,10 +64,12 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( 'bp_forum_reply_search_join_sql' === $actionName ) {
 			$join_sql .= $this->exclude_joint_query( "p.ID" );
 		} else {
-			$reply_slug = bbp_get_reply_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
-				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
+			if( false !== $wp_query->get('moderation_query')  ){
+				$reply_slug = bbp_get_reply_post_type();
+				$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
+				if ( ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
+					$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
+				}
 			}
 		}
 
@@ -91,7 +93,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( 'bp_forum_reply_search_where_sql' !== $actionName ) {
 			$reply_slug = bbp_get_reply_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
+			if ( false === $wp_query->get('moderation_query') || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true )  ) {
 				return $where_conditions;
 			}
 		}
