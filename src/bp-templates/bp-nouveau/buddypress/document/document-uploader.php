@@ -33,9 +33,21 @@
 									<div class="dropzone" id="media-uploader"></div>
 								</div>
 							</div>
-							<a id="bp-media-document-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Next', 'buddyboss' ); ?></a>
+							<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Select Folder', 'buddyboss' ); ?></a>
 						</div>
-						<?php if ( ! bp_is_group() && ! bp_is_single_folder() ) : ?>
+					</div>
+
+					<div class="bb-field-steps bb-field-steps-2">
+						<a id="bp-media-document-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><i class="bb-icon-angle-left"></i><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
+						<div class="bb-field-wrap">
+							<?php bp_get_template_part( 'document/location-move' ); ?>
+							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
+						</div>
+					</div>
+
+					<footer class="bb-model-footer document-uploader-footer">
+						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" ><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">
 								<select id="bb-document-privacy">
 									<?php foreach ( bp_document_get_visibility_levels() as $k => $option ) {
@@ -49,19 +61,6 @@
 								</select>
 							</div>
 						<?php endif; ?>
-					</div>
-
-					<div class="bb-field-steps bb-field-steps-2">
-						<div class="bb-field-wrap">
-							<?php bp_get_template_part( 'document/location-move' ); ?>
-							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
-						</div>
-					</div>
-
-					<footer class="bb-model-footer document-uploader-footer">
-						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" ><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
-						<a id="bp-media-document-prev" class="button bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
-
 						<a class="button pull-right" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
