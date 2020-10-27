@@ -840,8 +840,11 @@ function bp_add_activation_redirect() {
 		// Check if there is any topics their in DB.
 		$topics = get_posts(
 			array(
-				'post_type'   => 'topic',
-				'numberposts' => 1,
+				'post_type'              => 'topic',
+				'numberposts'            => 1,
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 
