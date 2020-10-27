@@ -1067,7 +1067,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		if ( bp_is_active( 'forums' ) ) {
 			$user_domain = bp_loggedin_user_domain();
-			$forums_link = trailingslashit( $user_domain . bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ) );
+			$forums_link = trailingslashit( $user_domain . bbp_get_root_slug() );
 
 			$item_forums = array(
 				'ID'       => 'forums',
@@ -1197,7 +1197,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		);
 
 	     // phpcs:ignore
-	     $items = json_decode( json_encode( $items ), false );
+	     $items = json_decode( wp_json_encode( $items ), false );
 
 		return $items;
 	}
