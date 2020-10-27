@@ -129,7 +129,7 @@ function messages_new_message( $args = '' ) {
 		// Check user can send the reply.
 		if ( ! $is_group_thread ) {
 			$has_access = bp_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
-			if ( ! empty( $has_access ) ) {
+			if ( is_wp_error( $has_access ) ) {
 				return $has_access;
 			}
 		}
@@ -303,7 +303,7 @@ function messages_new_message( $args = '' ) {
 	// Check user can send the message.
 	if ( true !== $is_group_thread ) {
 		$has_access = bp_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
-		if ( ! empty( $has_access ) ) {
+		if ( is_wp_error( $has_access ) ) {
 			return $has_access;
 		}
 	}
