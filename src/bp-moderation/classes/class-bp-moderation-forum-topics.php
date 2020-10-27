@@ -60,10 +60,10 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	public function update_join_sql( $join_sql, $wp_query = null ) {
 		global $wpdb;
 
-		$actionName = current_filter();
+		$action_name = current_filter();
 
-		if ( 'bp_forum_topic_search_join_sql' === $actionName ) {
-			$join_sql .= $this->exclude_joint_query( "p.ID" );
+		if ( 'bp_forum_topic_search_join_sql' === $action_name ) {
+			$join_sql .= $this->exclude_joint_query( 'p.ID' );
 		} else {
 			$topic_slug = bbp_get_topic_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
@@ -87,9 +87,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	public function update_where_sql( $where_conditions, $wp_query = null ) {
 
-		$actionName = current_filter();
+		$action_name = current_filter();
 
-		if ( 'bp_forum_topic_search_where_sql' !== $actionName ) {
+		if ( 'bp_forum_topic_search_where_sql' !== $action_name ) {
 			$topic_slug = bbp_get_topic_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( empty( $post_types ) || ! in_array( $topic_slug, $post_types, true ) ) {
@@ -125,7 +125,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_forum_topics_get_where_conditions', $where );
 
-		if ( 'bp_forum_topic_search_where_sql' === $actionName ) {
+		if ( 'bp_forum_topic_search_where_sql' === $action_name ) {
 			$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
 		} else {
 			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
@@ -142,10 +142,10 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	private function exclude_member_topic_query() {
 		global $wpdb;
 		$sql                = false;
-		$actionName         = current_filter();
+		$action_name        = current_filter();
 		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_members_ids ) ) {
-			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $actionName ) ? 'p' : $wpdb->posts;
+			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
 			$sql         = "( {$topic_alias}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 
@@ -160,10 +160,10 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	private function exclude_forum_topic_query() {
 		global $wpdb;
 		$sql              = false;
-		$actionName       = current_filter();
+		$action_name      = current_filter();
 		$hidden_forum_ids = BP_Moderation_Forums::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_forum_ids ) ) {
-			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $actionName ) ? 'p' : $wpdb->posts;
+			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
 			$sql         = "( {$topic_alias}.post_parent NOT IN ( " . implode( ',', $hidden_forum_ids ) . ' ) )';
 		}
 

@@ -60,10 +60,10 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public function update_join_sql( $join_sql, $wp_query = null ) {
 		global $wpdb;
 
-		$actionName = current_filter();
+		$action_name = current_filter();
 
-		if ( 'bp_forums_search_join_sql' === $actionName ) {
-			$join_sql .= $this->exclude_joint_query( "p.ID" );
+		if ( 'bp_forums_search_join_sql' === $action_name ) {
+			$join_sql .= $this->exclude_joint_query( 'p.ID' );
 		} else {
 			$forum_slug = bbp_get_forum_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
@@ -87,9 +87,9 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 */
 	public function update_where_sql( $where_conditions, $wp_query = null ) {
 
-		$actionName = current_filter();
+		$action_name = current_filter();
 
-		if ( 'bp_forums_search_where_sql' !== $actionName ) {
+		if ( 'bp_forums_search_where_sql' !== $action_name ) {
 			$forum_slug = bbp_get_forum_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 			if ( empty( $post_types ) || ! in_array( $forum_slug, $post_types, true ) ) {
@@ -117,7 +117,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_forums_get_where_conditions', $where );
 
-		if ( 'bp_forums_search_where_sql' === $actionName ) {
+		if ( 'bp_forums_search_where_sql' === $action_name ) {
 			$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
 		} else {
 			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
@@ -134,10 +134,10 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	private function exclude_member_forum_query() {
 		global $wpdb;
 		$sql                = false;
-		$actionName         = current_filter();
+		$action_name        = current_filter();
 		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_members_ids ) ) {
-			$forum_alias = ( 'bp_forums_search_where_sql' === $actionName ) ? 'p' : $wpdb->posts;
+			$forum_alias = ( 'bp_forums_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
 			$sql         = "( {$forum_alias}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
 		}
 

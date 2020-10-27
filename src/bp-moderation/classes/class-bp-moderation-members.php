@@ -52,7 +52,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param string $join_sql Members sql.
-	 * @param string $uid_name User ID field name
+	 * @param string $uid_name User ID field name.
 	 *
 	 * @return string Join sql
 	 */

@@ -39,7 +39,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-		// Search Component
+		// Search Component.
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 	}
@@ -109,7 +109,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_member_activity_comment_query() {
-		$sql              = false;
+		$sql                = false;
 		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_members_ids ) ) {
 			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
@@ -124,8 +124,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_activity_activity_comment_query() {
-		$sql              = false;
-		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
+		$sql                         = false;
+		$hidden_activity_ids         = BP_Moderation_Activity::get_sitewide_hidden_ids();
 		$hidden_activity_comment_ids = self::get_sitewide_activity_comments_hidden_ids();
 		if ( ! empty( $hidden_activity_ids ) ) {
 			$sql = '( a.item_id NOT IN ( ' . implode( ',', $hidden_activity_ids ) . ' ) ';
@@ -147,7 +147,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$hidden_all_activity_comment_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
 
 		$hidden_activity_comments_ids = self::get_sitewide_activity_comments_hidden_ids();
-		if ( ! empty( $hidden_activity_comments_ids ) ){
+		if ( ! empty( $hidden_activity_comments_ids ) ) {
 			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids, $hidden_activity_comments_ids );
 		}
 
@@ -164,11 +164,11 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		$hidden_activity_comment_ids = array();
 
 		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
-		foreach ( $hidden_activity_ids as $hidden_activity_id ){
-			$activity_comments = BP_Activity_Activity::get_child_comments( $hidden_activity_id );
+		foreach ( $hidden_activity_ids as $hidden_activity_id ) {
+			$activity_comments     = BP_Activity_Activity::get_child_comments( $hidden_activity_id );
 			$activity_comments_ids = wp_list_pluck( $activity_comments, 'id' );
-			if ( ! empty( $activity_comments_ids ) ){
-				$hidden_activity_ids = array_merge( $hidden_activity_ids, $activity_comments_ids );
+			if ( ! empty( $activity_comments_ids ) ) {
+				$hidden_activity_ids         = array_merge( $hidden_activity_ids, $activity_comments_ids );
 				$hidden_activity_comment_ids = array_merge( $hidden_activity_comment_ids, $activity_comments_ids );
 			}
 		}

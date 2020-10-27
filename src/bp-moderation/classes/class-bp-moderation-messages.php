@@ -39,11 +39,11 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		$this->item_type = self::$moderation_type;
 
-		// Message
+		// Message.
 		add_filter( 'bp_messages_message_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_messages_message_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// Recipient
+		// Recipient.
 		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
@@ -64,10 +64,10 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 			return $join_sql;
 		}
 
-		$actionName = current_filter();
+		$action_name = current_filter();
 
 		$item_id_field = 'm.thread_id';
-		if ( 'bp_messages_recipient_get_join_sql' === $actionName ) {
+		if ( 'bp_messages_recipient_get_join_sql' === $action_name ) {
 			$item_id_field = 'r.thread_id';
 		}
 
@@ -92,7 +92,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 			return $where_conditions;
 		}
 
-		$actionName = current_filter();
+		$action_name = current_filter();
 
 		$where                   = array();
 		$where['messages_where'] = $this->exclude_where_query();
@@ -116,7 +116,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_messages_get_where_conditions', $where );
 
-		if ( 'bp_messages_recipient_get_where_conditions' === $actionName ) {
+		if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
 			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
 		} else {
 			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
@@ -131,10 +131,10 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_member_message_query() {
-		$actionName = current_filter();
+		$action_name = current_filter();
 
 		$user_id_field = 'm.sender_id';
-		if ( 'bp_messages_recipient_get_where_conditions' === $actionName ) {
+		if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
 			$user_id_field = 'r.user_id';
 		}
 
@@ -153,17 +153,17 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @return string|bool
 	 */
 	private function exclude_group_messages_query() {
-		$sql        = false;
-		$actionName = current_filter();
+		$sql         = false;
+		$action_name = current_filter();
 
 		$item_id_field = 'm.thread_id';
-		if ( 'bp_messages_recipient_get_where_conditions' === $actionName ) {
+		if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
 			$item_id_field = 'r.thread_id';
 		}
 
 		$hidden_thread_ids = self::get_sitewide_groups_thread_hidden_ids();
 		if ( ! empty( $hidden_thread_ids ) ) {
-			$sql = "( {$item_id_field} NOT IN ( " . implode( ',', $hidden_thread_ids ) . " ) )";
+			$sql = "( {$item_id_field} NOT IN ( " . implode( ',', $hidden_thread_ids ) . ' ) )';
 		}
 
 		return $sql;
@@ -186,11 +186,13 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	public static function get_sitewide_messages_hidden_ids() {
 		$messages_ids = array();
 		$threads      = self::get_sitewide_hidden_ids();
-		$results      = BP_Messages_Message::get( array(
-			'fields'           => 'ids',
-			'include_threads'  => $threads,
-			'moderation_query' => false,
-		) );
+		$results      = BP_Messages_Message::get(
+			array(
+				'fields'           => 'ids',
+				'include_threads'  => $threads,
+				'moderation_query' => false,
+			)
+		);
 		if ( ! empty( $results['messages'] ) ) {
 			$messages_ids = $results['messages'];
 		}
@@ -200,6 +202,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Message thread ids of blocked groups.
+	 *
 	 * @return array|mixed
 	 */
 	private static function get_sitewide_groups_thread_hidden_ids() {
@@ -207,17 +210,19 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
 		if ( ! empty( $hidden_group_ids ) ) {
-			$messages = BP_Messages_Message::get( array(
-				'fields'           => 'thread_ids',
-				'moderation_query' => false,
-				'meta_query'       => array(
-					array(
-						'key'     => 'group_id',
-						'value'   => $hidden_group_ids,
-						'compare' => 'IN',
-					)
+			$messages = BP_Messages_Message::get(
+				array(
+					'fields'           => 'thread_ids',
+					'moderation_query' => false,
+					'meta_query'       => array(
+						array(
+							'key'     => 'group_id',
+							'value'   => $hidden_group_ids,
+							'compare' => 'IN',
+						),
+					),
 				)
-			) );
+			);
 
 			if ( ! empty( $messages['messages'] ) ) {
 				$thread_ids = $messages['messages'];
