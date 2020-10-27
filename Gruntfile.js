@@ -366,6 +366,11 @@ module.exports = function (grunt) {
 				command: 'git clone https://github.com/buddyboss/buddyboss-platform-api.git',
 				cwd: SOURCE_DIR,
 				stdout: false
+			},
+			composer: {
+				command: 'composer update',
+				cwd: SOURCE_DIR,
+				stdout: false
 			}
 		},
 		jsvalidate: {
@@ -417,7 +422,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('pre-commit', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint']);
 	grunt.registerTask('src', ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src']);
     grunt.registerTask('bp_rest', ['clean:bp_rest', 'exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest', 'apidoc' ]);
-	grunt.registerTask('build', ['exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
+	grunt.registerTask('build', ['exec:composer', 'exec:cli', 'clean:all', 'copy:files', 'compress', 'clean:all']);
 	grunt.registerTask('release', ['src', 'build']);
 
 	// Testing tasks.
