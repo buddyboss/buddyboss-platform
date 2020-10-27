@@ -446,7 +446,7 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] ) ) {
+				|| ! groups_can_user_manage_albums( bp_loggedin_user_id(), (int) $request['group_id'] ) ) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
 					__( 'You don\'t have a permission to create an album inside this group.', 'buddyboss' ),
