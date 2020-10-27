@@ -73,24 +73,24 @@ $albums_link = bp_get_album_link();
 					<div class="media-album_details__bottom">
 						<?php
 						if ( bp_is_active( 'groups' ) ) {
-							$group_id = bp_get_media_group_id();
+							$group_id = bp_get_album_group_id();
 							if ( $group_id > 0 ) {
 								?>
 									<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php bp_media_privacy(); ?>
+									<?php bp_album_visibility(); ?>
 									</span>
 								<?php
 							} else {
 								?>
-									<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
-									<?php bp_media_privacy(); ?>
+									<span id="privacy-<?php echo esc_attr( bp_get_album_id() ); ?>">
+									<?php bp_album_visibility(); ?>
 									</span>
 								<?php
 							}
 						} else {
 							?>
 								<span>
-								<?php bp_media_privacy(); ?>
+								<?php bp_album_visibility(); ?>
 								</span>
 							<?php
 						}

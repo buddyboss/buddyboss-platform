@@ -978,6 +978,37 @@ function bp_get_media_privacy() {
 }
 
 /**
+ * Output the media visibility.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_media_visibility() {
+	echo bp_get_media_visibility();
+}
+
+/**
+ * Return the media visibility.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media visibility.
+ */
+function bp_get_media_visibility() {
+	global $media_template;
+
+	/**
+	 * Filters the media privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $id The media privacy.
+	 */
+	return apply_filters( 'bp_get_media_visibility', $media_template->media->visibility );
+}
+
+/**
  * Output the media parent activity id.
  *
  * @since BuddyBoss 1.2.0
@@ -1698,4 +1729,44 @@ function bp_get_album_group_id() {
 	 * @param int $id The album group ID.
 	 */
 	return apply_filters( 'bp_get_album_group_id', $media_album_template->album->group_id );
+}
+
+/**
+ * Output the album privacy.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_album_privacy() {
+	echo bp_get_album_privacy();
+}
+
+/**
+ * Output the album visibility.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_album_visibility() {
+	echo bp_get_album_visibility();
+}
+
+/**
+ * Return the album visibility.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $media_album_template {@link BP_Media_Album_Template}
+ *
+ * @return string The media album visibility.
+ */
+function bp_get_album_visibility() {
+	global $media_album_template;
+
+	/**
+	 * Filters the album visibility being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The media album visibility.
+	 */
+	return apply_filters( 'bp_get_album_visibility', $media_album_template->album->visibility );
 }

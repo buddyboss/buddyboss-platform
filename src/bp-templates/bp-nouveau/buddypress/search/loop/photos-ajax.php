@@ -90,20 +90,20 @@ $media_created = bp_get_media_date_created();
 							if ( $group_id > 0 ) {
 								?>
 									<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
-									<?php bp_media_privacy(); ?>
+									<?php bp_media_visibility(); ?>
 									</span>
 								<?php
 							} else {
 								?>
 									<span id="privacy-<?php echo esc_attr( bp_get_media_id() ); ?>">
-									<?php bp_media_privacy(); ?>
+									<?php bp_media_visibility(); ?>
 									</span>
 								<?php
 							}
 						} else {
 							?>
 								<span>
-								<?php bp_media_privacy(); ?>
+								<?php bp_media_visibility(); ?>
 								</span>
 							<?php
 						}
