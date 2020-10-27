@@ -115,7 +115,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 							$value = maybe_unserialize( $value );
 						}
 
-						$value = json_decode( json_encode( $value ), true );
+						$value = json_decode( wp_json_encode( $value ), true );
 
 						if ( ! is_array( $value ) ) {
 							$value = (array) $value;

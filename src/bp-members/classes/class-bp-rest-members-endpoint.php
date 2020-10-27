@@ -727,7 +727,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		if ( 'edit' === $context ) {
-			$user_data = get_userdata( $user->ID );
+			$user_data                  = get_userdata( $user->ID );
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
 			$data['capabilities']       = (array) array_keys( $user_data->allcaps );

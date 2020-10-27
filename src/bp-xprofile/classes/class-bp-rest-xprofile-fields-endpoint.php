@@ -1080,7 +1080,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	/**
 	 * Retrieve the unserialized value of a profile field.
 	 *
-	 * @param string $value The raw value of the field.
+	 * @param string                    $value The raw value of the field.
 	 * @param integer|BP_XProfile_Field $profile_field The ID or the full object for the field.
 	 *
 	 * @return array         The unserialized field value.

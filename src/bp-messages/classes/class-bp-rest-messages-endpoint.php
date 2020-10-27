@@ -1825,7 +1825,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 					'format'      => 'date-time',
 				),
 				'start_date'          => array(
-					'context'     => array( 'embed','view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( "The date the first message of the Thread, in the site's timezone.", 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
@@ -2051,7 +2051,7 @@ class BP_REST_Messages_Endpoint extends WP_REST_Controller {
 	public function bp_rest_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 		if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
 			$user_query['exclude'] = array();
-		} else if ( ! empty( $user_query['exclude'] ) ) {
+		} elseif ( ! empty( $user_query['exclude'] ) ) {
 			$user_query['exclude'] = wp_parse_id_list( $user_query['exclude'] );
 		}
 

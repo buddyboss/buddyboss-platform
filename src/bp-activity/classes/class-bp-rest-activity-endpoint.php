@@ -1930,6 +1930,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$toolbar_option = true;
 		}
 
+		if ( true === $toolbar_option && empty( $request['content'] ) ) {
+			$toolbar_option = true;
+		}
+
 		return $toolbar_option;
 	}
 
