@@ -5434,3 +5434,51 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 		)
 	);
 }
+
+
+function bp_get_activity_comment_edit_data( $comment_id = 0 ) {
+	// check comment exists.
+	if ( empty( $comment_id ) ) {
+		return false;
+	}
+
+	$activity = new BP_Activity_Activity( $comment_id );
+
+
+	$can_edit_privacy = true;
+	$album_id         = 0;
+	$folder_id        = 0;
+	$comment_content = bp_get_activity_comment_content();
+
+	$album_activity_id = bp_activity_get_meta( $comment_id, 'bp_media_album_activity', true );
+	if ( ! empty( $album_activity_id ) ) {
+		$album_id = $album_activity_id;
+	}
+
+	$folder_activity_id = bp_activity_get_meta( $comment_id, 'bp_document_folder_activity', true );
+	if ( ! empty( $folder_activity_id ) ) {
+		$folder_id = $folder_activity_id;
+	}
+
+	// if album or folder activity then set privacy edit to always false.
+	if ( $album_id || $folder_id ) {
+		$can_edit_privacy = false;
+	}
+
+	/**
+	 * Filter here to edit the comment edit data.
+	 *
+	 * @since BuddyBoss 1.5.5
+	 *
+	 * @param string $comment_data The Comment edit data.
+	 */
+	return apply_filters(
+		'bp_get_activity_comment_edit_data',
+		array(
+			'id'               => $comment_id,
+			'content'          => stripslashes( $comment_content ),
+			'item_id'          => $activity->item_id,
+			'object'           => $activity->component,
+		)
+	);
+}

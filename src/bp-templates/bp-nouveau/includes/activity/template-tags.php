@@ -1468,3 +1468,11 @@ function bp_nouveau_edit_activity_data() {
 function bp_nouveau_get_edit_activity_data() {
 	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
 }
+
+function bp_nouveau_edit_activity_comment_data() {
+	echo bp_nouveau_get_edit_activity_comment_data();
+}
+
+function bp_nouveau_get_edit_activity_comment_data() {
+	return htmlentities( wp_json_encode( bp_get_activity_comment_edit_data( bp_get_activity_comment_id() ) ) );
+}

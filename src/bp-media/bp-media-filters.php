@@ -26,6 +26,7 @@ add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 2
 add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
 add_filter( 'bp_activity_get_edit_data', 'bp_media_get_edit_activity_data' );
+add_filter( 'bp_get_activity_comment_edit_data', 'bp_media_get_edit_activity_data' );
 
 // Forums.
 add_action( 'bbp_template_after_single_topic', 'bp_media_add_theatre_template' );
