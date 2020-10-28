@@ -38,5 +38,8 @@
 
 	<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 
+	<?php bp_nouveau_activity_comment_edit_form(); ?>
+
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
+
 </li>

@@ -1473,6 +1473,16 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'value' => __( 'Post', 'buddyboss' ),
 			),
 		),
+		'activity-edit-comment'          => array(
+			'after'      => 'bp_activity_entry_comments',
+			'nonce'      => 'edit_activity_comment',
+			'nonce_key'  => '_wpnonce_edit_activity_comment',
+			'wrapper'    => false,
+			'attributes' => array(
+				'name'  => 'ac_edit_form_submit',
+				'value' => __( 'Save', 'buddyboss' ),
+			),
+		),
 		'member-data-export'            => array(
 			'nonce'      => 'buddyboss_data_export_request',
 			'attributes' => array(

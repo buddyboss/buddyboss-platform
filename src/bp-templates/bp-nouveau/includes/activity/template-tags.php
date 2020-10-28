@@ -808,6 +808,15 @@ function bp_nouveau_activity_comment_form() {
 }
 
 /**
+ * Load the Activity comment edit form
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_nouveau_activity_comment_edit_form() {
+	bp_get_template_part( 'activity/comment-edit-form' );
+}
+
+/**
  * Output the action buttons for the activity comments
  *
  * @since BuddyPress 3.0.0

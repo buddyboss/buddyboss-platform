@@ -1026,11 +1026,194 @@ window.bp = window.bp || {};
 			}
 
 
+			//Show comment edit form
 			if ( target.hasClass( 'acomment-edit' ) ) {
 
-				console.log( 'Displaying Comment Edit...' );
+				var comment_id = $( target ).closest( '.comment-item' ).attr( 'data-bp-activity-comment-id' );
 
+				$( '#ac-edit-form-' + comment_id ).slideDown( 200 );
+			}
 
+			// Updating comments .
+			if ( 'ac_edit_form_submit' === target.prop( 'name' ) ) {
+				var comment_content, comment_data;
+
+				form    = target.closest( 'form' );
+				item_id = activity_id;
+
+				// Stop event propagation.
+				event.preventDefault();
+
+				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
+					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
+				}
+
+				comment_content = $( form ).find( '.ac-input' ).first();
+
+				console.log( item_id, activity_id , comment_content);
+				return;
+
+				// replacing atwho query from the comment content to disable querying it in the requests.
+				var atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var i = 0; i < atwho_query.length; i++ ) {
+					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				}
+
+				// transform other emoji into emojionearea emoji.
+				comment_content.find( 'img.emoji' ).each(function( index, Obj) {
+					$( Obj ).addClass( 'emojioneemoji' );
+					var emojis = $( Obj ).attr( 'alt' );
+					$( Obj ).attr( 'data-emoji-char', emojis );
+					$( Obj ).removeClass( 'emoji' );
+				});
+
+				// Transform emoji image into emoji unicode.
+				comment_content.find( 'img.emojioneemoji' ).replaceWith(
+					function () {
+						return this.dataset.emojiChar;
+					}
+				);
+
+				target.addClass( 'loading' ).prop( 'disabled', true );
+				comment_content.addClass( 'loading' ).prop( 'disabled', true );
+				var comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
+
+				comment_data = {
+					action                        : 'edit_activity_comment',
+					_wpnonce_new_activity_comment : $( '#_wpnonce_edit_activity_comment' ).val(),
+					comment_id                    : item_id,
+					form_id                       : activity_id,
+					content                       : comment_value
+				};
+
+				// Add the Akismet nonce if it exists.
+				if ( $( '#_bp_as_nonce_' + activity_id ).val() ) {
+					comment_data['_bp_as_nonce_' + activity_id] = $( '#_bp_as_nonce_' + activity_id ).val();
+				}
+
+				// add media data if enabled or uploaded.
+				if ( this.dropzone_media.length ) {
+					comment_data.media = this.dropzone_media;
+
+					if ( _.isEmpty( comment_data.content ) ) {
+						comment_data.content = '&#8203;';
+					}
+				}
+
+				// add media data if enabled or uploaded.
+				if ( this.dropzone_document.length ) {
+					comment_data.document = this.dropzone_document;
+
+					if ( _.isEmpty( comment_data.content ) ) {
+						comment_data.content = '&#8203;';
+					}
+				}
+
+				// add gif data if enabled or uploaded.
+				if ( ! _.isUndefined( this.models[activity_id] ) ) {
+					model                 = this.models[activity_id];
+					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
+
+					if ( _.isEmpty( comment_data.content ) ) {
+						comment_data.content = '&#8203;';
+					}
+				}
+
+				parent.ajax( comment_data, 'activity' ).done(
+					function( response ) {
+						target.removeClass( 'loading' );
+						comment_content.removeClass( 'loading' );
+						$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );
+
+						if ( false === response.success ) {
+							form.append( $( response.data.feedback ).hide().fadeIn( 200 ) );
+						} else {
+							var activity_comments = form.parent();
+							var the_comment       = $.trim( response.data.contents );
+
+							form.fadeOut(
+								200,
+								function() {
+									if ( 0 === activity_comments.children( 'ul' ).length ) {
+										if ( activity_comments.hasClass( 'activity-comments' ) ) {
+											activity_comments.prepend( '<ul></ul>' );
+										} else {
+											activity_comments.append( '<ul></ul>' );
+										}
+									}
+
+									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									$( form ).find( '.ac-input' ).first().html( '' );
+
+									activity_comments.parent().addClass( 'has-comments' );
+									activity_comments.parent().addClass( 'comments-loaded' );
+									activity_state.addClass( 'has-comments' );
+									// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+
+									var tool_box_comment = activity_comments.find( '.ac-reply-content' );
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+									}
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+									}
+									if ( tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ) ) {
+										tool_box_comment.find( '.ac-reply-toolbar .ac-reply-gif-button' ).removeClass( 'active ' );
+									}
+									jQuery( window ).scroll();
+								}
+							);
+
+							// why, as it's already done a few lines ahead ???
+							// jq( '#' + form.attr('id') + ' textarea').val('');
+
+							// Set the new count.
+							comment_count_span = activity_state.find( 'span.comments-count' );
+							comment_count      = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
+							comment_count      = Number( comment_count ) + 1;
+
+							// Increase the "Reply (X)" button count.
+							// $( activity_item ).find( 'a span.comment-count' ).html( comment_count );
+
+							if ( comments_text.length ) {
+								var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
+								comments_text.text( label.replace( '%d', comment_count || 1 ) );
+							}
+
+							// Increment the 'Show all x comments' string, if present.
+							show_all_a = $( activity_item ).find( '.show-all a' );
+							if ( show_all_a ) {
+								show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
+							}
+
+							// keep the dropzone media saved so it wont remove its attachment when destroyed.
+							if ( self.dropzone_media.length ) {
+								for ( var l = 0; l < self.dropzone_media.length; l++ ) {
+									self.dropzone_media[l].saved = true;
+								}
+							}
+
+							// keep the dropzone media saved so it wont remove its attachment when destroyed.
+							if ( self.dropzone_document.length ) {
+								for ( var d = 0; d < self.dropzone_document.length; d++ ) {
+									self.dropzone_document[d].saved = true;
+								}
+							}
+
+						}
+
+						if ( ! _.isUndefined( model ) ) {
+							model.set( 'gif_data', {} );
+							$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
+						}
+
+						self.destroyCommentMediaUploader( activity_id );
+						self.destroyCommentDocumentUploader( activity_id );
+
+						target.prop( 'disabled', false );
+						comment_content.prop( 'disabled', false );
+					}
+				);
 			}
 
 			// Removing the form.
