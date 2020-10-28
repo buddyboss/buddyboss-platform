@@ -3808,8 +3808,6 @@ function bp_activity_create_summary( $content, $activity ) {
 		$content = ( $excerpt ) ?: $content->post_content;
 	}
 
-
-
 	$para_count     = substr_count( strtolower( wpautop( $content ) ), '<p>' );
 	$has_audio      = ! empty( $media['has']['audio'] ) && $media['has']['audio'];
 	$has_videos     = ! empty( $media['has']['videos'] ) && $media['has']['videos'];

@@ -608,8 +608,6 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 		return;
 	}
 
-	error_log( print_r( $args, 1 ) );
-
 	bp_activity_update_meta( $activity_id, 'post_title', $post->post_title );
 
 	if ( ! empty( $args['post_url'] ) ) {
