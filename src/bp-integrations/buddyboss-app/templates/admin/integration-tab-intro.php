@@ -1,7 +1,7 @@
 <div class="wrap">
 	
 	<div class="bp-admin-card section-bp_buddyboss_app-integration">
-		<h2><?php _e( 'BuddyBoss App <span>&mdash; coming soon</span>', 'buddyboss' ); ?></h2>
+		<h2><?php _e( 'BuddyBoss App', 'buddyboss' ); ?></h2>
 		<p>
 		<?php
 			printf(
@@ -16,13 +16,11 @@
 		</p>
 		<br />
 		<?php
-			/*
 			printf(
 				'<a href="%s" class="button-primary">%s</a>',
 				esc_url( bp_get_admin_url( '?hello=buddyboss-app' ) ),
 				__( 'Video Demo', 'buddyboss' )
 			);
-			*/
 		?>
 		<?php
 			printf(
