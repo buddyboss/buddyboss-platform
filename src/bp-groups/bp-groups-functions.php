@@ -294,7 +294,8 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	$group->description = $r['description'];
 
-	if ( $r['parent_id'] ) {
+	// Update the parent ID if necessary.
+	if ( false !== $r['parent_id'] ) {
 		$group->parent_id = $r['parent_id'];
 	}
 
