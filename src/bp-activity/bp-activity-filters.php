@@ -580,8 +580,14 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	if ( in_array( $activities_template->activity->type, array( 'new_blog_post', 'new_blog_comment' ), true ) ) {
 		$excerpt_link = 'new_blog_post' === $activities_template->activity->type ? get_the_permalink( $activities_template->activity->secondary_item_id ) : bp_get_activity_thread_permalink();
-
-		$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
+		$read_more_added = bp_activity_get_meta( $activities_template->activity->id, 'bp_blog_posts_content_activity_read_more_added', true );
+		// If posts doesn't have any content and only the featured image is added then add the Read More text below the image.
+		if ( ! $read_more_added && 'new_blog_post' === $activities_template->activity->type && '' === wp_strip_all_tags( $excerpt ) ) {
+			$excerpt = sprintf( '<span class="activity-blog-post-link"><a href="%1$s" rel="nofollow">%2$s</a></span>%3$s', $excerpt_link, $append_text, $excerpt );
+		// Keep the Read More as it is in all the previous activity created.
+		} elseif ( ! $read_more_added ) {
+			$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
+		}
 	} elseif ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
 		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 
