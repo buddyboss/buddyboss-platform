@@ -159,9 +159,6 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 
 		return $return;
 	}
-
-	do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
-
 	return $action;
 }
 add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 5 );
