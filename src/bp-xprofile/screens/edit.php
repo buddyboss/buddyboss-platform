@@ -22,7 +22,7 @@ function xprofile_screen_edit_profile() {
 
 	// Make sure a group is set.
 	if ( ! bp_action_variable( 1 ) ) {
-		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/1' ) );
+		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_xprofile_base_group_id() ) );
 	}
 
 	// Check the field group exists.
