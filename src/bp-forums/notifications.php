@@ -203,7 +203,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		'item_id'          => $reply_id,
 		'component_name'   => bbp_get_component_name(),
 		'component_action' => 'bbp_new_reply',
-		'date_notified'    => bp_core_current_time(),
+		'date_notified'    => get_post( $reply_id )->post_date_gmt,
 	);
 
 	// Notify the topic author if not the current reply author
