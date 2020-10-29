@@ -128,7 +128,11 @@ function bp_moderation_admin() {
         <div class="wrap">
             <h2 class="nav-tab-wrapper">
 				<?php
-				bp_core_admin_moderation_tabs( __( 'Reported Content', 'buddyboss' ) );
+				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+					bp_core_admin_moderation_tabs( __( 'Blocked Members', 'buddyboss' ) );
+				} else {
+					bp_core_admin_moderation_tabs( __( 'Reported Content', 'buddyboss' ) );
+				}
 				?>
             </h2>
         </div>
@@ -194,20 +198,4 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 	}
 
 	return $new_value;
-}
-
-/**
- * Function to get specific moderation content type.
- *
- * @since BuddyBoss 1.5.4
- *
- * @param $key string content type key.
- *
- * @return mixed|void
- */
-function bp_get_moderation_content_type( $key ) {
-
-	$content_types = bp_moderation_content_types();
-
-	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }

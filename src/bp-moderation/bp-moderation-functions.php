@@ -214,3 +214,19 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 
 	return $user_id;
 }
+
+/**
+ * Function to get specific moderation content type.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param $key string content type key.
+ *
+ * @return mixed|void
+ */
+function bp_get_moderation_content_type( $key ) {
+
+	$content_types = bp_moderation_content_types();
+
+	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
+}
