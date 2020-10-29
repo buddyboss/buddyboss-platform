@@ -144,82 +144,73 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
 }
 
 /**
- * Output the tabs in the admin area.
+ * Function to get the moderation content types.
  *
  * @since BuddyBoss 1.5.4
  *
- * @param string $active_tab Name of the tab that is active. Optional.
+ * @return mixed|void
  */
-function bp_core_admin_moderation_tabs( $active_tab = '' ) {
+function bp_moderation_content_types() {
 
-	$tabs_html    = '';
-	$idle_class   = 'nav-tab';
-	$active_class = 'nav-tab nav-tab-active';
+	$content_types = array(
+		'activity'    => 'Activity',
+		'document'    => 'Document',
+		'forum_reply' => 'Forum Reply',
+		'forum_topic' => 'Forum Topic',
+		'forum'       => 'Forum',
+		'groups'      => 'Groups',
+		'media'       => 'Media',
+		'user'        => 'User',
+		'message'     => 'Message',
+	);
 
-	/**
-	 * Filters the admin tabs to be displayed.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param array $value Array of tabs to output to the admin area.
-	 */
-	$tabs = apply_filters( 'bp_core_admin_moderation_tabs', bp_core_get_moderation_admin_tabs( $active_tab ) );
-
-	// Loop through tabs and build navigation.
-	foreach ( array_values( $tabs ) as $tab_data ) {
-		$is_current = (bool) ( $tab_data['name'] == $active_tab );
-		$tab_class  = $is_current ? $tab_data['class'] . ' ' . $active_class : $tab_data['class'] . ' ' . $idle_class;
-		$tabs_html  .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
-	}
-
-	echo $tabs_html;
-
-	/**
-	 * Fires after the output of tabs for the admin area.
-	 *
-	 * @since BuddyBoss 1.5.4
-	 */
-	do_action( 'bp_admin_moderation_tabs' );
+	return apply_filters( 'bp_moderation_content_types', $content_types );
 }
 
 /**
- * Register tabs for the BuddyBoss > Moderation screens.
+ * Function get content owner id.
  *
  * @since BuddyBoss 1.5.4
  *
- * @param string $active_tab
+ * @param $moderation_item_id   int content id.
+ * @param $moderation_item_type string content type.
  *
- * @return array
+ * @return array|int|string
  */
-function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
+function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
-	$tabs = array();
+	switch ( $moderation_item_type ) {
+		case'activity':
+			$activity = new BP_Activity_Activity( $moderation_item_id );
+			$user_id  = ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
+			break;
+		case'document':
+			$document = new BP_Document( $moderation_item_id );
+			$user_id  = ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
+			break;
+		case'forum_reply':
+		case'forum_topic':
+		case'forum':
+			$user_id = get_post_field( 'post_author', $moderation_item_id );
+			break;
+		case'media':
+			$media   = new BP_Media( $moderation_item_id );
+			$user_id = ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
+			break;
+		case'groups':
+			$group   = new BP_Groups_Group( $moderation_item_id );
+			$user_id = ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
+			break;
+		case'user':
+			$user_id = $moderation_item_id;
+			break;
+		case'message':
+			$message = new BP_Messages_Message( $moderation_item_id );
+			$user_id = ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
+			break;
+		default:
+			$user_id = 0;
+	}
 
-	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) ),
-		'name'  => __( 'Reported Content', 'buddyboss' ),
-		'class' => 'bp-reported-content',
-	);
-
-
-	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation', 'tab' => 'blocked-members' ), 'admin.php' ) ),
-		'name'  => __( 'Blocked Members', 'buddyboss' ),
-		'class' => 'bp-blocked-members',
-	);
-
-	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation', 'tab' => 'report-categories' ), 'admin.php' ) ),
-		'name'  => __( 'Report Categories', 'buddyboss' ),
-		'class' => 'bp-report-categories',
-	);
-
-	/**
-	 * Filters the tab data used in our wp-admin screens.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param array $tabs Tab data.
-	 */
-	return apply_filters( 'bp_core_get_moderation_admin_tabs', $tabs );
+	return $user_id;
 }
