@@ -2294,6 +2294,17 @@ function bp_is_document_component() {
 }
 
 /**
+ * Check whether the current page is part of the Video component.
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return bool True if the current page is part of the Video component.
+ */
+function bp_is_video_component() {
+	return (bool) bp_is_current_component( 'video' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -4133,6 +4144,23 @@ function bp_is_group_messages() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's video page?
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return bool True if the current page is a group's video page.
+ */
+function bp_is_group_video() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'videos' ) ) {
 		$retval = true;
 	}
 

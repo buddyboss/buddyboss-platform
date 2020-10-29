@@ -618,6 +618,7 @@ class BuddyPress {
 			'search',
 			'media',
 			'document',
+			'video',
 			'gdpr',
 			'invites',
 		);

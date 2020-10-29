@@ -1206,3 +1206,100 @@ function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
 
 	return $buttons;
 }
+
+/**
+ * Function get video support extension.
+ *
+ * @param string $format
+ *
+ * @return array|mixed|string|void
+ */
+function bp_video_allowed_video_type() {
+
+	$extension_lists = array(
+		'bb_doc_1'  => array(
+			'extension'   => '.abw',
+			'mime_type'   => 'application/x-abiword',
+			'description' => __( 'AbiWord Document', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_2'  => array(
+			'extension'   => '.abw',
+			'mime_type'   => 'text/xml',
+			'description' => __( 'AbiWord Document', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_3'  => array(
+			'extension'   => '.ace',
+			'mime_type'   => 'application/x-ace-compressed',
+			'description' => __( 'ACE Archive', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_4'  => array(
+			'extension'   => '.ai',
+			'mime_type'   => 'application/postscript',
+			'description' => __( 'Illustrator File', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_5'  => array(
+			'extension'   => '.ai',
+			'mime_type'   => 'application/pdf',
+			'description' => __( 'Illustrator File', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_6'  => array(
+			'extension'   => '.apk',
+			'mime_type'   => 'application/vnd.android.package-archive',
+			'description' => __( 'Android Package', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_7'  => array(
+			'extension'   => '.apk',
+			'mime_type'   => 'application/java-archive',
+			'description' => __( 'Android Package', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_8'  => array(
+			'extension'   => '.css',
+			'mime_type'   => 'text/css',
+			'description' => __( 'CSS', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_9'  => array(
+			'extension'   => '.css',
+			'mime_type'   => 'text/plain',
+			'description' => __( 'CSS', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+		'bb_doc_10'  => array(
+			'extension'   => '.csv',
+			'mime_type'   => 'text/csv',
+			'description' => __( 'CSV', 'buddyboss' ),
+			'is_default'  => 1,
+			'is_active'   => 1,
+			'icon'        => '',
+		),
+	);
+
+	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
+
+	return $extension_lists;
+}

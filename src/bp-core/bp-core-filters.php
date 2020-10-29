@@ -787,6 +787,8 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					$component = $tab;
 					if ( $component && in_array( $component, array( 'document' ), true ) ) {
 						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'video' ), true ) ) {
+						$component = 'media';
 					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
 						$component = 'xprofile';
 					}
