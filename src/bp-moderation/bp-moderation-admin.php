@@ -123,9 +123,14 @@ function bp_moderation_admin_load() {
  */
 function bp_moderation_admin() {
 	// Added navigation tab on top.
-	if ( bp_core_get_groups_admin_tabs() ) { ?>
+	if ( bp_core_get_moderation_admin_tabs() ) {
+		?>
         <div class="wrap">
-            <h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( __( 'Reported Content', 'buddyboss' ) ); ?></h2>
+            <h2 class="nav-tab-wrapper">
+				<?php
+				bp_core_admin_moderation_tabs( __( 'Reported Content', 'buddyboss' ) );
+				?>
+            </h2>
         </div>
 		<?php
 	}
@@ -192,30 +197,6 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 }
 
 /**
- * Function to get the moderation content types.
- *
- * @since BuddyBoss 1.5.4
- *
- * @return mixed|void
- */
-function bp_moderation_content_types() {
-
-	$content_types = array(
-		'activity'    => 'Activity',
-		'document'    => 'Document',
-		'forum_reply' => 'Forum Reply',
-		'forum_topic' => 'Forum Topic',
-		'forum'       => 'Forum',
-		'groups'      => 'Groups',
-		'media'       => 'Media',
-		'user'        => 'User',
-		'message'     => 'Message',
-	);
-
-	return apply_filters( 'bp_moderation_content_types', $content_types );
-}
-
-/**
  * Function to get specific moderation content type.
  *
  * @since BuddyBoss 1.5.4
@@ -229,42 +210,4 @@ function bp_get_moderation_content_type( $key ) {
 	$content_types = bp_moderation_content_types();
 
 	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
-}
-
-function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
-
-	switch ( $moderation_item_type ) {
-		case'activity':
-			$activity = new BP_Activity_Activity( $moderation_item_id );
-			$user_id  = ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
-			break;
-		case'document':
-			$document = new BP_Document( $moderation_item_id );
-			$user_id  = ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
-			break;
-		case'forum_reply':
-		case'forum_topic':
-		case'forum':
-			$user_id = get_post_field( 'post_author', $moderation_item_id );
-			break;
-		case'media':
-			$media   = new BP_Media( $moderation_item_id );
-			$user_id = ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
-			break;
-		case'groups':
-			$group   = new BP_Groups_Group( $moderation_item_id );
-			$user_id = ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
-			break;
-		case'user':
-			$user_id = $moderation_item_id;
-			break;
-		case'message':
-			$message = new BP_Messages_Message( $moderation_item_id );
-			$user_id = ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
-			break;
-		default:
-			$user_id = 0;
-	}
-
-	return $user_id;
 }

@@ -144,7 +144,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
             </tr>
             </thead>
 
-            <tbody id="the-comment-list">
+            <tbody id="the-moderation-request-list">
 			<?php $this->display_rows_or_placeholder(); ?>
             </tbody>
 
