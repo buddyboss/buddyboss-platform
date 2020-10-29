@@ -2306,7 +2306,7 @@ function bp_media_default_scope( $scope ) {
 		$allowed_scopes[] = 'groups';
 	}
 
-	if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
+	if ( ( is_user_logged_in() || bp_is_user_media() ) && bp_is_profile_media_support_enabled() ) {
 		$allowed_scopes[] = 'personal';
 	}
 
