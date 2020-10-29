@@ -629,7 +629,7 @@ class BP_Media {
 					$visibility = ucfirst( $status );
 				}
 			} else {
-				$visibility       = $media_privacy[ $media->privacy ];
+				$visibility       = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
 			}
 			$media->group_name = $group_name;
 			$media->visibility = $visibility;
