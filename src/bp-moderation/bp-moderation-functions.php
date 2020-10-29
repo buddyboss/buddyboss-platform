@@ -28,7 +28,6 @@ defined( 'ABSPATH' ) || exit;
  * @return array $moderation See BP_Moderation::get() for description.
  * @see   BP_Moderation::get() For more information on accepted arguments
  *        and the format of the returned value.
- *
  */
 function bp_moderation_get( $args = '' ) {
 
@@ -129,7 +128,6 @@ function bp_moderation_get( $args = '' ) {
  * @param string $type Moderation items type.
  *
  * @return array $moderation See BP_Moderation::get() for description.
- *
  */
 function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
 	return bp_moderation_get(
@@ -172,39 +170,39 @@ function bp_moderation_content_types() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param $moderation_item_id   int content id.
- * @param $moderation_item_type string content type.
+ * @param int    $moderation_item_id   content id.
+ * @param string $moderation_item_type content type.
  *
  * @return array|int|string
  */
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
 	switch ( $moderation_item_type ) {
-		case'activity':
+		case 'activity':
 			$activity = new BP_Activity_Activity( $moderation_item_id );
 			$user_id  = ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
 			break;
-		case'document':
+		case 'document':
 			$document = new BP_Document( $moderation_item_id );
 			$user_id  = ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
 			break;
-		case'forum_reply':
-		case'forum_topic':
-		case'forum':
+		case 'forum_reply':
+		case 'forum_topic':
+		case 'forum':
 			$user_id = get_post_field( 'post_author', $moderation_item_id );
 			break;
-		case'media':
+		case 'media':
 			$media   = new BP_Media( $moderation_item_id );
 			$user_id = ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
 			break;
-		case'groups':
+		case 'groups':
 			$group   = new BP_Groups_Group( $moderation_item_id );
 			$user_id = ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
 			break;
-		case'user':
+		case 'user':
 			$user_id = $moderation_item_id;
 			break;
-		case'message':
+		case 'message':
 			$message = new BP_Messages_Message( $moderation_item_id );
 			$user_id = ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
 			break;
@@ -220,7 +218,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  *
  * @since BuddyBoss 1.5.4
  *
- * @param $key string content type key.
+ * @param string $key content type key.
  *
  * @return mixed|void
  */
