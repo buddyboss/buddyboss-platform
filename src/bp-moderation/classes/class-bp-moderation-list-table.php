@@ -43,7 +43,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * @return array Column headers.
 	 */
-	function get_column_info() {
+	public function get_column_info() {
 
 		$screen         = get_current_screen();
 		$hidden_columns = get_hidden_columns( $screen );
@@ -75,8 +75,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 */
-	function no_items() {
-		_e( 'No moderation requests found.', 'buddyboss' );
+	public function no_items() {
+		esc_html__( 'No moderation requests found.', 'buddyboss' );
 	}
 
 	/**
@@ -106,7 +106,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		} else {
 			$moderation_request_args['exclude_types'] = array( 'user' );
 		}
-		
+
 		$moderation_requests = BP_Moderation::get( $moderation_request_args );
 
 		// Set raw data to display.
@@ -127,33 +127,33 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 */
-	function display() {
+	public function display() {
 		$this->display_tablenav( 'top' ); ?>
 
-        <h2 class="screen-reader-text">
+		<h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
-			_e( 'Moderation Request list', 'buddyboss' );
+			esc_html_e( 'Moderation Request list', 'buddyboss' );
 			?>
-        </h2>
+		</h2>
 
-        <table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
-            <thead>
-            <tr>
+		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
+			<thead>
+			<tr>
 				<?php $this->print_column_headers(); ?>
-            </tr>
-            </thead>
+			</tr>
+			</thead>
 
-            <tbody id="the-moderation-request-list">
+			<tbody id="the-moderation-request-list">
 			<?php $this->display_rows_or_placeholder(); ?>
-            </tbody>
+			</tbody>
 
-            <tfoot>
-            <tr>
+			<tfoot>
+			<tr>
 				<?php $this->print_column_headers( false ); ?>
-            </tr>
-            </tfoot>
-        </table>
+			</tr>
+			</tfoot>
+		</table>
 		<?php
 
 		$this->display_tablenav( 'bottom' );
@@ -166,7 +166,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * @return array Array of column titles.
 	 * @see   WP_List_Table::single_row_columns()
-	 *
 	 */
 	public function get_columns() {
 
@@ -197,7 +196,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * @param object $item The current item.
 	 */
-	function single_row( $item ) {
+	public function single_row( $item ) {
 		$item = (array) $item;
 		echo '<tr>';
 		echo $this->single_row_columns( $item );
@@ -221,11 +220,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		if ( 'content_type' === $column_name ) {
-			echo bp_get_moderation_content_type( $item['item_type'] );
+			echo esc_html( bp_get_moderation_content_type( $item['item_type'] ) );
 		}
 
 		if ( 'content_id' === $column_name ) {
-			echo $item['item_id'];
+			echo esc_html( $item['item_id'] );
 		}
 
 		if ( 'content_owner' === $column_name ) {
@@ -234,11 +233,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		}
 
 		if ( 'report' === $column_name ) {
-			echo "report category";
+			echo 'report category';
 		}
 
 		if ( 'date' === $column_name ) {
-			echo bbp_get_time_since( bbp_convert_date( $item['date_updated'] ) );
+			echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_updated'] ) ) );
 		}
 
 		/**
