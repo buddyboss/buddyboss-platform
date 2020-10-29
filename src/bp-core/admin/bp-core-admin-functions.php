@@ -2603,7 +2603,9 @@ function bp_set_emails_platform_tab_submenu_active( $parent_file ) {
  * @param string $active_tab Name of the tab that is active. Optional.
  */
 function bp_core_admin_groups_tabs( $active_tab = '' ) {
-
+	echo "<pre>";
+	print_r($active_tab);
+	echo "</pre>";
 	$tabs_html    = '';
 	$idle_class   = 'nav-tab';
 	$active_class = 'nav-tab nav-tab-active';
