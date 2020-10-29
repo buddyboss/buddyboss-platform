@@ -15,7 +15,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 // Per_page screen option. Has to be hooked in extremely early.
-if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' == $_REQUEST['page'] ) {
+if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST['page'] ) {
 	add_filter( 'set-screen-option', 'bp_moderation_admin_screen_options', 10, 3 );
 }
 
@@ -125,17 +125,19 @@ function bp_moderation_admin() {
 	// Added navigation tab on top.
 	if ( bp_core_get_moderation_admin_tabs() ) {
 		?>
-        <div class="wrap">
-            <h2 class="nav-tab-wrapper">
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper">
 				<?php
 				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 					bp_core_admin_moderation_tabs( __( 'Blocked Members', 'buddyboss' ) );
+				} elseif ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
+					bp_core_admin_moderation_tabs( __( 'Report Categories', 'buddyboss' ) );
 				} else {
 					bp_core_admin_moderation_tabs( __( 'Reported Content', 'buddyboss' ) );
 				}
 				?>
-            </h2>
-        </div>
+			</h2>
+		</div>
 		<?php
 	}
 	bp_moderation_admin_index();
@@ -157,20 +159,34 @@ function bp_moderation_admin_index() {
 	// Prepare the group items for display.
 	$bp_moderation_list_table->prepare_items();
 	?>
-    <div class="wrap">
-        <h1>
-			<?php _e( 'Moderation', 'buddyboss' ); ?>
-        </h1>
+	<div class="wrap">
+		<h1>
+			<?php
+			if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+				esc_html_e( 'Blocked Members', 'buddyboss' );
+			} elseif ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
+				esc_html_e( 'Report Categories', 'buddyboss' );
+			} else {
+				esc_html_e( 'Reported Content', 'buddyboss' );
+			}
+			?>
+		</h1>
 
-		<?php // Display each activity on its own row. ?>
-		<?php $bp_moderation_list_table->views(); ?>
+		<?php
+		if ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
+			echo 'report categories';
+		} else {
+			$bp_moderation_list_table->views();
+			?>
 
-        <form id="bp-moseration-form" action="" method="get">
-			<?php //$bp_moderation_list_table->search_box( __( 'Search all Moderation', 'buddyboss' ), 'bp-activity' ); ?>
-            <input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
-			<?php $bp_moderation_list_table->display(); ?>
-        </form>
-    </div>
+			<form id="bp-moseration-form" action="" method="get">
+				<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
+				<?php $bp_moderation_list_table->display(); ?>
+			</form>
+			<?php
+		}
+		?>
+	</div>
 	<?php
 }
 
@@ -187,7 +203,7 @@ function bp_moderation_admin_index() {
  */
 function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 
-	if ( 'buddyboss_page_bp_moderation_per_page' != $option && 'buddyboss_page_bp_activity_network_per_page' != $option ) {
+	if ( 'buddyboss_page_bp_moderation_per_page' !== $option && 'buddyboss_page_bp_activity_network_per_page' !== $option ) {
 		return $value;
 	}
 
