@@ -14614,8 +14614,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 
 .search-media-list .media-album_thumb img {
   border-radius: 4px !important;
-  max-width: 100%;
-  height: auto;
+  width: 95px;
+  height: 75px;
+  object-fit: cover;
 }
 
 .search-media-list .media-album_details {
