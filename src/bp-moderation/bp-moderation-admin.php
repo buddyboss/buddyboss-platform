@@ -90,7 +90,7 @@ function bp_moderation_admin_load() {
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . esc_html__( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+			'<p><a href="https://www.buddyboss.com/resources/">'. esc_html__( 'Documentation', 'buddyboss' ) .'</a></p>'
 		);
 	} else {
 		/**
@@ -122,7 +122,7 @@ function bp_moderation_admin_load() {
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . wp_kses_post( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+			'<p><a href="https://www.buddyboss.com/resources/">' . esc_html__( 'Documentation', 'buddyboss' ) . '</a></p>'
 		);
 
 		// Add accessible hidden heading and text for Activity screen pagination.
@@ -163,7 +163,7 @@ function bp_moderation_admin_load() {
 	// Help panel - sidebar links.
 	get_current_screen()->set_help_sidebar(
 		'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-		'<p>' . esc_html__( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+		'<p><a href="https://www.buddyboss.com/resources/">' . esc_html__( 'Documentation', 'buddyboss' ) . '</a></p>'
 	);
 
 	// Add accessible hidden heading and text for Activity screen pagination.
