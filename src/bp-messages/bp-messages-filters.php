@@ -91,6 +91,7 @@ add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_a
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 
+add_filter( 'bp_repair_list', 'bp_messages_repair_items_unread_count' );
 
 /**
  * Enforce limitations on viewing private message contents
@@ -651,5 +652,61 @@ function bp_messages_remove_user_to_group_message_thread( $group_id, $user_id ) 
 			}
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
 		}
+	}
+}
+
+/**
+ * Add message notification repair list item.
+ *
+ * @param $repair_list
+ *
+ * @since BuddyBoss 1.5.0
+ * @return array Repair list items.
+ */
+function bp_messages_repair_items_unread_count( $repair_list ) {
+	$repair_list[] = array(
+		'bp-repair-messages-unread-count',
+		__( 'Repair unread messages count on the site.', 'buddyboss' ),
+		'bp_messages_admin_repair_unread_messages_count',
+	);
+	return $repair_list;
+}
+
+/**
+ * Repair unread messages count.
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_messages_admin_repair_unread_messages_count() {
+	global $wpdb;
+
+	$offset           = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp               = buddypress();
+	$recipients_query = "SELECT DISTINCT thread_id FROM {$bp->messages->table_name_recipients} LIMIT 50 OFFSET $offset ";
+	$recipients       = $wpdb->get_results( $recipients_query );
+
+	if ( ! empty( $recipients ) ) {
+		foreach ( $recipients as $recipient ) {
+			$thread_id = (int) $recipient->thread_id;
+			if ( ! empty( $thread_id ) ) {
+				$is_valid = messages_is_valid_thread( $thread_id );
+				if ( empty( $is_valid ) ) {
+					messages_delete_thread( $thread_id, bp_loggedin_user_id() );
+				}
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s thread updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'thread update complete!', 'buddyboss' ),
+		);
 	}
 }

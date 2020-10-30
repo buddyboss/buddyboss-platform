@@ -270,6 +270,8 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '.gif-image-container', this.playVideo.bind( this ) );
 
+			$( '.bp-existing-media-wrap' ).on( 'scroll', this.loadExistingMedia.bind( this ) );
+
 			document.addEventListener( 'keyup', this.closePopup.bind( this ) );
 			document.addEventListener( 'keyup', this.submitPopup.bind( this ) );
 
@@ -303,6 +305,11 @@ window.bp = window.bp || {};
 				$('#bp-media-edit-child-folder').show();
 			}
 
+		},
+
+		loadExistingMedia: function() {
+			// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+			$( window ).scroll();
 		},
 
 		resetPageDocumentDirectory: function( event ) {
@@ -475,10 +482,11 @@ window.bp = window.bp || {};
 
 			if ( itemId > 0 ) {
 				var data = {
-					'action'	: 'document_save_privacy',
-					'itemId'	: itemId,
-					'type'		: type,
-					'value'		: value,
+					'action': 'document_save_privacy',
+					'item_id': itemId,
+					'type': type,
+					'value': value,
+					'_wpnonce': BP_Nouveau.nonces.media
 				};
 
 				$.ajax(
@@ -519,10 +527,11 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var data = {
-				'action'			: 'document_folder_move',
-				'currentFolderId'	: currentFolderId,
-				'folderMoveToId'	: folderMoveToId,
-				'group'				: self.group_id
+				'action': 'document_folder_move',
+				'current_folder_id': currentFolderId,
+				'folder_move_to_id': folderMoveToId,
+				'group_id': self.group_id,
+				'_wpnonce': BP_Nouveau.nonces.media,
 			};
 
 			$.ajax(
@@ -586,11 +595,12 @@ window.bp = window.bp || {};
 				}
 
 				data = {
-					'action'				: 'document_delete',
-					'id'					: id,
-					'preview_attachment_id'	: preview_attachment_id,
-					'type'					: type,
-					'attachment_id'			: attachment_id
+					'action': 'document_delete',
+					'id': id,
+					'preview_attachment_id': preview_attachment_id,
+					'type': type,
+					'attachment_id': attachment_id,
+					'_wpnonce': BP_Nouveau.nonces.media,
 				};
 
 				if ( 'yes' === BP_Nouveau.media.is_document_directory ) {
@@ -629,12 +639,13 @@ window.bp = window.bp || {};
 				var activityId = target.attr( 'data-item-activity-id' );
 
 				data = {
-					'action'				: 'document_activity_delete',
-					'id'					: id,
-					'preview_attachment_id'	: preview_attachment_id,
-					'type'					: type,
-					'activity_id'			: activityId,
-					'attachment_id'			: attachment_id
+					'action': 'document_activity_delete',
+					'id': id,
+					'preview_attachment_id': preview_attachment_id,
+					'type': type,
+					'activity_id': activityId,
+					'attachment_id': attachment_id,
+					'_wpnonce': BP_Nouveau.nonces.media,
 				};
 
 				$.ajax(
@@ -1546,7 +1557,7 @@ window.bp = window.bp || {};
 
 		resetGroupMessagesMediaComponent: function() {
 			var self = this;
-			if ( self.dropzone_obj && typeof self.dropzone_obj !== 'undefined' ) {
+			if ( self.dropzone_obj.length && typeof self.dropzone_obj !== 'undefined' ) {
 				self.dropzone_obj.destroy();
 			}
 			self.dropzone_media = [];
@@ -2548,7 +2559,7 @@ window.bp = window.bp || {};
 				$.ajax(
 					{
 						url : BP_Nouveau.ajaxurl,
-						type : 'post',
+						type : 'GET',
 						data : {
 							action: 'document_get_folder_view',
 							id: this.moveToIdPopup,
@@ -2684,18 +2695,28 @@ window.bp = window.bp || {};
 			var pattern				   		= '';
 
 			if ( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
-				pattern = /^[-\w^&@{}[\],$=!#().%+~]+$/; // regex to find not supported characters - \ * | / > < ? ` ; :
+				pattern = /[?\[\]=<>:;,'"&$#*()|~`!{}%+ \/]+/g; // regex to find not supported characters. ?[]/=<>:;,'"&$#*()|~`!{}%+ {space}
 			} else if ( $( event.currentTarget ).closest( '.ac-folder-list' ).length ) {
-				pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters. \ * | / > < ? ` ; : {space}
+				pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
 			}
 
 			var matches     = pattern.exec( document_name_val );
 			var matchStatus = Boolean( matches );
 
-			if ( matchStatus ) { // If any not supported character found add error class.
+			if ( !matchStatus ) { // If any not supported character found add error class.
 				document_edit.removeClass( 'error' );
 			} else {
 				document_edit.addClass( 'error' );
+			}
+
+			if( $( event.currentTarget ).closest( '.ac-document-list' ).length ) {
+
+				if( document_name_val.indexOf('\\\\') != -1 || matchStatus) { //Also check if filename has "\\"
+					document_edit.addClass( 'error' );
+				} else {
+					document_edit.removeClass( 'error' );
+				}
+
 			}
 
 			if ( $( event.currentTarget ).hasClass( 'name_edit_cancel' ) || event.keyCode == 27 ) {
@@ -2707,7 +2728,7 @@ window.bp = window.bp || {};
 
 			if ( $( event.currentTarget ).hasClass( 'name_edit_save' ) || event.keyCode == 13 ) {
 
-				if ( ! matchStatus ) {
+				if ( matchStatus ) {
 					return; // prevent user to add not supported characters.
 				}
 
@@ -2719,12 +2740,13 @@ window.bp = window.bp || {};
 					{
 						url 	: BP_Nouveau.ajaxurl,
 						type 	: 'post',
-						data 	: {
-							action					: 'document_update_file_name',
-							document_id				: document_id,
-							attachment_document_id	: attachment_document_id,
-							document_type			: documentType,
-							name					: document_name_val,
+						data: {
+							action: 'document_update_file_name',
+							document_id: document_id,
+							attachment_document_id: attachment_document_id,
+							document_type: documentType,
+							name: document_name_val,
+							_wpnonce: BP_Nouveau.nonces.media
 						},
 						success : function( response ) {
 							if (response.success) {
@@ -2822,7 +2844,7 @@ window.bp = window.bp || {};
 			$.ajax(
 				{
 					url	: BP_Nouveau.ajaxurl,
-					type: 'post',
+					type: 'GET',
 					data: {
 						action	: 'document_get_folder_view',
 						id		: id,
@@ -3468,7 +3490,11 @@ window.bp = window.bp || {};
 				privacy = $( event.currentTarget ).parents().find( '.open-popup #bb-folder-privacy option:selected' );
 			event.preventDefault();
 
-			if ($.trim( title.val() ) === '') {
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -3545,7 +3571,12 @@ window.bp = window.bp || {};
 		saveChildFolder: function (event) {
 			var target  = $( event.currentTarget ), self = this, title = $( '#bp-media-create-child-folder #bb-album-child-title' );
 			event.preventDefault();
-			if ($.trim( title.val() ) === '') {
+
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -3598,7 +3629,11 @@ window.bp = window.bp || {};
 				privacy = $( '#bp-media-edit-child-folder #bb-folder-privacy' ),
 				id	    = this.currentTargetParent;
 
-			if ($.trim( title.val() ) === '') {
+			var pattern = /[\\/?%*:|"<>]+/g; // regex to find not supported characters - \ / ? % * : | " < >
+			var matches     = pattern.exec( title.val() );
+			var matchStatus = Boolean( matches );
+
+			if ($.trim( title.val() ) === '' || matchStatus) {
 				title.addClass( 'error' );
 				return false;
 			} else {
@@ -3982,6 +4017,9 @@ window.bp = window.bp || {};
 
 							// Update the current page.
 							self.current_page_existing_media = next_page;
+
+							// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+							jQuery( window ).scroll();
 						}
 					}
 				);
@@ -4250,9 +4288,6 @@ window.bp = window.bp || {};
 
 				}
 			);
-			if ( ! $( '.bb-activity-media-elem.document-activity' ).closest( '.activity-inner' ).hasClass( 'documemt-activity' )) {
-				$( '.bb-activity-media-elem.document-activity' ).closest( '.activity-content' ).addClass( 'documemt-activity' );
-			}
 		},
 
 		/**
@@ -4387,18 +4422,20 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			var userIsEditing = ( $('#add-activity-description').length && $('#add-activity-description').is(':focus') ) || ( $('.ac-reply-content .ac-textarea > .ac-input').length && $('.ac-reply-content .ac-textarea > .ac-input').hasClass('focus-visible') );
+
 			switch (e.keyCode) {
 				case 27: // escape key.
 					self.closeTheatre( e );
 					break;
 				case 37: // left arrow key code.
-					if (typeof self.medias[self.current_index - 1] === 'undefined') {
+					if (typeof self.medias[self.current_index - 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.previous( e );
 					break;
 				case 39: // right arrow key code.
-					if (typeof self.medias[self.current_index + 1] === 'undefined') {
+					if (typeof self.medias[self.current_index + 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.next( e );
@@ -4413,18 +4450,21 @@ window.bp = window.bp || {};
 			if ( ! self.is_open_document ) {
 				return false;
 			}
+
+			var userIsEditing = ( $('#add-activity-description').length && $('#add-activity-description').is(':focus') ) || ( $('.ac-reply-content .ac-textarea > .ac-input').length && $('.ac-reply-content .ac-textarea > .ac-input').hasClass('focus-visible') );
+
 			switch (e.keyCode) {
 				case 27: // escape key.
 					self.closeDocumentTheatre( e );
 					break;
 				case 37: // left arrow key code.
-					if (typeof self.documents[self.current_document_index - 1] === 'undefined') {
+					if (typeof self.documents[self.current_document_index - 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.previousDocument( e );
 					break;
 				case 39: // right arrow key code.
-					if (typeof self.documents[self.current_document_index + 1] === 'undefined') {
+					if (typeof self.documents[self.current_document_index + 1] === 'undefined' || userIsEditing ) {
 						return false;
 					}
 					self.nextDocument( e );
@@ -4475,10 +4515,10 @@ window.bp = window.bp || {};
 					type	: 'POST',
 					url		: BP_Nouveau.ajaxurl,
 					data	: {
-						action		: 'media_get_media_description',
-						id			: self.current_media.id,
-						id1			: self.current_media.attachment_id,
-						nonce		: BP_Nouveau.nonces.media
+						action		        : 'media_get_media_description',
+						id			          : self.current_media.id,
+						attachment_id			: self.current_media.attachment_id,
+						nonce		          : BP_Nouveau.nonces.media
 					},
 					success: function (response) {
 						if (response.success) {
@@ -4999,15 +5039,16 @@ window.bp = window.bp || {};
 
 				self.activity_ajax = $.ajax(
 					{
-						type	: 'POST',
-						url		: BP_Nouveau.ajaxurl,
-						data	: {
-							action	: 'media_get_activity',
-							id		: self.current_media.activity_id,
-							nonce	: BP_Nouveau.nonces.media
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: {
+							action: 'media_get_activity',
+							id: self.current_media.activity_id,
+							group_id: ! _.isUndefined( self.current_media.group_id ) ? self.current_media.group_id : 0,
+							nonce: BP_Nouveau.nonces.media
 						},
-						success: function (response) {
-							if (response.success) {
+						success: function ( response ) {
+							if ( response.success ) {
 								$( '.bb-media-info-section:visible .activity-list' ).removeClass( 'loading' ).html( response.data.activity );
 								$( '.bb-media-info-section:visible' ).show();
 
@@ -5050,8 +5091,7 @@ window.bp = window.bp || {};
 						data	: {
 							action		: 'document_get_activity',
 							id			: self.current_document.activity_id,
-							group_id 	: self.current_document.group_id,
-							author		: self.current_document.author,
+							group_id 	: ! _.isUndefined( self.current_document.group_id ) ? self.current_document.group_id : 0,
 							nonce		: BP_Nouveau.nonces.media
 						},
 						success: function (response) {
@@ -5082,11 +5122,11 @@ window.bp = window.bp || {};
 				{
 					type	: 'POST',
 					url		: BP_Nouveau.ajaxurl,
-					data	: {
-						action	: 'document_get_document_description',
-						id		: self.current_document.id,
-						id1		: self.current_document.attachment_id,
-						nonce	: BP_Nouveau.nonces.media
+					data: {
+						action: 'document_get_document_description',
+						id: self.current_document.id,
+						attachment_id: self.current_document.attachment_id,
+						nonce: BP_Nouveau.nonces.media
 					},
 					success: function (response) {
 						if (response.success) {
@@ -5296,6 +5336,7 @@ window.bp = window.bp || {};
 
 							target.parents( '.activity-media-description' ).find( '.bp-edit-media-activity-description' ).hide().removeClass( 'open' );
 							target.parents( '.activity-media-description' ).find( '.bp-media-activity-description' ).show();
+							target.parents( '.activity-media-description' ).find( '.bp-feedback.error' ).remove();
 						} else {
 							target.parents( '.activity-media-description' ).prepend( response.data.feedback );
 						}

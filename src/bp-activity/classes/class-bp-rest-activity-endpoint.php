@@ -330,6 +330,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the activity.
+	 * @apiParam {String=stream,threaded,false} [display_comments=false] No comments by default, stream for within stream display, threaded for below each activity item.
 	 */
 	public function get_item( $request ) {
 		$activity = $this->get_activity_object( $request );
@@ -441,7 +442,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				'bp_rest_create_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -617,13 +618,35 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				empty( $activity_object->content )
 				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_media_ids', true ) )
 				&& empty( bp_activity_get_meta( $activity_object->id, '_gif_data', true ) )
+				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_document_ids', true ) )
 			) && true === $this->bp_rest_activity_content_validate( $request )
 		) {
 			return new WP_Error(
 				'bp_rest_update_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
+				)
+			);
+		}
+
+		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object->id );
+		$activity   = new BP_Activity_Activity( $activity_object->id );
+
+		if (
+			! empty( $activity->id ) &&
+			! empty( $allow_edit ) &&
+			false === (bool) $allow_edit['can_edit_privacy'] &&
+			isset( $request['privacy'] ) &&
+			! empty( $request['privacy'] ) &&
+			isset( $activity->privacy ) &&
+			$request['privacy'] !== $activity->privacy
+		) {
+			return new WP_Error(
+				'bp_rest_update_invalid_activity_privacy',
+				__( 'Sorry, you are not allow to update the privacy', 'buddyboss' ),
+				array(
+					'status' => 400,
 				)
 			);
 		}
@@ -640,8 +663,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		$activity      = $this->get_activity_object( $activity_id );
-		$fields_update = $this->update_additional_fields_for_object( $activity, $request );
+		$activity       = $this->get_activity_object( $activity_id );
+		$activity->edit = true;
+		$fields_update  = $this->update_additional_fields_for_object( $activity, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
@@ -656,6 +680,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Update privacy for the media which are uploaded in the activity.
 			bp_media_update_activity_privacy( $activity->id, $activity->privacy );
 		}
+
+		bp_activity_update_meta( $activity_id, '_is_edited', bp_core_current_time() );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $activity, $request )
@@ -710,12 +736,28 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( true === $retval && (
+				function_exists( 'bp_is_activity_edit_enabled' )
+				&& ! bp_is_activity_edit_enabled()
+				&& function_exists( 'bp_activity_user_can_edit' )
+				&& ! bp_activity_user_can_edit( $activity )
+			)
+		) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		if ( true === $retval && ! bp_activity_user_can_delete( $activity ) ) {
 			$retval = new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update this activity.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -1088,9 +1130,20 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			'can_favorite'      => bp_activity_can_favorite(),
 			'favorite_count'    => $this->get_activity_favorite_count( $activity->id ),
 			'can_comment'       => ( 'activity_comment' === $activity->type ) ? bp_activity_can_comment_reply( $activity ) : bp_activity_can_comment(),
+			'can_edit'          => (
+				(
+					function_exists( 'bp_is_activity_edit_enabled' )
+					&& bp_is_activity_edit_enabled()
+					&& function_exists( 'bp_activity_user_can_edit' )
+					&& bp_activity_user_can_edit( $activity )
+				)
+				? true
+				: false
+			),
 			'can_delete'        => bp_activity_user_can_delete( $activity ),
 			'content_stripped'  => html_entity_decode( wp_strip_all_tags( $activity->content ) ),
 			'privacy'           => ( isset( $activity->privacy ) ? $activity->privacy : false ),
+			'activity_data'     => $this->bp_rest_activitiy_edit_data( $activity->id ),
 		);
 
 		// Get item schema.
@@ -1614,6 +1667,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'can_edit'          => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Whether or not user have the edit access for the activity object.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'can_delete'        => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Whether or not user have the delete access for the activity object.', 'buddyboss' ),
@@ -1631,6 +1690,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'description' => __( 'Privacy of the activity.', 'buddyboss' ),
 					'type'        => 'string',
 					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'media' ),
+				),
+				'activity_data'     => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Activity data for allow edit or not.', 'buddyboss' ),
+					'type'        => 'object',
 				),
 			),
 		);
@@ -1859,6 +1923,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					|| empty( $request['media_gif']['mp4'] )
 				)
 			)
+			&& empty( $request['bp_documents'] )
 		) {
 			$toolbar_option = true;
 		}
@@ -1883,7 +1948,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 			$new_scope[] = 'public';
 
-			if ( empty( $user_id ) ) {
+			if ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
+				$new_scope[] = 'groups';
+			} else {
 				$new_scope[] = 'just-me';
 
 				if ( empty( $user_id ) ) {
@@ -1910,8 +1977,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					$new_scope[] = 'media';
 					$new_scope[] = 'document';
 				}
-			} elseif ( bp_is_active( 'group' ) && ! empty( $group_id ) ) {
-				$new_scope[] = 'groups';
 			}
 		} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 			$new_scope[] = 'public';
@@ -1930,5 +1995,38 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		return implode( ',', $new_scope );
 
+	}
+
+	/**
+	 * Collect the activity information.
+	 *
+	 * @param int $activity_id Activity ID.
+	 *
+	 * @return array
+	 * 
+	 * @since BuddyBoss 1.5.1
+	 */
+	public function bp_rest_activitiy_edit_data( $activity_id = 0 ) {
+		if ( empty( $activity_id ) ) {
+			return array();
+		}
+
+		if ( ! function_exists( 'bp_activity_get_edit_data' ) ) {
+			return array();
+		}
+
+		$edit_activity_data = bp_activity_get_edit_data( $activity_id );
+
+		if ( ! empty( $edit_activity_data ) ) {
+			// Removed unwanted data.
+			$unset_keys = array( 'id', 'content', 'item_id', 'object', 'privacy', 'media', 'gif', 'document' );
+			foreach ( $unset_keys as $key ) {
+				if ( array_key_exists( $key, $edit_activity_data ) ) {
+					unset( $edit_activity_data[ $key ] );
+				}
+			}
+		}
+
+		return (array) $edit_activity_data;
 	}
 }

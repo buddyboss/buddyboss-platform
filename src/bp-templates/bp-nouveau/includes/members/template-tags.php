@@ -136,7 +136,15 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 		$args['type'] = 'header';// we have no real need for this 'type' on header actions
 	}
 
-	$output = join( ' ', bp_nouveau_get_members_buttons( $args ) );
+	$members_buttons = bp_nouveau_get_members_buttons( $args );
+
+	$order = bp_nouveau_get_user_profile_actions();
+
+	uksort( $members_buttons, function ( $key1, $key2 ) use ( $order ) {
+		return ( array_search( $key1, $order ) > array_search( $key2, $order ) );
+	} );
+
+	$output = join( ' ', $members_buttons );
 
 	/**
 	 * On the member's header we need to reset the group button's global

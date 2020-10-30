@@ -100,12 +100,11 @@ if ( $attachment_id ) {
 			<?php
 			if ( $attachment_id ) {
 				?>
-				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \' " \ * | / > < ? ` ; : {space}', 'buddyboss' ); ?></small>
+					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; , \' " & $ # * ( ) | ~ ` ! { } % + {space}', 'buddyboss' ); ?></small>
+				<?php } else { ?>
+					<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \ / ? % * : | " < >', 'buddyboss' ); ?></small>
 				<?php
-			} else { ?>
-				<small class="error-box"><?php _e( 'Following special characters are not supported:<br/> \' " \ * | / > < ? ` ; :', 'buddyboss' ); ?></small>
-				<?php
-			}
+      }
 			if ( wp_is_mobile() ) {
 				?>
 				<a href="#" class="name_edit_cancel button small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>

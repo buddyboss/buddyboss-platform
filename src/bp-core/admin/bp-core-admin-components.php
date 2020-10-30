@@ -221,7 +221,7 @@ function bp_core_admin_components_options() {
 				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
 				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
-			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 		</div>
 	</div>
 	<table class="wp-list-table widefat plugins">
@@ -393,7 +393,7 @@ function bp_core_admin_components_options() {
 				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
 				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
-			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 		</div>
 	</div>
 	<?php
@@ -500,7 +500,7 @@ function bp_core_admin_components_settings_handler() {
 			$page_id = wp_insert_post( $new_page );
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-			$slug = get_post_field( 'post_name', $page_id );
+			$slug    = get_page_uri( $page_id );
 			bp_update_option( '_bbp_root_slug', $slug );
 		}
 	}
@@ -610,7 +610,7 @@ function bp_core_admin_components_activation_handler() {
 			$page_id = wp_insert_post( $new_page );
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-			$slug = get_post_field( 'post_name', $page_id );
+			$slug    = get_page_uri( $page_id );
 			bp_update_option( '_bbp_root_slug', $slug );
 		}
 	}

@@ -469,7 +469,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'bp_rest_group_invite_cannot_create_item',
 				__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -583,7 +583,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'bp_rest_group_invite_cannot_update_item',
 				__( 'Sorry, you are not allowed to accept the invitation as requested.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -643,7 +643,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'bp_rest_group_invite_cannot_delete_item',
 				__( 'Could not delete group invitation.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}
@@ -719,7 +719,7 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'bp_rest_group_invite_cannot_delete_item',
 				__( 'Sorry, you are not allowed to delete the invitation as requested.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => rest_authorization_required_code(),
 				)
 			);
 		}

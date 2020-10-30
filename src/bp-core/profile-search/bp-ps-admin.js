@@ -19,7 +19,7 @@ function add_field () {
 	$select.addClass( 'new_field' );
 	var $option = jQuery( '<option>', {text: window.bp_ps_strings.field, value: 0} );
 	$option.appendTo( $select );
-
+	
 	jQuery.each(
 		window.bp_ps_groups,
 		function (i, optgroups) {
@@ -32,10 +32,11 @@ function add_field () {
 					jQuery.each(
 						options,
 						function (j, option) {
-							var $option = jQuery( '<option>', {text: option.name, value: option.id} );
+							var $option = jQuery( '<option>', {text: option.name, value: option.id } );
 							$option.appendTo( $optgroup );
 						}
 					);
+					
 				}
 			);
 		}
@@ -54,6 +55,10 @@ function add_field () {
 	newDiv.appendChild( toDelete );
 
 	enableSortableFieldOptions();
+	/**
+	 * For dropdown value already selected then disable existing value
+	 */
+	disableAlreadySelectedOption();
 	document.getElementById( 'field_name' + theId ).focus();
 	document.getElementById( 'field_next' ).value = ++theId;
 }
@@ -81,9 +86,39 @@ function enableSortableFieldOptions () {
 	);
 }
 
+function disableAlreadySelectedOption() {
+
+	jQuery('#field_box select.bp_ps_col2 option').prop('disabled', false); //enable everything
+
+    //collect the values from selected;
+    var arr = jQuery.map (
+	        jQuery('#field_box select.bp_ps_col2 option:selected'), function (n) {
+	        	if ( n.value !== 'heading' ) {
+	            	return n.value;
+	        	}
+	        }
+        );
+
+    //disable elements
+    jQuery('#field_box select.bp_ps_col2 option').filter(function () {
+    	if (jQuery(this).prop('selected') == false ){
+	        return jQuery.inArray(jQuery(this).val(), arr) > -1; //if value is in the array of selected values
+	    }
+    }).prop('disabled', true);
+
+    //re-enable elements
+    jQuery('#field_box select.bp_ps_col2 option').filter(function () {
+        return jQuery.inArray(jQuery(this).val(), arr) == -1; //if value is not in the array of selected values
+    }).prop('disabled',false);
+}
+
 jQuery( document ).ready(
 	function () {
 		enableSortableFieldOptions();
+		/**
+		 * For dropdown value already selected then disable existing value When page load
+		 */
+		disableAlreadySelectedOption();
 	}
 );
 
@@ -132,6 +167,10 @@ jQuery( document ).ready(
 						var index = count - 1;
 						$( 'body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box #field_div' + index ).remove();
 						$( 'body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box' ).append( response );
+						/**
+						 * For dropdown value already selected then disable existing value
+						 */
+						disableAlreadySelectedOption();
 					}
 				);
 			}
