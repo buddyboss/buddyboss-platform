@@ -174,23 +174,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				/**
 				 * Added support for display name format support from platform.
 				 */
-				// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-				$current_value = bp_get_option( 'bp-display-name-format' );
-
-				// If First Name selected then do not add last name field.
-				if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-						continue;
-					}
-					// If Nick Name selected then do not add first & last name field.
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-						continue;
-					}
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-						continue;
-					}
+				if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+					continue;
 				}
 
 				if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
@@ -883,10 +868,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
 			$data['visibility_level']        = $field->visibility_level;
-			$data['allow_custom_visibility'] = (
-				! empty( $field->__get( 'allow_custom_visibility' ) )
-				&& 'allowed' === $field->__get( 'allow_custom_visibility' )
-			) ? $field->__get( 'allow_custom_visibility' ) : 'disabled';
+			$data['allow_custom_visibility'] = $this->bp_rest_get_field_visibility( $field );
 		}
 
 		if ( true === wp_validate_boolean( $request->get_param( 'fetch_field_data' ) ) ) {
@@ -1697,30 +1679,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 * Added support for display name format support from platform.
 		 */
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-		$current_value = bp_get_option( 'bp-display-name-format' );
 		if (
-			// If First Name selected then do not add last name field.
 			(
-				'first_name' === $current_value
-				&& function_exists( 'bp_xprofile_lastname_field_id' )
-				&& bp_xprofile_lastname_field_id() === $field_id
-				&& function_exists( 'bp_hide_last_name' )
-				&& false === bp_hide_last_name()
-			)
-			// If Nick Name selected then do not add first & last name field.
-			|| (
-				'nickname' === $current_value
-				&& function_exists( 'bp_xprofile_lastname_field_id' )
-				&& bp_xprofile_lastname_field_id() === $field_id
-				&& function_exists( 'bp_hide_nickname_last_name' )
-				&& false === bp_hide_nickname_last_name()
-			)
-			|| (
-				'nickname' === $current_value
-				&& function_exists( 'bp_xprofile_firstname_field_id' )
-				&& bp_xprofile_firstname_field_id() === $field_id
-				&& function_exists( 'bp_hide_nickname_first_name' )
-				&& false === bp_hide_nickname_first_name()
+				function_exists( 'bp_core_hide_display_name_field' )
+				&& true === bp_core_hide_display_name_field( $field_id )
 			)
 			|| (
 				function_exists( 'bp_member_type_enable_disable' )
@@ -1739,5 +1701,36 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Check current user can edit the visibility or not.
+	 *
+	 * @param BP_XProfile_Field $field_object Field Object.
+	 *
+	 * @return string
+	 */
+	public function bp_rest_get_field_visibility( $field_object ) {
+		global $field;
+
+		// Get the field id into for user check.
+		$GLOBALS['profile_template']              = new stdClass();
+		$GLOBALS['profile_template']->in_the_loop = true;
+
+		// Setup current user id into global.
+		$field = $field_object;
+
+		return (
+			! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
+			? 'disabled'
+			: (
+				(
+					! empty( $field->__get( 'allow_custom_visibility' ) )
+					&& 'allowed' === $field->__get( 'allow_custom_visibility' )
+				)
+				? $field->__get( 'allow_custom_visibility' )
+				: 'disabled'
+			)
+		);
 	}
 }

@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.4.2
+Tested up to: 5.5.1
 Requires PHP: 5.6.20
-Stable tag: 1.4.7
+Stable tag: 1.5.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,92 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.3 =
+* Profiles - Improved profile and Groups cover photo upload
+* Profiles - Fixed fieldset caching issue based on profile types
+* Groups - Fixed issue to show hidden groups in the group directory page
+* Groups - Fixed group tooltip UI issue when cover photo settings disabled
+* Groups - Fixed group invite message do not show
+* Groups - Fixed groups parent setting issue in the dashboard
+* Forums - Fixed forums tab in profile when configured Forums directory as a child page
+* Forums - Fixed forums reply editor formatting issue
+* Activity - Fixed issue to show 'read more' link for blog posts activity
+* Media - Updated Dropzone 5.7.2 library
+* Media - Improved security
+* Photos - Fixed photo description editing issue in the popup
+* Messages - Fixed messages thread formatting
+* Network Search - Fixed minor network search issue
+* BuddyPanel - Fixed selected profile tab issue
+* Performance - Improved DB queries
+* Translations - Updated German (formal) language files
+
+= 1.5.2 =
+* Profiles - Provided option to re-order profile action buttons, visible when viewing other member's profiles
+* Profiles - Fixed profile completion widget issue when first or last name field disabled
+* Profiles - Fixed registration duplicate field issue when profile type enabled
+* Forums - Fixed forums 404 issue when configured as a child page
+* Activity - Fixed URL preview for Cloudflare sites not allowing default 'user-agent'
+* Activity - Fixed activity editor, formatting toolbar focus issue
+* Activity - Fixed activity update in other member's profile
+* Photos - Fixed add photos popup layout issues
+* Documents - Fixed document sub-folder download issue
+* Messages - Fixed invalid gravatar issue in private messages module
+* Messages - Allowing admin always to send private messages to all members on the site
+* Compatibility - Fixed profile cropping compatibility issue with Jetpack plugin
+* Translations - Updated German (formal) language files
+
+= 1.5.1.1 =
+* Photos - Fixed private messages photos and documents attachments security issue
+
+= 1.5.1 =
+* Profiles - Provided 'Cover Photo Repositioning' support in Profiles and Groups
+* Profiles - Fixed profile completion widget profile photo issue to consider gravatar
+* Profiles - Fixed profile completion widget social network field count issue
+* Profiles - Fixed display name format, field visibility, and field requirement logical issue
+* Groups - Provided options to Hide subgroups from Groups Directory & Group Type Shortcode
+* Groups - Fixed invites module to allow sending invites to group members in bulk
+* Forums - Fixed forums page not working when configured as a child page
+* Forums - Fixed reply editor HTML formatting issue
+* Activity - Fixed 'Edit Activity' module related critical bugs
+* Activity - Fixed activity form focus issue on click
+* Activity - Fixed activity form @mention delete issue
+* Activity - Fixed 404 Page issue when activity settings are updated
+* Media - Fixed issue to allow sending just emoji in messaging, activity, forums, etc
+* REST API - Small API fixes and code enhancement in media
+* REST API - New endpoints added for 'Edit Activity' feature
+
+= 1.5.0 =
+* Activity - Provided 'Edit Activity' support
+* Activity - Provided settings to allow members to edit their activity posts for a duration specified
+* Activity - Provided 'Edit Activity' compatibility with photos, documents, permissions, emoji, giphy, etc
+* Profiles - Provided option to setup Custom Profile dropdown
+* Profiles - Provided option to Hide Profile navigation
+* Profiles - Fixed profile completion issue with Repeater Field Set
+* Forums - Fixed discussion nested replies notification issue
+* Forums - Fixed discussion reply editor formatting issue
+* Media - Fixed album edit/save/cancel button layout issue
+* Documents - Fixed document download link privacy issue
+* Documents - Fixed document sub-folder download issue
+* Messages - Improved message thread delete logic
+* Messages - Fixed deleted message thread count issue
+* Templates - Profile navigation template enhancement for new profile navigation hide feature
+* REST API - Fixed API issues in profile, media, and social groups
+* LearnDash - Fixed Social groups and LearnDash groups sync conflict
+* Compatibility - Fixed frontend page conflict with Elementor plugin
+* Compatibility - Fixed activity date conflict with TranslatePress plugin
+* Compatibility - Fixed document layout issues with Wallstreet Theme
+
+= 1.4.9 =
+* Profiles - Fixed profile completion logic to reuse the same feature in Elementor
+* Media - Fixed logic to delete GIF attachments when entry deleted
+* Documents - Improved the logic to support BuddyBoss REST API
+* Compatibility - Fixes for WordPress 5.5 and PHP 7.*
+
+= 1.4.8 =
+* Media - New settings to set maximum file upload size for Photos and Documents
+* Media - Improved media popup code to work inside our new Elementor 'Activity' widget
+* Media - Improved the logic to support BuddyBoss REST API
 
 = 1.4.7 =
 * Profiles - Fixed profile field type Gender default options unable to re-order

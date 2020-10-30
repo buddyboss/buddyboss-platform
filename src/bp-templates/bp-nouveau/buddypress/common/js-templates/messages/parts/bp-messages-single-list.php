@@ -8,10 +8,10 @@
 
 		<div class="bp-avatar-wrap">
 			<# if ( data.is_deleted ) { #>
-				<img class="avatar" src="{{data.sender_avatar}}" alt="" />
+				<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 			<# } else { #>
 				<a href="{{data.sender_link}}" class="bp-user-avatar">
-					<img class="avatar" src="{{data.sender_avatar}}" alt="" />
+					<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 				</a>
 			<# } #>
 		</div>

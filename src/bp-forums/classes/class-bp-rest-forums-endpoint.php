@@ -544,13 +544,13 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			'is_forum_category'  => bbp_is_forum_category( $forum->ID ),
 		);
 
-		$data['featured_media']['full'] = (
+		$data['featured_media']['full'] = (string) (
 			function_exists( 'bbp_get_forum_thumbnail_src' )
 			? bbp_get_forum_thumbnail_src( $forum->ID, 'full', 'full' )
 			: get_the_post_thumbnail_url( $forum->ID, 'full' )
 		);
 
-		$data['featured_media']['thumb'] = (
+		$data['featured_media']['thumb'] = (string) (
 			function_exists( 'bbp_get_forum_thumbnail_src' )
 			? bbp_get_forum_thumbnail_src( $forum->ID, 'large', 'large' )
 			: get_the_post_thumbnail_url( $forum->ID, 'large' )

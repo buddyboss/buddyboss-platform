@@ -2,10 +2,11 @@
 /**
  * Core component classes.
  *
- * @package BuddyBoss\Core
+ * @package BuddyPress
+ * @subpackage Core
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -25,6 +26,7 @@ class BP_PHPMailer implements BP_Email_Delivery {
 	 */
 	public function bp_email( BP_Email $email ) {
 		static $phpmailer = null;
+		$phpmailer_is_6_0 = false;
 
 		/**
 		 * Filter PHPMailer object to use.
@@ -37,13 +39,30 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		 */
 		$phpmailer = apply_filters( 'bp_phpmailer_object', $phpmailer );
 
-		if ( ! ( $phpmailer instanceof PHPMailer ) ) {
-			if ( ! class_exists( 'PHPMailer' ) ) {
-				require_once ABSPATH . WPINC . '/class-phpmailer.php';
-				require_once ABSPATH . WPINC . '/class-smtp.php';
-			}
+		/**
+		 * WordPress 5.5 deprecated version 5.2 of PHPMailer
+		 * and is now using version 6.0 of PHPMailer.
+		 */
+		if ( file_exists( ABSPATH . WPINC . '/PHPMailer/PHPMailer.php' ) ) {
+			if ( ! ( $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) ) {
+				if ( ! class_exists( 'PHPMailer\\PHPMailer\\PHPMailer' ) ) {
+					require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+					require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
+					require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+				}
 
-			$phpmailer = new PHPMailer( true );
+				$phpmailer        = new PHPMailer\PHPMailer\PHPMailer( true );
+				$phpmailer_is_6_0 = true;
+			}
+		} else {
+			if ( ! ( $phpmailer instanceof PHPMailer ) ) {
+				if ( ! class_exists( 'PHPMailer' ) ) {
+					require_once ABSPATH . WPINC . '/class-phpmailer.php';
+					require_once ABSPATH . WPINC . '/class-smtp.php';
+				}
+
+				$phpmailer = new PHPMailer( true );
+			}
 		}
 
 		/*
@@ -59,16 +78,18 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		/*
 		 * Set up.
 		 */
-
 		$phpmailer->IsMail();
 		$phpmailer->CharSet = bp_get_option( 'blog_charset' );
 
 		/*
 		 * Content.
 		 */
-
 		$phpmailer->Subject = $email->get_subject( 'replace-tokens' );
-		$content_plaintext  = PHPMailer::normalizeBreaks( $email->get_content_plaintext( 'replace-tokens' ) );
+		if ( $phpmailer_is_6_0 ) {
+			$content_plaintext = PHPMailer\PHPMailer\PHPMailer::normalizeBreaks( $email->get_content_plaintext( 'replace-tokens' ) );
+		} else {
+			$content_plaintext = PHPMailer::normalizeBreaks( $email->get_content_plaintext( 'replace-tokens' ) );
+		}
 
 		if ( $email->get( 'content_type' ) === 'html' ) {
 			$phpmailer->msgHTML( $email->get_template( 'add-content' ) );
@@ -80,38 +101,79 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		}
 
 		$recipient = $email->get_from();
-		try {
-			$phpmailer->SetFrom( $recipient->get_address(), $recipient->get_name(), false );
-		} catch ( phpmailerException $e ) {
+		if ( $phpmailer_is_6_0 ) {
+			try {
+				$phpmailer->setFrom( $recipient->get_address(), $recipient->get_name(), false );
+			} catch ( PHPMailer\PHPMailer\Exception $e ) {
+			}
+		} else {
+			try {
+				$phpmailer->SetFrom( $recipient->get_address(), $recipient->get_name(), false );
+			} catch ( phpmailerException $e ) {
+			}
 		}
 
 		$recipient = $email->get_reply_to();
-		try {
-			$phpmailer->addReplyTo( $recipient->get_address(), $recipient->get_name() );
-		} catch ( phpmailerException $e ) {
+		if ( $phpmailer_is_6_0 ) {
+			try {
+				$phpmailer->addReplyTo( $recipient->get_address(), $recipient->get_name() );
+			} catch ( PHPMailer\PHPMailer\Exception $e ) {
+			}
+		} else {
+			try {
+				$phpmailer->addReplyTo( $recipient->get_address(), $recipient->get_name() );
+			} catch ( phpmailerException $e ) {
+			}
 		}
 
 		$recipients = $email->get_to();
-		foreach ( $recipients as $recipient ) {
-			try {
-				$phpmailer->AddAddress( $recipient->get_address(), $recipient->get_name() );
-			} catch ( phpmailerException $e ) {
+		if ( $phpmailer_is_6_0 ) {
+			foreach ( $recipients as $recipient ) {
+				try {
+					$phpmailer->AddAddress( $recipient->get_address(), $recipient->get_name() );
+				} catch ( PHPMailer\PHPMailer\Exception $e ) {
+				}
+			}
+		} else {
+			foreach ( $recipients as $recipient ) {
+				try {
+					$phpmailer->AddAddress( $recipient->get_address(), $recipient->get_name() );
+				} catch ( phpmailerException $e ) {
+				}
 			}
 		}
 
 		$recipients = $email->get_cc();
-		foreach ( $recipients as $recipient ) {
-			try {
-				$phpmailer->AddCc( $recipient->get_address(), $recipient->get_name() );
-			} catch ( phpmailerException $e ) {
+		if ( $phpmailer_is_6_0 ) {
+			foreach ( $recipients as $recipient ) {
+				try {
+					$phpmailer->AddCc( $recipient->get_address(), $recipient->get_name() );
+				} catch ( PHPMailer\PHPMailer\Exception $e ) {
+				}
+			}
+		} else {
+			foreach ( $recipients as $recipient ) {
+				try {
+					$phpmailer->AddCc( $recipient->get_address(), $recipient->get_name() );
+				} catch ( phpmailerException $e ) {
+				}
 			}
 		}
 
 		$recipients = $email->get_bcc();
-		foreach ( $recipients as $recipient ) {
-			try {
-				$phpmailer->AddBcc( $recipient->get_address(), $recipient->get_name() );
-			} catch ( phpmailerException $e ) {
+		if ( $phpmailer_is_6_0 ) {
+			foreach ( $recipients as $recipient ) {
+				try {
+					$phpmailer->AddBcc( $recipient->get_address(), $recipient->get_name() );
+				} catch ( PHPMailer\PHPMailer\Exception $e ) {
+				}
+			}
+		} else {
+			foreach ( $recipients as $recipient ) {
+				try {
+					$phpmailer->AddBcc( $recipient->get_address(), $recipient->get_name() );
+				} catch ( phpmailerException $e ) {
+				}
 			}
 		}
 
@@ -132,13 +194,20 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		/** This filter is documented in wp-includes/pluggable.php */
 		do_action_ref_array( 'phpmailer_init', array( &$phpmailer ) );
 
-		try {
-			return $phpmailer->Send();
-		} catch ( phpmailerException $e ) {
-			return new WP_Error( $e->getCode(), $e->getMessage(), $email );
+		if ( $phpmailer_is_6_0 ) {
+			try {
+				return $phpmailer->Send();
+			} catch ( PHPMailer\PHPMailer\Exception $e ) {
+				return new WP_Error( $e->getCode(), $e->getMessage(), $email );
+			}
+		} else {
+			try {
+				return $phpmailer->Send();
+			} catch ( phpmailerException $e ) {
+				return new WP_Error( $e->getCode(), $e->getMessage(), $email );
+			}
 		}
 	}
-
 
 	/*
 	 * Utility/helper functions.
