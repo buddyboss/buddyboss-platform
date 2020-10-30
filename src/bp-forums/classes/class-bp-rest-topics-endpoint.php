@@ -1011,9 +1011,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			add_post_meta( $topic_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
 		}
 
-		/** Update counts, etc... */
-		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
-
 		/** Stickies */
 		// Sticky check after 'bbp_new_topic' action so forum ID meta is set.
 		if ( ! empty( $topic->bbp_stick_topic ) && in_array(
@@ -1066,9 +1063,6 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		/** Additional Actions (After Save) */
-		do_action( 'bbp_new_topic_post_extras', $topic_id );
-
 		$topic         = get_post( $topic_id );
 		$fields_update = $this->update_additional_fields_for_object( $topic, $request );
 
@@ -1079,6 +1073,12 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $topic, $request )
 		);
+
+		/** Update counts, etc... */
+		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
+
+		/** Additional Actions (After Save) */
+		do_action( 'bbp_new_topic_post_extras', $topic_id );
 
 		$response = rest_ensure_response( $retval );
 

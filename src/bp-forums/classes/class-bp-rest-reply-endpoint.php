@@ -1043,12 +1043,6 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
-		/** Update counts, etc... */
-		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
-
-		/** Additional Actions (After Save) */
-		do_action( 'bbp_new_reply_post_extras', $reply_id );
-
 		$reply         = get_post( $reply_id );
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
@@ -1068,12 +1062,20 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		 */
 		do_action( 'bp_rest_reply_create_item', $reply, $topic_id, $forum_id, $request );
 
-		return $this->get_item(
+		$response = $this->get_item(
 			array(
 				'id'      => $reply_id,
 				'context' => 'view',
 			)
 		);
+
+		/** Update counts, etc... */
+		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
+
+		/** Additional Actions (After Save) */
+		do_action( 'bbp_new_reply_post_extras', $reply_id );
+
+		return $response;
 	}
 
 	/**
