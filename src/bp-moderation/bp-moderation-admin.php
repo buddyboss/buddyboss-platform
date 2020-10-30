@@ -29,8 +29,8 @@ function bp_moderation_add_admin_menu() {
 	// Add our screen.
 	$hook = add_submenu_page(
 		'buddyboss-platform',
-		__( 'Moderation', 'buddyboss' ),
-		__( 'Moderation', 'buddyboss' ),
+		esc_html__( 'Moderation', 'buddyboss' ),
+		esc_html__( 'Moderation', 'buddyboss' ),
 		'bp_moderate',
 		'bp-moderation',
 		'bp_moderation_admin'
@@ -73,8 +73,8 @@ function bp_moderation_admin_load() {
 	global $bp_moderation_list_table;
 
 	$doaction                = bp_admin_list_table_current_bulk_action();
-	$moderation_id           = filter_input( INPUT_REQUEST, 'mid', FILTER_SANITIZE_NUMBER_INT );
-	$moderation_content_type = filter_input( INPUT_REQUEST, 'content_type', FILTER_SANITIZE_STRING );
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 
 	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
 
@@ -133,6 +133,46 @@ function bp_moderation_admin_load() {
 			)
 		);
 	}
+
+	/**
+	 * Fires at top of Moderation admin page.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param string $doaction Current $_GET action being performed in admin screen.
+	 */
+	do_action( 'bp_moderation_admin_load', $doaction );
+
+	// Create the Moderation screen list table.
+	$bp_moderation_list_table = new BP_Moderation_List_Table();
+
+	// The per_page screen option.
+	add_screen_option( 'per_page', array( 'label' => esc_html__( 'Moderation Request', 'buddyboss' ) ) );
+
+	// Help panel - overview text.
+	get_current_screen()->add_help_tab(
+		array(
+			'id'      => 'bp-moderation-overview',
+			'title'   => esc_html__( 'Overview', 'buddyboss' ),
+			'content' =>
+				'<p>' . esc_html__( 'Moderation overview line 1', 'buddyboss' ) . '</p>' .
+				'<p>' . esc_html__( 'Moderation overview line 2', 'buddyboss' ) . '</p>',
+		)
+	);
+
+	// Help panel - sidebar links.
+	get_current_screen()->set_help_sidebar(
+		'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+		'<p>' . esc_html__( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+	);
+
+	// Add accessible hidden heading and text for Activity screen pagination.
+	get_current_screen()->set_screen_reader_content(
+		array(
+			/* translators: accessibility text */
+			'heading_pagination' => esc_html__( 'Moderation list navigation', 'buddyboss' ),
+		)
+	);
 }
 
 /**
@@ -161,9 +201,9 @@ function bp_moderation_admin() {
 	}
 
 	// Decide whether to load the index or edit screen.
-	$doaction                = filter_input( INPUT_REQUEST, 'action', FILTER_SANITIZE_STRING );
-	$moderation_id           = filter_input( INPUT_REQUEST, 'mid', FILTER_SANITIZE_NUMBER_INT );
-	$moderation_content_type = filter_input( INPUT_REQUEST, 'content_type', FILTER_SANITIZE_STRING );
+	$doaction                = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 
 	// Display the single activity edit screen.
 	if ( 'view' == $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
@@ -253,8 +293,8 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
  */
 function bp_moderation_admin_view() {
 
-	$moderation_id           = filter_input( INPUT_REQUEST, 'mid', FILTER_SANITIZE_NUMBER_INT );
-	$moderation_content_type = filter_input( INPUT_REQUEST, 'content_type', FILTER_SANITIZE_STRING );
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 	$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
 	/**

@@ -204,6 +204,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Name column, and "quick admin" rollover actions.
 	 *
 	 * Called "comment" in the CSS so we can re-use some WP core CSS.

@@ -89,8 +89,8 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
-		$moderation_id           = filter_input( INPUT_REQUEST, 'mid', FILTER_SANITIZE_NUMBER_INT );
-		$moderation_content_type = filter_input( INPUT_REQUEST, 'content_type', FILTER_SANITIZE_STRING );
+		$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+		$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 		$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
 
 		// Set current page.

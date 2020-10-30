@@ -3084,7 +3084,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) ),
-		'name'  => __( 'Reported Content', 'buddyboss' ),
+		'name'  => esc_html__( 'Reported Content', 'buddyboss' ),
 		'class' => 'bp-reported-content',
 	);
 
@@ -3094,7 +3094,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 			'page' => 'bp-moderation',
 			'tab'  => 'blocked-members'
 		), 'admin.php' ) ),
-		'name'  => __( 'Blocked Members', 'buddyboss' ),
+		'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
 		'class' => 'bp-blocked-members',
 	);
 
@@ -3103,7 +3103,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 			'page' => 'bp-moderation',
 			'tab'  => 'report-categories'
 		), 'admin.php' ) ),
-		'name'  => __( 'Report Categories', 'buddyboss' ),
+		'name'  => esc_html__( 'Report Categories', 'buddyboss' ),
 		'class' => 'bp-report-categories',
 	);
 
