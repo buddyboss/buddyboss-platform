@@ -21,13 +21,13 @@ defined( 'ABSPATH' ) || exit;
  * The bp_moderation_get() function shares all arguments with
  * BP_Moderation::get().
  *
+ * @since BuddyBoss 1.5.4
+ *
  * @param array|string $args See BP_Moderation::get() for description.
  *
  * @return array $moderation See BP_Moderation::get() for description.
  * @see   BP_Moderation::get() For more information on accepted arguments
  *        and the format of the returned value.
- *
- * @since BuddyBoss 1.5.4
  */
 function bp_moderation_get( $args = '' ) {
 
@@ -105,10 +105,11 @@ function bp_moderation_get( $args = '' ) {
 	/**
 	 * Filters the requested moderation item(s).
 	 *
-	 * @param BP_Moderation $moderation Requested moderation object.
-	 * @param array $r                  Arguments used for the moderation query.
-	 *
 	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array         $r          Arguments used for the moderation query.
+	 *
+	 * @param BP_Moderation $moderation Requested moderation object.
 	 */
 	return apply_filters_ref_array(
 		'bp_moderation_get',
@@ -122,11 +123,11 @@ function bp_moderation_get( $args = '' ) {
 /**
  * Retrieve sitewide hidden items ids of particular item type.
  *
+ * @since BuddyBoss 1.5.4
+ *
  * @param string $type Moderation items type.
  *
  * @return array $moderation See BP_Moderation::get() for description.
- *
- * @since BuddyBoss 1.5.4
  */
 function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
 	return bp_moderation_get(
@@ -138,4 +139,92 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
 			),
 		)
 	);
+}
+
+/**
+ * Function to get the moderation content types.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @return mixed|void
+ */
+function bp_moderation_content_types() {
+
+	$content_types = array(
+		'activity'    => 'Activity',
+		'document'    => 'Document',
+		'forum_reply' => 'Forum Reply',
+		'forum_topic' => 'Forum Topic',
+		'forum'       => 'Forum',
+		'groups'      => 'Groups',
+		'media'       => 'Media',
+		'user'        => 'User',
+		'message'     => 'Message',
+	);
+
+	return apply_filters( 'bp_moderation_content_types', $content_types );
+}
+
+/**
+ * Function get content owner id.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $moderation_item_id   content id.
+ * @param string $moderation_item_type content type.
+ *
+ * @return array|int|string
+ */
+function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
+
+	switch ( $moderation_item_type ) {
+		case 'activity':
+			$activity = new BP_Activity_Activity( $moderation_item_id );
+			$user_id  = ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
+			break;
+		case 'document':
+			$document = new BP_Document( $moderation_item_id );
+			$user_id  = ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
+			break;
+		case 'forum_reply':
+		case 'forum_topic':
+		case 'forum':
+			$user_id = get_post_field( 'post_author', $moderation_item_id );
+			break;
+		case 'media':
+			$media   = new BP_Media( $moderation_item_id );
+			$user_id = ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
+			break;
+		case 'groups':
+			$group   = new BP_Groups_Group( $moderation_item_id );
+			$user_id = ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
+			break;
+		case 'user':
+			$user_id = $moderation_item_id;
+			break;
+		case 'message':
+			$message = new BP_Messages_Message( $moderation_item_id );
+			$user_id = ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
+			break;
+		default:
+			$user_id = 0;
+	}
+
+	return $user_id;
+}
+
+/**
+ * Function to get specific moderation content type.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param string $key content type key.
+ *
+ * @return mixed|void
+ */
+function bp_get_moderation_content_type( $key ) {
+
+	$content_types = bp_moderation_content_types();
+
+	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
