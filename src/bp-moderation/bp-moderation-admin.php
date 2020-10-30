@@ -102,7 +102,7 @@ function bp_moderation_admin_load() {
 
 	// Help panel - sidebar links.
 	get_current_screen()->set_help_sidebar(
-		'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+		'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
 		'<p>' . esc_html__( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 	);
 
