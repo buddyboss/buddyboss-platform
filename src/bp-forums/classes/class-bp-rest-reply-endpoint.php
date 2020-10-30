@@ -1043,6 +1043,18 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		/**
+		 * Removed notification sent and called additionally.
+		 * Due to we have moved all filters on title and content.
+		 */
+		remove_action( 'bbp_new_reply', 'bbp_notify_topic_subscribers', 11, 5 );
+
+		/** Update counts, etc... */
+		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
+
+		/** Additional Actions (After Save) */
+		do_action( 'bbp_new_reply_post_extras', $reply_id );
+
 		$reply         = get_post( $reply_id );
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
@@ -1069,11 +1081,12 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			)
 		);
 
-		/** Update counts, etc... */
-		do_action( 'bbp_new_reply', $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author, false, $reply_to );
-
-		/** Additional Actions (After Save) */
-		do_action( 'bbp_new_reply_post_extras', $reply_id );
+		if ( function_exists( 'bbp_notify_topic_subscribers' ) ) {
+			/**
+			 * Sends notification emails for new replies to subscribed topics.
+			 */
+			bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author );
+		}
 
 		return $response;
 	}
