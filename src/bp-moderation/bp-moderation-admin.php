@@ -72,7 +72,67 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
 function bp_moderation_admin_load() {
 	global $bp_moderation_list_table;
 
-	$doaction = bp_admin_list_table_current_bulk_action();
+	$doaction                = bp_admin_list_table_current_bulk_action();
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+
+	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
+
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-moderation-view-overview',
+				'title'   => esc_html__( 'Overview', 'buddyboss' ),
+				'content' =>
+					'<p>' . esc_html__( 'View moderation Overview line 1.', 'buddyboss' ) . '</p>' .
+					'<p>' . esc_html__( 'View moderation Overview line 2', 'buddyboss' ) . '</p>',
+			)
+		);
+		// Help panel - sidebar links.
+		get_current_screen()->set_help_sidebar(
+			'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+			'<p><a href="https://www.buddyboss.com/resources/">'. esc_html__( 'Documentation', 'buddyboss' ) .'</a></p>'
+		);
+	} else {
+		/**
+		 * Fires at top of Moderation admin page.
+		 *
+		 * @since BuddyBoss 1.5.4
+		 *
+		 * @param string $doaction Current $_GET action being performed in admin screen.
+		 */
+		do_action( 'bp_moderation_admin_load', $doaction );
+
+		// Create the Moderation screen list table.
+		$bp_moderation_list_table = new BP_Moderation_List_Table();
+
+		// The per_page screen option.
+		add_screen_option( 'per_page', array( 'label' => esc_html__( 'Moderation Request', 'buddyboss' ) ) );
+
+		// Help panel - overview text.
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-moderation-overview',
+				'title'   => esc_html__( 'Overview', 'buddyboss' ),
+				'content' =>
+					'<p>' . esc_html__( 'Moderation overview line 1', 'buddyboss' ) . '</p>' .
+					'<p>' . esc_html__( 'Moderation overview line 2', 'buddyboss' ) . '</p>',
+			)
+		);
+
+		// Help panel - sidebar links.
+		get_current_screen()->set_help_sidebar(
+			'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+			'<p><a href="https://www.buddyboss.com/resources/">' . esc_html__( 'Documentation', 'buddyboss' ) . '</a></p>'
+		);
+
+		// Add accessible hidden heading and text for Activity screen pagination.
+		get_current_screen()->set_screen_reader_content(
+			array(
+				/* translators: accessibility text */
+				'heading_pagination' => esc_html__( 'Moderation list navigation', 'buddyboss' ),
+			)
+		);
+	}
 
 	/**
 	 * Fires at top of Moderation admin page.
@@ -103,7 +163,7 @@ function bp_moderation_admin_load() {
 	// Help panel - sidebar links.
 	get_current_screen()->set_help_sidebar(
 		'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-		'<p>' . esc_html__( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+		'<p><a href="https://www.buddyboss.com/resources/">' . esc_html__( 'Documentation', 'buddyboss' ) . '</a></p>'
 	);
 
 	// Add accessible hidden heading and text for Activity screen pagination.
@@ -113,7 +173,6 @@ function bp_moderation_admin_load() {
 			'heading_pagination' => esc_html__( 'Moderation list navigation', 'buddyboss' ),
 		)
 	);
-
 }
 
 /**
@@ -140,7 +199,18 @@ function bp_moderation_admin() {
 		</div>
 		<?php
 	}
-	bp_moderation_admin_index();
+
+	// Decide whether to load the index or edit screen.
+	$doaction                = filter_input( INPUT_GET, 'action', FILTER_SANITIZE_STRING );
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+
+	// Display the single activity edit screen.
+	if ( 'view' == $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
+		bp_moderation_admin_view();
+	} else {
+		bp_moderation_admin_index();
+	}
 }
 
 /**
@@ -214,4 +284,178 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 	}
 
 	return $new_value;
+}
+
+/**
+ * Display the single moderation edit screen.
+ *
+ * @since BuddyPress 1.6.0
+ */
+function bp_moderation_admin_view() {
+
+	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+	$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
+
+	/**
+	 * Fires before moderation edit form is displays so plugins can modify the activity.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $value Array holding single activity object that was passed by reference.
+	 */
+	do_action_ref_array( 'bp_moderation_admin_edit', array( &$moderation_request_data ) );
+	?>
+	<div class="wrap">
+		<h1>
+			<?php
+			/* translators: accessibility text */
+			printf( esc_html__( 'Editing Moderation (ID #%s)', 'buddyboss' ), esc_html( number_format_i18n( (int) $moderation_id ) ) );
+			?>
+		</h1>
+
+		<?php
+		if ( ! empty( $moderation_request_data ) ) :
+			?>
+			<div id="poststuff">
+				<div id="post-body"
+					 class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
+					<div id="post-body-content">
+						<div id="postdiv">
+							<div id="bp_moderation_action" class="postbox">
+								<h2>
+									<?php esc_html_e( 'Details', 'buddyboss' ); ?>
+								</h2>
+								<div class="inside">
+									<table class="form-table">
+										<tbody>
+										<tr>
+											<th scope="row">
+												<label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Item ID', 'buddyboss' );
+													?>
+												</label>
+											</th>
+											<td>
+												<?php
+												echo esc_html( $moderation_request_data->item_id );
+												?>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">
+												<label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Item Type', 'buddyboss' );
+													?>
+												</label>
+											</th>
+											<td>
+												<?php
+												echo esc_html( bp_get_moderation_content_type( $moderation_request_data->item_type ) );
+												?>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">
+												<label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Hidden Sitewide', 'buddyboss' );
+													?>
+												</label>
+											</th>
+											<td>
+												<?php
+												$hide_sitewide = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? esc_html__( 'Yes', 'buddyboss' ) : esc_html__( 'No', 'buddyboss' );
+												echo esc_html( $hide_sitewide );
+												?>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">
+												<label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Content Owner', 'buddyboss' );
+													?>
+												</label>
+											</th>
+											<td>
+												<?php
+												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $user_id, '32' ) ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+												?>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">
+												<label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Last reported By', 'buddyboss' );
+													?>
+												</label>
+											</th>
+											<td>
+												<?php
+												printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $moderation_request_data->updated_by, '32' ) ), wp_kses_post( bp_core_get_userlink( $moderation_request_data->updated_by ) ) );
+												?>
+											</td>
+										</tr>
+										<tr>
+											<th scope="row">
+												<label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Last reported', 'buddyboss' );
+													?>
+												</label>
+											</th>
+											<td>
+												<?php
+												echo esc_html( bbp_get_time_since( bbp_convert_date( $moderation_request_data->date_updated ) ) );
+												?>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div id="bp_moderation_action" class="postbox">
+								<h2>
+									<?php esc_html_e( 'Reports', 'buddyboss' ); ?>
+								</h2>
+								<div class="inside">
+									<?php
+									$bp_moderation_report_list_table = new BP_Moderation_Report_List_Table();
+									// Prepare the group items for display.
+									$bp_moderation_report_list_table->prepare_items();
+									$bp_moderation_report_list_table->views();
+									$bp_moderation_report_list_table->display();
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php else : ?>
+			<p>
+				<?php
+				printf(
+					'%1$s <a href="%2$s">%3$s</a>',
+					esc_html__( 'No moderation found with this ID.', 'buddyboss' ),
+					esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
+					esc_html__( 'Go back and try again.', 'buddyboss' )
+				);
+				?>
+			</p>
+		<?php endif; ?>
+	</div>
+	<?php
 }
