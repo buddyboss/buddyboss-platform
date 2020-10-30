@@ -10,6 +10,8 @@ $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 $group_id      = bp_get_media_group_id();
 $move_id       = '';
 $move_type     = '';
+$media_privacy  = bp_media_user_can_manage_media( bp_get_media_id(), bp_loggedin_user_id() );
+$can_manage    = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
 
 if ( $group_id > 0 ) {
 	$move_id   = $group_id;
@@ -23,19 +25,21 @@ if ( $group_id > 0 ) {
 
     <div class="bb-photo-thumb">
         <div class="media-action-wrap">
-            <a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
-                <i class="bb-icon-menu-dots-v"></i>
-            </a>
-            <div class="media-action_list">
-                <ul>
-                    <li class="move_file">
-                        <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
-                    </li>
-                    <li class="delete_file">
-                        <a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
-                    </li>
-                </ul>
-            </div>
+            <?php if( $can_manage ) { ?>
+                <a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
+                    <i class="bb-icon-menu-dots-v"></i>
+                </a>
+                <div class="media-action_list">
+                    <ul>
+                        <li class="move_file">
+                            <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php _e( 'Move', 'buddyboss' ); ?></a>
+                        </li>
+                        <li class="delete_file">
+                            <a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a>
+                        </li>
+                    </ul>
+                </div>
+            <?php } ?>
         </div> <!--.media-action-wrap-->
 		<?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-media-thumbnail' ); ?>
         <a class="bb-open-media-theatre bb-photo-cover-wrap"
@@ -51,8 +55,6 @@ if ( $group_id > 0 ) {
            <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo $attachment_url; ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
         </a>
         <?php
-		$media_privacy  = bp_media_user_can_manage_media( bp_get_media_id(), bp_loggedin_user_id() );
-		$can_manage = ( true === (bool) $media_privacy['can_manage'] ) ? true : false;
 		if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) : ?>
             <div class="bb-media-check-wrap">
                 <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
