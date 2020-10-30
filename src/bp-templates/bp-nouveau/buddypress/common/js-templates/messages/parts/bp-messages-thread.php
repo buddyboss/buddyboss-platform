@@ -25,23 +25,23 @@
                 if( data.avatars.length == 2 ) { #>
                     <div class="thread-multiple-avatar">
                 <# } #>
-                    <img class="avatar" src="{{data.avatars[0].url}}" alt="{{data.avatars[0].name}}"/>
+                    <img class="avatar" src="{{{data.avatars[0].url}}}" alt="{{data.avatars[0].name}}"/>
                     <# if( data.avatars[1] ) { #>
-                        <img class="avatar" src="{{data.avatars[1].url}}" alt="{{data.avatars[1].name}}"/>
+                        <img class="avatar" src="{{{data.avatars[1].url}}}" alt="{{data.avatars[1].name}}"/>
                     <# }
                 if( data.avatars.length == 2 ) { #>
                     </div>
                 <# } #>
             <# } else if ( data.group_avatar && data.group_avatar.length > 1 && data.is_group_thread ) { #>
-				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
+				<img class="avatar" src="{{{data.group_avatar}}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
 					<span class="recipients-count">{{other_recipients.length}}</span>
-					<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
+					<img class="avatar" src="{{{data.sender_avatar}}}" alt="{{data.sender_name}}" />
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
-						<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+						<img class="avatar" src="{{{recipient.avatar}}}" alt="{{recipient.user_name}}" />
 					<# } #>
 				<# } #>
 			<# } #>
