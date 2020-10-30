@@ -151,15 +151,15 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
 function bp_moderation_content_types() {
 
 	$content_types = array(
-		'activity'    => 'Activity',
-		'document'    => 'Document',
-		'forum_reply' => 'Forum Reply',
-		'forum_topic' => 'Forum Topic',
-		'forum'       => 'Forum',
-		'groups'      => 'Groups',
-		'media'       => 'Media',
-		'user'        => 'User',
-		'message'     => 'Message',
+		'activity'    => esc_html__( 'Activity', 'buddyboss' ),
+		'document'    => esc_html__( 'Document', 'buddyboss' ),
+		'forum_reply' => esc_html__( 'Forum Reply', 'buddyboss' ),
+		'forum_topic' => esc_html__( 'Forum Topic', 'buddyboss' ),
+		'forum'       => esc_html__( 'Forum', 'buddyboss' ),
+		'groups'      => esc_html__( 'Groups', 'buddyboss' ),
+		'media'       => esc_html__( 'Media', 'buddyboss' ),
+		'user'        => esc_html__( 'User', 'buddyboss' ),
+		'message'     => esc_html__( 'Message', 'buddyboss' ),
 	);
 
 	return apply_filters( 'bp_moderation_content_types', $content_types );
