@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss Moderation admin list table class.
+ * BuddyBoss Moderation Report admin list table class.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyBoss\Moderation
+ * @package BuddyBoss\Moderation_Report
  * @since   BuddyBoss 1.5.4
  */
 
@@ -13,11 +13,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * List table class for the Moderation component admin page.
+ * List table class for the Moderation report component admin page.
  *
  * @since BuddyBoss 1.5.4
  */
-class BP_Moderation_List_Table extends WP_List_Table {
+class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 	/**
 	 * Constructor
@@ -30,8 +30,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		parent::__construct(
 			array(
 				'ajax'     => false,
-				'plural'   => 'moderations',
-				'singular' => 'moderation',
+				'plural'   => 'reports',
+				'singular' => 'report',
 			)
 		);
 	}
@@ -76,7 +76,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 1.5.4
 	 */
 	public function no_items() {
-		esc_html__( 'No moderation requests found.', 'buddyboss' );
+		esc_html__( 'No report found.', 'buddyboss' );
 	}
 
 	/**
@@ -89,41 +89,41 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
+		$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
+		$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+		$moderation_request_data = new BP_Moderation( $moderation_id, $moderation_content_type );
+
 		// Set current page.
 		$page = $this->get_pagenum();
-
 		// Set per page from the screen options.
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
-		$moderation_request_args = array(
-			'page'        => $page,
-			'per_page'    => $per_page,
-			'count_total' => true,
-		);
+		$reporters = BP_Moderation::get_moderation_reporters( $moderation_request_data->id );
 
-		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-			$moderation_request_args['in_types'] = array( 'user' );
-		} else {
-			$moderation_request_args['exclude_types'] = array( 'user' );
+		$total_item  = ( ! empty( $reporters ) ) ? count( $reporters ) : 0;
+		$total_pages = ceil( $total_item / $per_page );
+		$page        = max( $page, 1 );
+		$page        = min( $page, $total_pages );
+		$offset      = ( $page - 1 ) * $per_page;
+
+		if ( $offset < 0 ) {
+			$offset = 0;
 		}
 
-		$moderation_requests = BP_Moderation::get( $moderation_request_args );
-
-		// Set raw data to display.
-		$this->items = $moderation_requests['moderations'];
+		$this->items = array_slice( $reporters, $offset, $per_page );
 
 		// Store information needed for handling table pagination.
 		$this->set_pagination_args(
 			array(
 				'per_page'    => $per_page,
-				'total_items' => $moderation_requests['total'],
-				'total_pages' => ceil( $moderation_requests['total'] / $per_page ),
+				'total_items' => $total_item,
+				'total_pages' => ceil( $total_item / $per_page ),
 			)
 		);
 	}
 
 	/**
-	 * Output the Moderation data table.
+	 * Output the Moderation report data table.
 	 *
 	 * @since BuddyBoss 1.5.4
 	 */
@@ -144,7 +144,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			</tr>
 			</thead>
 
-			<tbody id="the-moderation-request-list">
+			<tbody id="the-moderation-report-list">
 			<?php $this->display_rows_or_placeholder(); ?>
 			</tbody>
 
@@ -170,21 +170,19 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	public function get_columns() {
 
 		/**
-		 * Filters the titles for the columns for the moderation list table.
+		 * Filters the titles for the columns for the moderation report list table.
 		 *
 		 * @since BuddyBoss 1.5.4
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
 		return apply_filters(
-			'bp_moderation_list_table_get_columns',
+			'bp_moderation_report_list_table_get_columns',
 			array(
-				'reporter'      => __( 'Reporter', 'buddyboss' ),
-				'content_owner' => __( 'Content Owner', 'buddyboss' ),
-				'content_type'  => __( 'Content Type', 'buddyboss' ),
-				'content_id'    => __( 'Content ID', 'buddyboss' ),
-				'report'        => __( 'Report', 'buddyboss' ),
-				'date'          => __( 'Last Reported', 'buddyboss' ),
+				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
+				'content'  => esc_html__( 'Content', 'buddyboss' ),
+				'category' => esc_html__( 'Category', 'buddyboss' ),
+				'date'     => esc_html__( 'Reported', 'buddyboss' ),
 			)
 		);
 	}
@@ -204,45 +202,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Name column, and "quick admin" rollover actions.
-	 *
-	 * Called "comment" in the CSS so we can re-use some WP core CSS.
-	 *
-	 * @since BuddyBoss 1.5.4
-	 *
-	 * @param array $item A singular item (one full row).
-	 *
-	 * @see   WP_List_Table::single_row_columns()
-	 */
-	public function column_reporter( $item = array() ) {
-
-		// Preorder items: View.
-		$actions = array(
-			'view' => '',
-		);
-
-		$view_url_query_arg = array(
-			'page'         => 'bp-moderation',
-			'mid'          => $item['item_id'],
-			'content_type' => $item['item_type'],
-			'action'       => 'view',
-		);
-
-		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-			$view_url_query_arg['tab'] = 'blocked-members';
-		}
-
-		// Build actions URL.
-		$view_url = add_query_arg( $view_url_query_arg, bp_get_admin_url( 'admin.php' ) );
-
-		// Rollover actions.
-		// View.
-		$actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $view_url ), esc_html__( 'View', 'buddyboss' ) );
-
-		printf( '<strong>%s %s</strong> %s', wp_kses_post( get_avatar( $item['updated_by'], '32' ) ), wp_kses_post( bp_core_get_userlink( $item['updated_by'] ) ), wp_kses_post( $this->row_actions( $actions ) ) );
-	}
-
-	/**
 	 * Allow plugins to add their custom column.
 	 *
 	 * @since BuddyBoss 1.5.4
@@ -254,25 +213,20 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function column_default( $item = array(), $column_name = '' ) {
 
-		if ( 'content_type' === $column_name ) {
-			echo esc_html( bp_get_moderation_content_type( $item['item_type'] ) );
+		if ( 'reporter' === $column_name ) {
+			printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $item['user_id'], '32' ) ), wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
 		}
 
-		if ( 'content_id' === $column_name ) {
-			echo esc_html( $item['item_id'] );
+		if ( 'content' === $column_name ) {
+			echo esc_html( $item['content'] );
 		}
 
-		if ( 'content_owner' === $column_name ) {
-			$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
-			printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $user_id, '32' ) ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
-		}
-
-		if ( 'report' === $column_name ) {
-			echo 'report category';
+		if ( 'category' === $column_name ) {
+			echo esc_html( $item['category_id'] );
 		}
 
 		if ( 'date' === $column_name ) {
-			echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_updated'] ) ) );
+			echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_created'] ) ) );
 		}
 
 		/**
@@ -282,9 +236,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		 *
 		 * @param string $value       Empty string.
 		 * @param string $column_name Name of the column being rendered.
-		 * @param array  $item        The current moderation item in the loop.
+		 * @param array  $item        The current moderation report item in the loop.
 		 */
 		return apply_filters( 'bp_moderation_admin_get_custom_column', '', $column_name, $item );
 	}
-
 }
