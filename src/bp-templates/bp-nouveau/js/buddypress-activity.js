@@ -1036,7 +1036,7 @@ window.bp = window.bp || {};
 
 			// Updating comments .
 			if ( 'ac_edit_form_submit' === target.prop( 'name' ) ) {
-				var comment_content, comment_data;
+				var comment_content, comment_data, comment_edit_data;
 
 				form    = target.closest( 'form' );
 				item_id = activity_id;
@@ -1047,10 +1047,14 @@ window.bp = window.bp || {};
 				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
+				if ( target.closest( 'li' ).data( 'data-bp-comment' ) ) {
+					comment_edit_data = JSON.parse( target.closest( 'li' ).data( 'data-bp-comment' ) );
+				}
 
+				console.log( target.closest( 'li' ).data( 'data-bp-comment' ) );
 				comment_content = $( form ).find( '.ac-input' ).first();
 
-				console.log( item_id, activity_id , comment_content);
+				//console.log( item_id, activity_id , comment_content);
 				return;
 
 				// replacing atwho query from the comment content to disable querying it in the requests.
