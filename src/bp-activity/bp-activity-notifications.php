@@ -3,7 +3,7 @@
  * BuddyBoss Activity Notifications.
  *
  * @package BuddyBoss\Activity
- * @since BuddyPress 1.2.0
+ * @since   BuddyPress 1.2.0
  */
 
 // Exit if accessed directly.
@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @param int    $total_items       The total number of notifications to format.
  * @param string $format            'string' to get a BuddyBar-compatible notification, 'array' otherwise.
  * @param int    $id                Optional. The notification ID.
+ *
  * @return string $return Formatted @mention notification.
  */
 function bp_activity_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string', $id = 0 ) {
@@ -44,10 +45,10 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			 *
 			 * @since BuddyBoss 1.2.5
 			 *
-			 * @param string $link          HTML anchor tag for the interaction.
-			 * @param int    $item_id            The permalink for the interaction.
-			 * @param int    $secondary_item_id     How many items being notified about.
-			 * @param int    $total_items     ID of the activity item being formatted.
+			 * @param string $link              HTML anchor tag for the interaction.
+			 * @param int    $item_id           The permalink for the interaction.
+			 * @param int    $secondary_item_id How many items being notified about.
+			 * @param int    $total_items       ID of the activity item being formatted.
 			 */
 			$link = apply_filters( 'bp_activity_new_at_mention_permalink', $link, $item_id, $secondary_item_id, $total_items );
 
@@ -102,11 +103,11 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		 * @since BuddyPress 1.5.0
 		 * @since BuddyPress 2.6.0 use the $action_filter as a new dynamic portion of the filter name.
 		 *
-		 * @param string $string          HTML anchor tag for the interaction.
-		 * @param string $link            The permalink for the interaction.
-		 * @param int    $total_items     How many items being notified about.
-		 * @param int    $activity_id     ID of the activity item being formatted.
-		 * @param int    $user_id         ID of the user who inited the interaction.
+		 * @param string $string      HTML anchor tag for the interaction.
+		 * @param string $link        The permalink for the interaction.
+		 * @param int    $total_items How many items being notified about.
+		 * @param int    $activity_id ID of the activity item being formatted.
+		 * @param int    $user_id     ID of the user who inited the interaction.
 		 */
 		$return = apply_filters( 'bp_activity_' . $amount . '_' . $action_filter . '_notification', '<a href="' . esc_url( $link ) . '">' . esc_html( $text ) . '</a>', $link, (int) $total_items, $activity_id, $user_id );
 	} else {
@@ -121,11 +122,11 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		 * @since BuddyPress 1.5.0
 		 * @since BuddyPress 2.6.0 use the $action_filter as a new dynamic portion of the filter name.
 		 *
-		 * @param array  $array           Array holding the content and permalink for the interaction notification.
-		 * @param string $link            The permalink for the interaction.
-		 * @param int    $total_items     How many items being notified about.
-		 * @param int    $activity_id     ID of the activity item being formatted.
-		 * @param int    $user_id         ID of the user who inited the interaction.
+		 * @param array  $array       Array holding the content and permalink for the interaction notification.
+		 * @param string $link        The permalink for the interaction.
+		 * @param int    $total_items How many items being notified about.
+		 * @param int    $activity_id ID of the activity item being formatted.
+		 * @param int    $user_id     ID of the user who inited the interaction.
 		 */
 		$return = apply_filters(
 			'bp_activity_' . $amount . '_' . $action_filter . '_notification',
@@ -165,11 +166,11 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
  *
  * @since BuddyPress 1.9.0
  *
- * @param object $activity           Activity object.
- * @param string $subject (not used) Notification subject.
- * @param string $message (not used) Notification message.
- * @param string $content (not used) Notification content.
- * @param int    $receiver_user_id   ID of user receiving notification.
+ * @param object $activity         Activity object.
+ * @param string $subject          (not used) Notification subject.
+ * @param string $message          (not used) Notification message.
+ * @param string $content          (not used) Notification content.
+ * @param int    $receiver_user_id ID of user receiving notification.
  */
 function bp_activity_at_mention_add_notification( $activity, $subject, $message, $content, $receiver_user_id ) {
 	bp_notifications_add_notification(
@@ -184,6 +185,7 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 		)
 	);
 }
+
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
 /**
@@ -208,6 +210,7 @@ function bp_activity_update_reply_add_notification( $activity, $comment_id, $com
 		)
 	);
 }
+
 add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update_reply_add_notification', 10, 3 );
 
 /**
@@ -232,6 +235,7 @@ function bp_activity_comment_reply_add_notification( $activity_comment, $comment
 		)
 	);
 }
+
 add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment_reply_add_notification', 10, 3 );
 
 /**
@@ -250,6 +254,7 @@ function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 
 	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'new_at_mention' );
 }
+
 add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
 
 /**
@@ -291,12 +296,13 @@ function bp_activity_remove_screen_notifications_single_activity_permalink( $act
 		);
 	}
 }
+
 add_action( 'bp_activity_screen_single_activity_permalink', 'bp_activity_remove_screen_notifications_single_activity_permalink' );
 
 /**
  * Mark notification read when user visit sing post page permalink
  *
- * @since BuddyPress 2.0.0
+ * @since BuddyBoss 1.5.4
  */
 function bp_activity_mark_blog_post_notification_read() {
 	global $post;
@@ -305,17 +311,17 @@ function bp_activity_mark_blog_post_notification_read() {
 		return;
 	}
 
-	$rid        = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
-	$crid       = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
-	$comment_id = 0;
+	$reply_id          = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
+	$comment_rreply_id = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
+	$comment_id        = 0;
 
 	// For replies to a parent update.
-	if ( ! empty( $rid ) ) {
-		$comment_id = $rid;
+	if ( ! empty( $reply_id ) ) {
+		$comment_id = $reply_id;
 
 		// For replies to an activity comment.
-	} elseif ( ! empty( $_GET['crid'] ) ) {
-		$comment_id = $crid;
+	} elseif ( ! empty( $comment_rreply_id ) ) {
+		$comment_id = $comment_rreply_id;
 	}
 
 	// Mark individual activity reply notification as read.
@@ -356,6 +362,7 @@ function bp_activity_remove_screen_notifications_for_non_mentions() {
 		)
 	);
 }
+
 add_action( 'bp_screens', 'bp_activity_remove_screen_notifications_for_non_mentions' );
 
 /**
@@ -374,6 +381,7 @@ function bp_activity_at_mention_delete_notification( $activity_ids_deleted = arr
 		}
 	}
 }
+
 add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_notification', 10 );
 
 /**
@@ -432,6 +440,7 @@ function bp_activity_add_notification_for_synced_blog_comment( $activity_id, $po
 		}
 	}
 }
+
 add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notification_for_synced_blog_comment', 10, 4 );
 
 /**
@@ -452,66 +461,79 @@ function bp_activity_screen_notification_settings() {
 
 	?>
 
-	<table class="notification-settings" id="activity-notification-settings">
-		<thead>
-			<tr>
-				<th class="icon">&nbsp;</th>
-				<th class="title"><?php _e( 'Activity Feed', 'buddyboss' ); ?></th>
-				<th class="yes"><?php _e( 'Yes', 'buddyboss' ); ?></th>
-				<th class="no"><?php _e( 'No', 'buddyboss' ); ?></th>
-			</tr>
-		</thead>
+    <table class="notification-settings" id="activity-notification-settings">
+        <thead>
+        <tr>
+            <th class="icon">&nbsp;</th>
+            <th class="title"><?php _e( 'Activity Feed', 'buddyboss' ); ?></th>
+            <th class="yes"><?php _e( 'Yes', 'buddyboss' ); ?></th>
+            <th class="no"><?php _e( 'No', 'buddyboss' ); ?></th>
+        </tr>
+        </thead>
 
-		<tbody>
-			<?php if ( bp_activity_do_mentions() ) : ?>
-				<?php $current_user = wp_get_current_user(); ?>
-				<tr id="activity-notification-settings-mentions">
-					<td>&nbsp;</td>
-					<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
-					<td class="yes">
-						<div class="bp-radio-wrap">
-							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio" value="yes" <?php checked( $mention, 'yes', true ); ?> />
-							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php  _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-						</div>
-					</td>
-					<td class="no">
-						<div class="bp-radio-wrap">
-							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio" value="no" <?php checked( $mention, 'no', true ); ?> />
-							<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-						</div>
-					</td>
-				</tr>
-			<?php endif; ?>
+        <tbody>
+		<?php if ( bp_activity_do_mentions() ) : ?>
+			<?php $current_user = wp_get_current_user(); ?>
+            <tr id="activity-notification-settings-mentions">
+                <td>&nbsp;</td>
+                <td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
+                <td class="yes">
+                    <div class="bp-radio-wrap">
+                        <input type="radio" name="notifications[notification_activity_new_mention]"
+                               id="notification-activity-new-mention-yes" class="bs-styled-radio"
+                               value="yes" <?php checked( $mention, 'yes', true ); ?> />
+                        <label for="notification-activity-new-mention-yes"><span
+                                    class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+                    </div>
+                </td>
+                <td class="no">
+                    <div class="bp-radio-wrap">
+                        <input type="radio" name="notifications[notification_activity_new_mention]"
+                               id="notification-activity-new-mention-no" class="bs-styled-radio"
+                               value="no" <?php checked( $mention, 'no', true ); ?> />
+                        <label for="notification-activity-new-mention-no"><span
+                                    class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+                    </div>
+                </td>
+            </tr>
+		<?php endif; ?>
 
-			<tr id="activity-notification-settings-replies">
-				<td>&nbsp;</td>
-				<td><?php _e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
-				<td class="yes">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio" value="yes" <?php checked( $reply, 'yes', true ); ?> />
-						<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-				<td class="no">
-					<div class="bp-radio-wrap">
-						<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio" value="no" <?php checked( $reply, 'no', true ); ?> />
-						<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
-					</div>
-				</td>
-			</tr>
+        <tr id="activity-notification-settings-replies">
+            <td>&nbsp;</td>
+            <td><?php _e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
+            <td class="yes">
+                <div class="bp-radio-wrap">
+                    <input type="radio" name="notifications[notification_activity_new_reply]"
+                           id="notification-activity-new-reply-yes" class="bs-styled-radio"
+                           value="yes" <?php checked( $reply, 'yes', true ); ?> />
+                    <label for="notification-activity-new-reply-yes"><span
+                                class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+                </div>
+            </td>
+            <td class="no">
+                <div class="bp-radio-wrap">
+                    <input type="radio" name="notifications[notification_activity_new_reply]"
+                           id="notification-activity-new-reply-no" class="bs-styled-radio"
+                           value="no" <?php checked( $reply, 'no', true ); ?> />
+                    <label for="notification-activity-new-reply-no"><span
+                                class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+                </div>
+            </td>
+        </tr>
 
-			<?php
+		<?php
 
-			/**
-			 * Fires inside the closing </tbody> tag for activity screen notification settings.
-			 *
-			 * @since BuddyPress 1.2.0
-			 */
-			do_action( 'bp_activity_screen_notification_settings' )
-			?>
-		</tbody>
-	</table>
+		/**
+		 * Fires inside the closing </tbody> tag for activity screen notification settings.
+		 *
+		 * @since BuddyPress 1.2.0
+		 */
+		do_action( 'bp_activity_screen_notification_settings' )
+		?>
+        </tbody>
+    </table>
 
 	<?php
 }
+
 add_action( 'bp_notification_settings', 'bp_activity_screen_notification_settings', 1 );
