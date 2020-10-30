@@ -312,7 +312,7 @@ function bp_activity_mark_blog_post_notification_read() {
 	}
 
 	$reply_id          = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
-	$comment_rreply_id = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
+	$comment_reply_id = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
 	$comment_id        = 0;
 
 	// For replies to a parent update.
@@ -320,8 +320,8 @@ function bp_activity_mark_blog_post_notification_read() {
 		$comment_id = $reply_id;
 
 		// For replies to an activity comment.
-	} elseif ( ! empty( $comment_rreply_id ) ) {
-		$comment_id = $comment_rreply_id;
+	} elseif ( ! empty( $comment_reply_id ) ) {
+		$comment_id = $comment_reply_id;
 	}
 
 	// Mark individual activity reply notification as read.
