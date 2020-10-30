@@ -226,6 +226,37 @@ class BP_Moderation_Component extends BP_Component {
 	}
 
 	/**
+	 * Set up taxonomies.
+	 *
+	 * @since BuddyPress 2.6.0
+	 */
+	public function register_taxonomies() {
+		// Group Type.
+		register_taxonomy(
+			'bpm_category',
+			'bp_moderation',
+			array(
+				'label'              => __( 'Reporting Category', 'buddyboss' ),
+				'labels'             => array(
+					"name"          => __( 'Reporting Categories', 'buddyboss' ),
+					"singular_name" => __( 'Reporting Category', 'buddyboss' ),
+					"menu_name"     => __( 'Reporting Categories', 'buddyboss' ),
+					"all_items"     => __( 'All Reporting Categories', 'buddyboss' ),
+					"edit_item"     => __( 'Edit Reporting Category', 'buddyboss' ),
+					"view_item"     => __( 'View Reporting Category', 'buddyboss' ),
+					"update_item"   => __( 'Update Reporting Category', 'buddyboss' ),
+					"add_new_item"  => __( 'Add Reporting Category', 'buddyboss' ),
+					"new_item_name" => __( 'New Reporting', 'buddyboss' ),
+				),
+				'public'             => true,
+				'publicly_queryable' => false,
+				'rewrite'            => false,
+				'hierarchical'       => false
+			)
+		);
+	}
+
+	/**
 	 * Init the BuddyBoss REST API.
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
