@@ -3902,11 +3902,6 @@ function bp_activity_create_summary( $content, $activity ) {
 		$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 		$excerpt_link = get_the_permalink( $activity['secondary_item_id'] );
 		$summary = sprintf( '%1$s <span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $summary, $excerpt_link, $append_text );
-
-		if ( isset( $activity['id'] ) ) {
-			// update activity meta to tell it is read more added in activity content.
-			bp_activity_update_meta( $activity['id'], 'bp_blog_posts_content_activity_read_more_added', '1' );
-		}
 	}
 
 	if ( $use_media_type === 'embeds' ) {
