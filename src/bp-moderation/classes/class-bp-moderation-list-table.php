@@ -204,7 +204,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Name column, and "quick admin" rollover actions.
 	 *
 	 * Called "comment" in the CSS so we can re-use some WP core CSS.
@@ -238,7 +237,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		// Rollover actions.
 		// View.
-		$actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $view_url ), __( 'View', 'buddyboss' ) );
+		$actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $view_url ), esc_html__( 'View', 'buddyboss' ) );
 
 		printf( '<strong>%s %s</strong> %s', wp_kses_post( get_avatar( $item['updated_by'], '32' ) ), wp_kses_post( bp_core_get_userlink( $item['updated_by'] ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}

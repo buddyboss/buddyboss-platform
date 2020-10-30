@@ -81,16 +81,16 @@ function bp_moderation_admin_load() {
 		get_current_screen()->add_help_tab(
 			array(
 				'id'      => 'bp-moderation-view-overview',
-				'title'   => __( 'Overview', 'buddyboss' ),
+				'title'   => esc_html__( 'Overview', 'buddyboss' ),
 				'content' =>
-					'<p>' . __( 'View moderation Overview line 1.', 'buddyboss' ) . '</p>' .
-					'<p>' . __( 'View moderation Overview line 2', 'buddyboss' ) . '</p>',
+					'<p>' . esc_html__( 'View moderation Overview line 1.', 'buddyboss' ) . '</p>' .
+					'<p>' . esc_html__( 'View moderation Overview line 2', 'buddyboss' ) . '</p>',
 			)
 		);
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
-			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+			'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+			'<p>' . esc_html__( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 		);
 	} else {
 		/**
@@ -106,30 +106,30 @@ function bp_moderation_admin_load() {
 		$bp_moderation_list_table = new BP_Moderation_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => __( 'Moderation Request', 'buddyboss' ) ) );
+		add_screen_option( 'per_page', array( 'label' => esc_html__( 'Moderation Request', 'buddyboss' ) ) );
 
 		// Help panel - overview text.
 		get_current_screen()->add_help_tab(
 			array(
 				'id'      => 'bp-moderation-overview',
-				'title'   => __( 'Overview', 'buddyboss' ),
+				'title'   => esc_html__( 'Overview', 'buddyboss' ),
 				'content' =>
-					'<p>' . __( 'Moderation overview line 1', 'buddyboss' ) . '</p>' .
-					'<p>' . __( 'Moderation overview line 2', 'buddyboss' ) . '</p>',
+					'<p>' . esc_html__( 'Moderation overview line 1', 'buddyboss' ) . '</p>' .
+					'<p>' . esc_html__( 'Moderation overview line 2', 'buddyboss' ) . '</p>',
 			)
 		);
 
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
-			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
+			'<p><strong>' . esc_html__( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+			'<p>' . wp_kses_post( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 		);
 
 		// Add accessible hidden heading and text for Activity screen pagination.
 		get_current_screen()->set_screen_reader_content(
 			array(
 				/* translators: accessibility text */
-				'heading_pagination' => __( 'Moderation list navigation', 'buddyboss' ),
+				'heading_pagination' => esc_html__( 'Moderation list navigation', 'buddyboss' ),
 			)
 		);
 	}
@@ -188,11 +188,11 @@ function bp_moderation_admin() {
 			<h2 class="nav-tab-wrapper">
 				<?php
 				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-					bp_core_admin_moderation_tabs( __( 'Blocked Members', 'buddyboss' ) );
+					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
 				} elseif ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
-					bp_core_admin_moderation_tabs( __( 'Report Categories', 'buddyboss' ) );
+					bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) );
 				} else {
-					bp_core_admin_moderation_tabs( __( 'Reported Content', 'buddyboss' ) );
+					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				}
 				?>
 			</h2>
