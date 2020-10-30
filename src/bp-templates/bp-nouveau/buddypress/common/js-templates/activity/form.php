@@ -27,6 +27,7 @@ $template_parts = apply_filters(
 		'parts/bp-gif-result-item',
 		'parts/bp-whats-new-toolbar',
 		'parts/bp-activity-post-form-privacy',
+		'parts/bp-activity-edit-postin',
 	)
 );
 

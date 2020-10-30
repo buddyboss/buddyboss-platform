@@ -251,6 +251,21 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 			return $avatar;
 		}
 
+		// Crop args.
+		$r = array(
+			'item_id'       => $request['group_id'],
+			'object'        => 'group',
+			'avatar_dir'    => sanitize_key( 'group' ) . '-avatars',
+			'original_file' => $avatar->full,
+			'crop_w'        => bp_core_avatar_full_width(),
+			'crop_h'        => bp_core_avatar_full_height(),
+			'crop_x'        => 0,
+			'crop_y'        => 0,
+		);
+
+		/** This action is documented in bp-groups/bp-groups-screens.php */
+		do_action( 'groups_avatar_uploaded', (int) $request['group_id'], 'crop', $r );
+
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $avatar, $request )
 		);

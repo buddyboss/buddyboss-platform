@@ -73,6 +73,11 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$type['class'] = 'bp-enable-group-hierarchies';
 		$this->add_field( 'bp-enable-group-hierarchies', __( 'Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval', $type );
 
+		// Hide subgroups from the main Groups Directory.
+		$type          = array();
+		$type['class'] = 'bp-enable-group-hide-subgroups';
+		$this->add_field( 'bp-enable-group-hide-subgroups', __( 'Hide Subgroups', 'buddyboss' ), 'bp_admin_setting_callback_group_hide_subgroups', 'intval', $type );
+
 		// enable or disable restrict invites to members who already in specific parent group.
 		$type          = array();
 		$type['class'] = 'bp-enable-group-restrict-invites';

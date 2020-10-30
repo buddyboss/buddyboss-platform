@@ -826,8 +826,24 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		// No reply content.
 		if (
 			empty( $reply_content )
-			&& empty( $request['bbp_media'] )
-			&& empty( $request['bbp_media_gif'] )
+			&& ! (
+				(
+					function_exists( 'bp_is_forums_media_support_enabled' )
+					&& false !== bp_is_forums_media_support_enabled()
+					&& ! empty( $request['bbp_media'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_gif_support_enabled' )
+					&& false !== bp_is_forums_gif_support_enabled()
+					&& ! empty( $request['bbp_media_gif']['url'] )
+					&& ! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_document_support_enabled' )
+					&& false !== bp_is_forums_document_support_enabled()
+					&& ! empty( $request['bbp_documents'] )
+				)
+			)
 		) {
 			return new WP_Error(
 				'bp_rest_bbp_reply_content',
@@ -1301,7 +1317,27 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		$reply_content = apply_filters( 'bbp_edit_reply_pre_content', $reply_content, $reply_id );
 
 		// No reply content.
-		if ( empty( $reply_content ) ) {
+		if (
+			empty( $reply_content )
+			&& ! (
+				(
+					function_exists( 'bp_is_forums_media_support_enabled' )
+					&& false !== bp_is_forums_media_support_enabled()
+					&& ! empty( $request['bbp_media'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_gif_support_enabled' )
+					&& false !== bp_is_forums_gif_support_enabled()
+					&& ! empty( $request['bbp_media_gif']['url'] )
+					&& ! empty( $request['bbp_media_gif']['mp4'] )
+				)
+				|| (
+					function_exists( 'bp_is_forums_document_support_enabled' )
+					&& false !== bp_is_forums_document_support_enabled()
+					&& ! empty( $request['bbp_documents'] )
+				)
+			)
+		) {
 			return new WP_Error(
 				'bp_rest_bbp_edit_reply_content',
 				__( 'Your reply cannot be empty.', 'buddyboss' ),
@@ -1381,8 +1417,24 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			remove_post_type_support( bbp_get_reply_post_type(), 'revisions' );
 		}
 
+		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
+			remove_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		}
+
+		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
+			remove_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
+		}
+
 		// Insert topic.
 		$reply_id = wp_update_post( $reply_data );
+
+		if ( function_exists( 'bp_media_forums_new_post_media_save' ) ) {
+			add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
+		}
+
+		if ( function_exists( 'bp_document_forums_new_post_document_save' ) ) {
+			add_action( 'edit_post', 'bp_document_forums_new_post_document_save', 999 );
+		}
 
 		// Toggle revisions back on.
 		if ( true === $revisions_removed ) {
@@ -1456,6 +1508,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 		do_action( 'bbp_edit_reply_post_extras', $reply_id );
 
 		$reply         = get_post( $reply_id );
+		$reply->edit   = true;
 		$fields_update = $this->update_additional_fields_for_object( $reply, $request );
 
 		if ( is_wp_error( $fields_update ) ) {
