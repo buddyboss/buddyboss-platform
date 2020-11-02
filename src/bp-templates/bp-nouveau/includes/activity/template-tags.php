@@ -634,7 +634,9 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 			'data_bp_tooltip' => __( 'Report', 'buddyboss' ),
 			'link_text'       => __( 'Report', 'buddyboss' ),
 			'link_href'       => '#jk-modal',
-			'data-attr'       => 1123,
+			'data-attr-nonce'  => wp_create_nonce('bp-report-content'),
+            'data-attr-id'    => $activity_id,
+			'data-attr-type'  => 'activity'
 		);
 
 		$buttons['activity_report'] = array(
@@ -649,7 +651,9 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'id'              => $report_args['link_id'],
 				'href'            => $report_args['link_href'],
 				'class'           => $report_args['link_class'],
-				'data-bp-nonce'   => $report_args['data-attr'] ,
+				'data-bp-nonce'   => $report_args['data-attr-nonce'],
+                'data-bp-id'      => $report_args['data-attr-id'],
+                'data-bp-type'      => $report_args['data-attr-type'],
 			),
 			'link_text'  => sprintf(
 				'<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>',

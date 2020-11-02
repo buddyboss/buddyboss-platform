@@ -228,3 +228,18 @@ function bp_get_moderation_content_type( $key ) {
 
 	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
+
+function bb_report_content() {
+	$result            = array();
+	$result['success'] = 0;
+	$result['msg']     = esc_html__( 'Sorry, Something happened wrong.', 'buddyboss' );
+	parse_str( $_POST['form_data'], $form_data_arr );
+	echo "<pre>";
+	print_r( $form_data_arr );
+	echo "</pre>";
+	exit;
+}
+
+// Ajax call to report content
+add_action( 'wp_ajax_bb_report_content', 'bb_report_content' );
+add_action( 'wp_ajax_nopriv_bb_report_content', 'bb_report_content' );
