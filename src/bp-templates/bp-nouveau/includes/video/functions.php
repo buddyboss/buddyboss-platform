@@ -107,35 +107,13 @@ function bp_nouveau_video_localize_scripts( $params = array() ) {
 		'cover_video_size_error_description'=> __( 'To reposition your cover video, please upload a larger image and then try again.', 'buddyboss' ),
 	);
 
-	if ( bp_is_single_album() ) {
+	if ( bp_is_single_video_album() ) {
 		$params['video']['album_id'] = (int) bp_action_variable( 0 );
-	}
-
-	if ( bp_is_single_folder() ) {
-		$params['document']['folder_id'] = (int) bp_action_variable( 0 );
 	}
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$params['video']['group_id'] = bp_get_current_group_id();
     }
-
-	$params['video']['emoji']            = array(
-		'profile'  => bp_is_profiles_emoji_support_enabled(),
-		'groups'   => bp_is_groups_emoji_support_enabled(),
-		'messages' => bp_is_messages_emoji_support_enabled(),
-		'forums'   => bp_is_forums_emoji_support_enabled(),
-		'document' => bp_is_forums_document_support_enabled(),
-	);
-	$params['video']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
-
-	$params['video']['gif']         = array(
-		'profile'  => bp_is_profiles_gif_support_enabled(),
-		'groups'   => bp_is_groups_gif_support_enabled(),
-		'messages' => bp_is_messages_gif_support_enabled(),
-		'forums'   => bp_is_forums_gif_support_enabled(),
-		'document' => bp_is_forums_document_support_enabled(),
-	);
-	$params['video']['gif_api_key'] = bp_video_get_gif_api_key();
 
 	$params['video']['i18n_strings'] = array(
 		'select'               => __( 'Select', 'buddyboss' ),

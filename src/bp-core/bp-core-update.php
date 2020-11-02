@@ -317,6 +317,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16201 ) {
 			bp_update_to_1_5_1();
 		}
+
+		if ( $raw_db_version < 16301 ) {
+			bp_update_to_1_6_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -655,6 +659,15 @@ function bp_update_to_1_5_1() {
 		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
 		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
 	}
+}
+
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_update_to_1_6_0() {
+	bp_core_install_media();
 }
 
 function bp_update_default_doc_extensions() {

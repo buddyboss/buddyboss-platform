@@ -95,10 +95,6 @@ class BP_Video_Component extends BP_Component {
 			'cache',
 		);
 
-		if ( class_exists( 'BP_Video_Rotation' ) ) {
-			$GLOBALS['bp_video_rotation'] = new BP_Video_Rotation();
-		}
-
 		parent::includes( $includes );
 	}
 
@@ -196,7 +192,7 @@ class BP_Video_Component extends BP_Component {
 		/* Single Album Globals **********************************************/
 
 		// Are we viewing a single album?
-		if ( bp_is_video_component() && bp_is_single_album()
+		if ( bp_is_video_component() && bp_is_single_video_album()
 			 && ( $album_id = BP_Video_Album::album_exists( bp_action_variable( 0 ) ) )
 		) {
 			$bp->is_single_item  = true;

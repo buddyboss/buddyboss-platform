@@ -2786,6 +2786,19 @@ function bp_is_user_media() {
 }
 
 /**
+ * Is this a user's video page?
+ *
+ * Eg http://example.com/members/joe/videos/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return bool True if the current page is a user's video page.
+ */
+function bp_is_user_video() {
+	return (bool) ( bp_is_user() && bp_is_video_component() );
+}
+
+/**
  * Is this a user's document page?
  *
  * Eg http://example.com/members/joe/documents/ (or a subpage thereof).
@@ -2798,7 +2811,6 @@ function bp_is_user_document() {
 	return (bool) ( bp_is_user() && bp_is_document_component() );
 }
 
-
 /**
  * Is the current page the media directory?
  *
@@ -2808,6 +2820,21 @@ function bp_is_user_document() {
  */
 function bp_is_media_directory() {
 	if ( ! bp_displayed_user_id() && bp_is_media_component() && ! bp_current_action() ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Is the current page the video directory?
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return bool True if the current page is the video directory.
+ */
+function bp_is_video_directory() {
+	if ( ! bp_displayed_user_id() && bp_is_video_component() && ! bp_current_action() ) {
 		return true;
 	}
 
@@ -2843,6 +2870,22 @@ function bp_is_single_album() {
 	}
 
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+/**
+ * Is the current page a single video album item permalink?
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return bool True if the current page is a single album item permalink.
+ */
+function bp_is_single_video_album() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_video_albums() && is_numeric( bp_action_variable( 0 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_video_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 /**
@@ -3170,6 +3213,23 @@ function bp_is_group_media() {
  * @return bool True if the current page is a group's activity page.
  */
 function bp_is_group_albums() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's video albums page?
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @return bool True if the current page is a group's video album page.
+ */
+function bp_is_group_video_albums() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
