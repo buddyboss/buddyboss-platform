@@ -5181,6 +5181,17 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 		$response['completed_fields'] = $total_completed_count;
 	}
 
+	/**
+	 * Filters will return the user progress based on the settings you provided.
+	 *
+	 * @param array $response           user progress array.
+	 * @param array $profile_groups     user profile groups.
+	 * @param array $profile_photo_type user profile photo/cover data.
+	 * @param array $get_user_data      user profile cached data.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 */
 	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
 
 }
