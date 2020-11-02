@@ -131,7 +131,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			/** Caps */
 
 			// Only add these filters if inside a group forum
-			if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) ) {
+			if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( $this->slug ) ) {
 
 				// Allow group member to view private/hidden forums
 				add_filter( 'bbp_map_meta_caps', array( $this, 'map_group_forum_meta_caps' ), 10, 4 );
