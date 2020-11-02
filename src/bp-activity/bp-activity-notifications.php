@@ -480,15 +480,18 @@ add_action( 'bp_notification_settings', 'bp_activity_screen_notification_setting
 /**
  * Mark notifications as read when a user visits an single post.
  *
- * @since BuddyBoss 1.5.2
+ * @since BuddyBoss 1.5.4
  */
 function bp_activity_remove_screen_notifications_single_post() {
+
+	$rid  = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
+	$crid = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
 
 	if (
 		! is_single()
 		|| (
-			( ! isset( $_GET['rid'] ) || empty( $_GET['rid'] ) )
-			&& ( ! isset( $_GET['crid'] ) || empty( $_GET['crid'] ) )
+			empty( $rid )
+			&& empty( $crid )
 		)
 	) {
 		return;
@@ -496,12 +499,12 @@ function bp_activity_remove_screen_notifications_single_post() {
 
 	$comment_id = 0;
 	// For replies to a parent update.
-	if ( ! empty( $_GET['rid'] ) ) {
-		$comment_id = (int) $_GET['rid'];
+	if ( ! empty( $rid ) ) {
+		$comment_id = $rid;
 
 		// For replies to an activity comment.
-	} elseif ( ! empty( $_GET['crid'] ) ) {
-		$comment_id = (int) $_GET['crid'];
+	} elseif ( ! empty( $crid ) ) {
+		$comment_id = (int) $crid;
 	}
 
 	// Mark individual activity reply notification as read.
