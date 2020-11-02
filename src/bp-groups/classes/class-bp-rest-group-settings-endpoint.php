@@ -705,6 +705,36 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+			$fields[] = array(
+				'label'       => esc_html__( 'Group Documents', 'buddyboss' ),
+				'name'        => 'group-document-status',
+				'description' => esc_html__( 'Which members of this group are allowed to manage documents?', 'buddyboss' ),
+				'field'       => 'radio',
+				'value'       => bp_group_get_document_status( $group_id ),
+				'options'     => array(
+					array(
+						'label'             => esc_html__( 'All group members', 'buddyboss' ),
+						'value'             => 'members',
+						'description'       => '',
+						'is_default_option' => 'members' === bp_group_get_document_status( $group_id ),
+					),
+					array(
+						'label'             => esc_html__( 'Organizers and Moderators only', 'buddyboss' ),
+						'value'             => 'mods',
+						'description'       => '',
+						'is_default_option' => 'mods' === bp_group_get_document_status( $group_id ),
+					),
+					array(
+						'label'             => esc_html__( 'Organizers only', 'buddyboss' ),
+						'value'             => 'admins',
+						'description'       => '',
+						'is_default_option' => 'admins' === bp_group_get_document_status( $group_id ),
+					),
+				),
+			);
+		}
+
 		if ( bp_is_active( 'messages' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
 			$fields[] = array(
 				'label'       => esc_html__( 'Group Messages', 'buddyboss' ),
@@ -760,12 +790,13 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		}
 
 		if ( $group_types ) {
+			$current_types    = bp_groups_get_group_type( $group_id, false );
 			$group_type_field = array(
 				'label'       => esc_html__( 'Group Type', 'buddyboss' ),
 				'name'        => 'group-types',
 				'description' => esc_html__( 'What type of group is this? (optional)', 'buddyboss' ),
 				'field'       => 'select',
-				'value'       => '',
+				'value'       => ( ! empty( $current_types ) ? current( $current_types ) : '' ),
 				'options'     => array(),
 			);
 
@@ -922,6 +953,11 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
+		$allowed_document_status = apply_filters( 'groups_allowed_document_status', array( 'members', 'mods', 'admins' ) );
+		$document_status         = ( array_key_exists( 'group-document-status', (array) $post_fields ) && ! empty( $post_fields['group-document-status'] ) ) ? $post_fields['group-document-status'] : bp_group_get_document_status( $group->id );
+
+		// Checked against a whitelist for security.
+		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
 		$album_status         = ( array_key_exists( 'group-album-status', (array) $post_fields ) && ! empty( $post_fields['group-album-status'] ) ) ? $post_fields['group-album-status'] : bp_group_get_album_status( $group->id );
 
@@ -962,7 +998,7 @@ class BP_REST_Group_Settings_Endpoint extends WP_REST_Controller {
 		$error  = '';
 		$notice = '';
 
-		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $album_status, $message_status ) ) {
+		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $document_status, $album_status, $message_status ) ) {
 			$error = __( 'There was an error updating group settings. Please try again.', 'buddyboss' );
 		} else {
 			$notice = __( 'Group settings were successfully updated.', 'buddyboss' );
