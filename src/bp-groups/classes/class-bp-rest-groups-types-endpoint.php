@@ -429,11 +429,14 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 		$group_type_posts = get_posts(
 			array(
-				'name'        => $group_type,
-				'post_type'   => 'bp-group-type',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'fields'      => 'ids',
+				'name'                   => $group_type,
+				'post_type'              => 'bp-group-type',
+				'post_status'            => 'publish',
+				'numberposts'            => 1,
+				'fields'                 => 'ids',
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 

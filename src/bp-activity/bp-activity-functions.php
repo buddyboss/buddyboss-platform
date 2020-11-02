@@ -5169,6 +5169,11 @@ function bp_activity_media_sideload_attachment( $file ) {
 
 	$file_array['name'] = basename( $matches[0] );
 
+	// Load function download_url if not exists.
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
 	$file                   = str_replace( '&amp;', '&', $file );
@@ -5221,6 +5226,11 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 	$file    = $file['file'];
 	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
 	$content = '';
+
+	// Load function wp_read_image_metadata if not exists.
+	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
 
 	// Use image exif/iptc data for title and caption defaults if possible.
 	if ( $image_meta = @wp_read_image_metadata( $file ) ) {

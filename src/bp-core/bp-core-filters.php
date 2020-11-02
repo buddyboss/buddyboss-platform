@@ -780,6 +780,25 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			} else {
 				$menu_item->classes = array( 'current_page_item', 'current-menu-item' );
 			}
+		} else {
+			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
+				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+					$tab = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$component = $tab;
+					if ( $component && in_array( $component, array( 'document' ), true ) ) {
+						$component = 'media';
+					} elseif ( $component && in_array( $component, array( 'profile' ), true ) ) {
+						$component = 'xprofile';
+					}
+					if ( bp_is_active( $component ) ) {
+						if ( strpos( $menu_item->url, $tab ) !== false ) {
+							$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array() ;
+							$menu_item->classes[] = 'current_page_item';
+							$menu_item->classes[] = 'current-menu-item';
+						}
+					}
+				}
+			}
 		}
 	}
 

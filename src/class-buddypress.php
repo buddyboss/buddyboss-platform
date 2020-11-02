@@ -750,7 +750,7 @@ class BuddyPress {
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
 		if ( 'bp-rest-attachments' === $class ) {
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-attachments.php";
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} else {

@@ -226,7 +226,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [folder_id] A unique numeric ID for the Folder.
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {Number} [activity_id] A unique numeric ID for the Document's Activity.
-	 * @apiParam {Array=public,loggedin,friends,onlyme,grouponly,message,forums} [privacy=public] Privacy of the Document.
+	 * @apiParam {Array=public,loggedin,friends,onlyme,grouponly} [privacy=public] Privacy of the Document.
 	 * @apiParam {Array=public,friends,groups,personal} [scope] Scope of the Document.
 	 * @apiParam {Array} [exclude] Ensure result set excludes specific IDs.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
@@ -340,6 +340,30 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		if ( true === $retval && ! empty( $request['group_id'] ) && bp_is_active( 'groups' ) ) {
+			$group       = groups_get_group( $request['group_id'] );
+			$user_id     = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
+			$user_groups = groups_get_user_groups( $user_id );
+
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id, $user_groups['groups'], true ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -483,7 +507,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {Number} [folder_id] A unique numeric ID for the Document Folder.
 	 * @apiParam {string} [content] Document Content.
-	 * @apiParam {string=public,loggedin,friends,onlyme,grouponly,message} [privacy=public] Privacy of the Document.
+	 * @apiParam {string=public,loggedin,friends,onlyme,grouponly} [privacy=public] Privacy of the Document.
 	 */
 	public function create_item( $request ) {
 
@@ -596,7 +620,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
 				|| ! function_exists( 'bp_is_group_document_support_enabled' )
 				|| ( function_exists( 'bp_is_group_document_support_enabled' ) && false === bp_is_group_document_support_enabled() )
 			) {
@@ -660,7 +684,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [folder_id] A unique numeric ID for the folder.
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {string} [title] Document title.
-	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly,message} [privacy] Privacy of the document.
+	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly} [privacy] Privacy of the document.
 	 */
 	public function update_item( $request ) {
 		$id = $request['id'];
@@ -823,7 +847,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! groups_can_user_manage_document( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -1092,6 +1116,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		$data = $this->add_additional_fields_to_object( $data, $request );
 
 		$response = rest_ensure_response( $data );
+		$response->add_links( $this->prepare_links( $document ) );
 
 		/**
 		 * Filter an document value returned from the API.
@@ -1105,6 +1130,54 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		 */
 		return apply_filters( 'bp_rest_document_prepare_value', $response, $request, $document );
 	}
+
+	/**
+	 * Prepare links for the request.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param BP_Document $document Document data.
+	 *
+	 * @return array
+	 */
+	protected function prepare_links( $document ) {
+		$base = sprintf( '/%s/%s/', $this->namespace, ( empty( $document->attachment_id ) ? 'document/folder' : $this->rest_base ) );
+		$url  = $base . $document->id;
+
+		// Entity meta.
+		$links = array(
+			'self'       => array(
+				'href' => rest_url( $url ),
+			),
+			'collection' => array(
+				'href' => rest_url( $base ),
+			),
+			'user'       => array(
+				'href'       => rest_url( bp_rest_get_user_url( $document->user_id ) ),
+				'embeddable' => true,
+			),
+		);
+
+		if ( ! empty( $document->activity_id ) && bp_is_active( 'activity' ) ) {
+			$activity_base     = sprintf( '/%s/%s/', $this->namespace, buddypress()->activity->id );
+			$activity_url      = $activity_base . $document->activity_id;
+			$links['activity'] = array(
+				'href'       => rest_url( $activity_url ),
+				'embeddable' => true,
+			);
+		}
+
+		/**
+		 * Filter links prepared for the REST response.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array       $links    The prepared links of the REST response.
+		 * @param BP_Document $document Document data.
+		 */
+		return apply_filters( 'bp_rest_document_prepare_links', $links, $document );
+	}
+
 
 	/**
 	 * Prepare object response for the document/folder.
@@ -1515,7 +1588,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Privacy of the Document.', 'buddyboss' ),
 			'type'              => 'array',
 			'items'             => array(
-				'enum' => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly', 'message', 'forums' ),
+				'enum' => array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly' ),
 				'type' => 'string',
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -1742,8 +1815,9 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					$title = get_the_title( $wp_attachment_id );
 
 					$documents[] = array(
-						'id'   => $wp_attachment_id,
-						'name' => $title,
+						'id'      => $wp_attachment_id,
+						'name'    => $title,
+						'privacy' => $document_privacy,
 					);
 				}
 			}
@@ -1790,6 +1864,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 	public function bp_rest_document_default_scope( $scope, $args ) {
 		$new_scope = array();
 
+		if ( is_array( $scope ) ) {
+			$scope = array_filter( $scope );
+		}
+
 		if ( ( 'all' === $scope || empty( $scope ) ) && ( empty( $args['group_id'] ) && empty( $args['user_id'] ) ) ) {
 			$new_scope[] = 'public';
 
@@ -1804,10 +1882,6 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( bp_is_active( 'groups' ) ) {
 				$new_scope[] = 'groups';
 			}
-		} elseif ( ! empty( $args['user_id'] ) && ( 'all' === $scope || empty( $scope ) ) ) {
-			$new_scope[] = 'personal';
-		} elseif ( bp_is_active( 'groups' ) && ! empty( $args['group_id'] ) && ( 'all' === $scope || empty( $scope ) ) ) {
-			$new_scope[] = 'groups';
 		}
 
 		$new_scope = array_unique( $new_scope );
@@ -2185,7 +2259,13 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			'privacy'      => 'message',
 		);
 
+		remove_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
 		$document_ids = $this->bp_rest_create_document( $args );
+
+		add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+		add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 		if ( is_wp_error( $document_ids ) ) {
 			$value->bp_documents = $document_ids;

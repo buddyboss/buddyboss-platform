@@ -692,15 +692,15 @@ function bp_core_admin_integrations() {
 }
 
 /**
- * Load the AppBoss integration admin screen.
+ * Load the BuddyBoss App integration admin screen.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_appboss() {
+function bp_core_admin_buddyboss_app() {
 	?>
 		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-appboss.php'; ?>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 		</div>
 		<?php
 }

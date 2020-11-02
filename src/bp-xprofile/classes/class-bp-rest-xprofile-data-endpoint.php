@@ -69,15 +69,19 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 					'args'                => array(
 						'value' => array(
 							'description' => __( 'The list of values for the field data.', 'buddyboss' ),
+
 							// @todo Removed to support array and object both.
-							/*'type'        => 'object',
+
+							/*
+							'type'        => 'object',
 							'items'       => array(
 								'type' => 'string',
 							),
 							'arg_options' => array(
 								'validate_callback' => 'rest_validate_request_arg',
 								'sanitize_callback' => 'rest_sanitize_request_arg',
-							),*/
+							),
+							*/
 						),
 					),
 				),
@@ -249,9 +253,24 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		if (
 			! $field->type_obj->supports_multiple_defaults
 			&& is_array( $value )
-			&& ! in_array( $field->type, apply_filters( 'bp_rest_xprofile_mutiple', array( 'socialnetworks' ) ) )
+			&& ! in_array( $field->type, apply_filters( 'bp_rest_xprofile_mutiple', array( 'socialnetworks' ) ), true )
 		) {
 			$value = implode( ' ', $value );
+		}
+
+		if (
+			$field->type_obj->supports_multiple_defaults
+			&& in_array( $field->type, apply_filters( 'bp_rest_xprofile_serialize', array( 'checkbox', 'multiselectbox' ) ), true )
+		) {
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			$value = json_decode( $value, true );
+
+			if ( ! is_array( $value ) ) {
+				$value = (array) $value;
+			}
 		}
 
 		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
@@ -479,8 +498,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			'field_id'     => $field_data->field_id,
 			'user_id'      => $field_data->user_id,
 			'value'        => array(
-				'raw'          => $field_data->value,
-				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value ),
+				'raw'          => $this->fields_endpoint->get_profile_field_raw_value( $field_data->value, $field_data->field_id ),
+				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value, $field_data->field_id ),
 				'rendered'     => $this->fields_endpoint->get_profile_field_rendered_value( $field_data->value, $field_data->field_id ),
 			),
 			'last_updated' => bp_rest_prepare_date_response( $field_data->last_updated ),
