@@ -29,9 +29,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// Define singular and plural labels, as well as whether we support AJAX.
 		parent::__construct(
 			array(
-				'ajax'     => false,
-				'plural'   => 'moderations',
-				'singular' => 'moderation',
+					'ajax'     => false,
+					'plural'   => 'moderations',
+					'singular' => 'moderation',
 			)
 		);
 	}
@@ -50,10 +50,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$hidden_columns = ( ! empty( $hidden_columns ) ) ? $hidden_columns : array();
 
 		$this->_column_headers = array(
-			$this->get_columns(),
-			$hidden_columns,
-			$this->get_sortable_columns(),
-			$this->get_default_primary_column_name(),
+				$this->get_columns(),
+				$hidden_columns,
+				$this->get_sortable_columns(),
+				$this->get_default_primary_column_name(),
 		);
 
 		return $this->_column_headers;
@@ -67,7 +67,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	protected function get_default_primary_column_name() {
-		return 'reporter';
+		return ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) ? 'blocked_member' : 'content_type';
 	}
 
 	/**
@@ -96,9 +96,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
 		$moderation_request_args = array(
-			'page'        => $page,
-			'per_page'    => $per_page,
-			'count_total' => true,
+				'page'        => $page,
+				'per_page'    => $per_page,
+				'count_total' => true,
 		);
 
 		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
@@ -114,11 +114,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		// Store information needed for handling table pagination.
 		$this->set_pagination_args(
-			array(
-				'per_page'    => $per_page,
-				'total_items' => $moderation_requests['total'],
-				'total_pages' => ceil( $moderation_requests['total'] / $per_page ),
-			)
+				array(
+						'per_page'    => $per_page,
+						'total_items' => $moderation_requests['total'],
+						'total_pages' => ceil( $moderation_requests['total'] / $per_page ),
+				)
 		);
 	}
 
@@ -168,6 +168,22 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @see   WP_List_Table::single_row_columns()
 	 */
 	public function get_columns() {
+		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+			$columns = array(
+				'blocked_member'    => esc_html__( 'Blocked Member', 'buddyboss' ),
+				'blocked'        => esc_html__( 'Block (Count)', 'buddyboss' ),
+				'actions'         => esc_html__( '', 'buddyboss' ),
+			);
+		} else {
+			$columns = array(
+				'content_type'    => esc_html__( 'Content Type', 'buddyboss' ),
+				'content_id'      => esc_html__( 'Content ID', 'buddyboss' ),
+				'content_excerpt' => esc_html__( 'Content Excerpt', 'buddyboss' ),
+				'content_owner'   => esc_html__( 'Content Owner', 'buddyboss' ),
+				'reported'        => esc_html__( 'Reported (Count)', 'buddyboss' ),
+				'actions'         => esc_html__( '', 'buddyboss' ),
+			);
+		}
 
 		/**
 		 * Filters the titles for the columns for the moderation list table.
@@ -176,17 +192,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
-		return apply_filters(
-			'bp_moderation_list_table_get_columns',
-			array(
-				'reporter'      => __( 'Reporter', 'buddyboss' ),
-				'content_owner' => __( 'Content Owner', 'buddyboss' ),
-				'content_type'  => __( 'Content Type', 'buddyboss' ),
-				'content_id'    => __( 'Content ID', 'buddyboss' ),
-				'report'        => __( 'Report', 'buddyboss' ),
-				'date'          => __( 'Last Reported', 'buddyboss' ),
-			)
-		);
+		return apply_filters( 'bp_moderation_list_table_get_columns', $columns );
 	}
 
 	/**
@@ -204,21 +210,14 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Name column, and "quick admin" rollover actions.
+	 * Create Actions link
 	 *
-	 * Called "comment" in the CSS so we can re-use some WP core CSS.
-	 *
-	 * @since BuddyBoss 1.5.4
-	 *
-	 * @param array $item A singular item (one full row).
-	 *
-	 * @see   WP_List_Table::single_row_columns()
+	 * @param array $item
 	 */
-	public function column_reporter( $item = array() ) {
-
+	public function actions( $item = array() ) {
 		// Preorder items: View.
 		$actions = array(
-			'view' => '',
+				'view' => '',
 		);
 
 		$view_url_query_arg = array(
@@ -239,7 +238,81 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// View.
 		$actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $view_url ), esc_html__( 'View', 'buddyboss' ) );
 
-		printf( '<strong>%s %s</strong> %s', wp_kses_post( get_avatar( $item['updated_by'], '32' ) ), wp_kses_post( bp_core_get_userlink( $item['updated_by'] ) ), wp_kses_post( $this->row_actions( $actions ) ) );
+		return wp_kses_post( $this->row_actions( $actions ) );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_content_type( $item = array() ) {
+		printf( '<strong>%s</strong> %s', esc_html( bp_get_moderation_content_type( $item['item_type'] ) ), $this->actions( $item ) );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_blocked_member( $item = array() ) {
+		$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
+		printf( '<strong>%s</strong> %s', wp_kses_post( bp_core_get_userlink( $user_id ) ), $this->actions( $item ) );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_content_id( $item = array() ) {
+		echo esc_html( $item['item_id'] );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_content_owner( $item = array() ) {
+		$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
+		printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_content_excerpt( $item = array() ) {
+		echo '<b>Todo :</b> excerpt';
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_reported( $item = array() ) {
+		echo esc_html( '0 time' );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_blocked( $item = array() ) {
+		echo esc_html( '0 time' );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_actions( $item = array() ) {
+		echo 'actions';
 	}
 
 	/**
@@ -253,27 +326,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_default( $item = array(), $column_name = '' ) {
-
-		if ( 'content_type' === $column_name ) {
-			echo esc_html( bp_get_moderation_content_type( $item['item_type'] ) );
-		}
-
-		if ( 'content_id' === $column_name ) {
-			echo esc_html( $item['item_id'] );
-		}
-
-		if ( 'content_owner' === $column_name ) {
-			$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
-			printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $user_id, '32' ) ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
-		}
-
-		if ( 'report' === $column_name ) {
-			echo 'report category';
-		}
-
-		if ( 'date' === $column_name ) {
-			echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_updated'] ) ) );
-		}
 
 		/**
 		 * Filters a string to allow plugins to add custom column content.

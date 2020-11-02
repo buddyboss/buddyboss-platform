@@ -189,8 +189,6 @@ function bp_moderation_admin() {
 				<?php
 				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
-				} elseif ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
-					bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) );
 				} else {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				}
@@ -234,28 +232,16 @@ function bp_moderation_admin_index() {
 			<?php
 			if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 				esc_html_e( 'Blocked Members', 'buddyboss' );
-			} elseif ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
-				esc_html_e( 'Report Categories', 'buddyboss' );
 			} else {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			}
 			?>
 		</h1>
-
-		<?php
-		if ( ! empty( $_GET['tab'] ) && 'report-categories' === $_GET['tab'] ) {
-			echo 'report categories';
-		} else {
-			$bp_moderation_list_table->views();
-			?>
-
-			<form id="bp-moseration-form" action="" method="get">
-				<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
-				<?php $bp_moderation_list_table->display(); ?>
-			</form>
-			<?php
-		}
-		?>
+		<?php $bp_moderation_list_table->views(); ?>
+		<form id="bp-moseration-form" action="" method="get">
+			<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
+			<?php $bp_moderation_list_table->display(); ?>
+		</form>
 	</div>
 	<?php
 }
@@ -305,157 +291,24 @@ function bp_moderation_admin_view() {
 	 * @param array $value Array holding single activity object that was passed by reference.
 	 */
 	do_action_ref_array( 'bp_moderation_admin_edit', array( &$moderation_request_data ) );
-	?>
-	<div class="wrap">
-		<h1>
-			<?php
-			/* translators: accessibility text */
-			printf( esc_html__( 'Editing Moderation (ID #%s)', 'buddyboss' ), esc_html( number_format_i18n( (int) $moderation_id ) ) );
-			?>
-		</h1>
 
-		<?php
-		if ( ! empty( $moderation_request_data ) ) :
-			?>
-			<div id="poststuff">
-				<div id="post-body"
-					 class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
-					<div id="post-body-content">
-						<div id="postdiv">
-							<div id="bp_moderation_action" class="postbox">
-								<h2>
-									<?php esc_html_e( 'Details', 'buddyboss' ); ?>
-								</h2>
-								<div class="inside">
-									<table class="form-table">
-										<tbody>
-										<tr>
-											<th scope="row">
-												<label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Item ID', 'buddyboss' );
-													?>
-												</label>
-											</th>
-											<td>
-												<?php
-												echo esc_html( $moderation_request_data->item_id );
-												?>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">
-												<label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Item Type', 'buddyboss' );
-													?>
-												</label>
-											</th>
-											<td>
-												<?php
-												echo esc_html( bp_get_moderation_content_type( $moderation_request_data->item_type ) );
-												?>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">
-												<label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Hidden Sitewide', 'buddyboss' );
-													?>
-												</label>
-											</th>
-											<td>
-												<?php
-												$hide_sitewide = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? esc_html__( 'Yes', 'buddyboss' ) : esc_html__( 'No', 'buddyboss' );
-												echo esc_html( $hide_sitewide );
-												?>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">
-												<label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Content Owner', 'buddyboss' );
-													?>
-												</label>
-											</th>
-											<td>
-												<?php
-												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-												printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $user_id, '32' ) ), wp_kses_post( bp_core_get_userlink( $user_id ) ) );
-												?>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">
-												<label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Last reported By', 'buddyboss' );
-													?>
-												</label>
-											</th>
-											<td>
-												<?php
-												printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $moderation_request_data->updated_by, '32' ) ), wp_kses_post( bp_core_get_userlink( $moderation_request_data->updated_by ) ) );
-												?>
-											</td>
-										</tr>
-										<tr>
-											<th scope="row">
-												<label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Last reported', 'buddyboss' );
-													?>
-												</label>
-											</th>
-											<td>
-												<?php
-												echo esc_html( bbp_get_time_since( bbp_convert_date( $moderation_request_data->date_updated ) ) );
-												?>
-											</td>
-										</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-
-							<div id="bp_moderation_action" class="postbox">
-								<h2>
-									<?php esc_html_e( 'Reports', 'buddyboss' ); ?>
-								</h2>
-								<div class="inside">
-									<?php
-									$bp_moderation_report_list_table = new BP_Moderation_Report_List_Table();
-									// Prepare the group items for display.
-									$bp_moderation_report_list_table->prepare_items();
-									$bp_moderation_report_list_table->views();
-									$bp_moderation_report_list_table->display();
-									?>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php else : ?>
-			<p>
-				<?php
-				printf(
-					'%1$s <a href="%2$s">%3$s</a>',
-					esc_html__( 'No moderation found with this ID.', 'buddyboss' ),
-					esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
-					esc_html__( 'Go back and try again.', 'buddyboss' )
-				);
-				?>
-			</p>
-		<?php endif; ?>
-	</div>
-	<?php
+	include 'screens/single/admin/report-single.php';
 }
+
+/**
+ * Add Navigation tab on top of the page BuddyBoss > Moderation > Reporting Categories
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_moderation_admin_category_listing_add_tab() {
+	global $pagenow, $current_screen;
+
+	if ( ( $pagenow == 'edit-tags.php' || $pagenow == 'term.php' )  && ( 'bpm_category' === $current_screen->taxonomy ) ) {
+		?>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) ); ?></h2>
+		</div>
+		<?php
+	}
+}
+add_action( 'admin_notices', 'bp_moderation_admin_category_listing_add_tab' );

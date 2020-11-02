@@ -28,11 +28,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 		// Define singular and plural labels, as well as whether we support AJAX.
 		parent::__construct(
-			array(
-				'ajax'     => false,
-				'plural'   => 'reports',
-				'singular' => 'report',
-			)
+				array(
+						'ajax'     => false,
+						'plural'   => 'reports',
+						'singular' => 'report',
+				)
 		);
 	}
 
@@ -50,10 +50,10 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		$hidden_columns = ( ! empty( $hidden_columns ) ) ? $hidden_columns : array();
 
 		$this->_column_headers = array(
-			$this->get_columns(),
-			$hidden_columns,
-			$this->get_sortable_columns(),
-			$this->get_default_primary_column_name(),
+				$this->get_columns(),
+				$hidden_columns,
+				$this->get_sortable_columns(),
+				$this->get_default_primary_column_name(),
 		);
 
 		return $this->_column_headers;
@@ -114,11 +114,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 		// Store information needed for handling table pagination.
 		$this->set_pagination_args(
-			array(
-				'per_page'    => $per_page,
-				'total_items' => $total_item,
-				'total_pages' => ceil( $total_item / $per_page ),
-			)
+				array(
+						'per_page'    => $per_page,
+						'total_items' => $total_item,
+						'total_pages' => ceil( $total_item / $per_page ),
+				)
 		);
 	}
 
@@ -169,6 +169,19 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 
+		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+			$columns = array(
+					'reporter' => esc_html__( 'Blocking Member', 'buddyboss' ),
+					'date'     => esc_html__( 'Date', 'buddyboss' ),
+			);
+		} else {
+			$columns = array(
+					'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
+					'category' => esc_html__( 'Report/Category', 'buddyboss' ),
+					'date'     => esc_html__( 'Date', 'buddyboss' ),
+			);
+		}
+
 		/**
 		 * Filters the titles for the columns for the moderation report list table.
 		 *
@@ -176,15 +189,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
-		return apply_filters(
-			'bp_moderation_report_list_table_get_columns',
-			array(
-				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
-				'content'  => esc_html__( 'Content', 'buddyboss' ),
-				'category' => esc_html__( 'Category', 'buddyboss' ),
-				'date'     => esc_html__( 'Reported', 'buddyboss' ),
-			)
-		);
+		return apply_filters( 'bp_moderation_report_list_table_get_columns', $columns );
 	}
 
 	/**
@@ -202,6 +207,33 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_reporter( $item = array() ) {
+		printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_category( $item = array() ) {
+		echo esc_html( $item['category_id'] );
+	}
+
+	/**
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $item
+	 */
+	public function column_date( $item = array() ) {
+		echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_created'] ) ) );
+	}
+
+	/**
 	 * Allow plugins to add their custom column.
 	 *
 	 * @since BuddyBoss 1.5.4
@@ -212,22 +244,6 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @return string
 	 */
 	public function column_default( $item = array(), $column_name = '' ) {
-
-		if ( 'reporter' === $column_name ) {
-			printf( '<strong>%s %s</strong>', wp_kses_post( get_avatar( $item['user_id'], '32' ) ), wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
-		}
-
-		if ( 'content' === $column_name ) {
-			echo esc_html( $item['content'] );
-		}
-
-		if ( 'category' === $column_name ) {
-			echo esc_html( $item['category_id'] );
-		}
-
-		if ( 'date' === $column_name ) {
-			echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_created'] ) ) );
-		}
 
 		/**
 		 * Filters a string to allow plugins to add custom column content.

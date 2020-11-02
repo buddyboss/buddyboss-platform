@@ -3099,10 +3099,10 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	);
 
 	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array(
-			'page' => 'bp-moderation',
-			'tab'  => 'report-categories'
-		), 'admin.php' ) ),
+		'href' => bp_get_admin_url( add_query_arg( array(
+				'taxonomy' => 'bpm_category',
+				'tab'      => 'report-categories'
+		), 'edit-tags.php' ) ),
 		'name'  => esc_html__( 'Report Categories', 'buddyboss' ),
 		'class' => 'bp-report-categories',
 	);
