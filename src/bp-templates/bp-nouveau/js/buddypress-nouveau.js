@@ -56,6 +56,9 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
+			// Report content popup
+			this.reportPopUp();
+
 			// Toggle password text
 			this.togglePassword();
 
@@ -1741,6 +1744,19 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+		reportPopUp: function() {
+			$( document ).on( 'click', '.report-activity', function ( e ) {
+				$( '.report-activity' ).magnificPopup(
+					{
+						type: 'inline',
+						preloader: false,
+						fixedBgPos: true,
+						fixedContentPos: true
+					}
+				);
+			}).magnificPopup('open');
+
 		},
 		togglePassword: function() {
                     $( document ).on( 'click', '.bb-toggle-password', function ( e ) {

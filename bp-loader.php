@@ -37,3 +37,23 @@ include( $bp_loader );
 
 // Unset the loader, since it's loaded in global scope
 unset( $bp_loader );
+
+add_action( 'wp_footer', function(){
+	?>
+    <a href="#jk-modal" class="button item-button bp-secondary-action report-activity" data-bp-nonce="1123">
+        <span class="bp-screen-reader-text">Report</span>
+        <span class="report-label">Report</span>
+    </a>
+	<div id="jk-modal" class="registration-popup bb-modal mfp-hide">
+		<h2>
+            <?php
+            esc_html_e( 'Report Content', 'buddyboss');
+            ?>
+        </h2>
+        <div class="bb-report-type">
+            
+        </div>
+		<button title="Close (Esc)" type="button" class="mfp-close">×</button>
+	</div>
+<?php
+} );

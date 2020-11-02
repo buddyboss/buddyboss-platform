@@ -626,6 +626,38 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 			);
 		}
 
+		$report_args = array(
+			'button_element'  => $button_element,
+			'link_id'         => '',
+			'link_class'      => 'button item-button bp-secondary-action report-activity',
+			'link_rel'        => 'nofollow',
+			'data_bp_tooltip' => __( 'Report', 'buddyboss' ),
+			'link_text'       => __( 'Report', 'buddyboss' ),
+			'link_href'       => '#jk-modal',
+			'data-attr'       => 1123,
+		);
+
+		$buttons['activity_report'] = array(
+			'id'                => 'activity_report',
+			'position'          => 50,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'id'              => $report_args['link_id'],
+				'href'            => $report_args['link_href'],
+				'class'           => $report_args['link_class'],
+				'data-bp-nonce'   => $report_args['data-attr'] ,
+			),
+			'link_text'  => sprintf(
+				'<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>',
+				esc_html( $report_args['data_bp_tooltip'] ),
+				esc_html( $report_args['data_bp_tooltip'] )
+			),
+		);
+
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.
 		 *
