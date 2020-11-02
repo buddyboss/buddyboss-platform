@@ -484,14 +484,14 @@ add_action( 'bp_notification_settings', 'bp_activity_screen_notification_setting
  */
 function bp_activity_remove_screen_notifications_single_post() {
 
-	$rid  = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
-	$crid = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
+	$reply_id         = filter_input( INPUT_GET, 'rid', FILTER_VALIDATE_INT );
+	$comment_reply_id = filter_input( INPUT_GET, 'crid', FILTER_VALIDATE_INT );
 
 	if (
 		! is_single()
 		|| (
-			empty( $rid )
-			&& empty( $crid )
+			empty( $reply_id )
+			&& empty( $comment_reply_id )
 		)
 	) {
 		return;
@@ -499,12 +499,12 @@ function bp_activity_remove_screen_notifications_single_post() {
 
 	$comment_id = 0;
 	// For replies to a parent update.
-	if ( ! empty( $rid ) ) {
-		$comment_id = $rid;
+	if ( ! empty( $reply_id ) ) {
+		$comment_id = $reply_id;
 
 		// For replies to an activity comment.
-	} elseif ( ! empty( $crid ) ) {
-		$comment_id = (int) $crid;
+	} elseif ( ! empty( $comment_reply_id ) ) {
+		$comment_id = (int) $comment_reply_id;
 	}
 
 	// Mark individual activity reply notification as read.
