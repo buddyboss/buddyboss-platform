@@ -49,13 +49,13 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		}
 
 		/* Widget VARS */
-		$profile_groups_selected         = $instance['profile_groups_enabled'];
+		$profile_groups_selected        = $instance['profile_groups_enabled'];
 		$this->widget_id                = $args['widget_id'];
-		$profile_phototype_selected      = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
-		$profile_hide_widget_selected    = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
+		$profile_phototype_selected     = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
+		$profile_hide_widget_selected   = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
 		$settings                       = array();
-		$settings['profile_groups']      = $profile_groups_selected;
-		$settings['profile_photo_type']  = $profile_phototype_selected;
+		$settings['profile_groups']     = $profile_groups_selected;
+		$settings['profile_photo_type'] = $profile_phototype_selected;
 		$user_progress                  = bp_xprofile_get_user_profile_progress_data( $settings );
 
 		// IF nothing selected then return and nothing to display.
@@ -80,7 +80,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		// Widget Content
 
 		// Globalize the Profile Completion widget arguments. Used in the template called below.
-		$bp_nouveau = bp_nouveau();
+		$bp_nouveau                                           = bp_nouveau();
 		$bp_nouveau->xprofile->profile_completion_widget_para = $user_progress;
 		bp_get_template_part( 'members/single/profile/widget' );
 		$bp_nouveau->xprofile->profile_completion_widget_para = array();

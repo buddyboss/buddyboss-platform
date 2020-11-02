@@ -5066,9 +5066,9 @@ function bp_core_upload_max_size() {
 }
 
 /**
- * Remove profile completion widget transient.
+ * Function will return the default fields groups and avatar/cover is enabled or not.
  *
- * @since BuddyBoss 1.5.3
+ * @since BuddyBoss 1.5.4
  */
 function bp_core_profile_completion_steps_options() {
 
@@ -5078,6 +5078,13 @@ function bp_core_profile_completion_steps_options() {
 	$options['is_profile_photo_disabled'] = bp_disable_avatar_uploads();
 	$options['is_cover_photo_disabled']   = bp_disable_cover_image_uploads();
 
+	/**
+	 * Filters will return the default fields groups and avatar/cover is enabled or not.
+	 *
+	 * @param array $options of default Profile Groups and Profile Cover/Photo enabled.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
 	return apply_filters( 'bp_core_profile_completion_steps_options', $options );
 }
 
@@ -5090,7 +5097,7 @@ function bp_core_profile_completion_steps_options() {
 function bp_core_xprofile_update_profile_completion_user_progress() {
 
 	$user_id            = get_current_user_id();
-	$steps_options     = bp_core_profile_completion_steps_options();
+	$steps_options      = bp_core_profile_completion_steps_options();
 	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
 	$profile_photo_type = array();
 
@@ -5110,7 +5117,8 @@ function bp_core_xprofile_update_profile_completion_user_progress() {
 /**
  * Function will return the user progress based on the settings you provided.
  *
- * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in progress.
+ * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in
+ *                        progress.
  *
  * @return array $response user progress based on widget settings.
  */
@@ -5138,14 +5146,14 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 		foreach ( $profile_photo_type as $option ) {
 			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
 				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
-				$total_count = $total_count + 1;
-				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) &&  1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
+				$total_count                             = $total_count + 1;
+				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
 					$total_completed_count = $total_completed_count + 1;
 				}
 			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
 				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
-				$total_count = $total_count + 1;
-				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) &&  1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
+				$total_count                           = $total_count + 1;
+				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
 					$total_completed_count = $total_completed_count + 1;
 				}
 			}
@@ -5154,11 +5162,11 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 
 	if ( ! empty( $profile_groups ) ) {
 		foreach ( $profile_groups as $group ) {
-			if ( isset( $get_user_data['groups'][$group] ) ) {
-				$response['groups'][$group] = $get_user_data['groups'][$group];
-				$total_count = $total_count + (int) $get_user_data['groups'][$group]['group_total_fields'];
-				if ( isset( $get_user_data['groups'][$group]['group_completed_fields'] ) && (int) $get_user_data['groups'][$group]['group_completed_fields'] > 0 ) {
-					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][$group]['group_completed_fields'];
+			if ( isset( $get_user_data['groups'][ $group ] ) ) {
+				$response['groups'][ $group ] = $get_user_data['groups'][ $group ];
+				$total_count                  = $total_count + (int) $get_user_data['groups'][ $group ]['group_total_fields'];
+				if ( isset( $get_user_data['groups'][ $group ]['group_completed_fields'] ) && (int) $get_user_data['groups'][ $group ]['group_completed_fields'] > 0 ) {
+					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][ $group ]['group_completed_fields'];
 				}
 			}
 
