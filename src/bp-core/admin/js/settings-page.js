@@ -378,6 +378,32 @@
 				}
 			);
 
+			$( '#bp_video_profile_video_support' ).change(
+				function () {
+					if ( ! this.checked) {
+						$( '#bp_video_profile_albums_support' ).prop( 'disabled', true );
+						$( '#bp_video_profile_albums_support' ).attr( 'checked', false );
+					} else {
+						$( '#bp_video_profile_albums_support' ).prop( 'disabled', false );
+					}
+				}
+			);
+
+			$( '#bp_video_group_video_support' ).change(
+				function () {
+					if ( ! this.checked) {
+						$( '#bp_video_group_albums_support' ).prop( 'disabled', true );
+						$( '#bp_video_group_albums_support' ).attr( 'checked', false );
+					} else {
+						$( '#bp_video_group_albums_support' ).prop( 'disabled', false );
+					}
+				}
+			);
+
+			if ( $( 'body .section-bp_video_settings_extensions' ).length ) {
+				$( document ).find( '.nav-settings-subsubsub .subsubsub li.bp-media a' ).addClass( 'current' );
+			}
+
 			/**
 			 * Admin Tools Default data setting Page
 			 */
