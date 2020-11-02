@@ -242,21 +242,25 @@ function bp_video_admin_setting_callback_video_section() {
 		</p>
 		<?php
 	} elseif ( class_exists( 'FFMpeg\FFMpeg') ) {
-		$ffmpeg = FFMpeg\FFMpeg::create();
-		$ffmpegVersion = $ffmpeg->getFFMpegDriver()->getVersion();
-
-		if ( $ffmpegVersion)
-		?>
-		<p class="alert">
-			<?php
-			echo sprintf(
-			/* translators: 1: FFMpeg status */
-					_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
-					'<code><a href="https://ffmpeg.org/" target="_blank">FFMPEG</a></code>'
-			);
+		$error = '';
+		try{
+			$ffmpeg = FFMpeg\FFMpeg::create();
+		} catch(Exception $ffmpeg){
+			$error = $ffmpeg->getMessage();
+		}
+		if ( ! empty( trim( $error ) ) ) {
 			?>
-		</p>
-		<?php
+			<p class="alert">
+				<?php
+				echo sprintf(
+				/* translators: 1: FFMpeg status */
+						_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+						'<code><a href="https://ffmpeg.org/" target="_blank">FFMPEG</a></code>'
+				);
+				?>
+			</p>
+			<?php
+		}
 	}
 }
 
