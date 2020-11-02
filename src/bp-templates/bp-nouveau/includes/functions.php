@@ -865,6 +865,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group photos. Please wait.', 'buddyboss' ),
 		),
+		'group-video-loading'               => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group videos. Please wait.', 'buddyboss' ),
+		),
 		'group-document-loading'            => array(
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group documents. Please wait.', 'buddyboss' ),
@@ -981,6 +985,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
+		'video-loop-none'                   => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no videos were found.', 'buddyboss' ),
+		),
 		'document-loop-none'                => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
@@ -993,6 +1001,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
+		'member-video-none'                 => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no videos were found.', 'buddyboss' ),
+		),
 		'member-media-document-none'        => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
@@ -1001,13 +1013,25 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
 		),
+		'video-album-none'                  => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
+		),
 		'album-media-loading'               => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 		),
+		'album-video-loading'               => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading videos from the album. Please wait.', 'buddyboss' ),
+		),
 		'directory-media-loading'           => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss' ),
+		),
+		'directory-video-loading'           => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading videos from the community. Please wait.', 'buddyboss' ),
 		),
 		'directory-media-document-loading'  => array(
 			'type'    => 'loading',

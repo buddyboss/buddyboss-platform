@@ -3403,3 +3403,21 @@ function bp_video_multi_array_search( $array, $search ) {
 	return $result;
 
 }
+
+/**
+ * Return all the allowed video extensions.
+ *
+ * @return array
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_get_allowed_extension() {
+	$extensions     = array();
+	$all_extensions = bp_video_extensions_list();
+	foreach ( $all_extensions as $extension ) {
+		if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+			$extensions[] = $extension['extension'];
+		}
+	}
+
+	return apply_filters( 'bp_video_get_allowed_extension', $extensions );
+}

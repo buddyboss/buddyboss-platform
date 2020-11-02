@@ -54,6 +54,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
         'parts/bp-messages-editor-toolbar',
         'parts/bp-messages-media',
         'parts/bp-messages-document',
+        'parts/bp-messages-video',
         'parts/bp-messages-attached-gif',
         'parts/bp-messages-gif-media-search-dropdown',
         'parts/bp-messages-gif-result-item',

@@ -34,6 +34,11 @@
 		<input name="bbp_document" id="bbp_document" type="hidden" value=""/>
 	<?php endif; ?>
 
+	<?php if ( bp_is_active( 'media' ) && bp_is_forums_video_support_enabled() ) : ?>
+		<div class="dropzone closed" id="forums-post-video-uploader" data-key="<?php echo esc_attr( bp_unique_id( 'forums_video_uploader_' ) ); ?>"></div>
+		<input name="bbp_video" id="bbp_video" type="hidden" value=""/>
+	<?php endif; ?>
+
 </div>
 
 <div id="whats-new-toolbar" class="
@@ -73,6 +78,17 @@ if ( ! bp_is_active( 'media' ) ) {
 			</a>
 		</div>
 
+	<?php endif; ?>
+
+	<?php
+	$video_extensions = bp_is_active( 'media' ) ?  bp_video_get_allowed_extension() : false;
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && bp_is_forums_video_support_enabled() ) :
+		?>
+		<div class="post-elements-buttons-item post-video video-support">
+			<a href="#" id="forums-video-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php esc_html_e( 'Attach a video', 'buddyboss' ); ?>">
+				<i class="bb-icon bb-icon-video"></i>
+			</a>
+		</div>
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ) : ?>

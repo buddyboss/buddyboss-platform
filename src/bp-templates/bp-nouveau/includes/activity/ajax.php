@@ -545,6 +545,8 @@ function bp_nouveau_ajax_post_update() {
 			$toolbar_option = true;
 		} elseif ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
 			$toolbar_option = true;
+		} elseif ( bp_is_active( 'video' ) && ! empty( $_POST['video'] ) ) {
+			$toolbar_option = true;
 		}
 
 		if ( ! $toolbar_option ) {

@@ -782,10 +782,10 @@ function bp_core_get_directory_page_default_titles() {
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
 		'document'        => __( 'Documents', 'buddyboss' ),
-		'video'        => __( 'Videos', 'buddyboss' ),
+		'video'           => __( 'Videos', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
-		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
+	// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page' => __( 'Forums', 'buddyboss' ),
 		'terms'           => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
@@ -2882,6 +2882,10 @@ function bp_nav_menu_get_loggedin_pages() {
 
 				if ( 'my-media' === $s_nav['slug'] ) {
 					$sub_name = __( 'My Photos', 'buddyboss' );
+				}
+
+				if ( 'my-video' === $s_nav['slug'] ) {
+					$sub_name = __( 'My Videos', 'buddyboss' );
 				}
 
 				if ( 'my-courses' === $s_nav['slug'] ) {
