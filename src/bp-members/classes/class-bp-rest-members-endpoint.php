@@ -651,6 +651,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 		$response->add_links( $this->prepare_links( $user ) );
 
+		// Update current user's last activity.
+		if ( strpos( $request->get_route(), 'members/me' ) !== false && get_current_user_id() === $user->ID ) {
+			bp_update_user_last_activity();
+		}
+
 		/**
 		 * Filters user data returned from the API.
 		 *
@@ -722,7 +727,7 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 		);
 
 		if ( 'edit' === $context ) {
-			$user_data = get_userdata( $user->ID );
+			$user_data                  = get_userdata( $user->ID );
 			$data['registered_date']    = bp_rest_prepare_date_response( $user_data->user_registered );
 			$data['roles']              = (array) array_values( $user_data->roles );
 			$data['capabilities']       = (array) array_keys( $user_data->allcaps );
@@ -843,9 +848,11 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 
 			$groups = bp_xprofile_get_groups(
 				array(
-					'user_id'          => $user_id,
-					'fetch_fields'     => true,
-					'fetch_field_data' => true,
+					'user_id'                        => $user_id,
+					'fetch_fields'                   => true,
+					'fetch_field_data'               => true,
+					'hide_empty_fields'              => true,
+					'repeater_show_main_fields_only' => false,
 				)
 			);
 
@@ -876,8 +883,8 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 					$data['groups'][ $group->id ]['fields'][ $item->id ] = array(
 						'name'  => $item->name,
 						'value' => array(
-							'raw'          => $item->data->value,
-							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value ),
+							'raw'          => $fields_endpoint->get_profile_field_raw_value( $item->data->value, $item ),
+							'unserialized' => $fields_endpoint->get_profile_field_unserialized_value( $item->data->value, $item ),
 							'rendered'     => $fields_endpoint->get_profile_field_rendered_value( $item->data->value, $item ),
 						),
 					);
