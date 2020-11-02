@@ -877,7 +877,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
 		if ( has_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' ) ) {
-			remove_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type');
+			remove_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' );
 		}
 
 		return $message;
