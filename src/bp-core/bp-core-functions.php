@@ -5146,15 +5146,15 @@ function bp_xprofile_get_selected_options_user_progress( $settings ) {
 		foreach ( $profile_photo_type as $option ) {
 			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
 				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
-				$total_count                             = $total_count + 1;
+				$total_count                             = ++$total_count;
 				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
-					$total_completed_count = $total_completed_count + 1;
+					$total_completed_count = ++$total_completed_count;
 				}
 			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
 				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
-				$total_count                           = $total_count + 1;
+				$total_count                           = ++$total_count;
 				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
-					$total_completed_count = $total_completed_count + 1;
+					$total_completed_count = ++$total_completed_count;
 				}
 			}
 		}
