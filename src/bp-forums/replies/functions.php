@@ -287,6 +287,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	// No reply content
 	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $reply_content ) ) ) )
 		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_video'] )
 		 && empty( $_POST['bbp_media_gif'] )
 		 && empty( $_POST['bbp_document'] )
 	) {

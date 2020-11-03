@@ -31,7 +31,7 @@
 
 			<?php
 			while ( bp_video_album() ) :
-				bp_video_the_album();
+				bp_the_video_album();
 
 				bp_get_template_part( 'video/album-entry' );
 

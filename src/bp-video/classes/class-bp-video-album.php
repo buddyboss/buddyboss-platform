@@ -337,6 +337,8 @@ class BP_Video_Album {
 		 */
 		$where_conditions = apply_filters( 'bp_video_album_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
+		$where_conditions['type'] = "m.type = 'video'";
+
 		if ( empty( $where_conditions ) ) {
 			$where_conditions['2'] = '2';
 		}

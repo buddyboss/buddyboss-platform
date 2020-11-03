@@ -321,13 +321,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 				// check if topic edit
 				if ( bbp_is_topic_edit() ) {
-					$params['bbp_is_topic_edit'] = true;
+					$params[ 'bbp_is_topic_edit' ] = true;
 
 					$media_type = get_post_meta( bbp_get_topic_id(), 'bp_media_type', true );
 
 					if ( 'document' === $media_type ) {
 
-						$document_ids  = get_post_meta( bbp_get_topic_id(), 'bp_document_ids', true );
+						$document_ids = get_post_meta( bbp_get_topic_id(), 'bp_document_ids', true );
 
 						if ( ! empty( $document_ids ) && bp_has_document(
 								array(
@@ -336,13 +336,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'sort'     => 'ASC',
 								)
 							) ) {
-							$params['topic_edit_document'] = array();
-							$index                      = 0;
+							$params[ 'topic_edit_document' ] = array();
+							$index                           = 0;
 							while ( bp_document() ) {
 								bp_the_document();
 
-								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
-								$params['topic_edit_document'][] = array(
+								$size                              = filesize( get_attached_file( bp_get_media_attachment_id() ) );
+								$params[ 'topic_edit_document' ][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
@@ -354,9 +354,35 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								$index ++;
 							}
 						}
+					} elseif ( 'video' === $media_type ) {
+						$video_ids = get_post_meta( bbp_get_topic_id(), 'bp_video_ids', true );
+
+						if ( ! empty( $video_ids ) && bp_has_video(
+								array(
+									'include'  => $video_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params[ 'topic_edit_video' ] = array();
+							$index                        = 0;
+							while ( bp_video() ) {
+								bp_the_video();
+
+								$params[ 'topic_edit_video' ][] = array(
+									'id'            => bp_get_video_id(),
+									'attachment_id' => bp_get_video_attachment_id(),
+									'name'          => bp_get_video_title(),
+									'thumb'         => bp_get_video_attachment_image_thumbnail(),
+									'url'           => bp_get_video_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
 					} else {
 
-						$media_ids  = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
+						$media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
 
 						if ( ! empty( $media_ids ) && bp_has_media(
 								array(
@@ -365,12 +391,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'sort'     => 'ASC',
 								)
 							) ) {
-							$params['topic_edit_media'] = array();
-							$index                      = 0;
+							$params[ 'topic_edit_media' ] = array();
+							$index                        = 0;
 							while ( bp_media() ) {
 								bp_the_media();
 
-								$params['topic_edit_media'][] = array(
+								$params[ 'topic_edit_media' ][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => bp_get_media_title(),
@@ -386,10 +412,10 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = wp_get_attachment_url( $gif_data['still'] );
-						$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+						$preview_url = wp_get_attachment_url( $gif_data[ 'still' ] );
+						$video_url   = wp_get_attachment_url( $gif_data[ 'mp4' ] );
 
-						$params['topic_edit_gif_data'] = array(
+						$params[ 'topic_edit_gif_data' ] = array(
 							'preview_url'  => $preview_url,
 							'video_url'    => $video_url,
 							'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
@@ -399,13 +425,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 				// check if reply edit
 				if ( bbp_is_reply_edit() ) {
-					$params['bbp_is_reply_edit'] = true;
+					$params[ 'bbp_is_reply_edit' ] = true;
 
 					$media_type = get_post_meta( bbp_get_reply_id(), 'bp_media_type', true );
 
 					if ( 'document' === $media_type ) {
 
-						$document_ids  = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
+						$document_ids = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
 
 						if ( ! empty( $document_ids ) && bp_has_document(
 								array(
@@ -414,13 +440,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'sort'     => 'ASC',
 								)
 							) ) {
-							$params['reply_edit_document'] = array();
-							$index                      = 0;
+							$params[ 'reply_edit_document' ] = array();
+							$index                           = 0;
 							while ( bp_document() ) {
 								bp_the_document();
 
-								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
-								$params['reply_edit_document'][] = array(
+								$size                              = filesize( get_attached_file( bp_get_media_attachment_id() ) );
+								$params[ 'reply_edit_document' ][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
@@ -432,9 +458,35 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								$index ++;
 							}
 						}
+					} elseif ( 'video' === $media_type ) {
+						$video_ids = get_post_meta( bbp_get_reply_id(), 'bp_video_ids', true );
+
+						if ( ! empty( $video_ids ) && bp_has_video(
+								array(
+									'include'  => $video_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params[ 'reply_edit_video' ] = array();
+							$index                        = 0;
+							while ( bp_video() ) {
+								bp_the_video();
+
+								$params[ 'reply_edit_video' ][] = array(
+									'id'            => bp_get_video_id(),
+									'attachment_id' => bp_get_video_attachment_id(),
+									'name'          => bp_get_video_title(),
+									'thumb'         => bp_get_video_attachment_image_thumbnail(),
+									'url'           => bp_get_video_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
 					} else {
 
-						$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
+						$media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
 
 						if ( ! empty( $media_ids ) && bp_has_media(
 								array(
@@ -443,12 +495,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'sort'     => 'ASC',
 								)
 							) ) {
-							$params['reply_edit_media'] = array();
-							$index                      = 0;
+							$params[ 'reply_edit_media' ] = array();
+							$index                        = 0;
 							while ( bp_media() ) {
 								bp_the_media();
 
-								$params['reply_edit_media'][] = array(
+								$params[ 'reply_edit_media' ][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => bp_get_media_title(),
@@ -464,10 +516,10 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = wp_get_attachment_url( $gif_data['still'] );
-						$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+						$preview_url = wp_get_attachment_url( $gif_data[ 'still' ] );
+						$video_url   = wp_get_attachment_url( $gif_data[ 'mp4' ] );
 
-						$params['reply_edit_gif_data'] = array(
+						$params[ 'reply_edit_gif_data' ] = array(
 							'preview_url'  => $preview_url,
 							'video_url'    => $video_url,
 							'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
@@ -477,14 +529,14 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 				// check if forum edit
 				if ( bbp_is_forum_edit() ) {
-					$params['bbp_is_forum_edit'] = true;
+					$params[ 'bbp_is_forum_edit' ] = true;
 
 
 					$media_type = get_post_meta( bbp_get_forum_id(), 'bp_media_type', true );
 
 					if ( 'document' === $media_type ) {
 
-						$document_ids  = get_post_meta( bbp_get_forum_id(), 'bp_document_ids', true );
+						$document_ids = get_post_meta( bbp_get_forum_id(), 'bp_document_ids', true );
 
 						if ( ! empty( $document_ids ) && bp_has_document(
 								array(
@@ -493,13 +545,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'sort'     => 'ASC',
 								)
 							) ) {
-							$params['forum_edit_document'] = array();
-							$index                      = 0;
+							$params[ 'forum_edit_document' ] = array();
+							$index                           = 0;
 							while ( bp_media() ) {
 								bp_the_media();
 
-								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
-								$params['forum_edit_document'][] = array(
+								$size                              = filesize( get_attached_file( bp_get_media_attachment_id() ) );
+								$params[ 'forum_edit_document' ][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
@@ -511,9 +563,36 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 								$index ++;
 							}
 						}
-					}  else {
+					} elseif ( 'video' === $media_type ) {
 
-						$media_ids  = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+						$video_ids = get_post_meta( bbp_get_forum_id(), 'bp_video_ids', true );
+
+						if ( ! empty( $video_ids ) && bp_has_video(
+								array(
+									'include'  => $video_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params[ 'forum_edit_video' ] = array();
+							$index                        = 0;
+							while ( bp_video() ) {
+								bp_the_video();
+
+								$params[ 'forum_edit_media' ][] = array(
+									'id'            => bp_get_video_id(),
+									'attachment_id' => bp_get_video_attachment_id(),
+									'name'          => bp_get_video_title(),
+									'thumb'         => bp_get_video_attachment_image_thumbnail(),
+									'url'           => bp_get_video_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					} else {
+
+						$media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
 
 						if ( ! empty( $media_ids ) && bp_has_media(
 								array(
@@ -522,12 +601,12 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'sort'     => 'ASC',
 								)
 							) ) {
-							$params['forum_edit_media'] = array();
-							$index                      = 0;
+							$params[ 'forum_edit_media' ] = array();
+							$index                        = 0;
 							while ( bp_media() ) {
 								bp_the_media();
 
-								$params['forum_edit_media'][] = array(
+								$params[ 'forum_edit_media' ][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => bp_get_media_title(),
@@ -543,10 +622,10 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = wp_get_attachment_url( $gif_data['still'] );
-						$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+						$preview_url = wp_get_attachment_url( $gif_data[ 'still' ] );
+						$video_url   = wp_get_attachment_url( $gif_data[ 'mp4' ] );
 
-						$params['forum_edit_gif_data'] = array(
+						$params[ 'forum_edit_gif_data' ] = array(
 							'preview_url'  => $preview_url,
 							'video_url'    => $video_url,
 							'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
@@ -555,14 +634,15 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				}
 			}
 
-			$result['media'] = $params;
+			$result[ 'media' ] = $params;
 
 			/**
 			 * Filters core JavaScript strings for internationalization before AJAX usage.
 			 *
+			 * @param array $params Array of key/value pairs for AJAX usage.
+			 *
 			 * @since BuddyBoss 1.1.6
 			 *
-			 * @param array $params Array of key/value pairs for AJAX usage.
 			 */
 			wp_localize_script( 'bp-nouveau', 'BP_Forums_Nouveau', $result );
 		}
