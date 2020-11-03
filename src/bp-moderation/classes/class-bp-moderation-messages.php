@@ -30,14 +30,17 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		parent::$Moderation[ self::$moderation_type ] = self::class;
+		$this->item_type                              = self::$moderation_type;
+
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
+
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
 		 */
 		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'messages' ) ) {
 			return;
 		}
-
-		$this->item_type = self::$moderation_type;
 
 		// Message.
 		add_filter( 'bp_messages_message_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
@@ -46,6 +49,21 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		// Recipient.
 		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $content_types Supported Contents types
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ) {
+		$content_types[ self::$moderation_type ] = __( 'Message', 'buddyboss' );
+
+		return $content_types;
 	}
 
 	/**
@@ -230,5 +248,18 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		}
 
 		return $thread_ids;
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $message_id Message id
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $message_id ) {
+		$message = new BP_Messages_Message( $message_id );
+
+		return ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
 	}
 }

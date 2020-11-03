@@ -149,20 +149,7 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
  * @return mixed|void
  */
 function bp_moderation_content_types() {
-
-	$content_types = array(
-		'activity'    => esc_html__( 'Activity', 'buddyboss' ),
-		'document'    => esc_html__( 'Document', 'buddyboss' ),
-		'forum_reply' => esc_html__( 'Forum Reply', 'buddyboss' ),
-		'forum_topic' => esc_html__( 'Forum Topic', 'buddyboss' ),
-		'forum'       => esc_html__( 'Forum', 'buddyboss' ),
-		'groups'      => esc_html__( 'Groups', 'buddyboss' ),
-		'media'       => esc_html__( 'Media', 'buddyboss' ),
-		'user'        => esc_html__( 'User', 'buddyboss' ),
-		'message'     => esc_html__( 'Message', 'buddyboss' ),
-	);
-
-	return apply_filters( 'bp_moderation_content_types', $content_types );
+	return apply_filters( 'bp_moderation_content_types', array() );
 }
 
 /**
@@ -177,37 +164,14 @@ function bp_moderation_content_types() {
  */
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
-	switch ( $moderation_item_type ) {
-		case 'activity':
-			$activity = new BP_Activity_Activity( $moderation_item_id );
-			$user_id  = ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
-			break;
-		case 'document':
-			$document = new BP_Document( $moderation_item_id );
-			$user_id  = ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
-			break;
-		case 'forum_reply':
-		case 'forum_topic':
-		case 'forum':
-			$user_id = get_post_field( 'post_author', $moderation_item_id );
-			break;
-		case 'media':
-			$media   = new BP_Media( $moderation_item_id );
-			$user_id = ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
-			break;
-		case 'groups':
-			$group   = new BP_Groups_Group( $moderation_item_id );
-			$user_id = ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
-			break;
-		case 'user':
-			$user_id = $moderation_item_id;
-			break;
-		case 'message':
-			$message = new BP_Messages_Message( $moderation_item_id );
-			$user_id = ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
-			break;
-		default:
-			$user_id = 0;
+	$user_id            = 0;
+	$moderation_classes = BP_Moderation_Abstract::$Moderation;
+
+	if ( ! empty( $moderation_classes ) && isset( $moderation_classes[ $moderation_item_type ] ) ) {
+		$class = $moderation_classes[ $moderation_item_type ];
+		if ( class_exists( $class ) ) {
+			$user_id = $class::get_content_owner_id( $moderation_item_id );
+		}
 	}
 
 	return $user_id;

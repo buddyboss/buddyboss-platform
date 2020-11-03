@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Media Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -30,17 +30,37 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		parent::$Moderation[ self::$moderation_type ] = self::class;
+		$this->item_type                              = self::$moderation_type;
+
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
+
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
 		 */
 		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'media' ) ) {
 			return;
 		}
+
 		$this->alias     = $this->alias . 'm'; // m = media.
-		$this->item_type = self::$moderation_type;
 
 		/*add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $content_types Supported Contents types
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ) {
+		$content_types[ self::$moderation_type ] = __( 'Photos', 'buddyboss' );
+
+		return $content_types;
 	}
 
 	/**
@@ -226,7 +246,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 * Get media ids of blocked posts [ Forums/topics/replies ] from meta
 	 *
 	 * @param array  $posts_ids Posts ids.
-	 * @param string $function Function Name to get meta.
+	 * @param string $function  Function Name to get meta.
 	 *
 	 * @return array Media IDs
 	 */
@@ -246,7 +266,21 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 				}
 			}
 		}
+
 		return $media_ids;
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $media_id Media id
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $media_id ) {
+		$media = new BP_Media( $media_id );
+
+		return ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
 	}
 
 }

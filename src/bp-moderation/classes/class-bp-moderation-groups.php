@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Groups Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -29,6 +29,10 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 */
 	public function __construct() {
+		parent::$Moderation[ self::$moderation_type ] = self::class;
+		$this->item_type                              = self::$moderation_type;
+
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
@@ -37,13 +41,26 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->item_type = self::$moderation_type;
-
 		add_filter( 'bp_groups_get_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_groups_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $content_types Supported Contents types
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ) {
+		$content_types[ self::$moderation_type ] = __( 'Groups', 'buddyboss' );
+
+		return $content_types;
 	}
 
 	/**
@@ -118,6 +135,19 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 */
 	public static function get_sitewide_hidden_ids() {
 		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $group_id Group id
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $group_id ) {
+		$group = new BP_Groups_Group( $group_id );
+
+		return ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
 	}
 
 }

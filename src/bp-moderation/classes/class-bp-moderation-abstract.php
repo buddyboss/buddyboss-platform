@@ -3,7 +3,7 @@
  * BuddyBoss Moderation items abstract Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -15,6 +15,13 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.5.4
  */
 abstract class BP_Moderation_Abstract {
+
+	/**
+	 * Moderation classes
+	 *
+	 * @var array
+	 */
+	public static $Moderation;
 
 	/**
 	 * Item type
@@ -42,6 +49,7 @@ abstract class BP_Moderation_Abstract {
 	protected function exclude_joint_query( $item_id_field ) {
 		global $wpdb;
 		$bp = buddypress();
+
 		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->moderation->table_name} {$this->alias} ON ( {$this->alias}.item_id = $item_id_field AND {$this->alias}.item_type = %s )", $this->item_type ); // phpcs:ignore
 	}
 
@@ -72,6 +80,14 @@ abstract class BP_Moderation_Abstract {
 		if ( ! empty( $moderations ) && ! empty( $moderations['moderations'] ) ) {
 			$hidden_ids = wp_list_pluck( $moderations['moderations'], 'item_id' );
 		}
+
 		return $hidden_ids;
 	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $item_id         Content item id
+	 */
+	abstract public static function get_content_owner_id( $item_id );
 }
