@@ -447,6 +447,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( empty( $request['content'] ) ) {
+			$request['content'] = '&#8203;';
+		}
+
 		$prepared_activity = $this->prepare_item_for_database( $request );
 
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
@@ -513,6 +517,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $fields_update ) ) {
 			return $fields_update;
 		}
+
+		// Update current user's last activity.
+		bp_update_user_last_activity();
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $activity, $request )
@@ -628,6 +635,10 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					'status' => 400,
 				)
 			);
+		}
+
+		if ( empty( $activity_object->content ) ) {
+			$activity_object->content = '&#8203;';
 		}
 
 		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object->id );
@@ -1151,8 +1162,7 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		// Get comments (count).
 		if ( ! empty( $activity->children ) ) {
-			$comment_count         = wp_filter_object_list( $activity->children, array( 'type' => 'activity_comment' ), 'AND', 'id' );
-			$data['comment_count'] = ! empty( $comment_count ) ? count( $comment_count ) : 0;
+			$data['comment_count'] = bp_activity_recurse_comment_count( $activity );
 
 			if ( ! empty( $schema['properties']['comments'] ) && 'threaded' === $request['display_comments'] ) {
 				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
@@ -1906,27 +1916,26 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @return int|mixed
 	 */
 	public function bp_rest_activity_content_validate( $request ) {
-		$toolbar_option = false;
+		$toolbar_option = true;
 
 		if ( ! empty( $request['content'] ) ) {
 			return false;
 		}
 
-		// check activity toolbar options if one of them is set, activity can be empty.
-		if (
+		$toolbar_option = (
 			bp_is_active( 'media' )
-			&& empty( $request['bp_media_ids'] )
 			&& (
-				! empty( $request['media_gif'] )
+				empty( $request['bp_media_ids'] )
 				&& (
-					empty( $request['media_gif']['url'] )
-					|| empty( $request['media_gif']['mp4'] )
+					empty( $request['media_gif'] )
+					&& (
+						empty( $request['media_gif']['url'] )
+						|| empty( $request['media_gif']['mp4'] )
+					)
 				)
+				&& empty( $request['bp_documents'] )
 			)
-			&& empty( $request['bp_documents'] )
-		) {
-			$toolbar_option = true;
-		}
+		);
 
 		return $toolbar_option;
 	}
@@ -2003,8 +2012,6 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 	 * @param int $activity_id Activity ID.
 	 *
 	 * @return array
-	 * 
-	 * @since BuddyBoss 1.5.1
 	 */
 	public function bp_rest_activitiy_edit_data( $activity_id = 0 ) {
 		if ( empty( $activity_id ) ) {

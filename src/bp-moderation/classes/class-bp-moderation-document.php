@@ -30,13 +30,17 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		parent::$Moderation[ self::$moderation_type ] = self::class;
+		$this->item_type                              = self::$moderation_type;
+
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
+
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
 		 */
 		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'document' ) ) {
 			return;
 		}
-		$this->item_type = self::$moderation_type;
 
 		/*add_filter( 'bp_document_get_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_document_get_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
@@ -44,6 +48,21 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		// Search Query.
 		/*add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $content_types Supported Contents types
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ) {
+		$content_types[ self::$moderation_type ] = __( 'Documents', 'buddyboss' );
+
+		return $content_types;
 	}
 
 	/**
@@ -253,6 +272,19 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $document_ids;
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $document_id Document id
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $document_id ) {
+		$document = new BP_Document( $document_id );
+
+		return ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
 	}
 
 }

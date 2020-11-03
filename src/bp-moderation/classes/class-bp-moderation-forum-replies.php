@@ -30,6 +30,11 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		parent::$Moderation[ self::$moderation_type ] = self::class;
+		$this->item_type                              = self::$moderation_type;
+
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
+
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
 		 */
@@ -37,7 +42,6 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->item_type = self::$moderation_type;
 		$this->alias     = $this->alias . 'fr'; // fr: Forum Reply.
 
 		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
@@ -45,6 +49,21 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $content_types Supported Contents types
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ) {
+		$content_types[ self::$moderation_type ] = __( 'Replies', 'buddyboss' );
+
+		return $content_types;
 	}
 
 	/**
@@ -64,7 +83,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( 'bp_forum_reply_search_join_sql' === $action_name ) {
 			$join_sql .= $this->exclude_joint_query( 'p.ID' );
 		} else {
-			if( false !== $wp_query->get('moderation_query')  ){
+			if ( false !== $wp_query->get( 'moderation_query' ) ) {
 				$reply_slug = bbp_get_reply_post_type();
 				$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
 				if ( ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
@@ -93,7 +112,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
 			$reply_slug = bbp_get_reply_post_type();
 			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( false === $wp_query->get('moderation_query') || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true )  ) {
+			if ( false === $wp_query->get( 'moderation_query' ) || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
 				return $where_conditions;
 			}
 		}
@@ -203,6 +222,17 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		return $hidden_reply_ids;
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $reply_id Reply id
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $reply_id ) {
+		return $user_id = get_post_field( 'post_author', $reply_id );
 	}
 
 }

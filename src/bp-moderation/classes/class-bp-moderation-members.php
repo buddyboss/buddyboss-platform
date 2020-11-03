@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Groups Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -30,14 +30,15 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
+		parent::$Moderation[ self::$moderation_type ] = self::class;
+		$this->item_type                              = self::$moderation_type;
+
 		/**
 		 * Moderation code should not add for WordPress backend
 		 */
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			return;
 		}
-
-		$this->item_type = self::$moderation_type;
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10 );
@@ -96,6 +97,17 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public static function get_sitewide_hidden_ids() {
 		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @param integer $user_id User id
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $user_id ) {
+		return $user_id;
 	}
 
 }
