@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -99,6 +99,14 @@ class BP_Moderation {
 	public $blog_id = 0;
 
 	/**
+	 * Reported count for Moderation report.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 * @var int
+	 */
+	public $count = 0;
+
+	/**
 	 * Error holder.
 	 *
 	 * @since BuddyBoss 1.5.4
@@ -121,8 +129,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param bool $item_id    Moderation item id.
-	 * @param bool $item_type  Moderation item type.
+	 * @param bool $item_id   Moderation item id.
+	 * @param bool $item_type Moderation item type.
 	 */
 	public function __construct( $item_id = false, $item_type = false ) {
 		// Instantiate errors object.
@@ -153,7 +161,10 @@ class BP_Moderation {
 		}
 
 		if ( empty( $row ) ) {
-			$this->id = 0;
+			$this->id            = 0;
+			$this->hide_sitewide = 0;
+			$this->blog_id       = get_current_blog_id();
+
 			return;
 		}
 
@@ -164,6 +175,7 @@ class BP_Moderation {
 		$this->updated_by    = (int) $row->updated_by;
 		$this->date_updated  = $row->date_updated;
 		$this->blog_id       = (int) $row->blog_id;
+		$this->count         = (int) bp_moderation_get_meta( $this->id, '_count' );
 	}
 
 	/**
@@ -179,14 +191,38 @@ class BP_Moderation {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_moderation_id_before_save', array( $this->id, &$this ) );
-		$this->updated_by    = apply_filters_ref_array( 'bp_moderation_updated_by_before_save', array( $this->updated_by, &$this ) );
-		$this->item_id       = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array( $this->item_id, &$this ) );
-		$this->content       = apply_filters_ref_array( 'bp_moderation_content_before_save', array( $this->content, &$this ) );
-		$this->item_type     = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array( $this->item_type, &$this ) );
-		$this->date_updated  = apply_filters_ref_array( 'bp_moderation_date_updated_before_save', array( $this->date_updated, &$this ) );
-		$this->hide_sitewide = apply_filters_ref_array( 'bp_moderation_hide_sitewide_before_save', array( $this->hide_sitewide, &$this ) );
-		$this->category_id   = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array( $this->category_id, &$this ) );
-		$this->blog_id       = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array( $this->blog_id, &$this ) );
+		$this->updated_by    = apply_filters_ref_array( 'bp_moderation_updated_by_before_save', array(
+			$this->updated_by,
+			&$this
+		) );
+		$this->item_id       = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array(
+			$this->item_id,
+			&$this
+		) );
+		$this->content       = apply_filters_ref_array( 'bp_moderation_content_before_save', array(
+			$this->content,
+			&$this
+		) );
+		$this->item_type     = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array(
+			$this->item_type,
+			&$this
+		) );
+		$this->date_updated  = apply_filters_ref_array( 'bp_moderation_date_updated_before_save', array(
+			$this->date_updated,
+			&$this
+		) );
+		$this->hide_sitewide = apply_filters_ref_array( 'bp_moderation_hide_sitewide_before_save', array(
+			$this->hide_sitewide,
+			&$this
+		) );
+		$this->category_id   = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array(
+			$this->category_id,
+			&$this
+		) );
+		$this->blog_id       = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array(
+			$this->blog_id,
+			&$this
+		) );
 
 		/**
 		 * Fires before the current moderation report item gets saved.
@@ -282,33 +318,34 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @see BP_Moderation::get_filter_sql() for a description of the
+	 * @see   BP_Moderation::get_filter_sql() for a description of the
 	 *      'filter' parameter.
-	 * @see WP_Meta_Query::queries for a description of the 'meta_query'
+	 * @see   WP_Meta_Query::queries for a description of the 'meta_query'
 	 *      parameter format.
 	 *
-	 * @param array $args {
-	 *     An array of arguments. All items are optional.
-	 *     @type int          $page              Which page of results to fetch. Using page=1 without per_page will result
+	 * @param array      $args              {
+	 *                                      An array of arguments. All items are optional.
+	 *
+	 * @type int         $page              Which page of results to fetch. Using page=1 without per_page will result
 	 *                                           in no pagination. Default: 1.
-	 *     @type int|bool     $per_page          Number of results per page. Default: 25.
-	 *     @type int|bool     $max               Maximum number of results to return. Default: false (unlimited).
-	 *     @type string       $fields            Moderation fields to return. Pass 'ids' to get only the moderation IDs.
+	 * @type int|bool    $per_page          Number of results per page. Default: 25.
+	 * @type int|bool    $max               Maximum number of results to return. Default: false (unlimited).
+	 * @type string      $fields            Moderation fields to return. Pass 'ids' to get only the moderation IDs.
 	 *                                           'all' returns full moderation objects.
-	 *     @type string       $user_id           Array of user to filter out moderation report.
-	 *     @type string       $sort              ASC or DESC. Default: 'DESC'.
-	 *     @type string       $order_by          Column to order results by.
-	 *     @type array        $exclude           Array of moderation report IDs to exclude. Default: false.
-	 *     @type array        $in                Array of ids to limit query by (IN). Default: false.
-	 *     @type array        $exclude_types     Array of moderation item type to exclude. Default: false.
-	 *     @type array        $in_types          Array of item type to limit query by (IN). Default: false.
-	 *     @type array        $meta_query        Array of meta_query conditions. See WP_Meta_Query::queries.
-	 *     @type array        $date_query        Array of date_query conditions. See first parameter of
+	 * @type string      $user_id           Array of user to filter out moderation report.
+	 * @type string      $sort              ASC or DESC. Default: 'DESC'.
+	 * @type string      $order_by          Column to order results by.
+	 * @type array       $exclude           Array of moderation report IDs to exclude. Default: false.
+	 * @type array       $in                Array of ids to limit query by (IN). Default: false.
+	 * @type array       $exclude_types     Array of moderation item type to exclude. Default: false.
+	 * @type array       $in_types          Array of item type to limit query by (IN). Default: false.
+	 * @type array       $meta_query        Array of meta_query conditions. See WP_Meta_Query::queries.
+	 * @type array       $date_query        Array of date_query conditions. See first parameter of
 	 *                                           WP_Date_Query::__construct().
-	 *     @type array        $filter_query      Array of advanced query conditions. See BP_Moderation_Query::__construct().
-	 *     @type bool         $display_reporters Whether to include moderation reported users. Default: false.
-	 *     @type bool         $update_meta_cache Whether to pre-fetch metadata for queried moderation items. Default: true.
-	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total moderation items
+	 * @type array       $filter_query      Array of advanced query conditions. See BP_Moderation_Query::__construct().
+	 * @type bool        $display_reporters Whether to include moderation reported users. Default: false.
+	 * @type bool        $update_meta_cache Whether to pre-fetch metadata for queried moderation items. Default: true.
+	 * @type string|bool $count_total       If true, an additional DB query is run to count the total moderation items
 	 *                                           for the query. Default: false.
 	 * }
 	 * @return array The array returned has two keys:
@@ -504,7 +541,7 @@ class BP_Moderation {
 		 * @since BuddyBoss 1.5.4
 		 *
 		 * @param string $moderation_ids_sql MySQL statement used to query for Moderation IDs.
-		 * @param array  $r                Array of arguments passed into method.
+		 * @param array  $r                  Array of arguments passed into method.
 		 */
 		$moderation_ids_sql = apply_filters( 'bp_moderation_paged_moderations_sql', $moderation_ids_sql, $r );
 
@@ -543,9 +580,9 @@ class BP_Moderation {
 
 			/**
 			 * Todo: Need to create function.
-			if ( ! empty( $moderation_ids ) && $r['update_meta_cache'] ) {
-				bp_moderation_update_meta_cache( $moderation_ids );
-			}*/
+			 * if ( ! empty( $moderation_ids ) && $r['update_meta_cache'] ) {
+			 * bp_moderation_update_meta_cache( $moderation_ids );
+			 * }*/
 
 			if ( $moderations && $r['display_reporters'] ) {
 				$moderations = self::append_reporters( $moderations );
@@ -596,6 +633,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param array $moderation_ids Array of moderation IDs.
+	 *
 	 * @return array
 	 */
 	protected static function get_moderation_data( $moderation_ids = array() ) {
@@ -636,8 +674,8 @@ class BP_Moderation {
 				$moderation->item_id       = (int) $moderation->item_id;
 				$moderation->hide_sitewide = (int) $moderation->hide_sitewide;
 				$moderation->blog_id       = (int) $moderation->blog_id;
+				$moderation->count         = (int) bp_moderation_get_meta( $moderation->id, '_count' );
 			}
-
 			$moderations[] = $moderation;
 		}
 
@@ -679,7 +717,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param array  $moderations Moderations/Moderations data array.
-	 * @param string $user_key   User key name.
+	 * @param string $user_key    User key name.
 	 *
 	 * @return array*
 	 */
@@ -738,6 +776,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param int $moderation_id Moderation id.
+	 *
 	 * @return array reporters data.
 	 */
 	public static function get_moderation_reporters( $moderation_id ) {
@@ -776,6 +815,7 @@ class BP_Moderation {
 	 *
 	 * @param array $meta_query An array of meta_query filters. See the
 	 *                          documentation for WP_Meta_Query for details.
+	 *
 	 * @return array $sql_array 'join' and 'where' clauses.
 	 */
 	public static function get_meta_query_sql( $meta_query = array() ) {
@@ -816,6 +856,7 @@ class BP_Moderation {
 	 *
 	 * @param array $date_query An array of date_query parameters. See the
 	 *                          documentation for the first parameter of WP_Date_Query.
+	 *
 	 * @return string
 	 */
 	public static function get_date_query_sql( $date_query = array() ) {
@@ -835,13 +876,13 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $filter_array {
-	 *     Fields and values to filter by.
+	 * @param array           $filter_array  {
+	 *                                       Fields and values to filter by.
 	 *
-	 *     @type array|string|int $user_id          User ID(s).
-	 *     @type array|string|int $item_id          Item ID(s).
-	 *     @type array|string|int $hide_sitewide    filter hidden items.
-	 *     @type array|string|int $blog_id          Blog ID(s).
+	 * @type array|string|int $user_id       User ID(s).
+	 * @type array|string|int $item_id       Item ID(s).
+	 * @type array|string|int $hide_sitewide filter hidden items.
+	 * @type array|string|int $blog_id       Blog ID(s).
 	 *
 	 * }
 	 * @return string The filter clause, for use in a SQL query.
@@ -883,10 +924,11 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @see BP_Moderation::get_filter_sql()
+	 * @see   BP_Moderation::get_filter_sql()
 	 *
 	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
+	 *
 	 * @return string|false
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
@@ -921,8 +963,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param int $item_id    Moderation item id.
-	 * @param int $item_type  Moderation item type.
+	 * @param int $item_id   Moderation item id.
+	 * @param int $item_type Moderation item type.
 	 *
 	 * @return false
 	 */

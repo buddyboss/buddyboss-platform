@@ -164,14 +164,11 @@ function bp_moderation_content_types() {
  */
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
-	$user_id            = 0;
-	$moderation_classes = BP_Moderation_Abstract::$Moderation;
+	$user_id = 0;
+	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
-	if ( ! empty( $moderation_classes ) && isset( $moderation_classes[ $moderation_item_type ] ) ) {
-		$class = $moderation_classes[ $moderation_item_type ];
-		if ( class_exists( $class ) ) {
-			$user_id = $class::get_content_owner_id( $moderation_item_id );
-		}
+	if ( method_exists( $class, 'get_content_owner_id' ) ) {
+		$user_id = $class::get_content_owner_id( $moderation_item_id );
 	}
 
 	return $user_id;
@@ -191,4 +188,150 @@ function bp_get_moderation_content_type( $key ) {
 	$content_types = bp_moderation_content_types();
 
 	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
+}
+
+/**
+ * Function to Report content.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $moderation_item_id   content id.
+ * @param string $moderation_item_type content type.
+ *
+ * @return bool
+ */
+function bp_moderation_add( $moderation_item_id = 0, $moderation_item_type = '' ) {
+
+	$response = false;
+	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
+
+	if ( method_exists( $class, 'report' ) ) {
+		$response = $class::report( $moderation_item_id );
+	}
+
+	return $response;
+}
+
+/** Meta *********************************************************************/
+
+/**
+ * Delete a meta entry from the DB for an moderation item.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @global wpdb  $wpdb          WordPress database abstraction object.
+ *
+ * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
+ * @param string $meta_key      Optional. The key of the metadata being deleted. If
+ *                              omitted, all metadata associated with the moderation
+ *                              item will be deleted.
+ * @param string $meta_value    Optional. If present, the metadata will only be
+ *                              deleted if the meta_value matches this parameter.
+ * @param bool   $delete_all    Optional. If true, delete matching metadata entries
+ *                              for all objects, ignoring the specified object_id. Otherwise,
+ *                              only delete matching metadata entries for the specified
+ *                              moderation item. Default: false.
+ *
+ * @return bool True on success, false on failure.
+ */
+function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
+
+	// Legacy - if no meta_key is passed, delete all for the item.
+	if ( empty( $meta_key ) ) {
+		$all_meta = bp_moderation_get_meta( $moderation_id );
+		$keys     = ! empty( $all_meta ) ? array_keys( $all_meta ) : array();
+
+		// With no meta_key, ignore $delete_all.
+		$delete_all = false;
+	} else {
+		$keys = array( $meta_key );
+	}
+
+	$retval = true;
+
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	foreach ( $keys as $key ) {
+		$retval = delete_metadata( 'moderation', $moderation_id, $key, $meta_value, $delete_all );
+	}
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Get metadata for a given moderation item.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $moderation_id ID of the moderation item whose metadata is being requested.
+ * @param string $meta_key      Optional. If present, only the metadata matching
+ *                              that meta key will be returned. Otherwise, all metadata for the
+ *                              moderation item will be fetched.
+ * @param bool   $single        Optional. If true, return only the first value of the
+ *                              specified meta_key. This parameter has no effect if meta_key is not
+ *                              specified. Default: true.
+ *
+ * @return mixed The meta value(s) being requested.
+ */
+function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'moderation', $moderation_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	/**
+	 * Filters the metadata for a specified moderation item.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param mixed  $retval        The meta values for the moderation item.
+	 * @param int    $moderation_id ID of the moderation item.
+	 * @param string $meta_key      Meta key for the value being requested.
+	 * @param bool   $single        Whether to return one matched meta key row or all.
+	 */
+	return apply_filters( 'bp_moderation_get_meta', $retval, $moderation_id, $meta_key, $single );
+}
+
+/**
+ * Update a piece of moderation meta.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $moderation_id ID of the moderation item whose metadata is being updated.
+ * @param string $meta_key      Key of the metadata being updated.
+ * @param mixed  $meta_value    Value to be set.
+ * @param mixed  $prev_value    Optional. If specified, only update existing metadata entries
+ *                              with the specified value. Otherwise, update all entries.
+ *
+ * @return bool|int Returns false on failure. On successful update of existing
+ *                  metadata, returns true. On successful creation of new metadata,
+ *                  returns the integer ID of the new metadata row.
+ */
+function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Add a piece of moderation metadata.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $moderation_id ID of the moderation item.
+ * @param string $meta_key      Metadata key.
+ * @param mixed  $meta_value    Metadata value.
+ * @param bool   $unique        Optional. Whether to enforce a single metadata value for the
+ *                              given key. If true, and the object already has a value for
+ *                              the key, no change will be made. Default: false.
+ *
+ * @return int|bool The meta ID on successful update, false on failure.
+ */
+function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
 }
