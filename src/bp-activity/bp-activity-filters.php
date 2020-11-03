@@ -583,9 +583,8 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 		// If posts doesn't have any content and only the featured image is added then add the Read More text below the image.
 		if ( strpos( $excerpt, $append_text ) == false && 'new_blog_post' === $activities_template->activity->type && '' === wp_strip_all_tags( $excerpt ) ) {
 			$excerpt = sprintf( '<span class="activity-blog-post-link"><a href="%1$s" rel="nofollow">%2$s</a></span>%3$s', $excerpt_link, $append_text, $excerpt );
-		// Keep the Read More as it is in all the previous activity created.
-		} elseif ( strpos( $excerpt, $append_text ) == false ) {
-			$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
+		} elseif ( !empty( $activities_template->activity->current_comment->id ) && 'new_blog_post' === $activities_template->activity->type && strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
+			$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, bp_get_activity_thread_permalink(), $append_text );
 		}
 	} elseif ( strlen( $excerpt ) <= strlen( strip_shortcodes( $text ) ) && false !== strrpos( $excerpt, __( '&hellip;', 'buddyboss' ) ) ) {
 		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
