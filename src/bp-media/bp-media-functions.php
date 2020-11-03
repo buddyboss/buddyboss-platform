@@ -2394,28 +2394,10 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage   = groups_can_user_manage_media( $user_id, $media->group_id );
-				$status   = bp_group_get_media_status( $media->group_id );
-				$is_admin = groups_is_user_admin( $user_id, $media->group_id );
-				$is_mod   = groups_is_user_mod( $user_id, $media->group_id );
-
+				$manage = groups_can_user_manage_media( $user_id, $media->group_id );
 				if ( $manage ) {
-					if ( $media->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
-					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
-					}
+					$can_manage   = true;
+					$can_add      = true;
 					$can_view     = true;
 					$can_download = true;
 				} else {
@@ -2780,27 +2762,10 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage   = groups_can_user_manage_media( $user_id, $album->group_id );
-				$status   = bp_group_get_media_status( $album->group_id );
-				$is_admin = groups_is_user_admin( $user_id, $album->group_id );
-				$is_mod   = groups_is_user_mod( $user_id, $album->group_id );
+				$manage   = groups_can_user_manage_albums( $user_id, $album->group_id );
 				if ( $manage ) {
-					if ( $album->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
-					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
-					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
-					}
+					$can_manage   = true;
+					$can_add      = true;
 					$can_view     = true;
 					$can_download = true;
 				} else {

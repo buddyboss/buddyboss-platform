@@ -758,6 +758,13 @@ function bp_document_user_can_delete( $document = false ) {
 		if ( isset( $document->user_id ) && ( $document->user_id === bp_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
+
+		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
+			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
+			if ( $manage ) {
+				$can_delete = true;
+			}
+		}
 	}
 
 	/**
@@ -1704,7 +1711,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 		if ( ! empty( $folder->group_id ) && groups_can_user_manage_document( bp_loggedin_user_id(), $folder->group_id ) ) {
 			$can_delete = true;
 
-			// Users are allowed to delete their own folder.
+		// Users are allowed to delete their own folder.
 		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
 			$can_delete = true;
 		}
