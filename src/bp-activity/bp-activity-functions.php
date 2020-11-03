@@ -3897,9 +3897,9 @@ function bp_activity_create_summary( $content, $activity ) {
 		)
 	);
 
-	if ( $use_media_type === 'embeds' ) {
+	if ( 'embeds' === $use_media_type ) {
 		$summary .= PHP_EOL . PHP_EOL . '<p>' . $extracted_media['url'] . '</p>';
-	} elseif ( $use_media_type === 'images' ) {
+	} elseif ( 'images' === $use_media_type ) {
 		$extracted_media_url = isset( $extracted_media['url'] ) ? $extracted_media['url'] : '';
 		$summary .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
 	} elseif ( in_array( $use_media_type, array( 'audio', 'videos' ), true ) ) {
