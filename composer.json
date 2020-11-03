@@ -31,11 +31,20 @@
 		"php": ">=5.3.0",
 		"phpunit/phpunit": "6.1.0"
 	},
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash"
-    },
 	"require-dev": {
-		"symfony/var-dumper": "^4.2"
+	  "symfony/var-dumper": "^4.2",
+	  "dealerdirect/phpcodesniffer-composer-installer": "*",
+	  "phpcompatibility/phpcompatibility-wp": "^2.1",
+	  "squizlabs/php_codesniffer": "^3.4.0",
+	  "wp-coding-standards/wpcs": "*"
+	},
+    "scripts": {
+		"test": "vendor/bin/phpunit",
+		"test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash",
+		"lint-php": "vendor/bin/phpcs -s",
+		"lint-php-fix": "vendor/bin/phpcbf",
+		"lint-js": "grunt jsvalidate jshint",
+		"lint-css": "grunt stylelint",
+		"lint": ["@lint-php", "@lint-js", "@lint-css"]
 	}
 }
