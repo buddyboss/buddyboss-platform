@@ -3898,10 +3898,10 @@ function bp_activity_create_summary( $content, $activity ) {
 	);
 
 	// Add the Read More text before the image/embed append into the content.
-	if ( $activity['type'] === 'new_blog_post' ) {
-		$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-		$excerpt_link = get_the_permalink( $activity['secondary_item_id'] );
-		$summary = sprintf( '%1$s <span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $summary, $excerpt_link, $append_text );
+	if ( $activity[ 'type' ] === 'new_blog_post' ) {
+		$append_text  = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+		$excerpt_link = get_the_permalink( $activity[ 'secondary_item_id' ] );
+		$summary      = sprintf( '%1$s <span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $summary, $excerpt_link, $append_text );
 	}
 
 	if ( $use_media_type === 'embeds' ) {

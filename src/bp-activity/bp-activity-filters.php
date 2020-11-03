@@ -583,7 +583,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 		// If posts doesn't have any content and only the featured image is added then add the Read More text below the image.
 		if ( strpos( $excerpt, $append_text ) == false && 'new_blog_post' === $activities_template->activity->type && '' === wp_strip_all_tags( $excerpt ) ) {
 			$excerpt = sprintf( '<span class="activity-blog-post-link"><a href="%1$s" rel="nofollow">%2$s</a></span>%3$s', $excerpt_link, $append_text, $excerpt );
-			// Keep the Read More as it is in all the previous activity created.
+		// Keep the Read More as it is in all the previous activity created.
 		} elseif ( strpos( $excerpt, $append_text ) == false ) {
 			$excerpt = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $excerpt, $excerpt_link, $append_text );
 		}
