@@ -154,7 +154,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
 #: bp-core/bp-core-cssjs.php:259 bp-search/bp-search-functions.php:376
-#: bp-search/bp-search-settings.php:820
+#: bp-search/bp-search-settings.php:909
 msgid "Activity"
 msgstr ""
 
@@ -713,7 +713,7 @@ msgid "Replied to a status update"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1725
-#: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:855
+#: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:944
 msgid "Activity Comments"
 msgstr ""
 
@@ -1874,7 +1874,7 @@ msgstr ""
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:137
 #: bp-messages/bp-messages-functions.php:257
 #: bp-messages/bp-messages-template.php:2121
-#: bp-search/bp-search-settings.php:899 bp-settings/actions/export.php:35
+#: bp-search/bp-search-settings.php:988 bp-settings/actions/export.php:35
 msgid "%s"
 msgstr ""
 
@@ -2530,7 +2530,7 @@ msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1265
-#: bp-search/bp-search-settings.php:459 bp-search/bp-search-settings.php:473
+#: bp-search/bp-search-settings.php:478 bp-search/bp-search-settings.php:492
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:14
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:22
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
@@ -2918,7 +2918,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
 #: bp-media/bp-media-settings.php:560 bp-media/bp-media-settings.php:587
 #: bp-media/bp-media-settings.php:744 bp-media/bp-media-settings.php:951
-#: bp-search/bp-search-settings.php:444
+#: bp-search/bp-search-settings.php:463
 msgid "View Tutorial"
 msgstr ""
 
@@ -3182,7 +3182,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:831
-#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:638
+#: bp-search/bp-search-functions.php:361 bp-search/bp-search-settings.php:657
 msgid "Blog Posts"
 msgstr ""
 
@@ -3302,7 +3302,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:799
 #: bp-media/bp-media-settings.php:29 bp-media/bp-media-settings.php:1295
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1149
-#: bp-search/bp-search-settings.php:737
+#: bp-search/bp-search-settings.php:800
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:30
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:22
@@ -3347,7 +3347,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:514
 #: bp-members/classes/class-bp-core-members-widget.php:307
 #: bp-members/classes/class-bp-members-component.php:37
-#: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:489
+#: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:508
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:19
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:987
@@ -3410,7 +3410,7 @@ msgstr ""
 #: bp-media/bp-media-settings.php:159 bp-media/bp-media-settings.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:879
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1007
-#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:715
+#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:734
 #: bp-templates/bp-nouveau/includes/activity/functions.php:290
 #: bp-templates/bp-nouveau/includes/customizer.php:199
 msgid "Groups"
@@ -4821,6 +4821,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:330
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1118
+#: bp-search/bp-search-settings.php:756
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
 #: bp-templates/bp-nouveau/includes/customizer.php:205
 #: bp-templates/bp-nouveau/includes/groups/classes.php:281
@@ -7646,13 +7647,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -15999,6 +16000,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:784
 #: bp-media/bp-media-filters.php:1212
 #: bp-media/classes/class-bp-media-component.php:295
+#: bp-search/bp-search-settings.php:778
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/includes/groups/classes.php:289
 #: bp-templates/bp-nouveau/includes/groups/classes.php:368
@@ -19754,7 +19756,7 @@ msgid "Newest Registered"
 msgstr ""
 
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:779
-#: bp-search/bp-search-settings.php:572
+#: bp-search/bp-search-settings.php:591
 #: bp-search/classes/class-bp-search-members.php:326
 #: bp-settings/classes/class-bp-settings-component.php:27
 #: bp-settings/classes/class-bp-settings-component.php:144
@@ -21162,27 +21164,27 @@ msgstr ""
 msgid "&#65279"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:389
+#: bp-search/bp-search-settings.php:408
 msgid "Enable autocomplete dropdown when typing into search inputs."
 msgstr ""
 
-#: bp-search/bp-search-settings.php:418
+#: bp-search/bp-search-settings.php:437
 msgid "results"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:457
+#: bp-search/bp-search-settings.php:476
 msgid "Search the following BuddyBoss components:"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:471
+#: bp-search/bp-search-settings.php:490
 msgid "Search the following WordPress content and custom post types:"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:680
+#: bp-search/bp-search-settings.php:699
 msgid "Meta Data"
 msgstr ""
 
-#: bp-search/bp-search-settings.php:759
+#: bp-search/bp-search-settings.php:822
 msgid "Folders"
 msgstr ""
 
@@ -21883,6 +21885,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:58
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:25
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:26
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:45
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:48
 msgid "by "
 msgstr ""
 
@@ -21891,10 +21895,14 @@ msgid "-"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:165
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:43
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:44
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:95
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:99
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:71
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:71
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:85
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:88
 msgid "Based on group privacy"
 msgstr ""
 
