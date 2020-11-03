@@ -1776,6 +1776,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-cancel-report-content', function ( e ) {
 					e.preventDefault();
 					$.magnificPopup.close();
+					$( 'form#bb-report-content' ).trigger( "reset" );
 				}
 			);
 
