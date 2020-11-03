@@ -3123,6 +3123,168 @@ function bp_activity_new_comment( $args = '' ) {
 	return $comment_id;
 }
 
+
+function bp_activity_edit_comment( $args = '' ) {
+	$bp = buddypress();
+
+	$r = wp_parse_args(
+		$args,
+		array(
+			'id'                => false, //Pass an id to update existing Comment
+			'content'           => false,
+			'user_id'           => bp_loggedin_user_id(),
+			'activity_id'       => false, // ID of the root activity item.
+			'parent_id'         => false, // ID of a parent comment (optional).
+			'primary_link'      => '',
+			'skip_notification' => false,
+			'error_type'        => 'bool',
+		)
+	);
+
+	// Error type is boolean; need to initialize some variables for backpat.
+	if ( 'bool' === $r['error_type'] ) {
+		if ( empty( $bp->activity->errors ) ) {
+			$bp->activity->errors = array();
+		}
+	}
+
+	// Default error message.
+	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
+
+	// Bail if missing necessary data.
+	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
+		$error = new WP_Error( 'missing_data', $feedback );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// Maybe set current activity ID as the parent.
+	if ( empty( $r['parent_id'] ) ) {
+		$r['parent_id'] = $r['activity_id'];
+	}
+
+	$activity_id = $r['activity_id'];
+
+	// Get the parent activity.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	// Bail if the parent activity does not exist.
+	if ( empty( $activity->date_recorded ) ) {
+		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+			return false;
+		}
+	}
+
+	// update comment privacy with parent one.
+	if ( ! empty( $activity->privacy ) ) {
+		$privacy = $activity->privacy;
+	} else {
+		$privacy = 'public';
+	}
+
+	// Check to see if the parent activity is hidden, and if so, hide this comment publicly.
+	$is_hidden = $activity->hide_sitewide ? 1 : 0;
+
+	/**
+	 * Filters the content of a new comment.
+	 *
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 3.0.0 Added $context parameter to disambiguate from bp_get_activity_comment_content().
+	 *
+	 * @param string $r       Content for the newly posted comment.
+	 * @param string $context This filter's context ("new").
+	 */
+	$comment_content = apply_filters( 'bp_activity_comment_content', $r['content'], 'new' );
+
+	// Insert the activity comment.
+	$comment_id = bp_activity_add(
+		array(
+			'id'                => $r['id'],
+			'content'           => $comment_content,
+			'component'         => buddypress()->activity->id,
+			'type'              => 'activity_comment',
+			'primary_link'      => $r['primary_link'],
+			'user_id'           => $r['user_id'],
+			'item_id'           => $activity_id,
+			'secondary_item_id' => $r['parent_id'],
+			'hide_sitewide'     => $is_hidden,
+			'privacy'           => $privacy,
+			'error_type'        => $r['error_type'],
+		)
+	);
+
+	// Bail on failure.
+	if ( false === $comment_id || is_wp_error( $comment_id ) ) {
+		return $comment_id;
+	}
+
+	// Comment caches are stored only with the top-level item.
+	wp_cache_delete( $activity_id, 'bp_activity_comments' );
+
+	// Walk the tree to clear caches for all parent items.
+	$clear_id = $r['parent_id'];
+	while ( $clear_id != $activity_id ) {
+		$clear_object = new BP_Activity_Activity( $clear_id );
+		wp_cache_delete( $clear_id, 'bp_activity' );
+		$clear_id = intval( $clear_object->secondary_item_id );
+	}
+	wp_cache_delete( $activity_id, 'bp_activity' );
+
+	if ( empty( $r['skip_notification'] ) ) {
+		/**
+		 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+		 * Sends a notification to the user @see bp_activity_new_comment_notification_helper().
+		 *
+		 * @since BuddyPress 1.2.0
+		 *
+		 * @param int                  $comment_id ID of the newly posted activity comment.
+		 * @param array                $r          Array of parsed comment arguments.
+		 * @param BP_Activity_Activity $activity   Activity item being commented on.
+		 */
+		do_action( 'bp_activity_comment_posted', $comment_id, $r, $activity );
+	} else {
+		/**
+		 * Fires near the end of an activity comment posting, before the returning of the comment ID.
+		 * without sending a notification to the user
+		 *
+		 * @since BuddyPress 2.5.0
+		 *
+		 * @param int                  $comment_id ID of the newly posted activity comment.
+		 * @param array                $r          Array of parsed comment arguments.
+		 * @param BP_Activity_Activity $activity   Activity item being commented on.
+		 */
+		do_action( 'bp_activity_comment_posted_notification_skipped', $comment_id, $r, $activity );
+	}
+
+	if ( empty( $comment_id ) ) {
+		$error = new WP_Error( 'comment_failed', $feedback );
+
+		if ( 'wp_error' === $r['error_type'] ) {
+			return $error;
+
+			// Backpat.
+		} else {
+			$bp->activity->errors['new_comment'] = $error;
+		}
+	}
+
+	return $comment_id;
+}
+
 /**
  * Fetch the activity_id for an existing activity entry in the DB.
  *

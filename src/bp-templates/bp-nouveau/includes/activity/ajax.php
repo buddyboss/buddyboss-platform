@@ -56,6 +56,12 @@ add_action(
 				),
 			),
 			array(
+				'edit_activity_comment' => array(
+					'function' => 'bp_nouveau_ajax_edit_activity_comment',
+					'nopriv'   => false,
+				),
+			),
+			array(
 				'bp_nouveau_get_activity_objects' => array(
 					'function' => 'bp_nouveau_ajax_get_activity_objects',
 					'nopriv'   => false,
@@ -393,6 +399,118 @@ function bp_nouveau_ajax_new_activity_comment() {
 			'parent_id'   => $_POST['comment_id'],
 		)
 	);
+
+	if ( ! $comment_id ) {
+		if ( ! empty( $bp->activity->errors['new_comment'] ) && is_wp_error( $bp->activity->errors['new_comment'] ) ) {
+			$response = array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html( $bp->activity->errors['new_comment']->get_error_message() )
+				),
+			);
+			unset( $bp->activity->errors['new_comment'] );
+		}
+
+		wp_send_json_error( $response );
+	}
+
+	$activity = new BP_Activity_Activity( $comment_id );
+
+	// Load the new activity item into the $activities_template global.
+	bp_has_activities(
+		array(
+			'display_comments' => 'stream',
+			'hide_spam'        => false,
+			'show_hidden'      => true,
+			'include'          => $comment_id,
+			'privacy'          => (array) $activity->privacy,
+			'scope'            => false,
+		)
+	);
+
+	// Swap the current comment with the activity item we just loaded.
+	if ( isset( $activities_template->activities[0] ) ) {
+		$activities_template->activity                  = new stdClass();
+		$activities_template->activity->id              = $activities_template->activities[0]->item_id;
+		$activities_template->activity->current_comment = $activities_template->activities[0];
+
+		// Because the whole tree has not been loaded, we manually
+		// determine depth.
+		$depth     = 1;
+		$parent_id = (int) $activities_template->activities[0]->secondary_item_id;
+		while ( $parent_id !== (int) $activities_template->activities[0]->item_id ) {
+			$depth++;
+			$p_obj     = new BP_Activity_Activity( $parent_id );
+			$parent_id = (int) $p_obj->secondary_item_id;
+		}
+		$activities_template->activity->current_comment->depth = $depth;
+	}
+
+	ob_start();
+	// Get activity comment template part.
+	bp_get_template_part( 'activity/comment' );
+	$response = array( 'contents' => ob_get_contents() );
+	ob_end_clean();
+
+	unset( $activities_template );
+
+	wp_send_json_success( $response );
+}
+
+function bp_nouveau_ajax_edit_activity_comment(){
+	global $activities_template;
+	$bp = buddypress();
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was an error posting your reply. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce_edit_activity_comment'] ) || ! wp_verify_nonce( $_POST['_wpnonce_edit_activity_comment'], 'edit_activity_comment' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['content'] ) ) {
+		wp_send_json_error(
+			array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html__( 'Please do not leave the comment area blank.', 'buddyboss' )
+				),
+			)
+		);
+	}
+
+	if ( empty( $_POST['form_id'] ) || empty( $_POST['comment_id'] ) || ! is_numeric( $_POST['form_id'] ) || ! is_numeric( $_POST['comment_id'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	//Get Existing Comment
+	$comment = new BP_Activity_Activity( $_POST['comment_id'] );
+
+	//Update comment data
+	$comment_id = bp_activity_edit_comment(
+		array(
+			'id' => $_POST['comment_id'],
+			'activity_id' => $_POST['form_id'],
+			'content'     => $_POST['content'],
+			'parent_id'   => $comment->secondary_item_id,
+		)
+	);
+
+
 
 	if ( ! $comment_id ) {
 		if ( ! empty( $bp->activity->errors['new_comment'] ) && is_wp_error( $bp->activity->errors['new_comment'] ) ) {

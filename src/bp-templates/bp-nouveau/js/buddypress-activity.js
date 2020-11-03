@@ -1033,36 +1033,36 @@ window.bp = window.bp || {};
 
 				$( '#ac-edit-form-' + comment_id ).slideDown( 200 );
 
-				var cedit_data = $( target ).closest( 'li' ).data( 'bp-comment' );
+				var comment_edit_data = $( target ).closest( 'li' ).data( 'bp-comment' );
 
-				if ( ! _.isUndefined( cedit_data ) ) {
-					//bp.Nouveau.Activity.postForm.displayEditActivityForm( cedit_data );
+				if ( ! _.isUndefined( comment_edit_data.media ) ) {
+					//bp.Nouveau.Activity.postForm.displayEditActivityForm( comment_edit_data );
 
 
 					var media_file = false;
-					for ( var i = 0; i < cedit_data.media.length; i++ ) {
+					for ( var i = 0; i < comment_edit_data.media.length; i++ ) {
 						media_file = false;
 
 						media_file = {
-							name		: cedit_data.media[i].title,
+							name		: comment_edit_data.media[i].title,
 							accepted	: true,
 							kind		: 'image',
 							upload: {
-								filename	: cedit_data.media[i].title,
-								uuid	: cedit_data.media[i].attachment_id
+								filename	: comment_edit_data.media[i].title,
+								uuid	: comment_edit_data.media[i].attachment_id
 							},
-							dataURL	: cedit_data.media[i].url,
-							id		: cedit_data.media[i].attachment_id,
+							dataURL	: comment_edit_data.media[i].url,
+							id		: comment_edit_data.media[i].attachment_id,
 							media_edit_data: {
-								'id'			: cedit_data.media[i].attachment_id,
-								'media_id'		: cedit_data.media[i].id,
-								'name'			: cedit_data.media[i].name,
-								'thumb'			: cedit_data.media[i].thumb,
-								'url'			: cedit_data.media[i].url,
-								'uuid'			: cedit_data.media[i].attachment_id,
-								'menu_order'	: cedit_data.media[i].menu_order,
-								'album_id'	: cedit_data.media[i].album_id,
-								'group_id'	: cedit_data.media[i].group_id,
+								'id'			: comment_edit_data.media[i].attachment_id,
+								'media_id'		: comment_edit_data.media[i].id,
+								'name'			: comment_edit_data.media[i].name,
+								'thumb'			: comment_edit_data.media[i].thumb,
+								'url'			: comment_edit_data.media[i].url,
+								'uuid'			: comment_edit_data.media[i].attachment_id,
+								'menu_order'	: comment_edit_data.media[i].menu_order,
+								'album_id'	: comment_edit_data.media[i].album_id,
+								'group_id'	: comment_edit_data.media[i].group_id,
 								'saved'			: true
 							}
 						};
@@ -1130,7 +1130,7 @@ window.bp = window.bp || {};
 
 				comment_data = {
 					action                        : 'edit_activity_comment',
-					_wpnonce_new_activity_comment : $( '#_wpnonce_edit_activity_comment' ).val(),
+					_wpnonce_edit_activity_comment : $( '#_wpnonce_edit_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
 					content                       : comment_value
@@ -1184,15 +1184,9 @@ window.bp = window.bp || {};
 							form.fadeOut(
 								200,
 								function() {
-									if ( 0 === activity_comments.children( 'ul' ).length ) {
-										if ( activity_comments.hasClass( 'activity-comments' ) ) {
-											activity_comments.prepend( '<ul></ul>' );
-										} else {
-											activity_comments.append( '<ul></ul>' );
-										}
-									}
 
-									activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
+									$( '#acomment-' + item_id ).replaceWith( $( $.parseHTML( the_comment ) ).hide().fadeIn( 200 ) );
+
 									$( form ).find( '.ac-input' ).first().html( '' );
 
 									activity_comments.parent().addClass( 'has-comments' );
