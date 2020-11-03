@@ -521,10 +521,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_scripts() {
-
-	    if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
+		wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	   /* if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
 		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
-	    }
+	    }*/
 
 		wp_enqueue_script( 'bp-nouveau' );
 		wp_enqueue_script( 'guillotine-js' );

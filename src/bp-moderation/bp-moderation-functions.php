@@ -191,6 +191,33 @@ function bp_get_moderation_content_type( $key ) {
 }
 
 /**
+ * Function to get Report button
+ * @param array $args button args
+ * @param bool  $html Should return button html or not.
+ *
+ * @return string|array
+ */
+function bp_get_moderation_report_button( $args, $html = true ) {
+	$button = wp_parse_args( $args, array(
+		'button_attr' => array(
+			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
+			'href'                 => '#content-report',
+			'class'                => 'button item-button bp-secondary-action report-content',
+			'data-bp-content-id'   => '',
+			'data-bp-content-type' => '',
+			'data-bp-nonce'        => wp_create_nonce( 'bp-report-content' ),
+		),
+		'link_text'   => __( 'Report', 'buddyboss' ),
+	) );
+
+	if ( ! empty( $html ) ) {
+		$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), esc_html( $button['link_text'] ) );
+	}
+
+	return apply_filters( 'bp_get_moderation_report_button', $button, $args, $html );
+}
+
+/**
  * Function to Report content.
  *
  * @since BuddyBoss 1.5.4
