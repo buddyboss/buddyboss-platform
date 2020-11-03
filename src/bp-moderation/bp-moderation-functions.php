@@ -229,17 +229,46 @@ function bp_get_moderation_content_type( $key ) {
 	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
 
-function bb_report_content() {
-	$result            = array();
-	$result['success'] = 0;
-	$result['msg']     = esc_html__( 'Sorry, Something happened wrong.', 'buddyboss' );
-	parse_str( $_POST['form_data'], $form_data_arr );
-	echo "<pre>";
-	print_r( $form_data_arr );
-	echo "</pre>";
-	exit;
-}
 
-// Ajax call to report content
-add_action( 'wp_ajax_bb_report_content', 'bb_report_content' );
-add_action( 'wp_ajax_nopriv_bb_report_content', 'bb_report_content' );
+function bp_get_moderation_report_button( $args ) {
+
+	$report_args = wp_parse_args( $args, array(
+		'type'              => 'html',
+		'id'                => '',
+		'component'         => '',
+		'position'          => '',
+		'parent_element'    => '',
+		'parent_attr'       => '',
+		'must_be_logged_in' => true,
+		'button_element'    => '',
+		'href'              => '#content-report',
+		'class'             => 'button item-button bp-secondary-action report-content',
+		'data-bp-nonce'     => wp_create_nonce( 'bp-report-content' ),
+		'data-bp-id'        => '',
+		'data-bp-type'      => '',
+		'link_text'         => '',
+	) );
+
+	if ( 'activity' === $report_args['component'] && 'array' === $report_args['type'] ) {
+		return array(
+			'id'                => $report_args['id'],
+			'position'          => $report_args['position'],
+			'component'         => $report_args['component'],
+			'parent_element'    => $report_args['parent_element'],
+			'parent_attr'       => $report_args['parent_attr'],
+			'must_be_logged_in' => $report_args['must_be_logged_in'],
+			'button_element'    => $report_args['button_element'],
+			'button_attr'       => array(
+				'id'            => '',
+				'href'          => $report_args['href'],
+				'class'         => $report_args['class'],
+				'data-bp-nonce' => $report_args['data-bp-nonce'],
+				'data-bp-id'    => $report_args['data-bp-id'],
+				'data-bp-type'  => $report_args['data-bp-type'],
+			),
+			'link_text'         => $report_args['link_text'],
+		);
+	} else {
+		return sprintf( '<a href="%s" class="%s" data-bp-id="%s" data-bp-type="%s" data-bp-nonce="%s">%s</a>', $report_args['button_attr']['href'], $report_args['button_attr']['class'], $report_args['button_attr']['data-bp-id'], $report_args['button_attr']['data-bp-type'], $report_args['button_attr']['data-bp-nonce'], esc_html__( $report_args['link_text'], 'buddyboss' ) );
+	}
+}

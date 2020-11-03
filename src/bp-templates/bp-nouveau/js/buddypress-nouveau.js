@@ -1756,8 +1756,8 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
-			$( document ).on( 'click', '.report-activity', function ( e ) {
-				$( '.report-activity' ).magnificPopup(
+			$( document ).on( 'click', '.report-content', function ( e ) {
+				$( '.report-content' ).magnificPopup(
 					{
 						type: 'inline',
 						preloader: false,
