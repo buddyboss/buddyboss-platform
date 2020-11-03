@@ -232,4 +232,17 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		return $user_id = get_post_field( 'post_author', $topic_id );
 	}
 
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $args Content data
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
+
 }

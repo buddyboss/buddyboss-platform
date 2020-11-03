@@ -23,8 +23,8 @@
 				if ( ! empty( $reports_terms ) ) {
 					foreach ( $reports_terms as $key => $reports_term ) {
 						?>
-						<label for="report-type-<?php echo esc_attr( $key ) ?>">
-							<input type="radio" id="report-type-<?php echo esc_attr( $key ); ?>" name="report_type"
+						<label for="report-category-<?php echo esc_attr( $key ) ?>">
+							<input type="radio" id="report-category-<?php echo esc_attr( $key ); ?>" name="report_category"
 								   value="<?php echo esc_attr( $key ); ?>">
 							<?php echo esc_html( $reports_term ); ?>
 						</label>
@@ -35,8 +35,8 @@
 					<?php
 				}
 				?>
-				<label for="report-type-other">
-					<input type="radio" id="report-type-other" name="report_type"
+				<label for="report-category-other">
+					<input type="radio" id="report-category-other" name="report_type"
 						   value="other">
 					<?php esc_html_e( 'Other', 'buddyboss' ); ?>
 				</label>

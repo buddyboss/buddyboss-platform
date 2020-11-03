@@ -262,4 +262,17 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		return ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
 	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $args Content data
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
 }

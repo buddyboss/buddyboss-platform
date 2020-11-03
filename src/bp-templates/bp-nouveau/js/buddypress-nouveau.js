@@ -1785,9 +1785,13 @@ window.bp = window.bp || {};
 
 			$('#bb-report-content').submit(function () {
 				var data = {
-					action: 'bb_report_content',
-					form_data: $(this).serialize()
+					action: 'bp_moderation_content_report',
 				};
+
+				$.each( $(this).serializeArray(), function(_, kv) {
+					data[kv.name] = kv.value;
+				});
+
 				$.post(BP_Nouveau.ajaxurl, data, function () {
 					//var result = $.parseJSON(response);
 				});

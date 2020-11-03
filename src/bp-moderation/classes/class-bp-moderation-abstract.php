@@ -118,25 +118,24 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param integer $item_id Content ID
-	 * @param string  $type    Content type
+	 * @param array $args Content data
 	 *
 	 * @return string
 	 */
-	public static function report( $item_id, $type ) {
-		$moderation         = new BP_Moderation( $item_id, $type );
+	public static function report( $args ) {
+		$moderation         = new BP_Moderation( $args['content_id'], $args['content_type'] );
 		$threshold          = false;
 		$email_notification = false;
 
 		// Get Moderation settings
-		if ( BP_Moderation_Members::$moderation_type === $type ) {
+		if ( BP_Moderation_Members::$moderation_type === $args['content_type'] ) {
 			$is_allow = bp_is_moderation_member_blocking_enable();
 			if ( bp_is_moderation_auto_suspend_enable() ) {
 				$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 				$email_notification = bp_is_moderation_blocking_email_notification_enable();
 			}
 		} else {
-			$is_allow = bp_is_moderation_content_reporting_enable( 0, $type );
+			$is_allow = bp_is_moderation_content_reporting_enable( 0, $args['content_type'] );
 			if ( bp_is_moderation_auto_hide_enable() ) {
 				$threshold          = bp_moderation_get_setting( 'bpm_reporting_auto_hide_threshold', '5' );
 				$email_notification = bp_is_moderation_reporting_email_notification_enable();
@@ -149,10 +148,11 @@ abstract class BP_Moderation_Abstract {
 		}
 
 		if ( empty( $moderation->id ) ) {
-			$moderation->item_id   = $item_id;
-			$moderation->item_type = $type;
+			$moderation->item_id   = $args['content_id'];
+			$moderation->item_type = $args['content_type'];
 		}
 
+		$moderation->category_id  = ! empty( $args['category_id'] ) ? $args['category_id'] : $moderation->category_id;
 		$moderation->updated_by   = get_current_user_id();
 		$moderation->date_updated = current_time( 'mysql' );
 

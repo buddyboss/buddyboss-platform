@@ -641,7 +641,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 					'id'                   => 'report-content-' . BP_Moderation_Activity::$moderation_type . '-' . $activity_id,
 					'href'                 => '#content-report',
 					'class'                => 'button item-button bp-secondary-action report-content',
-					'data-bp-nonce'        => wp_create_nonce( 'bp-report-content' ),
+					'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
 					'data-bp-content-id'   => $activity_id,
 					'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
 				),

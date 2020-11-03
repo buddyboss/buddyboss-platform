@@ -295,7 +295,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 			for="bpm_reporting_content_reporting"><?php esc_html_e( 'Allow content reporting from the list below.', 'buddyboss' ); ?></label>
 	<br/>
 	<?php foreach ( $content_types as $slug => $type ) { ?>
-		<label for="bpm_reporting_content_reporting-<?php esc_attr_e( $slug ); ?>">
+		<label for="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>">
 			<input name="bpm_reporting_content_reporting[<?php echo esc_attr( $slug ); ?>]"
 				   id="bpm_reporting_content_reporting-<?php echo esc_attr( $slug ); ?>" type="checkbox" value="1"
 					<?php checked( bp_is_moderation_content_reporting_enable( false, $slug ) ); ?> />

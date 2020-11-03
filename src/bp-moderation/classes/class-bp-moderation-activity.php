@@ -301,4 +301,17 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
 	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $args Content data
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
 }

@@ -192,6 +192,7 @@ function bp_get_moderation_content_type( $key ) {
 
 /**
  * Function to get Report button
+ *
  * @param array $args button args
  * @param bool  $html Should return button html or not.
  *
@@ -205,7 +206,7 @@ function bp_get_moderation_report_button( $args, $html = true ) {
 			'class'                => 'button item-button bp-secondary-action report-content',
 			'data-bp-content-id'   => '',
 			'data-bp-content-type' => '',
-			'data-bp-nonce'        => wp_create_nonce( 'bp-report-content' ),
+			'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
 		),
 		'link_text'   => __( 'Report', 'buddyboss' ),
 	) );
@@ -222,18 +223,19 @@ function bp_get_moderation_report_button( $args, $html = true ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int    $moderation_item_id   content id.
- * @param string $moderation_item_type content type.
+ * @param array $args Report args.
  *
  * @return bool
  */
-function bp_moderation_add( $moderation_item_id = 0, $moderation_item_type = '' ) {
-
+function bp_moderation_add( $args = array() ) {
 	$response = false;
-	$class    = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
-	if ( method_exists( $class, 'report' ) ) {
-		$response = $class::report( $moderation_item_id );
+	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+
+		if ( method_exists( $class, 'report' ) ) {
+			$response = $class::report( $args );
+		}
 	}
 
 	return $response;

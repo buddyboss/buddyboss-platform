@@ -26,14 +26,37 @@ new BP_Moderation_Messages();
  * @since BuddyBoss 1.5.4
  */
 function bp_moderation_content_report() {
-	$result            = array();
-	$result['success'] = 0;
-	$result['msg']     = esc_html__( 'Sorry, Something happened wrong.', 'buddyboss' );
-	parse_str( $_POST['form_data'], $form_data_arr );
-	echo "<pre>";
-	print_r( $form_data_arr );
-	echo "</pre>";
-	exit;
+	$response = array(
+		'success' => false,
+		'message' => esc_html__( 'Sorry, Something happened wrong.', 'buddyboss' ),
+	);
+
+	$item_id   = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
+	$item_type = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
+	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
+	if ( 'other' !== $category ) {
+		$category = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_NUMBER_INT );
+	}
+	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
+
+	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
+		$response['message'] = esc_html__( 'Required field missing.', 'buddyboss' );
+	}
+
+	if ( check_ajax_referer( 'bp-moderation-content', '_wpnonce' ) ) {
+		$moderation = bp_moderation_add( array(
+			'content_id'   => $item_id,
+			'content_type' => $item_type,
+			'category_id'  => $category,
+			'note'         => $item_note,
+		) );
+
+		$response['success'] = true;
+		$response['message'] = $moderation;
+	}
+
+	echo wp_json_encode( $response );
+	exit();
 }
 
 add_action( 'wp_ajax_bp_moderation_content_report', 'bp_moderation_content_report' );
