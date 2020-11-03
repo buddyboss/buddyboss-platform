@@ -2762,7 +2762,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 		case 'grouponly':
 			if ( bp_is_active( 'groups' ) ) {
 
-				$manage   = groups_can_user_manage_albums( $user_id, $album->group_id );
+				$manage = groups_can_user_manage_albums( $user_id, $album->group_id );
 				if ( $manage ) {
 					$can_manage   = true;
 					$can_add      = true;
