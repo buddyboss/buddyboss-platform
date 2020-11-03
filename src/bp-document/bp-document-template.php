@@ -810,22 +810,9 @@ function bp_document_user_can_edit( $document = false ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && $document->group_id > 0 ) {
-
-			$manage   = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
-			$status   = bp_group_get_media_status( $document->group_id );
-			$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $document->group_id );
-			$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $document->group_id );
-
+			$manage = groups_can_user_manage_document( bp_loggedin_user_id(), $document->group_id );
 			if ( $manage ) {
-				if ( $document->user_id === bp_loggedin_user_id() ) {
-					$can_edit = true;
-				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
-					$can_edit = true;
-				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-					$can_edit = true;
-				} elseif ( 'admins' == $status && $is_admin ) {
-					$can_edit = true;
-				}
+				$can_edit = true;
 			}
 
 		}
