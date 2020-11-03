@@ -229,46 +229,28 @@ function bp_get_moderation_content_type( $key ) {
 	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
 
-
-function bp_get_moderation_report_button( $args ) {
-
-	$report_args = wp_parse_args( $args, array(
-		'type'              => 'html',
-		'id'                => '',
-		'component'         => '',
-		'position'          => '',
-		'parent_element'    => '',
-		'parent_attr'       => '',
-		'must_be_logged_in' => true,
-		'button_element'    => '',
-		'href'              => '#content-report',
-		'class'             => 'button item-button bp-secondary-action report-content',
-		'data-bp-nonce'     => wp_create_nonce( 'bp-report-content' ),
-		'data-bp-id'        => '',
-		'data-bp-type'      => '',
-		'link_text'         => '',
+/**
+ * @param      $args
+ * @param bool $html
+ *
+ * @return string|array
+ */
+function bp_get_moderation_report_button( $args, $html = true ) {
+	$button = wp_parse_args( $args, array(
+		'button_attr' => array(
+			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
+			'href'                 => '#content-report',
+			'class'                => 'button item-button bp-secondary-action report-content',
+			'data-bp-content-id'   => '',
+			'data-bp-content-type' => '',
+			'data-bp-nonce'        => wp_create_nonce( 'bp-report-content' ),
+		),
+		'link_text'   => __( 'Report', 'buddyboss' ),
 	) );
 
-	if ( 'activity' === $report_args['component'] && 'array' === $report_args['type'] ) {
-		return array(
-			'id'                => $report_args['id'],
-			'position'          => $report_args['position'],
-			'component'         => $report_args['component'],
-			'parent_element'    => $report_args['parent_element'],
-			'parent_attr'       => $report_args['parent_attr'],
-			'must_be_logged_in' => $report_args['must_be_logged_in'],
-			'button_element'    => $report_args['button_element'],
-			'button_attr'       => array(
-				'id'            => '',
-				'href'          => $report_args['href'],
-				'class'         => $report_args['class'],
-				'data-bp-nonce' => $report_args['data-bp-nonce'],
-				'data-bp-id'    => $report_args['data-bp-id'],
-				'data-bp-type'  => $report_args['data-bp-type'],
-			),
-			'link_text'         => $report_args['link_text'],
-		);
-	} else {
-		return sprintf( '<a href="%s" class="%s" data-bp-id="%s" data-bp-type="%s" data-bp-nonce="%s">%s</a>', $report_args['button_attr']['href'], $report_args['button_attr']['class'], $report_args['button_attr']['data-bp-id'], $report_args['button_attr']['data-bp-type'], $report_args['button_attr']['data-bp-nonce'], esc_html__( $report_args['link_text'], 'buddyboss' ) );
+	if ( ! empty( $html ) ) {
+		$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), esc_html( $button['link_text'] ) );
 	}
+
+	return apply_filters( 'bp_get_moderation_report_button', $button, $args, $html );
 }

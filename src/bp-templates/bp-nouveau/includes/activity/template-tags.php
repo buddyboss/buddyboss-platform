@@ -627,21 +627,29 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		);
 	}
 
-	$buttons['activity_report'] = bp_get_moderation_report_button(
-		array(
-			'type'           => 'array',
-			'id'             => 'activity_report',
-			'position'       => 50,
-			'component'      => 'activity',
-			'parent_element' => $parent_element,
-			'parent_attr'    => $parent_attr,
-			'button_element' => $button_element,
-			'data-bp-id'     => $activity_id,
-			'data-bp-type'   => 'activity',
-			'link_text'      => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Report', 'buddyboss' ), esc_html__( 'Report', 'buddyboss' )
+	if ( bp_is_active( 'moderation' ) ){
+		$buttons['activity_report'] = bp_get_moderation_report_button(
+			array(
+				'id'                => 'activity_report',
+				'position'          => 50,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'                   => 'report-content-' . BP_Moderation_Activity::$moderation_type . '-' . $activity_id,
+					'href'                 => '#content-report',
+					'class'                => 'button item-button bp-secondary-action report-content',
+					'data-bp-nonce'        => wp_create_nonce( 'bp-report-content' ),
+					'data-bp-content-id'   => $activity_id,
+					'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
+				),
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Report', 'buddyboss' ), esc_html__( 'Report', 'buddyboss' ) ),
 			),
-		)
-	);
+			false
+		);
+	}
 
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.

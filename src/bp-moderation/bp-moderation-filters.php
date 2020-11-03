@@ -25,7 +25,7 @@ new BP_Moderation_Document();
  *
  * @since BuddyBoss 1.5.4
  */
-function bb_report_content() {
+function bp_moderation_content_report() {
 	$result            = array();
 	$result['success'] = 0;
 	$result['msg']     = esc_html__( 'Sorry, Something happened wrong.', 'buddyboss' );
@@ -36,10 +36,15 @@ function bb_report_content() {
 	exit;
 }
 
-// Ajax call to report content
-add_action( 'wp_ajax_bb_report_content', 'bb_report_content' );
-add_action( 'wp_ajax_nopriv_bb_report_content', 'bb_report_content' );
+add_action( 'wp_ajax_bp_moderation_content_report', 'bp_moderation_content_report' );
+add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_content_report' );
 
-add_action( 'wp_footer', function () {
-	include BP_PLUGIN_DIR.'src/bp-moderation/screens/content-report-form.php';
-} );
+/**
+ * Function to Popup markup for moderation content report
+ * @since BuddyBoss 1.5.4
+ */
+function bb_moderation_content_report_popup() {
+	include BP_PLUGIN_DIR . 'src/bp-moderation/screens/content-report-form.php';
+}
+
+add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
