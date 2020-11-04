@@ -59,16 +59,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.5.4 =
 * Profiles - Improved Profile completion module caching logic
-* Groups - Private groups documents security issue fixed
-* Groups - Fixed forums permission issue for non-members
-* Activity - Fixed invalid avatar on the activity post form
-* Activity - Fixed blog post activity video embed issue
-* Messages - code refactoring
-* Network Search - Provide option to search for photos and albums
 * Notifications - Fixed custom notification blank text issue
 * Notifications - Fixed forum reply notification incorrect timestamp
 * Notifications - Fixed notification issue when a user comments on a blog post
+* Groups - Private groups documents security issue fixed
+* Groups - Fixed forums permission issue for non-members
 * Forums - Fixed forum reply image repost issue
+* Activity - Fixed invalid avatar on the activity post form
+* Activity - Fixed blog post activity video embed issue
+* Messages - code refactoring
+* Network Search - Provided option to search for photos and albums
 * REST API - Fixed many API issues in activity, media, messages, members, and social groups
 * Compatibility - Fixed password reset email layout issue with 'Paid Memberships Pro' plugin
 
