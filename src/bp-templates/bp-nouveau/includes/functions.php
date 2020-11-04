@@ -1013,6 +1013,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 		),
+		'moderation-requests-loading' => array(
+			'type'    => 'loading',
+			'message' => esc_html__( 'Loading your moderation requests. Please wait.', 'buddyboss' ),
+		),
+		'moderation-requests-none' => array(
+			'type'    => 'info',
+			'message' => esc_html__( 'Sorry, no requests were found.', 'buddyboss' ),
+		)
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {

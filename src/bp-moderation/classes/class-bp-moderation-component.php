@@ -72,6 +72,10 @@ class BP_Moderation_Component extends BP_Component {
 		if ( defined( 'BP_TESTS_DIR' ) ) {
 			return;
 		}
+
+		if ( bp_is_user() ) {
+			require $this->path . 'bp-moderation/screens/user/my-moderation.php';
+		}
 	}
 
 	/**
@@ -149,19 +153,29 @@ class BP_Moderation_Component extends BP_Component {
 			'name'                => __( 'Moderation', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 100,
-			'screen_function'     => 'bp_moderation_screen_my_reporting', // Todo: Add function.
-			'default_subnav_slug' => 'my-reporting',
+			'screen_function'     => 'bp_moderation_screen',
+			'default_subnav_slug' => 'reported-content',
 			'item_css_id'         => $this->id,
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'My Reporting', 'buddyboss' ),
-			'slug'            => 'my-reporting',
+			'name'            => __( 'Reported Content', 'buddyboss' ),
+			'slug'            => 'reported-content',
 			'parent_url'      => $moderation_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_moderation_screen_my_reporting', // Todo: Add function.
+			'screen_function' => 'bp_moderation_screen',
 			'position'        => 10,
-			'item_css_id'     => 'moderation-reporting',
+			'item_css_id'     => 'reported-content',
+		);
+
+		$sub_nav[] = array(
+			'name'            => __( 'Blocked Members', 'buddyboss' ),
+			'slug'            => 'blocked-members',
+			'parent_url'      => $moderation_link,
+			'parent_slug'     => $slug,
+			'screen_function' => array( $this, 'bp_moderation_screen'),
+			'position'        => 15,
+			'item_css_id'     => 'blocked-members',
 		);
 
 		parent::setup_nav( $main_nav, $sub_nav );
