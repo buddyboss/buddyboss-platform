@@ -399,14 +399,14 @@
 	list-style: none;
 }
 
-.bb-member-photos-header {
+.bb-member-media-header {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
 	margin-top: 20px;
 }
 
-.bb-photos-meta {
+.bb-media-meta {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
@@ -420,8 +420,13 @@
 		margin-left: 10px;
 	}
 
-	.bb-delete i {
-		font-size: 21px;
+	.bb-delete {
+		line-height: 1;
+
+		i {
+			font-size: 21px;
+		}
+
 	}
 
 	.bb-select i {
@@ -435,7 +440,7 @@
 		-webkit-box-pack: center;
 		-ms-flex-pack: center;
 		justify-content: center;
-		font-size: 15px;
+		font-size: 12px;
 		border-radius: 50%;
 		width: 19px;
 		height: 19px;

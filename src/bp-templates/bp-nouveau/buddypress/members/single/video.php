@@ -6,7 +6,7 @@
  */
 ?>
 
-<div class="bb-video-container member-video">
+<div class="bb-video-container bb-media-container member-video">
 	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
 	<?php bp_get_template_part( 'video/theatre' ); ?>
@@ -18,7 +18,7 @@
 		// Home/Video
 		case 'my-video':
 
-			bp_get_template_part( 'video/add-media' );
+			bp_get_template_part( 'video/add-video' );
 
 			bp_nouveau_member_hook( 'before', 'video_content' );
 

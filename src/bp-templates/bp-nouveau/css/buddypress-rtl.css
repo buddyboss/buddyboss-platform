@@ -12420,14 +12420,14 @@ body.login .login-popup .mfp-close:hover {
   list-style: none;
 }
 
-.bb-member-photos-header {
+.bb-member-media-header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   margin-top: 20px;
 }
 
-.bb-photos-meta {
+.bb-media-meta {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -12438,15 +12438,19 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 10px;
 }
 
-.bb-photos-meta a {
+.bb-media-meta a {
   margin-right: 10px;
 }
 
-.bb-photos-meta .bb-delete i {
+.bb-media-meta .bb-delete {
+  line-height: 1;
+}
+
+.bb-media-meta .bb-delete i {
   font-size: 21px;
 }
 
-.bb-photos-meta .bb-select i {
+.bb-media-meta .bb-select i {
   border: 1px solid;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -12457,13 +12461,13 @@ body.login .login-popup .mfp-close:hover {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 12px;
   border-radius: 50%;
   width: 19px;
   height: 19px;
 }
 
-.bb-photos-meta .bb-select.selected i {
+.bb-media-meta .bb-select.selected i {
   background: #000;
   color: #fff;
   border-color: #000;
