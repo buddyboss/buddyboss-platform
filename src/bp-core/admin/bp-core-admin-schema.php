@@ -1126,14 +1126,12 @@ function bp_core_install_moderation() {
 	   item_id bigint(20) NOT NULL,
 	   item_type varchar(120) NOT NULL,
 	   hide_sitewide tinyint(1) NOT NULL,
-	   updated_by bigint(20) NOT NULL,
-	   date_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   blog_id bigint(20) NOT NULL,
 	   PRIMARY KEY  (id),
 	   KEY moderation_report_id (item_id,item_type,blog_id),
 	   KEY moderation_report_item (item_id,item_type),
-	   KEY item_id (item_id),
-	   KEY updated_by (updated_by)
+	   KEY item_id (item_id)
     ) {$charset_collate};";
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_reports (

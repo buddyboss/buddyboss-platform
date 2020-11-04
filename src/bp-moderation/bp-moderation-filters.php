@@ -28,9 +28,10 @@ new BP_Moderation_Messages();
 function bp_moderation_content_report() {
 	$response = array(
 		'success' => false,
-		'message' => esc_html__( 'Sorry, Something happened wrong.', 'buddyboss' ),
+		'message' => '',
 	);
 
+	$nonce     = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$item_id   = filter_input( INPUT_POST, 'content_id', FILTER_SANITIZE_NUMBER_INT );
 	$item_type = filter_input( INPUT_POST, 'content_type', FILTER_SANITIZE_STRING );
 	$category  = filter_input( INPUT_POST, 'report_category', FILTER_SANITIZE_STRING );
@@ -40,10 +41,17 @@ function bp_moderation_content_report() {
 	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
-		$response['message'] = esc_html__( 'Required field missing.', 'buddyboss' );
+		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 	}
 
-	if ( check_ajax_referer( 'bp-moderation-content', '_wpnonce' ) ) {
+	if ( bp_is_moderation_exist( array(
+		'content_id'   => $item_id,
+		'content_type' => $item_type,
+	) ) ) {
+		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
+	}
+
+	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
 		$moderation = bp_moderation_add( array(
 			'content_id'   => $item_id,
 			'content_type' => $item_type,
@@ -51,8 +59,16 @@ function bp_moderation_content_report() {
 			'note'         => $item_note,
 		) );
 
-		$response['success'] = true;
-		$response['message'] = $moderation;
+		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
+			$response['success']    = true;
+			$response['moderation'] = $moderation;
+		}
+
+		$response['message'] = $moderation->errors;
+	}
+
+	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
+		$response['message'] = new WP_Error( 'bp_moderation_missing_error', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
 	}
 
 	echo wp_json_encode( $response );

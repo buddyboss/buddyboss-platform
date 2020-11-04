@@ -49,7 +49,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 		'item_id',
 		'user_id',
 		'item_type',
-		'date_updated',
+		'last_updated',
 		'hide_sitewide',
 		'blog_id',
 	);

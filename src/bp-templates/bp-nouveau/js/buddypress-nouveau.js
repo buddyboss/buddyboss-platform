@@ -1792,8 +1792,12 @@ window.bp = window.bp || {};
 					data[kv.name] = kv.value;
 				});
 
-				$.post(BP_Nouveau.ajaxurl, data, function () {
-					//var result = $.parseJSON(response);
+				$.post(BP_Nouveau.ajaxurl, data, function ( response ) {
+					var result = $.parseJSON(response);
+					if ( result.success ){
+						$.magnificPopup.close();
+						$('form#bb-report-content').trigger('reset');
+					}
 				});
 			});
 		},

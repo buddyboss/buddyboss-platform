@@ -51,7 +51,7 @@
 											</th>
 											<td>
 												<?php
-												echo '0 time';
+												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), number_format_i18n( $moderation_request_data->count ) );
 												?>
 											</td>
 										</tr>
@@ -128,7 +128,7 @@
 											</th>
 											<td>
 												<?php
-												echo '0 time';
+												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), number_format_i18n( $moderation_request_data->count ) );
 												?>
 											</td>
 										</tr>

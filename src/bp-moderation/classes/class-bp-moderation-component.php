@@ -98,6 +98,11 @@ class BP_Moderation_Component extends BP_Component {
 			'table_name_meta'    => $bp->table_prefix . 'bp_moderation_meta',
 		);
 
+		// Metadata tables for groups component.
+		$meta_tables = array(
+			'moderation' => $bp->table_prefix . 'bp_moderation_meta',
+		);
+
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
 		$default_directory_title  = $default_directory_titles[ $this->id ];
@@ -110,6 +115,7 @@ class BP_Moderation_Component extends BP_Component {
 				'root_slug'       => isset( $bp->pages->moderation->slug ) ? $bp->pages->moderation->slug : BP_MODERATION_SLUG,
 				'has_directory'   => false,
 				'global_tables'   => $global_tables,
+				'meta_tables'     => $meta_tables,
 				'directory_title' => isset( $bp->pages->moderation->title ) ? $bp->pages->moderation->title : $default_directory_title,
 			)
 		);

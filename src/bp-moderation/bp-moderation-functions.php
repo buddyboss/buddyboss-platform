@@ -44,7 +44,7 @@ function bp_moderation_get( $args = '' ) {
 			'per_page'          => false,
 			// results per page.
 			'sort'              => 'DESC',
-			'order_by'          => 'date_updated',
+			'order_by'          => 'last_updated',
 			// sort ASC or DESC.
 			// Phpcs:ignore
 			'meta_query'        => false,
@@ -211,8 +211,26 @@ function bp_get_moderation_report_button( $args, $html = true ) {
 		'link_text'   => __( 'Report', 'buddyboss' ),
 	) );
 
+	$is_reported = bp_is_moderation_exist( array(
+		'content_id' => $button['button_attr']['data-bp-content-id'],
+		'content_type' => $button['button_attr']['data-bp-content-type'],
+	) );
+
+	if ( $is_reported ) {
+		$button['link_text'] = __( 'Reported', 'buddyboss' );
+		$button['button_attr']['class'] = 'button item-button bp-secondary-action reported-content';
+		unset( $button['button_attr']['href'] );
+		unset( $button['button_attr']['data-bp-content-id'] );
+		unset( $button['button_attr']['data-bp-content-type'] );
+		unset( $button['button_attr']['data-bp-nonce'] );
+	}
+
 	if ( ! empty( $html ) ) {
-		$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), esc_html( $button['link_text'] ) );
+		if ( $is_reported ){
+			$button = sprintf( '<span id="%s" class="%s">%s</span>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_html( $button['link_text'] ) );
+		} else {
+			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), esc_html( $button['link_text'] ) );
+		}
 	}
 
 	return apply_filters( 'bp_get_moderation_report_button', $button, $args, $html );
@@ -236,6 +254,26 @@ function bp_moderation_add( $args = array() ) {
 		if ( method_exists( $class, 'report' ) ) {
 			$response = $class::report( $args );
 		}
+	}
+
+	return $response;
+}
+
+/**
+ * Function to Check content Reported by current usr or not.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param array $args Report args.
+ *
+ * @return bool
+ */
+function bp_is_moderation_exist( $args = array() ) {
+	$response = false;
+
+	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$response = ( !empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 	}
 
 	return $response;

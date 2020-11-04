@@ -294,7 +294,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item
 	 */
 	public function column_reported( $item = array() ) {
-		echo esc_html( '0 time' );
+		printf( _n( '%s time', '%s times', $item['count'], 'buddyboss' ), number_format_i18n( $item['count'] ) );
 	}
 
 	/**
@@ -303,7 +303,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item
 	 */
 	public function column_blocked( $item = array() ) {
-		echo esc_html( '0 time' );
+		printf( _n( '%s time', '%s times', $item['count'], 'buddyboss' ), number_format_i18n( $item['count'] ) );
 	}
 
 	/**

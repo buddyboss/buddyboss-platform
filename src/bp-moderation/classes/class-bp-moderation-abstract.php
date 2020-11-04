@@ -124,22 +124,12 @@ abstract class BP_Moderation_Abstract {
 	 */
 	public static function report( $args ) {
 		$moderation         = new BP_Moderation( $args['content_id'], $args['content_type'] );
-		$threshold          = false;
-		$email_notification = false;
 
 		// Get Moderation settings
 		if ( BP_Moderation_Members::$moderation_type === $args['content_type'] ) {
 			$is_allow = bp_is_moderation_member_blocking_enable();
-			if ( bp_is_moderation_auto_suspend_enable() ) {
-				$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
-				$email_notification = bp_is_moderation_blocking_email_notification_enable();
-			}
 		} else {
 			$is_allow = bp_is_moderation_content_reporting_enable( 0, $args['content_type'] );
-			if ( bp_is_moderation_auto_hide_enable() ) {
-				$threshold          = bp_moderation_get_setting( 'bpm_reporting_auto_hide_threshold', '5' );
-				$email_notification = bp_is_moderation_reporting_email_notification_enable();
-			}
 		}
 
 		// Return error is moderation setting not enabled
@@ -147,23 +137,18 @@ abstract class BP_Moderation_Abstract {
 			return new WP_Error( 'moderation_not_enable', __( 'Moderation not enabled.', 'buddyboss' ) );
 		}
 
+		$args['category_id'] = isset( $args['category_id'] ) && 'other' !== $args['category_id'] ? $args['category_id'] : 0;
+
 		if ( empty( $moderation->id ) ) {
 			$moderation->item_id   = $args['content_id'];
 			$moderation->item_type = $args['content_type'];
 		}
 
-		$moderation->category_id  = ! empty( $args['category_id'] ) ? $args['category_id'] : $moderation->category_id;
-		$moderation->updated_by   = get_current_user_id();
-		$moderation->date_updated = current_time( 'mysql' );
+		$moderation->category_id = isset( $args['category_id'] ) ? $args['category_id'] : 0;
+		$moderation->content     = ! empty( $args['note'] ) ? $args['note'] : '';
 
-		if ( ! empty( $threshold ) ) {
-
-			// Todo: Check Threshold and auto-suspend/auto-hide item.
-
-			if ( $email_notification ) {
-				// Todo: Send email notification
-			}
-		}
+		$moderation->user_id   = get_current_user_id();
+		$moderation->last_updated = current_time( 'mysql' );
 
 		$moderation->save();
 

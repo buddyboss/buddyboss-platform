@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-03 15:46:02+00:00\n"
+"POT-Creation-Date: 2020-11-04 12:07:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4002,8 +4002,8 @@ msgstr ""
 #: bp-moderation/bp-moderation-admin.php:32
 #: bp-moderation/bp-moderation-admin.php:33
 #: bp-moderation/classes/class-bp-moderation-component.php:29
-#: bp-moderation/classes/class-bp-moderation-component.php:143
-#: bp-moderation/classes/class-bp-moderation-component.php:184
+#: bp-moderation/classes/class-bp-moderation-component.php:149
+#: bp-moderation/classes/class-bp-moderation-component.php:190
 msgid "Moderation"
 msgstr ""
 
@@ -21027,13 +21027,25 @@ msgstr ""
 msgid "Moderation list navigation"
 msgstr ""
 
-#: bp-moderation/bp-moderation-filters.php:31
-msgid "Sorry, Something happened wrong."
+#: bp-moderation/bp-moderation-filters.php:44
+msgid "Required field missing."
 msgstr ""
 
-#: bp-moderation/bp-moderation-functions.php:210
+#: bp-moderation/bp-moderation-filters.php:51
+msgid "Already reported this item."
+msgstr ""
+
+#: bp-moderation/bp-moderation-filters.php:71
+msgid "Sorry, Something happened wrong"
+msgstr ""
+
+#: bp-moderation/bp-moderation-functions.php:211
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:648
 msgid "Report"
+msgstr ""
+
+#: bp-moderation/bp-moderation-functions.php:220
+msgid "Reported"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:25
@@ -21103,50 +21115,50 @@ msgstr ""
 msgid "Notify all administrators when content auto-moderated/hidden."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-abstract.php:148
+#: bp-moderation/classes/class-bp-moderation-abstract.php:137
 msgid "Moderation not enabled."
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:152
-#: bp-moderation/classes/class-bp-moderation-component.php:192
+#: bp-moderation/classes/class-bp-moderation-component.php:158
+#: bp-moderation/classes/class-bp-moderation-component.php:198
 msgid "My Reporting"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:213
+#: bp-moderation/classes/class-bp-moderation-component.php:219
 msgid "My Moderation"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:239
-#: bp-moderation/classes/class-bp-moderation-component.php:242
+#: bp-moderation/classes/class-bp-moderation-component.php:245
+#: bp-moderation/classes/class-bp-moderation-component.php:248
 msgid "Reporting Category"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:241
-#: bp-moderation/classes/class-bp-moderation-component.php:243
+#: bp-moderation/classes/class-bp-moderation-component.php:247
+#: bp-moderation/classes/class-bp-moderation-component.php:249
 msgid "Reporting Categories"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:244
+#: bp-moderation/classes/class-bp-moderation-component.php:250
 msgid "All Reporting Categories"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:245
+#: bp-moderation/classes/class-bp-moderation-component.php:251
 msgid "Edit Reporting Category"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:246
+#: bp-moderation/classes/class-bp-moderation-component.php:252
 msgid "View Reporting Category"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:247
+#: bp-moderation/classes/class-bp-moderation-component.php:253
 msgid "Update Reporting Category"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:248
+#: bp-moderation/classes/class-bp-moderation-component.php:254
 msgid "Add Reporting Category"
 msgstr ""
 
-#: bp-moderation/classes/class-bp-moderation-component.php:249
+#: bp-moderation/classes/class-bp-moderation-component.php:255
 msgid "New Reporting"
 msgstr ""
 
@@ -21202,6 +21214,15 @@ msgstr ""
 msgid "Reported (Count)"
 msgstr ""
 
+#: bp-moderation/classes/class-bp-moderation-list-table.php:297
+#: bp-moderation/classes/class-bp-moderation-list-table.php:306
+#: bp-moderation/screens/single/admin/report-single.php:54
+#: bp-moderation/screens/single/admin/report-single.php:131
+msgid "%s time"
+msgid_plural "%s times"
+msgstr[0] ""
+msgstr[1] ""
+
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:79
 msgid "No report found."
 msgstr ""
@@ -21223,6 +21244,14 @@ msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-report-list-table.php:180
 msgid "Report/Category"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation.php:280
+msgid "Item ID field missing."
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation.php:282
+msgid "Item type field missing."
 msgstr ""
 
 #: bp-moderation/screens/content-report-form.php:10
