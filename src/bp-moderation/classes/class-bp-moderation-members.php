@@ -41,10 +41,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10 );
+		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
 	/**
@@ -68,13 +68,14 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $where_conditions Members where sql.
+	 * @param array  $where_conditions Members where sql.
+	 * @param string $uid_name         User ID field name.
 	 *
 	 * @return mixed Where SQL
 	 */
-	public function update_where_sql( $where_conditions ) {
+	public function update_where_sql( $where_conditions, $uid_name ) {
 		$where                = array();
-		$where['users_where'] = $this->exclude_where_query();
+		$where['users_where'] = $this->exclude_where_query( $uid_name );
 
 		/**
 		 * Filters the Members Moderation Where SQL statement.
@@ -85,9 +86,30 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_groups_get_where_conditions', $where );
 
-		$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Prepare Where sql for exclude Blocked items
+	 *
+	 * @param string $uid_name User ID field name.
+	 *
+	 * @return string|void
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	protected function exclude_where_query( $uid_name = '' ) {
+		$sql                = false;
+		$hidden_members_ids = self::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = "( u.$uid_name NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
+		}
+
+		return $sql;
 	}
 
 	/**
@@ -96,7 +118,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type, true );
 	}
 
 	/**
