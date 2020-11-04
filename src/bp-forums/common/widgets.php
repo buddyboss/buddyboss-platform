@@ -101,7 +101,7 @@ class BBP_Login_Widget extends WP_Widget {
 					</div>
 
 					<div class="bbp-remember-me">
-						<input type="checkbox" name="rememberme" value="forever" <?php checked( bbp_get_sanitize_val( 'rememberme', 'checkbox' ), true, true ); ?> id="rememberme" tabindex="<?php bbp_tab_index(); ?>" />
+						<input type="checkbox" name="rememberme" class="bs-styled-checkbox" value="forever" <?php checked( bbp_get_sanitize_val( 'rememberme', 'checkbox' ), true, true ); ?> id="rememberme" tabindex="<?php bbp_tab_index(); ?>" />
 						<label for="rememberme"><?php _e( 'Remember Me', 'buddyboss' ); ?></label>
 					</div>
 
