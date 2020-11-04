@@ -227,8 +227,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						$field    = $fields_endpoint->assemble_response_data( $field, $request );
 						$fields[] = array(
 							'id'          => 'field_' . $field['id'],
-							'label'       => $field['name'],
-							'description' => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'label'       => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'description' => $field['description']['rendered'],
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
