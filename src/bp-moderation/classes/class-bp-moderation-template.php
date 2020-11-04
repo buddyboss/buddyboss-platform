@@ -113,7 +113,7 @@ class BP_Moderation_Template {
 			'max'               => false,           // Max number of items to return.
 			'fields'            => 'all',           // Fields to include.
 			'sort'              => 'DESC',          // ASC or DESC.
-			'order_by'          => 'date_updated', // Column to order by.
+			'order_by'          => 'last_updated', // Column to order by.
 			'exclude'           => false,           // Array of ids to exclude.
 			'in'                => false,           // Array of ids to limit query by (IN).
 			'exclude_types'     => false,           // Array of type to exclude.
@@ -126,7 +126,7 @@ class BP_Moderation_Template {
 			'filter'            => false,           // See self::get_filter_sql().
 			'display_reporters' => false,           // Whether or not to fetch user data.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
-			'count_total'       => false,           // Whether or not to use count_total.
+			'count_total'       => true,           // Whether or not to use count_total.
 		);
 
 		$r              = wp_parse_args( $args, $defaults );
@@ -223,10 +223,9 @@ class BP_Moderation_Template {
 	 * @see   bp_moderation()
 	 */
 	public function user_moderations() {
-
-		if ( ( $this->current_moderation + 1 ) < $this->current_moderation ) {
+		if ( ( $this->current_moderation + 1 ) < $this->moderation_count ) {
 			return true;
-		} elseif ( ( $this->current_moderation + 1 ) == $this->current_moderation ) {
+		} elseif ( ( $this->current_moderation + 1 ) == $this->moderation_count ) {
 
 			/**
 			 * Fires right before the rewinding of moderation posts.

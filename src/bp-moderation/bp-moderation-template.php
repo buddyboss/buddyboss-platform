@@ -84,7 +84,7 @@ function bp_has_moderation( $args = '' ) {
 			'max'               => false,           // Max number of items to return.
 			'fields'            => 'all',           // Fields to include.
 			'sort'              => 'DESC',          // ASC or DESC.
-			'order_by'          => 'date_updated', // Column to order by.
+			'order_by'          => 'last_updated', // Column to order by.
 			'exclude'           => false,           // Array of ids to exclude.
 			'in'                => false,           // Array of ids to limit query by (IN).
 			'exclude_types'     => false,           // Array of type to exclude.
@@ -97,7 +97,7 @@ function bp_has_moderation( $args = '' ) {
 			'filter'            => false,           // See self::get_filter_sql().
 			'display_reporters' => false,           // Whether or not to fetch user data.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
-			'count_total'       => false,           // Whether or not to use count_total.
+			'count_total'       => true,           // Whether or not to use count_total.
 		),
 		'has_moderation'
 	);

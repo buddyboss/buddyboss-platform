@@ -1013,13 +1013,17 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 		),
-		'moderation-requests-loading' => array(
+		'moderation-reported-content-loading' => array(
 			'type'    => 'loading',
-			'message' => esc_html__( 'Loading your moderation requests. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading your reported content. Please wait.', 'buddyboss' ),
+		),
+		'moderation-block-member-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading your blocked member. Please wait.', 'buddyboss' ),
 		),
 		'moderation-requests-none' => array(
 			'type'    => 'info',
-			'message' => esc_html__( 'Sorry, no requests were found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no moderation were found.', 'buddyboss' ),
 		)
 	) );
 

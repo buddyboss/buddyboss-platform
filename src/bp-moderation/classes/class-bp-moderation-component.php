@@ -173,7 +173,7 @@ class BP_Moderation_Component extends BP_Component {
 			'slug'            => 'blocked-members',
 			'parent_url'      => $moderation_link,
 			'parent_slug'     => $slug,
-			'screen_function' => array( $this, 'bp_moderation_screen'),
+			'screen_function' => 'bp_moderation_screen',
 			'position'        => 15,
 			'item_css_id'     => 'blocked-members',
 		);
