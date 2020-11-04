@@ -58,6 +58,7 @@ window.bp = window.bp || {};
 
 			// Report content popup
 			this.reportPopUp();
+			this.reportActions();
 
 			// Toggle password text
 			this.togglePassword();
@@ -528,6 +529,12 @@ window.bp = window.bp || {};
 							);
 						}
 					}
+					setTimeout(
+						function () { // Waiting to load dummy image
+							self.reportPopUp()
+						},
+						1000
+					);
 				}
 			);
 		},
@@ -1756,26 +1763,28 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
-			$(document).on('click', '.report-content', function () {
-				var contentId = $(this).attr('data-bp-content-id');
-				var contentType = $(this).attr('data-bp-content-type');
-				var nonce = $(this).attr('data-bp-nonce');
+			$('.report-content').magnificPopup({
+				type: 'inline',
+				midClick: true,
+				fixedContentPos: true,
+				closeOnBgClick: false,
+				enableEscapeKey: false,
+				closeBtnInside: false,
+				callbacks: {
+					open: function () {
+						var mf_content = $('.mfp-content');
+						var contentId = this.currItem.el.data('bp-content-id');
+						var contentType = this.currItem.el.data('bp-content-type');
+						var nonce = this.currItem.el.data('bp-nonce');
 
-				$('form#bb-report-content').find('.bp-content-id').val(contentId);
-				$('form#bb-report-content').find('.bp-content-type').val(contentType);
-				$('form#bb-report-content').find('.bp-nonce').val(nonce);
-
-				$(this).magnificPopup({
-					type: 'inline',
-					preloader: false,
-					fixedBgPos: true,
-					fixedContentPos: true,
-					closeOnBgClick: false,
-					enableEscapeKey: false,
-					closeBtnInside: false
-				});
+						mf_content.find('.bp-content-id').val(contentId);
+						mf_content.find('.bp-content-type').val(contentType);
+						mf_content.find('.bp-nonce').val(nonce);
+					}
+				}
 			});
-
+		},
+		reportActions: function (){
 			$(document).on('click', '.bb-cancel-report-content', function (e) {
 					e.preventDefault();
 					$.magnificPopup.close();
@@ -1788,15 +1797,23 @@ window.bp = window.bp || {};
 					action: 'bp_moderation_content_report',
 				};
 
-				$.each( $(this).serializeArray(), function(_, kv) {
+				$.each($(this).serializeArray(), function (_, kv) {
 					data[kv.name] = kv.value;
 				});
 
-				$.post(BP_Nouveau.ajaxurl, data, function ( response ) {
+				$.post(BP_Nouveau.ajaxurl, data, function (response) {
 					var result = $.parseJSON(response);
-					if ( result.success ){
+					if (result.success) {
+						var btn_report = $('#' + result.button.button_attr.id );
+
 						$.magnificPopup.close();
 						$('form#bb-report-content').trigger('reset');
+						btn_report.html( result.button.link_text );
+						btn_report.attr( 'class', result.button.button_attr.class );
+						btn_report.removeAttr( 'href' );
+						btn_report.removeAttr( 'data-bp-content-id' );
+						btn_report.removeAttr( 'data-bp-content-type' );
+						btn_report.removeAttr( 'data-bp-nonce' );
 					}
 				});
 			});

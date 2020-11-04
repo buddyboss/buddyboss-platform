@@ -199,25 +199,27 @@ function bp_get_moderation_content_type( $key ) {
  * @return string|array
  */
 function bp_get_moderation_report_button( $args, $html = true ) {
+
+	$args['button_attr'] = wp_parse_args( $args['button_attr'], array(
+		'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
+		'href'                 => '#content-report',
+		'class'                => 'button item-button bp-secondary-action report-content',
+		'data-bp-content-id'   => '',
+		'data-bp-content-type' => '',
+		'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
+	) );
+
 	$button = wp_parse_args( $args, array(
-		'button_attr' => array(
-			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
-			'href'                 => '#content-report',
-			'class'                => 'button item-button bp-secondary-action report-content',
-			'data-bp-content-id'   => '',
-			'data-bp-content-type' => '',
-			'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
-		),
-		'link_text'   => __( 'Report', 'buddyboss' ),
+		'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Report', 'buddyboss' ), esc_html__( 'Report', 'buddyboss' ) ),
 	) );
 
 	$is_reported = bp_is_moderation_exist( array(
-		'content_id' => $button['button_attr']['data-bp-content-id'],
+		'content_id'   => $button['button_attr']['data-bp-content-id'],
 		'content_type' => $button['button_attr']['data-bp-content-type'],
 	) );
 
 	if ( $is_reported ) {
-		$button['link_text'] = __( 'Reported', 'buddyboss' );
+		$button['link_text']            = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Reported', 'buddyboss' ), esc_html__( 'Reported', 'buddyboss' ) );
 		$button['button_attr']['class'] = 'button item-button bp-secondary-action reported-content';
 		unset( $button['button_attr']['href'] );
 		unset( $button['button_attr']['data-bp-content-id'] );
@@ -226,10 +228,10 @@ function bp_get_moderation_report_button( $args, $html = true ) {
 	}
 
 	if ( ! empty( $html ) ) {
-		if ( $is_reported ){
-			$button = sprintf( '<span id="%s" class="%s">%s</span>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_html( $button['link_text'] ) );
+		if ( $is_reported ) {
+			$button = sprintf( '<a id="%s" class="%s" >%s</a>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), wp_kses_post( $button['link_text'] ) );
 		} else {
-			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), esc_html( $button['link_text'] ) );
+			$button = sprintf( '<a href="%s" id="%s" class="%s" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s">%s</a>', esc_url( $button['button_attr']['href'] ), esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), esc_attr( $button['button_attr']['data-bp-content-id'] ), esc_attr( $button['button_attr']['data-bp-content-type'] ), esc_attr( $button['button_attr']['data-bp-nonce'] ), wp_kses_post( $button['link_text'] ) );
 		}
 	}
 
@@ -273,7 +275,7 @@ function bp_is_moderation_exist( $args = array() ) {
 
 	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
 		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
-		$response = ( !empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 	}
 
 	return $response;
