@@ -531,7 +531,7 @@ window.bp = window.bp || {};
 					}
 					setTimeout(
 						function () { // Waiting to load dummy image
-							self.reportPopUp()
+							self.reportPopUp();
 						},
 						1000
 					);

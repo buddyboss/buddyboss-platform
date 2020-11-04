@@ -62,6 +62,13 @@ function bp_moderation_content_report() {
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['success']    = true;
 			$response['moderation'] = $moderation;
+
+			$response['button'] = bp_get_moderation_report_button( array(
+				'button_attr' => array(
+					'data-bp-content-id'   => $item_id,
+					'data-bp-content-type' => $item_type,
+				)
+			), false );
 		}
 
 		$response['message'] = $moderation->errors;
