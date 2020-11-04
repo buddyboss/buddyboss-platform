@@ -1053,8 +1053,6 @@ window.bp = window.bp || {};
 							self.dropzone_obj.destroy();
 							self.dropzone_obj = null;
 							self.dropzone_media = [];
-
-							console.log( instance_id );
 						}
 
 					}
@@ -1077,6 +1075,7 @@ window.bp = window.bp || {};
 				}
 
 				if ( ! _.isUndefined( comment_edit_data.media ) ) {
+
 					//bp.Nouveau.Activity.postForm.displayEditActivityForm( comment_edit_data );
 
 					var media_file = false;
@@ -1115,13 +1114,50 @@ window.bp = window.bp || {};
 						}
 
 						if ( self.dropzone_obj ) {
+							self.dropzone_media.push( media_file.media_edit_data );
 							self.dropzone_obj.files.push( media_file );
 							self.dropzone_obj.emit( 'addedfile', media_file );
+							self.dropzone_obj.emit( 'complete', media_file );
 							self.createThumbnailFromUrl( media_file );
 						}
 
 					}
 
+					self.dropzone_obj.on(
+						'sending',
+						function(file, xhr, formData) {
+							formData.append( 'action', 'media_upload' );
+							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+						}
+					);
+
+					self.dropzone_obj.on(
+						'success',
+						function(file, response) {
+							if ( response.data.id ) {
+								file.id                  	= response.id;
+								response.data.uuid       	= file.upload.uuid;
+								response.data.menu_order 	= $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+								response.data.album_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+								response.data.group_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+								response.data.saved      	= false;
+								self.dropzone_media.push( response.data );
+								console.log( response.data );
+								return file.previewElement.classList.add( 'dz-success' );
+							} else {
+								var node, _i, _len, _ref, _results;
+								var message = response.data.feedback;
+								file.previewElement.classList.add( 'dz-error' );
+								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+								_results = [];
+								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+									node                            = _ref[_i];
+									_results.push( node.textContent = message );
+								}
+								return _results;
+							}
+						}
+					);
 
 				}
 			}
