@@ -1030,6 +1030,8 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'acomment-edit' ) ) {
 
 				var comment_id = $( target ).closest( '.comment-item' ).attr( 'data-bp-activity-comment-id' );
+				var tool_box = $( target ).closest( '.comment-item' ).find( '.ac-reply-toolbar' );
+
 
 				$( '#ac-edit-form-' + comment_id ).slideDown( 200 );
 
@@ -1075,6 +1077,15 @@ window.bp = window.bp || {};
 				}
 
 				if ( ! _.isUndefined( comment_edit_data.media ) ) {
+
+					/**
+					 * Add remove toolbox class for necessary
+					 */
+
+					tool_box.find( '.post-elements-buttons-item' ).addClass( 'disable no-click' );
+					tool_box.find( '.ac-reply-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+					tool_box.find( '.toolbar-button' ).removeClass( 'active' );
+					tool_box.find( '.ac-reply-media-button' ).addClass( 'active' );
 
 					//bp.Nouveau.Activity.postForm.displayEditActivityForm( comment_edit_data );
 
