@@ -223,30 +223,30 @@ function bp_activity_check_blacklist_keys( $activity ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $activity
+ * @param object $activity Activity Object.
  */
 function bp_activity_save_link_data( $activity ) {
 
-	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
-	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+	$link_url   = filter_input( INPUT_POST, 'link_url', FILTER_VALIDATE_URL );
+	$link_embed = filter_input( INPUT_POST, 'link_embed', FILTER_VALIDATE_BOOLEAN );
 
-	// check if link url is set or not
+	// Check if link url is set or not.
 	if ( empty( $link_url ) ) {
 		if ( false === $link_embed ) {
-			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
+			bp_activity_delete_meta( $activity->id, '_link_embed' );
 
 			// This will remove the preview data if the activity don't have anymore link in content.
-			bp_activity_update_meta( $activity->id, '_link_preview_data', '' );
+			bp_activity_delete_meta( $activity->id, '_link_preview_data' );
 		}
 
 		return;
 	}
 
-	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
-	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
-	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
+	$link_title       = filter_input( INPUT_POST, 'link_title', FILTER_SANITIZE_STRING );
+	$link_description = filter_input( INPUT_POST, 'link_description', FILTER_DEFAULT );
+	$link_image       = filter_input( INPUT_POST, 'link_image', FILTER_VALIDATE_URL );
 
-	// check if link embed was used
+	// Check if link embed was used.
 	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
 		return;

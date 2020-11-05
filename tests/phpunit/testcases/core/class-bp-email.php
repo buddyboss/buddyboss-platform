@@ -287,7 +287,7 @@ class BP_Tests_Email extends BP_UnitTestCase_Emails {
 		$name = "Test o'Toole";
 
 		// Emulate rendered {poster.name} token.
-		$token = apply_filters( 'bp_core_get_user_displayname', $name );
+		$token = apply_filters( 'bp_core_get_user_displayname', $name, false );
 
 		$email = new BP_Email( 'activity-at-message' );
 		$email->set_subject( '{{poster.name}}' )->set_tokens( array( 'poster.name' => $token ) );

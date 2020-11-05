@@ -753,10 +753,18 @@ Bar!';
 	 */
 	public function test_bp_activity_format_activity_action_activity_comment() {
 		$u = self::factory()->user->create();
+
+		$p = self::factory()->activity->create( array(
+			'component' => buddypress()->activity->id,
+			'type' => 'activity_update',
+			'user_id' => $u,
+		) );
+
 		$a = self::factory()->activity->create( array(
 			'component' => buddypress()->activity->id,
 			'type' => 'activity_comment',
 			'user_id' => $u,
+			'item_id' => $p
 		) );
 
 		$a_obj = new BP_Activity_Activity( $a );
@@ -820,7 +828,7 @@ Bar!';
 	 */
 	public function test_bp_activity_format_activity_action_custom_post_type_post_ms() {
 		if ( ! is_multisite() ) {
-			return;
+			$this->markTestSkipped();
 		}
 
 		$b = self::factory()->blog->create();
@@ -932,7 +940,7 @@ Bar!';
 	 */
 	public function test_bp_activity_format_activity_action_custom_string_post_type_post_ms() {
 		if ( ! is_multisite() ) {
-			return;
+			$this->markTestSkipped();
 		}
 
 		$b = self::factory()->blog->create();
