@@ -839,11 +839,12 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param int $moderation_id Moderation id.
+	 * @param int   $moderation_id Moderation id.
+	 * @param array $args          Argument to filter data
 	 *
 	 * @return array reporters data.
 	 */
-	public static function get_moderation_reporters( $moderation_id, $args ) {
+	public static function get_moderation_reporters( $moderation_id, $args = array() ) {
 		global $wpdb;
 
 		$reporters = wp_cache_get( $moderation_id, 'bp_moderation_reporters' );
