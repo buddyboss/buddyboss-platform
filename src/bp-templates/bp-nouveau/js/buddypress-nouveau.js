@@ -1766,10 +1766,6 @@ window.bp = window.bp || {};
 			$('.report-content').magnificPopup({
 				type: 'inline',
 				midClick: true,
-				fixedContentPos: true,
-				closeOnBgClick: false,
-				enableEscapeKey: false,
-				closeBtnInside: false,
 				callbacks: {
 					open: function () {
 						var mf_content = $('.mfp-content');
@@ -1787,8 +1783,7 @@ window.bp = window.bp || {};
 		reportActions: function (){
 			$(document).on('click', '.bb-cancel-report-content', function (e) {
 					e.preventDefault();
-					$.magnificPopup.close();
-					$('form#bb-report-content').trigger('reset');
+					$('.mfp-close').trigger('click');
 				}
 			);
 

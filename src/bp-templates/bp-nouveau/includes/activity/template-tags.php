@@ -632,7 +632,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			array(
 				'id'                => 'activity_report',
 				'position'          => 50,
-				'component'         => 'activity',
+				'component'         => 'moderation',
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'must_be_logged_in' => true,
@@ -641,7 +641,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 					'data-bp-content-id'   => $activity_id,
 					'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
 				),
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Report', 'buddyboss' ), esc_html__( 'Report', 'buddyboss' ) ),
 			),
 			false
 		);

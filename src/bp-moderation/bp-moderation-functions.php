@@ -125,20 +125,33 @@ function bp_moderation_get( $args = '' ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param string $type Moderation items type.
+ * @param string $type         Moderation items type.
+ * @param bool   $user_include Include item which report by current user even if it's not hidden.
  *
  * @return array $moderation See BP_Moderation::get() for description.
  */
-function bp_moderation_get_sitewide_hidden_item_ids( $type ) {
-	return bp_moderation_get(
-		array(
-			'in_types'          => $type,
-			'update_meta_cache' => false,
-			'filter'            => array(
-				'hide_sitewide' => 1,
+function bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include = false ) {
+
+	$args = array(
+		'in_types'          => $type,
+		'update_meta_cache' => false,
+		'filter_query'      => array(
+			array(
+				'column' => 'hide_sitewide',
+				'value'  => 1
 			),
 		)
 	);
+
+	if ( $user_include ) {
+		$args['filter_query']['relation'] = 'OR';
+		$args['filter_query'][]           = array(
+			'column' => 'user_id',
+			'value'  => get_current_user_id(),
+		);
+	}
+
+	return bp_moderation_get( $args );
 }
 
 /**

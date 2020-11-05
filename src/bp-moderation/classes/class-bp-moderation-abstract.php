@@ -69,13 +69,14 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param string $type Moderation items type.
+	 * @param string $type         Moderation items type.
+	 * @param bool   $user_include Include item which report by current user even if it's not hidden.
 	 *
 	 * @return array $moderation See BP_Moderation::get() for description.
 	 */
-	public static function get_sitewide_hidden_item_ids( $type ) {
+	public static function get_sitewide_hidden_item_ids( $type, $user_include = false ) {
 		$hidden_ids  = array();
-		$moderations = bp_moderation_get_sitewide_hidden_item_ids( $type );
+		$moderations = bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include );
 
 		if ( ! empty( $moderations ) && ! empty( $moderations['moderations'] ) ) {
 			$hidden_ids = wp_list_pluck( $moderations['moderations'], 'item_id' );
@@ -123,7 +124,7 @@ abstract class BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public static function report( $args ) {
-		$moderation         = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
 
 		// Get Moderation settings
 		if ( BP_Moderation_Members::$moderation_type === $args['content_type'] ) {
@@ -147,7 +148,7 @@ abstract class BP_Moderation_Abstract {
 		$moderation->category_id = isset( $args['category_id'] ) ? $args['category_id'] : 0;
 		$moderation->content     = ! empty( $args['note'] ) ? $args['note'] : '';
 
-		$moderation->user_id   = get_current_user_id();
+		$moderation->user_id      = get_current_user_id();
 		$moderation->last_updated = current_time( 'mysql' );
 
 		$moderation->save();
