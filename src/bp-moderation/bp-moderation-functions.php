@@ -423,12 +423,16 @@ function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique
  *
  * @since BuddyBoss 1.5.4
  *
- * @param $moderation_id int moderation id to unblock
+ * @param int    $item_id   Item id
+ * @param string $item_type Item type
+ * @param bool   $force_all Should delete all reported entry
  *
  * @return false|int
  */
-function bp_moderation_relieve_user( $moderation_id ) {
-	return BP_Moderation::delete_report( $moderation_id );
+function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = false ) {
+	$moderation_obj = new BP_Moderation( $item_id, $item_type );
+
+	return $moderation_obj->delete( $force_all );
 }
 
 /**
@@ -436,26 +440,20 @@ function bp_moderation_relieve_user( $moderation_id ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param $moderation_id int moderation id.
- * @param $action        string hide/unhide action.
+ * @param int    $item_id   Item id
+ * @param string $item_type Item type
+ * @param string $action    hide/unhide action.
  *
  * @return bool
  */
-function bp_moderation_hide_unhide_request( $moderation_id, $action ) {
-	if ( ! $action ) {
-		$retval = false;
-	}
-
-	$moderation_obj     = new BP_Moderation();
-	$moderation_obj->id = $moderation_id;
-	$moderation_obj->populate();
+function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
+	$moderation_obj = new BP_Moderation( $item_id, $item_type, );
 	if ( 'hide' === $action ) {
 		$moderation_obj->hide_sitewide = 1;
 	} elseif ( 'unhide' === $action ) {
 		$moderation_obj->hide_sitewide = 0;
-
+		$moderation_obj->delete();
 	}
-	$retval = $moderation_obj->save();
 
-	return $retval;
+	return $moderation_obj->save();
 }

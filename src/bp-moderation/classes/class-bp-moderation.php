@@ -1063,22 +1063,59 @@ class BP_Moderation {
 	}
 
 	/**
-	 * Function to delete single moderation report.
+	 * Function to delete Moderation.
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param $moderation_id int moderation id.
+	 * @param bool $force_all Should delete all reported entry
 	 *
 	 * @return false|int
 	 */
-	public static function delete_report( $moderation_id ) {
+	public function delete( $force_all = false ) {
 		global $wpdb;
-
 		$bp = buddypress();
 
-		$report     = $wpdb->delete( $bp->moderation->table_name_reports, array( 'moderation_id' => $moderation_id ) );
-		$moderation = $wpdb->delete( $bp->moderation->table_name, array( 'id' => $moderation_id ) );
+		$delete_parent = $force_all;
 
-		return ( ! empty( $report ) && ! empty( $moderation ) ) ? true : false;
+		if ( ! empty( $this->report_id ) ) {
+			$this->delete_report( $force_all );
+
+			if ( 1 >= $this->count ) {
+				$delete_parent = true;
+			}
+
+		}
+
+		if ( $delete_parent ) {
+			$updated_row = $wpdb->delete( $bp->moderation->table_name, array( 'id' => $this->id ) );
+			$this->count -= 1;
+			bp_moderation_update_meta( $this->id, '_count', $this->count );
+		}
+
+		return ! empty( $updated_row );
+	}
+
+	/**
+	 * Function to delete Moderation.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param bool $force_all Should delete all reported entry
+	 *
+	 * @return false|int
+	 */
+	public function delete_report( $force_all ) {
+		global $wpdb;
+		$bp = buddypress();
+
+		if ( $force_all ) {
+			$args = array( 'moderation_id' => $this->id );
+		} else {
+			$args = array( 'id' => $this->report_id );
+		}
+
+		$updated_row = $wpdb->delete( $bp->moderation->table_name_reports, $args );
+
+		return ! empty( $updated_row );
 	}
 }
