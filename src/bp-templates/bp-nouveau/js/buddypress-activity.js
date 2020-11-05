@@ -1134,43 +1134,91 @@ window.bp = window.bp || {};
 
 					}
 
-					self.dropzone_obj.on(
-						'sending',
-						function(file, xhr, formData) {
-							formData.append( 'action', 'media_upload' );
-							formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+					self.prepareDropzoneForEditcomment();
+
+				}
+
+				/**
+				 * Process Document
+				 */
+
+				if ( ! _.isUndefined( comment_edit_data.document ) ) {
+
+					/**
+					 * Add remove toolbox class for necessary
+					 */
+
+					tool_box.find( '.post-elements-buttons-item' ).addClass( 'disable no-click' );
+					tool_box.find( '.ac-reply-document-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+					tool_box.find( '.toolbar-button' ).removeClass( 'active' );
+					tool_box.find( '.ac-reply-document-button' ).addClass( 'active' );
+
+					//bp.Nouveau.Activity.postForm.displayEditActivityForm( comment_edit_data );
+
+					var document_file = false;
+					for ( var i = 0; i < comment_edit_data.document.length; i++ ) {
+						document_file = false;
+
+						document_file = {
+							name				: comment_edit_data.document[i].name,
+							size				: comment_edit_data.document[i].size,
+							accepted			: true,
+							kind				: 'file',
+							upload: {
+								filename			: comment_edit_data.document[i].name,
+								uuid			: comment_edit_data.document[i].doc_id
+							},
+							dataURL				: comment_edit_data.document[i].url,
+							id					: comment_edit_data.document[i].doc_id,
+							document_edit_data: {
+								'id'			: comment_edit_data.document[i].attachment_id,
+								'media_id'		: comment_edit_data.document[i].id,
+								'name'			: comment_edit_data.document[i].name,
+								'type'			: 'document',
+								'size'			: comment_edit_data.document[i].size,
+								'url'			: comment_edit_data.document[i].url,
+								'uuid'			: comment_edit_data.document[i].attachment_id,
+								'document_id'	: comment_edit_data.document[i].id,
+								'menu_order'	: comment_edit_data.document[i].menu_order,
+								'folder_id'	: comment_edit_data.document[i].folder_id,
+								'album_id'	: comment_edit_data.document[i].album_id,
+								'group_id'	: comment_edit_data.document[i].group_id,
+								'saved'			: true,
+							}
+						};
+
+
+						//console.log( '#ac-reply-post-media-uploader-' + comment_id );
+
+						if ( ! self.dropzone_obj ) {
+							self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + comment_id, self.dropzone_options );
 						}
-					);
+
+						if ( self.dropzone_obj ) {
+
+							self.dropzone_obj.files.push( document_file );
+							self.dropzone_obj.emit( 'addedfile', document_file );
+							self.dropzone_obj.emit( 'complete', document_file );
+
+						}
+
+					}
 
 					self.dropzone_obj.on(
-						'success',
-						function(file, response) {
-							if ( response.data.id ) {
-								file.id                  	= response.id;
-								response.data.uuid       	= file.upload.uuid;
-								response.data.menu_order 	= $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-								response.data.album_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
-								response.data.group_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
-								response.data.saved      	= false;
-								self.dropzone_media.push( response.data );
-								console.log( response.data );
-								return file.previewElement.classList.add( 'dz-success' );
-							} else {
-								var node, _i, _len, _ref, _results;
-								var message = response.data.feedback;
-								file.previewElement.classList.add( 'dz-error' );
-								_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
-								_results = [];
-								for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
-									node                            = _ref[_i];
-									_results.push( node.textContent = message );
-								}
-								return _results;
+						'addedfile',
+						function ( file ) {
+							if ( file.document_edit_data ) {
+								self.document.push( file.document_edit_data );
+								self.model.set( 'document', self.document );
 							}
 						}
 					);
 
+					self.prepareDropzoneForEditcomment();
+
 				}
+
+
 			}
 
 			// Updating comments .
@@ -1584,6 +1632,53 @@ window.bp = window.bp || {};
 					self.dropzone_obj.emit( 'complete', mock_file );
 				}
 			);
+		},
+
+		/**
+		 * We are Checking if dropzone instance exists
+		 * if not exists, we will prepare
+		 * If exists, we will sync media/document
+		 */
+
+		prepareDropzoneForEditcomment : function(){
+			var self = this;
+
+			self.dropzone_obj.on(
+				'sending',
+				function(file, xhr, formData) {
+					formData.append( 'action', 'media_upload' );
+					formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+				}
+			);
+
+			self.dropzone_obj.on(
+				'success',
+				function(file, response) {
+					if ( response.data.id ) {
+						file.id                  	= response.id;
+						response.data.uuid       	= file.upload.uuid;
+						response.data.menu_order 	= $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
+						response.data.album_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+						response.data.group_id   	= typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+						response.data.saved      	= false;
+						self.dropzone_media.push( response.data );
+						console.log( response.data );
+						return file.previewElement.classList.add( 'dz-success' );
+					} else {
+						var node, _i, _len, _ref, _results;
+						var message = response.data.feedback;
+						file.previewElement.classList.add( 'dz-error' );
+						_ref     = file.previewElement.querySelectorAll( '[data-dz-errormessage]' );
+						_results = [];
+						for ( _i = 0, _len = _ref.length; _i < _len; _i++ ) {
+							node                            = _ref[_i];
+							_results.push( node.textContent = message );
+						}
+						return _results;
+					}
+				}
+			);
+
 		},
 
 		/**
