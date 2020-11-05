@@ -45,6 +45,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
+
+		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 	}
 
 	/**
@@ -110,6 +112,20 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Show 404 if Member is suspended
+	 */
+	public function restrict_member_profile() {
+		$user_id            = bp_displayed_user_id();
+		$hidden_members_ids = self::get_sitewide_hidden_ids();
+		if ( in_array( $user_id, $hidden_members_ids, true ) ) {
+			buddypress()->displayed_user->id = 0;
+			bp_do_404();
+
+			return;
+		}
 	}
 
 	/**

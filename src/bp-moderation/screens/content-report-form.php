@@ -9,6 +9,7 @@
 		<?php
 		esc_html_e( 'Report Content', 'buddyboss' );
 		?>
+		<button title="Close (Esc)" type="button" class="mfp-close"></button>
 	</h2>
 	<?php
 	$reports_terms = get_terms( 'bpm_category', array(
