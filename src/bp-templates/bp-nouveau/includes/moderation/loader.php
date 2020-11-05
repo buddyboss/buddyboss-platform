@@ -24,6 +24,8 @@ class BP_Nouveau_Moderation {
 	public function __construct() {
 		$this->setup_globals();
 		$this->includes();
+		$this->setup_actions();
+		$this->setup_filters();
 	}
 
 	/**
@@ -41,6 +43,7 @@ class BP_Nouveau_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 */
 	protected function includes() {
+		require $this->dir . 'functions.php';
 
 		// Test suite requires the AJAX functions early.
 		if ( function_exists( 'tests_add_filter' ) ) {
@@ -49,13 +52,33 @@ class BP_Nouveau_Moderation {
 			// Load AJAX code only on AJAX requests.
 		} else {
 			//add_action( 'admin_init', function () {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'moderation_' ) ) {
-					require $this->dir . 'ajax.php';
-				}
+			if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'moderation_' ) ) {
+				require $this->dir . 'ajax.php';
+			}
 			//} );
 		}
 	}
 
+	/**
+	 * Register do_action() hooks
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	protected function setup_actions() {
+		// Enqueue the scripts for the new UI
+		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_moderation_enqueue_scripts' );
+	}
+
+	/**
+	 * Register add_filter() hooks
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	protected function setup_filters() {
+
+		// Register messages scripts
+		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_moderation_register_scripts', 10, 1 );
+	}
 }
 
 /**

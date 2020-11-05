@@ -1,0 +1,104 @@
+/* jshint browser: true */
+/* global bp, BP_Nouveau, JSON, Dropzone */
+/* @version 1.0.0 */
+window.bp = window.bp || {};
+
+( function ( exports, $ ) {
+
+	// Bail if not set.
+	if ( typeof BP_Nouveau === 'undefined' ) {
+		return;
+	}
+
+	bp.Nouveau = bp.Nouveau || {};
+
+	/**
+	 * [Media description]
+	 *
+	 * @type {Object}
+	 */
+	bp.Nouveau.Moderation = {
+
+		/**
+		 * [start description]
+		 *
+		 * @return {[type]} [description]
+		 */
+		start: function () {
+			this.setupGlobals();
+
+			// Listen to events ("Add hooks!").
+			this.addListeners();
+
+		},
+
+		/**
+		 * [setupGlobals description]
+		 *
+		 * @return {[type]} [description]
+		 */
+		setupGlobals: function () {
+			var bodySelector = $( 'body' );
+
+			// Init current page.
+			this.current_page = 1;
+		},
+
+		/**
+		 * [addListeners description]
+		 */
+		addListeners: function () {
+
+			$( document ).on( 'click', '.bp-nouveau [data-bp-list="moderation"] .pager .md-more-container.load-more', this.injectModerations.bind( this ) );
+		},
+
+		injectModerations: function ( event ) {
+
+			var store = bp.Nouveau.getStorage( 'bp-moderation' ), sort = '', order_by = '',
+				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
+
+			if ( currentTarget.hasClass( 'load-more' ) ) {
+				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
+
+				// Stop event propagation.
+				event.preventDefault();
+
+				currentTarget.find( 'a' ).first().addClass( 'loading' );
+
+				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+				}
+
+				var queryData;
+				queryData = {
+					object: 'moderation',
+					scope: scope,
+					filter: filter,
+					search_terms: search_terms,
+					page: next_page,
+					method: 'append',
+					target: '#buddypress [data-bp-list] table#moderation-list tbody',
+				};
+
+				bp.Nouveau.objectRequest(
+					queryData
+				).done(
+					function ( response ) {
+						if ( true === response.success ) {
+							currentTarget.parent( '.pager' ).remove();
+
+							// Update the current page.
+							self.current_page = next_page;
+
+							jQuery( window ).scroll();
+						}
+					}
+				);
+			}
+		},
+	};
+
+	// Launch BP Nouveau Moderation.
+	bp.Nouveau.Moderation.start();
+
+} )( bp, jQuery );

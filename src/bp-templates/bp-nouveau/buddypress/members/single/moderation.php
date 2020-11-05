@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Users Groups
+ * BuddyBoss - Users Moderation
  *
  * @since   BuddyBoss 1.5.4
  * @version 1.5.4
@@ -14,7 +14,6 @@
 <?php
 switch ( bp_current_action() ) :
 
-	// Home/My Groups
 	case 'reported-content':
 		bp_nouveau_member_hook( 'before', 'moderation_content' );
 		?>
