@@ -15,9 +15,13 @@ $albums_link = bp_get_album_link();
 			<div class="media-album_items ac-album-list">
 				<div class="media-album_thumb">
 					<?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
-					<a href="<?php echo esc_url( $albums_link ); ?>">
-						<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->thumb ); ?>" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
-					</a>
+						<a href="<?php echo esc_url( $albums_link ); ?>">
+							<img src="<?php echo esc_url( $media_album_template->album->media['medias'][0]->attachment_data->thumb ); ?>" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
+						</a>
+					<?php else: ?>
+						<a href="<?php echo esc_url( $albums_link ); ?>">
+							<img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" alt="<?php echo wp_kses_post( bp_get_album_title() ); ?>" />
+						</a>
 					<?php endif; ?>
 				</div>
 
