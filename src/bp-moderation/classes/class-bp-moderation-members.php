@@ -47,6 +47,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
+		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
 	}
 
 	/**
@@ -129,12 +130,42 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Prevent Suspended from logging in.
+	 *
+	 * When a user logs in, check if they have been marked as a spammer. If yes
+	 * then simply redirect them to the home page and stop them from logging in.
+	 *
+	 * @param WP_User|WP_Error $user Either the WP_User object or the WP_Error
+	 *                               object, as passed to the 'authenticate' filter.
+	 *
+	 * @return WP_User|WP_Error If the user is not a spammer, return the WP_User
+	 *                          object. Otherwise a new WP_Error object.
+	 */
+	public function boot_suspended_user( $user ) {
+		// Check to see if the $user has already failed logging in, if so return $user as-is.
+		if ( is_wp_error( $user ) || empty( $user ) ) {
+			return $user;
+		}
+
+		$hidden_members_ids = self::get_sitewide_hidden_ids( false );
+		// The user exists; now do a check to see if the user is a suspended
+		if ( is_a( $user, 'WP_User' ) && in_array( $user->id, $hidden_members_ids, true ) ) {
+			return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been Suspended.', 'buddyboss' ) );
+		}
+
+		// User is good to go!
+		return $user;
+	}
+
+	/**
 	 * Get blocked Member ids
+	 *
+	 * @param bool $user_include Include item which report by current user even if it's not hidden.
 	 *
 	 * @return array
 	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type, true );
+	public static function get_sitewide_hidden_ids( $user_include = true ) {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type, $user_include );
 	}
 
 	/**
