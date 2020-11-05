@@ -565,14 +565,18 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
  *
  */
 function bp_nouveau_get_appearance_settings( $option = '' ) {
+
 	$default_args = array(
-		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
-		'user_nav_order'     => array(),
-		'members_layout'     => 4,
-		'members_dir_tabs'   => 0,
-		'members_dir_layout' => 0,
-		'bp_emails'          => '',
-		'user_default_tab'   => 'profile'
+		'user_nav_display'             => 0, // O is default (horizontally). 1 is vertically.
+		'user_nav_order'               => array(),
+		'user_nav_hide'                => array(),
+		'user_profile_actions_display' => array(),
+		'user_profile_actions_order'   => array(),
+		'members_layout'               => 4,
+		'members_dir_tabs'             => 0,
+		'members_dir_layout'           => 0,
+		'bp_emails'                    => '',
+		'user_default_tab'             => 'profile'
 	);
 
 	if ( bp_is_active( 'friends' ) ) {
@@ -633,6 +637,23 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  *
  */
 function bp_nouveau_sanitize_nav_order( $option = '' ) {
+	if ( ! is_array( $option ) ) {
+		$option = explode( ',', $option );
+	}
+
+	return array_map( 'sanitize_key', $option );
+}
+
+/**
+ * Sanitize a list of slugs to save it as an array
+ *
+ * @param string $option A comma separated list of nav items slugs.
+ *
+ * @return array An array of nav items slugs.
+ * @since BuddyPress 3.0.0
+ *
+ */
+function bp_nouveau_sanitize_nav_hide( $option = '' ) {
 	if ( ! is_array( $option ) ) {
 		$option = explode( ',', $option );
 	}
@@ -1517,4 +1538,26 @@ function bp_nouveau_set_nav_item_order( $nav = null, $order = array(), $parent_s
 	}
 
 	return true;
+}
+
+/**
+ * Return saved profile header buttons by order
+ *
+ * @since BuddyBoss 1.5.1
+ *
+ * @return mixed|void
+ */
+
+function bp_nouveau_get_user_profile_actions() {
+	$bp_nouveau_appearance     = maybe_unserialize( bp_get_option( 'bp_nouveau_appearance' ) );
+	$profile_header_btn_orders = isset( $bp_nouveau_appearance['user_profile_actions_order'] )
+		? $bp_nouveau_appearance['user_profile_actions_order'] : array();
+
+	/**
+	 * Filter the header buttons
+	 *
+	 * @since BuddyBoss 1.5.1
+	 */
+
+	return apply_filters( 'bp_nouveau_get_user_profile_actions', $profile_header_btn_orders );
 }

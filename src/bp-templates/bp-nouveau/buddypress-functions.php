@@ -141,8 +141,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_support() {
-		$width         = 1300;
-		$top_offset    = 150;
+		$width         = 1178;
+		$top_offset    = 200;
 
 		/** This filter is documented in bp-core/bp-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
@@ -292,7 +292,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
 
 		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
-			$slug = get_post_field( 'post_name', $post_id );
+			$slug    = get_page_uri( $forum_page_id );
 			if ( '' !== $slug ) {
 				bp_update_option( '_bbp_root_slug', $slug );
 				bp_update_option( 'rewrite_rules', '' );
@@ -441,6 +441,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'version'      => $this->version,
 				'footer'       => true,
 			),
+			'guillotine-js' => array(
+				'file'         => 'js/jquery.guillotine.min.js',
+				'dependencies' => $dependencies,
+				'version'      => $this->version,
+				'footer'       => true,
+			),
 		) );
 
 		// Bail if no scripts
@@ -521,6 +527,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 	    }
 
 		wp_enqueue_script( 'bp-nouveau' );
+		wp_enqueue_script( 'guillotine-js' );
+
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );

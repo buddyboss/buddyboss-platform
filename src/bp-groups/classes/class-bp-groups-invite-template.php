@@ -97,7 +97,7 @@ class BP_Groups_Invite_Template {
 			$args,
 			array(
 				'page'     => 1,
-				'per_page' => 10,
+				'per_page' => 20,
 				'page_arg' => 'invitepage',
 				'user_id'  => bp_loggedin_user_id(),
 				'group_id' => bp_get_current_group_id(),
