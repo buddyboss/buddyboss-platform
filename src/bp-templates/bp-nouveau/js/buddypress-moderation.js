@@ -30,6 +30,7 @@ window.bp = window.bp || {};
 			// Listen to events ("Add hooks!").
 			this.addListeners();
 
+			this.unblockUser();
 		},
 
 		/**
@@ -95,6 +96,32 @@ window.bp = window.bp || {};
 					}
 				);
 			}
+		},
+		unblockUser: function ( $event ) {
+			$( document ).on( 'click', '.moderation-item-actions .bp-unblock-user', function () {
+
+				if ( !confirm( 'Are you sure you want to unblock this member?' ) ) { //Todo: need to add translated message
+					return false;
+				}
+				var curObj = $( this );
+				var id = curObj.attr( 'data-id' );
+				var nonce = curObj.attr( 'data-nonce' );
+				var data = {
+					action: 'bp_moderation_unblock_user',
+					id: id,
+					nonce: nonce,
+				};
+				$.post( ajaxurl, data, function ( response ) {
+					var result = $.parseJSON( response );
+					if ( true === result.success ) {
+						curObj.parent().closest( '.moderation-item-wrp' ).fadeOut( "normal", function () {
+							curObj.parent().closest( '.moderation-item-wrp' ).remove();
+						} );
+					} else {
+						alert( result.message );
+					}
+				} );
+			} );
 		},
 	};
 

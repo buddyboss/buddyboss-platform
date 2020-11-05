@@ -143,12 +143,13 @@ class BP_Moderation {
 	public function __construct( $item_id = false, $item_type = false ) {
 		// Instantiate errors object.
 		$this->errors = new WP_Error();
-
-		$id = self::check_moderation_exist( $item_id, $item_type );
-		if ( ! empty( $id ) ) {
-			$this->id      = (int) $id;
-			$this->user_id = get_current_user_id();
-			$this->populate();
+		if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
+			$id = self::check_moderation_exist( $item_id, $item_type );
+			if ( ! empty( $id ) ) {
+				$this->id      = (int) $id;
+				$this->user_id = get_current_user_id();
+				$this->populate();
+			}
 		}
 	}
 
@@ -384,11 +385,6 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @see   BP_Moderation::get_filter_sql() for a description of the
-	 *      'filter' parameter.
-	 * @see   WP_Meta_Query::queries for a description of the 'meta_query'
-	 *      parameter format.
-	 *
 	 * @param array      $args              {
 	 *                                      An array of arguments. All items are optional.
 	 *
@@ -417,6 +413,11 @@ class BP_Moderation {
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located moderations
 	 *               - 'moderations' is an array of the located moderation reports
+	 * @see   BP_Moderation::get_filter_sql() for a description of the
+	 *        'filter' parameter.
+	 * @see   WP_Meta_Query::queries for a description of the 'meta_query'
+	 *        parameter format.
+	 *
 	 */
 	public static function get( $args = array() ) {
 		global $wpdb;
@@ -647,7 +648,7 @@ class BP_Moderation {
 			 * }*/
 
 			if ( $moderations && $r['display_reporters'] ) {
-				$moderations = self::append_reporters( $moderations );
+				$moderations = self::append_reporters( $moderations, array( 'user_id' => $r['user_id'] ) );
 			}
 
 			// Pre-fetch data associated with moderation users and other objects.
@@ -756,10 +757,11 @@ class BP_Moderation {
 	 * components, such as bp-activity and bp-groups, to hook in and prime
 	 * their own caches at the beginning of an Moderation loop.
 	 *
+	 * @since BuddyBoss 1.5.4
+	 *
 	 * @param array $moderations Array of moderations.
 	 *
 	 * @return array $moderations Array of moderations.
-	 * @since BuddyBoss 1.5.4
 	 */
 	protected static function prefetch_object_data( $moderations ) {
 
@@ -806,19 +808,19 @@ class BP_Moderation {
 	/**
 	 * Append moderation reported users to their associated moderation report.
 	 *
+	 * @since BuddyBoss 1.5.4
+	 *
 	 * @param array $moderations moderations array.
 	 *
 	 * @return array The updated moderations with users.
-	 * @since BuddyBoss 1.5.4
-	 *
 	 * @global wpdb $wpdb        WordPress database abstraction object.
 	 */
-	public static function append_reporters( $moderations ) {
+	public static function append_reporters( $moderations, $args ) {
 		$moderations_reporters = array();
 
 		// Now fetch the activity comments and parse them into the correct position in the activities array.
 		foreach ( (array) $moderations as $moderation ) {
-			$moderations_reporters[ $moderation->id ] = self::get_moderation_reporters( $moderation->id );
+			$moderations_reporters[ $moderation->id ] = self::get_moderation_reporters( $moderation->id, $args );
 		}
 
 		// Merge the comments with the activity items.
@@ -841,7 +843,7 @@ class BP_Moderation {
 	 *
 	 * @return array reporters data.
 	 */
-	public static function get_moderation_reporters( $moderation_id ) {
+	public static function get_moderation_reporters( $moderation_id, $args ) {
 		global $wpdb;
 
 		$reporters = wp_cache_get( $moderation_id, 'bp_moderation_reporters' );
@@ -986,12 +988,12 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @see   BP_Moderation::get_filter_sql()
-	 *
 	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
 	 *
 	 * @return string|false
+	 * @see   BP_Moderation::get_filter_sql()
+	 *
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
 		global $wpdb;
@@ -1058,5 +1060,25 @@ class BP_Moderation {
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $moderation_id, $user_id ) ); // phpcs:ignore
 
 		return is_numeric( $result ) ? (int) $result : false;
+	}
+
+	/**
+	 * Function to delete single moderation report.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param $moderation_id int moderation id.
+	 *
+	 * @return false|int
+	 */
+	public static function delete_report( $moderation_id ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$report     = $wpdb->delete( $bp->moderation->table_name_reports, array( 'moderation_id' => $moderation_id ) );
+		$moderation = $wpdb->delete( $bp->moderation->table_name, array( 'id' => $moderation_id ) );
+
+		return ( ! empty( $report ) && ! empty( $moderation ) ) ? true : false;
 	}
 }

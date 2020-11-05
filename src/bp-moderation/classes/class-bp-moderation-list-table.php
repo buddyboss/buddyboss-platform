@@ -29,9 +29,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// Define singular and plural labels, as well as whether we support AJAX.
 		parent::__construct(
 			array(
-					'ajax'     => false,
-					'plural'   => 'moderations',
-					'singular' => 'moderation',
+				'ajax'     => false,
+				'plural'   => 'moderations',
+				'singular' => 'moderation',
 			)
 		);
 	}
@@ -50,10 +50,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$hidden_columns = ( ! empty( $hidden_columns ) ) ? $hidden_columns : array();
 
 		$this->_column_headers = array(
-				$this->get_columns(),
-				$hidden_columns,
-				$this->get_sortable_columns(),
-				$this->get_default_primary_column_name(),
+			$this->get_columns(),
+			$hidden_columns,
+			$this->get_sortable_columns(),
+			$this->get_default_primary_column_name(),
 		);
 
 		return $this->_column_headers;
@@ -96,9 +96,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$per_page = $this->get_items_per_page( str_replace( '-', '_', "{$this->screen->id}_per_page" ) );
 
 		$moderation_request_args = array(
-				'page'        => $page,
-				'per_page'    => $per_page,
-				'count_total' => true,
+			'page'        => $page,
+			'per_page'    => $per_page,
+			'count_total' => true,
 		);
 
 		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
@@ -114,11 +114,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		// Store information needed for handling table pagination.
 		$this->set_pagination_args(
-				array(
-						'per_page'    => $per_page,
-						'total_items' => $moderation_requests['total'],
-						'total_pages' => ceil( $moderation_requests['total'] / $per_page ),
-				)
+			array(
+				'per_page'    => $per_page,
+				'total_items' => $moderation_requests['total'],
+				'total_pages' => ceil( $moderation_requests['total'] / $per_page ),
+			)
 		);
 	}
 
@@ -130,30 +130,30 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	public function display() {
 		$this->display_tablenav( 'top' ); ?>
 
-		<h2 class="screen-reader-text">
+        <h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
 			esc_html_e( 'Moderation Request list', 'buddyboss' );
 			?>
-		</h2>
+        </h2>
 
-		<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
-			<thead>
-			<tr>
+        <table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
+            <thead>
+            <tr>
 				<?php $this->print_column_headers(); ?>
-			</tr>
-			</thead>
+            </tr>
+            </thead>
 
-			<tbody id="the-moderation-request-list">
+            <tbody id="the-moderation-request-list">
 			<?php $this->display_rows_or_placeholder(); ?>
-			</tbody>
+            </tbody>
 
-			<tfoot>
-			<tr>
+            <tfoot>
+            <tr>
 				<?php $this->print_column_headers( false ); ?>
-			</tr>
-			</tfoot>
-		</table>
+            </tr>
+            </tfoot>
+        </table>
 		<?php
 
 		$this->display_tablenav( 'bottom' );
@@ -170,9 +170,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	public function get_columns() {
 		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 			$columns = array(
-				'blocked_member'    => esc_html__( 'Blocked Member', 'buddyboss' ),
+				'blocked_member' => esc_html__( 'Blocked Member', 'buddyboss' ),
 				'blocked'        => esc_html__( 'Block (Count)', 'buddyboss' ),
-				'actions'         => esc_html__( '', 'buddyboss' ),
+				'actions'        => esc_html__( '', 'buddyboss' ),
 			);
 		} else {
 			$columns = array(
@@ -207,38 +207,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		echo '<tr>';
 		wp_kses_post( $this->single_row_columns( $item ) );
 		echo '</tr>';
-	}
-
-	/**
-	 * Create Actions link
-	 *
-	 * @param array $item
-	 */
-	public function actions( $item = array() ) {
-		// Preorder items: View.
-		$actions = array(
-				'view' => '',
-		);
-
-		$view_url_query_arg = array(
-			'page'         => 'bp-moderation',
-			'mid'          => $item['item_id'],
-			'content_type' => $item['item_type'],
-			'action'       => 'view',
-		);
-
-		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-			$view_url_query_arg['tab'] = 'blocked-members';
-		}
-
-		// Build actions URL.
-		$view_url = add_query_arg( $view_url_query_arg, bp_get_admin_url( 'admin.php' ) );
-
-		// Rollover actions.
-		// View.
-		$actions['view'] = sprintf( '<a href="%s">%s</a>', esc_url( $view_url ), esc_html__( 'View', 'buddyboss' ) );
-
-		return wp_kses_post( $this->row_actions( $actions ) );
 	}
 
 	/**
@@ -312,7 +280,31 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item
 	 */
 	public function column_actions( $item = array() ) {
-		echo 'actions';
+
+		$view_url_query_arg = array(
+			'page'         => 'bp-moderation',
+			'mid'          => $item['item_id'],
+			'content_type' => $item['item_type'],
+			'action'       => 'view',
+		);
+
+		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+			$view_url_query_arg['tab'] = 'blocked-members';
+		}
+
+		$action_type  = ( 1 === (int) $item['hide_sitewide'] ) ? 'unhide' : 'hide';
+		$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
+
+		// Build actions URL.
+		$view_url = add_query_arg( $view_url_query_arg, bp_get_admin_url( 'admin.php' ) );
+
+		// Rollover actions.
+		// View.
+		printf( '<a href="%s" title="%s"><i class="bb-icon-eye"></i></a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ) );
+		if ( ! isset( $_GET['tab'] ) || 'blocked-members' !== $_GET['tab'] ) {
+			printf( '<a href="javascript:void(0);" class="bp-hide-request" data-id="%s" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-close-circle"></i></a>', esc_attr( $item['id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $action_type ), esc_attr( $action_label ) );
+		}
+		printf( '<a href="javascript:void(0);" class="bp-block-user" data-id="%s" data-nonce="%s"><i class="bb-icon-slash"></i></a>', esc_attr( $item['id'] ), esc_attr( wp_create_nonce( 'bp-blobk-unblock-user' ) ) );
 	}
 
 	/**

@@ -301,8 +301,6 @@ function bp_is_moderation_exist( $args = array() ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @global wpdb  $wpdb          WordPress database abstraction object.
- *
  * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
  * @param string $meta_key      Optional. The key of the metadata being deleted. If
  *                              omitted, all metadata associated with the moderation
@@ -315,6 +313,8 @@ function bp_is_moderation_exist( $args = array() ) {
  *                              moderation item. Default: false.
  *
  * @return bool True on success, false on failure.
+ * @global wpdb  $wpdb          WordPress database abstraction object.
+ *
  */
 function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
@@ -414,6 +414,48 @@ function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	$retval = add_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Function to unblock user from frontend.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param $moderation_id int moderation id to unblock
+ *
+ * @return false|int
+ */
+function bp_moderation_relieve_user( $moderation_id ) {
+	return BP_Moderation::delete_report( $moderation_id );
+}
+
+/**
+ * Function to hide unhide moderation request.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param $moderation_id int moderation id.
+ * @param $action        string hide/unhide action.
+ *
+ * @return bool
+ */
+function bp_moderation_hide_unhide_request( $moderation_id, $action ) {
+	if ( ! $action ) {
+		$retval = false;
+	}
+
+	$moderation_obj     = new BP_Moderation();
+	$moderation_obj->id = $moderation_id;
+	$moderation_obj->populate();
+	if ( 'hide' === $action ) {
+		$moderation_obj->hide_sitewide = 1;
+	} elseif ( 'unhide' === $action ) {
+		$moderation_obj->hide_sitewide = 0;
+
+	}
+	$retval = $moderation_obj->save();
 
 	return $retval;
 }

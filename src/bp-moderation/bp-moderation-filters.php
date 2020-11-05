@@ -86,6 +86,70 @@ add_action( 'wp_ajax_bp_moderation_content_report', 'bp_moderation_content_repor
 add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_content_report' );
 
 /**
+ * Function to handle frontend unblock user request.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_moderation_unblock_user() {
+	$response = array(
+		'success' => false,
+		'message' => '',
+	);
+
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+
+	if ( wp_verify_nonce( $nonce, 'bp-unblock-user' ) ) {
+
+		$unlock = bp_moderation_relieve_user( $id );
+
+		if ( ! empty( $unlock ) ) {
+			$response['success'] = true;
+			$response['message'] = esc_html__( 'User unblocked successfully', 'buddyboss' );
+		}
+	}
+
+	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
+		$response['message'] = new WP_Error( 'bp_moderation_block_error', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+	}
+
+	echo wp_json_encode( $response );
+	exit();
+}
+
+add_action( 'wp_ajax_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
+add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
+
+function bp_moderation_hide_request() {
+	$response = array(
+		'success' => false,
+		'message' => '',
+	);
+
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+	$type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+
+	if ( wp_verify_nonce( $nonce, 'bp-hide-unhide-moderation' ) ) {
+		$action = bp_moderation_hide_unhide_request( $id, $type );
+		if ( ! empty( $action ) ) {
+			$response['success'] = true;
+			$response['message'] = esc_html__( 'Moderation item updated successfully', 'buddyboss' );
+		}
+	}
+
+	if ( empty( $response['success'] ) && empty( $response['message'] ) ) {
+		$response['message'] = new WP_Error( 'bp_moderation_hide_request_error', esc_html__( 'Sorry, Something happened wrong', 'buddyboss' ) );
+	}
+
+	echo wp_json_encode( $response );
+	exit();
+}
+
+add_action( 'wp_ajax_bp_moderation_hide_request', 'bp_moderation_hide_request' );
+add_action( 'wp_ajax_nopriv_bp_moderation_hide_request', 'bp_moderation_hide_request' );
+
+/**
  * Function to Popup markup for moderation content report
  * @since BuddyBoss 1.5.4
  */
@@ -94,3 +158,43 @@ function bb_moderation_content_report_popup() {
 }
 
 add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
+
+add_action( 'admin_footer', 'print_admin_js' );
+function print_admin_js() {
+	?>
+    <script>
+		window.bp = window.bp || {};
+		( function ( exports, $ ) {
+			$( document ).on( 'click', '.bp-hide-request', function () {
+				if ( !confirm( 'Are you sure you?' ) ) { //Todo: need to add translated message
+					return false;
+				}
+				var curObj = $( this );
+				var id = curObj.attr( 'data-id' );
+				var nonce = curObj.attr( 'data-nonce' );
+				var type = curObj.attr( 'data-action' );
+				var data = {
+					action: 'bp_moderation_hide_request',
+					id: id,
+					nonce: nonce,
+					type: type,
+				};
+				$.post( ajaxurl, data, function ( response ) {
+					var result = $.parseJSON( response );
+					if ( true === result.success ) {
+						if ( 'hide' === type ) {
+							curObj.attr( 'data-action', 'unhide' );
+							curObj.attr( 'title', 'Unhide' ); //todo: add translated lable
+						} else if ( 'unhide' === type ) {
+							curObj.attr( 'data-action', 'hide' );
+							curObj.attr( 'title', 'Hide' ); //todo: add translated lable
+						}
+					} else {
+						alert( result.message );
+					}
+				} );
+			} );
+		} )( bp, jQuery );
+    </script>
+	<?php
+}
