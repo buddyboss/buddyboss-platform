@@ -173,7 +173,7 @@ function bp_moderation_content_types() {
  * @param int    $moderation_item_id   content id.
  * @param string $moderation_item_type content type.
  *
- * @return array|int|string
+ * @return int
  */
 function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
@@ -184,7 +184,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 		$user_id = $class::get_content_owner_id( $moderation_item_id );
 	}
 
-	return $user_id;
+	return (int) $user_id;
 }
 
 function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type ) {
@@ -208,11 +208,11 @@ function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_ite
  *
  * @return mixed|void
  */
-function bp_get_moderation_content_type( $key ) {
+function bp_moderation_get_content_type( $key ) {
 
 	$content_types = bp_moderation_content_types();
 
-	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
+	return apply_filters( 'bp_moderation_get_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
 
 /**
@@ -223,7 +223,30 @@ function bp_get_moderation_content_type( $key ) {
  *
  * @return string|array
  */
-function bp_get_moderation_report_button( $args, $html = true ) {
+function bp_moderation_get_report_button( $args, $html = true ) {
+
+	$item_id              = $args['button_attr']['data-bp-content-id'];
+	$item_type            = $args['button_attr']['data-bp-content-type'];
+	$button_text          = __( 'Report', 'buddyboss' );
+	$reported_button_text = __( 'Reported', 'buddyboss' );
+
+	// Check moderation setting enabled or not
+	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
+		$button_text          = __( 'Block', 'buddyboss' );
+		$reported_button_text = __( 'Blocked', 'buddyboss' );
+		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+			return ! empty( $html ) ? '' : array();
+		}
+	} else {
+		if ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
+			return ! empty( $html ) ? '' : array();
+		}
+	}
+
+	// Hide if content is created by current user
+	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
+		return ! empty( $html ) ? '' : array();
+	}
 
 	$args['button_attr'] = wp_parse_args( $args['button_attr'], array(
 		'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
@@ -235,16 +258,13 @@ function bp_get_moderation_report_button( $args, $html = true ) {
 	) );
 
 	$button = wp_parse_args( $args, array(
-		'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Report', 'buddyboss' ), esc_html__( 'Report', 'buddyboss' ) ),
+		'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html__( $button_text ) ),
 	) );
 
-	$is_reported = bp_is_moderation_exist( array(
-		'content_id'   => $button['button_attr']['data-bp-content-id'],
-		'content_type' => $button['button_attr']['data-bp-content-type'],
-	) );
+	$is_reported = bp_moderation_report_exist( $item_id, $item_type );
 
 	if ( $is_reported ) {
-		$button['link_text']            = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Reported', 'buddyboss' ), esc_html__( 'Reported', 'buddyboss' ) );
+		$button['link_text']            = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
 		$button['button_attr']['class'] = 'button item-button bp-secondary-action reported-content';
 		unset( $button['button_attr']['href'] );
 		unset( $button['button_attr']['data-bp-content-id'] );
@@ -260,7 +280,7 @@ function bp_get_moderation_report_button( $args, $html = true ) {
 		}
 	}
 
-	return apply_filters( 'bp_get_moderation_report_button', $button, $args, $html );
+	return apply_filters( 'bp_moderation_get_report_button', $button, $args, $html );
 }
 
 /**
@@ -291,19 +311,79 @@ function bp_moderation_add( $args = array() ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param array $args Report args.
+ * @param int    $item_id   Item id
+ * @param string $item_type Item type
  *
  * @return bool
  */
-function bp_is_moderation_exist( $args = array() ) {
+function bp_moderation_report_exist( $item_id, $item_type ) {
 	$response = false;
 
-	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
-		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
+		$moderation = new BP_Moderation( $item_type, $item_type );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 	}
 
 	return $response;
+}
+
+/**
+ * Function to unblock user from frontend.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $item_id   Item id
+ * @param string $item_type Item type
+ * @param bool   $force_all Should delete all reported entry
+ *
+ * @return false|int
+ */
+function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = false ) {
+	$moderation_obj = new BP_Moderation( $item_id, $item_type );
+
+	return $moderation_obj->delete( $force_all );
+}
+
+/**
+ * Function to hide unhide moderation request.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int    $item_id   Item id
+ * @param string $item_type Item type
+ * @param string $action    hide/unhide action.
+ *
+ * @return bool
+ */
+function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
+	$moderation_obj = new BP_Moderation( $item_id, $item_type );
+
+	if ( 'hide' === $action ) {
+		$moderation_obj->hide_sitewide = 1;
+	} elseif ( 'unhide' === $action ) {
+		$moderation_obj->hide_sitewide = 0;
+		$moderation_obj->delete();
+	}
+
+	return $moderation_obj->save();
+}
+
+/**
+ * Check whether a user has been marked as a suspended.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int $user_id The ID for the user.
+ *
+ * @return bool True if suspended, otherwise false.
+ */
+function bp_moderation_is_user_suspended( $user_id ) {
+	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( false );
+	if ( in_array( $user_id, $hidden_members_ids, true ) ) {
+		return true;
+	}
+
+	return false;
 }
 
 /** Meta *********************************************************************/
@@ -428,63 +508,4 @@ function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
-}
-
-/**
- * Function to unblock user from frontend.
- *
- * @since BuddyBoss 1.5.4
- *
- * @param int    $item_id   Item id
- * @param string $item_type Item type
- * @param bool   $force_all Should delete all reported entry
- *
- * @return false|int
- */
-function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = false ) {
-	$moderation_obj = new BP_Moderation( $item_id, $item_type );
-
-	return $moderation_obj->delete( $force_all );
-}
-
-/**
- * Function to hide unhide moderation request.
- *
- * @since BuddyBoss 1.5.4
- *
- * @param int    $item_id   Item id
- * @param string $item_type Item type
- * @param string $action    hide/unhide action.
- *
- * @return bool
- */
-function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
-	$moderation_obj = new BP_Moderation( $item_id, $item_type );
-
-	if ( 'hide' === $action ) {
-		$moderation_obj->hide_sitewide = 1;
-	} elseif ( 'unhide' === $action ) {
-		$moderation_obj->hide_sitewide = 0;
-		$moderation_obj->delete();
-	}
-
-	return $moderation_obj->save();
-}
-
-/**
- * Check whether a user has been marked as a suspended.
- *
- * @since BuddyBoss 1.5.4
- *
- * @param int $user_id The ID for the user.
- *
- * @return bool True if suspended, otherwise false.
- */
-function bp_moderation_is_user_suspended( $user_id ) {
-	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( false );
-	if ( in_array( $user_id, $hidden_members_ids, true ) ) {
-		return true;
-	}
-
-	return false;
 }

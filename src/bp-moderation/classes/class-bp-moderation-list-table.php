@@ -215,7 +215,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item
 	 */
 	public function column_content_type( $item = array() ) {
-		printf( '<strong>%s</strong> %s', esc_html( bp_get_moderation_content_type( $item['item_type'] ) ), $this->actions( $item ) );
+		printf( '<strong>%s</strong> %s', esc_html( bp_moderation_get_content_type( $item['item_type'] ) ), $this->actions( $item ) );
 	}
 
 	/**
@@ -304,7 +304,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unhide' : 'hide';
 			$user_action_label = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
 		}
-		
+
 		// Build actions URL.
 		$view_url = add_query_arg( $view_url_query_arg, bp_get_admin_url( 'admin.php' ) );
 

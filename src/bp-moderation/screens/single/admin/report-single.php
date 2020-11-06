@@ -67,7 +67,7 @@
                                             </th>
                                             <td>
 												<?php
-												echo esc_html( bp_get_moderation_content_type( $moderation_request_data->item_type ) );
+												echo esc_html( bp_moderation_get_content_type( $moderation_request_data->item_type ) );
 												?>
                                             </td>
                                         </tr>
