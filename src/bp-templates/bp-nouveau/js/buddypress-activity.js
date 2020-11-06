@@ -1219,6 +1219,33 @@ window.bp = window.bp || {};
 				}
 
 
+
+				//GIF
+				if ( ! _.isUndefined( comment_edit_data.gif ) && Object.keys( comment_edit_data.gif ).length ) {
+					// close and destroy existing media instance
+					//self.activityToolbar.toggleGifSelector( bpActivityEvent );
+					//self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', comment_edit_data.gif );
+
+					// Make tool box button disable.
+
+					tool_box.find( '.post-elements-buttons-item' ).addClass( 'disable no-click' );
+					tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
+					tool_box.find( '.toolbar-button' ).removeClass( 'active' );
+					tool_box.find( '.ac-reply-gif-button' ).addClass( 'active' );
+					// END Toolbox Button
+
+					$gifAttachmentEl = $( '#ac-reply-post-gif-' + comment_id );
+
+					var model                      = new bp.Models.ACReply();
+					var activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
+					activityAttachedGifPreview.model.set( 'gif_data', comment_edit_data.gif );
+					$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
+
+					//self.model.set( 'gif_data', comment_edit_data.gif );
+
+					this.models[comment_id] = activityAttachedGifPreview.model;
+				}
+
 			}
 
 			// Updating comments .
@@ -1297,9 +1324,9 @@ window.bp = window.bp || {};
 				}
 
 				// add gif data if enabled or uploaded.
-				if ( ! _.isUndefined( this.models[activity_id] ) ) {
-					model                 = this.models[activity_id];
-					comment_data.gif_data = this.models[activity_id].get( 'gif_data' );
+				if ( ! _.isUndefined( this.models[item_id] ) ) {
+					model                 = this.models[item_id];
+					comment_data.gif_data = this.models[item_id].get( 'gif_data' );
 
 					if ( _.isEmpty( comment_data.content ) ) {
 						comment_data.content = '&#8203;';
