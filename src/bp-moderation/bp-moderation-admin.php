@@ -29,12 +29,20 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
 function bp_moderation_admin_scripts( $hook ) {
 	if ( 'buddyboss_page_bp-moderation' === $hook ) {
 		wp_enqueue_script(
-			'bp-admin',
+			'bp-moderation',
 			buddypress()->plugin_url . 'bp-core/admin/js/moderation-page.js',
 			array( 'jquery' ),
 			buddypress()->version,
 			true
 		);
+
+		wp_localize_script( 'bp-moderation', 'Bp_Moderation', array(
+			'strings' => array(
+				'confirm_msg'  => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
+				'hide_label'   => esc_js( __( 'Hide', 'buddyboss' ) ),
+				'unhide_label' => esc_js( __( 'Unhide', 'buddyboss' ) ),
+			)
+		) );
 	}
 }
 

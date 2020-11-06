@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Activity Classes
  *
- * @since   BuddyBoss 1.5.4
  * @package BuddyBoss\Moderation
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -300,6 +300,19 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		$activity = new BP_Activity_Activity( $activity_comment_id );
 
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param int $activity_comment_id activity id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $activity_comment_id ) {
+		$activity = new BP_Activity_Activity( $activity_comment_id );
+
+		return ( ! empty( $activity->content ) ) ? $activity->content : '';
 	}
 
 	/**

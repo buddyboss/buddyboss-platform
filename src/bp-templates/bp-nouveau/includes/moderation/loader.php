@@ -78,6 +78,9 @@ class BP_Nouveau_Moderation {
 
 		// Register messages scripts
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_moderation_register_scripts', 10, 1 );
+
+		// Localize Scripts
+		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_moderation_localize_scripts', 10, 1 );
 	}
 }
 

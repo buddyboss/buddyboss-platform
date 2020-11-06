@@ -104,6 +104,32 @@ class BP_Moderation_Template {
 	 */
 	public $full_name;
 
+	/**
+	 *
+	 * Constructor method.
+	 * The arguments passed to this class constructor are of the same
+	 * format as {@link BP_Moderation::get()}.
+	 *
+	 * @param array $args     {
+	 *                        Array of arguments. Supports all arguments from
+	 *                        BP_Moderation::get(), as well as 'page_arg' and
+	 *                        'include'. Default values for 'per_page'
+	 *                        differ from the originating function, and are described below.
+	 *
+	 *                                         pagination links. Default: 'acpage'.
+	 * @type array|bool $in  Pass an array of moderation IDs to
+	 *                                         retrieve only those items, or false to noop the 'include'
+	 *                                         parameter. 'include' differs from 'in' in that 'in' forms
+	 *                                         an IN clause that works in conjunction with other filters
+	 *                                         passed to the function, while 'include' is interpreted as
+	 *                                         an exact list of items to retrieve, which skips all other
+	 *                                         filter-related parameters. Default: false.
+	 * @type int|bool   $per_page Default: 20.
+	 * }
+	 * @see   BP_Moderation::get() for a description of the argument
+	 *        structure, as well as default values.
+	 * @since BuddyBoss 1.5.4
+	 */
 	public function __construct( $args ) {
 
 		$defaults = array(

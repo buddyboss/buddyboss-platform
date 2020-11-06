@@ -288,6 +288,19 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content.
+	 *
+	 * @param int $document_id document id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $document_id ) {
+		$document = new BP_Document( $document_id );
+
+		return ( ! empty( $document->title ) ) ? $document->title : '';
+	}
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 1.5.4

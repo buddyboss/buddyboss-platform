@@ -188,6 +188,26 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 }
 
 /**
+ * Function to get the content based on type.
+ *
+ * @param int    $moderation_item_id   moderation id to get the content.
+ * @param string $moderation_item_type item type
+ *
+ * @return string
+ */
+function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type ) {
+
+	$content_excerpt = '';
+	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );
+
+	if ( method_exists( $class, 'get_content_excerpt' ) ) {
+		$content_excerpt = $class::get_content_excerpt( $moderation_item_id );
+	}
+
+	return $content_excerpt;
+}
+
+/**
  * Function to get specific moderation content type.
  *
  * @since BuddyBoss 1.5.4

@@ -42,7 +42,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->alias     = $this->alias . 'f'; // f = Forum.
+		$this->alias = $this->alias . 'f'; // f = Forum.
 
 		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
@@ -181,6 +181,19 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 */
 	public static function get_content_owner_id( $forum_id ) {
 		return $user_id = get_post_field( 'post_author', $forum_id );
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param integer $forum_id Forum id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $forum_id ) {
+		$forum_content = get_post_field( 'post_content', $forum_id );
+
+		return ( ! empty( $forum_content ) ) ? $forum_content : '';
 	}
 
 	/**
