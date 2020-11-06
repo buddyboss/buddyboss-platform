@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Activity Classes
  *
- * @since   BuddyBoss 1.5.4
  * @package BuddyBoss\Moderation
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -30,7 +30,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
@@ -55,7 +55,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
@@ -292,7 +292,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $activity_comment_id Activity Comment id
+	 * @param integer $activity_comment_id Activity Comment id.
 	 *
 	 * @return int
 	 */
@@ -303,11 +303,24 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content.
+	 *
+	 * @param int $activity_comment_id activity id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $activity_comment_id ) {
+		$activity = new BP_Activity_Activity( $activity_comment_id );
+
+		return ( ! empty( $activity->content ) ) ? $activity->content : '';
+	}
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */

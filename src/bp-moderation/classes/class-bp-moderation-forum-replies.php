@@ -30,7 +30,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
@@ -42,7 +42,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->alias     = $this->alias . 'fr'; // fr: Forum Reply.
+		$this->alias = $this->alias . 'fr'; // fr: Forum Reply.
 
 		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
@@ -56,7 +56,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
@@ -227,12 +227,25 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $reply_id Reply id
+	 * @param integer $reply_id Reply id.
 	 *
 	 * @return int
 	 */
 	public static function get_content_owner_id( $reply_id ) {
-		return $user_id = get_post_field( 'post_author', $reply_id );
+		return get_post_field( 'post_author', $reply_id );
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param integer $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $reply_id ) {
+		$reply_content = get_post_field( 'post_content', $reply_id );
+
+		return ( ! empty( $reply_content ) ) ? $reply_content : '';
 	}
 
 	/**
@@ -240,7 +253,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */

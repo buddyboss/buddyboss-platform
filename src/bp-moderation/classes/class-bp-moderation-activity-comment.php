@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Activity Comment Classes
  *
- * @since   BuddyBoss 1.5.4
  * @package BuddyBoss\Moderation
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -30,10 +30,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
-		add_filter('bp_moderation_content_types', array( $this, 'add_content_types' ) );
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
@@ -45,6 +45,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		// Search Component.
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+
+		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
 	/**
@@ -52,12 +54,13 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
-	public function add_content_types( $content_types ){
+	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss' );
+
 		return $content_types;
 	}
 
@@ -156,6 +159,31 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Update blocked comment template
+	 *
+	 * @param string $template_names Template name.
+	 *
+	 * @return string
+	 */
+	public function locate_blocked_template( $template_names ) {
+		global $activities_template;
+
+		if ( 'activity/comment.php' !== $template_names ) {
+			return $template_names;
+		}
+
+		if ( in_array( $activities_template->activity->current_comment->id, self::get_sitewide_hidden_ids(), true ) ) {
+			return 'activity/blocked-comment.php';
+		}
+
+		if ( bp_is_moderation_member_blocking_enable( 0 ) && in_array( $activities_template->activity->current_comment->user_id, BP_Moderation_Members::get_sitewide_hidden_ids(), true ) ) {
+			return 'activity/blocked-user-comment.php';
+		}
+
+		return $template_names;
+	}
+
+	/**
 	 * Get All blocked Activity Comments ids.
 	 *
 	 * @return array
@@ -196,13 +224,27 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $activity_id     Activity id
+	 * @param integer $activity_id Activity id.
 	 *
 	 * @return int
 	 */
 	public static function get_content_owner_id( $activity_id ) {
 		$activity = new BP_Activity_Activity( $activity_id );
+
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param int $activity_comment_id activity id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $activity_comment_id ) {
+		$activity = new BP_Activity_Activity( $activity_comment_id );
+
+		return ( ! empty( $activity->content ) ) ? $activity->content : '';
 	}
 
 	/**
@@ -210,7 +252,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */

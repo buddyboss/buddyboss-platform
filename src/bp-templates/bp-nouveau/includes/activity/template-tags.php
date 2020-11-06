@@ -628,11 +628,11 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 	}
 
 	if ( bp_is_active( 'moderation' ) ){
-		$buttons['activity_report'] = bp_get_moderation_report_button(
+		$buttons['activity_report'] = bp_moderation_get_report_button(
 			array(
 				'id'                => 'activity_report',
 				'position'          => 50,
-				'component'         => 'activity',
+				'component'         => 'moderation',
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'must_be_logged_in' => true,
@@ -641,7 +641,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 					'data-bp-content-id'   => $activity_id,
 					'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
 				),
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html__( 'Report', 'buddyboss' ), esc_html__( 'Report', 'buddyboss' ) ),
 			),
 			false
 		);
@@ -977,6 +976,25 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$buttons['activity_comment_spam']['button_attr'][ $data_element ] = wp_nonce_url(
 			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_comment_id . '/?cid=' . $activity_comment_id,
 			'bp_activity_akismet_spam_' . $activity_comment_id
+		);
+	}
+
+	if ( bp_is_active( 'moderation' ) ){
+		$buttons['activity_report'] = bp_moderation_get_report_button(
+			array(
+				'id'                => 'activity_comment_report',
+				'position'          => 50,
+				'component'         => 'moderation',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+						'data-bp-content-id'   => $activity_comment_id,
+						'data-bp-content-type' => BP_Moderation_Activity_Comment::$moderation_type,
+				),
+			),
+			false
 		);
 	}
 

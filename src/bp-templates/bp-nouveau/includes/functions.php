@@ -1013,6 +1013,18 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 		),
+		'moderation-reported-content-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading your reported content. Please wait.', 'buddyboss' ),
+		),
+		'moderation-block-member-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading your blocked member. Please wait.', 'buddyboss' ),
+		),
+		'moderation-requests-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no moderation were found.', 'buddyboss' ),
+		)
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {

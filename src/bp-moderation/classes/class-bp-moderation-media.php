@@ -30,7 +30,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
@@ -42,7 +42,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->alias     = $this->alias . 'm'; // m = media.
+		$this->alias = $this->alias . 'm'; // m = media.
 
 		/*add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
@@ -53,7 +53,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
@@ -273,7 +273,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $media_id Media id
+	 * @param integer $media_id Media id.
 	 *
 	 * @return int
 	 */
@@ -284,11 +284,24 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content.
+	 *
+	 * @param integer $media_id Media id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $media_id ) {
+		$media = new BP_Media( $media_id );
+
+		return ( ! empty( $media->title ) ) ? $media->title : '';
+	}
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */

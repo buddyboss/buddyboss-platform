@@ -28,11 +28,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 		// Define singular and plural labels, as well as whether we support AJAX.
 		parent::__construct(
-				array(
-						'ajax'     => false,
-						'plural'   => 'reports',
-						'singular' => 'report',
-				)
+			array(
+				'ajax'     => false,
+				'plural'   => 'reports',
+				'singular' => 'report',
+			)
 		);
 	}
 
@@ -50,10 +50,10 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 		$hidden_columns = ( ! empty( $hidden_columns ) ) ? $hidden_columns : array();
 
 		$this->_column_headers = array(
-				$this->get_columns(),
-				$hidden_columns,
-				$this->get_sortable_columns(),
-				$this->get_default_primary_column_name(),
+			$this->get_columns(),
+			$hidden_columns,
+			$this->get_sortable_columns(),
+			$this->get_default_primary_column_name(),
 		);
 
 		return $this->_column_headers;
@@ -114,11 +114,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 		// Store information needed for handling table pagination.
 		$this->set_pagination_args(
-				array(
-						'per_page'    => $per_page,
-						'total_items' => $total_item,
-						'total_pages' => ceil( $total_item / $per_page ),
-				)
+			array(
+				'per_page'    => $per_page,
+				'total_items' => $total_item,
+				'total_pages' => ceil( $total_item / $per_page ),
+			)
 		);
 	}
 
@@ -171,14 +171,14 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 
 		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 			$columns = array(
-					'reporter' => esc_html__( 'Blocking Member', 'buddyboss' ),
-					'date'     => esc_html__( 'Date', 'buddyboss' ),
+				'reporter' => esc_html__( 'Blocking Member', 'buddyboss' ),
+				'date'     => esc_html__( 'Date', 'buddyboss' ),
 			);
 		} else {
 			$columns = array(
-					'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
-					'category' => esc_html__( 'Report/Category', 'buddyboss' ),
-					'date'     => esc_html__( 'Date', 'buddyboss' ),
+				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
+				'category' => esc_html__( 'Report/Category', 'buddyboss' ),
+				'date'     => esc_html__( 'Date', 'buddyboss' ),
 			);
 		}
 
@@ -207,27 +207,35 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Function to item reporter.
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_reporter( $item = array() ) {
 		printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
 	}
 
 	/**
+	 * Function to item category.
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_category( $item = array() ) {
-		echo esc_html( $item['category_id'] );
+		$term_data = get_term( $item['category_id'] );
+		$term_name = ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) ) ? $term_data->name : '';
+		echo esc_html( $term_name );
 	}
 
 	/**
+	 * Function to show the item date.
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item item data.
 	 */
 	public function column_date( $item = array() ) {
 		echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_created'] ) ) );

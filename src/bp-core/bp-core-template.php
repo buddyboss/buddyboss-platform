@@ -2798,6 +2798,19 @@ function bp_is_user_document() {
 	return (bool) ( bp_is_user() && bp_is_document_component() );
 }
 
+/**
+ * Is this a user's moderation page?
+ *
+ * Eg http://example.com/members/joe/moderation/ (or a subpage thereof).
+ *
+ * @since BuddyPress 1.5.4
+ *
+ * @return bool True if the current page is a user's moderation page.
+ */
+function bp_is_user_moderation() {
+	return (bool) ( bp_is_user() && bp_is_moderation_component() );
+}
+
 
 /**
  * Is the current page the media directory?

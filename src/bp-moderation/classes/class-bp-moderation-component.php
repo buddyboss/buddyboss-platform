@@ -72,6 +72,10 @@ class BP_Moderation_Component extends BP_Component {
 		if ( defined( 'BP_TESTS_DIR' ) ) {
 			return;
 		}
+
+		if ( bp_is_user() ) {
+			require $this->path . 'bp-moderation/screens/user/my-moderation.php';
+		}
 	}
 
 	/**
@@ -149,19 +153,29 @@ class BP_Moderation_Component extends BP_Component {
 			'name'                => __( 'Moderation', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 100,
-			'screen_function'     => 'bp_moderation_screen_my_reporting', // Todo: Add function.
-			'default_subnav_slug' => 'my-reporting',
+			'screen_function'     => 'bp_moderation_screen',
+			'default_subnav_slug' => 'reported-content',
 			'item_css_id'         => $this->id,
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'My Reporting', 'buddyboss' ),
-			'slug'            => 'my-reporting',
+			'name'            => __( 'Reported Content', 'buddyboss' ),
+			'slug'            => 'reported-content',
 			'parent_url'      => $moderation_link,
 			'parent_slug'     => $slug,
-			'screen_function' => 'bp_moderation_screen_my_reporting', // Todo: Add function.
+			'screen_function' => 'bp_moderation_screen',
 			'position'        => 10,
-			'item_css_id'     => 'moderation-reporting',
+			'item_css_id'     => 'reported-content',
+		);
+
+		$sub_nav[] = array(
+			'name'            => __( 'Blocked Members', 'buddyboss' ),
+			'slug'            => 'blocked-members',
+			'parent_url'      => $moderation_link,
+			'parent_slug'     => $slug,
+			'screen_function' => 'bp_moderation_screen',
+			'position'        => 15,
+			'item_css_id'     => 'blocked-members',
 		);
 
 		parent::setup_nav( $main_nav, $sub_nav );
@@ -244,20 +258,20 @@ class BP_Moderation_Component extends BP_Component {
 			array(
 				'label'              => __( 'Reporting Category', 'buddyboss' ),
 				'labels'             => array(
-					"name"          => __( 'Reporting Categories', 'buddyboss' ),
-					"singular_name" => __( 'Reporting Category', 'buddyboss' ),
-					"menu_name"     => __( 'Reporting Categories', 'buddyboss' ),
-					"all_items"     => __( 'All Reporting Categories', 'buddyboss' ),
-					"edit_item"     => __( 'Edit Reporting Category', 'buddyboss' ),
-					"view_item"     => __( 'View Reporting Category', 'buddyboss' ),
-					"update_item"   => __( 'Update Reporting Category', 'buddyboss' ),
-					"add_new_item"  => __( 'Add Reporting Category', 'buddyboss' ),
-					"new_item_name" => __( 'New Reporting', 'buddyboss' ),
+					'name'          => __( 'Reporting Categories', 'buddyboss' ),
+					'singular_name' => __( 'Reporting Category', 'buddyboss' ),
+					'menu_name'     => __( 'Reporting Categories', 'buddyboss' ),
+					'all_items'     => __( 'All Reporting Categories', 'buddyboss' ),
+					'edit_item'     => __( 'Edit Reporting Category', 'buddyboss' ),
+					'view_item'     => __( 'View Reporting Category', 'buddyboss' ),
+					'update_item'   => __( 'Update Reporting Category', 'buddyboss' ),
+					'add_new_item'  => __( 'Add Reporting Category', 'buddyboss' ),
+					'new_item_name' => __( 'New Reporting', 'buddyboss' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => false,
 				'rewrite'            => false,
-				'hierarchical'       => false
+				'hierarchical'       => false,
 			)
 		);
 	}

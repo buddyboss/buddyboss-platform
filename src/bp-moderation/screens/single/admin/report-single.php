@@ -1,7 +1,10 @@
 <?php
 /**
  * Admin Single Reported item screen
+ *
+ * @package BuddyBoss
  */
+
 ?>
 <div class="wrap">
 	<h1>
@@ -11,9 +14,7 @@
 		?>
 	</h1>
 
-	<?php
-	if ( ! empty( $moderation_request_data ) ) :
-		?>
+	<?php if ( ! empty( $moderation_request_data ) ) : ?>
 		<div id="poststuff">
 			<div id="post-body"
 				 class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
@@ -21,6 +22,11 @@
 					<div id="postdiv">
 						<div id="bp_moderation_action" class="postbox">
 							<div class="inside">
+
+								<div class="bp-moderation-ajax-msg hidden notice notice-success">
+									<p></p>
+								</div>
+
 								<table class="form-table">
 									<tbody>
 									<?php if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) { ?>
@@ -51,7 +57,8 @@
 											</th>
 											<td>
 												<?php
-												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), number_format_i18n( $moderation_request_data->count ) );
+												/* translators: accessibility text */
+												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -67,7 +74,7 @@
 											</th>
 											<td>
 												<?php
-												echo esc_html( bp_get_moderation_content_type( $moderation_request_data->item_type ) );
+												echo esc_html( bp_moderation_get_content_type( $moderation_request_data->item_type ) );
 												?>
 											</td>
 										</tr>
@@ -97,7 +104,8 @@
 											</th>
 											<td>
 												<?php
-												echo esc_html( 'Todo' );
+												$content_excerpt = bp_moderation_get_content_excerpt( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
 												?>
 											</td>
 										</tr>
@@ -128,7 +136,8 @@
 											</th>
 											<td>
 												<?php
-												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), number_format_i18n( $moderation_request_data->count ) );
+												/* translators: accessibility text */
+												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
 												?>
 											</td>
 										</tr>
@@ -142,7 +151,47 @@
 								$bp_moderation_report_list_table->prepare_items();
 								$bp_moderation_report_list_table->views();
 								$bp_moderation_report_list_table->display();
+
+								$action_type  = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? 'unhide' : 'hide';
+								$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
 								?>
+								<div class="bp-moderation-actions">
+									<?php
+									if ( ! isset( $_GET['tab'] ) || 'blocked-members' !== $_GET['tab'] ) {
+										$user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+										$user_action_type  = 'hide';
+										$user_action_label = esc_html__( 'Hide', 'buddyboss' );
+										$user_data         = BP_Moderation::get_specific_moderation( $user_id, 'user' );
+										$user_action_text  = esc_html__( 'Suspend Content Author', 'buddyboss' );
+										if ( ! empty( $user_data ) ) {
+											$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unhide' : 'hide';
+											$user_action_label = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
+											$user_action_text  = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
+										}
+										?>
+										<a href="javascript:void(0);" class="button button-primary bp-hide-request single-report-btn" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="<?php echo esc_attr( $moderation_request_data->item_type ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_html( $action_label ); ?>">
+											<?php
+											echo esc_html( $action_label );
+											?>
+										</a>
+										<a href="javascript:void(0);" class="button button-primary bp-block-user single-report-btn content-author" data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $user_action_type ); ?>" title="<?php echo esc_attr( $user_action_label ); ?>">
+											<?php
+											echo esc_html( $user_action_text );
+											?>
+										</a>
+										<?php
+									} else {
+										$member_action_text = ( 'unhide' === $action_type ) ? esc_html__( 'Unsuspend Member', 'buddyboss' ) : esc_html__( 'Suspend Member', 'buddyboss' );
+										?>
+										<a href="javascript:void(0);" class="button button-primary bp-block-user single-report-btn" data-id="<?php echo esc_attr( $moderation_request_data->item_id ); ?>" data-type="user" data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>" data-action="<?php echo esc_attr( $action_type ); ?>" title="<?php echo esc_attr( $action_label ); ?>">
+											<?php
+											echo esc_html( $member_action_text );
+											?>
+										</a>
+										<?php
+									}
+									?>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -153,10 +202,10 @@
 		<p>
 			<?php
 			printf(
-					'%1$s <a href="%2$s">%3$s</a>',
-					esc_html__( 'No moderation found with this ID.', 'buddyboss' ),
-					esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
-					esc_html__( 'Go back and try again.', 'buddyboss' )
+				'%1$s <a href="%2$s">%3$s</a>',
+				esc_html__( 'No moderation found with this ID.', 'buddyboss' ),
+				esc_url( bp_get_admin_url( 'admin.php?page=bp-moderation' ) ),
+				esc_html__( 'Go back and try again.', 'buddyboss' )
 			);
 			?>
 		</p>

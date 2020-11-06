@@ -20,14 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bp_moderation_get_settings_sections() {
 
 	$settings = array(
-			'bp_moderation_settings_blocking'  => array(
-					'page'  => 'moderation',
-					'title' => __( 'Blocking', 'buddyboss' ),
-			),
-			'bp_moderation_settings_reporting' => array(
-					'page'  => 'moderation',
-					'title' => __( 'Reporting', 'buddyboss' ),
-			),
+		'bp_moderation_settings_blocking'  => array(
+			'page'  => 'moderation',
+			'title' => __( 'Blocking', 'buddyboss' ),
+		),
+		'bp_moderation_settings_reporting' => array(
+			'page'  => 'moderation',
+			'title' => __( 'Reporting', 'buddyboss' ),
+		),
 	);
 
 	return (array) apply_filters( 'bp_moderation_get_settings_sections', $settings );
@@ -45,63 +45,63 @@ function bp_moderation_get_settings_fields() {
 
 	$fields['bp_moderation_settings_blocking'] = array(
 
-			'bpm_blocking_member_blocking' => array(
-					'title'             => __( 'Member Blocking', 'buddyboss' ),
-					'callback'          => 'bpm_blocking_settings_callback_member_blocking',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_blocking_member_blocking'        => array(
+			'title'             => __( 'Member Blocking', 'buddyboss' ),
+			'callback'          => 'bpm_blocking_settings_callback_member_blocking',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 
-			'bpm_blocking_auto_suspend' => array(
-					'title'             => __( 'Auto Suspend', 'buddyboss' ),
-					'callback'          => 'bpm_blocking_settings_callback_auto_suspend',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_blocking_auto_suspend'           => array(
+			'title'             => __( 'Auto Suspend', 'buddyboss' ),
+			'callback'          => 'bpm_blocking_settings_callback_auto_suspend',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 
-			'bpm_blocking_auto_suspend_threshold' => array(
-					'title'             => __( 'Auto Suspend threshold', 'buddyboss' ),
-					'callback'          => 'bpm_blocking_settings_callback_auto_suspend_threshold',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_blocking_auto_suspend_threshold' => array(
+			'title'             => __( 'Auto Suspend threshold', 'buddyboss' ),
+			'callback'          => 'bpm_blocking_settings_callback_auto_suspend_threshold',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 
-			'bpm_blocking_email_notification' => array(
-					'title'             => __( 'Email Notification', 'buddyboss' ),
-					'callback'          => 'bpm_blocking_settings_callback_email_notification',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_blocking_email_notification'     => array(
+			'title'             => __( 'Email Notification', 'buddyboss' ),
+			'callback'          => 'bpm_blocking_settings_callback_email_notification',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 	);
 
 	$fields['bp_moderation_settings_reporting'] = array(
-			'bpm_reporting_content_reporting' => array(
-					'title'             => __( 'Content reporting', 'buddyboss' ),
-					'callback'          => 'bpm_reporting_settings_callback_content_reporting',
-					'sanitize_callback' => '',
-					'args'              => array(),
-			),
+		'bpm_reporting_content_reporting'   => array(
+			'title'             => __( 'Content reporting', 'buddyboss' ),
+			'callback'          => 'bpm_reporting_settings_callback_content_reporting',
+			'sanitize_callback' => '',
+			'args'              => array(),
+		),
 
-			'bpm_reporting_auto_hide' => array(
-					'title'             => __( 'Auto Hide', 'buddyboss' ),
-					'callback'          => 'bpm_reporting_settings_callback_auto_hide',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_reporting_auto_hide'           => array(
+			'title'             => __( 'Auto Hide', 'buddyboss' ),
+			'callback'          => 'bpm_reporting_settings_callback_auto_hide',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 
-			'bpm_reporting_auto_hide_threshold' => array(
-					'title'             => __( 'Auto Hide threshold', 'buddyboss' ),
-					'callback'          => 'bpm_reporting_settings_callback_auto_hide_threshold',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_reporting_auto_hide_threshold' => array(
+			'title'             => __( 'Auto Hide threshold', 'buddyboss' ),
+			'callback'          => 'bpm_reporting_settings_callback_auto_hide_threshold',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 
-			'bpm_reporting_email_notification' => array(
-					'title'             => __( 'Email Notification', 'buddyboss' ),
-					'callback'          => 'bpm_reporting_settings_callback_email_notification',
-					'sanitize_callback' => 'intval',
-					'args'              => array(),
-			),
+		'bpm_reporting_email_notification'  => array(
+			'title'             => __( 'Email Notification', 'buddyboss' ),
+			'callback'          => 'bpm_reporting_settings_callback_email_notification',
+			'sanitize_callback' => 'intval',
+			'args'              => array(),
+		),
 	);
 
 	return (array) apply_filters( 'bp_moderation_get_settings_fields', $fields );
@@ -137,22 +137,22 @@ function bp_moderation_get_settings_fields_for_section( $section_id = '' ) {
  * @uses  esc_attr()
  * @uses  apply_filters()
  *
- * @param string $option
- * @param string $default
+ * @param string $option Option name.
+ * @param string $default Default value.
  *
  * @return mixed
  */
 function bp_moderation_get_setting( $option, $default = '' ) {
 
-	// Get the option and sanitize it
+	// Get the option and sanitize it.
 	$value = get_option( $option, $default );
 
-	// Fallback to default
+	// Fallback to default.
 	if ( empty( $value ) ) {
 		$value = $default;
 	}
 
-	// Allow plugins to further filter the output
+	// Allow plugins to further filter the output.
 	return apply_filters( 'bp_moderation_get_setting', $value, $option );
 }
 
@@ -161,11 +161,11 @@ function bp_moderation_get_setting( $option, $default = '' ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param string $option
- * @param string $default
+ * @param string $option Option name.
+ * @param string $default Default value.
  */
 function bp_moderation_setting( $option, $default = '' ) {
-	echo bp_moderation_get_setting( $option, $default );
+	echo esc_attr( bp_moderation_get_setting( $option, $default ) );
 }
 
 /**
@@ -191,10 +191,10 @@ function bpm_blocking_settings_callback_member_blocking() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param $default bool Optional.Default value true
+ * @param int $default bool Optional.Default value true.
  *
- * @uses  get_option() To get the bp_search_autocomplete option
  * @return bool Is search autocomplete enabled or not
+ * @uses  get_option() To get the bp_search_autocomplete option
  */
 function bp_is_moderation_member_blocking_enable( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_moderation_member_blocking_enable', (bool) get_option( 'bpm_blocking_member_blocking', $default ) );
@@ -222,7 +222,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int $default bool Optional.Default value true
+ * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
@@ -268,7 +268,7 @@ function bpm_blocking_settings_callback_email_notification() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int $default bool Optional.Default value true
+ * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
@@ -311,8 +311,8 @@ function bpm_reporting_settings_callback_content_reporting() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int    $default      bool Optional.Default value true
- * @param string $content_type content type
+ * @param int    $default      bool Optional.Default value true.
+ * @param string $content_type content type.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
@@ -349,7 +349,7 @@ function bpm_reporting_settings_callback_auto_hide() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int $default bool Optional.Default value true
+ * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
@@ -395,7 +395,7 @@ function bpm_reporting_settings_callback_email_notification() {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int $default bool Optional.Default value true
+ * @param int $default bool Optional.Default value true.
  *
  * @return bool Is search autocomplete enabled or not
  * @uses  get_option() To get the bp_search_autocomplete option
