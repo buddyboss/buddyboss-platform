@@ -851,7 +851,20 @@ class BP_Moderation {
 		if ( empty( $reporters ) ) {
 			$bp = buddypress();
 
-			$sql       = $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d ORDER BY mr.date_created DESC", $moderation_id ); // phpcs:ignore
+			$select_sql = "SELECT * FROM {$bp->moderation->table_name_reports} mr";
+
+			// Where conditions.
+			$where_conditions[] = $wpdb->prepare( "mr.moderation_id = %d", $moderation_id ); // phpcs:ignore
+
+			if ( ! empty( $args['user_id'] ) ) {
+				$where_conditions[] = $wpdb->prepare( "mr.user_id = %d", $args['user_id'] ); // phpcs:ignore
+			}
+
+			// Join the where conditions together.
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$select_sql} {$where_sql} ORDER BY mr.date_created DESC";
+
 			$sql       = apply_filters( 'bp_moderation_reports_sql', $sql, $moderation_id );
 			$reporters = $wpdb->get_results( $sql ); // phpcs:ignore
 			foreach ( $reporters as $key => $reporter ) {
@@ -1041,6 +1054,26 @@ class BP_Moderation {
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->moderation->table_name} mo WHERE mo.item_id = %d AND mo.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
 
 		return is_numeric( $result ) ? (int) $result : false;
+	}
+
+	/**
+	 * get specific moderation item id
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param int $item_id   Moderation item id.
+	 * @param int $item_type Moderation item type.
+	 *
+	 * @return array|false|object|void
+	 */
+	public static function get_specific_moderation( $item_id, $item_type ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name} mo WHERE mo.item_id = %d AND mo.item_type = %s", $item_id, $item_type ) ); // phpcs:ignore
+
+		return ! empty( $result ) ? $result : false;
 	}
 
 	/**

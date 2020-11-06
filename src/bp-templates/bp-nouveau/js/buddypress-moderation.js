@@ -105,10 +105,12 @@ window.bp = window.bp || {};
 				}
 				var curObj = $( this );
 				var id = curObj.attr( 'data-id' );
+				var type = curObj.attr( 'data-type' );
 				var nonce = curObj.attr( 'data-nonce' );
 				var data = {
 					action: 'bp_moderation_unblock_user',
 					id: id,
+					type: type,
 					nonce: nonce,
 				};
 				$.post( ajaxurl, data, function ( response ) {

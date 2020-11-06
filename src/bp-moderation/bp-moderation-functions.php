@@ -447,7 +447,8 @@ function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = 
  * @return bool
  */
 function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
-	$moderation_obj = new BP_Moderation( $item_id, $item_type, );
+	$moderation_obj = new BP_Moderation( $item_id, $item_type );
+
 	if ( 'hide' === $action ) {
 		$moderation_obj->hide_sitewide = 1;
 	} elseif ( 'unhide' === $action ) {

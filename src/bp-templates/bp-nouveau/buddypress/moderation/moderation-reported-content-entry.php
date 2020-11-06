@@ -34,11 +34,7 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
     <td class="moderation-content-owner">
 		<?php
 		$user_id = bp_moderation_get_content_owner_id( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
-		if ( true === $hide_sitewide ) {
-			echo esc_html( bp_core_get_user_displayname( $user_id ) );
-		} else {
-			echo wp_kses_post( bp_core_get_userlink( $user_id ) );
-		}
+		echo wp_kses_post( bp_core_get_userlink( $user_id ) );
 		?>
     </td>
     <td class="moderation-content-excerpt">
@@ -48,7 +44,7 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
     </td>
     <td class="moderation-content-category">
 		<?php
-		echo '<b>Todo :</b> excerpt';
+		echo esc_html( bp_get_moderation_reported_category() );
 		?>
     </td>
     <td class="moderation-item-last-updated">

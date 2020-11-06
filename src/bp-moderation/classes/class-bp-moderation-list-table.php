@@ -294,7 +294,17 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		$action_type  = ( 1 === (int) $item['hide_sitewide'] ) ? 'unhide' : 'hide';
 		$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
+		$user_id      = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
 
+		$user_action_type  = 'hide';
+		$user_action_label = esc_html__( 'Hide', 'buddyboss' );
+		$user_data         = BP_Moderation::get_specific_moderation( $user_id, 'user' );
+
+		if ( ! empty( $user_data ) ) {
+			$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unhide' : 'hide';
+			$user_action_label = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
+		}
+		
 		// Build actions URL.
 		$view_url = add_query_arg( $view_url_query_arg, bp_get_admin_url( 'admin.php' ) );
 
@@ -302,9 +312,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		// View.
 		printf( '<a href="%s" title="%s"><i class="bb-icon-eye"></i></a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ) );
 		if ( ! isset( $_GET['tab'] ) || 'blocked-members' !== $_GET['tab'] ) {
-			printf( '<a href="javascript:void(0);" class="bp-hide-request" data-id="%s" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-close-circle"></i></a>', esc_attr( $item['id'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $action_type ), esc_attr( $action_label ) );
+			printf( '<a href="javascript:void(0);" class="bp-hide-request" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-close-circle"></i></a>', esc_attr( $item['item_id'] ), esc_attr( $item['item_type'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $action_type ), esc_attr( $action_label ) );
 		}
-		printf( '<a href="javascript:void(0);" class="bp-block-user" data-id="%s" data-nonce="%s"><i class="bb-icon-slash"></i></a>', esc_attr( $item['id'] ), esc_attr( wp_create_nonce( 'bp-blobk-unblock-user' ) ) );
+		printf( '<a href="javascript:void(0);" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-slash"></i></a>', esc_attr( $user_id ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), $user_action_label );
 	}
 
 	/**

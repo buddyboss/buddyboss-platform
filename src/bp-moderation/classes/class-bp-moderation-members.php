@@ -33,6 +33,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		parent::$Moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
+		add_filter('bp_moderation_content_types', array( $this, 'add_content_types' ) );
+
 		/**
 		 * Moderation code should not add for WordPress backend
 		 */
@@ -48,6 +50,20 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $content_types Supported Contents types
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ){
+		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
+		return $content_types;
 	}
 
 	/**

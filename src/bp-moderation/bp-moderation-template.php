@@ -71,7 +71,8 @@ function bp_has_moderation( $args = '' ) {
 	$args = bp_parse_args( $args );
 
 	if ( bp_is_user_moderation() && 'reported-content' === bp_current_action() ) {
-		$args['exclude_types'] = array( 'user' );
+		$args['exclude_types']     = array( 'user' );
+		$args['display_reporters'] = true;
 	} elseif ( bp_is_user_moderation() && 'blocked-members' === bp_current_action() ) {
 		$args['in_types'] = array( 'user' );
 	}
@@ -291,11 +292,40 @@ function bp_get_moderation_last_updated() {
 	 * @param string $last_updated The moderation last updated.
 	 */
 
-	if ( isset( $moderation_template->moderation->last_updated ) ) {
-		$moderation_hide_site_wide = $moderation_template->moderation->last_updated;
+	if ( isset( $moderation_template->moderation->reporters[0]->date_created ) ) {
+		$moderation_reported_date = $moderation_template->moderation->reporters[0]->date_created;
 	}
 
-	return apply_filters( 'bp_get_moderation_last_updated', $moderation_hide_site_wide );
+	return apply_filters( 'bp_get_moderation_last_updated', $moderation_reported_date );
+}
+
+/**
+ * Return the moderation reported category.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @return string moderation reported category.
+ *
+ * @global object $moderation_template {@link BP_Moderation_Template}
+ *
+ */
+function bp_get_moderation_reported_category() {
+	global $moderation_template;
+
+	/**
+	 * Filters the moderation item ID being displayed.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param string $reported_category The moderation reported category.
+	 */
+
+	if ( isset( $moderation_template->moderation->reporters[0]->category_id ) ) {
+		$term_data                    = get_term( $moderation_template->moderation->reporters[0]->category_id );
+		$moderation_reported_category = ( ! empty( $term_data->name ) ) ? $term_data->name : '';
+	}
+
+	return apply_filters( 'bp_get_moderation_reported_category', $moderation_reported_category );
 }
 
 /**
