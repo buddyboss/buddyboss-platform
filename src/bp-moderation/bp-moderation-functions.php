@@ -308,7 +308,7 @@ function bp_moderation_report_exist( $item_id, $item_type ) {
 	$response = false;
 
 	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$moderation = new BP_Moderation( $item_type, $item_type );
+		$moderation = new BP_Moderation( $item_id, $item_type );
 		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
 	}
 

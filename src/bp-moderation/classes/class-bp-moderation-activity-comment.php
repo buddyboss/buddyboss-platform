@@ -33,7 +33,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		parent::$Moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
-		add_filter('bp_moderation_content_types', array( $this, 'add_content_types' ) );
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
 		 * Moderation code should not add for WordPress backend & IF component is not active
@@ -45,6 +45,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		// Search Component.
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+
+		add_filter( 'bp_activity_comment_content', array( $this, 'comment_content_placeholder' ), 10 );
 	}
 
 	/**
@@ -56,8 +58,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @return mixed
 	 */
-	public function add_content_types( $content_types ){
+	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'Activity Comments', 'buddyboss' );
+
 		return $content_types;
 	}
 
@@ -155,6 +158,20 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		return $sql;
 	}
 
+	public function comment_content_placeholder( $content ) {
+		global $activities_template;
+
+		if ( in_array( $activities_template->activity->current_comment->id, self::get_sitewide_hidden_ids(), true ) ) {
+			$content = esc_html__( 'Content is hidden by moderator.', 'buddyboss' );
+		}
+
+		if ( bp_is_moderation_member_blocking_enable( 0 ) && in_array( $activities_template->activity->current_comment->user_id, BP_Moderation_Members::get_sitewide_hidden_ids(), true ) ) {
+			$content = esc_html__( 'Content from suspended/blocked user.', 'buddyboss' );
+		}
+
+		return $content;
+	}
+
 	/**
 	 * Get All blocked Activity Comments ids.
 	 *
@@ -196,12 +213,13 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $activity_id     Activity id
+	 * @param integer $activity_id Activity id
 	 *
 	 * @return int
 	 */
 	public static function get_content_owner_id( $activity_id ) {
 		$activity = new BP_Activity_Activity( $activity_id );
+
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
 	}
 

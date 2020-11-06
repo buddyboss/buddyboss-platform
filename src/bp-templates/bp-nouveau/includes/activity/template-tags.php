@@ -979,6 +979,25 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		);
 	}
 
+	if ( bp_is_active( 'moderation' ) ){
+		$buttons['activity_report'] = bp_moderation_get_report_button(
+			array(
+				'id'                => 'activity_comment_report',
+				'position'          => 50,
+				'component'         => 'moderation',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+						'data-bp-content-id'   => $activity_comment_id,
+						'data-bp-content-type' => BP_Moderation_Activity_Comment::$moderation_type,
+				),
+			),
+			false
+		);
+	}
+
 	/**
 	 * Filter to add your buttons, use the position argument to choose where to insert it.
 	 *
