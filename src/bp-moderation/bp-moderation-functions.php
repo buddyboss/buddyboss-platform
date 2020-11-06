@@ -378,11 +378,11 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
 		$moderation_obj->hide_sitewide = 0;
 	}
 
-	$moderation_obj->save();
-
 	if ( 'unhide' === $action ) {
 		$moderation_obj->delete();
 	}
+
+	return $moderation_obj->save();
 }
 
 /**
