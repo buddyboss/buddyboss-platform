@@ -124,6 +124,10 @@ function bp_moderation_unblock_user() {
 add_action( 'wp_ajax_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
 add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_user' );
 
+/**
+ * Function to handle moderation request from frontend
+ * @since BuddyBoss 1.5.4
+ */
 function bp_moderation_content_actions_request() {
 	$response = array(
 		'success' => false,
