@@ -1,7 +1,7 @@
 /* global BP_ADMIN */
 jQuery( document ).ready( function ( $ ) {
 	$( document ).on( 'click', '.bp-hide-request, .bp-block-user', function () {
-		if ( !confirm( Bp_Moderation.confirm_msg ) ) {
+		if ( !confirm( Bp_Moderation.strings.confirm_msg ) ) {
 			return false;
 		}
 		var curObj = $( this );
@@ -21,10 +21,10 @@ jQuery( document ).ready( function ( $ ) {
 			if ( true === result.success ) {
 				if ( 'hide' === sub_action ) {
 					curObj.attr( 'data-action', 'unhide' );
-					curObj.attr( 'title', Bp_Moderation.unhide_label );
+					curObj.attr( 'title', Bp_Moderation.strings.unhide_label );
 				} else if ( 'unhide' === sub_action ) {
 					curObj.attr( 'data-action', 'hide' );
-					curObj.attr( 'title', Bp_Moderation.hide_label );
+					curObj.attr( 'title', Bp_Moderation.strings.hide_label );
 				}
 			} else {
 				alert( result.message );

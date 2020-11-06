@@ -121,6 +121,7 @@ function bp_has_moderation( $args = '' ) {
 		$args['display_reporters'] = true;
 	} elseif ( bp_is_user_moderation() && 'blocked-members' === bp_current_action() ) {
 		$args['in_types'] = array( 'user' );
+		$args['display_reporters'] = true;
 	}
 
 	if ( bp_is_user_moderation() ) {

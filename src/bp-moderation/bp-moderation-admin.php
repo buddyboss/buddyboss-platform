@@ -37,9 +37,11 @@ function bp_moderation_admin_scripts( $hook ) {
 		);
 
 		wp_localize_script( 'bp-moderation', 'Bp_Moderation', array(
-			'confirm_msg'  => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
-			'hide_label'   => esc_js( __( 'Hide', 'buddyboss' ) ),
-			'unhide_label' => esc_js( __( 'Unhide', 'buddyboss' ) ),
+			'strings' => array(
+				'confirm_msg'  => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
+				'hide_label'   => esc_js( __( 'Hide', 'buddyboss' ) ),
+				'unhide_label' => esc_js( __( 'Unhide', 'buddyboss' ) ),
+			)
 		) );
 	}
 }
