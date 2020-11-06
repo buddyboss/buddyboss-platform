@@ -387,7 +387,17 @@
 		li .group-remove-invite-button {
 
 			span.icons:before {
-				content: "\f153";
+				content: "\e8f7";
+				font-family: bb-icons;
+				speak: none;
+				font-style: normal;
+				font-weight: 400;
+				font-variant: normal;
+				text-transform: none;
+				line-height: 1;
+				list-style: none;
+				-webkit-font-smoothing: antialiased;
+				color: #939597;
 			}
 		}
 	} // close ul.item-list

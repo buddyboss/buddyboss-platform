@@ -73,7 +73,7 @@ class BP_Blogs_Component extends BP_Component {
 		$args = array(
 			'slug'                  => BP_BLOGS_SLUG,
 			'root_slug'             => isset( $bp->pages->blogs->slug ) ? $bp->pages->blogs->slug : BP_BLOGS_SLUG,
-			'has_directory'         => is_multisite(), // Non-multisite installs don't need a top-level Sites directory, since there's only one site.
+			'has_directory'         => false, // Non-multisite installs don't need a top-level Sites directory, since there's only one site.
 			'directory_title'       => isset( $bp->pages->blogs->title ) ? $bp->pages->blogs->title : $default_directory_title,
 			'notification_callback' => 'bp_blogs_format_notifications',
 			'search_string'         => __( 'Search sites&hellip;', 'buddyboss' ),
@@ -217,15 +217,13 @@ class BP_Blogs_Component extends BP_Component {
 		// Add 'Sites' to the main navigation.
 		$count    = (int) bp_get_total_blog_count_for_user();
 		$class    = ( 0 === $count ) ? 'no-count' : 'count';
-		$nav_text = sprintf(
-			/* translators: %s: Site count for the current user */
-			__( 'Sites %s', 'buddyboss' ),
-			sprintf(
-				'<span class="%s">%s</span>',
-				esc_attr( $class ),
-				bp_core_number_format( $count )
-			)
+		$nav_text = __( 'Sites', 'buddyboss' );
+		$nav_text .= sprintf(
+			' <span class="%s">%s</span>',
+			esc_attr( $class ),
+			bp_core_number_format( $count )
 		);
+
 		$main_nav = array(
 			'name'                => $nav_text,
 			'slug'                => $slug,

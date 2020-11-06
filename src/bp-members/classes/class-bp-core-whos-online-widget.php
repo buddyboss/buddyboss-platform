@@ -365,6 +365,9 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 		'exclude'         => $exclude_ids,
 	);
 
+	$online_count     = 0;
+	$connection_count = 0;
+
 	ob_start();
 	if ( bp_has_members( $online_args ) ) :
 		?>

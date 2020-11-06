@@ -58,6 +58,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 						'enum'              => array(
 							'delete_messages',
 							'hide_thread',
+							'unread',
 						),
 						'sanitize_callback' => 'sanitize_key',
 						'validate_callback' => 'rest_validate_request_arg',
@@ -95,7 +96,7 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id ID of the Messages Thread.
-	 * @apiParam {String=delete_messages,hide_thread} action Action name to perform on the message thread.
+	 * @apiParam {String=delete_messages,hide_thread,unread} action Action name to perform on the message thread.
 	 * @apiParam {Boolean} value Value for the action on message thread.
 	 */
 	public function action_items( $request ) {
@@ -109,6 +110,9 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 				break;
 			case 'hide_thread':
 				$retval = $this->rest_hide_thread( $thread_id, $value );
+				break;
+			case 'unread':
+				$retval = $this->rest_unread_thread( $thread_id, $value );
 				break;
 		}
 
@@ -241,6 +245,26 @@ class BP_REST_Messages_Actions_Endpoint extends WP_REST_Controller {
 			// phpcs:ignore
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, (int) $thread_id, bp_loggedin_user_id() ) );
 			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Read/Unread message thread based on the logged in user.
+	 * - from bp_nouveau_ajax_readunread_thread_messages();
+	 *
+	 * @param integer $thread_id ID of the Messages Thread.
+	 * @param boolen  $value     Action value.
+	 *
+	 * @return bool|void
+	 */
+	protected function rest_unread_thread( $thread_id, $value ) {
+		if ( empty( $value ) ) {
+			messages_mark_thread_read( $thread_id );
+			return true;
+		} elseif ( ! empty( $value ) ) {
+			messages_mark_thread_unread( $thread_id );
 		}
 
 		return false;

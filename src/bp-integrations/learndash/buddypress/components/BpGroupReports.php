@@ -120,7 +120,8 @@ class BpGroupReports extends BP_Group_Extension {
 
 		foreach ( bp_ld_sync( 'settings' )->get( 'reports.access', array() ) as $type ) {
 			$function = "groups_is_user_{$type}";
-			if ( function_exists( $function ) && call_user_func_array( $function, array( bp_loggedin_user_id(), $currentGroup->id ) ) ) {
+			$callback = call_user_func_array( $function, array( bp_loggedin_user_id(), $currentGroup->id ) );
+			if ( function_exists( $function ) && $callback ) {
 				return true;
 			}
 		}

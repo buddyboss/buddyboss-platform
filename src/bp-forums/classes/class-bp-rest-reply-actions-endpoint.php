@@ -146,7 +146,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/reply/action/:id Reply Actions
 	 * @apiName        ActionBBPReply
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Actions on Reply
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -228,7 +228,7 @@ class BP_REST_Reply_Actions_Endpoint extends BP_REST_Reply_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/reply/move/:id Move Reply
 	 * @apiName        MoveBBPReply
-	 * @apiGroup       ForumReplies
+	 * @apiGroup       Forum Replies
 	 * @apiDescription Move a Reply
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

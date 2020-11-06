@@ -69,7 +69,7 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/update Update xProfile
 	 * @apiName        UpdateBBxProfile
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Update xProfile for user.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -110,12 +110,12 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 				$field = xprofile_get_field( $field_id );
 
 				if ( isset( $field_post['value'] ) ) {
-					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type ) {
+					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
 						if ( is_serialized( $value ) ) {
 							$value = maybe_unserialize( $value );
 						}
 
-						$value = json_decode( $value, true );
+						$value = json_decode( wp_json_encode( $value ), true );
 
 						if ( ! is_array( $value ) ) {
 							$value = (array) $value;
@@ -293,8 +293,8 @@ class BP_REST_XProfile_Update_Endpoint extends WP_REST_Controller {
 
 		$params['fields'] = array(
 			'description' => __( 'Fields array with field_id, group_id, type, value and visibility_level to update the data.', 'buddyboss' ),
-			'type'        => 'object',
-			'items'       => array( 'type' => 'array' ),
+			'type'        => 'array',
+			'items'       => array( 'type' => 'object' ),
 			'default'     => array(
 				array(
 					'field_id'         => '',

@@ -101,7 +101,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 			// All arguments for forums component
 			$args = array(
 				'path'          => BP_PLUGIN_DIR,
-				'slug'          => bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ),
+				'slug'          => BP_FORUMS_SLUG,
 				'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BP_FORUMS_SLUG,
 				'has_directory' => false,
 				'search_string' => __( 'Search Forums&hellip;', 'buddyboss' ),
@@ -228,19 +228,21 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 				'item_css_id'     => 'replies',
 			);
 
-			// Favorite topics
-			$sub_nav[] = array(
-				'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
-				'slug'            => bbp_get_user_favorites_slug(),
-				'parent_url'      => $forums_link,
-				'parent_slug'     => $this->slug,
-				'screen_function' => 'bbp_member_forums_screen_favorites',
-				'position'        => 60,
-				'item_css_id'     => 'favorites',
-			);
+			if ( bbp_is_favorites_active() ) {
+				// Favorite topics
+				$sub_nav[] = array(
+					'name'            => ( bp_loggedin_user_id() === bp_displayed_user_id() ? __( 'My Favorites', 'buddyboss' ) : __( 'Favorites', 'buddyboss' ) ),
+					'slug'            => bbp_get_user_favorites_slug(),
+					'parent_url'      => $forums_link,
+					'parent_slug'     => $this->slug,
+					'screen_function' => 'bbp_member_forums_screen_favorites',
+					'position'        => 60,
+					'item_css_id'     => 'favorites',
+				);
+			}
 
 			// Subscribed topics (my profile only)
-			if ( bp_is_my_profile() ) {
+			if ( ( is_admin() || bp_is_my_profile() ) && bbp_is_subscriptions_active() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Subscriptions', 'buddyboss' ),
 					'slug'            => bbp_get_user_subscriptions_slug(),

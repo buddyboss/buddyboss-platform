@@ -176,6 +176,7 @@ class BP_Media_Template {
 					'order_by'    => $order_by,
 					'user_id'     => $user_id,
 					'album_id'    => $album_id,
+					'privacy'     => $privacy,
 				)
 			);
 

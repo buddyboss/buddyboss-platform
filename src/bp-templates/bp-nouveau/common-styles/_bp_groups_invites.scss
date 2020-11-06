@@ -24,6 +24,13 @@
 	.group-invites-search {
 		padding: 20px;
 	}
+
+	.bb-icons.bb-icon-loader {
+		display: inline-block;
+		font-size: 16px;
+		vertical-align: top;
+		margin-top: 3px;
+	}
 }
 
 #item-body #group-invites-container li.selected {
@@ -102,6 +109,11 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
 		display: flex;
 		align-items: center;
 		line-height: 1;
+
+		.bb-icons {
+			margin-right: 5px;
+			font-size: 18px;
+		}
 	}
 }
 
@@ -410,7 +422,12 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 	margin-left: auto;
 	margin-right: 10px;
 	position: relative;
-	top: 10px;
+	top: 2px;
+
+	.bb-icons {
+		font-size: 16px;
+	}
+
 }
 
 #bp-invites-submit-loader .dashicons-update:before {

@@ -59,9 +59,10 @@ class BP_REST_XProfile_Types_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/types Profile Types
 	 * @apiName        GetBBProfileTypes
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Profile Types.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 */
 	public function get_items( $request ) {
 		$registered_types = bp_get_member_types( array(), 'objects' );

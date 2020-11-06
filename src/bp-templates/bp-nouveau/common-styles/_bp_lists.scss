@@ -229,6 +229,11 @@
 #notifications-user-list {
 	clear: both;
 	padding-top: $pad-med;
+
+	.bb-sort-by-date .notifications-order-actions a .bb-icon {
+		width: 20px;
+		text-align: center;
+	}
 }
 
 // If logged out we don't display action buttons

@@ -82,3 +82,58 @@ function bbp_search_results_redirect() {
 	wp_safe_redirect( $redirect_to );
 	exit();
 }
+
+
+/**
+ * Return an array of search types
+ *
+ * @since 2.6.0 bbPress (r6903)
+ *
+ * @return array
+ */
+function bbp_get_search_type_ids() {
+	return apply_filters( 'bbp_get_search_types', array( 's', 'fs', 'ts', 'rs' ) );
+}
+
+/**
+ * Sanitize a query argument used to pass some search terms.
+ *
+ * Accepts a single parameter to be used for forums, topics, or replies.
+ *
+ * @since 2.6.0 bbPress (r6903)
+ *
+ * @param string $query_arg s|fs|ts|rs
+ *
+ * @return mixed
+ */
+function bbp_sanitize_search_request( $query_arg = 's' ) {
+
+	// Define allowed keys
+	$allowed = bbp_get_search_type_ids();
+
+	// Bail if not an allowed query string key
+	if ( ! in_array( $query_arg, $allowed, true ) ) {
+		return false;
+	}
+
+	// Get search terms if requested
+	$terms = ! empty( $_REQUEST[ $query_arg ] )
+		? $_REQUEST[ $query_arg ]
+		: false;
+
+	// Bail if query argument does not exist
+	if ( empty( $terms ) ) {
+		return false;
+	}
+
+	// Maybe implode if an array
+	if ( is_array( $terms ) ) {
+		$terms = implode( ' ', $terms );
+	}
+
+	// Sanitize
+	$retval = sanitize_title( trim( $terms ) );
+
+	// Filter & return
+	return apply_filters( 'bbp_sanitize_search_request', $retval, $query_arg );
+}

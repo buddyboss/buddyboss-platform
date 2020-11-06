@@ -265,7 +265,7 @@ class BP_Embed extends WP_Embed {
 
 		if ( $is_activity ) {
 
-			if ( false !== strpos( '<iframe', $content ) ) {
+			if ( !empty( $content ) && false !== strpos( '<iframe', $content ) ) {
 				return apply_filters( 'bp_embeds', $content );
 			}
 

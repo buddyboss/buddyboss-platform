@@ -156,14 +156,11 @@ class BP_Notifications_Component extends BP_Component {
 		if ( bp_is_user() && bp_user_has_access() ) {
 			$count    = bp_notifications_get_unread_notification_count( bp_displayed_user_id() );
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name = sprintf(
-				/* translators: %s: Unread notification count for the current user */
-				__( 'Notifications %s', 'buddyboss' ),
-				sprintf(
-					'<span class="%s">%s</span>',
-					esc_attr( $class ),
-					bp_core_number_format( $count )
-				)
+			$nav_name = __( 'Notifications', 'buddyboss' );
+			$nav_name .= sprintf(
+				' <span class="%s">%s</span>',
+				esc_attr( $class ),
+				bp_core_number_format( $count )
 			);
 		} else {
 			$nav_name = __( 'Notifications', 'buddyboss' );

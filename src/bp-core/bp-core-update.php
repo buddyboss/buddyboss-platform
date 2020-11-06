@@ -287,6 +287,11 @@ function bp_version_updater() {
 			bb_update_to_1_2_3();
 		}
 
+		// Version 3.1.1
+		if ( $raw_db_version < 14801 ) {
+			bp_update_to_1_2_4();
+		}
+
 		if ( $raw_db_version < 14901 ) {
 			bp_update_to_1_2_9();
 		}
@@ -298,6 +303,19 @@ function bp_version_updater() {
 		// Version 1.3.5
 		if ( $raw_db_version < 15601 ) {
 			bb_update_to_1_3_5();
+		}
+
+		// Version 1.4.0
+		if ( $raw_db_version < 15800 ) {
+			bp_update_to_1_4_0();
+		}
+
+		if ( $raw_db_version < 16000 ) {
+			bp_update_to_1_4_3();
+		}
+
+		if ( $raw_db_version < 16201 ) {
+			bp_update_to_1_5_1();
 		}
 	}
 
@@ -595,10 +613,101 @@ function bp_update_to_3_1_1() {
 /**
  * 1.2.3 update routine.
  *
+ * - Add follow table.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_update_to_1_2_4() {
+	bp_core_install_media();
+}
+
+function bp_update_to_1_4_0() {
+	bp_core_install_document();
+}
+
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.4.3
+ */
+function bp_update_to_1_4_3() {
+	global $wpdb;
+	$bp = buddypress();
+	$squery = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
+	$records = $wpdb->get_col( $squery );
+	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
+		$records = reset( $records );
+		if ( !empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ")";
+			$wpdb->query( $update_query );
+		}
+	}
+}
+
+/**
+ * Fix forums media showing in users profile media tab.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_update_to_1_5_1() {
+	if ( bp_is_active( 'xprofile' ) ) {
+		$nickname_field_id = bp_xprofile_nickname_field_id();
+		bp_xprofile_update_field_meta( $nickname_field_id, 'default_visibility', 'public' );
+		bp_xprofile_update_field_meta( $nickname_field_id, 'allow_custom_visibility', 'disabled' );
+	}
+}
+
+function bp_update_default_doc_extensions() {
+
+	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
+
+//	$changed_array = array(
+//		'bb_doc_52'   => array(
+//			'description' => '7z Archive XYZ',
+//		)
+//	);
+//
+//
+//	if ( !empty( $changed_array ) ) {
+//		foreach ( $changed_array as $k => $v ) {
+//			if ( array_key_exists( $k, $get_extensions ) ) {
+//				$extension = $get_extensions[$k];
+//				$get_extensions[$k] = array_replace( $extension, $v );
+//			} else {
+//				// For newly add key.
+//				$get_extensions[$k] = $v;
+//			}
+//		}
+//	}
+//
+//	$removed_array = array(
+//		'bb_doc_51'
+//	);
+//
+//	if ( !empty( $removed_array ) ) {
+//		foreach (  $removed_array as $key ) {
+//			unset( $get_extensions[$key] );
+//		}
+//
+//	}
+
+
+
+	//bp_update_option( 'bp_document_extensions_support', $get_extensions );
+
+}
+
+
+/**
+ * 1.2.3 update routine.
+ *
  * @since BuddyBoss 1.2.3
  */
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
+
+	// Fix current forums media privacy to 'forums'
+	bp_core_fix_forums_media();
 }
 
 /**
@@ -731,8 +840,11 @@ function bp_add_activation_redirect() {
 		// Check if there is any topics their in DB.
 		$topics = get_posts(
 			array(
-				'post_type'   => 'topic',
-				'numberposts' => 1,
+				'post_type'              => 'topic',
+				'numberposts'            => 1,
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 
@@ -778,7 +890,7 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug = get_post_field( 'post_name', $page_id );
+				$slug    = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
 				bp_update_option( '_bbp_root_slug', $slug );
@@ -967,6 +1079,17 @@ function bp_core_fix_media_activities() {
  */
 function bp_update_to_1_2_9() {
 	bp_core_install_group_message_email();
+}
+
+/**
+ * Fix forums media
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_core_fix_forums_media() {
+	if ( bp_is_active( 'forums' ) && bp_is_active( 'media' ) ) {
+		bbp_fix_forums_media();
+	}
 }
 
 function bp_update_to_1_3_0() {

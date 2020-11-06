@@ -8,7 +8,7 @@
 		autocomplete="off"
 		<?php checked( $checked, true ); ?>
 	/>
-	<?php _e( 'Yes. I want this group to have a social group', 'buddyboss' ); ?>
+	<?php _e( 'Yes, I want this group to have a social group', 'buddyboss' ); ?>
 </label>
 
 <p>

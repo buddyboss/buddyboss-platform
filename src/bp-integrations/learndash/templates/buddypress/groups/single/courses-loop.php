@@ -1,9 +1,7 @@
 <?php
 
 $is_enrolled            = false;
-$lession_list           = learndash_get_lesson_list( get_the_ID() );
-$lessons_count          = sizeof( $lession_list );
-$total_lessons          = $lessons_count > 1 ? sprintf( __( '%s Lessons', 'buddyboss' ), $lessons_count ) : sprintf( __( '%s Lesson', 'buddyboss' ), $lessons_count );
+$lesson_list            = learndash_get_lesson_list( get_the_ID(), array( 'num' => - 1 ) );
 $current_user_id        = get_current_user_id();
 $access_list            = learndash_get_course_meta_setting( $post->ID, 'course_access_list' );
 $admin_enrolled         = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' );
@@ -116,7 +114,7 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 
 				if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
 
-					if ( ( $course_pricing['type'] === 'open' && $progress['percentage'] === 0 ) || ( $course_pricing['type'] !== 'open' && $user_course_has_access && $progress['percentage'] === 0 ) ) {
+					if ( ( isset( $course_pricing['type'] ) && $course_pricing['type'] === 'open' && $progress['percentage'] === 0 ) || ( isset( $course_pricing['type'] ) && $course_pricing['type'] !== 'open' && $user_course_has_access && $progress['percentage'] === 0 ) ) {
 
 						echo '<div class="ld-status ld-status-progress ld-primary-background">' . __( 'Start ', 'buddyboss' ) . sprintf( __( '%s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ) . '</div>';
 
@@ -147,7 +145,7 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
         </div>
         <div class="bb-card-course-details">
 			<?php
-			$lessons_count = sizeof( $lesson_count );
+			$lessons_count = sizeof( $lesson_list );
 			$total_lessons = (
 			$lessons_count > 1
 				? sprintf(

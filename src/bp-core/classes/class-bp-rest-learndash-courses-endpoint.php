@@ -60,6 +60,7 @@ class BP_REST_Learndash_Courses_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Learndash
 	 * @apiDescription Retrieve courses.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.

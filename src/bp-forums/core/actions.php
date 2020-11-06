@@ -276,6 +276,9 @@ add_action( 'bbp_template_redirect', 'bbp_check_topic_edit', 10 );
 add_action( 'bbp_template_redirect', 'bbp_check_reply_edit', 10 );
 add_action( 'bbp_template_redirect', 'bbp_check_topic_tag_edit', 10 );
 
+// Must be after bbp_template_include_theme_compat
+add_action( 'bbp_template_redirect', 'bbp_remove_adjacent_posts', 10 );
+
 // Theme-side POST requests
 add_action( 'bbp_post_request', 'bbp_do_ajax', 1 );
 add_action( 'bbp_post_request', 'bbp_edit_topic_tag_handler', 1 );

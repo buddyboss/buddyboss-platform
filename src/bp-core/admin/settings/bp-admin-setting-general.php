@@ -57,7 +57,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'child-no-padding-first registration-form-main-select';
-			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
+			$this->add_field( 'allow-custom-registration', __( 'Registration Form', 'buddyboss' ), 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
 			$args          = array();
 			$args['class'] = 'child-no-padding register-text-box';
@@ -75,7 +75,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 			$args          = array();
 			$args['class'] = 'registration-form-main-select';
-			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
+			$this->add_field( 'allow-custom-registration', __( 'Registration Form', 'buddyboss' ), 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
 			$args          = array();
 			$args['class'] = 'child-no-padding register-text-box';
@@ -98,8 +98,8 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		// Private Network Settings.
 		$this->add_field( 'bp-enable-private-network', __( 'Private Network', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
-		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
-		if ( '0' === $enable_private_network ) {
+		$enable_private_network = bp_enable_private_network();
+		if ( ! $enable_private_network ) {
 			$this->add_field( 'bp-enable-private-network-public-content', __( 'Public Content', 'buddyboss' ), 'bp_admin_setting_callback_private_network_public_content' );
 		}
 		$this->add_field( 'bp-privacy-tutorial', '', 'bp_privacy_tutorial' );

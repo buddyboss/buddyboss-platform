@@ -165,6 +165,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Signups
 	 * @apiDescription Retrieve Signup Form Fields.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  WithoutLoggedInUser
 	 */
 	public function signup_form_items( $request ) {
 		$fields = array();
@@ -185,6 +186,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 					'type'        => $field['type'],
 					'required'    => $field['required'],
 					'options'     => '',
+					'member_type' => '',
 				);
 			}
 		}
@@ -209,22 +211,8 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						 * Added support for display name format support from platform.
 						 */
 						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-						$current_value = bp_get_option( 'bp-display-name-format' );
-
-						// If First Name selected then do not add last name field.
-						if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-								continue;
-							}
-							// If Nick Name selected then do not add first & last name field.
-						} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-								continue;
-							}
-						} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-								continue;
-							}
+						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+							continue;
 						}
 
 						if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
@@ -239,11 +227,12 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 						$field    = $fields_endpoint->assemble_response_data( $field, $request );
 						$fields[] = array(
 							'id'          => 'field_' . $field['id'],
-							'label'       => $field['name'],
-							'description' => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'label'       => ( ! empty( $field['alternate_name'] ) ? $field['alternate_name'] : $field['name'] ),
+							'description' => $field['description']['rendered'],
 							'type'        => $field['type'],
 							'required'    => $field['is_required'],
 							'options'     => $field['options'],
+							'member_type' => bp_xprofile_get_meta( $field['id'], 'field', 'member_type', false ),
 						);
 					}
 				}
@@ -569,6 +558,7 @@ class BP_REST_Signup_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Signups
 	 * @apiDescription Create signup
 	 * @apiVersion     1.0.0
+	 * @apiPermission  WithoutLoggedInUser
 	 * @apiParam {String} signup_email New user email address.
 	 * @apiParam {String} [signup_email_confirm] New user confirm email address.
 	 * @apiParam {String} signup_password New user account password.

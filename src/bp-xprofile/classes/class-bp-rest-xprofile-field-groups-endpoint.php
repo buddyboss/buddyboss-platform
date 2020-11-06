@@ -141,9 +141,10 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/groups Get xProfile Groups
 	 * @apiName        GetBBxProfileGroups
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Groups
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [profile_group_id] ID of the field group that have fields.
 	 * @apiParam {Boolean} [hide_empty_groups=false] Whether to hide profile groups of fields that do not have any profile fields or not.
 	 * @apiParam {Number} [user_id=1] Required if you want to load a specific user's data.
@@ -261,9 +262,10 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/groups/:id Get xProfile Group
 	 * @apiName        GetBBxProfilGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve Single xProfile Group
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the group of profile fields.
 	 * @apiParam {Number} [user_id=1] Required if you want to load a specific user's data.
 	 * @apiParam {string} [member_type] Limit fields by those restricted to a given member type, or array of member types.
@@ -339,7 +341,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/xprofile/groups Create xProfile Group
 	 * @apiName        CreateBBxProfileGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Create a Group
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -373,7 +375,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				'bp_rest_required_param_missing',
 				__( 'Required param missing.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -461,7 +463,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/groups/:id Update xProfile Group
 	 * @apiName        UpdateBBxProfileGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Update a Group
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -589,7 +591,7 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {DELETE} /wp-json/buddyboss/v1/xprofile/groups/:id Delete xProfile Group
 	 * @apiName        DeleteBBxProfileGroup
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Delete xProfile Group.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -705,23 +707,8 @@ class BP_REST_XProfile_Field_Groups_Endpoint extends WP_REST_Controller {
 				/**
 				 * Added support for display name format support from platform.
 				 */
-				// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-				$current_value = bp_get_option( 'bp-display-name-format' );
-
-				// If First Name selected then do not add last name field.
-				if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-						continue;
-					}
-					// If Nick Name selected then do not add first & last name field.
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-						continue;
-					}
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-						continue;
-					}
+				if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+					continue;
 				}
 
 				if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {

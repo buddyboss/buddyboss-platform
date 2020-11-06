@@ -69,7 +69,11 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 					'args'                => array(
 						'value' => array(
 							'description' => __( 'The list of values for the field data.', 'buddyboss' ),
-							'type'        => 'array',
+
+							// @todo Removed to support array and object both.
+
+							/*
+							'type'        => 'object',
 							'items'       => array(
 								'type' => 'string',
 							),
@@ -77,6 +81,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 								'validate_callback' => 'rest_validate_request_arg',
 								'sanitize_callback' => 'rest_sanitize_request_arg',
 							),
+							*/
 						),
 					),
 				),
@@ -100,9 +105,10 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {GET} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Get xProfile Field Data
 	 * @apiName        GetBBxProfileFieldData
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Retrieve xProfile Field data for the user.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} field_id The ID of the field the data is from.
 	 * @apiParam {Number} user_id The ID of user the field data is from.
 	 */
@@ -213,13 +219,13 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Update xProfile Field Data
 	 * @apiName        UpdateBBxProfileData
-	 * @apiGroup       ProfileFields
+	 * @apiGroup       Profile Fields
 	 * @apiDescription Update xProfile field data for the user.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} field_id The ID of the field the data is from.
 	 * @apiParam {Number} user_id The ID of user the field data is from.
-	 * @apiParam {String} [value] The list of values for the field data.
+	 * @apiParam {Array} [value] The list of values for the field data.
 	 */
 	public function update_item( $request ) {
 		// Setting context.
@@ -244,8 +250,27 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 		 * For field types not supporting multiple values, join values in case
 		 * the submitted value was not an array.
 		 */
-		if ( ! $field->type_obj->supports_multiple_defaults ) {
+		if (
+			! $field->type_obj->supports_multiple_defaults
+			&& is_array( $value )
+			&& ! in_array( $field->type, apply_filters( 'bp_rest_xprofile_mutiple', array( 'socialnetworks' ) ), true )
+		) {
 			$value = implode( ' ', $value );
+		}
+
+		if (
+			$field->type_obj->supports_multiple_defaults
+			&& in_array( $field->type, apply_filters( 'bp_rest_xprofile_serialize', array( 'checkbox', 'multiselectbox' ) ), true )
+		) {
+			if ( is_serialized( $value ) ) {
+				$value = maybe_unserialize( $value );
+			}
+
+			$value = json_decode( $value, true );
+
+			if ( ! is_array( $value ) ) {
+				$value = (array) $value;
+			}
 		}
 
 		if ( ! xprofile_set_field_data( $field->id, $user->ID, $value ) ) {
@@ -369,7 +394,7 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 	 *
 	 * @api {DELETE} /wp-json/buddyboss/v1/xprofile/:field_id/data/:user_id Delete xProfile Field Data
 	 * @apiName DeleteBBxProfileData
-	 * @apiGroup ProfileFields
+	 * @apiGroup Profile Fields
 	 * @apiDescription Delete user's xProfile data.
 	 * @apiVersion 1.0.0
 	 * @apiPermission LoggedInUser
@@ -473,8 +498,8 @@ class BP_REST_XProfile_Data_Endpoint extends WP_REST_Controller {
 			'field_id'     => $field_data->field_id,
 			'user_id'      => $field_data->user_id,
 			'value'        => array(
-				'raw'          => $field_data->value,
-				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value ),
+				'raw'          => $this->fields_endpoint->get_profile_field_raw_value( $field_data->value, $field_data->field_id ),
+				'unserialized' => $this->fields_endpoint->get_profile_field_unserialized_value( $field_data->value, $field_data->field_id ),
 				'rendered'     => $this->fields_endpoint->get_profile_field_rendered_value( $field_data->value, $field_data->field_id ),
 			),
 			'last_updated' => bp_rest_prepare_date_response( $field_data->last_updated ),

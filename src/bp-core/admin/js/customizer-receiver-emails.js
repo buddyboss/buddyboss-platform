@@ -93,8 +93,8 @@
 			value.bind(
 				function( newval ) {
 					if ( newval.length ) {
-						$( 'a' ).css( 'color', newval );
-						$( 'a' ).attr( 'style', function(i,s) { return s + 'color:' + newval + ' !important;'; } );
+						$( 'a:not(.ab-item)' ).css( 'color', newval );
+						$( 'a:not(.ab-item)' ).attr( 'style', function(i,s) { return s + 'color:' + newval + ' !important;'; } );
 						$( 'hr' ).attr( 'color', newval );
 						$( '.button_outline' ).css( 'border-color', newval );
 					}

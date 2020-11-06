@@ -14,9 +14,11 @@
 				<div class="activity-inner"><?php echo wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ) ?></div>
 			<?php endif; ?>
 			<div class="item-meta">
-				<time>
-					<?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ) ?>
-				</time>
+				<a href="<?php bp_activity_thread_permalink(); ?>">
+					<time>
+						<?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . '&nbsp;' . esc_html__( 'ago', 'buddyboss' ) ?>
+					</time>
+				</a>
 			</div>
 		</div>
 	</div>

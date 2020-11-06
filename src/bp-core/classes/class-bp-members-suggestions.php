@@ -98,6 +98,11 @@ class BP_Members_Suggestions extends BP_Suggestions {
 			$user_query['user_id'] = get_current_user_id();
 		}
 
+		// Exclude current user from mention list.
+		if ( is_user_logged_in() ) {
+			$user_query['exclude'] = get_current_user_id();
+		}
+
 		/**
 		 * Filters the members suggestions query args.
 		 *

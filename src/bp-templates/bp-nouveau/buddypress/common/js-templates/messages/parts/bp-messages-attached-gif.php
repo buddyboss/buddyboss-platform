@@ -4,7 +4,7 @@
 		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
 	<div class="gif-image-remove gif-image-overlay">
-		<span class="dashicons dashicons-no"></span>
+		<i class="bb-icon-close"></i>
 	</div>
 	<# } #>
 </script>

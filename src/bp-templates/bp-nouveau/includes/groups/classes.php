@@ -372,6 +372,15 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			);
 		}
 
+		if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+			$nav_items['documents'] = array(
+				'name'        => __( 'Documents', 'buddyboss' ),
+				'slug'        => 'documents',
+				'parent_slug' => $this->group->slug,
+				'position'    => 21,
+			);
+		}
+
 		// Required params
 		$required_params = array(
 			'slug'              => true,
@@ -394,6 +403,13 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				}
 			}
 		}
+
+		/**
+		 * Filters group customizer navigation items.
+		 *
+		 * @since BuddyBoss 1.4.4
+		 */
+		$nav_items = apply_filters( 'bp_nouveau_customizer_group_nav_items', $nav_items, $this->group );
 
 		// Now we got all, create the temporary nav.
 		foreach ( $nav_items as $nav_item ) {

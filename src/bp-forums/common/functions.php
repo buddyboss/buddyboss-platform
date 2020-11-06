@@ -955,8 +955,13 @@ function bbp_check_for_blacklist( $anonymous_data = false, $author_id = 0, $titl
 
 	/** Blacklist */
 
+	$blacklist_option_name = 'blacklist_keys';
+	if ( function_exists( 'wp_check_comment_disallowed_list' ) ) {
+		$blacklist_option_name = 'disallowed_keys';
+	}
+
 	// Get the moderation keys
-	$blacklist = trim( get_option( 'blacklist_keys' ) );
+	$blacklist = trim( get_option( $blacklist_option_name ) );
 
 	// Bail if blacklist is empty
 	if ( empty( $blacklist ) ) {

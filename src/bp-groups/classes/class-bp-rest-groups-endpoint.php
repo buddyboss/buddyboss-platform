@@ -83,6 +83,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::DELETABLE ),
 				),
 				'schema' => array( $this, 'get_item_schema' ),
 			)
@@ -102,7 +103,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve groups
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} [page=1] Current page of the collection.
 	 * @apiParam {Number} [per_page=10] Maximum number of items to be returned in result set.
 	 * @apiParam {String} [search] Limit results to those matching a string.
@@ -141,6 +142,11 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $request['parent_id'] ) ) {
 			$args['parent_id'] = null;
+		}
+
+		// See if the user can see hidden groups.
+		if ( isset( $request['show_hidden'] ) && true === (bool) $request['show_hidden'] && ! $this->can_see_hidden_groups( $request ) ) {
+			$args['show_hidden'] = false;
 		}
 
 		if ( isset( $request['scope'] ) ) {
@@ -223,16 +229,6 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && ! $this->can_see_hidden_groups( $request ) ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you cannot view hidden groups.', 'buddyboss' ),
-				array(
-					'status' => rest_authorization_required_code(),
-				)
-			);
-		}
-
 		/**
 		 * Filter the groups `get_items` permissions check.
 		 *
@@ -257,7 +253,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve single group
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} id A unique numeric ID for the Group.
 	 */
 	public function get_item( $request ) {
@@ -316,6 +312,16 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		if ( true === $retval && ! $this->can_see( $group ) ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you cannot view the group.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
 		/**
 		 * Filter the groups `get_item` permissions check.
 		 *
@@ -361,7 +367,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 				'bp_rest_create_group_empty_name',
 				__( 'Please, enter the name of group.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 400,
 				)
 			);
 		}
@@ -445,11 +451,11 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	/**
 	 * Update a group.
 	 *
+	 * @since 0.1.0
+	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_REST_Response | WP_Error
-	 * @since 0.1.0
-	 *
 	 * @api            {PATCH} /wp-json/buddyboss/v1/groups/:id Update Group
 	 * @apiName        UpdateBBGroup
 	 * @apiGroup       Groups
@@ -464,6 +470,8 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Boolean} [enable_forum] Whether the Group has a forum enabled or not.
 	 * @apiParam {Number} [parent_id] ID of the parent Group.
 	 * @apiParam {Array} [types] Set type(s) for a group.
+	 * @apiParam {Array} [append_types] Append type(s) for a group.
+	 * @apiParam {Array} [remove_types] Remove type(s) for a group.
 	 */
 	public function update_item( $request ) {
 		// Setting context.
@@ -578,6 +586,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
 	 * @apiParam {Number} id A unique numeric ID for the Group.
+	 * @apiParam {boolean} delete_group_forum Delete the Group forum if exist.
 	 */
 	public function delete_item( $request ) {
 		// Setting context.
@@ -586,6 +595,14 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		// Get the group before it's deleted.
 		$group    = $this->get_group_object( $request );
 		$previous = $this->prepare_item_for_response( $group, $request );
+
+		// Delete group forum.
+		if ( isset( $request['delete_group_forum'] ) && true === $request['delete_group_forum'] ) {
+			$forum_ids = bbp_get_group_forum_ids( $group->id );
+			foreach ( $forum_ids as $forum_id ) {
+				wp_delete_post( $forum_id, true );
+			}
+		}
 
 		if ( ! groups_delete_group( $group->id ) ) {
 			return new WP_Error(
@@ -713,6 +730,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			'role'               => '',
 			'plural_role'        => '',
 			'can_join'           => $this->bp_rest_user_can_join( $item ),
+			'can_post'           => $this->bp_rest_user_can_post( $item ),
 		);
 
 		// BuddyBoss Platform support.
@@ -926,12 +944,22 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 		// Update group type(s).
 		if ( isset( $prepared_group->group_id ) && isset( $request['types'] ) ) {
+			bp_groups_set_group_type( $prepared_group->group_id, $request['types'], false );
+		}
 
-			// Append on update. Add on creation.
-			$append = WP_REST_Server::EDITABLE === $request->get_method();
+		// Remove group type(s).
+		if ( isset( $prepared_group->group_id ) && isset( $request['remove_types'] ) ) {
+			array_map(
+				function( $type ) use ( $prepared_group ) {
+					bp_groups_remove_group_type( $prepared_group->group_id, $type );
+				},
+				$request['remove_types']
+			);
+		}
 
-			// Add/Append group type(s).
-			bp_groups_set_group_type( $prepared_group->group_id, $request['types'], $append );
+		// Append group type(s).
+		if ( isset( $prepared_group->group_id ) && isset( $request['append_types'] ) ) {
+			bp_groups_set_group_type( $prepared_group->group_id, $request['append_types'], true );
 		}
 
 		/**
@@ -989,8 +1017,27 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 	 * @return bool
 	 * @since 0.1.0
 	 */
-	protected function can_user_delete_or_update( $group ) {
+	public function can_user_delete_or_update( $group ) {
 		return ( bp_current_user_can( 'bp_moderate' ) || bp_loggedin_user_id() === $group->creator_id );
+	}
+
+	/**
+	 * Can a user see a group?
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param  BP_Groups_Group $group Group object.
+	 * @return bool
+	 */
+	protected function can_see( $group ) {
+
+		// If it is not a hidden group, user can see it.
+		if ( 'hidden' !== $group->status ) {
+			return true;
+		}
+
+		// Check for moderators or if user is a member of the group.
+		return ( bp_current_user_can( 'bp_moderate' ) || groups_is_user_member( bp_loggedin_user_id(), $group->id ) );
 	}
 
 	/**
@@ -1075,9 +1122,50 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			if ( WP_REST_Server::EDITABLE === $method ) {
 				$key = 'update_item';
 				unset( $args['slug'] );
+
+				// Append group types.
+				$args['append_types'] = array(
+					'description'       => __( 'Append type(s) for a group.', 'buddyboss' ),
+					'type'              => 'array',
+					'enum'              => bp_groups_get_group_types(),
+					'sanitize_callback' => 'bp_rest_sanitize_group_types',
+					'validate_callback' => 'bp_rest_validate_group_types',
+					'items'             => array(
+						'type' => 'string',
+					),
+				);
+
+				// Remove group types.
+				$args['remove_types'] = array(
+					'description'       => __( 'Remove type(s) for a group.', 'buddyboss' ),
+					'type'              => 'array',
+					'enum'              => bp_groups_get_group_types(),
+					'sanitize_callback' => 'bp_rest_sanitize_group_types',
+					'validate_callback' => 'bp_rest_validate_group_types',
+					'items'             => array(
+						'type' => 'string',
+					),
+				);
 			}
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
-			$key = 'delete_item';
+			$key  = 'delete_item';
+			$args = array(
+				'id' => array(
+					'description' => __( 'A unique numeric ID for the Group.', 'buddyboss' ),
+					'type'        => 'integer',
+					'required'    => true,
+				),
+			);
+
+			if ( bp_is_active( 'forums' ) ) {
+				$args['delete_group_forum'] = array(
+					'description'       => __( 'Delete the Group forum if exist.', 'buddyboss' ),
+					'type'              => 'boolean',
+					'default'           => false,
+					'sanitize_callback' => 'rest_sanitize_boolean',
+					'validate_callback' => 'rest_validate_request_arg',
+				);
+			}
 		}
 
 		/**
@@ -1297,6 +1385,12 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'readonly'    => true,
 				),
+				'can_post'           => array(
+					'context'     => array( 'view', 'edit' ),
+					'description' => __( 'Check current user can post activity or not.', 'buddyboss' ),
+					'type'        => 'boolean',
+					'readonly'    => true,
+				),
 				'forum'              => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Forum id of the group.', 'buddyboss' ),
@@ -1508,6 +1602,7 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 
 	/**
 	 * Check the group join with members type.
+	 * - from bp_get_group_join_button().
 	 *
 	 * @param BP_Groups_Group $item Group object.
 	 *
@@ -1519,31 +1614,82 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
+		if (
+			'hidden' === bp_get_group_status( $item )
+			|| bp_group_is_user_banned( $item, $user_id )
+			|| ! empty( $item->is_member )
+		) {
+			return false;
+		}
+
+		// Don't Show the button if restrict invite is enabled and member is not a part of parent group.
+		$parent_group_id = bp_get_parent_group_id( $item->id );
+		if (
+			isset( $parent_group_id )
+			&& $parent_group_id > 0
+			&& function_exists( 'bp_enable_group_hierarchies' )
+			&& true === bp_enable_group_hierarchies()
+			&& function_exists( 'bp_enable_group_restrict_invites' )
+			&& true === bp_enable_group_restrict_invites()
+		) {
+			$is_member = groups_is_user_member( $user_id, $parent_group_id );
+			if ( false === $is_member ) {
+				return false;
+			}
+		}
+
 		if ( 'public' === bp_get_group_status( $item ) ) {
 			return true;
 		}
 
-		// Check for the group type > profile type joining.
-		if (
-			function_exists( 'bp_member_type_enable_disable' )
-			&& true === bp_member_type_enable_disable()
-			&& function_exists( 'bp_disable_group_type_creation' )
-			&& true === bp_disable_group_type_creation()
-		) {
-			$group_type = bp_groups_get_group_type( $item->id );
-
-			$group_type_id = bp_group_get_group_type_id( $group_type );
-
-			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
-
-			$get_requesting_user_member_type = bp_get_member_type( $user_id );
-
-			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
+		if ( 'private' === bp_get_group_status( $item ) ) {
+			if ( $item->is_invited ) {
 				return true;
+			} elseif ( $item->is_pending ) {
+				return false;
+			} else {
+				// Check for the group type > profile type joining.
+				if (
+					function_exists( 'bp_member_type_enable_disable' )
+					&& true === bp_member_type_enable_disable()
+					&& function_exists( 'bp_disable_group_type_creation' )
+					&& true === bp_disable_group_type_creation()
+				) {
+					$group_type = bp_groups_get_group_type( $item->id );
+
+					$group_type_id = bp_group_get_group_type_id( $group_type );
+
+					$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+					$get_requesting_user_member_type = bp_get_member_type( $user_id );
+
+					if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join, true ) ) {
+						return true;
+					} else {
+						return true;
+					}
+				} else {
+					return true;
+				}
 			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check the user can post activity into group or not based on settings.
+	 *
+	 * @param BP_Groups_Group $item Group object.
+	 *
+	 * @return bool
+	 */
+	protected function bp_rest_user_can_post( $item ) {
+		if ( ! bp_is_active( 'activity' ) ) {
+			return false;
+		}
+
+		return is_user_logged_in() && bp_group_is_member( $item ) && bp_group_is_member_allowed_posting( $item );
 	}
 
 	/**
@@ -1622,7 +1768,13 @@ class BP_REST_Groups_Endpoint extends WP_REST_Controller {
 		$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
 		$group_admin           = groups_get_group_admins( $group_id );
 		$group_mode            = groups_get_group_mods( $group_id );
-		$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
+		$group_member          = groups_get_group_members(
+			array(
+				'group_id' => $group_id,
+				'per_page' => 10,
+				'page'     => 1,
+			)
+		);
 
 		if ( groups_is_user_admin( $user_id, $group_id ) ) {
 			if ( isset( $group_admin ) && count( $group_admin ) > 1 ) {

@@ -64,7 +64,6 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			global $wpdb, $bp;
 
-			$bp_prefix = bp_core_get_table_prefix();
 
 			$query_placeholder = array();
 
@@ -99,7 +98,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 					if ( 'user_meta' === $user_field ) {
 						// Search in user meta table for terms
-						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s ) ";
+						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE ExtractValue(meta_value, '//text()') LIKE %s AND meta_key NOT IN( 'first_name', 'last_name', 'nickname' ) ) ";
 						$query_placeholder[]        = '%' . $search_term . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . ' LIKE %s ';
@@ -126,7 +125,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
 				$groups = bp_xprofile_get_groups(
 					array(
-						'fetch_fields' => true,
+						'fetch_fields'                   => true,
+						'repeater_show_main_fields_only' => true,
 					)
 				);
 
@@ -136,6 +136,8 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 						'char_search' => array( 0 ), // Search for character in field of type textbox, textarea and etc
 					);
 
+					$selected_xprofile_repeater_fields = array();
+
 					$word_search_field_type = array( 'radio', 'checkbox' );
 
 					foreach ( $groups as $group ) {
@@ -143,37 +145,89 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 							foreach ( $group->fields as $field ) {
 								if ( bp_is_search_xprofile_enable( $field->id ) ) {
 
-									if ( in_array( $field->type, $word_search_field_type ) ) {
-										$selected_xprofile_fields['word_search'][] = $field->id;
+									if ( true === bp_core_hide_display_name_field( $field->id ) ) {
+										continue;
+									}
+
+									$repeater_enabled = bp_xprofile_get_meta( $field->group_id, 'group', 'is_repeater_enabled', true );
+
+									if ( ! empty( $repeater_enabled ) && 'on' === $repeater_enabled ) {
+										$selected_xprofile_repeater_fields = array_unique( array_merge(
+											$selected_xprofile_repeater_fields,
+											bp_get_repeater_clone_field_ids_all( $field->group_id )
+										) );
 									} else {
-										$selected_xprofile_fields['char_search'][] = $field->id;
+										if ( in_array( $field->type, $word_search_field_type ) ) {
+											$selected_xprofile_fields['word_search'][] = $field->id;
+										} else {
+											$selected_xprofile_fields['char_search'][] = $field->id;
+										}
 									}
 								}
 							}
 						}
 					}
 
-					if ( ! empty( $selected_xprofile_fields ) ) {
-						// u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s )
-						$clause_xprofile_table  = "u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
-						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
-						$clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
-						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
-						$clause_xprofile_table .= ') ) ) ';
+					// added repeater support based on privacy.
+					if ( ! empty( $selected_xprofile_repeater_fields ) ) {
+						$selected_xprofile_repeater_fields = array_unique( $selected_xprofile_repeater_fields );
+						foreach ( $selected_xprofile_repeater_fields as $field_id ) {
+							$field_object = new BP_XProfile_Field( $field_id );
+							if ( in_array( $field_object->type, $word_search_field_type ) ) {
+								$selected_xprofile_fields['word_search'][] = $field_object->id;
+							} else {
+								$selected_xprofile_fields['char_search'][] = $field_object->id;
+							}
+						}
+					}
 
-						$where_fields[]      = $clause_xprofile_table;
-						$query_placeholder[] = '%' . $search_term . '%';
+					if ( ! empty( $selected_xprofile_fields ) ) {
+
+						$data_clause_xprofile_table  = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
+						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
+						$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
+						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );
+						$data_clause_xprofile_table .= ') ) )';
+
+						$sql_xprofile = $wpdb->prepare( $data_clause_xprofile_table, '%' . $search_term . '%' );
+						$sql_xprofile_result = $wpdb->get_results( $sql_xprofile );
+
+						$user_ids = array();
+
+						// check visiblity for field id with current user.
+						if ( ! empty( $sql_xprofile_result ) ) {
+							foreach ( $sql_xprofile_result as $field_data ) {
+								$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+
+								if (
+									( ! empty( $hidden_fields )
+									  && ! in_array( $field_data->field_id, $hidden_fields )
+									)
+									|| empty( $hidden_fields )
+								) {
+									$user_ids[] = $field_data->user_id;
+								}
+							}
+						}
+
+						// Added user when visbility matched.
+						if ( !empty( $user_ids ) ) {
+							$user_ids = array_unique( $user_ids );
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids )  ." )";
+						} else {
+							$where_fields[] = "u.id = 0";
+						}
 					}
 				}
 			}
 			/* _____________________________ */
 
-						/*
-						 ++++++++++++++++++++++++++++++++
+			/*
+			 ++++++++++++++++++++++++++++++++
 			 * Search from search string
 			 +++++++++++++++++++++++++++++++ */
 
-							$split_search_term = explode( ' ', $search_term );
+			$split_search_term = explode( ' ', $search_term );
 
 			if ( count( $split_search_term ) > 1 ) {
 
@@ -196,7 +250,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			}
 
-						/* _____________________________ */
+			/* _____________________________ */
 
 			if ( ! empty( $where_fields ) ) {
 				$WHERE[] = '(' . implode( ' OR ', $where_fields ) . ')';
@@ -211,16 +265,18 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 				$sql .= ' GROUP BY u.id ';
 			}
 
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			if ( ! empty( $query_placeholder ) ) {
+				$sql = $wpdb->prepare( $sql, $query_placeholder );
+			}
 
-						return apply_filters(
-							'Bp_Search_Members_sql',
-							$sql,
-							array(
-								'search_term'         => $search_term,
-								'only_totalrow_count' => $only_totalrow_count,
-							)
-						);
+			return apply_filters(
+				'Bp_Search_Members_sql',
+				$sql,
+				array(
+					'search_term'         => $search_term,
+					'only_totalrow_count' => $only_totalrow_count,
+				)
+			);
 		}
 
 		protected function generate_html( $template_type = '' ) {
@@ -315,4 +371,3 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 	// End class Bp_Search_Members
 
 endif;
-

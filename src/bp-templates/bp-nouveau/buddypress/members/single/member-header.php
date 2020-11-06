@@ -12,7 +12,7 @@
 	<div id="item-header-avatar">
 		<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
 			<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Profile Photo', 'buddyboss'); ?>">
-				<span class="dashicons dashicons-edit"></span>
+				<i class="bb-icon-edit-thin"></i>
 			</a>
 		<?php } ?>
 		<?php bp_displayed_user_avatar( 'type=full' ); ?>
@@ -40,7 +40,7 @@
 				<?php if ( bp_nouveau_member_has_meta() ) : ?>
 					<?php bp_nouveau_member_meta(); ?>
 				<?php endif; ?>
-			</div>	
+			</div>
 		<?php endif; ?>
 
 		<?php echo bp_get_user_social_networks_urls(); ?>

@@ -147,6 +147,7 @@ class BuddyPress {
 		return $instance;
 
 		// The last metroid is in captivity. The galaxy is at peace.
+		// The powers of the metroid might be harnessed for the good of civilization.
 	}
 
 	/** Magic Methods *********************************************************/
@@ -329,7 +330,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 15601;
+		$this->db_version = 16201;
 
 		/** Loading */
 
@@ -576,10 +577,11 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddypress/3.0.php';
 
 			// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php' );
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -616,6 +618,7 @@ class BuddyPress {
 			'forums',
 			'search',
 			'media',
+			'document',
 			'gdpr',
 			'invites',
 		);
@@ -689,6 +692,10 @@ class BuddyPress {
 			'BP_REST_Signup_Endpoint'                      => 'members',
 			'BP_REST_Media_Endpoint'                       => 'media',
 			'BP_REST_Media_Albums_Endpoint'                => 'media',
+			'BP_REST_Media_Details_Endpoint'               => 'media',
+			'BP_REST_Document_Endpoint'                    => 'document',
+			'BP_REST_Document_Folder_Endpoint'             => 'document',
+			'BP_REST_Document_Details_Endpoint'            => 'document',
 			'BP_REST_Activity_Endpoint'                    => 'activity',
 			'BP_REST_Activity_Comment_Endpoint'            => 'activity',
 			'BP_REST_Activity_Details_Endpoint'            => 'activity',
@@ -707,11 +714,13 @@ class BuddyPress {
 			'BP_REST_Group_Membership_Endpoint'            => 'groups',
 			'BP_REST_Group_Invites_Endpoint'               => 'groups',
 			'BP_REST_Group_Membership_Request_Endpoint'    => 'groups',
+			'BP_REST_Group_Settings_Endpoint'              => 'groups',
 			'BP_REST_Groups_Types_Endpoint'                => 'groups',
 			'BP_REST_Attachments_Group_Avatar_Endpoint'    => 'groups',
 			'BP_REST_Attachments_Group_Cover_Endpoint'     => 'groups',
 			'BP_REST_Messages_Endpoint'                    => 'messages',
 			'BP_REST_Group_Messages_Endpoint'              => 'messages',
+			'BP_REST_Messages_Actions_Endpoint'            => 'messages',
 			'BP_REST_Notifications_Endpoint'               => 'notifications',
 			'BP_REST_Friends_Endpoint'                     => 'friends',
 			'BP_REST_Forums_Endpoint'                      => 'forums',
@@ -742,7 +751,7 @@ class BuddyPress {
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
 		if ( 'bp-rest-attachments' === $class ) {
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-attachments.php";
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} else {

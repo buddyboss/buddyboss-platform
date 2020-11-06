@@ -1,5 +1,5 @@
 /**
- * Loads for Hello BuddyBoss/AppBoss in wp-admin for query string `hello=buddyboss` and `hello=appboss`.
+ * Loads for Hello BuddyBoss/App in wp-admin for query string `hello=buddyboss` and `hello=buddyboss-app`.
  *
  * @since BuddyPress 3.0.0
  */
@@ -11,6 +11,9 @@
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
 			modal    = document.getElementById( 'bp-hello-container' );
 
+		if ( null === backdrop ) {
+			return;
+		}
 		document.body.classList.add( 'bp-disable-scroll' );
 
 		// Show modal and overlay.
@@ -56,14 +59,11 @@
 	 * Close the Hello modal.
 	 */
 	var bp_hello_close_modal = function() {
-		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal    = document.getElementById( 'bp-hello-container' );
 
-		document.body.classList.remove( 'bp-disable-scroll' );
+		document.getElementById( 'bp-hello-container' ).setAttribute( 'style', 'display:none' );
+		document.getElementById( 'bp-hello-backdrop' ).setAttribute('style', 'display:none' );
+		document.body.className = document.body.className.replace('bp-disable-scroll','');
 
-		// Remove modal and overlay.
-		modal.parentNode.removeChild( modal );
-		backdrop.parentNode.removeChild( backdrop );
 	};
 
 	/**

@@ -58,7 +58,7 @@ if ( 'list_grid' === $current_value ) {
 																				'buddyboss'
 																			);
 																			?>
-		"> <i class="dashicons dashicons-screenoptions" aria-hidden="true"></i> </a>
+		"> <i class="bb-icon-grid-view-small" aria-hidden="true"></i> </a>
 
 	<a href="#" class="layout-view layout-list-view bp-tooltip <?php echo ( 'list' === $default_current_value ) ? 'active' : ''; ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="
 																		  <?php
@@ -67,7 +67,7 @@ if ( 'list_grid' === $current_value ) {
 																				'buddyboss'
 																			);
 																			?>
-		"> <i class="dashicons dashicons-menu" aria-hidden="true"></i> </a>
+		"> <i class="bb-icon-list-view-small" aria-hidden="true"></i> </a>
 	</div>
 	<?php
 }

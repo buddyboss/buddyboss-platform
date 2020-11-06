@@ -62,6 +62,7 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve Groups Types.
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 */
 	public function get_items( $request ) {
 		$registered_types = bp_groups_get_group_types( array(), 'objects' );
@@ -428,11 +429,14 @@ class BP_REST_Groups_Types_Endpoint extends WP_REST_Controller {
 
 		$group_type_posts = get_posts(
 			array(
-				'name'        => $group_type,
-				'post_type'   => 'bp-group-type',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'fields'      => 'ids',
+				'name'                   => $group_type,
+				'post_type'              => 'bp-group-type',
+				'post_status'            => 'publish',
+				'numberposts'            => 1,
+				'fields'                 => 'ids',
+				'suppress_filters'       => false,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 

@@ -3,7 +3,7 @@
 
 	<div class="bp-messages-form-header">
 		<label for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
-		<a href="#" class="bp-close-compose-form"><span class="dashicons dashicons-no-alt"></span></a>
+		<a href="#" class="bp-close-compose-form"><span class="bb-icons bb-icon-x"></span></a>
 	</div>
 
 	<select

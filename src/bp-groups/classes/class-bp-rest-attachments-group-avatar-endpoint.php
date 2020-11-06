@@ -115,6 +115,7 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Groups
 	 * @apiDescription Retrieve group avatar
 	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {Number} group_id A unique numeric ID for the Group.
 	 * @apiParam {Boolean} [html=false] Whether to return an <img> HTML element, vs a raw URL to a group avatar.
 	 * @apiParam {String} [alt] The alt attribute for the <img> element.
@@ -249,6 +250,21 @@ class BP_REST_Attachments_Group_Avatar_Endpoint extends WP_REST_Controller {
 		if ( is_wp_error( $avatar ) ) {
 			return $avatar;
 		}
+
+		// Crop args.
+		$r = array(
+			'item_id'       => $request['group_id'],
+			'object'        => 'group',
+			'avatar_dir'    => sanitize_key( 'group' ) . '-avatars',
+			'original_file' => $avatar->full,
+			'crop_w'        => bp_core_avatar_full_width(),
+			'crop_h'        => bp_core_avatar_full_height(),
+			'crop_x'        => 0,
+			'crop_y'        => 0,
+		);
+
+		/** This action is documented in bp-groups/bp-groups-screens.php */
+		do_action( 'groups_avatar_uploaded', (int) $request['group_id'], 'crop', $r );
 
 		$retval = $this->prepare_response_for_collection(
 			$this->prepare_item_for_response( $avatar, $request )

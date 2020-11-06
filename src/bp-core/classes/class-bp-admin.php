@@ -126,6 +126,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require $this->admin_dir . 'bp-core-admin-slugs.php';
 			require $this->admin_dir . 'bp-core-admin-tools.php';
 			require $this->admin_dir . 'bp-core-admin-help.php';
+			require $this->admin_dir . 'bp-core-admin-theme-settings.php';
 		}
 
 		/**
@@ -173,9 +174,10 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_filter( 'manage_' . bp_get_email_post_type() . '_posts_columns', array( $this, 'emails_register_situation_column' ) );
 			add_action( 'manage_' . bp_get_email_post_type() . '_posts_custom_column', array( $this, 'emails_display_situation_column_data' ), 10, 2 );
 
-			// Hello BuddyBoss/AppBoss.
+			// Hello BuddyBoss/App.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
-			add_action( 'admin_footer', array( $this, 'about_appboss_screen' ) );
+			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
+			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
 
 			/* Filters ***********************************************************/
 
@@ -200,6 +202,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			add_action( 'admin_enqueue_scripts', array( $this, 'deregister_wp_job_manager_shared_assets' ), 21 );
 
 			add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
+			add_action( bp_core_admin_hook(), array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 
 			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
 			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
@@ -665,7 +668,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 	public function bp_emails_add_sub_menu_page_admin_menu() {
 
-		if ( is_multisite() && bp_is_network_activated() ) {
+		if ( is_multisite() && bp_is_network_activated() && bp_is_root_blog() ) {
 			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
 			// Add our screen.
 			$hook = add_submenu_page( 'buddyboss-platform',
@@ -700,6 +703,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require_once $this->admin_dir . '/settings/bp-admin-setting-media.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 			require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
+		    require_once $this->admin_dir . '/settings/bp-admin-setting-document.php';
 		}
 
 		/**
@@ -764,7 +768,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 		 * Add some general styling to the admin area.
 		 *
 		 * @since BuddyPress 1.6.0
-		 * @since BuddyBoss 1.0.0 Added support for Hello AppBoss
+		 * @since BuddyBoss 1.0.0 Added support for Hello BuddyBoss App
 		 */
 		public function enqueue_scripts() {
 			wp_enqueue_style( 'bp-admin-common-css' );
@@ -775,8 +779,13 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			// Hello AppBoss
-			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'appboss' ) {
+			// Hello BuddyBoss App
+			if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss-app' ) {
+				wp_enqueue_style( 'bp-hello-css' );
+				wp_enqueue_script( 'bp-hello-js' );
+			}
+
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' === $_GET['tab'] ) {
 				wp_enqueue_style( 'bp-hello-css' );
 				wp_enqueue_script( 'bp-hello-js' );
 			}
@@ -807,7 +816,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 		}
 
-		/** About BuddyBoss and AppBoss ********************************************/
+		/** About BuddyBoss and BuddyBoss App ********************************************/
 
 		/**
 		 * Output the Hello BuddyBoss template.
@@ -823,17 +832,25 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			include $this->admin_dir . 'templates/about-buddyboss.php';
 		}
 
-		/**
-		 * Output the Hello AppBoss template.
-		 *
-		 * @since BuddyBoss 1.0.0 Output the Hello AppBoss template.
-		 */
-		public function about_appboss_screen() {
-			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'appboss' ) {
+		public function document_extension_mime_type_check_screen() {
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-document' !== $_GET['tab'] ) {
 				return;
 			}
 
-			include $this->admin_dir . 'templates/about-appboss.php';
+			include $this->admin_dir . 'templates/check-document-mime-type.php';
+		}
+
+		/**
+		 * Output the Hello BuddyBoss App template.
+		 *
+		 * @since BuddyBoss 1.0.0 Output the Hello BuddyBoss App template.
+		 */
+		public function about_buddyboss_app_screen() {
+			if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss-app' ) {
+				return;
+			}
+
+			include $this->admin_dir . 'templates/about-buddyboss-app.php';
 		}
 
 		/** Emails ****************************************************************/

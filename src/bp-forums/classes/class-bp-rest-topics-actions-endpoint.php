@@ -226,7 +226,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/merge/:id Merge Topic
 	 * @apiName        MergeBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Merge Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -407,10 +407,12 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 		// Get the replies of the source topic.
 		$replies = (array) get_posts(
 			array(
-				'post_parent'    => $source_topic->ID,
-				'post_type'      => bbp_get_reply_post_type(),
-				'posts_per_page' => - 1,
-				'order'          => 'ASC',
+				'post_parent'            => $source_topic->ID,
+				'post_type'              => bbp_get_reply_post_type(),
+				'posts_per_page'         => - 1,
+				'order'                  => 'ASC',
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
 			)
 		);
 
@@ -542,7 +544,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/split/:id Split Topic
 	 * @apiName        SplitBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Split Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -985,7 +987,7 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 *
 	 * @api            {POST} /wp-json/buddyboss/v1/topics/action/:id Topic Actions
 	 * @apiName        ActionBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Actions on Topic
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser
@@ -1079,9 +1081,9 @@ class BP_REST_Topics_Actions_Endpoint extends BP_REST_Topics_Endpoint {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api            {POST} /wp-json/buddyboss/v1/topics/dropdown/:id Topic Actions
+	 * @api            {GET} /wp-json/buddyboss/v1/topics/dropdown/:id Topic Actions
 	 * @apiName        DropdownBBPTopic
-	 * @apiGroup       ForumTopics
+	 * @apiGroup       Forum Topics
 	 * @apiDescription Siblings of the topic.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser

@@ -66,7 +66,7 @@ class BP_REST_Activity_Link_Preview_Endpoint extends WP_REST_Controller {
 	 * @apiGroup       Activity
 	 * @apiDescription Retrieve link preview Activity.
 	 * @apiVersion     1.0.0
-	 * @apiPermission  LoggedInUser
+	 * @apiPermission  LoggedInUser if the site is in Private Network.
 	 * @apiParam {String} url URL for the generate link preview.
 	 */
 	public function get_items( $request ) {

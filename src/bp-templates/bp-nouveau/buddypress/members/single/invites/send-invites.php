@@ -73,7 +73,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				}
 				?>
 				<td class="field-actions">
-					<span class="field-actions-remove"><i class="dashicons dashicons-no-alt"></i></span>
+					<span class="field-actions-remove"><i class="bb-icon bb-icon-close"></i></span>
 				</td>
 			</tr>
 
@@ -82,7 +82,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				<td class="field-name" colspan="<?php if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) { echo 3; } else { echo 2; }?>">
 				</td>
 				<td class="field-actions-last" colspan="">
-					<span class="field-actions-add"><i class="dashicons dashicons-plus"></i></span>
+					<span class="field-actions-add"><i class="bb-icon bb-icon-plus"></i></span>
 				</td>
 			</tr>
 
