@@ -4,7 +4,9 @@ jQuery( document ).ready( function ( $ ) {
 		if ( !confirm( Bp_Moderation.strings.confirm_msg ) ) {
 			return false;
 		}
-		$( '.bp-moderation-ajax-msg' ).empty();
+
+		$( '.bp-moderation-ajax-msg p' ).text('').parent.addClass('hidden');
+
 		var curObj = $( this );
 		curObj.addClass( 'disabled' );
 		var id = curObj.attr( 'data-id' );
@@ -42,9 +44,9 @@ jQuery( document ).ready( function ( $ ) {
 						curObj.text( Bp_Moderation.strings.suspend_member_label );
 					}
 				}
-				$( '.bp-moderation-ajax-msg' ).append( result.message );
+				$( '.bp-moderation-ajax-msg p' ).text( result.message ).parent().removeClass('hidden');
 			} else {
-				$( '.bp-moderation-ajax-msg' ).append( result.message.errors.bp_moderation_content_actions_request );
+				$( '.bp-moderation-ajax-msg p' ).text( result.message.errors.bp_moderation_content_actions_request ).parent().removeClass('hidden');
 			}
 			curObj.removeClass( 'disabled' );
 		} );

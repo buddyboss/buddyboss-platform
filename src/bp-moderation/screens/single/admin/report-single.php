@@ -22,6 +22,11 @@
 					<div id="postdiv">
 						<div id="bp_moderation_action" class="postbox">
 							<div class="inside">
+
+								<div class="bp-moderation-ajax-msg hidden notice notice-success">
+									<p></p>
+								</div>
+
 								<table class="form-table">
 									<tbody>
 									<?php if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) { ?>
@@ -186,7 +191,6 @@
 										<?php
 									}
 									?>
-									<div class="bp-moderation-ajax-msg"></div>
 								</div>
 							</div>
 						</div>

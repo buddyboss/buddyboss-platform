@@ -150,9 +150,9 @@ function bp_moderation_content_actions_request() {
 		if ( true === $action ) {
 			$response['success'] = true;
 			if ( 'user' === $type ) {
-				$response['message'] = esc_html__( 'User updated successfully', 'buddyboss' );
+				$response['message'] = esc_html__( 'Successfully user suspend status updated', 'buddyboss' );
 			} else {
-				$response['message'] = esc_html__( 'Moderation item updated successfully', 'buddyboss' );
+				$response['message'] = esc_html__( 'Successfully content block status updated', 'buddyboss' );
 			}
 		}
 	}

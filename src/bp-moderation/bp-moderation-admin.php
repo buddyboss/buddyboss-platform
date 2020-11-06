@@ -274,7 +274,9 @@ function bp_moderation_admin_index() {
 			}
 			?>
 		</h1>
-		<div class="bp-moderation-ajax-msg"></div>
+		<div class="bp-moderation-ajax-msg hidden notice notice-success">
+			<p></p>
+		</div>
 		<?php $bp_moderation_list_table->views(); ?>
 		<form id="bp-moseration-form" action="" method="get">
 			<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
