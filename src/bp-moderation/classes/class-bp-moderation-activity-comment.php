@@ -46,7 +46,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
-		add_filter( 'bp_activity_comment_content', array( $this, 'comment_content_placeholder' ), 10 );
+		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
 	/**
@@ -158,18 +158,22 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		return $sql;
 	}
 
-	public function comment_content_placeholder( $content ) {
+	public function locate_blocked_template( $template_names ) {
 		global $activities_template;
 
+		if ( 'activity/comment.php' !== $template_names ){
+			return $template_names;
+		}
+
 		if ( in_array( $activities_template->activity->current_comment->id, self::get_sitewide_hidden_ids(), true ) ) {
-			$content = esc_html__( 'Content is hidden by moderator.', 'buddyboss' );
+			return 'activity/blocked-comment.php';
 		}
 
 		if ( bp_is_moderation_member_blocking_enable( 0 ) && in_array( $activities_template->activity->current_comment->user_id, BP_Moderation_Members::get_sitewide_hidden_ids(), true ) ) {
-			$content = esc_html__( 'Content from suspended/blocked user.', 'buddyboss' );
+			return 'activity/blocked-user-comment.php';
 		}
 
-		return $content;
+		return $template_names;
 	}
 
 	/**
