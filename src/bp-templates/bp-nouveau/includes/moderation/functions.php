@@ -41,3 +41,22 @@ function bp_nouveau_moderation_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-moderation' );
 }
+
+/**
+ * Localize the strings needed for the moderation UI
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts
+ *
+ * @return array         The same array with specific strings for the messages UI if needed.
+ */
+function bp_nouveau_moderation_localize_scripts( $params = array() ) {
+
+	//initialize moderation vars because it is used globally
+	$params['moderation'] = array(
+		'unblock_user_msg' => esc_html__( 'Are you sure you want to unblock this member?', 'buddyboss' ),
+	);
+
+	return $params;
+}

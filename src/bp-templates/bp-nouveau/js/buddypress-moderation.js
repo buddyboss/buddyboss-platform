@@ -100,9 +100,10 @@ window.bp = window.bp || {};
 		unblockUser: function ( $event ) {
 			$( document ).on( 'click', '.moderation-item-actions .bp-unblock-user', function () {
 
-				if ( !confirm( 'Are you sure you want to unblock this member?' ) ) { //Todo: need to add translated message
+				if ( !confirm( BP_Nouveau.moderation.unblock_user_msg ) ) {
 					return false;
 				}
+
 				var curObj = $( this );
 				var id = curObj.attr( 'data-id' );
 				var type = curObj.attr( 'data-type' );
