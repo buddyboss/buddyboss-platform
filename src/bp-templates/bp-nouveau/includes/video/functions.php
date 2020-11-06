@@ -25,7 +25,7 @@ function bp_nouveau_video_register_scripts( $scripts = array() ) {
 	return array_merge( $scripts, array(
 		'bp-nouveau-video' => array(
 			'file'         => 'js/buddypress-video%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
+			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-media' ),
 			'footer'       => true,
 		)
 	) );
@@ -38,38 +38,19 @@ function bp_nouveau_video_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_video_enqueue_scripts() {
 
-	wp_enqueue_script( 'bp-nouveau-video-document-data-table' );
-
 	if ( bp_is_user_video() ||
-	     bp_is_single_album() ||
+	     bp_is_single_video_album() ||
 	     bp_is_video_directory() ||
 	     bp_is_activity_component() ||
 	     bp_is_group_activity() ||
 	     bp_is_group_video() ||
-	     bp_is_group_albums() ||
-	     bp_is_group_document() ||
-	     bp_is_group_folders() ||
+	     bp_is_group_video_albums() ||
 	     bp_is_group_messages() ||
 	     bp_is_messages_component()
 	) {
 
-		$gif = false;
-		if ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() ) {
-			wp_enqueue_script( 'giphy' );
-			$gif = true;
-		}
-
-		$emoji = false;
-		if ( bp_is_profiles_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() || bp_is_messages_emoji_support_enabled() ) {
-			wp_enqueue_script( 'emojionearea' );
-			wp_enqueue_style( 'emojionearea' );
-			$emoji = true;
-		}
-
-		if ( bp_is_profile_video_support_enabled() || bp_is_group_document_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || $gif || $emoji || bp_is_group_messages() ) {
-			wp_enqueue_script( 'bp-video-dropzone' );
-			wp_enqueue_script( 'bp-nouveau-codemirror' );
-			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
+		if ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_video_support_enabled() || bp_is_group_messages() ) {
+			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_script( 'bp-nouveau-video' );
 			wp_enqueue_script( 'bp-exif' );
 		}

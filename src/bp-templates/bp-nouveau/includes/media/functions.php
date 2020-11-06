@@ -38,8 +38,6 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
-	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
-
 	if ( bp_is_user_media() ||
 	     bp_is_single_album() ||
 	     bp_is_media_directory() ||
