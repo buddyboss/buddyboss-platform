@@ -151,6 +151,19 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content.
+	 *
+	 * @param integer $group_id Group id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $group_id ) {
+		$group = new BP_Groups_Group( $group_id );
+
+		return ( ! empty( $group->description ) ) ? $group->description : '';
+	}
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 1.5.4

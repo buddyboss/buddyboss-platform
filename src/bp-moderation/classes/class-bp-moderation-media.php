@@ -42,7 +42,7 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->alias     = $this->alias . 'm'; // m = media.
+		$this->alias = $this->alias . 'm'; // m = media.
 
 		/*add_filter( 'bp_media_get_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_media_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
@@ -281,6 +281,19 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		$media = new BP_Media( $media_id );
 
 		return ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param integer $media_id Media id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $media_id ) {
+		$media = new BP_Media( $media_id );
+
+		return ( ! empty( $media->title ) ) ? $media->title : '';
 	}
 
 	/**

@@ -322,7 +322,7 @@ function bp_get_moderation_reported_category() {
 
 	if ( isset( $moderation_template->moderation->reporters[0]->category_id ) ) {
 		$term_data                    = get_term( $moderation_template->moderation->reporters[0]->category_id );
-		$moderation_reported_category = ( ! empty( $term_data->name ) ) ? $term_data->name : '';
+		$moderation_reported_category = ( ! is_wp_error( $term_data->name ) && ! empty( $term_data->name ) ) ? $term_data->name : '';
 	}
 
 	return apply_filters( 'bp_get_moderation_reported_category', $moderation_reported_category );

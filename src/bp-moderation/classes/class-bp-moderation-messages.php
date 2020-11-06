@@ -264,6 +264,19 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content.
+	 *
+	 * @param integer $message_id User id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $message_id ) {
+		$message = new BP_Messages_Message( $message_id );
+
+		return ( ! empty( $message->message ) ) ? $message->message : '';
+	}
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 1.5.4

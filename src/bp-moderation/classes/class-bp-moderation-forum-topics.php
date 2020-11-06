@@ -233,6 +233,19 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content.
+	 *
+	 * @param integer $topic_id Topic id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $topic_id ) {
+		$topic_content = get_post_field( 'post_content', $topic_id );
+
+		return ( ! empty( $topic_content ) ) ? $topic_content : '';
+	}
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 1.5.4

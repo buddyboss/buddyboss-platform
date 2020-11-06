@@ -187,6 +187,18 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 	return $user_id;
 }
 
+function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type ) {
+
+	$content_excerpt = '';
+	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );
+
+	if ( method_exists( $class, 'get_content_excerpt' ) ) {
+		$content_excerpt = $class::get_content_excerpt( $moderation_item_id );
+	}
+
+	return $content_excerpt;
+}
+
 /**
  * Function to get specific moderation content type.
  *
@@ -471,7 +483,8 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
 function bp_moderation_is_user_suspended( $user_id ) {
 	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( false );
 	if ( in_array( $user_id, $hidden_members_ids, true ) ) {
-		return  true;
+		return true;
 	}
+
 	return false;
 }

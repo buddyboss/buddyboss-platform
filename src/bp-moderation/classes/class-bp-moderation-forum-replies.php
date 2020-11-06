@@ -42,7 +42,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			return;
 		}
 
-		$this->alias     = $this->alias . 'fr'; // fr: Forum Reply.
+		$this->alias = $this->alias . 'fr'; // fr: Forum Reply.
 
 		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
@@ -233,6 +233,19 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 */
 	public static function get_content_owner_id( $reply_id ) {
 		return $user_id = get_post_field( 'post_author', $reply_id );
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param integer $reply_id Reply id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $reply_id ) {
+		$reply_content = get_post_field( 'post_content', $reply_id );
+
+		return ( ! empty( $reply_content ) ) ? $reply_content : '';
 	}
 
 	/**

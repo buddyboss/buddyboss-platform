@@ -33,7 +33,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		parent::$Moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
-		add_filter('bp_moderation_content_types', array( $this, 'add_content_types' ) );
+		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
 		 * Moderation code should not add for WordPress backend
@@ -58,8 +58,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @return mixed
 	 */
-	public function add_content_types( $content_types ){
+	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
+
 		return $content_types;
 	}
 
@@ -112,11 +113,12 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items
 	 *
+	 * @since BuddyBoss 1.5.4
+	 *
 	 * @param string $uid_name User ID field name.
 	 *
 	 * @return string|void
 	 *
-	 * @since BuddyBoss 1.5.4
 	 */
 	protected function exclude_where_query( $uid_name = '' ) {
 		$sql                = false;
@@ -148,6 +150,17 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public static function get_content_owner_id( $user_id ) {
 		return $user_id;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @param integer $user_id User id
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $user_id ) {
+		return bp_core_get_user_displayname( $user_id );
 	}
 
 	/**
