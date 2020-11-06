@@ -12,11 +12,7 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
     <td class="moderation-block-member">
 		<?php
 		$user_id = bp_moderation_get_content_owner_id( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
-		if ( true === $hide_sitewide ) {
-			echo esc_html( bp_core_get_user_displayname( $user_id ) );
-		} else {
-			echo wp_kses_post( bp_core_get_userlink( $user_id ) );
-		}
+		echo esc_html( bp_core_get_user_displayname( $user_id ) );
 		if ( true === $hide_sitewide ) {
 			?>
             <span class="description">
