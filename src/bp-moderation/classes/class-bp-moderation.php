@@ -142,12 +142,21 @@ class BP_Moderation {
 	 */
 	public function __construct( $item_id = false, $item_type = false ) {
 		// Instantiate errors object.
-		$this->errors = new WP_Error();
+		$this->id            = 0;
+		$this->hide_sitewide = 0;
+		$this->errors        = new WP_Error();
+		$this->user_id       = get_current_user_id();
+		$this->blog_id       = get_current_blog_id();
+		$this->report_id     = 0;
+		$this->category_id   = 0;
+
 		if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-			$id = self::check_moderation_exist( $item_id, $item_type );
+			$this->item_id   = $item_id;
+			$this->item_type = $item_type;
+
+			$id = self::check_moderation_exist( $this->item_id, $this->item_type );
 			if ( ! empty( $id ) ) {
-				$this->id      = (int) $id;
-				$this->user_id = get_current_user_id();
+				$this->id = (int) $id;
 				$this->populate();
 			}
 		}
@@ -170,10 +179,6 @@ class BP_Moderation {
 		}
 
 		if ( empty( $row ) ) {
-			$this->id            = 0;
-			$this->hide_sitewide = 0;
-			$this->blog_id       = get_current_blog_id();
-
 			return;
 		}
 
@@ -197,9 +202,6 @@ class BP_Moderation {
 		}
 
 		if ( empty( $report_row ) ) {
-			$this->report_id   = 0;
-			$this->category_id = 0;
-
 			return;
 		}
 
@@ -337,7 +339,7 @@ class BP_Moderation {
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->count = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
 			$this->count += 1;
 			if ( ! empty( $threshold ) ) {
 				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
@@ -408,8 +410,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args              {
-	 *                                 An array of arguments. All items are optional.
+	 * @param array      $args              {
+	 *                                      An array of arguments. All items are optional.
 	 *
 	 * @type int         $page              Which page of results to fetch. Using page=1 without per_page will result
 	 *                                           in no pagination. Default: 1.
@@ -977,8 +979,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $filter_array  {
-	 *                             Fields and values to filter by.
+	 * @param array           $filter_array  {
+	 *                                       Fields and values to filter by.
 	 *
 	 * @type array|string|int $user_id       User ID(s).
 	 * @type array|string|int $item_id       Item ID(s).

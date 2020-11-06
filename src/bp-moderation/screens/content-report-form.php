@@ -19,41 +19,43 @@
 		'bpm_category',
 		array(
 			'hide_empty' => false,
-			'fields'     => 'id=>name',
 		)
 	);
 	?>
 	<div class="bb-report-type-wrp">
 		<form id="bb-report-content" action="javascript:void(0);">
-			<div class="form-item">
-				<?php
-				if ( ! empty( $reports_terms ) ) {
-					$count = 1;
-					foreach ( $reports_terms as $key => $reports_term ) {
-						$checked = ( 1 === $count ) ? 'checked' : '';
-						?>
-						<label for="report-category-<?php echo esc_attr( $key ); ?>">
-							<input type="radio" id="report-category-<?php echo esc_attr( $key ); ?>"
-								   name="report_category"
-								   value="<?php echo esc_attr( $key ); ?>" <?php echo esc_attr( $checked ); ?>>
-							<?php echo esc_html( $reports_term ); ?>
-						</label>
-						<br/>
-						<?php
-						$count ++;
-					}
+
+			<?php
+			if ( ! empty( $reports_terms ) ) {
+				$count = 1;
+				foreach ( $reports_terms as $reports_term ) {
+					$checked = ( 1 === $count ) ? 'checked' : '';
 					?>
+					<div class="form-item">
+						<label for="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>">
+							<input type="radio" id="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>"
+								   name="report_category"
+								   value="<?php echo esc_attr( $reports_term->term_id ); ?>" <?php echo esc_attr( $checked ); ?>>
+							<?php echo esc_html( $reports_term->name ); ?>
+						</label><br/>
+						<span><?php echo esc_html( $reports_term->description ); ?></span>
+					</div>
 					<?php
+					$count ++;
 				}
-				?>
+			}
+			?>
+
+			<div class="form-item">
 				<label for="report-category-other">
 					<input type="radio" id="report-category-other" name="report_category"
 						   value="other">
 					<?php esc_html_e( 'Other', 'buddyboss' ); ?>
 				</label>
-
+			</div>
+			<div class="form-item">
 				<label for="report-note">
-					<input id="report-note" type="text" name="note" class="bp-other-report-cat" style="display: none;"/>
+					<textarea id="report-note" type="text" name="note" class="bp-other-report-cat bb-hide"></textarea>
 				</label>
 			</div>
 			<div class="form-item">
