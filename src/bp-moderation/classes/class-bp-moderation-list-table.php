@@ -210,37 +210,45 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Function to show content type
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_content_type( $item = array() ) {
-		printf( '<strong>%s</strong> %s', esc_html( bp_moderation_get_content_type( $item['item_type'] ) ), $this->actions( $item ) );
+		printf( '<strong>%s</strong> %s', esc_html( bp_moderation_get_content_type( $item['item_type'] ) ), wp_kses_post( $this->actions( $item ) ) );
 	}
 
 	/**
+	 * Function to blocked member
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop ite.
 	 */
 	public function column_blocked_member( $item = array() ) {
 		$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
-		printf( '<strong>%s</strong> %s', wp_kses_post( bp_core_get_userlink( $user_id ) ), $this->actions( $item ) );
+		printf( '<strong>%s</strong> %s', wp_kses_post( bp_core_get_userlink( $user_id ) ), wp_kses_post( $this->actions( $item ) ) );
 	}
 
 	/**
+	 * Function content id
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_content_id( $item = array() ) {
 		echo esc_html( $item['item_id'] );
 	}
 
 	/**
+	 * Function to content owner
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_content_owner( $item = array() ) {
 		$user_id = bp_moderation_get_content_owner_id( $item['item_id'], $item['item_type'] );
@@ -248,9 +256,11 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Function to show content excerpt
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_content_excerpt( $item = array() ) {
 		$content_excerpt = bp_moderation_get_content_excerpt( $item['item_id'], $item['item_type'] );
@@ -258,27 +268,35 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Function to show reported count
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_reported( $item = array() ) {
-		printf( _n( '%s time', '%s times', $item['count'], 'buddyboss' ), number_format_i18n( $item['count'] ) );
+		/* translators: accessibility text */
+		printf( _n( '%s time', '%s times', $item['count'], 'buddyboss' ), esc_html( number_format_i18n( $item['count'] ) ) );
 	}
 
 	/**
+	 * Function to blocked count
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_blocked( $item = array() ) {
-		printf( _n( '%s time', '%s times', $item['count'], 'buddyboss' ), number_format_i18n( $item['count'] ) );
+		/* translators: accessibility text */
+		printf( _n( '%s time', '%s times', $item['count'], 'buddyboss' ), esc_html( number_format_i18n( $item['count'] ) ) );
 	}
 
 	/**
+	 * Function to show table actions
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_actions( $item = array() ) {
 
@@ -315,7 +333,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		if ( ! isset( $_GET['tab'] ) || 'blocked-members' !== $_GET['tab'] ) {
 			printf( '<a href="javascript:void(0);" class="bp-hide-request" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-close-circle"></i></a>', esc_attr( $item['item_id'] ), esc_attr( $item['item_type'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $action_type ), esc_attr( $action_label ) );
 		}
-		printf( '<a href="javascript:void(0);" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-slash"></i></a>', esc_attr( $user_id ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), $user_action_label );
+		printf( '<a href="javascript:void(0);" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s"><i class="bb-icon-slash"></i></a>', esc_attr( $user_id ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $user_action_label ) );
 	}
 
 	/**

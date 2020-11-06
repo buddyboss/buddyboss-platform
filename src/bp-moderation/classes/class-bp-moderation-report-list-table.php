@@ -207,18 +207,22 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Function to item reporter.
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_reporter( $item = array() ) {
 		printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $item['user_id'] ) ) );
 	}
 
 	/**
+	 * Function to item category.
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item loop item.
 	 */
 	public function column_category( $item = array() ) {
 		$term_data = get_term( $item['category_id'] );
@@ -227,9 +231,11 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Function to show the item date.
+	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $item
+	 * @param array $item item data.
 	 */
 	public function column_date( $item = array() ) {
 		echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_created'] ) ) );
