@@ -808,7 +808,7 @@ class BP_Groups_Component extends BP_Component {
 				);
 			}
 
-			if ( bp_is_active( 'media' ) && bp_is_group_videp_support_enabled() ) {
+			if ( bp_is_active( 'media' ) && bp_is_group_video_support_enabled() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Videos', 'buddyboss' ),
 					'slug'            => 'videos',
