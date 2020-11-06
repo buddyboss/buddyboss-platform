@@ -208,6 +208,22 @@ function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_ite
  *
  * @return mixed|void
  */
+function bp_get_moderation_content_type( $key ) {
+
+	$content_types = bp_moderation_content_types();
+
+	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
+}
+
+/**
+ * Function to get specific moderation content type.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param string $key content type key.
+ *
+ * @return mixed|void
+ */
 function bp_moderation_get_content_type( $key ) {
 
 	$content_types = bp_moderation_content_types();
