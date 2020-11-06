@@ -458,3 +458,20 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
 
 	return $moderation_obj->save();
 }
+
+/**
+ * Check whether a user has been marked as a suspended.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param int $user_id The ID for the user.
+ *
+ * @return bool True if suspended, otherwise false.
+ */
+function bp_moderation_is_user_suspended( $user_id ) {
+	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( false );
+	if ( in_array( $user_id, $hidden_members_ids, true ) ) {
+		return  true;
+	}
+	return false;
+}

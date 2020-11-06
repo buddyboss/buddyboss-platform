@@ -47,9 +47,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-
-		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
-		add_filter( 'authenticate', array( $this, 'boot_suspended_user' ), 30 );
 	}
 
 	/**
@@ -129,48 +126,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Show 404 if Member is suspended
-	 */
-	public function restrict_member_profile() {
-		$user_id            = bp_displayed_user_id();
-		$hidden_members_ids = self::get_sitewide_hidden_ids();
-		if ( in_array( $user_id, $hidden_members_ids, true ) ) {
-			buddypress()->displayed_user->id = 0;
-			bp_do_404();
-
-			return;
-		}
-	}
-
-	/**
-	 * Prevent Suspended from logging in.
-	 *
-	 * When a user logs in, check if they have been marked as a spammer. If yes
-	 * then simply redirect them to the home page and stop them from logging in.
-	 *
-	 * @param WP_User|WP_Error $user Either the WP_User object or the WP_Error
-	 *                               object, as passed to the 'authenticate' filter.
-	 *
-	 * @return WP_User|WP_Error If the user is not a spammer, return the WP_User
-	 *                          object. Otherwise a new WP_Error object.
-	 */
-	public function boot_suspended_user( $user ) {
-		// Check to see if the $user has already failed logging in, if so return $user as-is.
-		if ( is_wp_error( $user ) || empty( $user ) ) {
-			return $user;
-		}
-
-		$hidden_members_ids = self::get_sitewide_hidden_ids( false );
-		// The user exists; now do a check to see if the user is a suspended
-		if ( is_a( $user, 'WP_User' ) && in_array( $user->id, $hidden_members_ids, true ) ) {
-			return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been Suspended.', 'buddyboss' ) );
-		}
-
-		// User is good to go!
-		return $user;
 	}
 
 	/**
