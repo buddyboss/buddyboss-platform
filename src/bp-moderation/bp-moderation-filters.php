@@ -45,10 +45,7 @@ function bp_moderation_content_report() {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 	}
 
-	if ( bp_is_moderation_exist( array(
-		'content_id'   => $item_id,
-		'content_type' => $item_type,
-	) ) ) {
+	if ( bp_moderation_report_exist( $item_id, $item_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
 	}
 
@@ -64,7 +61,7 @@ function bp_moderation_content_report() {
 			$response['success']    = true;
 			$response['moderation'] = $moderation;
 
-			$response['button'] = bp_get_moderation_report_button( array(
+			$response['button'] = bp_moderation_get_report_button( array(
 				'button_attr' => array(
 					'data-bp-content-id'   => $item_id,
 					'data-bp-content-type' => $item_type,

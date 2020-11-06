@@ -596,7 +596,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		}
 
 		if ( bp_is_active( 'moderation' ) ){
-			$buttons['member_report'] = bp_get_moderation_report_button(
+			$buttons['member_report'] = bp_moderation_get_report_button(
 				array(
 					'id'                => 'member_report',
 					'position'          => 50,
