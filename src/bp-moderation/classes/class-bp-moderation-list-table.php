@@ -253,7 +253,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @param array $item
 	 */
 	public function column_content_excerpt( $item = array() ) {
-		echo '<b>Todo :</b> excerpt';
+		$content_excerpt = bp_moderation_get_content_excerpt( $item['item_id'], $item['item_type'] );
+		echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
 	}
 
 	/**

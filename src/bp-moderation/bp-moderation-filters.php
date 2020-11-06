@@ -143,7 +143,11 @@ function bp_moderation_content_actions_request() {
 		$action = bp_moderation_hide_unhide_request( $id, $type, $sub_action );
 		if ( true === $action ) {
 			$response['success'] = true;
-			$response['message'] = esc_html__( 'Moderation item updated successfully', 'buddyboss' );
+			if ( 'user' === $type ) {
+				$response['message'] = esc_html__( 'User updated successfully', 'buddyboss' );
+			} else {
+				$response['message'] = esc_html__( 'Moderation item updated successfully', 'buddyboss' );
+			}
 		}
 	}
 

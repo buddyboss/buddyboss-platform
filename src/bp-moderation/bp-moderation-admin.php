@@ -38,9 +38,13 @@ function bp_moderation_admin_scripts( $hook ) {
 
 		wp_localize_script( 'bp-moderation', 'Bp_Moderation', array(
 			'strings' => array(
-				'confirm_msg'  => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
-				'hide_label'   => esc_js( __( 'Hide', 'buddyboss' ) ),
-				'unhide_label' => esc_js( __( 'Unhide', 'buddyboss' ) ),
+				'confirm_msg'            => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
+				'hide_label'             => esc_js( __( 'Hide', 'buddyboss' ) ),
+				'unhide_label'           => esc_js( __( 'Unhide', 'buddyboss' ) ),
+				'suspend_author_label'   => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
+				'unsuspend_author_label' => esc_js( __( 'Unsuspend Content Author', 'buddyboss' ) ),
+				'suspend_member_label'   => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
+				'unsuspend_member_label' => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
 			)
 		) );
 	}
@@ -266,6 +270,7 @@ function bp_moderation_admin_index() {
 			}
 			?>
         </h1>
+        <div class="bp-moderation-ajax-msg"></div>
 		<?php $bp_moderation_list_table->views(); ?>
         <form id="bp-moseration-form" action="" method="get">
             <input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
