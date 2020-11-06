@@ -1246,6 +1246,32 @@ window.bp = window.bp || {};
 					this.models[comment_id] = activityAttachedGifPreview.model;
 				}
 
+
+				/**
+				 * Process Emojis
+				 */
+
+				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + comment_id ).data( 'emojioneArea' ) ) {
+					$( '#ac-input-' + comment_id ).emojioneArea(
+						{
+							standalone: true,
+							hideSource: false,
+							container: '#ac-reply-emoji-button-' + comment_id,
+							autocomplete: false,
+							pickerPosition: 'bottom',
+							hidePickerOnBlur: true,
+							useInternalCDN: false,
+							events: {
+								emojibtn_click: function () {
+									$( '#ac-input-' + comment_id )[0].emojioneArea.hidePicker();
+								},
+							}
+						}
+					);
+				}
+
+
+
 			}
 
 			// Updating comments .
