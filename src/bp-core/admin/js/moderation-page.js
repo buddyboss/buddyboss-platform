@@ -5,7 +5,7 @@ jQuery( document ).ready( function ( $ ) {
 			return false;
 		}
 
-		$( '.bp-moderation-ajax-msg p' ).text('').parent.addClass('hidden');
+		$( '.bp-moderation-ajax-msg p' ).text('').parent()._appendClass('hidden');
 
 		var curObj = $( this );
 		curObj.addClass( 'disabled' );
