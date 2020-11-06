@@ -188,7 +188,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 }
 
 /**
- * Function to get the content base on type.
+ * Function to get the content based on type.
  *
  * @param int    $moderation_item_id   moderation id to get the content.
  * @param string $moderation_item_type item type

@@ -66,6 +66,7 @@ function bp_get_moderation_root_slug() {
 }
 
 /**
+ *
  * Initialize the moderation loop.
  *
  * Based on the $args passed, bp_has_moderation() populates the

@@ -105,6 +105,7 @@ class BP_Moderation_Template {
 	public $full_name;
 
 	/**
+	 *
 	 * Constructor method.
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Moderation::get()}.
