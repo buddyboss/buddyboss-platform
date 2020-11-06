@@ -10,7 +10,7 @@ jQuery( document ).ready( function ( $ ) {
 		var nonce = curObj.attr( 'data-nonce' );
 		var sub_action = curObj.attr( 'data-action' );
 		var data = {
-			action: 'bp_moderation_hide_request',
+			action: 'bp_moderation_content_actions_request',
 			id: id,
 			type: type,
 			sub_action: sub_action,

@@ -172,7 +172,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$columns = array(
 				'blocked_member' => esc_html__( 'Blocked Member', 'buddyboss' ),
 				'blocked'        => esc_html__( 'Block (Count)', 'buddyboss' ),
-				'actions'        => esc_html__( '', 'buddyboss' ),
+				'actions'        => '',
 			);
 		} else {
 			$columns = array(
@@ -181,7 +181,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				'content_excerpt' => esc_html__( 'Content Excerpt', 'buddyboss' ),
 				'content_owner'   => esc_html__( 'Content Owner', 'buddyboss' ),
 				'reported'        => esc_html__( 'Reported (Count)', 'buddyboss' ),
-				'actions'         => esc_html__( '', 'buddyboss' ),
+				'actions'         => '',
 			);
 		}
 

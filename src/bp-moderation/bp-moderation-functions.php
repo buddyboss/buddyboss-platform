@@ -187,6 +187,14 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 	return (int) $user_id;
 }
 
+/**
+ * Function to get the content base on type.
+ *
+ * @param int    $moderation_item_id   moderation id to get the content.
+ * @param string $moderation_item_type item type
+ *
+ * @return string
+ */
 function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type ) {
 
 	$content_excerpt = '';
@@ -197,22 +205,6 @@ function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_ite
 	}
 
 	return $content_excerpt;
-}
-
-/**
- * Function to get specific moderation content type.
- *
- * @since BuddyBoss 1.5.4
- *
- * @param string $key content type key.
- *
- * @return mixed|void
- */
-function bp_get_moderation_content_type( $key ) {
-
-	$content_types = bp_moderation_content_types();
-
-	return apply_filters( 'bp_get_moderation_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
 
 /**

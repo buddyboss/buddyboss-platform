@@ -11,7 +11,7 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
     <td class="moderation-item-type">
         <span class="item-type">
             <?php
-            echo esc_html( bp_get_moderation_content_type( bp_get_moderation_item_type() ) );
+            echo esc_html( bp_moderation_get_content_type( bp_get_moderation_item_type() ) );
             ?>
         </span>
 		<?php

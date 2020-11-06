@@ -65,6 +65,51 @@ function bp_get_moderation_root_slug() {
 	return apply_filters( 'bp_get_moderation_root_slug', buddypress()->moderation->root_slug );
 }
 
+/**
+ * Initialize the moderation loop.
+ *
+ * Based on the $args passed, bp_has_moderation() populates the
+ * $moderation_template global, enabling the use of BuddyPress templates and
+ * template functions to display a list of moderation items.
+ *
+ * @since BuddyBoss 1.5.4
+ *
+ * @param array|string $args                {
+ *                                          Arguments for limiting the contents of the moderation loop. Most arguments
+ *                                          are in the same format as {@link BP_Moderation::get()}. However,
+ *                                          because the format of the arguments accepted here differs in a number of
+ *                                          ways, and because bp_has_moderation() determines some default arguments in
+ *                                          a dynamic fashion, we list all accepted arguments here as well.
+ *
+ *     Arguments can be passed as an associative array, or as a URL querystring
+ *     (eg, 'user_id=4&fields=all').
+ *
+ * @type int           $page                Which page of results to fetch. Using page=1 without per_page will result
+ *                                           in no pagination. Default: 1.
+ * @type int|bool      $per_page            Number of results per page. Default: 25.
+ * @type int|bool      $max                 Maximum number of results to return. Default: false (unlimited).
+ * @type string        $fields              Moderation fields to return. Pass 'ids' to get only the moderation IDs.
+ *                                           'all' returns full moderation objects.
+ * @type string        $user_id             Array of user to filter out moderation report.
+ * @type string        $sort                ASC or DESC. Default: 'DESC'.
+ * @type string        $order_by            Column to order results by.
+ * @type array         $exclude             Array of moderation report IDs to exclude. Default: false.
+ * @type array         $in                  Array of ids to limit query by (IN). Default: false.
+ * @type array         $exclude_types       Array of moderation item type to exclude. Default: false.
+ * @type array         $in_types            Array of item type to limit query by (IN). Default: false.
+ * @type array         $meta_query          Array of meta_query conditions. See WP_Meta_Query::queries.
+ * @type array         $date_query          Array of date_query conditions. See first parameter of
+ *                                           WP_Date_Query::__construct().
+ * @type array         $filter_query        Array of advanced query conditions. See BP_Moderation_Query::__construct().
+ * @type bool          $display_reporters   Whether to include moderation reported users. Default: false.
+ * @type bool          $update_meta_cache   Whether to pre-fetch metadata for queried moderation items. Default: true.
+ * @type string|bool   $count_total         If true, an additional DB query is run to count the total moderation items
+ *                                           for the query. Default: false.
+ * }
+ * @return bool Returns true when moderation found, otherwise false.
+ * @global object      $moderation_template {@link BP_Moderation_Template}
+ *
+ */
 function bp_has_moderation( $args = '' ) {
 	global $moderation_template;
 
