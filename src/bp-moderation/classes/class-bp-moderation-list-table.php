@@ -130,30 +130,30 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	public function display() {
 		$this->display_tablenav( 'top' ); ?>
 
-        <h2 class="screen-reader-text">
+		<h2 class="screen-reader-text">
 			<?php
 			/* translators: accessibility text */
 			esc_html_e( 'Moderation Request list', 'buddyboss' );
 			?>
-        </h2>
+		</h2>
 
-        <table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
-            <thead>
-            <tr>
+		<table class="wp-list-table <?php echo esc_attr( implode( ' ', $this->get_table_classes() ) ); ?>">
+			<thead>
+			<tr>
 				<?php $this->print_column_headers(); ?>
-            </tr>
-            </thead>
+			</tr>
+			</thead>
 
-            <tbody id="the-moderation-request-list">
+			<tbody id="the-moderation-request-list">
 			<?php $this->display_rows_or_placeholder(); ?>
-            </tbody>
+			</tbody>
 
-            <tfoot>
-            <tr>
+			<tfoot>
+			<tr>
 				<?php $this->print_column_headers( false ); ?>
-            </tr>
-            </tfoot>
-        </table>
+			</tr>
+			</tfoot>
+		</table>
 		<?php
 
 		$this->display_tablenav( 'bottom' );

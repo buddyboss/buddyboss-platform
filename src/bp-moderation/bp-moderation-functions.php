@@ -138,9 +138,9 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include = fals
 		'filter_query'      => array(
 			array(
 				'column' => 'hide_sitewide',
-				'value'  => 1
+				'value'  => 1,
 			),
-		)
+		),
 	);
 
 	if ( $user_include ) {
@@ -191,7 +191,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  * Function to get the content based on type.
  *
  * @param int    $moderation_item_id   moderation id to get the content.
- * @param string $moderation_item_type item type
+ * @param string $moderation_item_type item type.
  *
  * @return string
  */
@@ -226,7 +226,7 @@ function bp_moderation_get_content_type( $key ) {
 /**
  * Function to get Report button
  *
- * @param array $args button args
+ * @param array $args button args.
  * @param bool  $html Should return button html or not.
  *
  * @return string|array
@@ -238,7 +238,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$button_text          = __( 'Report', 'buddyboss' );
 	$reported_button_text = __( 'Reported', 'buddyboss' );
 
-	// Check moderation setting enabled or not
+	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
 		$button_text          = __( 'Block', 'buddyboss' );
 		$reported_button_text = __( 'Blocked', 'buddyboss' );
@@ -251,23 +251,29 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		}
 	}
 
-	// Hide if content is created by current user
+	// Hide if content is created by current user.
 	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
 		return ! empty( $html ) ? '' : array();
 	}
 
-	$args['button_attr'] = wp_parse_args( $args['button_attr'], array(
-		'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
-		'href'                 => '#content-report',
-		'class'                => 'button item-button bp-secondary-action report-content',
-		'data-bp-content-id'   => '',
-		'data-bp-content-type' => '',
-		'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
-	) );
+	$args['button_attr'] = wp_parse_args(
+		$args['button_attr'],
+		array(
+			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
+			'href'                 => '#content-report',
+			'class'                => 'button item-button bp-secondary-action report-content',
+			'data-bp-content-id'   => '',
+			'data-bp-content-type' => '',
+			'data-bp-nonce'        => wp_create_nonce( 'bp-moderation-content' ),
+		)
+	);
 
-	$button = wp_parse_args( $args, array(
-		'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html__( $button_text ) ),
-	) );
+	$button = wp_parse_args(
+		$args,
+		array(
+			'link_text' => sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $button_text ), esc_html( $button_text ) ),
+		)
+	);
 
 	$is_reported = bp_moderation_report_exist( $item_id, $item_type );
 
@@ -319,8 +325,8 @@ function bp_moderation_add( $args = array() ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int    $item_id   Item id
- * @param string $item_type Item type
+ * @param int    $item_id   Item id.
+ * @param string $item_type Item type.
  *
  * @return bool
  */
@@ -340,9 +346,9 @@ function bp_moderation_report_exist( $item_id, $item_type ) {
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int    $item_id   Item id
- * @param string $item_type Item type
- * @param bool   $force_all Should delete all reported entry
+ * @param int    $item_id   Item id.
+ * @param string $item_type Item type.
+ * @param bool   $force_all Should delete all reported entry.
  *
  * @return false|int
  */
@@ -357,8 +363,8 @@ function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = 
  *
  * @since BuddyBoss 1.5.4
  *
- * @param int    $item_id   Item id
- * @param string $item_type Item type
+ * @param int    $item_id   Item id.
+ * @param string $item_type Item type.
  * @param string $action    hide/unhide action.
  *
  * @return bool
@@ -414,7 +420,6 @@ function bp_moderation_is_user_suspended( $user_id ) {
  *
  * @return bool True on success, false on failure.
  * @global wpdb  $wpdb          WordPress database abstraction object.
- *
  */
 function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value = '', $delete_all = false ) {
 

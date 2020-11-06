@@ -229,7 +229,7 @@ class BP_Moderation_Template {
 	 * @return bool True if there are items in the loop, otherwise false.
 	 * @see   bp_has_moderation()
 	 */
-	function has_moderation() {
+	public function has_moderation() {
 		if ( $this->moderation_count ) {
 			return true;
 		}
@@ -251,7 +251,7 @@ class BP_Moderation_Template {
 	public function user_moderations() {
 		if ( ( $this->current_moderation + 1 ) < $this->moderation_count ) {
 			return true;
-		} elseif ( ( $this->current_moderation + 1 ) == $this->moderation_count ) {
+		} elseif ( ( $this->current_moderation + 1 ) === $this->moderation_count ) {
 
 			/**
 			 * Fires right before the rewinding of moderation posts.
@@ -300,7 +300,7 @@ class BP_Moderation_Template {
 		}
 
 		// Loop has just started.
-		if ( $this->current_moderation == 0 ) {
+		if ( 0 === $this->current_moderation ) {
 
 			/**
 			 * Fires if the current moderation item is the first in the loop.

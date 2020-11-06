@@ -30,7 +30,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
@@ -54,7 +54,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
@@ -158,10 +158,17 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		return $sql;
 	}
 
+	/**
+	 * Update blocked comment template
+	 *
+	 * @param string $template_names Template name.
+	 *
+	 * @return string
+	 */
 	public function locate_blocked_template( $template_names ) {
 		global $activities_template;
 
-		if ( 'activity/comment.php' !== $template_names ){
+		if ( 'activity/comment.php' !== $template_names ) {
 			return $template_names;
 		}
 
@@ -217,7 +224,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $activity_id Activity id
+	 * @param integer $activity_id Activity id.
 	 *
 	 * @return int
 	 */
@@ -230,7 +237,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get Content.
 	 *
-	 * @param int $activity_comment_id activity id
+	 * @param int $activity_comment_id activity id.
 	 *
 	 * @return string
 	 */
@@ -245,7 +252,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */

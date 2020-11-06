@@ -222,38 +222,62 @@ class BP_Moderation {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_moderation_id_before_save', array( $this->id, &$this ) );
-		$this->user_id       = apply_filters_ref_array( 'bp_moderation_user_id_before_save', array(
-			$this->user_id,
-			&$this
-		) );
-		$this->item_id       = apply_filters_ref_array( 'bp_moderation_item_id_before_save', array(
-			$this->item_id,
-			&$this
-		) );
-		$this->content       = apply_filters_ref_array( 'bp_moderation_content_before_save', array(
-			$this->content,
-			&$this
-		) );
-		$this->item_type     = apply_filters_ref_array( 'bp_moderation_item_type_before_save', array(
-			$this->item_type,
-			&$this
-		) );
-		$this->date_created  = apply_filters_ref_array( 'bp_moderation_date_created_before_save', array(
-			$this->date_created,
-			&$this
-		) );
-		$this->hide_sitewide = apply_filters_ref_array( 'bp_moderation_hide_sitewide_before_save', array(
-			$this->hide_sitewide,
-			&$this
-		) );
-		$this->category_id   = apply_filters_ref_array( 'bp_moderation_category_id_before_save', array(
-			$this->category_id,
-			&$this
-		) );
-		$this->blog_id       = apply_filters_ref_array( 'bp_moderation_blog_id_before_save', array(
-			$this->blog_id,
-			&$this
-		) );
+		$this->user_id       = apply_filters_ref_array(
+			'bp_moderation_user_id_before_save',
+			array(
+				$this->user_id,
+				&$this,
+			)
+		);
+		$this->item_id       = apply_filters_ref_array(
+			'bp_moderation_item_id_before_save',
+			array(
+				$this->item_id,
+				&$this,
+			)
+		);
+		$this->content       = apply_filters_ref_array(
+			'bp_moderation_content_before_save',
+			array(
+				$this->content,
+				&$this,
+			)
+		);
+		$this->item_type     = apply_filters_ref_array(
+			'bp_moderation_item_type_before_save',
+			array(
+				$this->item_type,
+				&$this,
+			)
+		);
+		$this->date_created  = apply_filters_ref_array(
+			'bp_moderation_date_created_before_save',
+			array(
+				$this->date_created,
+				&$this,
+			)
+		);
+		$this->hide_sitewide = apply_filters_ref_array(
+			'bp_moderation_hide_sitewide_before_save',
+			array(
+				$this->hide_sitewide,
+				&$this,
+			)
+		);
+		$this->category_id   = apply_filters_ref_array(
+			'bp_moderation_category_id_before_save',
+			array(
+				$this->category_id,
+				&$this,
+			)
+		);
+		$this->blog_id       = apply_filters_ref_array(
+			'bp_moderation_blog_id_before_save',
+			array(
+				$this->blog_id,
+				&$this,
+			)
+		);
 
 		$this->date_created = empty( $this->date_created ) ? current_time( 'mysql' ) : $this->date_created;
 		$this->last_updated = empty( $this->last_updated ) ? current_time( 'mysql' ) : $this->last_updated;
@@ -287,7 +311,7 @@ class BP_Moderation {
 			}
 		}
 
-		// Get Moderation settings
+		// Get Moderation settings.
 		$threshold          = false;
 		$email_notification = false;
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
@@ -309,11 +333,11 @@ class BP_Moderation {
 		 */
 		if ( empty( $this->report_id ) ) {
 
-			// Update last update time as new reported added
+			// Update last update time as new reported added.
 			$this->last_updated = current_time( 'mysql' );
 
 			// Update count and check $threshold for auto hide/suspended and send email notification if auto hide/suspended.
-			$this->count = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
+			$this->count  = ! empty( $this->id ) ? (int) bp_moderation_get_meta( $this->id, '_count' ) : 0;
 			$this->count += 1;
 			if ( ! empty( $threshold ) ) {
 				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
@@ -323,7 +347,6 @@ class BP_Moderation {
 					$email_notification = false;
 				}
 			}
-
 		}
 
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
@@ -363,7 +386,7 @@ class BP_Moderation {
 		}
 
 		if ( ! empty( $email_notification ) ) {
-			//TODO: Send Admin Notification
+			// TODO: Send Admin Notification.
 		}
 
 		/**
@@ -385,8 +408,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array      $args              {
-	 *                                      An array of arguments. All items are optional.
+	 * @param array $args              {
+	 *                                 An array of arguments. All items are optional.
 	 *
 	 * @type int         $page              Which page of results to fetch. Using page=1 without per_page will result
 	 *                                           in no pagination. Default: 1.
@@ -417,7 +440,6 @@ class BP_Moderation {
 	 *        'filter' parameter.
 	 * @see   WP_Meta_Query::queries for a description of the 'meta_query'
 	 *        parameter format.
-	 *
 	 */
 	public static function get( $args = array() ) {
 		global $wpdb;
@@ -810,7 +832,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $moderations moderations array.
+	 * @param array $moderations moderation array.
+	 * @param array $args        arguments.
 	 *
 	 * @return array The updated moderations with users.
 	 * @global wpdb $wpdb        WordPress database abstraction object.
@@ -840,7 +863,7 @@ class BP_Moderation {
 	 * @since BuddyBoss 1.5.4
 	 *
 	 * @param int   $moderation_id Moderation id.
-	 * @param array $args          Argument to filter data
+	 * @param array $args          Argument to filter data.
 	 *
 	 * @return array reporters data.
 	 */
@@ -954,8 +977,8 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array           $filter_array  {
-	 *                                       Fields and values to filter by.
+	 * @param array $filter_array  {
+	 *                             Fields and values to filter by.
 	 *
 	 * @type array|string|int $user_id       User ID(s).
 	 * @type array|string|int $item_id       Item ID(s).
@@ -1007,7 +1030,6 @@ class BP_Moderation {
 	 *
 	 * @return string|false
 	 * @see   BP_Moderation::get_filter_sql()
-	 *
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
 		global $wpdb;
@@ -1057,7 +1079,7 @@ class BP_Moderation {
 	}
 
 	/**
-	 * get specific moderation item id
+	 * Get specific moderation item id
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
@@ -1101,7 +1123,7 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param bool $force_all Should delete all reported entry
+	 * @param bool $force_all Should delete all reported entry.
 	 *
 	 * @return false|int
 	 */
@@ -1117,11 +1139,10 @@ class BP_Moderation {
 			if ( 1 >= $this->count ) {
 				$delete_parent = true;
 			}
-
 		}
 
 		if ( $delete_parent ) {
-			$updated_row = $wpdb->delete( $bp->moderation->table_name, array( 'id' => $this->id ) );
+			$updated_row = $wpdb->delete( $bp->moderation->table_name, array( 'id' => $this->id ) ); // phpcs:ignore
 			$this->count -= 1;
 			bp_moderation_update_meta( $this->id, '_count', $this->count );
 		}
@@ -1134,7 +1155,7 @@ class BP_Moderation {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param bool $force_all Should delete all reported entry
+	 * @param bool $force_all Should delete all reported entry.
 	 *
 	 * @return false|int
 	 */
@@ -1148,7 +1169,7 @@ class BP_Moderation {
 			$args = array( 'id' => $this->report_id );
 		}
 
-		$updated_row = $wpdb->delete( $bp->moderation->table_name_reports, $args );
+		$updated_row = $wpdb->delete( $bp->moderation->table_name_reports, $args ); // phpcs:ignore
 
 		return ! empty( $updated_row );
 	}

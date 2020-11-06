@@ -109,7 +109,6 @@ function bp_get_moderation_root_slug() {
  * }
  * @return bool Returns true when moderation found, otherwise false.
  * @global object      $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_has_moderation( $args = '' ) {
 	global $moderation_template;
@@ -120,7 +119,7 @@ function bp_has_moderation( $args = '' ) {
 		$args['exclude_types']     = array( 'user' );
 		$args['display_reporters'] = true;
 	} elseif ( bp_is_user_moderation() && 'blocked-members' === bp_current_action() ) {
-		$args['in_types'] = array( 'user' );
+		$args['in_types']          = array( 'user' );
 		$args['display_reporters'] = true;
 	}
 
@@ -184,7 +183,6 @@ function bp_has_moderation( $args = '' ) {
  *
  * @return bool Returns true when moderation are found.
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_moderation() {
 	global $moderation_template;
@@ -200,7 +198,6 @@ function bp_moderation() {
  *
  * @return object The current moderation within the loop.
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_the_moderation() {
 	global $moderation_template;
@@ -215,7 +212,6 @@ function bp_the_moderation() {
  *
  * @return int The moderation ID.
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_get_moderation_id() {
 	global $moderation_template;
@@ -242,7 +238,6 @@ function bp_get_moderation_id() {
  *
  * @return int The moderation ID.
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_get_moderation_item_id() {
 	global $moderation_template;
@@ -270,7 +265,6 @@ function bp_get_moderation_item_id() {
  * @return string The moderation type.
  *
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_get_moderation_item_type() {
 	global $moderation_template;
@@ -298,7 +292,6 @@ function bp_get_moderation_item_type() {
  * @return int hide/show.
  *
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_get_moderation_hide_site_wide() {
 	global $moderation_template;
@@ -326,7 +319,6 @@ function bp_get_moderation_hide_site_wide() {
  * @return string moderation late updated.
  *
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_get_moderation_last_updated() {
 	global $moderation_template;
@@ -354,7 +346,6 @@ function bp_get_moderation_last_updated() {
  * @return string moderation reported category.
  *
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_get_moderation_reported_category() {
 	global $moderation_template;
@@ -382,7 +373,6 @@ function bp_get_moderation_reported_category() {
  *
  * @return bool $has_more_items True if more items, false if not.
  * @global object $moderation_template {@link BP_Moderation_Template}
- *
  */
 function bp_moderation_has_more_items() {
 	global $moderation_template;

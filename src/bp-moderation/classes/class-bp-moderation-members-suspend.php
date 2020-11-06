@@ -57,7 +57,7 @@ class BP_Moderation_Members_Suspend {
 			return $user;
 		}
 
-		// The user exists; now do a check to see if the user is a suspended
+		// The user exists; now do a check to see if the user is a suspended.
 		if ( is_a( $user, 'WP_User' ) && bp_moderation_is_user_suspended( $user->id ) ) {
 			return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been Suspended.', 'buddyboss' ) );
 		}
@@ -92,7 +92,7 @@ class BP_Moderation_Members_Suspend {
 		$is_login = false;
 		if ( isset( $GLOBALS['pagenow'] ) && ( false !== strpos( $GLOBALS['pagenow'], 'wp-login.php' ) ) ) {
 			$is_login = true;
-		} elseif ( isset( $_SERVER['SCRIPT_NAME'] ) && false !== strpos( $_SERVER['SCRIPT_NAME'], 'wp-login.php' ) ) {
+		} elseif ( isset( $_SERVER['SCRIPT_NAME'] ) && false !== strpos( $_SERVER['SCRIPT_NAME'], 'wp-login.php' ) ) { // phpcs:ignore
 			$is_login = true;
 		}
 
@@ -105,8 +105,8 @@ class BP_Moderation_Members_Suspend {
 			return;
 		}
 
-		$user_id            = bp_loggedin_user_id();
-		if (  bp_moderation_is_user_suspended( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+		if ( bp_moderation_is_user_suspended( $user_id ) ) {
 			// Setup login args.
 			$args = array(
 				// Custom action used to throw an error message.
@@ -139,7 +139,7 @@ class BP_Moderation_Members_Suspend {
 	public function bp_live_suspended_login_error() {
 		global $error;
 
-		$error = __( '<strong>ERROR</strong>: Your account has been suspended.', 'buddyboss' );
+		$error = __( '<strong>ERROR</strong>: Your account has been suspended.', 'buddyboss' ); // phpcs:ignore
 
 		// Shake shake shake!
 		add_action( 'login_head', 'wp_shake_js', 12 );

@@ -50,23 +50,28 @@ function bp_moderation_content_report() {
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_add( array(
-			'content_id'   => $item_id,
-			'content_type' => $item_type,
-			'category_id'  => $category,
-			'note'         => $item_note,
-		) );
+		$moderation = bp_moderation_add(
+			array(
+				'content_id'   => $item_id,
+				'content_type' => $item_type,
+				'category_id'  => $category,
+				'note'         => $item_note,
+			)
+		);
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['success']    = true;
 			$response['moderation'] = $moderation;
 
-			$response['button'] = bp_moderation_get_report_button( array(
-				'button_attr' => array(
-					'data-bp-content-id'   => $item_id,
-					'data-bp-content-type' => $item_type,
-				)
-			), false );
+			$response['button'] = bp_moderation_get_report_button(
+				array(
+					'button_attr' => array(
+						'data-bp-content-id'   => $item_id,
+						'data-bp-content-type' => $item_type,
+					),
+				),
+				false
+			);
 		}
 
 		$response['message'] = $moderation->errors;
@@ -98,7 +103,7 @@ function bp_moderation_unblock_user() {
 	$type           = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$id             = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 	$moderation_obj = new BP_Moderation( $id, $type );
-	$moderation_obj->populate();;
+	$moderation_obj->populate();
 
 	if ( $moderation_obj->check_moderation_report_exist( $moderation_obj->id, get_current_user_id() ) ) {
 
@@ -126,6 +131,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_
 
 /**
  * Function to handle moderation request from frontend
+ *
  * @since BuddyBoss 1.5.4
  */
 function bp_moderation_content_actions_request() {
@@ -164,6 +170,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_actions_request', 'bp_moderati
 
 /**
  * Function to Popup markup for moderation content report
+ *
  * @since BuddyBoss 1.5.4
  */
 function bb_moderation_content_report_popup() {

@@ -24,7 +24,7 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
  *
  * @since BuddyBoss 1.5.4
  *
- * @param string $hook page name
+ * @param string $hook page name.
  */
 function bp_moderation_admin_scripts( $hook ) {
 	if ( 'buddyboss_page_bp-moderation' === $hook ) {
@@ -36,17 +36,21 @@ function bp_moderation_admin_scripts( $hook ) {
 			true
 		);
 
-		wp_localize_script( 'bp-moderation', 'Bp_Moderation', array(
-			'strings' => array(
-				'confirm_msg'            => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
-				'hide_label'             => esc_js( __( 'Hide', 'buddyboss' ) ),
-				'unhide_label'           => esc_js( __( 'Unhide', 'buddyboss' ) ),
-				'suspend_author_label'   => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
-				'unsuspend_author_label' => esc_js( __( 'Unsuspend Content Author', 'buddyboss' ) ),
-				'suspend_member_label'   => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
-				'unsuspend_member_label' => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
+		wp_localize_script(
+			'bp-moderation',
+			'Bp_Moderation',
+			array(
+				'strings' => array(
+					'confirm_msg'            => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
+					'hide_label'             => esc_js( __( 'Hide', 'buddyboss' ) ),
+					'unhide_label'           => esc_js( __( 'Unhide', 'buddyboss' ) ),
+					'suspend_author_label'   => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
+					'unsuspend_author_label' => esc_js( __( 'Unsuspend Content Author', 'buddyboss' ) ),
+					'suspend_member_label'   => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
+					'unsuspend_member_label' => esc_js( __( 'Unsuspend Member', 'buddyboss' ) ),
+				),
 			)
-		) );
+		);
 	}
 }
 
@@ -217,8 +221,8 @@ function bp_moderation_admin() {
 	// Added navigation tab on top.
 	if ( bp_core_get_moderation_admin_tabs() ) {
 		?>
-        <div class="wrap">
-            <h2 class="nav-tab-wrapper">
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper">
 				<?php
 				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
@@ -226,8 +230,8 @@ function bp_moderation_admin() {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				}
 				?>
-            </h2>
-        </div>
+			</h2>
+		</div>
 		<?php
 	}
 
@@ -237,7 +241,7 @@ function bp_moderation_admin() {
 	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
 
 	// Display the single activity edit screen.
-	if ( 'view' == $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
+	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
 		bp_moderation_admin_view();
 	} else {
 		bp_moderation_admin_index();
@@ -260,8 +264,8 @@ function bp_moderation_admin_index() {
 	// Prepare the group items for display.
 	$bp_moderation_list_table->prepare_items();
 	?>
-    <div class="wrap">
-        <h1>
+	<div class="wrap">
+		<h1>
 			<?php
 			if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 				esc_html_e( 'Blocked Members', 'buddyboss' );
@@ -269,14 +273,14 @@ function bp_moderation_admin_index() {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			}
 			?>
-        </h1>
-        <div class="bp-moderation-ajax-msg"></div>
+		</h1>
+		<div class="bp-moderation-ajax-msg"></div>
 		<?php $bp_moderation_list_table->views(); ?>
-        <form id="bp-moseration-form" action="" method="get">
-            <input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
+		<form id="bp-moseration-form" action="" method="get">
+			<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
 			<?php $bp_moderation_list_table->display(); ?>
-        </form>
-    </div>
+		</form>
+	</div>
 	<?php
 }
 
@@ -337,11 +341,11 @@ function bp_moderation_admin_view() {
 function bp_moderation_admin_category_listing_add_tab() {
 	global $pagenow, $current_screen;
 
-	if ( ( $pagenow == 'edit-tags.php' || $pagenow == 'term.php' ) && ( 'bpm_category' === $current_screen->taxonomy ) ) {
+	if ( ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow ) && ( 'bpm_category' === $current_screen->taxonomy ) ) {
 		?>
-        <div class="wrap">
-            <h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) ); ?></h2>
-        </div>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) ); ?></h2>
+		</div>
 		<?php
 	}
 }

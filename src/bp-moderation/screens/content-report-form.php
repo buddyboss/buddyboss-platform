@@ -1,7 +1,10 @@
 <?php
 /**
  * Content report form
+ *
+ * @package BuddyBoss
  */
+
 ?>
 
 <div id="content-report" class="content-report-popup bb-modal mfp-hide">
@@ -12,10 +15,13 @@
         <button title="Close (Esc)" type="button" class="mfp-close"></button>
     </h2>
 	<?php
-	$reports_terms = get_terms( 'bpm_category', array(
-		'hide_empty' => false,
-		'fields'     => 'id=>name',
-	) );
+	$reports_terms = get_terms(
+		'bpm_category',
+		array(
+			'hide_empty' => false,
+			'fields'     => 'id=>name',
+		)
+	);
 	?>
     <div class="bb-report-type-wrp">
         <form id="bb-report-content" action="javascript:void(0);">

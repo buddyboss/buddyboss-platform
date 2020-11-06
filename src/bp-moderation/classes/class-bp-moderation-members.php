@@ -30,7 +30,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function __construct() {
 
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
@@ -54,7 +54,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
@@ -118,7 +118,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @param string $uid_name User ID field name.
 	 *
 	 * @return string|void
-	 *
 	 */
 	protected function exclude_where_query( $uid_name = '' ) {
 		$sql                = false;
@@ -144,7 +143,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $user_id User id
+	 * @param integer $user_id User id.
 	 *
 	 * @return int
 	 */
@@ -155,7 +154,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get Content.
 	 *
-	 * @param integer $user_id User id
+	 * @param integer $user_id User id.
 	 *
 	 * @return string
 	 */
@@ -168,7 +167,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */

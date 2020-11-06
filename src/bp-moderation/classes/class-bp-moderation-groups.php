@@ -29,7 +29,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 1.5.4
 	 */
 	public function __construct() {
-		parent::$Moderation[ self::$moderation_type ] = self::class;
+		parent::$moderation[ self::$moderation_type ] = self::class;
 		$this->item_type                              = self::$moderation_type;
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
@@ -53,7 +53,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $content_types Supported Contents types
+	 * @param array $content_types Supported Contents types.
 	 *
 	 * @return mixed
 	 */
@@ -140,7 +140,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @param integer $group_id Group id
+	 * @param integer $group_id Group id.
 	 *
 	 * @return int
 	 */
@@ -153,7 +153,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get Content.
 	 *
-	 * @param integer $group_id Group id
+	 * @param integer $group_id Group id.
 	 *
 	 * @return string
 	 */
@@ -168,7 +168,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array $args Content data
+	 * @param array $args Content data.
 	 *
 	 * @return string
 	 */
