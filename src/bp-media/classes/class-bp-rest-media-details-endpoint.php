@@ -232,7 +232,6 @@ class BP_REST_Media_Details_Endpoint extends WP_REST_Controller {
 	 * @param array $querystring Query String parameters.
 	 *
 	 * @return string
-	 *
 	 */
 	public function bp_rest_media_object_results_media_all_scope( $querystring ) {
 		$querystring = wp_parse_args( $querystring );

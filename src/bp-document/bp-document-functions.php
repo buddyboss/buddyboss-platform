@@ -2442,10 +2442,11 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 
 	while ( $posts = get_posts(
 		array(
-			'post_type'   => $post_types,
-			'post_status' => 'any',
-			'numberposts' => 100,
-			'offset'      => $i * 100,
+			'post_type'              => $post_types,
+			'post_status'            => 'any',
+			'numberposts'            => 100,
+			'offset'                 => $i * 100,
+			'update_post_term_cache' => false,
 		)
 	) ) {
 		foreach ( $posts as $post ) {
@@ -3428,7 +3429,7 @@ function bp_document_default_scope( $scope = 'all' ) {
 		$allowed_scopes[] = 'groups';
 	}
 
-	if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
+	if ( ( is_user_logged_in() || bp_is_user_document() ) && bp_is_profile_document_support_enabled() ) {
 		$allowed_scopes[] = 'personal';
 	}
 

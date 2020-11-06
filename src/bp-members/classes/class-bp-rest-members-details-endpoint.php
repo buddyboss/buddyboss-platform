@@ -99,11 +99,11 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @return WP_REST_Response | WP_Error
 	 * @since 0.1.0
 	 *
-	 * @api {GET} /wp-json/buddyboss/v1/members/details Members Details
-	 * @apiName GetBBMembersDetails
-	 * @apiGroup Members
+	 * @api            {GET} /wp-json/buddyboss/v1/members/details Members Details
+	 * @apiName        GetBBMembersDetails
+	 * @apiGroup       Members
 	 * @apiDescription Retrieve Members details(includes tabs and order_options)
-	 * @apiVersion 1.0.0
+	 * @apiVersion     1.0.0
 	 */
 	public function get_items( $request ) {
 		$retval = array();
@@ -172,17 +172,18 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	 * @apiDescription Retrieve Member detail tabs.
 	 * @apiVersion     1.0.0
 	 * @apiPermission  LoggedInUser if the site is in Private Network.
-	 * @apiParam {Number} id A unique numeric ID for the member.
+	 * @apiParam       {Number} id A unique numeric ID for the member.
 	 */
 	public function get_item( $request ) {
 		$retval = array();
 		global $bp;
 
 		$current_user_id = $request->get_param( 'id' );
-		$this->user_id   = $current_user_id;
 		if ( empty( $current_user_id ) ) {
 			$current_user_id = bp_loggedin_user_id();
 		}
+
+		$this->user_id = $current_user_id;
 
 		if ( empty( $current_user_id ) ) {
 			return new WP_Error(
@@ -207,6 +208,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		}
 
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+
+		bp_setup_nav();
 
 		$profile_tabs = array();
 		$default_tab  = 'profile';
@@ -234,8 +237,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				$id   = $nav['slug'];
 
 				$hidden_tabs = bp_nouveau_get_appearance_settings( 'user_nav_hide' );
-				if (
-					is_array( $hidden_tabs )
+				if ( is_array( $hidden_tabs )
 					&& ! empty( $hidden_tabs )
 					&& in_array( $id, $hidden_tabs, true )
 				) {
@@ -293,6 +295,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		$retval['tabs'] = array_values( $profile_tabs );
 
 		$response = rest_ensure_response( $retval );
+
+		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		/**
 		 * Fires after a list of members details is fetched via the REST API.
@@ -708,7 +712,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 					$menu       = wp_get_nav_menu_object( $locations['header-my-account'] );
 					$menu_items = wp_get_nav_menu_items( $menu->term_id );
 					return $this->bp_rest_build_tree( $menu_items, 0 );
-
 				} else {
 					return $this->bp_rest_default_menu();
 				}
@@ -850,8 +853,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				'count' => '',
 			);
 
-			if (
-				function_exists( 'bp_is_activity_tabs_active' )
+			if ( function_exists( 'bp_is_activity_tabs_active' )
 				&& bp_is_activity_tabs_active()
 			) {
 
@@ -1065,7 +1067,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		if ( bp_is_active( 'forums' ) ) {
 			$user_domain = bp_loggedin_user_domain();
-			$forums_link = trailingslashit( $user_domain . bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ) );
+			$forums_link = trailingslashit( $user_domain . bbp_get_root_slug() );
 
 			$item_forums = array(
 				'ID'       => 'forums',
@@ -1194,8 +1196,8 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			'count' => '',
 		);
 
-		// phpcs:ignore
-		$items = json_decode( json_encode( $items ), false );
+	     // phpcs:ignore
+	     $items = json_decode( wp_json_encode( $items ), false );
 
 		return $items;
 	}
@@ -1203,7 +1205,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	/**
 	 * Recursive function to create child level elements.
 	 *
-	 * @param array $elements Array elements.
+	 * @param array $elements  Array elements.
 	 * @param int   $parent_id Parent element id.
 	 *
 	 * @return array
