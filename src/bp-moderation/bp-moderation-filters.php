@@ -3,7 +3,7 @@
  * Filters related to the Moderation component.
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ new BP_Moderation_Messages();
 /**
  * Function to handle frontend report form submission.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_content_report() {
 	$response = array(
@@ -91,7 +91,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_report', 'bp_moderation_conten
 /**
  * Function to handle frontend unblock user request.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_unblock_user() {
 	$response = array(
@@ -132,7 +132,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_unblock_user', 'bp_moderation_unblock_
 /**
  * Function to handle moderation request from frontend
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_content_actions_request() {
 	$response = array(
@@ -171,7 +171,7 @@ add_action( 'wp_ajax_nopriv_bp_moderation_content_actions_request', 'bp_moderati
 /**
  * Function to Popup markup for moderation content report
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bb_moderation_content_report_popup() {
 	include BP_PLUGIN_DIR . 'src/bp-moderation/screens/content-report-form.php';

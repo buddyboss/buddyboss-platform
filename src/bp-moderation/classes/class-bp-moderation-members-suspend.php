@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Groups Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Members.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Members_Suspend {
 
@@ -20,7 +20,7 @@ class BP_Moderation_Members_Suspend {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -43,7 +43,7 @@ class BP_Moderation_Members_Suspend {
 	 * When a user logs in, check if they have been marked as a Suspended. If yes
 	 * then simply redirect them to the home page and stop them from logging in.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param WP_User|WP_Error $user Either the WP_User object or the WP_Error
 	 *                               object, as passed to the 'authenticate' filter.
@@ -85,7 +85,7 @@ class BP_Moderation_Members_Suspend {
 	 *
 	 * This is important as the $bp->loggedin_user object is setup at priority 4.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function bp_stop_live_suspended() {
 		// If we're on the login page, stop now to prevent redirect loop.
@@ -134,7 +134,7 @@ class BP_Moderation_Members_Suspend {
 	/**
 	 * Show a custom error message when a logged-in user is marked as a suspended.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function bp_live_suspended_login_error() {
 		global $error;
@@ -148,7 +148,7 @@ class BP_Moderation_Members_Suspend {
 	/**
 	 * If the displayed user is marked as a suspended, Show 404.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function restrict_member_profile() {
 		$user_id            = bp_displayed_user_id();

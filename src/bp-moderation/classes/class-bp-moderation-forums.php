@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Forums Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Forums.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -54,7 +54,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -69,7 +69,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Forums Join SQL query to filter blocked Forums
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Forums Join sql.
 	 * @param object $wp_query WP_Query object.
@@ -97,7 +97,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Forums Where SQL query to filter blocked Forums
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $where_conditions Forums Where sql.
 	 * @param object $wp_query         WP_Query object.
@@ -130,7 +130,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		/**
 		 * Filters the Forums Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of Forums moderation where query.
 		 */
@@ -199,7 +199,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

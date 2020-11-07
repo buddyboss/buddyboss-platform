@@ -3,6 +3,8 @@
  * Content report form
  *
  * @package BuddyBoss
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 ?>

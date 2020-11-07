@@ -3,7 +3,8 @@
  * BuddyBoss Moderation Template Functions.
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Output the moderation component slug.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_slug() {
 	echo esc_html( bp_get_moderation_slug() );
@@ -21,7 +22,7 @@ function bp_moderation_slug() {
 /**
  * Return the moderation component slug.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return string The moderation component slug.
  */
@@ -30,7 +31,7 @@ function bp_get_moderation_slug() {
 	/**
 	 * Filters the moderation component slug.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $slug Activity component slug.
 	 */
@@ -40,7 +41,7 @@ function bp_get_moderation_slug() {
 /**
  * Output the moderation component root slug.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_root_slug() {
 	echo esc_html( bp_get_moderation_root_slug() );
@@ -49,7 +50,7 @@ function bp_moderation_root_slug() {
 /**
  * Return the moderation component root slug.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return string The moderation component root slug.
  */
@@ -58,7 +59,7 @@ function bp_get_moderation_root_slug() {
 	/**
 	 * Filters the moderation component root slug.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $root_slug Activity component root slug.
 	 */
@@ -73,7 +74,7 @@ function bp_get_moderation_root_slug() {
  * $moderation_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of moderation items.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param array|string $args                {
  *                                          Arguments for limiting the contents of the moderation loop. Most arguments
@@ -167,7 +168,7 @@ function bp_has_moderation( $args = '' ) {
 	/**
 	 * Filters whether or not there are moderation items to display.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param bool   $value               Whether or not there are moderation items to display.
 	 * @param string $moderation_template Current moderation template being used.
@@ -179,7 +180,7 @@ function bp_has_moderation( $args = '' ) {
 /**
  * Determine if there are still moderation left in the loop.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return bool Returns true when moderation are found.
  * @global object $moderation_template {@link BP_Moderation_Template}
@@ -194,7 +195,7 @@ function bp_moderation() {
 /**
  * Get the current moderation object in the loop.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return object The current moderation within the loop.
  * @global object $moderation_template {@link BP_Moderation_Template}
@@ -208,7 +209,7 @@ function bp_the_moderation() {
 /**
  * Return the moderation ID.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return int The moderation ID.
  * @global object $moderation_template {@link BP_Moderation_Template}
@@ -219,7 +220,7 @@ function bp_get_moderation_id() {
 	/**
 	 * Filters the moderation ID being displayed.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param int $id The moderation ID.
 	 */
@@ -234,7 +235,7 @@ function bp_get_moderation_id() {
 /**
  * Return the moderation item ID.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return int The moderation ID.
  * @global object $moderation_template {@link BP_Moderation_Template}
@@ -245,7 +246,7 @@ function bp_get_moderation_item_id() {
 	/**
 	 * Filters the moderation item ID being displayed.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param int $item_id The moderation item ID.
 	 */
@@ -260,7 +261,7 @@ function bp_get_moderation_item_id() {
 /**
  * Return the moderation item type.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return string The moderation type.
  *
@@ -272,7 +273,7 @@ function bp_get_moderation_item_type() {
 	/**
 	 * Filters the moderation item ID being displayed.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $item_type The moderation item ID.
 	 */
@@ -287,7 +288,7 @@ function bp_get_moderation_item_type() {
 /**
  * Return the moderation hide site wide or not.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return int hide/show.
  *
@@ -299,7 +300,7 @@ function bp_get_moderation_hide_site_wide() {
 	/**
 	 * Filters the moderation item ID being displayed.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param int $hide_sitewide The moderation hide site wide.
 	 */
@@ -314,7 +315,7 @@ function bp_get_moderation_hide_site_wide() {
 /**
  * Return the moderation last updated.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return string moderation late updated.
  *
@@ -326,7 +327,7 @@ function bp_get_moderation_last_updated() {
 	/**
 	 * Filters the moderation item ID being displayed.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $last_updated The moderation last updated.
 	 */
@@ -341,7 +342,7 @@ function bp_get_moderation_last_updated() {
 /**
  * Return the moderation reported category.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return string moderation reported category.
  *
@@ -353,7 +354,7 @@ function bp_get_moderation_reported_category() {
 	/**
 	 * Filters the moderation item ID being displayed.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $reported_category The moderation reported category.
 	 */
@@ -369,7 +370,7 @@ function bp_get_moderation_reported_category() {
 /**
  * Return true when there are more moderation items to be shown than currently appear.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return bool $has_more_items True if more items, false if not.
  * @global object $moderation_template {@link BP_Moderation_Template}
@@ -392,7 +393,7 @@ function bp_moderation_has_more_items() {
 	/**
 	 * Filters whether there are more moderation items to display.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param bool $has_more_items Whether or not there are more moderation items to display.
 	 */
@@ -402,7 +403,7 @@ function bp_moderation_has_more_items() {
 /**
  * Output the URL for the Load More link.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_load_more_link() {
 	echo esc_url( bp_get_moderation_load_more_link() );
@@ -411,7 +412,7 @@ function bp_moderation_load_more_link() {
 /**
  * Get the URL for the Load More link.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return string $link
  */
@@ -424,7 +425,7 @@ function bp_get_moderation_load_more_link() {
 	/**
 	 * Filters the Load More link URL.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $link                The "Load More" link URL with appropriate query args.
 	 * @param string $url                 The original URL.

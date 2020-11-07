@@ -5,7 +5,7 @@
  * An moderation component, for users, groups moderation.
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Moderation Class.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Component extends BP_Component {
 
 	/**
 	 * Start the Moderation component setup process.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -37,7 +37,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Include component files.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -65,7 +65,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -81,7 +81,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up component global variables.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -128,7 +128,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -184,7 +184,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -222,7 +222,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function setup_title() {
 		// Adjust title based on view.
@@ -240,7 +240,7 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Setup cache moderation.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function setup_cache_groups() {
 	}
@@ -281,7 +281,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function rest_api_init( $controllers = array() ) {
 	}

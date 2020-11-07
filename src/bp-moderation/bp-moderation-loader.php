@@ -5,7 +5,7 @@
  * An Moderation component, for users, groups, and site moderation.
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-Moderation component.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_setup_moderation() {
 	buddypress()->moderation = new BP_Moderation_Component();

@@ -5,7 +5,8 @@
  * Functions for the Moderation component.
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ *
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -21,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * The bp_moderation_get() function shares all arguments with
  * BP_Moderation::get().
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param array|string $args See BP_Moderation::get() for description.
  *
@@ -105,7 +106,7 @@ function bp_moderation_get( $args = '' ) {
 	/**
 	 * Filters the requested moderation item(s).
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array         $r          Arguments used for the moderation query.
 	 *
@@ -123,7 +124,7 @@ function bp_moderation_get( $args = '' ) {
 /**
  * Retrieve sitewide hidden items ids of particular item type.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $type         Moderation items type.
  * @param bool   $user_include Include item which report by current user even if it's not hidden.
@@ -157,7 +158,7 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include = fals
 /**
  * Function to get the moderation content types.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @return mixed|void
  */
@@ -168,7 +169,7 @@ function bp_moderation_content_types() {
 /**
  * Function get content owner id.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $moderation_item_id   content id.
  * @param string $moderation_item_type content type.
@@ -210,7 +211,7 @@ function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_ite
 /**
  * Function to get specific moderation content type.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $key content type key.
  *
@@ -300,7 +301,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 /**
  * Function to Report content.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param array $args Report args.
  *
@@ -323,7 +324,7 @@ function bp_moderation_add( $args = array() ) {
 /**
  * Function to Check content Reported by current usr or not.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $item_id   Item id.
  * @param string $item_type Item type.
@@ -344,7 +345,7 @@ function bp_moderation_report_exist( $item_id, $item_type ) {
 /**
  * Function to unblock user from frontend.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $item_id   Item id.
  * @param string $item_type Item type.
@@ -361,7 +362,7 @@ function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = 
 /**
  * Function to hide unhide moderation request.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $item_id   Item id.
  * @param string $item_type Item type.
@@ -390,7 +391,7 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
 /**
  * Check whether a user has been marked as a suspended.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int $user_id The ID for the user.
  *
@@ -410,7 +411,7 @@ function bp_moderation_is_user_suspended( $user_id ) {
 /**
  * Delete a meta entry from the DB for an moderation item.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $moderation_id ID of the moderation item whose metadata is being deleted.
  * @param string $meta_key      Optional. The key of the metadata being deleted. If
@@ -453,7 +454,7 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 /**
  * Get metadata for a given moderation item.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $moderation_id ID of the moderation item whose metadata is being requested.
  * @param string $meta_key      Optional. If present, only the metadata matching
@@ -473,7 +474,7 @@ function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = t
 	/**
 	 * Filters the metadata for a specified moderation item.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param mixed  $retval        The meta values for the moderation item.
 	 * @param int    $moderation_id ID of the moderation item.
@@ -486,7 +487,7 @@ function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = t
 /**
  * Update a piece of moderation meta.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $moderation_id ID of the moderation item whose metadata is being updated.
  * @param string $meta_key      Key of the metadata being updated.
@@ -509,7 +510,7 @@ function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $pre
 /**
  * Add a piece of moderation metadata.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $moderation_id ID of the moderation item.
  * @param string $meta_key      Metadata key.

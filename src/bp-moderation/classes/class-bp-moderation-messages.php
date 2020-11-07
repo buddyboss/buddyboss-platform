@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Messages Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Messages.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -54,7 +54,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -69,7 +69,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Groups Join SQL query to filter blocked Messages
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Messages Join sql.
 	 * @param array  $args     Messages args.
@@ -97,7 +97,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Messages Where SQL query to filter blocked Messages
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string|array $where_conditions Messages Where sql.
 	 * @param array        $args             Messages args.
@@ -128,7 +128,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		/**
 		 * Filters the Messages Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of Messages moderation where query.
 		 */
@@ -279,7 +279,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *
