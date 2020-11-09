@@ -72,12 +72,12 @@ window.bp = window.bp || {};
 				this.dropzone_options = {
 					url                 : BP_Nouveau.ajaxurl,
 					timeout             : 3 * 60 * 60 * 1000,
-					dictFileTooBig		: BP_Nouveau.media.dictFileTooBig,
-					dictDefaultMessage 	: BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles		: 'image/*',
-					autoProcessQueue	: true,
-					addRemoveLinks		: true,
-					uploadMultiple		: false,
+					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       : 'image/*',
+					autoProcessQueue    : true,
+					addRemoveLinks      : true,
+					uploadMultiple      : false,
 					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
 					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
 				};
