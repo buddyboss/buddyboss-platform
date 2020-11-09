@@ -905,6 +905,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'title'         => $album->title,
 			'privacy'       => $album->privacy,
 			'media'         => $album->media,
+			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
 			'user_email'    => $album->user_email,
 			'user_nicename' => $album->user_nicename,
 			'user_login'    => $album->user_login,

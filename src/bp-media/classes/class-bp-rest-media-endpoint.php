@@ -1260,6 +1260,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'menu_order'      => $media->menu_order,
 			'date_created'    => $media->date_created,
 			'attachment_data' => $media->attachment_data,
+			'group_name'      => ( isset( $media->group_name ) ? $media->group_name : '' ),
+			'visibility'      => ( isset( $media->visibility ) ? $media->visibility : '' ),
 			'user_email'      => $media->user_email,
 			'user_nicename'   => $media->user_nicename,
 			'user_login'      => $media->user_login,
