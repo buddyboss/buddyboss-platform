@@ -355,7 +355,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$search_results[] = $new_row;
 				}
 
-				// Show "View All" link
+				// Show "View All" link.
 				if ( absint( $this->search_results['all']['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
 						'value'      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . '</a></div>',
@@ -367,7 +367,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			} else {
 				// @todo give a settings screen for this field
 				$search_results[] = array(
-					'value' => '<div class="bp-search-ajax-item noresult">' . sprintf( __( "Nothing found for '%s'", 'buddyboss' ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
+					'value' => '<div class="bp-search-ajax-item ui-state-disabled noresult">' .
+						sprintf(
+							/* translators: %s: search term */
+							__( "Nothing found for '%s'", 'buddyboss' ),
+							stripslashes( $this->search_args['search_term'] )
+						) .
+					'</div>',
 					'label' => $this->search_args['search_term'],
 				);
 			}
