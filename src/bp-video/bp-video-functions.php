@@ -55,22 +55,25 @@ function bp_video_upload() {
 /**
  * Mine type for uploader allowed by buddyboss video for security reason
  *
- * @param Array $mime_types carry mime information
+ * @param Array $existing_mimes carry mime information.
  *
- * @return Array
+ * @return Array $existing_mimes allowed mime types.
  * @since BuddyBoss 1.6.0
  */
-function bp_video_allowed_mimes( $mime_types ) {
+function bp_video_allowed_mimes( $existing_mimes = array() ) {
 
-	// Creating a new array will reset the allowed filetypes
-	$mime_types = array(
-		'jpg|jpeg|jpe' => 'image/jpeg',
-		'gif'          => 'image/gif',
-		'png'          => 'image/png',
-		'bmp'          => 'image/bmp',
-	);
+	if ( bp_is_active( 'media' ) ) {
+		$existing_mimes = array();
+		$all_extensions = bp_video_extensions_list();
+		foreach ( $all_extensions as $extension ) {
+			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+				$extension_name                      = ltrim( $extension['extension'], '.' );
+				$existing_mimes[ "$extension_name" ] = $extension['mime_type'];
+			}
+		}
+	}
 
-	return $mime_types;
+	return $existing_mimes;
 }
 
 /**
@@ -129,7 +132,7 @@ function bp_video_upload_handler( $file_id = 'file' ) {
 		return $aid;
 	}
 
-	// Image rotation fix
+	// Image rotation fix.
 	do_action( 'bp_video_attachment_uploaded', $aid );
 
 	$attachment = get_post( $aid );
@@ -159,11 +162,11 @@ function bp_video_compress_image( $source, $destination, $quality = 90 ) {
 
 	$info = @getimagesize( $source );
 
-	if ( $info['mime'] == 'image/jpeg' ) {
+	if ( $info['mime'] === 'image/jpeg' ) {
 		$image = @imagecreatefromjpeg( $source );
-	} elseif ( $info['mime'] == 'image/gif' ) {
+	} elseif ( $info['mime'] === 'image/gif' ) {
 		$image = @imagecreatefromgif( $source );
-	} elseif ( $info['mime'] == 'image/png' ) {
+	} elseif ( $info['mime'] === 'image/png' ) {
 		$image = @imagecreatefrompng( $source );
 	}
 
@@ -262,9 +265,9 @@ function bp_video_get( $args = '' ) {
 			'max'          => false,        // Maximum number of results to return.
 			'fields'       => 'all',
 			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,        // results per page
-			'sort'         => 'DESC',       // sort ASC or DESC
-			'order_by'     => false,        // order by
+			'per_page'     => false,        // results per page.
+			'sort'         => 'DESC',       // sort ASC or DESC.
+			'order_by'     => false,        // order by.
 
 			'scope'        => false,
 
@@ -273,8 +276,8 @@ function bp_video_get( $args = '' ) {
 			'activity_id'  => false,
 			'album_id'     => false,
 			'group_id'     => false,
-			'search_terms' => false,        // Pass search terms as a string
-			'privacy'      => false,        // privacy of video
+			'search_terms' => false,        // Pass search terms as a string.
+			'privacy'      => false,        // privacy of video.
 			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'  => false,
 		),
@@ -499,7 +502,7 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 		// save  video.
 		foreach ( $videos as $video ) {
 
-			// Update video if existing
+			// Update video if existing.
 			if ( ! empty( $video['video_id'] ) ) {
 				$bp_video = new BP_Video( $video['video_id'] );
 
@@ -914,15 +917,15 @@ function bp_video_album_get( $args = '' ) {
 			'max'          => false,                    // Maximum number of results to return.
 			'fields'       => 'all',
 			'page'         => 1,                        // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,                    // results per page
-			'sort'         => 'DESC',                   // sort ASC or DESC
+			'per_page'     => false,                    // results per page.
+			'sort'         => 'DESC',                   // sort ASC or DESC.
 
-			'search_terms' => false,           // Pass search terms as a string
+			'search_terms' => false,           // Pass search terms as a string.
 			'exclude'      => false,           // Comma-separated list of activity IDs to exclude.
 			// want to limit the query.
 			'user_id'      => false,
 			'group_id'     => false,
-			'privacy'      => false,                    // privacy of album
+			'privacy'      => false,                    // privacy of album.
 			'count_total'  => false,
 		),
 		'album_get'

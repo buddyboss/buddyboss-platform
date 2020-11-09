@@ -328,3 +328,31 @@ function bp_video_settings_callback_extension_link() {
 		)
 	);
 }
+
+/**
+ * Setting > Media > Photos > Allowed Per Batch
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_settings_callback_video_allowed_per_batch() {
+?>
+<input type="number"
+       name="bp_video_allowed_per_batch"
+       id="bp_video_allowed_per_batch"
+       value="<?php echo esc_attr( bp_video_allowed_upload_video_per_batch() ); ?>"
+/>
+
+	<?php
+}
+
+/**
+ * Allowed per batch for the video.
+ *
+ * @return int Allowed upload per batch for the video.
+ * @since BuddyBoss 1.6.0
+ */
+function bp_video_allowed_upload_video_per_batch() {
+
+	$default  = apply_filters( 'bp_video_upload_chunk_limit', 10 );
+	return (int) apply_filters( 'bp_video_allowed_upload_video_per_batch', (int) get_option( 'bp_video_allowed_per_batch', $default ) );
+}

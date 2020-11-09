@@ -78,7 +78,170 @@ window.bp = window.bp || {};
 		addListeners: function () {
 
 			$( document ).on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
+			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
 
+		},
+
+		submitVideo: function (event) {
+			var self = this, target = $( event.currentTarget ), data, privacy = $( '#bb-video-privacy' );
+			event.preventDefault();
+
+			if (target.hasClass( 'saving' )) {
+				return false;
+			}
+
+			target.addClass( 'saving' );
+
+			if (self.current_tab === 'bp-video-dropzone-content') {
+
+				var post_content = $( '#bp-video-post-content' ).val();
+				data             = {
+					'action'	: 'video_save',
+					'_wpnonce'	: BP_Nouveau.nonces.video,
+					'videos'	: self.dropzone_video,
+					'content'	: post_content,
+					'album_id'	: self.video_album_id,
+					'group_id'	: self.video_group_id,
+					'privacy'	: privacy.val()
+				};
+
+				$( '#bp-video-dropzone-content .bp-feedback' ).remove();
+
+				$.ajax(
+					{
+						type	: 'POST',
+						url		: BP_Nouveau.ajaxurl,
+						data	: data,
+						success: function (response) {
+							if (response.success) {
+
+								// It's the very first media, let's make sure the container can welcome it!
+								if ( ! $( '#video-stream ul.video-list' ).length) {
+									$( '#video-stream' ).html( $( '<ul></ul>' ).addClass( 'video-list item-list bp-list bb-video-list grid' ) );
+									$( '.bb-videos-actions' ).show();
+								}
+
+								// Prepend the activity.
+								bp.Nouveau.inject( '#video-stream ul.video-list', response.data.video, 'prepend' );
+
+								for ( var i = 0; i < self.dropzone_video.length; i++ ) {
+									self.dropzone_video[i].saved = true;
+								}
+
+								self.closeUploader( event );
+
+								// replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad.
+								jQuery( window ).scroll();
+
+							} else {
+								$( '#bp-video-dropzone-content' ).prepend( response.data.feedback );
+							}
+
+							target.removeClass( 'saving' );
+						}
+					}
+				);
+
+			} else if (self.current_tab === 'bp-existing-video-content') {
+				var selected = [];
+				$( '.bp-existing-video-wrap .bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
+					function () {
+						selected.push( $( this ).val() );
+					}
+				);
+				data = {
+					'action'	: 'video_move_to_album',
+					'_wpnonce'	: BP_Nouveau.nonces.video,
+					'medias'	: selected,
+					'album_id'	: self.video_album_id,
+					'group_id'	: self.video_group_id
+				};
+
+				$( '#bp-existing-video-content .bp-feedback' ).remove();
+
+				$.ajax(
+					{
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						data: data,
+						success: function (response) {
+							if (response.success) {
+
+								// It's the very first media, let's make sure the container can welcome it!
+								if ( ! $( '#video-stream ul.media-list' ).length) {
+									$( '#video-stream' ).html( $( '<ul></ul>' ).addClass( 'video-list item-list bp-list bb-video-list grid' ) );
+									$( '.bb-video-actions' ).show();
+								}
+
+								// Prepend the activity.
+								bp.Nouveau.inject( '#video-stream ul.video-list', response.data.video, 'prepend' );
+
+								// remove selected media from existing media list.
+								$( '.bp-existing-video-wrap .bb-video-check-wrap [name="bb-video-select"]:checked' ).each(
+									function () {
+										if ($( this ).closest( 'li' ).data( 'id' ) === $( this ).val()) {
+											$( this ).closest( 'li' ).remove();
+										}
+									}
+								);
+
+								jQuery( window ).scroll();
+
+								self.closeUploader( event );
+							} else {
+								$( '#bp-existing-video-content' ).prepend( response.data.feedback );
+							}
+
+							target.removeClass( 'saving' );
+						}
+					}
+				);
+			} else if ( ! self.current_tab) {
+				self.closeUploader( event );
+				target.removeClass( 'saving' );
+			}
+
+		},
+
+		closeUploader: function (event) {
+			event.preventDefault();
+			$( '#bp-video-uploader' ).hide();
+			$( '#bp-video-add-more' ).hide();
+			$( '#bp-video-uploader-modal-title' ).text( BP_Nouveau.video.i18n_strings.upload );
+			$( '#bp-video-uploader-modal-status-text' ).text( '' );
+			this.video_dropzone_obj.destroy();
+			this.dropzone_video = [];
+
+			var currentPopup = $( event.currentTarget ).closest( '#bp-video-uploader' );
+
+			if (currentPopup.find( '.bb-field-steps' ).length) {
+				currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps-2' ).hide();
+				currentPopup.find( '#bp-media-document-prev, #bp-media-document-submit, .bp-document-open-create-popup-folder' ).hide();
+			}
+
+			this.clearFolderLocationUI( event );
+
+		},
+
+		clearFolderLocationUI: function (event) {
+
+			var closest_parent = jQuery( event.currentTarget ).closest( '.has-folderlocationUI' );
+			if (closest_parent.length > 0) {
+
+				closest_parent.find( '.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li' ).each(
+					function () {
+						jQuery( this ).removeClass( 'is_active' ).find( 'span.selected:not(.disabled)' ).removeClass( 'selected' );
+						jQuery( this ).find( 'ul' ).hide();
+					}
+				);
+
+				closest_parent.find( '.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li' ).show().children( 'span, i' ).show();
+				closest_parent.find( '.location-folder-title' ).text( BP_Nouveau.media.target_text );
+				closest_parent.find( '.location-folder-back' ).hide().closest( '.has-folderlocationUI' ).find( '.bb-folder-selected-id' ).val( '0' );
+				closest_parent.find( '.ac_document_search_folder' ).val( '' );
+				closest_parent.find( '.bb-model-header h4 span' ).text( '...' );
+				closest_parent.find( '.ac_document_search_folder_list ul' ).html( '' ).parent().hide().siblings( '.location-folder-list-wrap' ).find( '.location-folder-list' ).show();
+			}
 		},
 
 		openUploader: function (event) {
@@ -146,7 +309,7 @@ window.bp = window.bp || {};
 						if (response.data.id) {
 							file.id                  = response.id;
 							response.data.uuid       = file.upload.uuid;
-							response.data.menu_order = self.dropzone_media.length;
+							response.data.menu_order = self.dropzone_video.length;
 							response.data.album_id   = self.video_album_id;
 							response.data.group_id   = self.video_group_id;
 							response.data.saved      = false;

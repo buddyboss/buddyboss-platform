@@ -182,7 +182,7 @@ function bp_nouveau_ajax_video_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
@@ -191,8 +191,12 @@ function bp_nouveau_ajax_video_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	// Upload file
+	add_filter( 'upload_dir', 'bp_video_upload_dir' );
+
+	// Upload file.
 	$result = bp_video_upload();
+
+	remove_filter( 'upload_dir', 'bp_video_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -1012,4 +1016,108 @@ function bp_nouveau_ajax_video_get_video_description() {
 			'description' => $video_description,
 		)
 	);
+}
+
+function bp_nouveau_ajax_video_get_album_view() {
+
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
+
+	if ( 'profile' === $type ) {
+		$ul = bp_video_user_video_album_tree_view_li_html( $id, 0 );
+	} else {
+		$ul = bp_video_user_video_album_tree_view_li_html( bp_loggedin_user_id(), $id );
+	}
+
+	$first_text = '';
+	if ( 'profile' === $type ) {
+		$first_text = esc_html__( ' Videos', 'buddyboss' );
+	} else {
+		if ( bp_is_active( 'groups' ) ) {
+			$group      = groups_get_group( (int) $id );
+			$first_text = bp_get_group_name( $group );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'message'         => 'success',
+			'html'            => $ul,
+			'first_span_text' => stripslashes( $first_text ),
+		)
+	);
+}
+
+/**
+ * Ajax video move.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_nouveau_ajax_video_move() {
+
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_video';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Move media.
+	$album_id    = ! empty( $_POST['album_id'] ) ? (int) $_POST['album_id'] : 0;
+	$video_id    = ! empty( $_POST['video_id'] ) ? (int) $_POST['video_id'] : 0;
+	$group_id    = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$activity_id = ! empty( $_POST['activity_id'] ) ? (int) $_POST['activity_id'] : 0;
+
+	if ( 0 === $video_id ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( (int) $video_id > 0 ) {
+		$has_access = bp_video_user_can_edit( $video_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this video.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
+	if ( (int) $album_id > 0 ) {
+		$has_access = bp_video_album_user_can_edit( $album_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this video.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
+	$video    = bp_video_move_video_to_album( $video_id, $album_id, $group_id );
+	$response = bp_video_get_activity_video( $activity_id );
+
+	if ( $video > 0 ) {
+		$content = '';
+		wp_send_json_success(
+			array(
+				'video_ids'     => $response['video_activity_ids'],
+				'video_content' => $response['content'],
+				'message'       => 'success',
+				'html'          => $content,
+			)
+		);
+	} else {
+		wp_send_json_error( $response );
+	}
+
 }

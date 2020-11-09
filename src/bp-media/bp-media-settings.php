@@ -287,6 +287,13 @@ function bp_media_get_settings_fields() {
 		'args'              => array(),
 	);
 
+	$fields['bp_media_settings_videos']['bp_video_allowed_per_batch'] = array(
+		'title'             => __( 'Allowed Per Batch', 'buddyboss' ),
+		'callback'          => 'bp_video_settings_callback_video_allowed_per_batch',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
 	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
 		'title'    => __( 'File Extensions', 'buddyboss' ),
 		'callback' => 'bp_media_settings_callback_extension_link',
