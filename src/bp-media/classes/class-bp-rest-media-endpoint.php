@@ -579,6 +579,55 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( true === $retval && ! empty( $request['upload_ids'] ) ) {
+			foreach ( (array) $request['upload_ids'] as $attachment_id ) {
+				$attachment_id = (int) $attachment_id;
+				$wp_attachment = get_post( $attachment_id );
+
+				if ( true !== $retval ) {
+					continue;
+				}
+
+				if ( empty( $wp_attachment ) || 'attachment' !== $wp_attachment->post_type ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_upload_id',
+						sprintf(
+						/* translators: Attachment ID. */
+							__( 'Invalid attachment id: %d', 'buddyboss' ),
+							$attachment_id
+						),
+						array(
+							'status' => 404,
+						)
+					);
+				} elseif ( bp_loggedin_user_id() !== (int) $wp_attachment->post_author ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_media_author',
+						sprintf(
+						/* translators: Attachment ID. */
+							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
+							$attachment_id
+						),
+						array(
+							'status' => 404,
+						)
+					);
+				} elseif ( function_exists( 'bp_get_attachment_media_id' ) && ! empty( bp_get_attachment_media_id( (int) $attachment_id ) ) ) {
+					$retval = new WP_Error(
+						'bp_rest_duplicate_media_upload_id',
+						sprintf(
+							/* translators: Attachment ID. */
+							__( 'Media already exists for attachment id: %d', 'buddyboss' ),
+							$attachment_id
+						),
+						array(
+							'status' => 404,
+						)
+					);
+				}
+			}
+		}
+
 		/**
 		 * Filter the Media `create_item` permissions check.
 		 *

@@ -655,6 +655,55 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+		if ( true === $retval && ! empty( $request['document_ids'] ) ) {
+			foreach ( (array) $request['document_ids'] as $attachment_id ) {
+				$attachment_id = (int) $attachment_id;
+				$wp_attachment = get_post( $attachment_id );
+
+				if ( true !== $retval ) {
+					continue;
+				}
+
+				if ( empty( $wp_attachment ) || 'attachment' !== $wp_attachment->post_type ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_document_id',
+						sprintf(
+							/* translators: Attachment ID. */
+							__( 'Invalid attachment id: %d', 'buddyboss' ),
+							$attachment_id
+						),
+						array(
+							'status' => 404,
+						)
+					);
+				} elseif ( bp_loggedin_user_id() !== (int) $wp_attachment->post_author ) {
+					$retval = new WP_Error(
+						'bp_rest_invalid_document_author',
+						sprintf(
+							/* translators: Attachment ID. */
+							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
+							$attachment_id
+						),
+						array(
+							'status' => 404,
+						)
+					);
+				} elseif ( $this->bp_rest_attachment_document_id( (int) $attachment_id ) ) {
+					$retval = new WP_Error(
+						'bp_rest_duplicate_document_upload_id',
+						sprintf(
+							/* translators: Attachment ID. */
+							__( 'Document already exists for attachment id: %d', 'buddyboss' ),
+							$attachment_id
+						),
+						array(
+							'status' => 404,
+						)
+					);
+				}
+			}
+		}
+
 		/**
 		 * Filter the document `create_item` permissions check.
 		 *
@@ -2459,6 +2508,26 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+	}
+
+	/**
+	 * Get document id for the attachment.
+	 *
+	 * @param integer $attachment_id Attachment ID.
+	 *
+	 * @return array|bool
+	 */
+	public function bp_rest_attachment_document_id( $attachment_id = 0 ) {
+		global $bp, $wpdb;
+
+		if ( ! $attachment_id ) {
+			return false;
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+		$attachment_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.attachment_id = {$attachment_id}" );
+
+		return $attachment_document_id;
 	}
 
 }
