@@ -369,12 +369,14 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 					// Query to use in get_posts to get sticky posts.
 					$sticky_query = array(
-						'post_type'   => bbp_get_topic_post_type(),
-						'post_parent' => 'any',
-						'meta_key'    => '_bbp_last_active_time', // phpcs:ignore
-						'orderby'     => 'meta_value',
-						'order'       => 'DESC',
-						'include'     => $stickies,
+						'post_type'              => bbp_get_topic_post_type(),
+						'post_parent'            => 'any',
+						'meta_key'               => '_bbp_last_active_time', // phpcs:ignore
+						'orderby'                => 'meta_value',
+						'order'                  => 'DESC',
+						'include'                => $stickies,
+						'suppress_filters'       => false,
+						'update_post_term_cache' => false,
 					);
 
 					// Cleanup.
@@ -1009,6 +1011,12 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 			add_post_meta( $topic_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
 		}
 
+		/**
+		 * Removed notification sent and called additionally.
+		 * Due to we have moved all filters on title and content.
+		 */
+		remove_action( 'bbp_new_topic', 'bbp_notify_forum_subscribers', 11, 4 );
+
 		/** Update counts, etc... */
 		do_action( 'bbp_new_topic', $topic_id, $forum_id, $anonymous_data, $topic_author );
 
@@ -1079,6 +1087,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		);
 
 		$response = rest_ensure_response( $retval );
+
+		if ( function_exists( 'bbp_notify_forum_subscribers' ) ) {
+			/**
+			 * Sends notification emails for new topics to subscribed forums.
+			 */
+			bbp_notify_forum_subscribers( $topic_id, $forum_id, $anonymous_data, $topic_author );
+		}
 
 		/**
 		 * Fires after a topic is created and fetched via the REST API.
@@ -1940,12 +1955,18 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 
 		$data['short_content'] = wp_trim_excerpt( $topic->post_content );
 
-		$content = apply_filters( 'the_content', $topic->post_content );
+		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		remove_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		$data['content'] = array(
 			'raw'      => $topic->post_content,
-			'rendered' => $content,
+			'rendered' => bbp_get_topic_content( $topic->ID ),
 		);
+
+		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 98, 2 );
+		add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999999, 2 );
 
 		// Don't leave our cookie lying around: https://github.com/WP-API/WP-API/issues/1055.
 		if ( ! empty( $topic->post_password ) ) {

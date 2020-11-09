@@ -382,8 +382,11 @@ class BP_REST_Invites_Endpoint extends WP_REST_Controller {
 		if ( ! empty( $invitations_ids ) ) {
 			$send_invitations = get_posts(
 				array(
-					'post_type' => bp_get_invite_post_type(),
-					'include'   => $invitations_ids,
+					'post_type'              => bp_get_invite_post_type(),
+					'include'                => $invitations_ids,
+					'suppress_filters'       => false,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
 				)
 			);
 
