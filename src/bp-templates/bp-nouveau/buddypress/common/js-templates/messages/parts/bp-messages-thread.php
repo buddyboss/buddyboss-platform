@@ -52,6 +52,8 @@
 
 				<# if ( data.group_name && data.group_name.length && data.is_group_thread ) { #>
 					<span class="user-name">{{data.group_name}}</span>
+				<# } else if ( data.is_user_blocked || data.is_user_suspended ) { #>
+					<span class="user-name"><?php _e( 'User Blocked', 'buddyboss' ); ?></span>
 				<# } else { #>
 
 					<# for ( i in first_three ) { #>
@@ -71,6 +73,8 @@
 				<span class="last-message-sender">
 				  <# if ( data.sender_is_you ) { #>
 					<?php _e('You', 'buddyboss'); ?>:
+				  <# } else if ( data.is_user_blocked || data.is_user_suspended ) { #>
+					<?php _e( 'User Blocked', 'buddyboss' ); ?>:
 				  <# } else if ( other_recipients && other_recipients.length ) { #>
 					{{ data.sender_name }}:
 				  <# } #>
