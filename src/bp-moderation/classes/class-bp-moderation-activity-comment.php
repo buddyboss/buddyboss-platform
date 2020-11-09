@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Moderation
  *
- * @since BuddyBoss 2.0.0
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -174,12 +174,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return $template_names;
 		}
 
-		if ( in_array( $activities_template->activity->current_comment->id, self::get_sitewide_hidden_ids(), true ) ) {
+		if ( in_array( $activities_template->activity->current_comment->id, self::get_sitewide_hidden_ids(), true ) ||
+		     bp_moderation_is_user_suspended( $activities_template->activity->current_comment->user_id, true ) ) {
 			return 'activity/blocked-comment.php';
-		}
-
-		if ( bp_moderation_is_user_suspended( $activities_template->activity->current_comment->user_id, true ) ) {
-			return 'activity/blocked-user-comment.php';
 		}
 
 		return $template_names;
