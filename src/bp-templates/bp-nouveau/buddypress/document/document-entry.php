@@ -2,8 +2,8 @@
 /**
  * BuddyBoss - Document Entry
  *
- * @package BuddyBoss\Core
  * @since   BuddyBoss 1.4.0
+ * @package BuddyBoss\Core
  */
 
 $attachment_id       = bp_get_document_attachment_id();
@@ -239,11 +239,11 @@ if ( $attachment_id ) {
                             <a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
                         </li>
 						<?php
-						if ( bp_document_get_report_link( array( 'id' => $document_id ) ) ) {
+						if ( bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) ) ) {
 							?>
                             <li class="report">
 								<?php
-								echo bp_document_get_report_link( array( 'id' => $document_id ) )
+								echo bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) );
 								?>
                             </li>
 							<?php
