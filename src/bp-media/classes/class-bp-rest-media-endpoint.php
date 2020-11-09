@@ -633,6 +633,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_id' => $media->attachment_id,
 			'group_id'      => $media->group_id,
 			'album_id'      => $media->album_id,
+			'activity_id'   => $media->activity_id,
 		);
 
 		if ( isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
