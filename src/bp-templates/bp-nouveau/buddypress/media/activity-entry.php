@@ -33,7 +33,7 @@ $more_media = $media_template->media_count > 5 ? true : false;
 
 <div class="bb-activity-media-elem media-activity 
 <?php
-bp_media_id();
+echo bp_media_id().' ';
 echo $media_template->current_media > 4 ? 'hide' : '';
 echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : '';
 echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : '';

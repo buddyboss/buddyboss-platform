@@ -1056,8 +1056,8 @@ window.bp = window.bp || {};
 									if ($('#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + value + '"]').length) {
 										$('#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + value + '"]').remove();
 									}
-									if ($('body .bb-activity-media-elem.media-activity' + value).length) {
-										$('body .bb-activity-media-elem.media-activity' + value).remove();
+									if ($('body .bb-activity-media-elem.media-activity.' + value).length) {
+										$('body .bb-activity-media-elem.media-activity.' + value).remove();
 									}
 								});
 
