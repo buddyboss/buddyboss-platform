@@ -14,9 +14,8 @@
 	<?php
 	switch ( bp_current_action() ) :
 
-		// Home/Media
+		// Home/Media.
 		case 'my-media':
-
 			bp_get_template_part( 'media/add-media' );
 
 			bp_nouveau_member_hook( 'before', 'media_content' );
@@ -34,15 +33,16 @@
 
 			break;
 
-		// Home/Media/Albums
+		// Home/Media/Albums.
 		case 'albums':
-			if ( ! bp_is_single_album() )
+			if ( ! bp_is_single_album() ) {
 				bp_get_template_part( 'media/albums' );
-			else
+			} else {
 				bp_get_template_part( 'media/single-album' );
+			}
 			break;
 
-		// Any other
+		// Any other.
 		default:
 			bp_get_template_part( 'members/single/plugins' );
 			break;

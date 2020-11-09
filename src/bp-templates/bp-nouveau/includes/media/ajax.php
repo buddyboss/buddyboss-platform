@@ -91,6 +91,18 @@ add_action(
 					'nopriv'   => true,
 				),
 			),
+			array(
+				'media_get_album_view' => array(
+					'function' => 'bp_nouveau_ajax_media_get_album_view',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'media_move' => array(
+					'function' => 'bp_nouveau_ajax_media_move',
+					'nopriv'   => true,
+				),
+			),
 		);
 
 		foreach ( $ajax_actions as $ajax_action ) {
@@ -191,8 +203,12 @@ function bp_nouveau_ajax_media_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
+	add_filter( 'upload_dir', 'bp_media_upload_dir' );
+
 	// Upload file
 	$result = bp_media_upload();
+
+	remove_filter( 'upload_dir', 'bp_media_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -288,6 +304,8 @@ function bp_nouveau_ajax_media_delete() {
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
+	$media_content = '';
+
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
 		wp_send_json_error( $response );
@@ -323,10 +341,12 @@ function bp_nouveau_ajax_media_delete() {
 		);
 		wp_send_json_error( $response );
 	}
-
+	$response 	= bp_media_get_activity_media( $_POST['activity_id'] );
 	wp_send_json_success(
 		array(
-			'media' => $media,
+			'media'         => $media,
+			'media_ids'     => $response['media_activity_ids'],
+			'media_content' => $response['content']
 		)
 	);
 }
@@ -531,9 +551,19 @@ function bp_nouveau_ajax_media_album_save() {
 		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id );
 	}
 
+	$album = new BP_Media_Album( $album_id );
+
+	if ( $group_id > 0 ) {
+		$ul = bp_media_user_media_album_tree_view_li_html( $album->user_id, $group_id );
+	} else {
+		$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id() );
+	}
+
 	wp_send_json_success(
 		array(
 			'redirect_url' => $redirect_url,
+			'tree_view' => $ul,
+			'album_id' => $album_id,
 		)
 	);
 }
@@ -1012,4 +1042,107 @@ function bp_nouveau_ajax_media_get_media_description() {
 			'description' => $media_description,
 		)
 	);
+}
+
+function bp_nouveau_ajax_media_get_album_view() {
+
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
+
+	if ( 'profile' === $type ) {
+		$ul = bp_media_user_media_album_tree_view_li_html( $id, 0 );
+	} else {
+		$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id(), $id );
+	}
+
+	$first_text = '';
+	if ( 'profile' === $type ) {
+		$first_text = esc_html__( ' Medias', 'buddyboss' );
+	} else {
+		if ( bp_is_active( 'groups') ) {
+			$group      = groups_get_group( (int) $id );
+			$first_text = bp_get_group_name( $group );
+		}
+	}
+
+	wp_send_json_success(
+		array(
+			'message'         => 'success',
+			'html'            => $ul,
+			'first_span_text' => stripslashes( $first_text ),
+		)
+	);
+}
+
+/**
+ * Ajax media move.
+ *
+ * @since BuddyBoss 1.4.9
+ */
+function bp_nouveau_ajax_media_move() {
+
+	$response = array(
+		'feedback' => esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' ),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce.
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Move media.
+	$album_id   = ! empty( $_POST['album_id'] ) ? (int) $_POST['album_id'] : 0;
+	$media_id   = ! empty( $_POST['media_id'] ) ? (int) $_POST['media_id'] : 0;
+	$group_id   = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+
+	if ( 0 === $media_id ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( (int) $media_id > 0 ) {
+		$has_access = bp_media_user_can_edit( $media_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this media.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
+	if ( (int) $album_id > 0 ) {
+		$has_access = bp_album_user_can_edit( $album_id );
+		if ( ! $has_access ) {
+			$response['feedback'] = esc_html__( 'You don\'t have permission to move this media.', 'buddyboss' );
+			wp_send_json_error( $response );
+		}
+	}
+
+	$media		= bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+	$response 	= bp_media_get_activity_media( $_POST['activity_id'] );
+
+	if ( $media > 0 ) {
+		$content = '';
+		wp_send_json_success(
+			array(
+				'media_ids'     => $response['media_activity_ids'],
+				'media_content' => $response['content'],
+				'message'       => 'success',
+				'html'          => $content,
+			)
+		);
+	} else {
+		wp_send_json_error( $response );
+	}
+
 }

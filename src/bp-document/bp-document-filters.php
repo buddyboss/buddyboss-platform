@@ -282,6 +282,16 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 		return false;
 	}
 
+	// Add in description in attachment when only one document uploaded.
+	if ( is_array( $_POST['document'] ) && 1 === count( $_POST['document'] ) ) {
+		foreach ( $_POST['document'] as $document ) {
+			$document_attachment_post = array();
+			$document_attachment_post['ID']           = $document['id'];
+			$document_attachment_post['post_content'] = wp_strip_all_tags( $content );
+			wp_update_post( $document_attachment_post );
+		}
+	}
+
 	$bp_activity_post_update    = true;
 	$bp_activity_post_update_id = $activity_id;
 
@@ -1647,6 +1657,7 @@ function bp_document_activity_after_email_content( $activity ) {
 		echo wpautop( $content );
 	}
 }
+
 
 /**
  * Adds activity document data for the edit activity

@@ -261,7 +261,7 @@
 .bb-icon-filter:before { content: '\e8eb'; }
 .bb-icon-folder:before { content: '\e8ec'; }
 .bb-icon-file-plus:before { content: '\e8ed'; }
-.bb-icon-file:before { content: '\e8ee'; }
+.bb-icon-file-default:before { content: '\e8ee'; }
 .bb-icon-film:before { content: '\e8ef'; }
 .bb-icon-volume-up:before { content: '\e8f0'; }
 .bb-icon-volume-off:before { content: '\e8f1'; }
@@ -481,4 +481,5 @@
 .bb-icon-rounded-dribbble:before { content: '\ede2'; }
 .bb-icon-rounded-pinterest:before { content: '\ede3'; }
 .bb-icon-attach:before { content: '\e980'; }
+.bb-icon-media:before { content: '\e963'; }
  /* stylelint-enable */
