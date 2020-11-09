@@ -3650,7 +3650,7 @@ function bp_document_get_report_link( $args = array() ) {
 				'must_be_logged_in' => true,
 				'button_attr'       => array(
 					'data-bp-content-id'   => $args['id'],
-					'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
+					'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
 				),
 			),
 			true
