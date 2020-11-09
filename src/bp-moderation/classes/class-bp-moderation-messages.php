@@ -204,15 +204,17 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	public static function get_sitewide_messages_hidden_ids() {
 		$messages_ids = array();
 		$threads      = self::get_sitewide_hidden_ids();
-		$results      = BP_Messages_Message::get(
-			array(
-				'fields'           => 'ids',
-				'include_threads'  => $threads,
-				'moderation_query' => false,
-			)
-		);
-		if ( ! empty( $results['messages'] ) ) {
-			$messages_ids = $results['messages'];
+		if ( ! empty( $threads ) ) {
+			$results = BP_Messages_Message::get(
+				array(
+					'fields'           => 'ids',
+					'include_threads'  => $threads,
+					'moderation_query' => false,
+				)
+			);
+			if ( ! empty( $results['messages'] ) ) {
+				$messages_ids = $results['messages'];
+			}
 		}
 
 		return $messages_ids;

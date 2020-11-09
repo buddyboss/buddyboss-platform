@@ -393,12 +393,17 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int $user_id The ID for the user.
+ * @param int  $user_id      The ID for the user.
+ * @param bool $user_include Include item which report by current user even if it's not hidden.
  *
  * @return bool True if suspended, otherwise false.
  */
-function bp_moderation_is_user_suspended( $user_id ) {
-	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( false );
+function bp_moderation_is_user_suspended( $user_id, $user_include = false ) {
+	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		return false;
+	}
+
+	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( $user_include );
 	if ( in_array( $user_id, $hidden_members_ids, true ) ) {
 		return true;
 	}

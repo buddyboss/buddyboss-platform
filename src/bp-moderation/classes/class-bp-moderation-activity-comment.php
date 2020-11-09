@@ -47,6 +47,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
+		// Blocked template
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
@@ -177,7 +178,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return 'activity/blocked-comment.php';
 		}
 
-		if ( bp_is_moderation_member_blocking_enable( 0 ) && in_array( $activities_template->activity->current_comment->user_id, BP_Moderation_Members::get_sitewide_hidden_ids(), true ) ) {
+		if ( bp_moderation_is_user_suspended( $activities_template->activity->current_comment->user_id, true ) ) {
 			return 'activity/blocked-user-comment.php';
 		}
 
