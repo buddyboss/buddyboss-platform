@@ -34,17 +34,17 @@ function bp_video_settings_callback_profile_video_support() {
 		}
 		?>
 	</label>
-	<br/>
-	<input name="bp_video_profile_albums_support"
-	       id="bp_video_profile_albums_support"
-	       type="checkbox"
-	       value="1"
-		<?php echo ! bp_is_profile_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
-		<?php checked( bp_is_profile_video_albums_support_enabled() ); ?>
-	/>
-	<label for="bp_media_profile_albums_support">
-		<?php _e( 'Enable Albums', 'buddyboss' ); ?>
-	</label>
+<!--	<br/>-->
+<!--	<input name="bp_video_profile_albums_support"-->
+<!--	       id="bp_video_profile_albums_support"-->
+<!--	       type="checkbox"-->
+<!--	       value="1"-->
+<!--		--><?php //echo ! bp_is_profile_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
+<!--		--><?php //checked( bp_is_profile_video_albums_support_enabled() ); ?>
+<!--	/>-->
+<!--	<label for="bp_media_profile_albums_support">-->
+<!--		--><?php //_e( 'Enable Albums', 'buddyboss' ); ?>
+<!--	</label>-->
 	<?php
 }
 
@@ -94,16 +94,16 @@ function bp_video_settings_callback_group_video_support() {
 		}
 		?>
 	</label>
-	<br/>
-	<input name="bp_video_group_albums_support"
-	       id="bp_video_group_albums_support"
-	       type="checkbox"
-	       value="1"
-		<?php echo ! bp_is_group_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
-		<?php checked( bp_is_group_video_albums_support_enabled() ); ?>
-	/>
-	<label for="bp_video_group_albums_support">
-		<?php _e( 'Enable Albums', 'buddyboss' ); ?>
+<!--	<br/>-->
+<!--	<input name="bp_video_group_albums_support"-->
+<!--	       id="bp_video_group_albums_support"-->
+<!--	       type="checkbox"-->
+<!--	       value="1"-->
+<!--		--><?php //echo ! bp_is_group_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
+<!--		--><?php //checked( bp_is_group_video_albums_support_enabled() ); ?>
+<!--	/>-->
+<!--	<label for="bp_video_group_albums_support">-->
+<!--		--><?php //_e( 'Enable Albums', 'buddyboss' ); ?>
 	</label>
 	<?php
 }

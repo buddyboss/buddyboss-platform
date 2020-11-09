@@ -130,7 +130,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return mixed
 	 */
-	function bp_core_set_bbpress_buddypress_active( $value = array(), $option ) {
+	function bp_core_set_bbpress_buddypress_active( $value = array(), $option = '' ) {
 
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
@@ -142,10 +142,10 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		$plugins_path = $root_path . 'plugins.php';
 		$ajax_path    = $root_path . 'admin-ajax.php';
 
-		// Hide My WP plugin compatibility
+		// Hide My WP plugin compatibility.
 		if ( class_exists( 'HideMyWP' ) ) {
 			if ( is_multisite() ) {
-				// Get the current site ID
+				// Get the current site ID.
 				$site_id = get_current_blog_id();
 				$options = get_blog_option( $site_id, 'hide_my_wp' );
 			} else {

@@ -22,7 +22,7 @@ class BP_Video_Component extends BP_Component {
 	 * @since BuddyBoss 1.6.0
 	 * @var BP_Video_Album
 	 */
-	public $current_album;
+	// public $current_album;
 
 	/**
 	 * Default video extension.
@@ -127,9 +127,9 @@ class BP_Video_Component extends BP_Component {
 				 *
 				 * 'album' is not a registered nav item, but we add a screen handler manually.
 				 */
-				if ( bp_is_user_video() && in_array( bp_current_action(), array( 'albums' ), true ) ) {
-					require $this->path . 'bp-video/screens/' . bp_current_action() . '.php';
-				}
+				// if ( bp_is_user_video() && in_array( bp_current_action(), array( 'albums' ), true ) ) {
+				// require $this->path . 'bp-video/screens/' . bp_current_action() . '.php';
+				// }
 			}
 
 			// Theme compatibility.
@@ -192,17 +192,16 @@ class BP_Video_Component extends BP_Component {
 		/* Single Album Globals **********************************************/
 
 		// Are we viewing a single album?
-		if ( bp_is_video_component() && bp_is_single_video_album()
-			 && ( $album_id = BP_Video_Album::album_exists( bp_action_variable( 0 ) ) )
-		) {
-			$bp->is_single_item  = true;
-			$this->current_album = albums_get_video_album( $album_id );
-
-			// Set current_album to 0 to prevent debug errors.
-		} else {
-			$this->current_album = 0;
-		}
-
+		// if ( bp_is_video_component() && bp_is_single_video_album()
+		// && ( $album_id = BP_Video_Album::album_exists( bp_action_variable( 0 ) ) )
+		// ) {
+		// $bp->is_single_item  = true;
+		// $this->current_album = albums_get_video_album( $album_id );
+		//
+		// Set current_album to 0 to prevent debug errors.
+		// } else {
+		// $this->current_album = 0;
+		// }
 	}
 
 	/**
@@ -283,18 +282,18 @@ class BP_Video_Component extends BP_Component {
 				'item_css_id'     => 'video-my-video',
 			);
 
-			if ( bp_is_profile_albums_support_enabled() ) {
-
-				// Add the subnav items to the profile.
-				$sub_nav[] = array(
-					'name'            => __( 'Albums', 'buddyboss' ),
-					'slug'            => 'albums',
-					'parent_url'      => $video_link,
-					'parent_slug'     => $slug,
-					'screen_function' => 'video_screen',
-					'position'        => 10,
-				);
-			}
+			// if ( bp_is_profile_albums_support_enabled() ) {
+			//
+			// Add the subnav items to the profile.
+			// $sub_nav[] = array(
+			// 'name'            => __( 'Albums', 'buddyboss' ),
+			// 'slug'            => 'albums',
+			// 'parent_url'      => $video_link,
+			// 'parent_slug'     => $slug,
+			// 'screen_function' => 'video_screen',
+			// 'position'        => 10,
+			// );
+			// }
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
@@ -335,16 +334,16 @@ class BP_Video_Component extends BP_Component {
 				'position' => 10,
 			);
 
-			if ( bp_is_profile_albums_support_enabled() ) {
-				// Albums.
-				$wp_admin_nav[] = array(
-					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-albums',
-					'title'    => __( 'My Albums', 'buddyboss' ),
-					'href'     => trailingslashit( $video_link . 'albums' ),
-					'position' => 20,
-				);
-			}
+			// if ( bp_is_profile_albums_support_enabled() ) {
+			// Albums.
+			// $wp_admin_nav[] = array(
+			// 'parent'   => 'my-account-' . $this->id,
+			// 'id'       => 'my-account-' . $this->id . '-albums',
+			// 'title'    => __( 'My Albums', 'buddyboss' ),
+			// 'href'     => trailingslashit( $video_link . 'albums' ),
+			// 'position' => 20,
+			// );
+			// }
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
@@ -389,7 +388,7 @@ class BP_Video_Component extends BP_Component {
 		wp_cache_add_global_groups(
 			array(
 				'bp_video',
-				'bp_video_albums',
+				// 'bp_video_albums',
 			)
 		);
 
@@ -407,7 +406,7 @@ class BP_Video_Component extends BP_Component {
 		parent::rest_api_init(
 			array(
 				'BP_RESTBP_Video_Template_Endpoint',
-				'BP_RESTBP_Video_Template_Albums_Endpoint',
+				// 'BP_RESTBP_Video_Template_Albums_Endpoint',
 				'BP_RESTBP_Video_Template_Details_Endpoint',
 			)
 		);

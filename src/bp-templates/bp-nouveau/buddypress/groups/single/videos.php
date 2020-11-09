@@ -12,11 +12,10 @@
 
 switch ( bp_current_action() ) :
 
-	// Home/Video
+	// Home/Video.
 	case 'videos':
-
 		if ( bp_is_group_video() && groups_can_user_manage_video( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
-		    bp_get_template_part( 'video/add-video' );
+			bp_get_template_part( 'video/add-video' );
 		endif;
 
 		bp_nouveau_group_hook( 'before', 'video_content' );
@@ -35,7 +34,7 @@ switch ( bp_current_action() ) :
 
 		break;
 
-	// Any other
+	// Any other.
 	default:
 		bp_get_template_part( 'groups/single/plugins' );
 		break;

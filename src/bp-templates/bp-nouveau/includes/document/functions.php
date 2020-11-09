@@ -2,7 +2,7 @@
 /**
  * Document functions
  *
- * @since BuddyBoss 1.4.0
+ * @since   BuddyBoss 1.4.0
  * @package BuddyBoss\Core
  */
 
@@ -30,10 +30,11 @@ function bp_nouveau_document_enqueue_scripts() {
 /**
  * Localize the strings needed for the messages UI
  *
+ * @param array $params Associative array containing the JS Strings needed by scripts.
+ *
+ * @return array         The same array with specific strings for the messages UI if needed.
  * @since BuddyBoss 1.4.0
  *
- * @param  array $params Associative array containing the JS Strings needed by scripts.
- * @return array         The same array with specific strings for the messages UI if needed.
  */
 function bp_nouveau_document_localize_scripts( $params = array() ) {
 
@@ -66,7 +67,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$type      = 'profile';
 	}
 
-	$exclude = array_merge( $mime_types, $extensions );
+	$exclude         = array_merge( $mime_types, $extensions );
 	$document_params = array(
 		'profile_document'                => bp_is_profile_document_support_enabled(),
 		'group_document'                  => bp_is_group_document_support_enabled(),
@@ -80,13 +81,13 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'                => $group_id,
 		'target_text'                     => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'                => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
 		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'                     => __( 'Move document to...', 'buddyboss' ),
+		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
 		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
 		'download_button'                 => __( 'Download', 'buddyboss' ),
 		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
@@ -97,10 +98,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	);
 
 	$document_options = array(
-		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'max_upload_size'           => bp_document_file_upload_max_size(),
-		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
-		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
+		'dictInvalidFileType'   => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'max_upload_size'       => bp_document_file_upload_max_size(),
+		'maxFiles'              => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'mp3_preview_extension' => implode( ',', bp_get_document_preview_music_extensions() ),
 	);
 
 	$params['document'] = $document_options;
@@ -134,9 +135,9 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 /**
  * Get the nav items for the Media directory
  *
+ * @return array An associative array of nav items.
  * @since BuddyBoss 1.4.0
  *
- * @return array An associative array of nav items.
  */
 function bp_nouveau_get_document_directory_nav_items() {
 	$nav_items = array();
@@ -147,7 +148,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 		'li_class'  => array(),
 		'link'      => bp_get_document_directory_permalink(),
 		'text'      => __( 'All Documents', 'buddyboss' ),
-		//'count'     => bp_get_total_document_count(),
+		// 'count'     => bp_get_total_document_count(),
 		'position'  => 5,
 	);
 
@@ -158,7 +159,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
 			'text'      => __( 'My Documents', 'buddyboss' ),
-			//'count'     => bp_document_get_total_document_count(),
+			// 'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
 	}
@@ -170,7 +171,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/groups-document/',
 			'text'      => __( 'My Groups', 'buddyboss' ),
-			//'count'     => bp_document_get_total_document_count(),
+			// 'count'     => bp_document_get_total_document_count(),
 			'position'  => 15,
 		);
 	}
@@ -178,9 +179,10 @@ function bp_nouveau_get_document_directory_nav_items() {
 	/**
 	 * Use this filter to introduce your custom nav items for the media directory.
 	 *
+	 * @param array $nav_items The list of the media directory nav items.
+	 *
 	 * @since BuddyBoss 1.4.0
 	 *
-	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_document_directory_nav_items', $nav_items );
 }
@@ -267,7 +269,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_10'  => array(
+		'bb_doc_10' => array(
 			'extension'   => '.csv',
 			'mime_type'   => 'text/csv',
 			'description' => __( 'CSV', 'buddyboss' ),
@@ -275,7 +277,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_11'  => array(
+		'bb_doc_11' => array(
 			'extension'   => '.doc',
 			'mime_type'   => 'application/msword',
 			'description' => __( 'Word Document', 'buddyboss' ),
@@ -283,7 +285,7 @@ function bp_media_allowed_document_type() {
 			'is_active'   => 1,
 			'icon'        => '',
 		),
-		'bb_doc_12'  => array(
+		'bb_doc_12' => array(
 			'extension'   => '.docm',
 			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
 			'description' => __( 'Word Document (Macro Enabled)', 'buddyboss' ),
@@ -850,7 +852,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
 
-		$file_arr  = explode( '.', $file_name_lower );
+		$file_arr = explode( '.', $file_name_lower );
 		$needle   = end( $file_arr );
 		if ( ! in_array( $needle, $whitelist ) ) {
 			exit( 'Invalid file!' );
@@ -896,7 +898,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			bp_document_get_child_folders( $attachment_id, $parent_folder );
 
 			$zip_name  = $upload_dir . '/' . $folder->title . '.zip';
-			$file_name  = sanitize_file_name( $folder->title ) . '.zip';
+			$file_name = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
 			$zip = new ZipArchive();
@@ -947,7 +949,6 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
 		return;
 	}
 
-
 	$query_where            = "find_in_set(parent, @pv) and length(@pv := concat(@pv, ',', id))";
 	$query_from             = $wpdb->prepare( "( select * from {$document_folder_table} order by parent, id) folder_sorted, (select @pv := %d) initialisation", $folder_id );
 	$documents_folder_query = "select * from $query_from where $query_where";
@@ -984,7 +985,7 @@ function bp_document_get_child_folders( $folder_id = 0, $parent_folder = '' ) {
  * This function will give the breadcrumbs ul li html.
  *
  * @param      $array
- * @param bool  $parent_folder
+ * @param bool $parent_folder
  *
  * @return string
  * @since BuddyBoss 1.4.0
@@ -1039,7 +1040,7 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 		$more_text = false;
 		if ( strlen( $file_data ) >= 9999 ) {
 			$file_data .= '...';
-			$more_text  = true;
+			$more_text = true;
 		}
 		fclose( $file_open );
 
@@ -1069,16 +1070,16 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$get_preview            = $preview_attachment_id;
-		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		$get_preview           = $preview_attachment_id;
+		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
 		if ( ! $preview_attachment_id ) {
 			$preview_attachment_id = $get_preview;
 		}
-		$document_id        = 'forbidden_' . $document_id;
-		$attachment_id      = 'forbidden_' . $preview_attachment_id;
-		$output_file_src     = bp_document_scaled_image_path( $preview_attachment_id );
+		$document_id     = 'forbidden_' . $document_id;
+		$attachment_id   = 'forbidden_' . $preview_attachment_id;
+		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
 		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
 
@@ -1089,11 +1090,12 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
  * Return absolute path of the document file.
  *
  * @param $path
+ *
  * @since BuddyBoss 1.4.1
  */
 function bp_document_scaled_image_path( $attachment_id ) {
-	$is_image = wp_attachment_is_image( $attachment_id );
-	$img_url  = get_attached_file( $attachment_id );
+	$is_image         = wp_attachment_is_image( $attachment_id );
+	$img_url          = get_attached_file( $attachment_id );
 	$meta             = wp_get_attachment_metadata( $attachment_id );
 	$img_url_basename = wp_basename( $img_url );
 	if ( ! $is_image ) {
@@ -1109,14 +1111,15 @@ function bp_document_scaled_image_path( $attachment_id ) {
  * Give recursive file permission.
  *
  * @param $path
+ *
  * @since BuddyBoss 1.4.1
  */
-function bp_document_chmod_r($path) {
-	$dir = new DirectoryIterator($path);
-	foreach ($dir as $item) {
-		chmod($item->getPathname(), 0777);
-		if ($item->isDir() && !$item->isDot()) {
-			bp_document_chmod_r($item->getPathname());
+function bp_document_chmod_r( $path ) {
+	$dir = new DirectoryIterator( $path );
+	foreach ( $dir as $item ) {
+		chmod( $item->getPathname(), 0777 );
+		if ( $item->isDir() && ! $item->isDot() ) {
+			bp_document_chmod_r( $item->getPathname() );
 		}
 	}
 }
@@ -1133,7 +1136,7 @@ function bp_document_mirror_text( $attachment_id ) {
 	$mirror_text = '';
 
 	$extension = bp_document_extension( $attachment_id );
-	if ( isset( $extension ) && !empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
+	if ( isset( $extension ) && ! empty( $extension ) && in_array( $extension, bp_get_document_preview_code_extensions() ) ) {
 		$words = 8000;
 		$more  = '...';
 		$text  = get_post_meta( $attachment_id, 'document_preview_mirror_text', true );
@@ -1167,12 +1170,12 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 	$attachment_url = '';
 
 	if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
-		$passed_attachment_id   = $attachment_id;
-		$document_id            = 'forbidden_' . $document_id;
-		$attachment_id          = 'forbidden_' . $attachment_id;
-		$output_file_src         = get_attached_file( $passed_attachment_id );
-		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src) ) {
-			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		$passed_attachment_id = $attachment_id;
+		$document_id          = 'forbidden_' . $document_id;
+		$attachment_id        = 'forbidden_' . $attachment_id;
+		$output_file_src      = get_attached_file( $passed_attachment_id );
+		if ( ! empty( $attachment_id ) && ! empty( $document_id ) && file_exists( $output_file_src ) ) {
+			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/player.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
 
@@ -1193,7 +1196,7 @@ function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		if ( ! empty( $activity->id ) && 'document' !== $activity->privacy ) {
-			$buttons['activity_edit']['button_attr']['href']  = bp_activity_get_permalink( $activity_id ) . 'edit';
+			$buttons['activity_edit']['button_attr']['href'] = bp_activity_get_permalink( $activity_id ) . 'edit';
 
 			$classes  = explode( ' ', $buttons['activity_edit']['button_attr']['class'] );
 			$edit_key = array_search( 'edit', $classes, true );
@@ -1207,99 +1210,4 @@ function bp_nouveau_document_activity_edit_button( $buttons, $activity_id ) {
 	return $buttons;
 }
 
-/**
- * Function get video support extension.
- *
- * @param string $format
- *
- * @return array|mixed|string|void
- */
-function bp_video_allowed_video_type() {
 
-	$extension_lists = array(
-		'bb_doc_1'  => array(
-			'extension'   => '.abw',
-			'mime_type'   => 'application/x-abiword',
-			'description' => __( 'AbiWord Document', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_2'  => array(
-			'extension'   => '.abw',
-			'mime_type'   => 'text/xml',
-			'description' => __( 'AbiWord Document', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_3'  => array(
-			'extension'   => '.ace',
-			'mime_type'   => 'application/x-ace-compressed',
-			'description' => __( 'ACE Archive', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_4'  => array(
-			'extension'   => '.ai',
-			'mime_type'   => 'application/postscript',
-			'description' => __( 'Illustrator File', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_5'  => array(
-			'extension'   => '.ai',
-			'mime_type'   => 'application/pdf',
-			'description' => __( 'Illustrator File', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_6'  => array(
-			'extension'   => '.apk',
-			'mime_type'   => 'application/vnd.android.package-archive',
-			'description' => __( 'Android Package', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_7'  => array(
-			'extension'   => '.apk',
-			'mime_type'   => 'application/java-archive',
-			'description' => __( 'Android Package', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_8'  => array(
-			'extension'   => '.css',
-			'mime_type'   => 'text/css',
-			'description' => __( 'CSS', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_9'  => array(
-			'extension'   => '.css',
-			'mime_type'   => 'text/plain',
-			'description' => __( 'CSS', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-		'bb_doc_10'  => array(
-			'extension'   => '.csv',
-			'mime_type'   => 'text/csv',
-			'description' => __( 'CSV', 'buddyboss' ),
-			'is_default'  => 1,
-			'is_active'   => 1,
-			'icon'        => '',
-		),
-	);
-
-	$extension_lists = apply_filters( 'bp_video_allowed_video_type', $extension_lists );
-
-	return $extension_lists;
-}

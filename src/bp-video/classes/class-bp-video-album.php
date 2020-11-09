@@ -458,12 +458,13 @@ class BP_Video_Album {
 	/**
 	 * Convert video IDs to video objects, as expected in template loop.
 	 *
-	 * @since BuddyBoss 1.6.0
-	 *
 	 * @param array $album_ids Array of video IDs.
+	 *
 	 * @return array
+	 *@since BuddyBoss 1.6.0
+	 *
 	 */
-	protected static function get_album_data( $album_ids = array() ) {
+	public static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no video ID's passed.
