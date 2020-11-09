@@ -14025,7 +14025,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #buddypress .bp-media-document-uploader #bp-media-document-prev {
   font-size: 15px;
   float: right;
-  margin: 7px 20px 0 0;
+  margin: 8px 20px 0 0;
   color: #a5a7ab;
 }
 
@@ -14049,9 +14049,27 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   float: right;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 480px) {
+  #buddypress .bp-media-document-uploader .document-uploader-footer {
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
   #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
     margin-bottom: 10px;
+  }
+  #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
+    width: 100%;
+  }
+  #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap select {
+    width: 100%;
+  }
+  #buddypress .bp-media-document-uploader .document-uploader-footer #bp-media-document-submit {
+    width: 100%;
+  }
+  #buddypress .bp-media-document-uploader .document-uploader-footer #bp-media-document-prev {
+    text-align: center;
+    margin: 10px 0 0 0;
+    width: 100%;
   }
 }
 
@@ -14104,9 +14122,27 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   float: right;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 480px) {
+  #buddypress .bp-media-photo-uploader .media-uploader-footer {
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
   #buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap {
     margin-bottom: 10px;
+  }
+  #buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap {
+    width: 100%;
+  }
+  #buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap select {
+    width: 100%;
+  }
+  #buddypress .bp-media-photo-uploader .media-uploader-footer #bp-media-submit {
+    width: 100%;
+  }
+  #buddypress .bp-media-photo-uploader .media-uploader-footer #bp-media-prev {
+    text-align: center;
+    margin: 10px 0 0 0;
+    width: 100%;
   }
 }
 
