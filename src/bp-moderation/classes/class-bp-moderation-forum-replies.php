@@ -4,11 +4,6 @@
  *
  * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- *
-<<<<<<< HEAD
-=======
- * @since   BuddyBoss 2.0.0
->>>>>>> feature/moderation
  */
 
 // Exit if accessed directly.
