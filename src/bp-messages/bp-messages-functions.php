@@ -1071,7 +1071,3 @@ function bp_messages_get_avatars( $thread_id, $user_id ) {
 	 */
 	return apply_filters( 'bp_messages_get_avatars', $avatar_urls, $thread_id, $user_id );
 }
-
-function bp_messages_get_report_button( $args ){
-
-}

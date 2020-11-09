@@ -2014,10 +2014,13 @@ function bbp_get_reply_admin_links( $args = array() ) {
 				'trash'  => bbp_get_reply_trash_link( $r ),
 				'spam'   => bbp_get_reply_spam_link( $r ),
 				'reply'  => bbp_get_reply_to_link( $r ),
-				'report' => bbp_get_reply_report_link( $r ),
 			),
 			$r['id']
 		);
+	}
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$r['links']['report'] = bbp_get_reply_report_link( $r );
 	}
 
 	// See if links need to be unset

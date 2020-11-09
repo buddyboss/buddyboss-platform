@@ -2643,10 +2643,13 @@ function bbp_get_topic_admin_links( $args = array() ) {
 				'trash'  => bbp_get_topic_trash_link( $r ),
 				'spam'   => bbp_get_topic_spam_link( $r ),
 				'reply'  => bbp_get_topic_reply_link( $r ),
-				'report' => bbp_get_topic_report_link( $r ),
 			),
 			$r['id']
 		);
+
+		if ( bp_is_active( 'moderation' ) ) {
+			$r['links']['report'] = bbp_get_topic_report_link( $r );
+		}
 	}
 
 	// See if links need to be unset
@@ -3241,7 +3244,7 @@ function bbp_get_topic_report_link( $args = '' ) {
 
 	$report_btn_arr = bp_moderation_get_report_button(
 		array(
-			'id'                => 'top[ic_report',
+			'id'                => 'topic_report',
 			'component'         => 'moderation',
 			'must_be_logged_in' => true,
 			'button_attr'       => array(

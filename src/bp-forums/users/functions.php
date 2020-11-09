@@ -322,45 +322,6 @@ function bbp_is_user_favorite( $user_id = 0, $topic_id = 0 ) {
 }
 
 /**
- * Report a topic
- *
- * @since BuddyBoss 1.5.4
- *
- * @param int $user_id  Optional. User id
- * @param int $topic_id Optional. Topic id
- *
- * @return bool True if the topic is in user's favorites, otherwise false
- */
-function bbp_report_topic( $args ) {
-
-	if ( ! bp_is_active( 'moderation' ) ) {
-		// No link
-		return false;
-	}
-
-	$report_btn_arr = bp_moderation_get_report_button(
-		array(
-			'id'                => 'topic_report',
-			'component'         => 'moderation',
-			'must_be_logged_in' => true,
-			'button_attr'       => array(
-				'data-bp-content-id'   => $args['topic_id'],
-				'data-bp-content-type' => BP_Moderation_Forum_Topics::$moderation_type,
-			),
-		),
-		false
-	);
-
-	if ( ! empty( $report_btn_arr['button_attr']['data-bp-content-id'] ) ) {
-		$retval = sprintf( '<span id="report-toggle"><span id="%s"><a href="%s" id="%s" class="report-content" data-bp-content-id="%s" data-bp-content-type="%s" data-bp-nonce="%s"></a></span></span>', 'report-' . $args['topic_id'], $report_btn_arr['button_attr']['href'], $report_btn_arr['button_attr']['id'], $report_btn_arr['button_attr']['data-bp-content-id'], $report_btn_arr['button_attr']['data-bp-content-type'], $report_btn_arr['button_attr']['data-bp-nonce'] );
-	} else {
-		$retval = sprintf( '<span id="report-toggle"><span id="%s"><a id="%s"></a></span></span>', 'report-' . $args['topic_id'], $report_btn_arr['button_attr']['id'] );
-	}
-
-	return apply_filters( 'bbp_get_topic_report_link', $retval, $args );
-}
-
-/**
  * Add a topic to user's favorites
  *
  * @since bbPress (r2652)
