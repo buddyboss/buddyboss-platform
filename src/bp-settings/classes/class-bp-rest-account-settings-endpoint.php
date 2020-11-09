@@ -71,7 +71,9 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 
 		// Setup Navigation for non admin users.
 		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		bp_setup_nav();
+		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
 
 		$user_nav = buddypress()->members->nav;
@@ -282,5 +284,21 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 	 */
 	public function bp_rest_get_displayed_user( $user_id ) {
 		return get_current_user_id();
+	}
+
+	/**
+	 * Unset group component while using this.
+	 * - added for phpunit fix.
+	 *
+	 * @param boolean $is_current_component Check is valid component.
+	 * @param string  $component            Current component name.
+	 *
+	 * @return boolean
+	 */
+	public function bp_rest_is_current_component( $is_current_component, $component ) {
+		if ( 'groups' !== $component ) {
+			return $is_current_component;
+		}
+		return false;
 	}
 }
