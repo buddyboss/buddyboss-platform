@@ -59,6 +59,7 @@
 				        	<li class="hide_thread"><a data-bp-action="hide_thread" href="#"><?php esc_html_e( 'Hide conversation', 'buddyboss' ); ?></a></li>
 					        <li class="delete_messages"><a data-bp-action="delete" href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a></li>
 					        <li class="delete_thread"><a data-bp-action="delete_thread" href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a></li>
+					        <li class="report_thread">123</li>
 				        </ul>
 			        </div>
 		        </div>
