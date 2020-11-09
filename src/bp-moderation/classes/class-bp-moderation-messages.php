@@ -49,6 +49,9 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		// Recipient.
 		add_filter( 'bp_messages_recipient_get_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// button class.
+		add_filter('bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10,3 );
 	}
 
 	/**
@@ -141,6 +144,24 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Function to modify the button class
+	 *
+	 * @param string $button_class button class.
+	 * @param bool   $is_reported  is content reported.
+	 * @param string $item_type    content type.
+	 *
+	 * @return string
+	 */
+	public function update_button_class( $button_class, $is_reported, $item_type ) {
+
+		if ( ! empty( $item_type ) && $this->item_type === $item_type && true === $is_reported ) {
+			$button_class = 'reported-content';
+		}
+
+		return $button_class;
 	}
 
 	/**

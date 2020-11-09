@@ -287,6 +287,8 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
 
+	$button['button_attr']['class'] = apply_filters( 'bp_moderation_get_report_button_class', $button['button_attr']['class'], $is_reported, $item_type );
+
 	if ( ! empty( $html ) ) {
 		if ( $is_reported ) {
 			$button = sprintf( '<a id="%s" class="%s" >%s</a>', esc_attr( $button['button_attr']['id'] ), esc_attr( $button['button_attr']['class'] ), wp_kses_post( $button['link_text'] ) );

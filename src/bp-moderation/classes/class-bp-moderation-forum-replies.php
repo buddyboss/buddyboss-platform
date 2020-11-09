@@ -2,9 +2,8 @@
 /**
  * BuddyBoss Moderation Forum Replies Classes
  *
- * @package BuddyBoss\Moderation
- *
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -50,6 +49,10 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+
+
+		// button class.
+		add_filter( 'bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10, 3 );
 
 		// Blocked template
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
@@ -158,6 +161,26 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Function to modify the button class
+	 *
+	 * @param string $button_class button class.
+	 * @param bool   $is_reported  is content reported.
+	 * @param string $item_type    content type.
+	 *
+	 * @return string
+	 */
+	public function update_button_class( $button_class, $is_reported, $item_type ) {
+
+		if ( ! empty( $item_type ) && $this->item_type === $item_type && true === $is_reported ) {
+			$button_class = 'reported-content';
+		} elseif ( ! empty( $item_type ) && $this->item_type === $item_type ) {
+			$button_class = 'report-content';
+		}
+
+		return $button_class;
 	}
 
 	/**

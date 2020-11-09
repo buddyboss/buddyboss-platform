@@ -49,6 +49,9 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		// Search Query.
 		/*add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
+
+		// button class.
+		add_filter( 'bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10, 3 );
 	}
 
 	/**
@@ -156,6 +159,26 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Function to modify the button class
+	 *
+	 * @param string $button_class button class.
+	 * @param bool   $is_reported  is content reported.
+	 * @param string $item_type    content type.
+	 *
+	 * @return string
+	 */
+	public function update_button_class( $button_class, $is_reported, $item_type ) {
+
+		if ( ! empty( $item_type ) && BP_Moderation_Activity::$moderation_type === $item_type && true === $is_reported && ( bp_is_document_component() || bp_is_group_document() ) ) {
+			$button_class = 'reported-content';
+		} elseif ( ! empty( $item_type ) && BP_Moderation_Activity::$moderation_type === $item_type && ( bp_is_document_component() || bp_is_group_document() ) ) {
+			$button_class = 'report-content';
+		}
+
+		return $button_class;
 	}
 
 	/**

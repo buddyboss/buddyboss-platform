@@ -597,6 +597,12 @@ window.bp = window.bp || {};
 					this.options.recipients     = resp.thread.recipients;
 				}
 
+				setTimeout(
+					function () { // Waiting to load dummy image
+						bp.Nouveau.reportPopUp();
+					},
+					1000
+				);
 				return resp.messages;
 			}
 		}
