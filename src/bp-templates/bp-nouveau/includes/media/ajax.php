@@ -848,7 +848,7 @@ function bp_nouveau_ajax_media_description_save() {
 	if ( empty( $description ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was an error for updating a description. Please try again.', 'buddyboss' )
+			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -859,7 +859,7 @@ function bp_nouveau_ajax_media_description_save() {
 	if ( empty( $attachment ) && ( 'attachment' !== $attachment->post_type ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was an error for updating a description. Please try again.', 'buddyboss' )
+			esc_html__( 'There was an error in updating a description. Please try again.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );

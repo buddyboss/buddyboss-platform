@@ -2566,7 +2566,7 @@ function bp_is_user_groups() {
  *
  * Eg http://example.com/members/joe/groups/invites/ (or a subpage thereof).
  *
- * @since BuddyBoss 1.5.2
+ * @since BuddyBoss 1.5.3
  *
  * @return bool True if the current page is a user's Groups invite page.
  */
@@ -2987,7 +2987,7 @@ function bp_is_group_subgroups() {
  * @return bool True if the current page is part of a group forum topic.
  */
 function bp_is_group_forum_topic() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) && bp_is_action_variable( 'topic', 0 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) );
 }
 
 /**
@@ -2999,7 +2999,7 @@ function bp_is_group_forum_topic() {
  * @return bool True if the current page is part of a group forum topic edit page.
  */
 function bp_is_group_forum_topic_edit() {
-	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'forum' ) && bp_is_action_variable( 'topic', 0 ) && bp_is_action_variable( 'edit', 2 ) );
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( urlencode( get_option( '_bbp_forum_slug', 'forum' ) ) ) && bp_is_action_variable( 'topic', 0 ) && bp_is_action_variable( 'edit', 2 ) );
 }
 
 /**
