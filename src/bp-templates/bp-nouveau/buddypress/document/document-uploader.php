@@ -33,12 +33,14 @@
 									<div class="dropzone" id="media-uploader"></div>
 								</div>
 							</div>
-							<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Select Folder', 'buddyboss' ); ?></a>
+							<a id="bp-media-document-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#">
+								<i class="bb-icon-folder"></i>
+								<?php esc_html_e( 'Select Folder', 'buddyboss' ); ?>
+							</a>
 						</div>
 					</div>
 
 					<div class="bb-field-steps bb-field-steps-2">
-						<a id="bp-media-document-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><i class="bb-icon-angle-left"></i><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
 						<div class="bb-field-wrap">
 							<?php bp_get_template_part( 'document/location-move' ); ?>
 							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
@@ -46,7 +48,10 @@
 					</div>
 
 					<footer class="bb-model-footer document-uploader-footer">
-						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" ><?php esc_html_e( 'Create new folder', 'buddyboss' ); ?></a>
+						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" >
+							<i class="bb-icon-plus"></i>
+							<?php esc_html_e( 'Create new folder', 'buddyboss' ); ?>
+						</a>
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">
 								<select id="bb-document-privacy">
@@ -62,6 +67,7 @@
 							</div>
 						<?php endif; ?>
 						<a class="button pull-right" id="bp-media-document-submit" style="display: none;" href="#"><?php esc_html_e( 'Done', 'buddyboss' ); ?></a>
+						<a id="bp-media-document-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
 					</footer>
 				</div>
 			</div>

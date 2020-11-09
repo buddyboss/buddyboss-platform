@@ -38,7 +38,10 @@
                                     <div class="media-uploader-wrapper">
                                         <div class="dropzone" id="media-uploader"></div>
                                     </div>
-                                    <a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php esc_html_e( 'Select Album', 'buddyboss' ); ?></a>
+                                    <a id="bp-media-photo-next" class="bb-field-uploader-next bb-field-uploader-actions pull-right" href="#">
+                                        <i class="bb-icon-folder"></i>
+                                        <?php esc_html_e( 'Select Album', 'buddyboss' ); ?>
+                                    </a>
                                 </div>
                             </div>
                     </div>
@@ -80,7 +83,6 @@
                     <?php endif; ?>
                     
                     <div class="bb-field-steps bb-field-steps-2">
-                        <a id="bp-media-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><i class="bb-icon-angle-left"></i><?php esc_html_e( 'Previous', 'buddyboss' ); ?></a>
 						<div class="bb-field-wrap">
 							<?php bp_get_template_part( 'media/location-move' ); ?>
 							<?php bp_get_template_part( 'media/media-create-album' ); ?>
@@ -88,7 +90,10 @@
 					</div>
 
                     <footer class="bb-model-footer media-uploader-footer">
-                        <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">Create new album</a>
+                        <a href="#" class="bp-media-open-create-popup-folder" style="display: none;">
+                            <i class="bb-icon-plus"></i>
+                            Create new album
+                        </a>
                         <?php if ( ! bp_is_group() ) : ?>
                             <div class="bb-dropdown-wrap">
                                 <select id="bb-media-privacy">
@@ -101,10 +106,7 @@
                             </div>
                         <?php endif; ?>
                         <a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
-                        <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
-                        
-                        
-
+                        <a id="bp-media-prev" class="bb-uploader-steps-prev bb-field-uploader-actions" href="#"><?php esc_html_e( 'Back', 'buddyboss' ); ?></a>
                     </footer>
 
                 </div>

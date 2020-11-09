@@ -14000,6 +14000,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   margin-top: 0;
 }
 
+#buddypress .bp-media-document-uploader .bb-model-header {
+  margin-bottom: 20px;
+}
+
 #buddypress .bp-media-document-uploader #bp-media-document-prev,
 #buddypress .bp-media-document-uploader #bp-media-document-next {
   display: none;
@@ -14013,15 +14017,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   text-align: center;
 }
 
-#buddypress .bp-media-document-uploader #bp-media-document-prev {
-  margin: 10px 0 0 -6px;
-  display: inline-block;
+#buddypress .bp-media-document-uploader #bp-media-document-next > i {
+  margin-right: 5px;
   font-size: 15px;
 }
 
-#buddypress .bp-media-document-uploader #bp-media-document-prev i {
-  font-size: 22px;
-  vertical-align: middle;
+#buddypress .bp-media-document-uploader #bp-media-document-prev {
+  font-size: 15px;
+  float: right;
+  margin: 7px 20px 0 0;
+  color: #a5a7ab;
 }
 
 #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
@@ -14035,6 +14040,11 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   clear: both;
 }
 
+#buddypress .bp-media-document-uploader .document-uploader-footer .bp-document-open-create-popup-folder > i {
+  margin-right: 5px;
+  font-size: 15px;
+}
+
 #buddypress .bp-media-document-uploader .document-uploader-footer #bp-media-document-submit {
   float: right;
 }
@@ -14043,6 +14053,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   #buddypress .bp-media-document-uploader .document-uploader-footer .bb-dropdown-wrap {
     margin-bottom: 10px;
   }
+}
+
+#buddypress .bp-media-photo-uploader .bb-model-header {
+  margin-bottom: 20px;
 }
 
 #buddypress .bp-media-photo-uploader #bp-media-prev,
@@ -14058,15 +14072,16 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   text-align: center;
 }
 
-#buddypress .bp-media-photo-uploader #bp-media-prev {
-  margin: 10px 0 0 -6px;
-  display: inline-block;
+#buddypress .bp-media-photo-uploader #bp-media-photo-next > i {
+  margin-right: 5px;
   font-size: 15px;
 }
 
-#buddypress .bp-media-photo-uploader #bp-media-prev i {
-  font-size: 22px;
-  vertical-align: middle;
+#buddypress .bp-media-photo-uploader #bp-media-prev {
+  font-size: 15px;
+  float: right;
+  margin: 10px 20px 0 0;
+  color: #a5a7ab;
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-footer .bb-dropdown-wrap {
@@ -14080,8 +14095,9 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   clear: both;
 }
 
-#buddypress .bp-media-photo-uploader .media-uploader-footer #bp-media-prev {
-  float: left;
+#buddypress .bp-media-photo-uploader .media-uploader-footer .bp-media-open-create-popup-folder > i {
+  font-size: 15px;
+  margin-right: 5px;
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-footer #bp-media-submit {
@@ -16177,7 +16193,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
   content: "\e963";
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .modal-container .bb-field-steps {

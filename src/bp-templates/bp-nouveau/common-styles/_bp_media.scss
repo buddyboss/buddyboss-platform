@@ -1811,6 +1811,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 #buddypress .bp-media-document-uploader {
 
+	.bb-model-header {
+		margin-bottom: 20px;
+	}
+
 	#bp-media-document-prev,
 	#bp-media-document-next {
 		display: none;
@@ -1822,17 +1826,19 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	#bp-media-document-next {
 		text-align: center;
+
+		> i {
+			margin-right: 5px;
+			font-size: 15px;
+		}
+
 	}
 
 	#bp-media-document-prev {
-		margin: 10px 0 0 -6px;
-		display: inline-block;
 		font-size: 15px;
-
-		i {
-			font-size: 22px;
-			vertical-align: middle;
-		}
+		float: right;
+		margin: 7px 20px 0 0;
+		color: #a5a7ab;
 	}
 
 	.document-uploader-footer {
@@ -1846,6 +1852,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			margin-bottom: 15px;
 			clear: both;
+
+			> i {
+				margin-right: 5px;
+				font-size: 15px;
+			}
+
 		}
 
 		#bp-media-document-submit {
@@ -1865,6 +1877,10 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 #buddypress .bp-media-photo-uploader {
 
+	.bb-model-header {
+		margin-bottom: 20px;
+	}
+
 	#bp-media-prev,
 	#bp-media-photo-next {
 		display: none;
@@ -1876,18 +1892,19 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 	#bp-media-photo-next {
 		text-align: center;
+
+		> i {
+			margin-right: 5px;
+			font-size: 15px;
+		}
+
 	}
 
 	#bp-media-prev {
-		margin: 10px 0 0 -6px;
-		display: inline-block;
 		font-size: 15px;
-
-		i {
-			font-size: 22px;
-			vertical-align: middle;
-		}
-
+		float: right;
+		margin: 10px 20px 0 0;
+		color: #a5a7ab;
 	}
 
 	.media-uploader-footer {
@@ -1901,10 +1918,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			margin-bottom: 15px;
 			clear: both;
-		}
 
-		#bp-media-prev {
-			float: left;
+			> i {
+				font-size: 15px;
+				margin-right: 5px;
+			}
+
 		}
 
 		#bp-media-submit {
@@ -3830,7 +3849,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .location-album-list-wrap-main .location-album-list-wrap .location-album-list li span:before {
 	content: "\e963";
-	font-size: 14px;
+	font-size: 15px;
 }
 
 .modal-container .bb-field-steps {

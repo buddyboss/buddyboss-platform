@@ -553,6 +553,7 @@ window.bp = window.bp || {};
 			$( '.bb-field-wrap-search' ).show();
 			$( '.bp-document-open-create-popup-folder' ).show();
 			$( '.location-folder-list-wrap-main' ).show();
+			$('#bp-media-document-prev').show();
 			$( '.create-popup-folder-wrap' ).hide();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header' ).children().show();
 			$( event.currentTarget ).closest( '.has-folderlocationUI' ).find( '.bb-model-header p' ).hide();
