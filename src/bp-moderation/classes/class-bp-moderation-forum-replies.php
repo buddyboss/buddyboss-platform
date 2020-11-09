@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Moderation
  *
- * @since BuddyBoss 2.0.0
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -50,6 +50,9 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+
+		// Blocked template
+		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
 	/**
@@ -191,6 +194,32 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Update blocked comment template
+	 *
+	 * @param string $template_names Template name.
+	 *
+	 * @return string
+	 */
+	public function locate_blocked_template( $template_names ) {
+
+		if ( 'loop-single-reply.php' !== $template_names ) {
+			if ( ! is_array( $template_names ) || ! in_array( 'loop-single-reply.php', $template_names, true ) ) {
+				return $template_names;
+			}
+		}
+
+		$reply_id        = bbp_get_reply_id();
+		$reply_author_id = bbp_get_reply_author_id( $reply_id );
+
+		if ( in_array( $reply_id, self::get_sitewide_hidden_ids(), true ) ||
+		     bp_moderation_is_user_suspended( $reply_author_id, true ) ) {
+			return 'loop-blocked-single-reply.php';
+		}
+
+		return $template_names;
 	}
 
 	/**
