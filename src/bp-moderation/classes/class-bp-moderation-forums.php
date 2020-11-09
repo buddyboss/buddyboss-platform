@@ -136,10 +136,12 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_forums_get_where_conditions', $where );
 
-		if ( 'bp_forums_search_where_sql' === $action_name ) {
-			$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
-		} else {
-			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+		if ( ! empty( array_filter( $where ) ) ) {
+			if ( 'bp_forums_search_where_sql' === $action_name ) {
+				$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
+			} else {
+				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+			}
 		}
 
 		return $where_conditions;

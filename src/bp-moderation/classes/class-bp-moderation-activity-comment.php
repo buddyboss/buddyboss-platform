@@ -120,7 +120,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_activity_comment_get_where_conditions', $where );
 
-		$where_conditions['moderation_where'] = ' ( ' . implode( ' AND ', $where ) . ' )';
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['moderation_where'] = ' ( ' . implode( ' AND ', $where ) . ' )';
+		}
 
 		return $where_conditions;
 	}

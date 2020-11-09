@@ -137,10 +137,12 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		 */
 		$where = apply_filters( 'bp_moderation_messages_get_where_conditions', $where );
 
-		if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
-			$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
-		} else {
-			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		if ( ! empty( array_filter( $where ) ) ) {
+			if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
+				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
+			} else {
+				$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+			}
 		}
 
 		return $where_conditions;
