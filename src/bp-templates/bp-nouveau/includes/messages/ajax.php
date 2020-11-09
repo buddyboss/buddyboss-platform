@@ -1803,6 +1803,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		'group_message_fresh'       => $group_message_fresh,
 		'message_from'              => $message_from,
 		'is_participated'           => empty( $is_participated ) ? 0 : 1,
+        'is_reported'               => bp_moderation_report_exist( bp_get_the_thread_id(), BP_Moderation_Messages::$moderation_type ),
 	);
 
 	if ( is_array( $thread_template->thread->recipients ) ) {
