@@ -3128,7 +3128,7 @@ function bp_media_get_activity_media( $activity_id ) {
 		global $media_template;
 		// Add Media to single activity page..
 		$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
-		if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' == $media_activity && empty( $media_ids ) ) {
+		if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' === $media_activity && empty( $media_activity_ids ) ) {
 			$media_ids = BP_Media::get_activity_media_id( $activity_id );
 		} else {
 			$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
