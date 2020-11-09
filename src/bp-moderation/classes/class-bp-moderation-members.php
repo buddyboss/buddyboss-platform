@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Groups Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Members.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Members extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -52,7 +52,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -67,7 +67,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Members Join SQL query to filter blocked Members
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Members sql.
 	 * @param string $uid_name User ID field name.
@@ -83,7 +83,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Members Where SQL query to filter blocked Members
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array  $where_conditions Members where sql.
 	 * @param string $uid_name         User ID field name.
@@ -97,7 +97,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * Filters the Members Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of Members moderation where query.
 		 */
@@ -113,7 +113,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $uid_name User ID field name.
 	 *
@@ -165,7 +165,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

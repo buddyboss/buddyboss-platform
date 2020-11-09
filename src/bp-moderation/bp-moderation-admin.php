@@ -3,7 +3,7 @@
  * BuddyBoss Moderation component admin screen.
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -22,7 +22,7 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-moderation' === $_REQUEST
 /**
  * Function to hook the admin screen.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $hook page name.
  */
@@ -59,7 +59,7 @@ add_action( 'admin_enqueue_scripts', 'bp_moderation_admin_scripts' );
 /**
  * Register the Moderation component admin screen.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_add_admin_menu() {
 
@@ -86,7 +86,7 @@ add_action( bp_core_admin_hook(), 'bp_moderation_add_admin_menu', 100 );
  * which all appear together in the middle of the Dashboard menu. This function
  * adds the Moderation page to the array of these menu items.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param array $custom_menus The list of top-level BP menu items.
  *
@@ -104,7 +104,7 @@ add_filter( 'bp_admin_menu_order', 'bp_moderation_admin_menu_order' );
 /**
  * Set up the Moderation admin page.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_admin_load() {
 	global $bp_moderation_list_table;
@@ -133,7 +133,7 @@ function bp_moderation_admin_load() {
 		/**
 		 * Fires at top of Moderation admin page.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $doaction Current $_GET action being performed in admin screen.
 		 */
@@ -174,7 +174,7 @@ function bp_moderation_admin_load() {
 	/**
 	 * Fires at top of Moderation admin page.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $doaction Current $_GET action being performed in admin screen.
 	 */
@@ -215,7 +215,7 @@ function bp_moderation_admin_load() {
 /**
  * Select the appropriate Moderation admin screen, and output it.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_admin() {
 	// Added navigation tab on top.
@@ -253,7 +253,7 @@ function bp_moderation_admin() {
  *
  * This screen contains a list of all BuddyBoss Moderation requests.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @global BP_Moderation_List_Table $bp_moderation_list_table Moderation screen list table.
  * @global string                   $plugin_page              Currently viewed plugin page.
@@ -289,7 +289,7 @@ function bp_moderation_admin_index() {
 /**
  * Handle save/update of screen options for the Moderation component admin screen.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $value     Will always be false unless another plugin filters it first.
  * @param string $option    Screen option name.
@@ -326,7 +326,7 @@ function bp_moderation_admin_view() {
 	/**
 	 * Fires before moderation edit form is displays so plugins can modify the activity.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $value Array holding single activity object that was passed by reference.
 	 */

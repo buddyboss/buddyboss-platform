@@ -3,7 +3,8 @@
  * BuddyBoss Moderation Forum Replies Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Forum Replies.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
@@ -26,7 +27,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -54,7 +55,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -69,7 +70,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Forum Replies Join SQL query to filter blocked Forum Replies
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Forum Replies Join sql.
 	 * @param object $wp_query WP_Query object.
@@ -98,7 +99,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Forum Replies Where SQL query to filter blocked Forum Replies
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $where_conditions Forum Replies Where sql.
 	 * @param object $wp_query         WP_Query object.
@@ -141,7 +142,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		/**
 		 * Filters the Forum Replies Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of Forum Replies moderation where query.
 		 */
@@ -251,7 +252,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

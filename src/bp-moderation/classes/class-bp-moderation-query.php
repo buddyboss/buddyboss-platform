@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Query Classes
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * This is notably used in {@link BP_Moderation::get()} with the
  * 'filter_query' parameter.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
@@ -23,7 +23,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * See {@see BP_Moderation_Query::__construct()} for information on query arguments.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var array
 	 */
 	public $queries = array();
@@ -31,7 +31,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
 	 * Table alias.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var string
 	 */
 	public $table_alias = '';
@@ -41,7 +41,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * See the 'wp_bp_moderation' DB table schema.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var array
 	 */
 	public $db_columns = array(
@@ -57,7 +57,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $query {
 	 *     Array of query clauses.
@@ -87,7 +87,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
 	 * Generates WHERE SQL clause to be appended to a main query.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
 	 *                      Default: 'a'. BP_Moderation::get() uses 'a', so we default to that.
@@ -109,7 +109,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
 	 * Generate WHERE clauses for a first-order clause.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param  array $clause       Array of arguments belonging to the clause.
 	 * @param  array $parent_query Parent query to which the clause belongs.
@@ -240,7 +240,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	/**
 	 * Determine whether a clause is first-order.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $query Clause to check.
 	 * @return bool
@@ -255,7 +255,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 * Column names are checked against a whitelist of known tables.
 	 * See {@link BP_Moderation_Query::db_tables}.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $column The user-supplied column name.
 	 * @return string A validated column name value.

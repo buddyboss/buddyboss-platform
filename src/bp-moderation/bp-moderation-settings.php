@@ -3,7 +3,7 @@
  * Moderation Settings
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Get the Moderation settings sections.
  *
  * @return array
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_get_settings_sections() {
 
@@ -37,7 +37,7 @@ function bp_moderation_get_settings_sections() {
  * Get all of the settings fields.
  *
  * @return array
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_get_settings_fields() {
 
@@ -113,7 +113,7 @@ function bp_moderation_get_settings_fields() {
  * @param string $section_id Section id.
  *
  * @return mixed False if section is invalid, array of fields otherwise.
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_get_settings_fields_for_section( $section_id = '' ) {
 
@@ -131,7 +131,7 @@ function bp_moderation_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Return Moderation settings API option
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  get_option()
  * @uses  esc_attr()
@@ -159,7 +159,7 @@ function bp_moderation_get_setting( $option, $default = '' ) {
 /**
  * Output Moderation settings API option
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $option Option name.
  * @param string $default Default value.
@@ -171,7 +171,7 @@ function bp_moderation_setting( $option, $default = '' ) {
 /**
  * Moderation blocking Member blocking setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -189,7 +189,7 @@ function bpm_blocking_settings_callback_member_blocking() {
 /**
  * Checks if Moderation Member blocking feature is enabled.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -203,7 +203,7 @@ function bp_is_moderation_member_blocking_enable( $default = 0 ) {
 /**
  * Moderation blocking auto suspend setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -220,7 +220,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 /**
  * Checks if Moderation Member auto suspend feature is enabled.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -234,7 +234,7 @@ function bp_is_moderation_auto_suspend_enable( $default = 0 ) {
 /**
  * Moderation blocking auto suspend threshold setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -249,7 +249,7 @@ function bpm_blocking_settings_callback_auto_suspend_threshold() {
 /**
  * Moderation blocking auto suspend setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -266,7 +266,7 @@ function bpm_blocking_settings_callback_email_notification() {
 /**
  * Checks if Moderation blocking email notification feature is enabled.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -284,7 +284,7 @@ function bp_is_moderation_blocking_email_notification_enable( $default = 0 ) {
 /**
  * Moderation blocking Member blocking setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -309,7 +309,7 @@ function bpm_reporting_settings_callback_content_reporting() {
 /**
  * Checks if Moderation Member reporting feature is enabled.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int    $default      bool Optional.Default value true.
  * @param string $content_type content type.
@@ -330,7 +330,7 @@ function bp_is_moderation_content_reporting_enable( $default = 0, $content_type 
 /**
  * Moderation reporting auto suspend setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -347,7 +347,7 @@ function bpm_reporting_settings_callback_auto_hide() {
 /**
  * Checks if Moderation Member auto suspend feature is enabled.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int $default bool Optional.Default value true.
  *
@@ -361,7 +361,7 @@ function bp_is_moderation_auto_hide_enable( $default = 0 ) {
 /**
  * Moderation reporting auto suspend threshold setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -376,7 +376,7 @@ function bpm_reporting_settings_callback_auto_hide_threshold() {
 /**
  * Moderation reporting auto suspend setting field
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  checked() To display the checked attribute
  */
@@ -393,7 +393,7 @@ function bpm_reporting_settings_callback_email_notification() {
 /**
  * Checks if Moderation reporting email notification feature is enabled.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param int $default bool Optional.Default value true.
  *

@@ -3,7 +3,8 @@
  * BuddyBoss Moderation Activity Comment Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Activity Comment.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
@@ -26,7 +27,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Activity_Comment constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -46,13 +47,14 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_activity_comments_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_comments_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
+		// Blocked template
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
 	}
 
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -67,7 +69,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Prepare activity Comment Join SQL query to filter blocked Activity Comment
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Activity Comment Join sql.
 	 *
@@ -82,7 +84,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Prepare activity Comment Where SQL query to filter blocked Activity Comment
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $where_conditions Activity Comment Where sql.
 	 *
@@ -112,7 +114,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		/**
 		 * Filters the activity comment Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of activity comment moderation where query.
 		 */
@@ -176,7 +178,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			return 'activity/blocked-comment.php';
 		}
 
-		if ( bp_is_moderation_member_blocking_enable( 0 ) && in_array( $activities_template->activity->current_comment->user_id, BP_Moderation_Members::get_sitewide_hidden_ids(), true ) ) {
+		if ( bp_moderation_is_user_suspended( $activities_template->activity->current_comment->user_id, true ) ) {
 			return 'activity/blocked-user-comment.php';
 		}
 
@@ -250,7 +252,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

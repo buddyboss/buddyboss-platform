@@ -3,7 +3,7 @@
  * BuddyBoss Moderation Groups Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Groups.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
@@ -26,7 +26,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Group constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 		parent::$moderation[ self::$moderation_type ] = self::class;
@@ -51,7 +51,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -66,7 +66,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Groups Join SQL query to filter blocked Groups
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Groups Join sql.
 	 *
@@ -81,7 +81,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Prepare Groups Where SQL query to filter blocked Groups
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $where_conditions Groups Where sql.
 	 *
@@ -102,7 +102,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		/**
 		 * Filters the groups Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of groups moderation where query.
 		 */
@@ -166,7 +166,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

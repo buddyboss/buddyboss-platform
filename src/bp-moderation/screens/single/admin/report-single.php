@@ -3,6 +3,8 @@
  * Admin Single Reported item screen
  *
  * @package BuddyBoss
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 ?>

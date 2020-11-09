@@ -3,7 +3,8 @@
  * BuddyBoss Moderation items abstract Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation items.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 abstract class BP_Moderation_Abstract {
 
@@ -40,7 +41,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Prepare Join sql for exclude Blocked items
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $item_id_field Items ID field name with alias of table.
 	 *
@@ -58,7 +59,7 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @return string|void
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	protected function exclude_where_query() {
 		return "( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
@@ -67,7 +68,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Retrieve sitewide hidden items ids of particular item type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $type         Moderation items type.
 	 * @param bool   $user_include Include item which report by current user even if it's not hidden.
@@ -88,7 +89,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $item_id Content item id.
 	 */
@@ -97,7 +98,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Get class from content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $type Content type.
 	 *
@@ -117,7 +118,7 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

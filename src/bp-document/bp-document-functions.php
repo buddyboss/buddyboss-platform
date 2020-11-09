@@ -3534,7 +3534,7 @@ function bp_document_default_scope( $scope = 'all' ) {
 		$allowed_scopes[] = 'groups';
 	}
 
-	if ( is_user_logged_in() && bp_is_profile_document_support_enabled() ) {
+	if ( ( is_user_logged_in() || bp_is_user_document() ) && bp_is_profile_document_support_enabled() ) {
 		$allowed_scopes[] = 'personal';
 	}
 

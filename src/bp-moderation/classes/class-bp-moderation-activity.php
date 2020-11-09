@@ -3,7 +3,8 @@
  * BuddyBoss Moderation Activity Classes
  *
  * @package BuddyBoss\Moderation
- * @since   BuddyBoss 1.5.4
+ *
+ * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Database interaction class for the BuddyBoss moderation Activity.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
@@ -26,7 +27,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * BP_Moderation_Activity constructor.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct() {
 
@@ -53,7 +54,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Add Moderation content type.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $content_types Supported Contents types.
 	 *
@@ -68,7 +69,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Prepare activity Join SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $join_sql Activity Join sql.
 	 * @param array  $args     Query arguments.
@@ -89,7 +90,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Prepare activity Where SQL query to filter blocked Activity
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $where_conditions Activity Where sql.
 	 * @param array $args             Query arguments.
@@ -136,7 +137,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		/**
 		 * Filters the activity Moderation Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+		 * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $where array of activity moderation where query.
 		 */
@@ -318,7 +319,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Report content
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *

@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
  * The main moderation template loop class.
  * Responsible for loading moderation into a loop for display.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  */
 class BP_Moderation_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var int
 	 */
 	public $current_moderation = - 1;
@@ -27,7 +27,7 @@ class BP_Moderation_Template {
 	/**
 	 * The moderation count.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var int
 	 */
 	public $moderation_count;
@@ -35,7 +35,7 @@ class BP_Moderation_Template {
 	/**
 	 * The total moderation count.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var int
 	 */
 	public $total_moderation_count;
@@ -43,7 +43,7 @@ class BP_Moderation_Template {
 	/**
 	 * Array of moderation located by the query.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var array
 	 */
 	public $moderations;
@@ -51,7 +51,7 @@ class BP_Moderation_Template {
 	/**
 	 * The moderation object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var object
 	 */
 	public $moderation;
@@ -59,7 +59,7 @@ class BP_Moderation_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -67,7 +67,7 @@ class BP_Moderation_Template {
 	/**
 	 * URL parameter key for moderation pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -75,7 +75,7 @@ class BP_Moderation_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -83,7 +83,7 @@ class BP_Moderation_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -91,7 +91,7 @@ class BP_Moderation_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -99,7 +99,7 @@ class BP_Moderation_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @var string
 	 */
 	public $full_name;
@@ -128,7 +128,7 @@ class BP_Moderation_Template {
 	 * }
 	 * @see   BP_Moderation::get() for a description of the argument
 	 *        structure, as well as default values.
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function __construct( $args ) {
 
@@ -225,7 +225,7 @@ class BP_Moderation_Template {
 	/**
 	 * Whether there are moderation items available in the loop.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @return bool True if there are items in the loop, otherwise false.
 	 * @see   bp_has_moderation()
 	 */
@@ -243,7 +243,7 @@ class BP_Moderation_Template {
 	 * that controls iteration inside the moderation loop, eg:
 	 *     while ( bp_moderation() ) { ...
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @return bool True if there are more moderation items to show,
 	 *              otherwise false.
 	 * @see   bp_moderation()
@@ -256,7 +256,7 @@ class BP_Moderation_Template {
 			/**
 			 * Fires right before the rewinding of moderation posts.
 			 *
-			 * @since BuddyBoss 1.5.4
+			 * @since BuddyBoss 2.0.0
 			 */
 			do_action( 'moderation_loop_end' );
 
@@ -272,7 +272,7 @@ class BP_Moderation_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	public function rewind_moderations() {
 		$this->current_moderation = - 1;
@@ -287,7 +287,7 @@ class BP_Moderation_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current moderation item.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 * @see   bp_the_moderation()
 	 */
 	public function the_moderation() {
@@ -305,7 +305,7 @@ class BP_Moderation_Template {
 			/**
 			 * Fires if the current moderation item is the first in the loop.
 			 *
-			 * @since BuddyBoss 1.5.4
+			 * @since BuddyBoss 2.0.0
 			 */
 			do_action( 'moderation_loop_start' );
 		}
@@ -314,7 +314,7 @@ class BP_Moderation_Template {
 	/**
 	 * Set up the next moderation item and iterate index.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return object The next moderation item to iterate over.
 	 */

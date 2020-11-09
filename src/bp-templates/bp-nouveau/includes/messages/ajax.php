@@ -251,6 +251,11 @@ function bp_nouveau_ajax_messages_send_message() {
 					}
 				}
 
+				if ( bp_is_active( 'moderation' ) ) {
+					$response['is_user_blocked']   = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id, true );
+					$response['is_user_suspended'] = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
+				}
+
 				if ( bp_is_active( 'messages', 'star' ) ) {
 					$star_link = bp_get_the_message_star_action_link(
 						array(
@@ -428,6 +433,11 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'date'          => bp_get_the_thread_message_date_sent() * 1000,
 		'display_date'  => bp_get_the_thread_message_time_since(),
 	);
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$reply['is_user_blocked']   = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id(), true );
+		$reply['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
+	}
 
 	if ( bp_is_active( 'messages', 'star' ) ) {
 
@@ -931,6 +941,11 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					);
 				}
 			}
+		}
+
+		if ( bp_is_active( 'moderation' ) ) {
+			$threads->threads[ $i ]['is_user_blocked']   = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id, true );
+			$threads->threads[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
 		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
@@ -1998,6 +2013,11 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
 				'display_date'  => bp_get_the_thread_message_time_since(),
 			);
+		}
+
+		if ( bp_is_active( 'moderation' ) ) {
+			$thread->messages[ $i ]['is_user_blocked']   = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id(), true );
+			$thread->messages[ $i ]['is_user_suspended'] = bp_moderation_is_user_suspended( bp_get_the_thread_message_sender_id() );
 		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
