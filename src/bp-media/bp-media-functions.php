@@ -3016,8 +3016,12 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	if ( $group_id > 0 ) {
 		$destination_privacy = 'grouponly';
 	} elseif ( $album_id > 0 ) {
-		$destination_album   = BP_Media_Album::get_album_data( array( $album_id ) );
-		$destination_privacy = $destination_album[0]->privacy;
+		$destination_album = BP_Media_Album::get_album_data( array( $album_id ) );
+		$destination_album = ( ! empty( $destination_album ) ) ? current( $destination_album ) : array();
+		if ( empty( $destination_album ) ) {
+			return false;
+		}
+		$destination_privacy = $destination_album->privacy;
 		// Update modify date for destination album.
 		$destination_album_update               = new BP_Media_Album( $album_id );
 		$destination_album_update->date_created = bp_core_current_time();
