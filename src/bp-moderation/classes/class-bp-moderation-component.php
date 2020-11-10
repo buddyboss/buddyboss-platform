@@ -274,7 +274,7 @@ class BP_Moderation_Component extends BP_Component {
 				'hierarchical'       => false,
 			)
 		);
-		
+
 		$is_moderation_terms = get_option( 'added_moderation_category', false );
 
 		if ( false === $is_moderation_terms ) {
