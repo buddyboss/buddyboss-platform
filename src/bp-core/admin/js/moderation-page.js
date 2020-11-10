@@ -1,4 +1,4 @@
-/* global BP_ADMIN */
+/* global Bp_Moderation */
 jQuery( document ).ready( function ( $ ) {
 	$( document ).on( 'click', '.bp-hide-request, .bp-block-user', function () {
 		if ( !confirm( Bp_Moderation.strings.confirm_msg ) ) {

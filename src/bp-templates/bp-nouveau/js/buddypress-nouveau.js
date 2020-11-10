@@ -1787,7 +1787,7 @@ window.bp = window.bp || {};
 				$( '.bp-other-report-cat' ).hide();
 				$( '.mfp-close' ).trigger( 'click' );
 			} );
-			$( document ).on( 'click', 'input[type=radio][name=report_category]', function ( e ) {
+			$( document ).on( 'click', 'input[type=radio][name=report_category]', function () {
 				if ( 'other' === this.value ) {
 					$( '.bp-other-report-cat' ).show();
 				} else {

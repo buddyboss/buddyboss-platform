@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau, JSON, Dropzone */
+/* global bp, BP_Nouveau */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -39,8 +39,6 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		setupGlobals: function () {
-			var bodySelector = $( 'body' );
-
 			// Init current page.
 			this.current_page = 1;
 		},
@@ -55,7 +53,7 @@ window.bp = window.bp || {};
 
 		injectModerations: function ( event ) {
 
-			var store = bp.Nouveau.getStorage( 'bp-moderation' ), sort = '', order_by = '',
+			var store = bp.Nouveau.getStorage( 'bp-moderation' ),
 				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
 
 			if ( currentTarget.hasClass( 'load-more' ) ) {
@@ -97,7 +95,7 @@ window.bp = window.bp || {};
 				);
 			}
 		},
-		unblockUser: function ( $event ) {
+		unblockUser: function () {
 			$( document ).on( 'click', '.moderation-item-actions .bp-unblock-user', function () {
 
 				if ( !confirm( BP_Nouveau.moderation.unblock_user_msg ) ) {
@@ -117,7 +115,7 @@ window.bp = window.bp || {};
 				$.post( ajaxurl, data, function ( response ) {
 					var result = $.parseJSON( response );
 					if ( true === result.success ) {
-						curObj.parent().closest( '.moderation-item-wrp' ).fadeOut( "normal", function () {
+						curObj.parent().closest( '.moderation-item-wrp' ).fadeOut( 'normal', function () {
 							curObj.parent().closest( '.moderation-item-wrp' ).remove();
 						} );
 					} else {
