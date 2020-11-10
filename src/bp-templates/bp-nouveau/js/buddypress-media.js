@@ -950,12 +950,17 @@ window.bp = window.bp || {};
 			var activityId = '';
 			activityId = $(document).find('a[data-media-id="' + media_id + '"]').attr('data-parent-activity-id');
 
+			var groupId = parseInt( self.group_id );
+			if ( ! groupId ) {
+				groupId = $(document).find('a[data-media-id="' + media_id + '"]').attr('id');
+			}
+
 			var data = {
 				'action'     : 'media_move',
 				'_wpnonce'   : BP_Nouveau.nonces.media,
 				'media_id'   : media_id,
 				'album_id'   : album_id,
-				'group_id'   : self.group_id,
+				'group_id'   : groupId,
 				'activity_id': activityId
 			};
 
@@ -979,8 +984,8 @@ window.bp = window.bp || {};
 							} else {
 								if (parseInt(BP_Nouveau.media.current_album) > 0) {
 									$('#media-stream ul.media-list li[data-id="' + media_id + '"]').remove();
-								} else if ($('#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]').length && !$('#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]').parent().hasClass('bb-media-length-1')) {
-									$('#activity-stream ul.activity-list li.activity .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]').remove();
+								} else if ($('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]').length && !$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]').parent().hasClass('bb-media-length-1')) {
+									$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + media_id + '"]').remove();
 									if (activityId && activityId.length) {
 										$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-media-wrap').remove();
 										$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner').append(response.data.media_content);

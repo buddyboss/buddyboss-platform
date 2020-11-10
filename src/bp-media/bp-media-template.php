@@ -1474,6 +1474,10 @@ function bp_album_id() {
 function bp_get_album_id() {
 	global $media_album_template;
 
+	if ( empty( $media_album_template ) ) {
+		return;
+	}
+
 	/**
 	 * Filters the media ID being displayed.
 	 *

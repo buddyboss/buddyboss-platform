@@ -3038,7 +3038,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	$media->save();
 
 	// Update media activity privacy.
-	//if ( ! $group_id ) {
+	if ( ! $group_id ) {
 		if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
 			$post_attachment    = $media->attachment_id;
 			$parent_activity_id = get_post_meta( $post_attachment, 'bp_media_parent_activity_id', true );
@@ -3109,7 +3109,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				}
 			}
 		}
-	//}
+	}
 
 	return $media_id;
 }
