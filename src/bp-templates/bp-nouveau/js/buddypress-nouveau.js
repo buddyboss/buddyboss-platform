@@ -1781,6 +1781,8 @@ window.bp = window.bp || {};
 			});
 		},
 		reportActions: function () {
+			var _this = this;
+
 			$(document).on('click', '.bb-cancel-report-content', function (e) {
 				e.preventDefault();
 				$('form#bb-report-content').trigger('reset');
@@ -1796,7 +1798,6 @@ window.bp = window.bp || {};
 			});
 
 			$('#bb-report-content').submit(function () {
-				var _this = this;
 				$('.bp-report-form-err').empty();
 
 				var data = {
