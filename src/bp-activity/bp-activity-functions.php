@@ -3765,7 +3765,7 @@ function bp_activity_create_summary( $content, $activity ) {
 	);
 
 	// Get the WP_Post object if this activity type is a blog post.
-	if ( $activity['type'] === 'new_blog_post' ) {
+	if ( 'new_blog_post' === $activity['type'] ) {
 		$content = get_post( $activity['secondary_item_id'] );
 	}
 
@@ -3897,16 +3897,9 @@ function bp_activity_create_summary( $content, $activity ) {
 		)
 	);
 
-	// Add the Read More text before the image/embed append into the content.
-	if ( $activity[ 'type' ] === 'new_blog_post' ) {
-		$append_text  = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-		$excerpt_link = get_the_permalink( $activity[ 'secondary_item_id' ] );
-		$summary      = sprintf( '%1$s <span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $summary, $excerpt_link, $append_text );
-	}
-
-	if ( $use_media_type === 'embeds' ) {
+	if ( 'embeds' === $use_media_type ) {
 		$summary .= PHP_EOL . PHP_EOL . $extracted_media['url'];
-	} elseif ( $use_media_type === 'images' ) {
+	} elseif ( 'images' === $use_media_type ) {
 		$extracted_media_url = isset( $extracted_media['url'] ) ? $extracted_media['url'] : '';
 		$summary .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
 	} elseif ( in_array( $use_media_type, array( 'audio', 'videos' ), true ) ) {

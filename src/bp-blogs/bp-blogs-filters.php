@@ -19,6 +19,17 @@ add_filter( 'bp_blog_latest_post_content', 'wpautop' );
 add_filter( 'bp_blog_latest_post_content', 'shortcode_unautop' );
 add_filter( 'bp_blog_latest_post_content', 'prepend_attachment' );
 
+//add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 99, 2 );
+
+function bp_blogs_activity_content_with_read_more( $content, $activity ) {
+
+	if ( 'blogs' === $activity->component ) {
+		return 'df';
+	}
+
+	return $content;
+}
+
 /**
  * Ensure that the 'Create a new site' link at wp-admin/my-sites.php points to the BP blog signup.
  *

@@ -622,7 +622,7 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 		'name' => $post->post_type,
 	);
 
-	$output = 'objects'; // names or objects
+	$output = 'objects'; // names or objects.
 
 	$cu_post_types = get_post_types( $get_post_type_args, $output );
 
