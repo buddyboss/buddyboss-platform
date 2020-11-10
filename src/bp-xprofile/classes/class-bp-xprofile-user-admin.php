@@ -128,7 +128,19 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				'user_id'      => $user_id,
 			);
 
-			if ( ! bp_is_user_spammer( $user_id ) && bp_has_profile( $profile_args ) ) {
+			if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable( 0 ) && bp_moderation_is_user_suspended( $user_id ) && bp_has_profile( $profile_args ) ) {
+
+				// If member is already a suspended , show a generic metabox.
+				add_meta_box(
+						'bp_xprofile_user_admin_empty_profile',
+						__( 'User marked as a suspended', 'buddyboss' ),
+						array( $this, 'user_admin_suspended_metabox' ),
+						$screen_id,
+						'normal',
+						'core'
+				);
+
+			} elseif ( ! bp_is_user_spammer( $user_id ) && bp_has_profile( $profile_args ) ) {
 
 				// Loop through field groups and add a metabox for each one.
 				while ( bp_profile_groups() ) :
@@ -143,7 +155,6 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 						array( 'profile_group_id' => bp_get_the_profile_group_id() )
 					);
 				endwhile;
-
 			} else {
 				// If member is already a spammer, show a generic metabox.
 				add_meta_box(
@@ -475,6 +486,19 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 		public function user_admin_spammer_metabox( $user = null ) {
 			?>
 		<p><?php printf( __( '%s has been marked as a spammer. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
+			<?php
+		}
+
+		/**
+		 * Render the fallback metabox in case a user has been marked as a suspended.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param WP_User|null $user The WP_User object for the user being edited.
+		 */
+		public function user_admin_suspended_metabox( $user = null ) {
+			?>
+			<p><?php printf( __( '%s has been marked as a suspended. All BuddyBoss data associated with the user has been removed.', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ); ?></p>
 			<?php
 		}
 
