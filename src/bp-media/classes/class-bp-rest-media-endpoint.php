@@ -461,6 +461,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ) {
 			$args['album_id'] = $request['album_id'];
+			$album            = new BP_Media_Album( $args['album_id'] );
+			$args['group_id'] = $album->group_id;
+			$args['privacy']  = $album->privacy;
 		}
 
 		if ( isset( $request['activity_id'] ) && ! empty( $request['activity_id'] ) ) {
@@ -695,6 +698,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( isset( $request['album_id'] ) && ! empty( $request['album_id'] ) ) {
 			$args['album_id'] = $request['album_id'];
+			$album            = new BP_Media_Album( $args['album_id'] );
+			$args['group_id'] = $album->group_id;
+			$args['privacy']  = $album->privacy;
 		}
 
 		if ( isset( $request['content'] ) && ! empty( $request['content'] ) ) {
