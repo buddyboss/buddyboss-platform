@@ -108,22 +108,32 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 				array_push( $friends, bp_loggedin_user_id() );
 			}
 
-			$sql = ' SELECT ';
+			$sql['select'] = 'SELECT';
 
 			if ( $only_totalrow_count ) {
-				$sql .= ' COUNT( DISTINCT ma.id ) ';
+				$sql['select'] .= ' COUNT( DISTINCT ma.id ) ';
 			} else {
-				$sql .= $wpdb->prepare( " DISTINCT ma.id, 'albums' as type, ma.title LIKE %s AS relevance, ma.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
+				$sql['select'] .= $wpdb->prepare( " DISTINCT ma.id, 'albums' as type, ma.title LIKE %s AS relevance, ma.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql .= " FROM {$bp->media->table_name_albums} ma WHERE";
+			$sql['from'] =  " FROM {$bp->media->table_name_albums} ma WHERE";
+
+			/**
+			 * Filter the MySQL JOIN clause for the albums Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param string $join_sql JOIN clause.
+			 */
+			$sql['from'] = apply_filters( 'bp_media_search_join_sql_album', $sql['from'] );
 
 			$privacy = array( 'public' );
 			if ( is_user_logged_in() ) {
 				$privacy[] = 'loggedin';
 			}
 
-			$sql .= $wpdb->prepare(
+			$where_conditions   = array( '1=1' );
+			$where_conditions[] = $wpdb->prepare(
 				" (
 					(
 						ma.title LIKE %s
@@ -138,6 +148,24 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 				)',
 				'%' . $wpdb->esc_like( $search_term ) . '%'
 			);
+
+			/**
+			 * Filters the MySQL WHERE conditions for the albums Search query.
+			 *
+			 * @since BuddyBoss 1.5.4
+			 *
+			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
+			 * @param string $search_term      Search Term.
+			 */
+			$where_conditions = apply_filters( 'bp_document_search_where_conditions_album', $where_conditions, $search_term );
+
+			// Join the where conditions together.
+			$sql['where'] = 'WHERE ' . join( ' AND ', $where_conditions );
+
+			$sql = "{$sql['select']} {$sql['from']} {$sql['where']}";
+
+			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
 				'bp_search_albums_sql',
