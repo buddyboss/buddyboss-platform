@@ -952,7 +952,10 @@ window.bp = window.bp || {};
 
 			var groupId = parseInt( self.group_id );
 			if ( ! groupId ) {
-				groupId = $(document).find('a[data-media-id="' + media_id + '"]').attr('id');
+				groupId = false;
+				if ( 'group' === $(document).find('a[data-media-id="' + media_id + '"]').attr('data-type') ) {
+					groupId = $(document).find('a[data-media-id="' + media_id + '"]').attr('id');
+				}
 			}
 
 			var data = {
