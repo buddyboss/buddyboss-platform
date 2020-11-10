@@ -1793,6 +1793,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $folders['folders'] ) ) {
 				$folder           = array_pop( $folders['folders'] );
 				$document_privacy = $folder->privacy;
+				$group_id         = $folder->group_id;
 			}
 		}
 

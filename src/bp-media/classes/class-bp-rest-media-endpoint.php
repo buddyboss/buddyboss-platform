@@ -1671,6 +1671,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( ! empty( $albums['albums'] ) ) {
 				$album         = array_pop( $albums['albums'] );
 				$media_privacy = $album->privacy;
+				$group_id       = $album->group_id;
 			}
 		}
 
