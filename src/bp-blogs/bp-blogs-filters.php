@@ -18,13 +18,32 @@ add_filter( 'bp_blog_latest_post_content', 'convert_chars' );
 add_filter( 'bp_blog_latest_post_content', 'wpautop' );
 add_filter( 'bp_blog_latest_post_content', 'shortcode_unautop' );
 add_filter( 'bp_blog_latest_post_content', 'prepend_attachment' );
-
 //add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 99, 2 );
 
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
-	if ( 'blogs' === $activity->component ) {
-		return 'df';
+	if ( ( 'blogs' === $activity->component ) || ( 'activity_comment' === $activity->component ) ) {
+
+		if ( 'activity_comment' === $activity->component && $activity->item_id && $activity->item_id > 0 ) {
+			// Get activity object.
+			$comment_activity = new BP_Activity_Activity( $activity->item_id );
+			if ( 'blogs' === $comment_activity->component ) {
+				$comment_id = bp_activity_get_meta( $comment_activity->id, 'bp_blogs_post_comment_id', true );
+			}
+		} else {
+
+			$content = get_post( $activity['secondary_item_id'] );
+
+			// If we converted $content to an object earlier, flip it back to a string.
+			if ( is_a( $content, 'WP_Post' ) ) {
+
+				// For the post and custom post type get the excerpt first.
+				$excerpt = get_the_excerpt( $content->ID );
+
+				// Get the excerpt first if found otherwise it will take the post content.
+				$content = ( $excerpt ) ?: $content->post_content;
+			}
+		}
 	}
 
 	return $content;
