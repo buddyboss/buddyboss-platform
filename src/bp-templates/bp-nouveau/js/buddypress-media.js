@@ -5115,6 +5115,12 @@ window.bp = window.bp || {};
 								$( '.bb-media-info-section:visible' ).show();
 
 								jQuery( window ).scroll();
+								setTimeout(
+									function () { // Waiting to load dummy image
+										bp.Nouveau.reportPopUp();
+									},
+									1000
+								);
 							}
 						}
 					}
