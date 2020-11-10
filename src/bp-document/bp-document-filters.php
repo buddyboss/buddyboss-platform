@@ -261,7 +261,11 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
-	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+
+	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
+	if ( ! isset( $documents ) || empty( $documents ) ) {
 
 		// delete document ids and meta for activity if empty document in request.
 		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
@@ -283,9 +287,9 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	}
 
 	// Add in description in attachment when only one document uploaded.
-	if ( is_array( $_POST['document'] ) && 1 === count( $_POST['document'] ) ) {
-		foreach ( $_POST['document'] as $document ) {
-			$document_attachment_post = array();
+	if ( is_array( $documents ) && 1 === count( $documents ) ) {
+		foreach ( $documents as $document ) {
+			$document_attachment_post                 = array();
 			$document_attachment_post['ID']           = $document['id'];
 			$document_attachment_post['post_content'] = wp_strip_all_tags( $content );
 			wp_update_post( $document_attachment_post );
@@ -296,9 +300,9 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $actions ) && 'new_activity_comment' === $actions ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
-		if ( $parent_activity->component === 'groups' ) {
+		if ( 'groups' === $parent_activity->component ) {
 			$_POST['privacy'] = 'grouponly';
 		} elseif ( ! empty( $parent_activity->privacy ) ) {
 			$_POST['privacy'] = $parent_activity->privacy;
@@ -310,7 +314,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
+	$document_ids = bp_document_add_handler( $documents, $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -319,7 +323,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
-		// Delete document if not exists in current document ids
+		// Delete document if not exists in current document ids.
 		if ( isset( $_POST['edit'] ) ) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );

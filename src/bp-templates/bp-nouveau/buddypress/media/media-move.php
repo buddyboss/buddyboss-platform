@@ -1,9 +1,9 @@
 <?php
 
 /**
- * BuddyBoss - Document Activity Folder Move
+ * BuddyBoss - Media Activity Album Move
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.0
  * @package BuddyBoss\Core
  */
 
@@ -16,9 +16,6 @@
 					<header class="bb-model-header">
 						<h4><span class="target_name"><?php esc_html_e( 'Move Photo to...', 'buddyboss' ); ?></span></h4>
 					</header>
-					<?php
-						//$ul = bp_media_user_media_album_tree_view_li_html( bp_loggedin_user_id() );
-					?>
 					<div class="bb-field-wrap">
 						<?php bp_get_template_part( 'media/location-move' ); ?>
 						<?php bp_get_template_part( 'media/media-create-album' ); ?>

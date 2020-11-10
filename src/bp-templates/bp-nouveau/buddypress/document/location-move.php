@@ -6,10 +6,10 @@
  * @package BuddyBoss\Core
  */
 
-$ul  = '';
+$ul = '';
 if ( bp_is_group_document() || bp_is_group_folders() ) {
-	$group_id         = bp_get_current_group_id();
-	$ul = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
+	$group_id = bp_get_current_group_id();
+	$ul       = bp_document_user_document_folder_tree_view_li_html( 0, $group_id );
 } elseif ( bp_is_user_document() || bp_is_user_folders() ) {
 	$ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 } elseif ( bp_is_document_directory() ) {
@@ -41,6 +41,6 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 			<ul class="location-folder-list"></ul>
 		</div>
 		<input type="hidden" class="bb-folder-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-folder-selected-id" value="<?php echo bp_get_document_folder_id() ? bp_get_document_folder_id() : '0' ; ?>" readonly/>
+		<input type="hidden" class="bb-folder-selected-id" value="<?php echo bp_get_document_folder_id() ? esc_attr( bp_get_document_folder_id() ) : esc_attr( '0' ); ?>" readonly/>
 	</div>
 </div>

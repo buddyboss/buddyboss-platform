@@ -4,6 +4,7 @@
  *
  * @since BuddyBoss 1.0.0
  */
+
 ?>
 
 <div class="bb-media-container member-media">

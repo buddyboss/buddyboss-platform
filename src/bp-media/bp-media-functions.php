@@ -430,7 +430,7 @@ function bp_media_add( $args = '' ) {
 	$media->date_created  = $r['date_created'];
 	$media->error_type    = $r['error_type'];
 
-	// groups document always have privacy to `grouponly`.
+	// groups media always have privacy to `grouponly`.
 	if ( ! empty( $media->privacy ) && ( in_array( $media->privacy, array( 'forums', 'message' ), true ) ) ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
@@ -1033,18 +1033,12 @@ function bp_album_add( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'id'           => false,
-			// Pass an existing album ID to update an existing entry.
-			'user_id'      => bp_loggedin_user_id(),
-			// User ID
-			'group_id'     => false,
-			// attachment id.
-			'title'        => '',
-			// title of album being added.
-			'privacy'      => 'public',
-			// Optional: privacy of the media e.g. public.
-			'date_created' => bp_core_current_time(),
-			// The GMT time that this media was recorded
+			'id'           => false,                  // Pass an existing album ID to update an existing entry.
+			'user_id'      => bp_loggedin_user_id(),  // User ID.
+			'group_id'     => false,                  // attachment id.
+			'title'        => '',                     // title of album being added.
+			'privacy'      => 'public',               // Optional: privacy of the media e.g. public.
+			'date_created' => bp_core_current_time(), // The GMT time that this media was recorded.
 			'error_type'   => 'bool',
 		),
 		'album_add'
@@ -1862,7 +1856,7 @@ function bp_media_import_reset_media_albums() {
 							do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 							// Deleting an activity comment.
-							if ( 'activity_comment' == $activity->type ) {
+							if ( 'activity_comment' === $activity->type ) {
 								if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 									/** This action is documented in bp-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -1931,7 +1925,7 @@ function bp_media_import_reset_media() {
 				do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 				// Deleting an activity comment.
-				if ( 'activity_comment' == $activity->type ) {
+				if ( 'activity_comment' === $activity->type ) {
 					if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 						/** This action is documented in bp-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -2896,7 +2890,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  * @param int $group_id
  *
  * @return string
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.5
  */
 function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
@@ -2914,27 +2908,28 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 	}
 
-	$data = $wpdb->get_results( $media_album_query, ARRAY_A ); // db call ok; no-cache ok;
+	// db call ok; no-cache ok;
+	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
 
-	// Build array of item references:
+	// Build array of item references.
 	foreach ( $data as $key => &$item ) {
-		$itemsByReference[ $item['id'] ] = &$item;
-		// Children array:
-		$itemsByReference[ $item['id'] ]['children'] = array();
-		// Empty data class (so that json_encode adds "data: {}" )
-		$itemsByReference[ $item['id'] ]['data'] = new StdClass();
+		$items_by_reference[ $item['id'] ] = &$item;
+		// Children array.
+		$items_by_reference[ $item['id'] ]['children'] = array();
+		// Empty data class (so that json_encode adds "data: {}" ).
+		$items_by_reference[ $item['id'] ]['data'] = new StdClass();
 	}
 
 	// Set items as children of the relevant parent item.
 	foreach ( $data as $key => &$item ) {
-		if ( isset( $item['parent'] ) && $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
-			$itemsByReference [ $item['parent'] ]['children'][] = &$item;
+		if ( isset( $item['parent'] ) && $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
+			$items_by_reference[ $item['parent'] ]['children'][] = &$item;
 		}
 	}
 
-	// Remove items that were added to parents elsewhere:
+	// Remove items that were added to parents elsewhere.
 	foreach ( $data as $key => &$item ) {
-		if ( isset( $item['parent'] ) && $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+		if ( isset( $item['parent'] ) && $item['parent'] && isset( $items_by_reference[ $item['parent'] ] ) ) {
 			unset( $data[ $key ] );
 		}
 	}
@@ -2950,7 +2945,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
  * @param bool  $first
  *
  * @return string
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.5
  */
 function bp_media_album_recursive_li_list( $array, $first = false ) {
 
@@ -2967,7 +2962,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . $item['id'] . '" data-privacy="' . $item['privacy'] . '"><span id="' . $item['id'] . '" data-id="' . $item['id'] . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</ul>';
 
@@ -2975,14 +2970,14 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 }
 
 /**
- * This function will document into the folder.
+ * This function will media into the album.
  *
- * @param int $media_id
- * @param int $album_id
- * @param int $group_id
+ * @param int $media_id media id.
+ * @param int $album_id album id.
+ * @param int $group_id group id.
  *
  * @return bool|int
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.5
  */
 function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id = 0 ) {
 
@@ -3042,7 +3037,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	$media->date_created = bp_core_current_time();
 	$media->save();
 
-	// Update document activity privacy.
+	// Update media activity privacy.
 	if ( ! $group_id ) {
 		if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
 			$post_attachment    = $media->attachment_id;
@@ -3119,6 +3114,13 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	return $media_id;
 }
 
+/**
+ * Get the activity media.
+ *
+ * @param int $activity_id activity id.
+ *
+ * @return array|void
+ */
 function bp_media_get_activity_media( $activity_id ) {
 
 	$media_content      = '';
@@ -3183,7 +3185,7 @@ function bp_media_get_activity_media( $activity_id ) {
 			$args['privacy'][] = 'forums';
 		}
 
-		if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
+		if ( bp_has_media( $args ) ) {
 
 			ob_start();
 			?>
@@ -3217,13 +3219,16 @@ function bp_media_get_activity_media( $activity_id ) {
 /**
  * Set bb_medias folder for the media upload directory.
  *
- * @param $pathdata
+ * @param array $pathdata upload directory path.
  *
  * @return mixed
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.5.5
  */
 function bp_media_upload_dir( $pathdata ) {
-	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
+
+	$actions = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
+	if ( isset( $actions ) && 'media_upload' === $actions ) { // WPCS: CSRF ok, input var ok.
 
 		if ( empty( $pathdata['subdir'] ) ) {
 			$pathdata['path']   = $pathdata['path'] . '/bb_medias';
@@ -3242,12 +3247,12 @@ function bp_media_upload_dir( $pathdata ) {
 }
 
 /**
- * Set bb_documents folder for the document upload directory.
+ * Set bb_medias folder for the media upload directory.
  *
- * @param $pathdata
+ * @param array $pathdata upload directory.
  *
  * @return mixed
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.5.5
  */
 function bp_media_upload_dir_script( $pathdata ) {
 

@@ -1046,7 +1046,6 @@ function bp_get_media_parent_activity_id() {
  *
  * @return string The media link.
  * @global object $media_template {@link \BP_Media_Template}
- *
  */
 function bp_get_media_link() {
 	global $media_template;
@@ -1613,7 +1612,7 @@ function bp_album_user_can_delete( $album = false ) {
 			$can_delete = true;
 
 			// Users are allowed to delete their own album.
-		} else if ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
+		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
 			$can_delete = true;
 		}
 
@@ -1774,10 +1773,10 @@ function bp_get_album_visibility() {
 /**
  * Determine if the current user can edit an media item.
  *
- * @since BuddyBoss 1.4.9
+ * @param bool $media BP_Media object or ID of the media.
  *
- * @param int|BP_Document $document BP_Media object or ID of the media.
  * @return bool True if can edit, false otherwise.
+ * @since BuddyBoss 1.5.5
  */
 function bp_media_user_can_edit( $media = false ) {
 
@@ -1821,21 +1820,19 @@ function bp_media_user_can_edit( $media = false ) {
 					$can_edit = true;
 				} elseif ( 'members' === $status && ( $is_mod || $is_admin ) ) {
 					$can_edit = true;
-				} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+				} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
 					$can_edit = true;
-				} elseif ( 'admins' == $status && $is_admin ) {
+				} elseif ( 'admins' === $status && $is_admin ) {
 					$can_edit = true;
 				}
 			}
-
 		}
-
 	}
 
 	/**
 	 * Filters whether the current user can edit an media item.
 	 *
-	 * @since BuddyBoss 1.4.9
+	 * @since BuddyBoss 1.5.5
 	 *
 	 * @param bool   $can_edit Whether the user can edit the item.
 	 * @param object $media   Current media item object.
@@ -1846,10 +1843,11 @@ function bp_media_user_can_edit( $media = false ) {
 /**
  * Determine if the current user can edit an album item.
  *
- * @since BuddyBoss 1.4.9
+ * @param bool $album BP_Media_Album object or ID of the album.
  *
- * @param int|BP_Media_Album $album BP_Media_Album object or ID of the album.
  * @return bool True if can edit, false otherwise.
+ * @since BuddyBoss 1.5.5
+ *
  */
 function bp_album_user_can_edit( $album = false ) {
 
@@ -1881,13 +1879,12 @@ function bp_album_user_can_edit( $album = false ) {
 		} elseif ( ! empty( $album->group_id ) && groups_can_user_manage_media( bp_loggedin_user_id(), $album->group_id ) ) {
 			$can_edit = true;
 		}
-
 	}
 
 	/**
 	 * Filters whether the current user can edit an album item.
 	 *
-	 * @since BuddyBoss 1.4.9
+	 * @since BuddyBoss 1.5.5
 	 *
 	 * @param bool   $can_edit Whether the user can edit the item.
 	 * @param object $album   Current album item object.
