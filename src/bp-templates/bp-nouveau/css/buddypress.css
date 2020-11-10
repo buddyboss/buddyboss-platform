@@ -13655,6 +13655,10 @@ ul.bb-albums-list .bb-more-photos strong {
   margin: 0;
 }
 
+.bb-media-actions-wrap .bb-media-actions-wrap {
+  width: 100%;
+}
+
 .bb-add-media {
   display: inline-block;
 }
