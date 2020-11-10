@@ -5,7 +5,7 @@
  * An moderation component, for users, groups moderation.
  *
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 2.0.0
+ * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -39,7 +39,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @see BP_Component::includes() for a description of arguments.
+	 * @see   BP_Component::includes() for a description of arguments.
 	 *
 	 * @param array $includes See BP_Component::includes() for a description.
 	 */
@@ -83,7 +83,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @see BP_Component::setup_globals() for a description of arguments.
+	 * @see   BP_Component::setup_globals() for a description of arguments.
 	 *
 	 * @param array $args See BP_Component::setup_globals() for a description.
 	 */
@@ -130,7 +130,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of arguments.
+	 * @see   BP_Component::setup_nav() for a description of arguments.
 	 *
 	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
 	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
@@ -186,7 +186,7 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 * @see   BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
 	 *
 	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a
@@ -275,29 +275,23 @@ class BP_Moderation_Component extends BP_Component {
 			)
 		);
 
-		$is_moderation_terms = get_option( 'added_moderation_category', false );
+		$is_moderation_terms = get_option( 'moderation_default_category_added', false );
 
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'abuse' => array( 'name' => __( 'Abuse', 'buddyboss' ), 'description' => 'abuse category description' ),
-				'adult' => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => 'adult category description' ),
+				'abusive' => array( 'name' => __( 'Abusive', 'buddyboss' ), 'description' => __( 'Member using a curse word.', 'buddyboss' ) ),
+				'adult'   => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Sending nude content', 'buddyboss' ) ),
 			);
 
 			foreach ( $moderation_terms as $moderation_term ) {
-
-				$insert_term = wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
-
-				if ( ! is_wp_error( $insert_term ) ) {
-					$register = true;
-				} else {
-					$register = false;
+				$term = term_exists( $moderation_term['name'], 'bpm_category' );
+				if ( empty( $term ) ) {
+					wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
 				}
 			}
 
-			if ( true === $register ) {
-				update_option( 'added_moderation_category', true, false );
-			}
+			update_option( 'moderation_default_category_added', true, false );
 		}
 	}
 
