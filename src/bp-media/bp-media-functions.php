@@ -3080,7 +3080,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						update_post_meta( $post_attachment, 'bp_media_parent_activity_id', $child_activity_id );
 
 						// Make the child activity as parent activity.
-						bp_activity_delete_meta( $child_activity_id, 'bp_video_activity', '1' );
+						bp_activity_delete_meta( $child_activity_id, 'bp_media_activity', '1' );
 
 						if ( $album_id > 0 ) {
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_album_activity', (int) $activity_album_id );
