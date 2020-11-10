@@ -274,6 +274,31 @@ class BP_Moderation_Component extends BP_Component {
 				'hierarchical'       => false,
 			)
 		);
+
+		$is_moderation_terms = get_option( 'added_moderation_category', false );
+
+		if ( false === $is_moderation_terms ) {
+
+			$moderation_terms = array(
+				'abuse' => array( 'name' => __( 'Abuse', 'buddyboss' ), 'description' => 'abuse category description' ),
+				'adult' => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => 'adult category description' ),
+			);
+
+			foreach ( $moderation_terms as $moderation_term ) {
+
+				$insert_term = wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
+
+				if ( ! is_wp_error( $insert_term ) ) {
+					$register = true;
+				} else {
+					$register = false;
+				}
+			}
+
+			if ( true === $register ) {
+				update_option( 'added_moderation_category', true, false );
+			}
+		}
 	}
 
 	/**
