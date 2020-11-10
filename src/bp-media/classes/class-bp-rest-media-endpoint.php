@@ -592,7 +592,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$retval = new WP_Error(
 						'bp_rest_invalid_upload_id',
 						sprintf(
-						/* translators: Attachment ID. */
+							/* translators: Attachment ID. */
 							__( 'Invalid attachment id: %d', 'buddyboss' ),
 							$attachment_id
 						),
@@ -604,7 +604,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$retval = new WP_Error(
 						'bp_rest_invalid_media_author',
 						sprintf(
-						/* translators: Attachment ID. */
+							/* translators: Attachment ID. */
 							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
 							$attachment_id
 						),
@@ -1312,7 +1312,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'attachment_data' => $media->attachment_data,
 			'group_name'      => ( isset( $media->group_name ) ? $media->group_name : '' ),
 			'visibility'      => ( isset( $media->visibility ) ? $media->visibility : '' ),
-			'user_email'      => $media->user_email,
 			'user_nicename'   => $media->user_nicename,
 			'user_login'      => $media->user_login,
 			'display_name'    => $media->display_name,
@@ -1493,9 +1492,15 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'user_email'      => array(
+				'group_name'      => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The user\'s email id to create a media.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the media.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
+				'visibility'      => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Visibility of the media.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),

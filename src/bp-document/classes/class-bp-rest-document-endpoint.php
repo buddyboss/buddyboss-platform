@@ -688,7 +688,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							'status' => 404,
 						)
 					);
-				} elseif ( $this->bp_rest_attachment_document_id( (int) $attachment_id ) ) {
+				} elseif ( function_exists( 'bp_get_attachment_document_id' ) && ! empty( bp_get_attachment_document_id( (int) $attachment_id ) ) ) {
 					$retval = new WP_Error(
 						'bp_rest_duplicate_document_upload_id',
 						sprintf(
@@ -2510,25 +2510,4 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		}
 
 	}
-
-	/**
-	 * Get document id for the attachment.
-	 *
-	 * @param integer $attachment_id Attachment ID.
-	 *
-	 * @return array|bool
-	 */
-	public function bp_rest_attachment_document_id( $attachment_id = 0 ) {
-		global $bp, $wpdb;
-
-		if ( ! $attachment_id ) {
-			return false;
-		}
-
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
-		$attachment_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.attachment_id = {$attachment_id}" );
-
-		return $attachment_document_id;
-	}
-
 }
