@@ -3038,7 +3038,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	$media->save();
 
 	// Update media activity privacy.
-	if ( ! $group_id ) {
+	//if ( ! $group_id ) {
 		if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
 			$post_attachment    = $media->attachment_id;
 			$parent_activity_id = get_post_meta( $post_attachment, 'bp_media_parent_activity_id', true );
@@ -3062,7 +3062,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 					} else {
 						bp_activity_delete_meta( (int) $parent_activity_id, 'bp_media_album_activity', $activity_album_id );
 					}
-					// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
+				// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
 				} else {
 					$activity = new BP_Activity_Activity( (int) $child_activity_id );
 					// Update activity data.
@@ -3109,7 +3109,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 				}
 			}
 		}
-	}
+	//}
 
 	return $media_id;
 }

@@ -2177,7 +2177,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 	$document->save();
 
 	// Update document activity privacy.
-	if ( ! $group_id ) {
+	//if ( ! $group_id ) {
 		if ( ! empty( $document ) && ! empty( $document->attachment_id ) ) {
 			$post_attachment    = $document->attachment_id;
 			$parent_activity_id = get_post_meta( $post_attachment, 'bp_document_parent_activity_id', true );
@@ -2248,7 +2248,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 				}
 			}
 		}
-	}
+	//}
 	return $document_id;
 }
 
