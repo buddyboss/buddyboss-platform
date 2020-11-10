@@ -280,8 +280,8 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'abuse' => array( 'name' => __( 'Abuse', 'buddyboss' ), 'description' => 'abuse category description' ),
-				'adult' => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => 'adult category description' ),
+				'abuse' => array( 'name' => __( 'Abuse', 'buddyboss' ), 'description' => 'abuse category description' ), // Todo: Add proper category description.
+				'adult' => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => 'adult category description' ), // Todo: Add proper category description.
 			);
 
 			foreach ( $moderation_terms as $moderation_term ) {
