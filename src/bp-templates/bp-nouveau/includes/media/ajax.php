@@ -138,7 +138,7 @@ function bp_nouveau_ajax_albums_loader() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -194,7 +194,7 @@ function bp_nouveau_ajax_media_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -205,7 +205,7 @@ function bp_nouveau_ajax_media_upload() {
 
 	add_filter( 'upload_dir', 'bp_media_upload_dir' );
 
-	// Upload file
+	// Upload file.
 	$result = bp_media_upload();
 
 	remove_filter( 'upload_dir', 'bp_media_upload_dir' );
@@ -238,7 +238,7 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -300,7 +300,7 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -327,7 +327,7 @@ function bp_nouveau_ajax_media_delete() {
 
 		if ( bp_media_user_can_delete( $media_id ) ) {
 
-			// delete media
+			// delete media.
 			if ( bp_media_delete( array( 'id' => $media_id ) ) ) {
 				$media_ids[] = $media_id;
 			}
@@ -341,12 +341,12 @@ function bp_nouveau_ajax_media_delete() {
 		);
 		wp_send_json_error( $response );
 	}
-	$response 	= bp_media_get_activity_media( $_POST['activity_id'] );
+	$response = bp_media_get_activity_media( $_POST['activity_id'] );
 	wp_send_json_success(
 		array(
 			'media'         => $media,
 			'media_ids'     => $response['media_activity_ids'],
-			'media_content' => $response['content']
+			'media_content' => $response['content'],
 		)
 	);
 }
@@ -371,7 +371,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -471,7 +471,7 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -562,8 +562,8 @@ function bp_nouveau_ajax_media_album_save() {
 	wp_send_json_success(
 		array(
 			'redirect_url' => $redirect_url,
-			'tree_view' => $ul,
-			'album_id' => $album_id,
+			'tree_view'    => $ul,
+			'album_id'     => $album_id,
 		)
 	);
 }
@@ -586,7 +586,7 @@ function bp_nouveau_ajax_media_album_delete() {
 		wp_send_json_error( $response );
 	}
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -652,7 +652,7 @@ function bp_nouveau_ajax_media_get_activity() {
 		),
 	);
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -731,7 +731,7 @@ function bp_nouveau_ajax_media_delete_attachment() {
 		),
 	);
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -774,7 +774,7 @@ function bp_nouveau_ajax_media_update_privacy() {
 		),
 	);
 
-	// Use default nonce
+	// Use default nonce.
 	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_media';
 
@@ -1044,6 +1044,11 @@ function bp_nouveau_ajax_media_get_media_description() {
 	);
 }
 
+/**
+ * Return the album view.
+ *
+ * @since BuddyBoss 1.5.5
+ */
 function bp_nouveau_ajax_media_get_album_view() {
 
 	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
@@ -1059,7 +1064,7 @@ function bp_nouveau_ajax_media_get_album_view() {
 	if ( 'profile' === $type ) {
 		$first_text = esc_html__( ' Medias', 'buddyboss' );
 	} else {
-		if ( bp_is_active( 'groups') ) {
+		if ( bp_is_active( 'groups' ) ) {
 			$group      = groups_get_group( (int) $id );
 			$first_text = bp_get_group_name( $group );
 		}
@@ -1077,7 +1082,7 @@ function bp_nouveau_ajax_media_get_album_view() {
 /**
  * Ajax media move.
  *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.5
  */
 function bp_nouveau_ajax_media_move() {
 
@@ -1104,9 +1109,10 @@ function bp_nouveau_ajax_media_move() {
 	}
 
 	// Move media.
-	$album_id   = ! empty( $_POST['album_id'] ) ? (int) $_POST['album_id'] : 0;
-	$media_id   = ! empty( $_POST['media_id'] ) ? (int) $_POST['media_id'] : 0;
-	$group_id   = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : 0;
+	$album_id    = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
+	$media_id    = filter_input( INPUT_POST, 'media_id', FILTER_VALIDATE_INT );
+	$group_id    = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
+	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_VALIDATE_INT );
 
 	if ( 0 === $media_id ) {
 		wp_send_json_error( $response );
@@ -1128,8 +1134,8 @@ function bp_nouveau_ajax_media_move() {
 		}
 	}
 
-	$media		= bp_media_move_media_to_album( $media_id, $album_id, $group_id );
-	$response 	= bp_media_get_activity_media( $_POST['activity_id'] );
+	$media    = bp_media_move_media_to_album( $media_id, $album_id, $group_id );
+	$response = bp_media_get_activity_media( $activity_id );
 
 	if ( $media > 0 ) {
 		$content = '';

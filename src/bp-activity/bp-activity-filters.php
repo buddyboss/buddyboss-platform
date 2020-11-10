@@ -1753,7 +1753,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		// Add in description in attachment when only one media uploaded.
-		if ( ! empty( $activity_id ) && is_array( $media_ids ) && 1 === count( $media_ids ) && !empty( $content ) ) {
+		if ( ! empty( $activity_id ) && is_array( $media_ids ) && 1 === count( $media_ids ) && ! empty( $content ) ) {
 			foreach ( $media_ids as $media_id ) {
 				$media                                 = new BP_Media( $media_id );
 				$media_attachment_post                 = array();
@@ -1763,14 +1763,14 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			}
 		}
 
-		// save media meta for activity
+		// save media meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
 			foreach ( (array) $added_media_ids as $media_id ) {
 				$media = new BP_Media( $media_id );
 
-				// get one of the media's privacy for the activity privacy
+				// get one of the media's privacy for the activity privacy.
 				$privacy = $media->privacy;
 
 				// get media album id
@@ -2076,7 +2076,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		// Add in description in attachment when only one document uploaded.
-		if ( ! empty( $activity_id ) && is_array( $document_ids ) && 1 === count( $document_ids ) && !empty( $content ) ) {
+		if ( ! empty( $activity_id ) && is_array( $document_ids ) && 1 === count( $document_ids ) && ! empty( $content ) ) {
 			foreach ( $document_ids as $document_id ) {
 				$document                                 = new BP_Document( $document_id );
 				$document_attachment_post                 = array();

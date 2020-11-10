@@ -19,8 +19,6 @@
 							<span class="bb-icon bb-icon-close"></span>
 						</a>
 					</header>
-
-					
 					<div class="bb-field-steps bb-field-steps-1">
 						<div class="bb-field-wrap">
 							<div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
@@ -39,14 +37,12 @@
 							</a>
 						</div>
 					</div>
-
 					<div class="bb-field-steps bb-field-steps-2">
 						<div class="bb-field-wrap">
 							<?php bp_get_template_part( 'document/location-move' ); ?>
 							<?php bp_get_template_part( 'document/document-create-folder' ); ?>
 						</div>
 					</div>
-
 					<footer class="bb-model-footer document-uploader-footer">
 						<a href="#" class="bp-document-open-create-popup-folder" style="display: none;" >
 							<i class="bb-icon-plus"></i>
@@ -55,14 +51,16 @@
 						<?php if ( ! bp_is_group() ) : ?>
 							<div class="bb-dropdown-wrap">
 								<select id="bb-document-privacy">
-									<?php foreach ( bp_document_get_visibility_levels() as $k => $option ) {
+									<?php
+									foreach ( bp_document_get_visibility_levels() as $k => $option ) {
 										if ( 'grouponly' === $k ) {
 											continue;
 										}
 										?>
 										<option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
 										<?php
-									} ?>
+									}
+									?>
 								</select>
 							</div>
 						<?php endif; ?>

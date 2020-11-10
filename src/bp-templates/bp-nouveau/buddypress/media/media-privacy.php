@@ -1,15 +1,15 @@
 <?php
 /**
- * BuddyBoss - Document Privacy Change
+ * BuddyBoss - Media Privacy Change
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.5
  * @package BuddyBoss\Core
  */
 
 $album_privacy = '';
 if ( bp_is_user_media() || bp_is_user_albums() ) {
-	$album_id 	= (int) bp_action_variable( 0 );
-	$album 	= new BP_Media_Album( $album_id );
+	$album_id = (int) bp_action_variable( 0 );
+	$album    = new BP_Media_Album( $album_id );
 	if ( ! empty( $album ) ) {
 		$album_privacy = $album->privacy;
 	}
