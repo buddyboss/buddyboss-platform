@@ -3632,7 +3632,7 @@ function bp_document_size_format( $bytes, $decimals = 0 ) {
 /**
  * Function to get document report link
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param array $args button arguments.
  *

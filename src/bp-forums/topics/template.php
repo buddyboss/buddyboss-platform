@@ -3220,7 +3220,7 @@ function bbp_get_topic_spam_link( $args = '' ) {
 /**
  * Return the spam link of the topic
  *
- * @since                 bbPress (r2727)
+ * @since BuddyBoss 2.0.0
  *
  * @param mixed $args This function supports these args:
  *                    - id: Optional. Topic id
@@ -3319,7 +3319,7 @@ function bbp_get_topic_reply_link( $args = array() ) {
 /**
  * Return the link to report reply
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param array $args Arguments
  *

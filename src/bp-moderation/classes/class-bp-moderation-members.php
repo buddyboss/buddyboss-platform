@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyBoss Moderation Groups Classes
+ * BuddyBoss Moderation Members Classes
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public static $moderation_type = 'user';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Members constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
@@ -132,6 +132,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get blocked Member ids
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param bool $user_include Include item which report by current user even if it's not hidden.
 	 *
 	 * @return array
@@ -143,6 +145,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $user_id User id.
 	 *
 	 * @return int
@@ -153,6 +157,8 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $user_id User id.
 	 *
@@ -174,5 +180,4 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public static function report( $args ) {
 		return parent::report( $args );
 	}
-
 }

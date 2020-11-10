@@ -2,9 +2,9 @@
 /**
  * BuddyBoss Moderation Document Classes
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
  *
- * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -25,7 +25,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	public static $moderation_type = 'document';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Document constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
@@ -164,6 +164,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify the button class
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param string $button_class button class.
 	 * @param bool   $is_reported  is content reported.
 	 * @param string $item_type    content type.
@@ -184,6 +186,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Get Exclude Blocked Members SQL
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_document_query() {
@@ -198,6 +202,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Exclude Blocked Activity SQL
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return string|bool
 	 */
@@ -216,6 +222,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Get Exclude Blocked Group SQL
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_group_document_query() {
@@ -230,6 +238,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Exclude Blocked forum/Topics/Replies SQL
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return string|bool
 	 */
@@ -248,6 +258,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Get Exclude Blocked Message SQL
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_message_document_query() {
@@ -264,6 +276,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Get blocked Document ids
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
@@ -272,6 +286,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Document ids of blocked posts [ Forums/topics/replies ] from meta
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array  $posts_ids Posts ids.
 	 * @param string $function  Function Name to get meta.
@@ -301,6 +317,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $document_id Document id.
 	 *
 	 * @return int
@@ -313,6 +331,8 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param int $document_id document id.
 	 *
@@ -336,5 +356,4 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	public static function report( $args ) {
 		return parent::report( $args );
 	}
-
 }

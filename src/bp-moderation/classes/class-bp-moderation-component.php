@@ -4,8 +4,8 @@
  *
  * An moderation component, for users, groups moderation.
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -39,9 +39,10 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
+	 * @param array $includes See BP_Component::includes() for a description.
+	 *
 	 * @see   BP_Component::includes() for a description of arguments.
 	 *
-	 * @param array $includes See BP_Component::includes() for a description.
 	 */
 	public function includes( $includes = array() ) {
 		// Files to include.
@@ -83,9 +84,10 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
+	 * @param array $args See BP_Component::setup_globals() for a description.
+	 *
 	 * @see   BP_Component::setup_globals() for a description of arguments.
 	 *
-	 * @param array $args See BP_Component::setup_globals() for a description.
 	 */
 	public function setup_globals( $args = array() ) {
 		$bp = buddypress();
@@ -130,10 +132,11 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @see   BP_Component::setup_nav() for a description of arguments.
-	 *
 	 * @param array $main_nav Optional. See BP_Component::setup_nav() for description.
 	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
+	 *
+	 * @see   BP_Component::setup_nav() for a description of arguments.
+	 *
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 		// Stop if there is no user displayed or logged in.
@@ -186,11 +189,12 @@ class BP_Moderation_Component extends BP_Component {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @see   BP_Component::setup_nav() for a description of the $wp_admin_nav
-	 *      parameter array.
-	 *
 	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a
 	 *                            description.
+	 *
+	 * @see   BP_Component::setup_nav() for a description of the $wp_admin_nav
+	 *        parameter array.
+	 *
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 		if ( is_user_logged_in() ) {
@@ -280,8 +284,14 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'abusive' => array( 'name' => __( 'Abusive', 'buddyboss' ), 'description' => __( 'Member using a curse word.', 'buddyboss' ) ),
-				'adult'   => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Sending nude content', 'buddyboss' ) ),
+				'abusive' => array(
+					'name'        => __( 'Abusive', 'buddyboss' ),
+					'description' => __( 'Member using a curse word.', 'buddyboss' )
+				),
+				'adult'   => array(
+					'name'        => __( 'Adult', 'buddyboss' ),
+					'description' => __( 'Sending nude content', 'buddyboss' )
+				),
 			);
 
 			foreach ( $moderation_terms as $moderation_term ) {
@@ -298,9 +308,10 @@ class BP_Moderation_Component extends BP_Component {
 	/**
 	 * Init the BuddyBoss REST API.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param array $controllers Optional. See BP_Component::rest_api_init() for description.
 	 *
-	 * @since BuddyBoss 2.0.0
 	 */
 	public function rest_api_init( $controllers = array() ) {
 	}

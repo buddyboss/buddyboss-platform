@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyBoss Moderation Groups Classes
+ * BuddyBoss Moderation Member Suspend Classes
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ class BP_Moderation_Members_Suspend {
 
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Members_Suspend constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */

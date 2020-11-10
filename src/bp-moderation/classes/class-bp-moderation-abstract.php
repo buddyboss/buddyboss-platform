@@ -2,9 +2,9 @@
 /**
  * BuddyBoss Moderation items abstract Classes
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
  *
- * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -57,9 +57,9 @@ abstract class BP_Moderation_Abstract {
 	/**
 	 * Prepare Where sql for exclude Blocked items
 	 *
-	 * @return string|void
-	 *
 	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return string|void
 	 */
 	protected function exclude_where_query() {
 		return "( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";

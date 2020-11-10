@@ -2,9 +2,9 @@
 /**
  * BuddyBoss Moderation Activity Comment Classes
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
  *
- * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -130,6 +130,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked Members related activity comment
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_activity_comment_query() {
@@ -144,6 +146,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 	/**
 	 * Get SQL for Exclude Blocked Activity related activity comment
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return string|bool
 	 */
@@ -164,6 +168,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 	/**
 	 * Update blocked comment template
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $template_names Template name.
 	 *
@@ -187,6 +193,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get All blocked Activity Comments ids.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
@@ -203,6 +211,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get blocked Activity's Comments ids related to blocked activity
 	 * Note: Below link Not include direct blocked Activity comment
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array
 	 */
@@ -225,6 +235,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $activity_id Activity id.
 	 *
 	 * @return int
@@ -237,6 +249,8 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param int $activity_comment_id activity id.
 	 *
