@@ -1341,7 +1341,7 @@ function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 		unset( $attachment['ID'] );
 	}
 
-	// Save the attachment metadata
+	// Save the attachment metadata.
 	$id = wp_insert_attachment( $attachment, $file );
 
 	if ( ! is_wp_error( $id ) ) {

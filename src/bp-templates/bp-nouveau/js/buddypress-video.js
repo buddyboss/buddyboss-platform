@@ -40,10 +40,13 @@ window.bp = window.bp || {};
 		 */
 		setupGlobals: function () {
 
+			var bodySelector = $( 'body' );
+
 			this.video_dropzone_obj = [];
 			this.dropzone_video     = [];
 			this.video_album_id     = typeof BP_Nouveau.video.album_id !== 'undefined' ? BP_Nouveau.video.album_id : false;
 			this.video_group_id     = typeof BP_Nouveau.video.group_id !== 'undefined' ? BP_Nouveau.video.group_id : false;
+			this.current_tab        = bodySelector.hasClass( 'single-topic' ) || bodySelector.hasClass( 'single-forum' ) ? false : 'bp-video-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones.
 			if (typeof window.Dropzone !== 'undefined') {

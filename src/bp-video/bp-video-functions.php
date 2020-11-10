@@ -535,6 +535,69 @@ function bp_video_add_handler( $videos = array(), $privacy = 'public', $content 
 						'privacy'       => ! empty( $video['privacy'] ) && in_array( $video['privacy'], array_merge( array_keys( bp_video_get_visibility_levels() ), array( 'message' ) ) ) ? $video['privacy'] : $privacy,
 					)
 				);
+
+				if ( class_exists( 'FFMpeg\FFMpeg' ) ) {
+					$error = '';
+					try {
+						$ffmpeg = FFMpeg\FFMpeg::create();
+					} catch ( Exception $ffmpeg ) {
+						$error = $ffmpeg->getMessage();
+					}
+					if ( empty( trim( $error ) ) ) {
+						$ff_probe = FFMpeg\FFProbe::create();
+						$duration = $ff_probe->streams( get_attached_file( $video['id'] ) )->videos()->first()->get( 'duration' );
+
+						if ( ! empty( $duration ) ) {
+							// Update video attachment meta.
+							update_post_meta( $video['id'], 'duration', $duration );
+
+							// Generate 3 random images for video cover.
+							$numbers = range( 1, (int) $duration );
+							shuffle( $numbers );
+							$random_seconds = array_slice( $numbers, 0, 3 );
+
+							if ( class_exists( 'ffmpeg_movie' ) ) {
+
+								// Get Upload directory.
+								$upload     = wp_upload_dir();
+								$upload_dir = $upload['basedir'];
+
+								// Create temp folder.
+								$upload_dir = $upload_dir . '/' . $video['id'] . '-video-thumbnail-' . time();
+
+								// If folder not exists then create.
+								if ( ! is_dir( $upload_dir ) ) {
+
+									// Create temp folder.
+									wp_mkdir_p( $upload_dir );
+									chmod( $upload_dir, 0777 );
+
+								}
+
+								foreach ( $random_seconds as $second ) {
+
+									$frame       = $second;
+									$str         = wp_rand();
+									$unique_file = md5( $str );
+									$image_name  = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $unique_file );
+									$thumbnail   = $upload_dir . '/' . $image_name . '.png';
+
+									$mov   = new ffmpeg_movie( get_attached_file( $video['id'] ) );
+									$frame = $mov->getFrame( $frame );
+									if ( $frame ) {
+										$gd_image = $frame->toGDImage();
+										if ( $gd_image ) {
+											imagepng( $gd_image, $thumbnail );
+											imagedestroy( $gd_image );
+										}
+									}
+								}
+
+								bp_core_remove_temp_directory( $upload_dir );
+							}
+						}
+					}
+				}
 			}
 
 			if ( $video_id ) {

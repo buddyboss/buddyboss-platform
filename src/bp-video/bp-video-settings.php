@@ -20,14 +20,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bp_video_settings_callback_profile_video_support() {
 	?>
 	<input name="bp_video_profile_video_support"
-	       id="bp_video_profile_video_support"
-	       type="checkbox"
-	       value="1"
+		   id="bp_video_profile_video_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_profile_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_profile_video_support">
 		<?php
-		if( bp_is_active('activity') ) {
+		if ( bp_is_active( 'activity' ) ) {
 			_e( 'Allow members to upload videos in <strong>profiles</strong> and <strong>profile activity</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload videos in <strong>profiles</strong>', 'buddyboss' );
@@ -39,11 +39,11 @@ function bp_video_settings_callback_profile_video_support() {
 <!--	       id="bp_video_profile_albums_support"-->
 <!--	       type="checkbox"-->
 <!--	       value="1"-->
-<!--		--><?php //echo ! bp_is_profile_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
-<!--		--><?php //checked( bp_is_profile_video_albums_support_enabled() ); ?>
+<!--		--><?php // echo ! bp_is_profile_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
+<!--		--><?php // checked( bp_is_profile_video_albums_support_enabled() ); ?>
 <!--	/>-->
 <!--	<label for="bp_media_profile_albums_support">-->
-<!--		--><?php //_e( 'Enable Albums', 'buddyboss' ); ?>
+<!--		--><?php // _e( 'Enable Albums', 'buddyboss' ); ?>
 <!--	</label>-->
 	<?php
 }
@@ -80,14 +80,14 @@ function bp_is_profile_video_albums_support_enabled( $default = 0 ) {
 function bp_video_settings_callback_group_video_support() {
 	?>
 	<input name="bp_video_group_video_support"
-	       id="bp_video_group_video_support"
-	       type="checkbox"
-	       value="1"
+		   id="bp_video_group_video_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_group_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_group_video_support">
 		<?php
-		if( bp_is_active('activity') ) {
+		if ( bp_is_active( 'activity' ) ) {
 			_e( 'Allow members to upload videos in <strong>groups</strong> and <strong>group activity</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload videos in <strong>groups</strong>', 'buddyboss' );
@@ -99,11 +99,11 @@ function bp_video_settings_callback_group_video_support() {
 <!--	       id="bp_video_group_albums_support"-->
 <!--	       type="checkbox"-->
 <!--	       value="1"-->
-<!--		--><?php //echo ! bp_is_group_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
-<!--		--><?php //checked( bp_is_group_video_albums_support_enabled() ); ?>
+<!--		--><?php // echo ! bp_is_group_video_support_enabled() ? 'disabled="disabled"' : ''; ?>
+<!--		--><?php // checked( bp_is_group_video_albums_support_enabled() ); ?>
 <!--	/>-->
 <!--	<label for="bp_video_group_albums_support">-->
-<!--		--><?php //_e( 'Enable Albums', 'buddyboss' ); ?>
+<!--		--><?php // _e( 'Enable Albums', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -140,9 +140,9 @@ function bp_is_group_video_albums_support_enabled( $default = 0 ) {
 function bp_video_settings_callback_messages_video_support() {
 	?>
 	<input name="bp_video_messages_video_support"
-	       id="bp_video_messages_video_support"
-	       type="checkbox"
-	       value="1"
+		   id="bp_video_messages_video_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_messages_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_messages_video_support">
@@ -177,9 +177,9 @@ function bp_is_messages_video_support_enabled( $default = 0 ) {
 function bp_video_settings_callback_forums_video_support() {
 	?>
 	<input name="bp_video_forums_video_support"
-	       id="bp_video_forums_video_support"
-	       type="checkbox"
-	       value="1"
+		   id="bp_video_forums_video_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_forums_video_support_enabled() ); ?>
 	/>
 	<label for="bp_video_forums_video_support">
@@ -229,7 +229,7 @@ function bp_video_uploading_tutorial() {
 
 function bp_video_admin_setting_callback_video_section() {
 
-	if ( ! class_exists( 'FFMpeg\FFMpeg') ) {
+	if ( ! class_exists( 'FFMpeg\FFMpeg' ) ) {
 		?>
 		<p class="alert">
 			<?php
@@ -241,11 +241,11 @@ function bp_video_admin_setting_callback_video_section() {
 			?>
 		</p>
 		<?php
-	} elseif ( class_exists( 'FFMpeg\FFMpeg') ) {
+	} elseif ( class_exists( 'FFMpeg\FFMpeg' ) ) {
 		$error = '';
-		try{
+		try {
 			$ffmpeg = FFMpeg\FFMpeg::create();
-		} catch(Exception $ffmpeg){
+		} catch ( Exception $ffmpeg ) {
 			$error = $ffmpeg->getMessage();
 		}
 		if ( ! empty( trim( $error ) ) ) {
@@ -254,8 +254,8 @@ function bp_video_admin_setting_callback_video_section() {
 				<?php
 				echo sprintf(
 				/* translators: 1: FFMpeg status */
-						_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
-						'<code><a href="https://ffmpeg.org/" target="_blank">FFMPEG</a></code>'
+					_x( 'Your server needs %1$s installed to create video thumbnail (optional). Ask your web host.', 'extension notification', 'buddyboss' ),
+					'<code><a href="https://ffmpeg.org/" target="_blank">FFMPEG</a></code>'
 				);
 				?>
 			</p>
@@ -270,19 +270,19 @@ function bp_video_admin_setting_callback_video_section() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_settings_callback_video_allowed_size() {
-	$max_size = bp_core_upload_max_size();
+	$max_size    = bp_core_upload_max_size();
 	$max_size_mb = bp_video_format_size_units( $max_size, false, 'MB' );
 	?>
 	<input type="number"
-	       name="bp_video_allowed_size"
-	       id="bp_video_allowed_size"
-	       class="regular-text"
-	       min="1"
-	       step="1"
-	       max="<?php echo esc_attr( $max_size_mb ) ?>"
-	       required
-	       value="<?php echo esc_attr( bp_video_allowed_upload_video_size() ); ?>"
-	       style="width: 70px;"
+		   name="bp_video_allowed_size"
+		   id="bp_video_allowed_size"
+		   class="regular-text"
+		   min="1"
+		   step="1"
+		   max="<?php echo esc_attr( $max_size_mb ); ?>"
+		   required
+		   value="<?php echo esc_attr( bp_video_allowed_upload_video_size() ); ?>"
+		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
@@ -306,7 +306,7 @@ function bp_video_settings_callback_video_allowed_size() {
  */
 function bp_video_allowed_upload_video_size() {
 	$max_size = bp_core_upload_max_size();
-	$default  =  bp_video_format_size_units( $max_size, false, 'MB' );
+	$default  = bp_video_format_size_units( $max_size, false, 'MB' );
 	return (int) apply_filters( 'bp_video_allowed_upload_video_size', (int) get_option( 'bp_video_allowed_size', $default ) );
 }
 
@@ -335,11 +335,11 @@ function bp_video_settings_callback_extension_link() {
  * @since BuddyBoss 1.6.0
  */
 function bp_video_settings_callback_video_allowed_per_batch() {
-?>
+	?>
 <input type="number"
-       name="bp_video_allowed_per_batch"
-       id="bp_video_allowed_per_batch"
-       value="<?php echo esc_attr( bp_video_allowed_upload_video_per_batch() ); ?>"
+	   name="bp_video_allowed_per_batch"
+	   id="bp_video_allowed_per_batch"
+	   value="<?php echo esc_attr( bp_video_allowed_upload_video_per_batch() ); ?>"
 />
 
 	<?php
@@ -353,6 +353,6 @@ function bp_video_settings_callback_video_allowed_per_batch() {
  */
 function bp_video_allowed_upload_video_per_batch() {
 
-	$default  = apply_filters( 'bp_video_upload_chunk_limit', 10 );
+	$default = apply_filters( 'bp_video_upload_chunk_limit', 10 );
 	return (int) apply_filters( 'bp_video_allowed_upload_video_per_batch', (int) get_option( 'bp_video_allowed_per_batch', $default ) );
 }

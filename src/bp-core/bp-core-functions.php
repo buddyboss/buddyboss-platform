@@ -5142,3 +5142,27 @@ function bp_core_get_profile_completion_key() {
 
 	return 'bbprofilecompletion';
 }
+
+/**
+ * Function which remove the temporary created directory.
+ *
+ * @param string $directory directory to remove.
+ *
+ * @since BuddyBoss 1.6.0
+ */
+function bp_core_remove_temp_directory( $directory = '' ) {
+	if ( is_dir( $directory ) ) {
+		$objects = scandir( $directory );
+		foreach ( $objects as $object ) {
+			if ( '.' !== $object && '..' !== $object ) {
+				if ( 'dir' === filetype( $directory . '/' . $object ) ) {
+					bp_core_remove_temp_directory( $directory . '/' . $object );
+				} else {
+					unlink( $directory . '/' . $object );
+				}
+			}
+		}
+		reset( $objects );
+		rmdir( $directory );
+	}
+}
