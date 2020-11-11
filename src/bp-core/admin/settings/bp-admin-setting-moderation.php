@@ -24,7 +24,7 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 
 		$this->tab_label = __( 'Moderation', 'buddyboss' );
 		$this->tab_name  = 'bp-moderation';
-		$this->tab_order = 90;
+		$this->tab_order = 80;
 	}
 
 	/**

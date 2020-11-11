@@ -24,7 +24,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	public static $moderation_type = 'forum_topic';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Forum_Topics constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
@@ -158,6 +158,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked Members related topics
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_topic_query() {
@@ -176,6 +178,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked forum related topics
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_forum_topic_query() {
@@ -193,6 +197,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 	/**
 	 * Get blocked Topics that also include Blocked forum's topics
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array
 	 */
@@ -226,6 +232,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $topic_id Topic id.
 	 *
 	 * @return int
@@ -236,6 +244,8 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $topic_id Topic id.
 	 *
@@ -259,5 +269,4 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	public static function report( $args ) {
 		return parent::report( $args );
 	}
-
 }

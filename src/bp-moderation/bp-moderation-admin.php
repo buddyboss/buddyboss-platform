@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation component admin screen.
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -221,8 +221,8 @@ function bp_moderation_admin() {
 	// Added navigation tab on top.
 	if ( bp_core_get_moderation_admin_tabs() ) {
 		?>
-		<div class="wrap">
-			<h2 class="nav-tab-wrapper">
+        <div class="wrap">
+            <h2 class="nav-tab-wrapper">
 				<?php
 				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
@@ -230,8 +230,8 @@ function bp_moderation_admin() {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				}
 				?>
-			</h2>
-		</div>
+            </h2>
+        </div>
 		<?php
 	}
 
@@ -264,8 +264,8 @@ function bp_moderation_admin_index() {
 	// Prepare the group items for display.
 	$bp_moderation_list_table->prepare_items();
 	?>
-	<div class="wrap">
-		<h1>
+    <div class="wrap">
+        <h1>
 			<?php
 			if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
 				esc_html_e( 'Blocked Members', 'buddyboss' );
@@ -273,16 +273,16 @@ function bp_moderation_admin_index() {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			}
 			?>
-		</h1>
-		<div class="bp-moderation-ajax-msg hidden notice notice-success">
-			<p></p>
-		</div>
+        </h1>
+        <div class="bp-moderation-ajax-msg hidden notice notice-success">
+            <p></p>
+        </div>
 		<?php $bp_moderation_list_table->views(); ?>
-		<form id="bp-moseration-form" action="" method="get">
-			<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
+        <form id="bp-moseration-form" action="" method="get">
+            <input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
 			<?php $bp_moderation_list_table->display(); ?>
-		</form>
-	</div>
+        </form>
+    </div>
 	<?php
 }
 
@@ -315,7 +315,7 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
 /**
  * Display the single moderation edit screen.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_admin_view() {
 
@@ -338,16 +338,16 @@ function bp_moderation_admin_view() {
 /**
  * Add Navigation tab on top of the page BuddyBoss > Moderation > Reporting Categories
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 2.0.0
  */
 function bp_moderation_admin_category_listing_add_tab() {
 	global $pagenow, $current_screen;
 
 	if ( ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow ) && ( 'bpm_category' === $current_screen->taxonomy ) ) {
 		?>
-		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) ); ?></h2>
-		</div>
+        <div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Reporting Categories', 'buddyboss' ) ); ?></h2>
+        </div>
 		<?php
 	}
 }

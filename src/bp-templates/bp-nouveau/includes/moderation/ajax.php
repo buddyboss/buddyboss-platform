@@ -2,8 +2,8 @@
 /**
  * Moderation Ajax functions
  *
- * @since BuddyBoss 1.5.4
- * @version 1.5.4
+ * @since BuddyBoss 2.0.0
+ * @version 2.0.0
  */
 
 // Exit if accessed directly.

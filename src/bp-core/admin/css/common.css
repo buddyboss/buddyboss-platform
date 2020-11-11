@@ -388,7 +388,7 @@ tr.bp-search-parent-field label {
   color: #0073aa;
 }
 
-/* Settings */
+/* General Settings */
 .bp-admin-card.section-bp_main h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
@@ -425,24 +425,6 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
 }
 
-/* Activity */
-.bp-admin-card.section-bp_activity h2:before {
-  background-image: url(../../images/admin/icons/buddyboss/activity.svg);
-  background-size: 23px 23px;
-}
-
-.buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/thumbtack.svg);
-  -webkit-transform: rotate(45deg);
-  transform: rotate(45deg);
-  background-position-y: 11px;
-}
-
-/* Invites */
-.bp-admin-card.section-bp_invites h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
-}
-
 /* Groups */
 .bp-admin-card.section-bp_groups h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
@@ -461,12 +443,6 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
 }
 
-/* Connections */
-.bp-admin-card.section-bp_friends h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
-  background-size: 21px 21px;
-}
-
 /* Forums */
 .bp-admin-card.section-bbp_settings_users h2:before,
 .bp-admin-card.section-bbp_settings_features h2:before,
@@ -479,6 +455,19 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bbp_settings_akismet h2:before {
   background-image: url(../../images/admin/icons/buddyboss/forums.svg);
   background-size: 21px 21px;
+}
+
+/* Activity */
+.bp-admin-card.section-bp_activity h2:before {
+  background-image: url(../../images/admin/icons/buddyboss/activity.svg);
+  background-size: 23px 23px;
+}
+
+.buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/thumbtack.svg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-position-y: 11px;
 }
 
 /* Media */
@@ -500,6 +489,27 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_media_settings_gifs h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
+}
+
+/* Connections */
+.bp-admin-card.section-bp_friends h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
+  background-size: 21px 21px;
+}
+
+/* Invites */
+.bp-admin-card.section-bp_invites h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
+}
+
+/* Moderation */
+.bp-admin-card.section-bp_moderation_settings_blocking h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/ban.svg);
+  background-size: 20px 20px;
+}
+
+.bp-admin-card.section-bp_moderation_settings_reporting h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/flag.svg);
 }
 
 /* Search */

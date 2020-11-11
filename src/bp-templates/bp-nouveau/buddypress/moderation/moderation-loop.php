@@ -2,8 +2,8 @@
 /**
  * BuddyBoss - Moderation Loop
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Core
- * @since   BuddyBoss 1.5.4
  */
 
 bp_nouveau_before_loop();

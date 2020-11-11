@@ -2,9 +2,9 @@
 /**
  * BuddyBoss Moderation Activity Classes
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
  *
- * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -153,6 +153,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked Groups related activity
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_group_activity_query() {
@@ -168,6 +170,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked Members related activity
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_activity_query() {
@@ -182,6 +186,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 	/**
 	 * Get SQL for Exclude Blocked Forums, topic and replies related activity
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return string|bool
 	 */
@@ -203,6 +209,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get blocked Activity ids including Blocked group and Forum/topic/reply related activity.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
@@ -223,6 +231,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Blocked group's activity ids
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array
 	 */
@@ -256,6 +266,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Blocked forum's activity ids
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array
 	 */
@@ -295,6 +307,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $activity_comment_id Activity Comment id.
 	 *
 	 * @return int
@@ -307,6 +321,8 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param int $activity_comment_id activity id.
 	 *

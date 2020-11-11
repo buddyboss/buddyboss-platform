@@ -2,8 +2,8 @@
 /**
  * Filters related to the Moderation component.
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -150,9 +150,9 @@ function bp_moderation_content_actions_request() {
 		if ( true === $action ) {
 			$response['success'] = true;
 			if ( 'user' === $type ) {
-				$response['message'] = esc_html__( 'Successfully user suspend status updated', 'buddyboss' );
+				$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
 			} else {
-				$response['message'] = esc_html__( 'Successfully content block status updated', 'buddyboss' );
+				$response['message'] = esc_html__( 'Content has been successfully hidden.', 'buddyboss' );
 			}
 		}
 	}
