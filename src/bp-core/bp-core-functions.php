@@ -2659,7 +2659,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'moderation'         => array(
 			'title'       => __( 'Moderation', 'buddyboss' ),
-			'description' => __( 'Moderate Activity, groups, messages and all.', 'buddyboss' ),
+			'description' => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
 			'default'     => false,
 		),
 	);
