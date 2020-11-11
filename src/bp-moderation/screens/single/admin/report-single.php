@@ -6,13 +6,18 @@
  * @package BuddyBoss
  *
  */
-
+$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+$is_member_screen = ! empty( $current_tab ) && 'blocked-members' === $current_tab;
 ?>
 <div class="wrap">
     <h1>
 		<?php
 		/* translators: accessibility text */
-		printf( esc_html__( 'View Moderation Item', 'buddyboss' ) );
+		if ( $is_member_screen ) {
+			printf( esc_html__( 'View Blocked Member', 'buddyboss' ) );
+		} else {
+			printf( esc_html__( 'View Reported Content', 'buddyboss' ) );
+		}
 		?>
     </h1>
 
@@ -31,7 +36,7 @@
 
                                 <table class="form-table">
                                     <tbody>
-									<?php if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) { ?>
+									<?php if ( $is_member_screen ) { ?>
                                         <tr>
                                             <th scope="row">
                                                 <label>
@@ -159,7 +164,7 @@
 								?>
                                 <div class="bp-moderation-actions">
 									<?php
-									if ( ! isset( $_GET['tab'] ) || 'blocked-members' !== $_GET['tab'] ) {
+									if ( $is_member_screen ) {
 										$user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 										$user_action_type  = 'hide';
 										$user_action_label = esc_html__( 'Hide', 'buddyboss' );
