@@ -314,18 +314,15 @@ class BP_Moderation {
 		}
 
 		// Get Moderation settings.
-		$threshold                  = false;
-		$email_notification         = false;
-		$content_block_notification = false;
-		$user_block_notification    = false;
+		$threshold          = false;
+		$email_notification = false;
+
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
-			$threshold               = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
-			$email_notification      = bp_is_moderation_blocking_email_notification_enable();
-			$user_block_notification = true;
+			$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
+			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable() ) {
-			$threshold                  = bp_moderation_get_setting( 'bpm_reporting_auto_hide_threshold', '5' );
-			$email_notification         = bp_is_moderation_reporting_email_notification_enable();
-			$content_block_notification = true;
+			$threshold          = bp_moderation_get_setting( 'bpm_reporting_auto_hide_threshold', '5' );
+			$email_notification = bp_is_moderation_reporting_email_notification_enable();
 		}
 
 		/**
@@ -396,25 +393,7 @@ class BP_Moderation {
 			$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
 			if ( ! empty( $admins ) ) {
 				foreach ( $admins as $admin ) {
-					if ( true === $content_block_notification ) {
-						bp_send_email(
-							'content-moderation-email',
-							bp_core_get_user_email( $admin ),
-							array(
-								'tokens' => array(
-									'content.type'       => bp_moderation_get_content_type( $this->item_type ),
-									'content.id'         => $this->item_id,
-									'content.owner'      => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
-									'content.reportlink' => add_query_arg( array(
-										'page'         => 'bp-moderation',
-										'mid'          => $this->id,
-										'content_type' => $this->item_type,
-										'action'       => 'view'
-									), bp_get_admin_url( 'admin.php' ) ),
-								),
-							)
-						);
-					} elseif ( true === $user_block_notification ) {
+					if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 						bp_send_email(
 							'user-moderation-email',
 							bp_core_get_user_email( $admin ),
@@ -428,6 +407,24 @@ class BP_Moderation {
 										'content_type' => $this->item_type,
 										'action'       => 'view',
 										'tab'          => 'blocked-members',
+									), bp_get_admin_url( 'admin.php' ) ),
+								),
+							)
+						);
+					} elseif ( bp_is_moderation_auto_hide_enable() ) {
+						bp_send_email(
+							'content-moderation-email',
+							bp_core_get_user_email( $admin ),
+							array(
+								'tokens' => array(
+									'content.type'       => bp_moderation_get_content_type( $this->item_type ),
+									'content.id'         => $this->item_id,
+									'content.owner'      => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+									'content.reportlink' => add_query_arg( array(
+										'page'         => 'bp-moderation',
+										'mid'          => $this->id,
+										'content_type' => $this->item_type,
+										'action'       => 'view'
 									), bp_get_admin_url( 'admin.php' ) ),
 								),
 							)

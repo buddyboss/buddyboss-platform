@@ -22,9 +22,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	/**
 	 * What type of view is being displayed?
 	 *
-	 * E.g. "all", "pending", "approved", "spam"...
+	 * E.g. "all", "active", "hidden", "blocked"...
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 2.0.0
 	 * @var string $view
 	 */
 	public $view = 'all';
