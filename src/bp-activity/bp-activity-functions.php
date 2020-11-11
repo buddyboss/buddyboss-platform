@@ -4952,61 +4952,42 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		// Update the activity entry.
 		$activity = new BP_Activity_Activity( $activity_id );
 
-		// get the excerpt first of post.
-		$excerpt = get_the_excerpt( $post->ID );
-
 		// if excert found then take content as a excerpt otherwise take the content as a post content.
-		$content = ( $excerpt ) ?: $post->post_content;
+		$content = '';
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
-			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
 
-			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
-
-			if ( isset( $src[0] ) ) {
-				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( $src[0] ) );
-			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
-				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
-			}
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
 					'bp_update_activity_feed_of_custom_post_content',
-					$activity_summary,
-					$content,
+					'',
+					'',
 					(array) $activity,
 					$post->post_type
 				);
 			} else {
-				$activity->content = $activity_summary;
+				$activity->content = '';
 			}
 		} else {
 
-			$src              = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
-			$activity_summary = '';
-			if ( isset( $src[0] ) ) {
-				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
-			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
-				$activity_summary .= sprintf( '<img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
-			}
-
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
 					'bp_update_activity_feed_of_custom_post_content',
-					$activity_summary,
-					$post->post_content,
+					'',
+					'',
 					(array) $activity,
 					$post->post_type
 				);
 			} else {
-				$activity->content = $activity_summary;
+				$activity->content = '';
 			}
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
@@ -5065,52 +5046,41 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		// Update the activity entry.
 		$activity = new BP_Activity_Activity( $activity_id );
 
-		// get the excerpt first of post.
-		$excerpt = get_the_excerpt( $post->ID );
-
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
-		$content = ( $excerpt ) ?: $post->post_content;
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
+		$content = '';
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
-			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
-
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
 					'bp_update_activity_feed_of_custom_post_content',
-					$activity_summary,
-					$content,
+					'',
+					'',
 					(array) $activity,
 					$post->post_type
 				);
 			} else {
-				$activity->content = $activity_summary;
+				$activity->content = '';
 			}
 		} else {
 
-			$src              = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
-			$activity_summary = '';
-			if ( isset( $src[0] ) ) {
-				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
-			}
-
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
 					'bp_update_activity_feed_of_custom_post_content',
-					$activity_summary,
-					$post->post_content,
+					'',
+					'',
 					(array) $activity,
 					$post->post_type
 				);
 			} else {
-				$activity->content = $activity_summary;
+				$activity->content = '';
 			}
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
