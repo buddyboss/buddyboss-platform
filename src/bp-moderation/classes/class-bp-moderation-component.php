@@ -262,15 +262,21 @@ class BP_Moderation_Component extends BP_Component {
 			array(
 				'label'              => __( 'Reporting Category', 'buddyboss' ),
 				'labels'             => array(
-					'name'          => __( 'Reporting Categories', 'buddyboss' ),
-					'singular_name' => __( 'Reporting Category', 'buddyboss' ),
-					'menu_name'     => __( 'Reporting Categories', 'buddyboss' ),
-					'all_items'     => __( 'All Reporting Categories', 'buddyboss' ),
-					'edit_item'     => __( 'Edit Reporting Category', 'buddyboss' ),
-					'view_item'     => __( 'View Reporting Category', 'buddyboss' ),
-					'update_item'   => __( 'Update Reporting Category', 'buddyboss' ),
-					'add_new_item'  => __( 'Add Reporting Category', 'buddyboss' ),
-					'new_item_name' => __( 'New Reporting', 'buddyboss' ),
+					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss' ),
+					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss' ),
+					'search_items'               => __( 'Search Reporting Categories', 'buddyboss' ),
+					'popular_items'              => __( 'Popular Reporting Categories', 'buddyboss' ),
+					'all_items'                  => __( 'All Reporting Categories', 'buddyboss' ),
+					'edit_item'                  => __( 'Edit Reporting Category', 'buddyboss' ),
+					'update_item'                => __( 'Update Reporting Category', 'buddyboss' ),
+					'add_new_item'               => __( 'Add New Reporting Category', 'buddyboss' ),
+					'new_item_name'              => __( 'New Reporting Category Name', 'buddyboss' ),
+					'separate_items_with_commas' => __( 'Separate Reporting Categories with commas', 'buddyboss' ),
+					'add_or_remove_items'        => __( 'Add or remove Reporting Categories', 'buddyboss' ),
+					'choose_from_most_used'      => __( 'Choose from the most used Reporting Categories', 'buddyboss' ),
+					'not_found'                  => __( 'No Reporting Categories found.', 'buddyboss' ),
+					'menu_name'                  => __( 'Reporting Categories', 'buddyboss' ),
+					'back_to_items'              => __( '&larr; Back to Reporting Categories', 'buddyboss' ),
 				),
 				'public'             => true,
 				'publicly_queryable' => false,
@@ -280,14 +286,13 @@ class BP_Moderation_Component extends BP_Component {
 		);
 
 		$is_moderation_terms = get_option( 'moderation_default_category_added', false );
-
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'spam' => array( 'name' => __( 'Spam', 'buddyboss' ), 'description' => __( 'Unwanted commercial content or spam', 'buddyboss' ) ),
-				'adult'   => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Pornography or sexually explicit material', 'buddyboss' ) ),
-				'hate-speech'   => array( 'name' => __( 'Hate Speech', 'buddyboss' ), 'description' => __( 'Hate speech or graphic violence', 'buddyboss' ) ),
-				'harassment'   => array( 'name' => __( 'Harassment', 'buddyboss' ), 'description' => __( 'Harassment or bullying', 'buddyboss' ) ),
+				'spam'        => array( 'name' => __( 'Spam', 'buddyboss' ), 'description' => __( 'Unwanted commercial content or spam', 'buddyboss' ) ),
+				'adult'       => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Pornography or sexually explicit material', 'buddyboss' ) ),
+				'hate-speech' => array( 'name' => __( 'Hate Speech', 'buddyboss' ), 'description' => __( 'Hate speech or graphic violence', 'buddyboss' ) ),
+				'harassment'  => array( 'name' => __( 'Harassment', 'buddyboss' ), 'description' => __( 'Harassment or bullying', 'buddyboss' ) ),
 			);
 
 			foreach ( $moderation_terms as $moderation_term ) {
@@ -298,7 +303,7 @@ class BP_Moderation_Component extends BP_Component {
 			}
 
 			update_option( 'moderation_default_category_added', true, false );
-		}
+		 }
 	}
 
 	/**
