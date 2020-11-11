@@ -152,6 +152,8 @@ add_action( 'bp_init', function() {
 /**
  * Restrict user when visit attachment url from media/document.
  * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
  */
 function bp_restrict_single_attachment() {
 	if ( is_attachment() ) {
