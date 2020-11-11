@@ -8,8 +8,8 @@
 
 $attachment_id       = bp_get_document_attachment_id();
 $extension           = '';
-$can_download    = false;
-$can_manage      = false;
+$can_download    	 = false;
+$can_manage      	 = false;
 $can_view            = false;
 $attachment_url      = '';
 $text_attachment_url = '';
@@ -20,6 +20,8 @@ $document_id         = bp_get_document_id();
 $filename             = basename( get_attached_file( $attachment_id ) );
 $mirror_text         = '';
 $audio_url           = '';
+$can_add			 = false;
+$data_action		 = '';
 if ( $attachment_id ) {
 	$extension           = bp_document_extension( $attachment_id );
 	$svg_icon            = bp_document_svg_icon( $extension, $attachment_id );
@@ -29,15 +31,15 @@ if ( $attachment_id ) {
 	$listing_class       = 'ac-document-list';
 	$document_type       = 'document';
 	$document_privacy    = bp_document_user_can_manage_document( bp_get_document_id(), bp_loggedin_user_id() );
-	$can_download    = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
-	$can_manage      = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
+	$can_download    	 = ( true === (bool) $document_privacy['can_download'] ) ? true : false;
+	$can_manage      	 = ( true === (bool) $document_privacy['can_manage'] ) ? true : false;
 	$can_view            = ( true === (bool) $document_privacy['can_view'] ) ? true : false;
 	$can_add             = ( true === (bool) $document_privacy['can_add'] ) ? true : false;
 	$group_id            = bp_get_document_group_id();
 	// $document_title   = basename( get_attached_file( $attachment_id ) );
-	$document_title = bp_get_document_title();
-	$data_action    = 'document';
-	$mirror_text    = bp_document_mirror_text( $attachment_id );
+	$document_title 	 = bp_get_document_title();
+	$data_action    	 = 'document';
+	$mirror_text    	 = bp_document_mirror_text( $attachment_id );
 
 	if ( $group_id > 0 ) {
 		$move_id   = $group_id;
@@ -59,9 +61,9 @@ if ( $attachment_id ) {
 	$listing_class    = 'ac-folder-list';
 	$document_type    = 'folder';
 	$folder_privacy   = bp_document_user_can_manage_folder( bp_get_document_folder_id(), bp_loggedin_user_id() );
-	$can_manage   = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
+	$can_manage   	  = ( true === (bool) $folder_privacy['can_manage'] ) ? true : false;
 	$can_view         = ( true === (bool) $folder_privacy['can_view'] ) ? true : false;
-	$can_download = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
+	$can_download 	  = ( true === (bool) $folder_privacy['can_download'] ) ? true : false;
 	$can_add          = ( true === (bool) $folder_privacy['can_add'] ) ? true : false;
 	$group_id         = bp_get_document_folder_group_id();
 	$document_title   = bp_get_folder_title();

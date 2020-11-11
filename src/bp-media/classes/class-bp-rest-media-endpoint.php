@@ -150,7 +150,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Album.
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {Number} [activity_id] A unique numeric ID for the Media's Activity.
-	 * @apiParam {Array=public,loggedin,onlyme,friends,grouponly,message} [privacy=public] Privacy of the media.
+	 * @apiParam {Array=public,loggedin,onlyme,friends,grouponly} [privacy=public] Privacy of the media.
 	 * @apiParam {Array=friends,groups,personal} [scope] Scope of the media.
 	 * @apiParam {Array} [exclude] Ensure result set excludes specific IDs.
 	 * @apiParam {Array} [include] Ensure result set includes specific IDs.
@@ -182,7 +182,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			$args['user_id'] = $request['user_id'];
 		}
 
-		if ( ! empty( $request['album_id'] ) ) {
+		if ( isset( $request['album_id'] ) && '' !== $request['album_id'] ) {
 			$args['album_id'] = $request['album_id'];
 		}
 
@@ -217,6 +217,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		 * @since 0.1.0
 		 */
 		$args = apply_filters( 'bp_rest_media_get_items_query_args', $args, $request );
+
+		if ( isset( $args['album_id'] ) && 0 === $args['album_id'] ) {
+			$args['album_id'] = 'existing-media';
+		}
 
 		$medias = $this->assemble_response_data( $args );
 
@@ -263,6 +267,30 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					'status' => rest_authorization_required_code(),
 				)
 			);
+		}
+
+		if ( true === $retval && ! empty( $request['group_id'] ) && bp_is_active( 'groups' ) ) {
+			$group       = groups_get_group( $request['group_id'] );
+			$user_id     = ( ! empty( $request['user_id'] ) ? $request['user_id'] : bp_loggedin_user_id() );
+			$user_groups = groups_get_user_groups( $user_id );
+
+			if ( empty( $group->id ) ) {
+				$retval = new WP_Error(
+					'bp_rest_group_invalid_id',
+					__( 'Invalid group ID.', 'buddyboss' ),
+					array(
+						'status' => 404,
+					)
+				);
+			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id, $user_groups['groups'], true ) ) {
+				$retval = new WP_Error(
+					'bp_rest_authorization_required',
+					__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
+					array(
+						'status' => rest_authorization_required_code(),
+					)
+				);
+			}
 		}
 
 		/**
@@ -406,7 +434,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Media Album.
 	 * @apiParam {string} [content] Media Content.
-	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly,message} [privacy=public] Privacy of the media.
+	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly} [privacy=public] Privacy of the media.
 	 */
 	public function create_item( $request ) {
 
@@ -513,7 +541,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
 				|| ! function_exists( 'bp_is_group_media_support_enabled' )
 				|| ( function_exists( 'bp_is_group_media_support_enabled' ) && false === bp_is_group_media_support_enabled() )
 			) {
@@ -580,7 +608,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	 * @apiParam {Number} [album_id] A unique numeric ID for the Album.
 	 * @apiParam {Number} [group_id] A unique numeric ID for the Group.
 	 * @apiParam {string} [content] Media Content.
-	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly,message} [privacy] Privacy of the media.
+	 * @apiParam {string=public,loggedin,onlyme,friends,grouponly} [privacy] Privacy of the media.
 	 */
 	public function update_item( $request ) {
 		$id = $request['id'];
@@ -728,7 +756,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( true === $retval && isset( $request['group_id'] ) && ! empty( $request['group_id'] ) ) {
 			if (
 				! bp_is_active( 'groups' )
-				|| groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
+				|| ! groups_can_user_manage_media( bp_loggedin_user_id(), (int) $request['group_id'] )
 			) {
 				$retval = new WP_Error(
 					'bp_rest_invalid_permission',
@@ -1042,10 +1070,14 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			);
 		}
 
+		add_filter( 'upload_dir', 'bp_media_upload_dir' );
+
 		/**
 		 * Create and upload the media file.
 		 */
 		$upload = bp_media_upload();
+
+		remove_filter( 'upload_dir', 'bp_media_upload_dir' );
 
 		if ( is_wp_error( $upload ) ) {
 			return new WP_Error(
@@ -1192,7 +1224,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$args['privacy'] = array(
 			'description'       => __( 'Privacy of the media.', 'buddyboss' ),
 			'type'              => 'string',
-			'enum'              => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly', 'message' ),
+			'enum'              => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 			'default'           => 'public',
 			'sanitize_callback' => 'sanitize_key',
 			'validate_callback' => 'rest_validate_request_arg',
@@ -1241,6 +1273,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$data = $this->add_additional_fields_to_object( $data, $request );
 
 		$response = rest_ensure_response( $data );
+		$response->add_links( $this->prepare_links( $media ) );
 
 		/**
 		 * Filter an activity value returned from the API.
@@ -1254,6 +1287,51 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		return apply_filters( 'bp_rest_media_prepare_value', $response, $request, $media );
 	}
 
+	/**
+	 * Prepare links for the request.
+	 *
+	 * @param BP_Media $media Media data.
+	 *
+	 * @return array
+	 * @since 0.1.0
+	 */
+	protected function prepare_links( $media ) {
+		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
+		$url  = $base . $media->id;
+
+		// Entity meta.
+		$links = array(
+			'self'       => array(
+				'href' => rest_url( $url ),
+			),
+			'collection' => array(
+				'href' => rest_url( $base ),
+			),
+			'user'       => array(
+				'href'       => rest_url( bp_rest_get_user_url( $media->user_id ) ),
+				'embeddable' => true,
+			),
+		);
+
+		if ( ! empty( $media->activity_id ) && bp_is_active( 'activity' ) ) {
+			$activity_base     = sprintf( '/%s/%s/', $this->namespace, buddypress()->activity->id );
+			$activity_url      = $activity_base . $media->activity_id;
+			$links['activity'] = array(
+				'href'       => rest_url( $activity_url ),
+				'embeddable' => true,
+			);
+		}
+
+		/**
+		 * Filter links prepared for the REST response.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array    $links The prepared links of the REST response.
+		 * @param BP_Media $media Media data.
+		 */
+		return apply_filters( 'bp_rest_media_prepare_links', $links, $media );
+	}
 
 	/**
 	 * Get the media schema, conforming to JSON Schema.
@@ -1318,7 +1396,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'privacy'         => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Privacy of the media.', 'buddyboss' ),
-					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly', 'message' ),
+					'enum'        => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
@@ -1469,7 +1547,7 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'description'       => __( 'Privacy of the media.', 'buddyboss' ),
 			'type'              => 'array',
 			'items'             => array(
-				'enum' => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly', 'message' ),
+				'enum' => array( 'public', 'loggedin', 'onlyme', 'friends', 'grouponly' ),
 				'type' => 'string',
 			),
 			'sanitize_callback' => 'bp_rest_sanitize_string_list',
@@ -1615,8 +1693,9 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 					$title = get_the_title( $wp_attachment_id );
 
 					$medias[] = array(
-						'id'   => $wp_attachment_id,
-						'name' => $title,
+						'id'      => $wp_attachment_id,
+						'name'    => $title,
+						'privacy' => $media_privacy,
 					);
 				}
 			}
@@ -2002,8 +2081,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url   = wp_get_attachment_url( $gif_data['still'] );
-		$video_url     = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url   = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url     = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 		$rendered_data = ( function_exists( 'bp_media_activity_embed_gif_content' ) ? bp_media_activity_embed_gif_content( $activity_id ) : '' );
 
 		$retval = array(
@@ -2058,9 +2137,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $still ) && ! empty( $mp4 ) ) {
 
-			$still = bp_media_sideload_attachment( $still );
-			$mp4   = bp_media_sideload_attachment( $mp4 );
-
 			bp_activity_update_meta(
 				$value->id,
 				'_gif_data',
@@ -2095,7 +2171,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 		$args['bp_media_ids'] = array(
 			'description'       => __( 'Media specific IDs.', 'buddyboss' ),
-			'default'           => array(),
 			'type'              => 'array',
 			'items'             => array( 'type' => 'integer' ),
 			'sanitize_callback' => 'wp_parse_id_list',
@@ -2106,10 +2181,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'description' => __( 'Save gif data into activity', 'buddyboss' ),
 			'type'        => 'object',
 			'items'       => array( 'type' => 'string' ),
-			'default'     => array(
-				'url' => '',
-				'mp4' => '',
-			),
 			'properties'  => array(
 				'url' => array(
 					'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
@@ -2143,7 +2214,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_is_forums_media_support_enabled' ) && true === bp_is_forums_media_support_enabled() ) {
 			$params['bbp_media'] = array(
 				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
-				'default'           => array(),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
 				'sanitize_callback' => 'wp_parse_id_list',
@@ -2156,10 +2226,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'description' => __( 'Save gif data into topic.', 'buddyboss' ),
 				'type'        => 'object',
 				'items'       => array( 'type' => 'string' ),
-				'default'     => array(
-					'url' => '',
-					'mp4' => '',
-				),
 				'properties'  => array(
 					'url' => array(
 						'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
@@ -2194,7 +2260,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		if ( function_exists( 'bp_is_messages_media_support_enabled' ) && true === bp_is_messages_media_support_enabled() ) {
 			$params['bp_media_ids'] = array(
 				'description'       => __( 'Media specific IDs.', 'buddyboss' ),
-				'default'           => array(),
 				'type'              => 'array',
 				'items'             => array( 'type' => 'integer' ),
 				'sanitize_callback' => 'wp_parse_id_list',
@@ -2207,10 +2272,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 				'description' => __( 'Save gif data into topic.', 'buddyboss' ),
 				'type'        => 'object',
 				'items'       => array( 'type' => 'string' ),
-				'default'     => array(
-					'url' => '',
-					'mp4' => '',
-				),
 				'properties'  => array(
 					'url' => array(
 						'description'       => __( 'URL for the gif media from object `480w_still->url`', 'buddyboss' ),
@@ -2427,8 +2488,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		$retval = array(
 			'preview_url' => $preview_url,
@@ -2455,9 +2516,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 
 			// save activity id if it is saved in forums and enabled in platform settings.
 			$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
-
-			$still = bp_media_sideload_attachment( $still );
-			$mp4   = bp_media_sideload_attachment( $mp4 );
 
 			$gdata = array(
 				'still' => $still,
@@ -2495,8 +2553,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		return '<div class="activity-attached-gif-container">' .
 			'<div class="gif-image-container">' .
@@ -2588,7 +2646,13 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			'privacy'    => 'message',
 		);
 
+		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
+
 		$medias_ids = $this->bp_rest_create_media( $args );
+
+		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
 		if ( is_wp_error( $medias_ids ) ) {
 			$value->bp_media_ids = $medias_ids;
@@ -2620,8 +2684,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		$retval = array(
 			'preview_url' => $preview_url,
@@ -2645,9 +2709,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 		$message_id = $value->id;
 
 		if ( ! empty( $still ) && ! empty( $mp4 ) ) {
-
-			$still = bp_media_sideload_attachment( $still );
-			$mp4   = bp_media_sideload_attachment( $mp4 );
 
 			$gdata = array(
 				'still' => $still,
@@ -2675,8 +2736,8 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			return;
 		}
 
-		$preview_url = wp_get_attachment_url( $gif_data['still'] );
-		$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+		$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+		$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 		return '<div class="activity-attached-gif-container">' .
 			'<div class="gif-image-container">' .
@@ -2707,6 +2768,10 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 	public function bp_rest_media_default_scope( $scope, $args = array() ) {
 		$new_scope = array();
 
+		if ( is_array( $scope ) ) {
+			$scope = array_filter( $scope );
+		}
+
 		if ( ( 'all' === $scope || empty( $scope ) ) && ( empty( $args['group_id'] ) && empty( $args['user_id'] ) ) ) {
 			$new_scope[] = 'public';
 
@@ -2721,10 +2786,6 @@ class BP_REST_Media_Endpoint extends WP_REST_Controller {
 			if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 				$new_scope[] = 'personal';
 			}
-		} elseif ( ! empty( $args['user_id'] ) && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
-			$new_scope[] = 'personal';
-		} elseif ( bp_is_active( 'groups' ) && ! empty( $args['group_id'] ) && ( 'all' === $scope || empty( $scope ) ) ) {
-			$new_scope[] = 'groups';
 		}
 
 		$new_scope = array_unique( $new_scope );
