@@ -796,7 +796,16 @@ function bp_media_attach_media_to_message( &$message ) {
 		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
-		$media_ids = bp_media_add_handler( $_POST['media'], 'message' );
+		$medias = $_POST['media'];
+		if ( ! empty( $medias ) ) {
+			foreach( $medias as $k => $media ) {
+				if( array_key_exists( 'group_id', $media ) ) {
+					unset( $medias[ $k ]['group_id'] );
+				}
+			}
+		}
+
+		$media_ids = bp_media_add_handler( $medias, 'message' );
 
 		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
@@ -1578,9 +1587,54 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 				__( 'Repair forum media privacy', 'buddyboss' ),
 				'bp_media_forum_privacy_repair',
 		);
+		$repair_list[] = array(
+			'bp-media-message-repair',
+			__( 'Repair messages media', 'buddyboss' ),
+			'bp_media_message_privacy_repair',
+		);
 	}
 
 	return $repair_list;
+}
+
+/**
+ * Repair BuddyBoss messages media.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_media_message_privacy_repair() {
+	global $wpdb;
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp     = buddypress();
+
+	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' LIMIT 20 OFFSET $offset ";
+	$medias      = $wpdb->get_results( $media_query );
+
+	if ( ! empty( $medias ) ) {
+		foreach ( $medias as $media ) {
+			if ( ! empty( $media->id ) ) {
+				$media_obj           = new BP_Media( $media->id );
+				$media_obj->album_id = 0;
+				$media_obj->group_id = 0;
+				$media_obj->activity_id = 0;
+				$media_obj->privacy  = 'message';
+				$media_obj->save();
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Media update complete!', 'buddyboss' ),
+		);
+	}
 }
 
 /**
