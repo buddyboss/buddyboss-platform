@@ -76,7 +76,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 2.0.0
 	 */
 	public function no_items() {
-		esc_html__( 'No report found.', 'buddyboss' );
+		esc_html_e( 'No report found.', 'buddyboss' );
 	}
 
 	/**
