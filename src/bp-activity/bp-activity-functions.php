@@ -4952,7 +4952,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		// Update the activity entry.
 		$activity = new BP_Activity_Activity( $activity_id );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = '';
 
 		// If content not empty.
