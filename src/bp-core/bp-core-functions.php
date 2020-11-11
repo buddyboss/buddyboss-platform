@@ -3903,6 +3903,22 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
+		'content-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{content.type}} is auto hide', 'buddyboss' ), //Todo: Add proper email suject.
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "Content id: {{content.id}}, Content Owner: {{content.owner}}, Report Link: {{content.reportlink}}", 'buddyboss' ), //Todo: Add proper content.
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "Content id: {{content.id}}, Content Owner {{content.owner}}, Report Link: {{content.reportlink}}", 'buddyboss' ), // Todo: Add proper excerpt.
+		),
+		'user-moderation-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] An user is auto suspended', 'buddyboss' ), //Todo: Add proper email subject.
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "User id: {{user.id}}, User Name: {{user.name}}, User Link: {{user.adminlink}}", 'buddyboss' ), //Todo: Add proper content.
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "User id: {{user.id}}, User Name: {{user.name}}, User Link: {{user.adminlink}}", 'buddyboss' ), // Todo: Add proper excerpt.
+		),
 	);
 
 	/**
@@ -4084,6 +4100,16 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		),
 	);
 
+	$content_moderation_email = array(
+		'description' => __( 'Content moderation email description.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
+	);
+
+	$user_moderation_email = array(
+		'description' => __( 'User suspended email description.', 'buddyboss' ), //Todo: Add proper description of email.
+		'unsubscribe' => false,
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -4105,6 +4131,8 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
 		'group-message-email'                => $group_message_email,
+		'content-moderation-email'           => $content_moderation_email,
+		'user-moderation-email'              => $user_moderation_email,
 	);
 
 	/**

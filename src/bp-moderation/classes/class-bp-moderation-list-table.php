@@ -20,6 +20,16 @@ defined( 'ABSPATH' ) || exit;
 class BP_Moderation_List_Table extends WP_List_Table {
 
 	/**
+	 * What type of view is being displayed?
+	 *
+	 * E.g. "all", "active", "hidden", "blocked"...
+	 *
+	 * @since BuddyBoss 2.0.0
+	 * @var string $view
+	 */
+	public $view = 'all';
+
+	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -89,6 +99,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 
+		$moderation_status = filter_input( INPUT_GET, 'moderation_status', FILTER_SANITIZE_STRING );
+
 		// Set current page.
 		$page = $this->get_pagenum();
 
@@ -105,6 +117,19 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$moderation_request_args['in_types'] = array( 'user' );
 		} else {
 			$moderation_request_args['exclude_types'] = array( 'user' );
+		}
+
+		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] && 'blocked' === $moderation_status ) {
+			$this->view                        = 'blocked';
+			$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+		} else if ( 'active' === $moderation_status ) {
+			$this->view                        = 'active';
+			$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+		} elseif ( 'hidden' === $moderation_status ) {
+			$this->view                        = 'hidden';
+			$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+		} else {
+			$this->view = 'all';
 		}
 
 		$moderation_requests = BP_Moderation::get( $moderation_request_args );
@@ -207,6 +232,72 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		echo '<tr>';
 		wp_kses_post( $this->single_row_columns( $item ) );
 		echo '</tr>';
+	}
+
+	/**
+	 * Get the list of views available on this table (e.g. "all", "spam").
+	 *
+	 * @since BuddyPress 2.0.0
+	 */
+	function get_views() {
+		?>
+        <ul class="subsubsub">
+			<?php
+			if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+				$url_base = add_query_arg( array(
+					'page' => 'bp-moderation',
+					'tab'  => 'blocked-members'
+				), bp_get_admin_url( 'admin.php' ) );
+				?>
+                <li class="all">
+                    <a href="<?php echo esc_url( $url_base ); ?>" class="<?php if ( 'all' === $this->view ) {
+						echo 'current';
+					} ?>">
+						<?php _e( 'All', 'buddyboss' ); ?>
+                    </a> |
+                </li>
+                <li class="blocked">
+                    <a href="<?php echo esc_url( add_query_arg( array( 'moderation_status' => 'blocked' ), $url_base ) ); ?>"
+                       class="<?php if ( 'blocked' === $this->view ) {
+						   echo 'current';
+					   } ?>">
+						<?php _e( 'Blocked', 'buddyboss' ); ?>
+                    </a>
+                </li>
+				<?php
+			} else {
+				$url_base = add_query_arg( array(
+					'page' => 'bp-moderation',
+				), bp_get_admin_url( 'admin.php' ) );
+				?>
+                <li class="all">
+                    <a href="<?php echo esc_url( $url_base ); ?>" class="<?php if ( 'all' === $this->view ) {
+						echo 'current';
+					} ?>">
+						<?php _e( 'All', 'buddyboss' ); ?>
+                    </a> |
+                </li>
+                <li class="active">
+                    <a href="<?php echo esc_url( add_query_arg( array( 'moderation_status' => 'active' ), $url_base ) ); ?>"
+                       class="<?php if ( 'active' === $this->view ) {
+						   echo 'current';
+					   } ?>">
+						<?php _e( 'Active', 'buddyboss' ); ?>
+                    </a> |
+                </li>
+                <li class="hidden">
+                    <a href="<?php echo esc_url( add_query_arg( array( 'moderation_status' => 'hidden' ), $url_base ) ); ?>"
+                       class="<?php if ( 'hidden' === $this->view ) {
+						   echo 'current';
+					   } ?>">
+						<?php _e( 'Hidden', 'buddyboss' ); ?>
+                    </a>
+                </li>
+				<?php
+			}
+			?>
+        </ul>
+		<?php
 	}
 
 	/**
