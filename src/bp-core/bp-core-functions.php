@@ -2638,6 +2638,11 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
+		'moderation'         => array(
+			'title'       => __( 'Moderation', 'buddyboss' ),
+			'description' => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'default'     => false,
+		),
 		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url(
@@ -2655,11 +2660,6 @@ function bp_core_get_components( $type = 'all' ) {
 		'blogs'         => array(
 			'title'       => __( 'Blog Feeds', 'buddyboss' ),
 			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
-			'default'     => false,
-		),
-		'moderation'         => array(
-			'title'       => __( 'Moderation', 'buddyboss' ),
-			'description' => __( 'Moderate Activity, groups, messages and all.', 'buddyboss' ),
 			'default'     => false,
 		),
 	);
