@@ -2983,37 +2983,37 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 
 	global $wpdb, $bp;
 
-	if ( 0 === $media_id ) {
+	if( 0 === $media_id ) {
 		return false;
 	}
 
-	if ( (int) $media_id > 0 ) {
+	if( (int) $media_id > 0 ) {
 		$has_access = bp_media_user_can_edit( $media_id );
-		if ( ! $has_access ) {
+		if( ! $has_access ) {
 			return false;
 		}
 	}
 
-	if ( (int) $album_id > 0 ) {
+	if( (int) $album_id > 0 ) {
 		$has_access = bp_album_user_can_edit( $album_id );
-		if ( ! $has_access ) {
+		if( ! $has_access ) {
 			return false;
 		}
 	}
 
-	if ( ! $group_id ) {
+	if( ! $group_id ) {
 		$get_media = new BP_Media( $media_id );
-		if ( $get_media->group_id > 0 ) {
+		if( $get_media->group_id > 0 ) {
 			$group_id = $get_media->group_id;
 		}
 	}
 
-	if ( $group_id > 0 ) {
-		$destination_privacy = 'grouponly';
-	} elseif ( $album_id > 0 ) {
+	if( $group_id > 0 ) {
+		$destination_privacy = 'public';
+	} elseif( $album_id > 0 ) {
 		$destination_album = BP_Media_Album::get_album_data( array( $album_id ) );
 		$destination_album = ( ! empty( $destination_album ) ) ? current( $destination_album ) : array();
-		if ( empty( $destination_album ) ) {
+		if( empty( $destination_album ) ) {
 			return false;
 		}
 		$destination_privacy = $destination_album->privacy;
@@ -3027,7 +3027,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 		$destination_privacy = $media_object->privacy;
 	}
 
-	if ( empty( $destination_privacy ) ) {
+	if( empty( $destination_privacy ) ) {
 		$destination_privacy = 'loggedin';
 	}
 
@@ -3038,72 +3038,120 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 	$media->save();
 
 	// Update media activity privacy.
-	if ( ! $group_id ) {
-		if ( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
-			$post_attachment    = $media->attachment_id;
-			$parent_activity_id = get_post_meta( $post_attachment, 'bp_media_parent_activity_id', true );
-			$child_activity_id  = get_post_meta( $post_attachment, 'bp_media_activity_id', true );
-			$activity_album_id  = bp_activity_get_meta( $media->activity_id, 'bp_media_album_activity', true );
-			if ( bp_is_active( 'activity' ) ) {
-				// Single media upload.
-				if ( empty( $child_activity_id ) ) {
-					$activity = new BP_Activity_Activity( (int) $parent_activity_id );
-					// Update activity data.
-					if ( bp_activity_user_can_delete( $activity ) ) {
-						// Make the activity media own.
-						$activity->hide_sitewide     = 0;
-						$activity->secondary_item_id = 0;
-						$activity->privacy           = $destination_privacy;
-						$activity->save();
-					}
+	if( ! empty( $media ) && ! empty( $media->attachment_id ) ) {
 
-					if ( $album_id > 0 ) {
-						bp_activity_update_meta( (int) $parent_activity_id, 'bp_media_album_activity', (int) $activity_album_id );
-					} else {
-						bp_activity_delete_meta( (int) $parent_activity_id, 'bp_media_album_activity', $activity_album_id );
-					}
-				// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
+		$media_attachment   = $media->attachment_id;
+		$parent_activity_id = get_post_meta( $media_attachment, 'bp_media_parent_activity_id', true );
+
+		// If found need to make this activity to main activity.
+		$child_activity_id = get_post_meta( $media_attachment, 'bp_media_activity_id', true );
+
+		if( bp_is_active( 'activity' ) ) {
+
+			// Single media upload.
+			if( empty( $child_activity_id ) ) {
+				$activity = new BP_Activity_Activity( (int) $parent_activity_id );
+				// Update activity data.
+				if( bp_activity_user_can_delete( $activity ) ) {
+					// Make the activity media own.
+					$activity->hide_sitewide     = 0;
+					$activity->secondary_item_id = 0;
+					$activity->privacy           = $destination_privacy;
+					$activity->save();
+				}
+
+				if( $album_id > 0 ) {
+					// Update to moved album id.
+					bp_activity_update_meta( (int) $parent_activity_id, 'bp_media_album_activity', (int) $album_id );
 				} else {
-					$activity = new BP_Activity_Activity( (int) $child_activity_id );
-					// Update activity data.
-					if ( bp_activity_user_can_delete( $activity ) ) {
-						// Make the activity media own.
-						$activity->hide_sitewide     = 0;
-						$activity->secondary_item_id = 0;
-						$activity->privacy           = $destination_privacy;
-						$activity->save();
+					// Delete the meta if uploaded to root so no need bp_media_album_activity meta.
+					bp_activity_delete_meta( (int) $parent_activity_id, 'bp_media_album_activity' );
+				}
+				// We have to change child activity privacy when we move the media while at a time multiple media uploaded.
+			} else {
 
-						bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );
+				$activity = new BP_Activity_Activity( (int) $child_activity_id );
+				// Update activity data.
+				if( bp_activity_user_can_delete( $activity ) ) {
+					// Make the activity media own.
+					$activity->hide_sitewide     = 0;
+					$activity->secondary_item_id = 0;
+					$activity->privacy           = $destination_privacy;
+					$activity->save();
 
-						// Update attachment meta.
-						delete_post_meta( $post_attachment, 'bp_media_activity_id', $child_activity_id );
-						update_post_meta( $post_attachment, 'bp_media_parent_activity_id', $child_activity_id );
+					bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );
 
-						// Make the child activity as parent activity.
-						bp_activity_delete_meta( $child_activity_id, 'bp_media_activity', '1' );
+					// Update attachment meta.
+					delete_post_meta( $media_attachment, 'bp_media_activity_id', $child_activity_id );
+					update_post_meta( $media_attachment, 'bp_media_parent_activity_id', $child_activity_id );
 
-						if ( $album_id > 0 ) {
-							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_album_activity', (int) $activity_album_id );
-						} else {
-							bp_activity_delete_meta( (int) $child_activity_id, 'bp_media_album_activity', $activity_album_id );
-						}
+					// Make the child activity as parent activity.
+					bp_activity_delete_meta( $child_activity_id, 'bp_media_activity', '1' );
+
+					if( $album_id > 0 ) {
+						bp_activity_update_meta( (int) $child_activity_id, 'bp_media_album_activity', (int) $album_id );
 					}
+				}
 
-					// Remove the media from the parent activity.
-					$parent_activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
-					if ( ! empty( $parent_activity_media_ids ) ) {
-						// Separate string to array.
-						$activity_media_ids = explode( ',', $parent_activity_media_ids );
+				// Remove the media from the parent activity.
+				$parent_activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+				if( ! empty( $parent_activity_media_ids ) ) {
+
+					// Separate string to array.
+					$activity_media_ids = explode( ',', $parent_activity_media_ids );
+					$media_counts       = count( $activity_media_ids );
+
+					if( $media_counts > 2 ) {
+
 						// Remove the media id from the parent activity meta.
-						if ( ( $key = array_search( $media_id, $activity_media_ids ) ) !== false ) {
+						if( ( $key = array_search( $media_id, $activity_media_ids ) ) !== false ) {
 							unset( $activity_media_ids[ $key ] );
 						}
 						// Update the activity meta.
-						if ( ! empty( $activity_media_ids ) ) {
+						if( ! empty( $activity_media_ids ) ) {
 							$activity_media_ids = implode( ',', $activity_media_ids );
 							bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $activity_media_ids );
 						} else {
 							bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', '' );
+						}
+					} else {
+
+						// Remove the media id from the parent activity meta.
+						if( ( $key = array_search( $media_id, $activity_media_ids ) ) !== false ) {
+							unset( $activity_media_ids[ $key ] );
+						}
+
+						// Update the activity meta.
+						if( ! empty( $activity_media_ids ) ) {
+							$activity_media_id = implode( ',', $activity_media_ids );
+
+							$media = new BP_Media( $activity_media_id );
+
+							// Need to delete child activity.
+							$need_delete = $media->activity_id;
+
+							$media_album = (int) $media->album_id;
+
+							// Update media activity id to parent activity id.
+							$media->activity_id  = $parent_activity_id;
+							$media->date_created = bp_core_current_time();
+							$media->save();
+
+							bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $activity_media_id );
+
+							// Update attachment meta.
+							delete_post_meta( $media->attachment_id, 'bp_media_activity_id' );
+							update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $parent_activity_id );
+
+							if( $media_album > 0 ) {
+								bp_activity_update_meta( $parent_activity_id, 'bp_media_album_activity', $media_album );
+							} else {
+								bp_activity_delete_meta( $parent_activity_id, 'bp_media_album_activity' );
+							}
+
+							// Delete child activity no need anymore because assigned all the data to parent activity.
+							bp_activity_update_meta( $need_delete, 'bp_media_ids', '' );
+							bp_activity_delete( array( 'id' => $need_delete ) );
 						}
 					}
 				}
