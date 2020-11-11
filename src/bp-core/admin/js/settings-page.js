@@ -175,6 +175,22 @@
 					$( '#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li' ).find( 'a[href*="bp-tools"]' ).parent().addClass( 'current' );
 			}
 
+			// Set Moderation selected on Reporting category
+			if ($('body.buddypress.taxonomy-bpm_category').length) {
+				var menus = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu li');
+				var buddyBossMenu = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform');
+				var selectorModeration = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-moderation"]');
+
+				$(menus).removeClass('wp-has-current-submenu');
+				$(menus).removeClass('wp-menu-open');
+				$(buddyBossMenu).addClass('wp-has-current-submenu wp-menu-open');
+
+				$(menuOpen).removeClass('current');
+				$(selectorModeration).addClass('current');
+				$(selectorModeration).attr('aria-current', 'page');
+				$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-moderation"]').parent().addClass('current');
+			}
+
 			if ( $( 'body .section-bp_search_settings_community' ).length ) {
 
 				if ($( 'body .section-bp_search_settings_community table td input:checkbox:checked' ).length === $( 'body .section-bp_search_settings_community table td input:checkbox' ).length) {
