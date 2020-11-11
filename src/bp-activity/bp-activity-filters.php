@@ -2240,6 +2240,12 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 }
 
 add_action( 'bp_before_activity_activity_content', 'bp_blogs_activity_content_set_temp_content' );
+
+/**
+ * Function which set the temporary content on the blog post activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
 function bp_blogs_activity_content_set_temp_content() {
 
 	global $activities_template;
@@ -2256,6 +2262,17 @@ function bp_blogs_activity_content_set_temp_content() {
 }
 
 add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
+
+/**
+ * Function which set the content on activity blog post.
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ *
+ * @since BuddyBoss 1.5.5
+ */
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
 	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
@@ -2281,6 +2298,16 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 }
 
 add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
+
+/**
+ * Function which set the content on activity blog post comment.
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ * @since BuddyBoss 1.5.5
+ */
 function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
 
 	if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
@@ -2302,5 +2329,4 @@ function bp_blogs_activity_comment_content_with_read_more( $content, $activity )
 		}
 	}
 	return $content;
-
 }
