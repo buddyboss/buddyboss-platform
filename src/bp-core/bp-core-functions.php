@@ -2641,6 +2641,15 @@ function bp_core_get_components( $type = 'all' ) {
 		'moderation'         => array(
 			'title'       => __( 'Moderation', 'buddyboss' ),
 			'description' => __( 'Allow members to block each other, and report inappropriate content to be reviewed by the site admin.', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-moderation',
+					),
+					'admin.php'
+				)
+			),
 			'default'     => false,
 		),
 		'search'        => array(
