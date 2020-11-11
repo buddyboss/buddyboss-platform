@@ -212,7 +212,7 @@ function bpm_blocking_settings_callback_auto_suspend() {
 	<label for="bpm_blocking_auto_suspend">
 		<input name="bpm_blocking_auto_suspend" id="bpm_blocking_auto_suspend" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_suspend_enable( false ) ); ?> />
-		<?php esc_html_e( 'Autotomatically suspend members after they have been blocked more than ___ times.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Automatically suspend members after they have been blocked more than ___ times.', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
