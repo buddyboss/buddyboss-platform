@@ -886,12 +886,16 @@ window.bp = window.bp || {};
 			target.closest('.modal-container').find('.location-folder-list').removeClass('has-error');
 			target.addClass('loading');
 
+			var activityId = '';
+			activityId = $(document).find('a[data-media-id="' + document_id + '"]').attr('data-parent-activity-id');
+
 			var data = {
 				'action'     : 'document_move',
 				'_wpnonce'   : BP_Nouveau.nonces.media,
 				'document_id': document_id,
 				'folder_id'  : folder_id,
-				'group_id'   : self.group_id
+				'group_id'   : self.group_id,
+				'activity_id': activityId
 			};
 
 			$.ajax(
@@ -912,6 +916,17 @@ window.bp = window.bp || {};
 									$(document).find('li#document-all').trigger('click');
 								}
 							} else {
+
+								if (parseInt(BP_Nouveau.media.current_folder) > 0) {
+									$('#document-stream ul.media-list li[data-id="' + document_id + '"]').remove();
+								} else if ($('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').length && !$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').parent().hasClass('bb-media-length-1')) {
+									$('#activity-stream ul.activity-list li .activity-content .activity-inner .bb-activity-media-wrap div[data-id="' + document_id + '"]').remove();
+									if (activityId && activityId.length) {
+										$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner .bb-activity-media-wrap').remove();
+										$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"] .activity-content .activity-inner').append(response.data.document_content);
+									}
+								}
+
 								var documentStream = $('#media-stream');
 								documentStream.html('');
 								documentStream.html(response.data.html);
