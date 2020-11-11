@@ -3103,7 +3103,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 				'taxonomy' => 'bpm_category',
 				'tab'      => 'report-categories'
 		), 'edit-tags.php' ) ),
-		'name'  => esc_html__( 'Report Categories', 'buddyboss' ),
+		'name'  => esc_html__( 'Reporting Categories', 'buddyboss' ),
 		'class' => 'bp-report-categories',
 	);
 

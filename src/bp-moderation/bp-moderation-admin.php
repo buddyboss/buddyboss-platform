@@ -346,7 +346,7 @@ function bp_moderation_admin_category_listing_add_tab() {
 	if ( ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow ) && ( 'bpm_category' === $current_screen->taxonomy ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Report Categories', 'buddyboss' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Reporting Categories', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}

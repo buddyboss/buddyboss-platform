@@ -53,7 +53,7 @@
 												<label>
 													<?php
 													/* translators: accessibility text */
-													esc_html_e( 'Block (Count)', 'buddyboss' );
+													esc_html_e( 'Times Blocked', 'buddyboss' );
 													?>
 												</label>
 											</th>
