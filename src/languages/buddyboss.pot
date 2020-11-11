@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-11 04:49:19+00:00\n"
+"POT-Creation-Date: 2020-11-11 05:46:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -389,6 +389,7 @@ msgstr ""
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
 #: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2340
 #: bp-forums/topics/functions.php:2076 bp-forums/topics/template.php:3195
+#: bp-moderation/classes/class-bp-moderation-component.php:283
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:612
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:613
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:961
@@ -2871,7 +2872,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:3106
 #: bp-moderation/bp-moderation-admin.php:349
-msgid "Report Categories"
+#: bp-moderation/classes/class-bp-moderation-component.php:261
+#: bp-moderation/classes/class-bp-moderation-component.php:263
+msgid "Reporting Categories"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-help.php:39
@@ -21196,33 +21199,35 @@ msgid "Auto Hide threshold"
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:183
-msgid "Allow members on the site to block other members."
+msgid "Allow members to block each other."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:185
 msgid ""
-"Setting will allow member on the site to block all other inappropriate "
-"member other that admin and editor role."
+"When a member is blocked, their profile and all of their content is hidden "
+"from the member who blocked them."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:215
-msgid "Auto suspend members other specified threshold."
+msgid ""
+"Automatically suspend members after they have been blocked more than ___ "
+"times."
 msgstr ""
 
 #: bp-moderation/bp-moderation-settings.php:261
-msgid "Notify all administrators when members auto-suspended."
+msgid "Notify administrators when members have been auto-suspended."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:295
-msgid "Allow content reporting from the list below."
+#: bp-moderation/bp-moderation-settings.php:294
+msgid "Allow the following content types to be reported:"
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:342
-msgid "Auto hide content other specified threshold."
+#: bp-moderation/bp-moderation-settings.php:341
+msgid "Automatically hide content after it has been reported more than ___ times."
 msgstr ""
 
-#: bp-moderation/bp-moderation-settings.php:388
-msgid "Notify all administrators when content auto-moderated/hidden."
+#: bp-moderation/bp-moderation-settings.php:387
+msgid "Notify administrators when content has been auto-hidden."
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-abstract.php:139
@@ -21240,11 +21245,6 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-component.php:259
 #: bp-moderation/classes/class-bp-moderation-component.php:262
 msgid "Reporting Category"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-component.php:261
-#: bp-moderation/classes/class-bp-moderation-component.php:263
-msgid "Reporting Categories"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:264
@@ -21272,11 +21272,7 @@ msgid "New Reporting"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:283
-msgid "Abusive"
-msgstr ""
-
-#: bp-moderation/classes/class-bp-moderation-component.php:283
-msgid "Member using a curse word."
+msgid "Unwanted commercial content or spam"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:284
@@ -21284,7 +21280,23 @@ msgid "Adult"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-component.php:284
-msgid "Sending nude content"
+msgid "Pornography or sexually explicit material"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:285
+msgid "Hate Speech"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:285
+msgid "Hate speech or graphic violence"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:286
+msgid "Harassment"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:286
+msgid "Harassment or bullying"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:79
@@ -21307,7 +21319,7 @@ msgstr ""
 #: bp-moderation/classes/class-bp-moderation-list-table.php:174
 #: bp-moderation/screens/single/admin/report-single.php:56
 #. translators: accessibility text
-msgid "Block (Count)"
+msgid "Times Blocked"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:179
@@ -21339,9 +21351,7 @@ msgid "Content Owner"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:183
-#: bp-moderation/screens/single/admin/report-single.php:135
-#. translators: accessibility text
-msgid "Reported (Count)"
+msgid "Times Reported"
 msgstr ""
 
 #: bp-moderation/classes/class-bp-moderation-list-table.php:279
@@ -21404,6 +21414,11 @@ msgstr ""
 #: bp-moderation/screens/single/admin/report-single.php:15
 #. translators: accessibility text
 msgid "View Moderation Item"
+msgstr ""
+
+#: bp-moderation/screens/single/admin/report-single.php:135
+#. translators: accessibility text
+msgid "Reported (Count)"
 msgstr ""
 
 #: bp-moderation/screens/single/admin/report-single.php:208
