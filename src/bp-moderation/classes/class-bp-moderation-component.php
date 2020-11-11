@@ -280,8 +280,10 @@ class BP_Moderation_Component extends BP_Component {
 		if ( false === $is_moderation_terms ) {
 
 			$moderation_terms = array(
-				'abusive' => array( 'name' => __( 'Abusive', 'buddyboss' ), 'description' => __( 'Member using a curse word.', 'buddyboss' ) ),
-				'adult'   => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Sending nude content', 'buddyboss' ) ),
+				'spam' => array( 'name' => __( 'Spam', 'buddyboss' ), 'description' => __( 'Unwanted commercial content or spam', 'buddyboss' ) ),
+				'adult'   => array( 'name' => __( 'Adult', 'buddyboss' ), 'description' => __( 'Pornography or sexually explicit material', 'buddyboss' ) ),
+				'hate-speech'   => array( 'name' => __( 'Hate Speech', 'buddyboss' ), 'description' => __( 'Hate speech or graphic violence', 'buddyboss' ) ),
+				'harassment'   => array( 'name' => __( 'Harassment', 'buddyboss' ), 'description' => __( 'Harassment or bullying', 'buddyboss' ) ),
 			);
 
 			foreach ( $moderation_terms as $moderation_term ) {
