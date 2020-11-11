@@ -51,7 +51,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 				<ul class="conflict-activity-ul-li-comment">
 					<?php
 					$item_id = 0;
-					if ( bp_loggedin_user_id() === bp_get_media_user_id() ) {
+					if ( bp_loggedin_user_id() === bp_get_media_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							?>
 							<li class="move_file">
@@ -65,12 +65,11 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 							if ( bp_is_active( 'activity' ) ) {
 								$item_id = bp_get_activity_id();
 							}
-						}
-					}
-					?>
-					<li class="delete_file">
+						} ?>
+						<li class="delete_file">
 						<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 					</li>
+					<?php } ?>
 				</ul>
 			</div>
 		<?php } ?>
