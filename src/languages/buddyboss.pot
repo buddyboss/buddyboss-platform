@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-10 08:50:40+00:00\n"
+"POT-Creation-Date: 2020-11-11 04:49:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4002,7 +4002,7 @@ msgid "Messages Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-moderation.php:25
-#: bp-core/bp-core-functions.php:791 bp-core/bp-core-functions.php:2661
+#: bp-core/bp-core-functions.php:791 bp-core/bp-core-functions.php:2642
 #: bp-moderation/bp-moderation-admin.php:69
 #: bp-moderation/bp-moderation-admin.php:70
 #: bp-moderation/classes/class-bp-moderation-component.php:29
@@ -4876,7 +4876,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:330
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-members/classes/class-bp-rest-members-details-endpoint.php:1120
-#: bp-moderation/classes/class-bp-moderation-media.php:62
+#: bp-moderation/classes/class-bp-moderation-media.php:66
 #: bp-search/bp-search-settings.php:756
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
 #: bp-templates/bp-nouveau/includes/customizer.php:205
@@ -5079,28 +5079,30 @@ msgstr ""
 msgid "Allow members to send email invitations to non-members to join the network."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2642 bp-search/bp-search-settings.php:24
+#: bp-core/bp-core-functions.php:2643
+msgid ""
+"Allow members to block each other, and report inappropriate content to be "
+"reviewed by the site admin."
+msgstr ""
+
+#: bp-core/bp-core-functions.php:2647 bp-search/bp-search-settings.php:24
 msgid "Network Search"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2652
+#: bp-core/bp-core-functions.php:2657
 msgid ""
 "Allow members to search the entire network, along with custom post types of "
 "your choice, all in one unified search bar."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2656
+#: bp-core/bp-core-functions.php:2661
 msgid "Blog Feeds"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2657
+#: bp-core/bp-core-functions.php:2662
 msgid ""
 "Have new blog posts and comments appear in site activity feeds. Make sure "
 "to enable Activity Feeds first."
-msgstr ""
-
-#: bp-core/bp-core-functions.php:2662
-msgid "Moderate Activity, groups, messages and all."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2669
@@ -21269,6 +21271,22 @@ msgstr ""
 msgid "New Reporting"
 msgstr ""
 
+#: bp-moderation/classes/class-bp-moderation-component.php:283
+msgid "Abusive"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:283
+msgid "Member using a curse word."
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:284
+msgid "Adult"
+msgstr ""
+
+#: bp-moderation/classes/class-bp-moderation-component.php:284
+msgid "Sending nude content"
+msgstr ""
+
 #: bp-moderation/classes/class-bp-moderation-list-table.php:79
 msgid "No moderation requests found."
 msgstr ""
@@ -24097,11 +24115,11 @@ msgid "Loading documents from the community. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1018
-msgid "Loading your reported content. Please wait."
+msgid "Loading content you have reported. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1022
-msgid "Loading your blocked member. Please wait."
+msgid "Loading members you have blocked. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1026

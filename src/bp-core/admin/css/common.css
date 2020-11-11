@@ -502,6 +502,16 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
 }
 
+/* Moderation */
+.bp-admin-card.section-bp_moderation_settings_blocking h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/ban.svg);
+  background-size: 20px 20px;
+}
+
+.bp-admin-card.section-bp_moderation_settings_reporting h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/flag.svg);
+}
+
 /* Search */
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
