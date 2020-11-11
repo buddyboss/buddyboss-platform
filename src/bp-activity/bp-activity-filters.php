@@ -2239,45 +2239,68 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 }
 
-//add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 999, 2 );
-function bp_blogs_activity_content_with_read_more( $content, $activity ) {
+add_action( 'bp_before_activity_activity_content', 'bp_blogs_activity_content_set_temp_content' );
+function bp_blogs_activity_content_set_temp_content() {
 
-//	error_log( $activity->type );
-//	error_log( $activity->component );
-//	error_log( $activity->id );
-//	error_log( $activity->secondary_item_id );
+	global $activities_template;
 
-	$content = 'dfd';
-	if ( ( 'blogs' === $activity->component ) || ( 'activity_comment' === $activity->type ) ) {
-
-		if ( 'activity_comment' === $activity->component && $activity->item_id && $activity->item_id > 0 ) {
-			// Get activity object.
-			$comment_activity = new BP_Activity_Activity( $activity->item_id );
-			if ( 'blogs' === $comment_activity->component ) {
-				$comment_id = bp_activity_get_meta( $comment_activity->id, 'bp_blogs_post_comment_id', true );
-				$comment = get_comment( $comment_id );
-				error_log( print_r( $comment, 1 ) );
-			}
-		} else {
-
-//			error_log( $activity->secondary_item_id );
-			$content = get_post( $activity->secondary_item_id );
-
-			// If we converted $content to an object earlier, flip it back to a string.
-			if ( is_a( $content, 'WP_Post' ) ) {
-
-				// For the post and custom post type get the excerpt first.
-				$excerpt = get_the_excerpt( $content->ID );
-
-				// Get the excerpt first if found otherwise it will take the post content.
-				$content = ( $excerpt ) ?: $content->post_content;
-
-				$content = bp_create_excerpt( $content );
-
-//				error_log( $content );
-			}
+	$activity = $activities_template->activity;
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$content = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if ( is_a( $content, 'WP_Post' ) ) {
+			$activities_template->activity->content = '&#8203;';
 		}
 	}
 
+}
+
+add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
+function bp_blogs_activity_content_with_read_more( $content, $activity ) {
+
+	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+		$blog_post = get_post( $activity->secondary_item_id );
+		// If we converted $content to an object earlier, flip it back to a string.
+		if( is_a( $blog_post, 'WP_Post' ) ) {
+			 $content = bp_create_excerpt( html_entity_decode( $blog_post->post_content ) );
+			 if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				 $content = str_replace( ' [&hellip;]', '&hellip;', $content );
+				 $append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+				 $content = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
+				 $src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+				 if ( isset( $src[0] ) ) {
+					 $content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+				 }
+			 }
+		}
+
+	}
+
 	return $content;
+
+}
+
+add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_read_more', 9999, 2 );
+function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
+
+	if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+		// Get activity object.
+		$comment_activity = new BP_Activity_Activity( $activity->item_id );
+		if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+			$comment_post_type = $comment_activity->secondary_item_id;
+			$get_post_type = get_post_type( $comment_post_type );
+			$comment_id = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
+			if ( $comment_id ) {
+				$comment = get_comment( $comment_id );
+				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
+				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+					$content = str_replace( ' [&hellip;]', '&hellip;', $content );
+					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+					$content = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+				}
+			}
+		}
+	}
+	return $content;
+
 }

@@ -2482,7 +2482,7 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_post_object->component_id ) {
-		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', $post->post_content, $post, $post_url, $post->post_type );
+		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', '', $post, $post_url, $post->post_type );
 		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', $post_url, $post_id, $post->post_type );
 	} else {
 		$activity_content      = $post->post_content;
@@ -5013,7 +5013,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 	}
 
 }
-add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5117,7 +5117,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 	}
 
 }
-add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
