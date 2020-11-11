@@ -3033,7 +3033,7 @@ add_action( 'wp_ajax_bp_document_check_file_mime_type', 'bp_document_ajax_check_
 /**
  * Output the tabs in the admin area.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
@@ -3046,7 +3046,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the admin tabs to be displayed.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
@@ -3064,7 +3064,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 	/**
 	 * Fires after the output of tabs for the admin area.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 */
 	do_action( 'bp_admin_moderation_tabs' );
 }
@@ -3072,7 +3072,7 @@ function bp_core_admin_moderation_tabs( $active_tab = '' ) {
 /**
  * Register tabs for the BuddyBoss > Moderation screens.
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @param string $active_tab
  *
@@ -3110,7 +3110,7 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
-	 * @since BuddyBoss 1.5.4
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $tabs Tab data.
 	 */

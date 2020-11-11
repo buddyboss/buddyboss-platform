@@ -2,8 +2,8 @@
 /**
  * Filters related to the Moderation component.
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.

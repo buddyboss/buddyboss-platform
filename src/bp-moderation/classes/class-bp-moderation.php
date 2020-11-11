@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Classes
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.

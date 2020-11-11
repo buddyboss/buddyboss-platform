@@ -4,9 +4,9 @@
  *
  * Functions for the Moderation component.
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
  *
- * @since   BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -191,6 +191,8 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
 /**
  * Function to get the content based on type.
  *
+ * @since BuddyBoss 2.0.0
+ *
  * @param int    $moderation_item_id   moderation id to get the content.
  * @param string $moderation_item_type item type.
  *
@@ -226,6 +228,8 @@ function bp_moderation_get_content_type( $key ) {
 
 /**
  * Function to get Report button
+ *
+ * @since BuddyBoss 2.0.0
  *
  * @param array $args button args.
  * @param bool  $html Should return button html or not.

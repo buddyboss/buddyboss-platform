@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Forums Classes
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public static $moderation_type = 'forum';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Forums constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
@@ -150,6 +150,8 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked Members related forums
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_forum_query() {
@@ -168,6 +170,8 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	/**
 	 * Get Blocked Forums ids
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
@@ -176,6 +180,8 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $forum_id Forum id.
 	 *
@@ -187,6 +193,8 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $forum_id Forum id.
 	 *
@@ -210,5 +218,4 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	public static function report( $args ) {
 		return parent::report( $args );
 	}
-
 }

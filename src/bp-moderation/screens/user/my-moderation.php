@@ -2,8 +2,8 @@
 /**
  * Moderation: User's "Moderation" screen handler
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation\Screens
- * @since BuddyBoss 2.0.0
  */
 
 /**

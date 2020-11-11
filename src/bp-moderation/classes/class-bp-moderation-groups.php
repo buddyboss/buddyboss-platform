@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Groups Classes
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -118,6 +118,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get Exclude Blocked Members SQL
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_group_query() {
@@ -133,6 +135,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	/**
 	 * Get blocked Groups ids
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
@@ -141,6 +145,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $group_id Group id.
 	 *
@@ -154,6 +160,8 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $group_id Group id.
 	 *
@@ -177,5 +185,4 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	public static function report( $args ) {
 		return parent::report( $args );
 	}
-
 }

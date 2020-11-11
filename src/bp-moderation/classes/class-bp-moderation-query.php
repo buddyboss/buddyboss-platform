@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Query Classes
  *
+ * @since   BuddyBoss 2.0.0
  * @package BuddyBoss\Moderation
- * @since BuddyBoss 2.0.0
  */
 
 // Exit if accessed directly.
@@ -59,18 +59,19 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array $query {
-	 *     Array of query clauses.
-	 *     @type array {
-	 *         @type string $column   Required. The column to query against. Basically, any DB column in the main
+	 * @param array $query    {
+	 *                        Array of query clauses.
+	 *
+	 * @type array {
+	 * @type string $column   Required. The column to query against. Basically, any DB column in the main
 	 *                                'wp_bp_moderation' table.
-	 *         @type string $value    Required. Value to filter by.
-	 *         @type string $compare  Optional. The comparison operator. Default '='.
+	 * @type string $value    Required. Value to filter by.
+	 * @type string $compare  Optional. The comparison operator. Default '='.
 	 *                                Accepts '=', '!=', '>', '>=', '<', '<=', 'IN', 'NOT IN', 'LIKE',
 	 *                                'NOT LIKE', BETWEEN', 'NOT BETWEEN', 'REGEXP', 'NOT REGEXP', 'RLIKE'.
-	 *         @type string $relation Optional. The boolean relationship between the moderation queries.
+	 * @type string $relation Optional. The boolean relationship between the moderation queries.
 	 *                                Accepts 'OR', 'AND'. Default 'AND'.
-	 *         @type array {
+	 * @type array {
 	 *             Optional. Another fully-formed moderation query. See parameters above.
 	 *         }
 	 *     }
@@ -91,6 +92,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
 	 *                      Default: 'a'. BP_Moderation::get() uses 'a', so we default to that.
+	 *
 	 * @return array SQL fragment to append to the main query.
 	 */
 	public function get_sql( $alias = 'mo' ) {
@@ -103,6 +105,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 		// Also trim trailing "AND" clause from parent BP_Recursive_Query class
 		// since it's not necessary for our needs.
 		$sql['where'] = preg_replace( '/^\sAND/', '', $sql['where'] );
+
 		return $sql;
 	}
 
@@ -111,11 +114,12 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param  array $clause       Array of arguments belonging to the clause.
-	 * @param  array $parent_query Parent query to which the clause belongs.
+	 * @param array $clause       Array of arguments belonging to the clause.
+	 * @param array $parent_query Parent query to which the clause belongs.
+	 *
 	 * @return array {
-	 *     @type array $where Array of subclauses for the WHERE statement.
-	 *     @type array $join  Empty array. Not used.
+	 * @type array  $where        Array of subclauses for the WHERE statement.
+	 * @type array  $join         Empty array. Not used.
 	 * }
 	 */
 	protected function get_sql_for_clause( $clause, $parent_query ) {
@@ -243,6 +247,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $query Clause to check.
+	 *
 	 * @return bool
 	 */
 	protected function is_first_order_clause( $query ) {
@@ -258,6 +263,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $column The user-supplied column name.
+	 *
 	 * @return string A validated column name value.
 	 */
 	public function validate_column( $column = '' ) {

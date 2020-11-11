@@ -2,8 +2,8 @@
 /**
  * BuddyBoss Moderation Messages Classes
  *
- * @package BuddyBoss\Moderation
  * @since   BuddyBoss 2.0.0
+ * @package BuddyBoss\Moderation
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	public static $moderation_type = 'message';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Messages constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
@@ -51,7 +51,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button class.
-		add_filter('bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10,3 );
+		add_filter( 'bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10, 3 );
 	}
 
 	/**
@@ -151,6 +151,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify the button class
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param string $button_class button class.
 	 * @param bool   $is_reported  is content reported.
 	 * @param string $item_type    content type.
@@ -168,6 +170,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 	/**
 	 * Get SQL for Exclude Blocked Members related Messages
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return string|bool
 	 */
@@ -191,6 +195,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked group related Messages
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_group_messages_query() {
@@ -213,6 +219,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Get Blocked Message threads ids
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return array
 	 */
 	public static function get_sitewide_hidden_ids() {
@@ -221,6 +229,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Blocked Messages ids
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array
 	 */
@@ -245,6 +255,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Message thread ids of blocked groups.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array|mixed
 	 */
@@ -278,6 +290,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $message_id Message id.
 	 *
 	 * @return int
@@ -290,6 +304,8 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $message_id User id.
 	 *

@@ -24,7 +24,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	public static $moderation_type = 'forum_reply';
 
 	/**
-	 * BP_Moderation_Group constructor.
+	 * BP_Moderation_Forum_Replies constructor.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
@@ -168,6 +168,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Function to modify the button class
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param string $button_class button class.
 	 * @param bool   $is_reported  is content reported.
 	 * @param string $item_type    content type.
@@ -188,6 +190,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked Members related replies
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_member_reply_query() {
@@ -206,6 +210,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Get SQL for Exclude Blocked topic related replies
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return string|bool
 	 */
 	private function exclude_topic_reply_query() {
@@ -223,6 +229,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 	/**
 	 * Update blocked comment template
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param string $template_names Template name.
 	 *
@@ -249,6 +257,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 	/**
 	 * Get blocked Replies that also include Blocked forum & topic replies
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @return array
 	 */
@@ -282,6 +292,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	/**
 	 * Get Content owner id.
 	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @param integer $reply_id Reply id.
 	 *
 	 * @return int
@@ -292,6 +304,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 	/**
 	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $reply_id Reply id.
 	 *
@@ -315,5 +329,4 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	public static function report( $args ) {
 		return parent::report( $args );
 	}
-
 }
