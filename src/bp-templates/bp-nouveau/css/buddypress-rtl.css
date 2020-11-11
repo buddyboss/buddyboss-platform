@@ -3668,6 +3668,15 @@ form.ac-form .ac-reply-content input {
   margin-left: 15px;
 }
 
+.activity-comments li form.ac-form.ac-edit-form .dropzone:not(:empty) {
+  margin: 20px 0;
+}
+
+.activity-comments li form.ac-form .dz-complete .dz-remove:after {
+  right: 0;
+  top: 0;
+}
+
 .activity-comments form.root {
   margin-right: 0;
 }
