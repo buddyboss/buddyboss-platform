@@ -344,7 +344,6 @@ function bpm_reporting_settings_callback_auto_hide() {
 	<label for="bpm_reporting_auto_hide">
 		<input name="bpm_reporting_auto_hide" id="bpm_reporting_auto_hide" type="checkbox" value="1"
 				<?php checked( bp_is_moderation_auto_hide_enable( false ) ); ?> />
-		<?php esc_html_e( 'Auto hide content other specified threshold.', 'buddyboss' ); ?>
 		<?php printf( esc_html__( 'Automatically hide content after it has reported more than %s times.', 'buddyboss' ), $threshold ); ?>
 	</label>
 	<?php
