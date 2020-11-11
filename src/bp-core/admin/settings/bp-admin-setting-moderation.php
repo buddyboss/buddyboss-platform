@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss\Core
  *
- * @since BuddyBoss 1.5.4
+ * @since   BuddyBoss 1.5.4
  */
 
 // Exit if accessed directly.
@@ -25,6 +25,23 @@ class BP_Admin_Setting_Moderation extends BP_Admin_Setting_tab {
 		$this->tab_label = __( 'Moderation', 'buddyboss' );
 		$this->tab_name  = 'bp-moderation';
 		$this->tab_order = 80;
+	}
+
+	public function settings_save() {
+		$sections = bp_moderation_get_settings_sections();
+
+		foreach ( (array) $sections as $section_id => $section ) {
+			$fields = bp_moderation_get_settings_fields_for_section( $section_id );
+
+			foreach ( (array) $fields as $field_id => $field ) {
+				$value = isset( $_POST[ $field_id ] ) ? $_POST[ $field_id ] : '';
+				if ( is_callable( $field['sanitize_callback'] ) ) {
+					$value = $field['sanitize_callback']( $value );
+				}
+
+				bp_update_option( $field_id, $value );
+			}
+		}
 	}
 
 	/**
