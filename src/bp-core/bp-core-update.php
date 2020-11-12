@@ -1125,37 +1125,7 @@ function bp_update_to_1_5_5() {
 	global $wpdb;
 	$bp = buddypress();
 
-	// Reset the message media to group_id to 0 as it's never associated with the groups.
-	$select_query = "SELECT GROUP_CONCAT( id ) as media_id FROM {$bp->media->table_name} WHERE privacy = 'message' and group_id > 0";
-	$records = $wpdb->get_col( $select_query );
-	if ( ! empty( $records ) ) {
-		$records = reset( $records );
-		if ( !empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `group_id`= 0 WHERE id in (" . $records . ")";
-			$wpdb->query( $update_query );
-		}
-	}
-
-	// Reset the message media to activity_id to 0 as it's never associated with the activity.
-	$select_query = "SELECT GROUP_CONCAT( id ) as media_id FROM {$bp->media->table_name} WHERE privacy = 'message' and activity_id > 0";
-	$records = $wpdb->get_col( $select_query );
-	if ( ! empty( $records ) ) {
-		$records = reset( $records );
-		if ( !empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `activity_id`= 0 WHERE id in (" . $records . ")";
-			$wpdb->query( $update_query );
-		}
-	}
-
-	// Reset the message media to album_id to 0 as it's never associated with the album.
-	$select_query = "SELECT GROUP_CONCAT( id ) as media_id FROM {$bp->media->table_name} WHERE privacy = 'message' and album_id > 0";
-	$records = $wpdb->get_col( $select_query );
-	if ( ! empty( $records ) ) {
-		$records = reset( $records );
-		if ( !empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `album_id`= 0 WHERE id in (" . $records . ")";
-			$wpdb->query( $update_query );
-		}
-	}
-
+	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
 }
