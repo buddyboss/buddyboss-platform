@@ -37,9 +37,9 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
-		 * Moderation code should not add for WordPress backend & IF component is not active
+		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'media' ) ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'media' ) || self::admin_bypass_check() ) {
 			return;
 		}
 

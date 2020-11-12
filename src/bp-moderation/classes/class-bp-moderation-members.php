@@ -36,9 +36,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
-		 * Moderation code should not add for WordPress backend
+		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( is_admin() && ! wp_doing_ajax() ) {
+		if ( is_admin() && ! wp_doing_ajax() && self::admin_bypass_check() ) {
 			return;
 		}
 
