@@ -4667,7 +4667,7 @@ function bp_member_get_report_link( $args = array() ) {
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
 				'data-bp-content-id'   => bp_displayed_user_id(),
-				'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
+				'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
 			),
 		)
 	);
@@ -4676,7 +4676,7 @@ function bp_member_get_report_link( $args = array() ) {
 	 * Restricted Report link for admin user.
 	 */
 	$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
-	if ( in_array( $args['button_attr']['data-bp-content-id'], $admins, true ) ) {
+	if ( in_array( $args['button_attr']['data-bp-content-id'], $admins ) ) {
 		return array();
 	}
 
