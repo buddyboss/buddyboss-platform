@@ -49,6 +49,60 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get blocked Groups ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $group_id Group id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $group_id ) {
+		$group = new BP_Groups_Group( $group_id );
+
+		return ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $group_id Group id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $group_id ) {
+		$group = new BP_Groups_Group( $group_id );
+
+		return ( ! empty( $group->description ) ) ? $group->description : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -130,59 +184,5 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Get blocked Groups ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $group_id Group id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $group_id ) {
-		$group = new BP_Groups_Group( $group_id );
-
-		return ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $group_id Group id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $group_id ) {
-		$group = new BP_Groups_Group( $group_id );
-
-		return ( ! empty( $group->description ) ) ? $group->description : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }

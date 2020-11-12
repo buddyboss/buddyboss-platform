@@ -50,12 +50,52 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10 );
 
-
 		// button class.
-		add_filter( 'bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10, 3 );
+		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
 
 		// Blocked template
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $reply_id Reply id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $reply_id ) {
+		return get_post_field( 'post_author', $reply_id );
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $reply_id Reply id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $reply_id ) {
+		$reply_content = get_post_field( 'post_content', $reply_id );
+
+		return ( ! empty( $reply_content ) ) ? $reply_content : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
 	}
 
 	/**
@@ -166,28 +206,6 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify the button class
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $button_class button class.
-	 * @param bool   $is_reported  is content reported.
-	 * @param string $item_type    content type.
-	 *
-	 * @return string
-	 */
-	public function update_button_class( $button_class, $is_reported, $item_type ) {
-
-		if ( ! empty( $item_type ) && $this->item_type === $item_type && true === $is_reported ) {
-			$button_class = 'reported-content';
-		} elseif ( ! empty( $item_type ) && $this->item_type === $item_type ) {
-			$button_class = 'report-content';
-		}
-
-		return $button_class;
-	}
-
-	/**
 	 * Get SQL for Exclude Blocked Members related replies
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -225,6 +243,30 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to modify the button class
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $button      Button args.
+	 * @param string $item_type   Content type.
+	 * @param string $is_reported Item reported.
+	 *
+	 * @return string
+	 */
+	public function update_button_args( $button, $item_type, $is_reported ) {
+
+		if ( self::$moderation_type === $item_type ) {
+			if ( $is_reported ) {
+				$button['button_attr']['class'] = 'reported-content';
+			} else {
+				$button['button_attr']['class'] = 'report-content';
+			}
+		}
+
+		return $button;
 	}
 
 	/**
@@ -287,46 +329,5 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		return $hidden_reply_ids;
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $reply_id Reply id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $reply_id ) {
-		return get_post_field( 'post_author', $reply_id );
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $reply_id Reply id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $reply_id ) {
-		$reply_content = get_post_field( 'post_content', $reply_id );
-
-		return ( ! empty( $reply_content ) ) ? $reply_content : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }

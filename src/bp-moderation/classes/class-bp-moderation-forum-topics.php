@@ -52,6 +52,81 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get blocked Topics that also include Blocked forum's topics
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		$hidden_topic_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
+
+		$hidden_forum_ids = BP_Moderation_Forums::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_forum_ids ) ) {
+			$topics_query = new WP_Query(
+				array(
+					'fields'                 => 'ids',
+					'post_type'              => bbp_get_topic_post_type(),
+					'post_status'            => 'publish',
+					'post_parent__in'        => $hidden_forum_ids,
+					'posts_per_page'         => - 1,
+					// Need to get all topics id of hidden forums.
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+					'suppress_filters'       => true,
+				)
+			);
+
+			if ( $topics_query->have_posts() ) {
+				$hidden_topic_ids = array_merge( $hidden_topic_ids, $topics_query->posts );
+			}
+		}
+
+		return $hidden_topic_ids;
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $topic_id Topic id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $topic_id ) {
+		return get_post_field( 'post_author', $topic_id );
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $topic_id Topic id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $topic_id ) {
+		$topic_content = get_post_field( 'post_content', $topic_id );
+
+		return ( ! empty( $topic_content ) ) ? $topic_content : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -193,80 +268,5 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Get blocked Topics that also include Blocked forum's topics
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		$hidden_topic_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
-
-		$hidden_forum_ids = BP_Moderation_Forums::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_forum_ids ) ) {
-			$topics_query = new WP_Query(
-				array(
-					'fields'                 => 'ids',
-					'post_type'              => bbp_get_topic_post_type(),
-					'post_status'            => 'publish',
-					'post_parent__in'        => $hidden_forum_ids,
-					'posts_per_page'         => - 1,
-					// Need to get all topics id of hidden forums.
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-					'suppress_filters'       => true,
-				)
-			);
-
-			if ( $topics_query->have_posts() ) {
-				$hidden_topic_ids = array_merge( $hidden_topic_ids, $topics_query->posts );
-			}
-		}
-
-		return $hidden_topic_ids;
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $topic_id Topic id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $topic_id ) {
-		return get_post_field( 'post_author', $topic_id );
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $topic_id Topic id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $topic_id ) {
-		$topic_content = get_post_field( 'post_content', $topic_id );
-
-		return ( ! empty( $topic_content ) ) ? $topic_content : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }

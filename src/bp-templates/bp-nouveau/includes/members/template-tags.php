@@ -595,25 +595,16 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 			unset( bp_nouveau()->members->button_args );
 		}
 
-		if ( bp_is_active( 'moderation' ) ){
-			$buttons['member_report'] = bp_moderation_get_report_button(
+		if ( bp_is_active( 'moderation' ) ) {
+			$buttons['member_report'] = bp_member_get_report_link(
 				array(
-					'id'                => 'member_report',
-					'position'          => 50,
-					'component'         => 'moderation',
-					'parent_element'    => $parent_element,
-					'parent_attr'       => array(
+					'parent_element' => $parent_element,
+					'parent_attr'    => array(
 						'id'    => $button_args['wrapper_id'],
 						'class' => $parent_class,
 					),
-					'must_be_logged_in' => true,
-					'button_element'    => $button_element,
-					'button_attr'       => array(
-						'data-bp-content-id'   => $user_id,
-						'data-bp-content-type' => BP_Moderation_Members::$moderation_type,
-					),
-				),
-				false
+					'button_element' => $button_element,
+				)
 			);
 		}
 

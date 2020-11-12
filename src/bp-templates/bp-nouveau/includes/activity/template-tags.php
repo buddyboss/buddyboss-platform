@@ -627,22 +627,13 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		);
 	}
 
-	if ( bp_is_active( 'moderation' ) ){
-		$buttons['activity_report'] = bp_moderation_get_report_button(
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_report'] = bp_activity_get_report_link(
 			array(
-				'id'                => 'activity_report',
-				'position'          => 50,
-				'component'         => 'moderation',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-					'data-bp-content-id'   => $activity_id,
-					'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
-				),
-			),
-			false
+				'parent_element' => $parent_element,
+				'parent_attr'    => $parent_attr,
+				'button_element' => $button_element,
+			)
 		);
 	}
 
@@ -979,22 +970,13 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		);
 	}
 
-	if ( bp_is_active( 'moderation' ) ){
-		$buttons['activity_report'] = bp_moderation_get_report_button(
-			array(
-				'id'                => 'activity_comment_report',
-				'position'          => 50,
-				'component'         => 'moderation',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-						'data-bp-content-id'   => $activity_comment_id,
-						'data-bp-content-type' => BP_Moderation_Activity_Comment::$moderation_type,
-				),
-			),
-			false
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
+				array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => $parent_attr,
+						'button_element' => $button_element,
+				)
 		);
 	}
 

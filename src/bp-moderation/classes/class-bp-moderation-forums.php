@@ -52,6 +52,58 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Blocked Forums ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $forum_id Forum id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $forum_id ) {
+		return get_post_field( 'post_author', $forum_id );
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $forum_id Forum id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $forum_id ) {
+		$forum_content = get_post_field( 'post_content', $forum_id );
+
+		return ( ! empty( $forum_content ) ) ? $forum_content : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -165,57 +217,5 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Get Blocked Forums ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $forum_id Forum id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $forum_id ) {
-		return get_post_field( 'post_author', $forum_id );
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $forum_id Forum id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $forum_id ) {
-		$forum_content = get_post_field( 'post_content', $forum_id );
-
-		return ( ! empty( $forum_content ) ) ? $forum_content : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }
