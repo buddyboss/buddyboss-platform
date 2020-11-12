@@ -140,6 +140,9 @@ window.bp = window.bp || {};
 						);
 					}
 
+					$( '#header-cover-image .header-cover-img' ).remove();
+					$( '#header-cover-image  .position-change-cover-image').remove();
+
 						// Reset the has_cover_image bp_param
 						BP_Uploader.settings.defaults.multipart_params.bp_params.has_cover_image = false;
 
