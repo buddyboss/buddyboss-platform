@@ -281,7 +281,7 @@ class BP_XProfile_Component extends BP_Component {
 		);
 
 		// Change Avatar.
-		if ( buddypress()->avatar->show_avatars ) {
+		if ( buddypress()->avatar->show_avatars && ! bp_disable_avatar_uploads() ) {
 			$sub_nav[] = array(
 				'name'            => __( 'Profile Photo', 'buddyboss' ),
 				'slug'            => 'change-avatar',

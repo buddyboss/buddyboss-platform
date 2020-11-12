@@ -174,7 +174,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** Discussion Title */
 
 	if ( ! empty( $_POST['bbp_topic_title'] ) ) {
-		$topic_title = esc_attr( strip_tags( $_POST['bbp_topic_title'] ) );
+		$topic_title = sanitize_text_field( $_POST['bbp_topic_title'] );
 	}
 
 	// Filter and sanitize.
@@ -195,11 +195,10 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content.
-	if (
-		empty( $topic_content )
-		&& empty( $_POST['bbp_media'] )
-		&& empty( $_POST['bbp_document'] )
-		&& empty( $_POST['bbp_media_gif'] )
+	if ( empty( trim( html_entity_decode( wp_strip_all_tags( $topic_content ) ) ) )
+		 && empty( $_POST['bbp_media'] )
+		 && empty( $_POST['bbp_document'] )
+		 && empty( $_POST['bbp_media_gif'] )
 	) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
@@ -1347,10 +1346,12 @@ function bbp_merge_topic_handler( $action = '' ) {
 	// Get the replies of the source topic.
 	$replies = (array) get_posts(
 		array(
-			'post_parent'    => $source_topic->ID,
-			'post_type'      => bbp_get_reply_post_type(),
-			'posts_per_page' => -1,
-			'order'          => 'ASC',
+			'post_parent'            => $source_topic->ID,
+			'post_type'              => bbp_get_reply_post_type(),
+			'posts_per_page'         => - 1,
+			'order'                  => 'ASC',
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
 		)
 	);
 

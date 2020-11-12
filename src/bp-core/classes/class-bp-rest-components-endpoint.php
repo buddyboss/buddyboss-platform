@@ -218,7 +218,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 				'bp_rest_component_nonexistent',
 				__( 'Sorry, this component does not exist.', 'buddyboss' ),
 				array(
-					'status' => 500,
+					'status' => 404,
 				)
 			);
 		}
@@ -240,7 +240,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 					'bp_rest_component_already_active',
 					__( 'Sorry, this component is already active.', 'buddyboss' ),
 					array(
-						'status' => 500,
+						'status' => 400,
 					)
 				);
 			}
@@ -252,7 +252,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 					'bp_rest_component_inactive',
 					__( 'Sorry, this component is not active.', 'buddyboss' ),
 					array(
-						'status' => 500,
+						'status' => 400,
 					)
 				);
 			}
@@ -262,7 +262,7 @@ class BP_REST_Components_Endpoint extends WP_REST_Controller {
 					'bp_rest_required_component',
 					__( 'Sorry, you cannot deactivate a required component.', 'buddyboss' ),
 					array(
-						'status' => 500,
+						'status' => 400,
 					)
 				);
 			}

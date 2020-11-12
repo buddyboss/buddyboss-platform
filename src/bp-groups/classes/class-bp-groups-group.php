@@ -1074,8 +1074,10 @@ class BP_Groups_Group {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
+		$function_args = func_get_args();
+
 		// Backward compatibility with old method of passing arguments.
-		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		if ( ! is_array( $args ) || count( $function_args ) > 1 ) {
 			_deprecated_argument( __METHOD__, '1.7', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -1090,7 +1092,7 @@ class BP_Groups_Group {
 				8 => 'show_hidden',
 			);
 
-			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
+			$args = bp_core_parse_args_array( $old_args_keys, $function_args );
 		}
 
 		$defaults = array(
@@ -1129,7 +1131,7 @@ class BP_Groups_Group {
 			'pagination' => '',
 		);
 
-		if ( ! empty( $r['user_id'] ) ) {
+		if ( ! empty( $r['user_id'] ) || ! empty( $r['show_hidden'] ) ) {
 			$sql['from'] .= " JOIN {$bp->groups->table_name_members} m ON ( g.id = m.group_id )";
 		}
 
@@ -1142,7 +1144,18 @@ class BP_Groups_Group {
 			$r['status']                = array_map( 'sanitize_title', $r['status'] );
 			$status_in                  = "'" . implode( "','", $r['status'] ) . "'";
 			$where_conditions['status'] = "g.status IN ({$status_in})";
-		} elseif ( empty( $r['show_hidden'] ) ) {
+		}
+
+		/**
+		 * if current page is not current user group's invite page and show_hidden is true and user is moderator and query is not for current user group
+		 *      then hidden group should be only visible if user is member of that group
+		 * else show_hidden is true is user is guest or show_hidden is false
+		 *      then hide hidden group
+		 */
+		if ( ! bp_is_user_groups_invites() && ! empty( $r['show_hidden'] ) && ! bp_current_user_can( 'bp_moderate' ) && is_user_logged_in() && $r['user_id'] != bp_loggedin_user_id() ){
+			// Exclude all other hidden group
+			$where_conditions['hidden'] = $wpdb->prepare( "( g.status != 'hidden' OR ( g.status = 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0 ) )", bp_loggedin_user_id() );
+		} elseif ( empty( $r['show_hidden'] ) || ( ! empty( $r['show_hidden'] ) && ! is_user_logged_in() )  ) {
 			$where_conditions['hidden'] = "g.status != 'hidden'";
 		}
 

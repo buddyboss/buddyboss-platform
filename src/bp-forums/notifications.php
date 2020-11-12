@@ -159,6 +159,8 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 
 		return $return;
 	}
+
+	return $action;
 }
 add_filter( 'bp_notifications_get_notifications_for_user', 'bbp_format_buddypress_notifications', 10, 5 );
 
@@ -183,7 +185,10 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		return;
 	}
 
-	// Get autohr information
+	// Define variable.
+	$reply_to_item_id = 0;
+
+	// Get author information.
 	$topic_author_id   = bbp_get_topic_author_id( $topic_id );
 	$secondary_item_id = $author_id;
 
@@ -198,18 +203,18 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		'item_id'          => $reply_id,
 		'component_name'   => bbp_get_component_name(),
 		'component_action' => 'bbp_new_reply',
-		'date_notified'    => get_post( $reply_id )->post_date,
+		'date_notified'    => get_post( $reply_id )->post_date_gmt,
 	);
 
 	// Notify the topic author if not the current reply author
-	if ( $author_id !== $topic_author_id ) {
+	if ( $author_id !== $topic_author_id && $topic_author_id !== $reply_to_item_id ) {
 		$args['secondary_item_id'] = $secondary_item_id;
 
 		bp_notifications_add_notification( $args );
 	}
 
 	// Notify the immediate reply author if not the current reply author
-	if ( ! empty( $reply_to ) && ( $author_id !== $reply_to_item_id ) ) {
+	if ( ! empty( $reply_to ) && ( $author_id !== $reply_to_item_id ) && ( $author_id !== $topic_author_id ) ) {
 		$args['secondary_item_id'] = $reply_to_item_id;
 
 		bp_notifications_add_notification( $args );

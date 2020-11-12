@@ -43,7 +43,7 @@ function bp_core_set_avatar_constants() {
 	}
 
 	if ( ! defined( 'BP_SHOW_AVATARS' ) ) {
-		define( 'BP_SHOW_AVATARS', bp_get_option( 'show_avatars' ) );
+		define( 'BP_SHOW_AVATARS', true );
 	}
 }
 add_action( 'bp_init', 'bp_core_set_avatar_constants', 3 );
