@@ -317,6 +317,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16201 ) {
 			bp_update_to_1_5_1();
 		}
+
+		if ( $raw_db_version < 16301 ) {
+			bp_update_to_1_5_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1109,4 +1113,49 @@ function bb_update_to_1_3_5() {
 	if ( bp_is_active( 'groups' ) ) {
 		bp_groups_migrate_invitations();
 	}
+}
+
+/**
+ * Fix message media showing in group photos tab.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_update_to_1_5_5() {
+
+	global $wpdb;
+	$bp = buddypress();
+
+	// Reset the message media to group_id to 0 as it's never associated with the groups.
+	$select_query = "SELECT GROUP_CONCAT( id ) as media_id FROM {$bp->media->table_name} WHERE privacy = 'message' and group_id > 0";
+	$records = $wpdb->get_col( $select_query );
+	if ( ! empty( $records ) ) {
+		$records = reset( $records );
+		if ( !empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `group_id`= 0 WHERE id in (" . $records . ")";
+			$wpdb->query( $update_query );
+		}
+	}
+
+	// Reset the message media to activity_id to 0 as it's never associated with the activity.
+	$select_query = "SELECT GROUP_CONCAT( id ) as media_id FROM {$bp->media->table_name} WHERE privacy = 'message' and activity_id > 0";
+	$records = $wpdb->get_col( $select_query );
+	if ( ! empty( $records ) ) {
+		$records = reset( $records );
+		if ( !empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `activity_id`= 0 WHERE id in (" . $records . ")";
+			$wpdb->query( $update_query );
+		}
+	}
+
+	// Reset the message media to album_id to 0 as it's never associated with the album.
+	$select_query = "SELECT GROUP_CONCAT( id ) as media_id FROM {$bp->media->table_name} WHERE privacy = 'message' and album_id > 0";
+	$records = $wpdb->get_col( $select_query );
+	if ( ! empty( $records ) ) {
+		$records = reset( $records );
+		if ( !empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `album_id`= 0 WHERE id in (" . $records . ")";
+			$wpdb->query( $update_query );
+		}
+	}
+
 }
