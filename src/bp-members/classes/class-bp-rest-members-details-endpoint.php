@@ -809,12 +809,14 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 			);
 
 			if ( bp_is_active( 'moderation' ) ) {
-				$item_settings['children'][] = array(
-					'ID'    => 'blocked-members',
-					'title' => __( 'Blocked Members', 'buddyboss' ),
-					'url'   => esc_url( trailingslashit( $settings_link . 'blocked-members' ) ),
-					'count' => '',
-				);
+				if ( bp_is_moderation_member_blocking_enable() ) {
+					$item_settings['children'][] = array(
+						'ID'    => 'blocked-members',
+						'title' => __( 'Blocked Members', 'buddyboss' ),
+						'url'   => esc_url( trailingslashit( $settings_link . 'blocked-members' ) ),
+						'count' => '',
+					);
+				}
 				$item_settings['children'][] = array(
 					'ID'    => 'reported-content',
 					'title' => __( 'Reported Content', 'buddyboss' ),

@@ -226,7 +226,10 @@ function bp_moderation_admin() {
         <div class="wrap">
             <h2 class="nav-tab-wrapper">
 				<?php
-				if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
+				$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+				$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
+
+				if ( 'reported-content' === $current_tab ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
 				} else {
 					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
@@ -263,13 +266,16 @@ function bp_moderation_admin() {
 function bp_moderation_admin_index() {
 	global $bp_moderation_list_table, $plugin_page;
 
+	$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+	$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
+
 	// Prepare the group items for display.
 	$bp_moderation_list_table->prepare_items();
 	?>
     <div class="wrap">
         <h1>
 			<?php
-			if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
+			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
 			} else {
 				esc_html_e( 'Blocked Members', 'buddyboss' );
