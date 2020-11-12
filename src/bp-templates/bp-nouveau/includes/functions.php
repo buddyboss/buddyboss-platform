@@ -1015,15 +1015,19 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'moderation-reported-content-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading content you have reported. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading your reported content. Please wait.', 'buddyboss' ),
+		),
+		'moderation-reported-content-none' => array(
+			'type'    => 'loading',
+			'message' => __( 'Sorry, no reported content was found.', 'buddyboss' ),
 		),
 		'moderation-block-member-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading members you have blocked. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading your blocked members. Please wait.', 'buddyboss' ),
 		),
 		'moderation-requests-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no moderation were found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no blocked members were found.', 'buddyboss' ),
 		)
 	) );
 

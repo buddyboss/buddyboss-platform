@@ -14,7 +14,11 @@ if ( 'blocked-members' === bp_current_action() ) {
 if ( bp_has_moderation( bp_ajax_querystring( 'moderation' ) ) ) :
 	bp_get_template_part( $template );
 else :
-	bp_nouveau_user_feedback( 'moderation-requests-none' );
+	if ( 'blocked-members' === bp_current_action() ) {
+		bp_nouveau_user_feedback( 'moderation-requests-none' );
+	}else{
+		bp_nouveau_user_feedback( 'moderation-reported-content-none' );
+	}
 endif;
 ?>
 <?php

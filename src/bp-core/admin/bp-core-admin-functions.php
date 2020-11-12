@@ -3083,19 +3083,17 @@ function bp_core_get_moderation_admin_tabs( $active_tab = '' ) {
 	$tabs = array();
 
 	$tabs[] = array(
-		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation' ), 'admin.php' ) ),
-		'name'  => esc_html__( 'Reported Content', 'buddyboss' ),
-		'class' => 'bp-reported-content',
-	);
-
-
-	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array(
 			'page' => 'bp-moderation',
-			'tab'  => 'blocked-members'
 		), 'admin.php' ) ),
 		'name'  => esc_html__( 'Blocked Members', 'buddyboss' ),
 		'class' => 'bp-blocked-members',
+	);
+
+	$tabs[] = array(
+		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-moderation', 'tab'  => 'reported-content' ), 'admin.php' ) ),
+		'name'  => esc_html__( 'Reported Content', 'buddyboss' ),
+		'class' => 'bp-reported-content',
 	);
 
 	$tabs[] = array(

@@ -116,10 +116,10 @@ function bp_has_moderation( $args = '' ) {
 
 	$args = bp_parse_args( $args );
 
-	if ( bp_is_user_moderation() && 'reported-content' === bp_current_action() ) {
+	if ( bp_is_my_profile() && 'reported-content' === bp_current_action() ) {
 		$args['exclude_types']     = array( 'user' );
 		$args['display_reporters'] = true;
-	} elseif ( bp_is_user_moderation() && 'blocked-members' === bp_current_action() ) {
+	} elseif ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) {
 		$args['in_types']          = array( 'user' );
 		$args['display_reporters'] = true;
 	}

@@ -44,6 +44,8 @@ function bp_moderation_admin_scripts( $hook ) {
 					'confirm_msg'            => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
 					'hide_label'             => esc_js( __( 'Hide', 'buddyboss' ) ),
 					'unhide_label'           => esc_js( __( 'Unhide', 'buddyboss' ) ),
+					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
+					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
 					'suspend_author_label'   => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
 					'unsuspend_author_label' => esc_js( __( 'Unsuspend Content Author', 'buddyboss' ) ),
 					'suspend_member_label'   => esc_js( __( 'Suspend Member', 'buddyboss' ) ),
@@ -224,10 +226,10 @@ function bp_moderation_admin() {
         <div class="wrap">
             <h2 class="nav-tab-wrapper">
 				<?php
-				if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
-				} else {
+				if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
 					bp_core_admin_moderation_tabs( esc_html__( 'Reported Content', 'buddyboss' ) );
+				} else {
+					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
 				}
 				?>
             </h2>
@@ -267,10 +269,10 @@ function bp_moderation_admin_index() {
     <div class="wrap">
         <h1>
 			<?php
-			if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-				esc_html_e( 'Blocked Members', 'buddyboss' );
-			} else {
+			if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
+			} else {
+				esc_html_e( 'Blocked Members', 'buddyboss' );
 			}
 			?>
         </h1>
@@ -346,7 +348,7 @@ function bp_moderation_admin_category_listing_add_tab() {
 	if ( ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow ) && ( 'bpm_category' === $current_screen->taxonomy ) ) {
 		?>
         <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Reporting Categories', 'buddyboss' ) ); ?></h2>
+            <h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Reporting Categories', 'buddyboss' ) ); ?></h2>
         </div>
 		<?php
 	}

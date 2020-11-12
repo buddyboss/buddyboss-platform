@@ -6,17 +6,17 @@
  * @package BuddyBoss
  *
  */
-$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
-$is_member_screen = ! empty( $current_tab ) && 'blocked-members' === $current_tab;
+$current_tab       = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+$is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_tab;
 ?>
 <div class="wrap">
     <h1>
 		<?php
 		/* translators: accessibility text */
-		if ( $is_member_screen ) {
-			printf( esc_html__( 'View Blocked Member', 'buddyboss' ) );
-		} else {
+		if ( $is_content_screen ) {
 			printf( esc_html__( 'View Reported Content', 'buddyboss' ) );
+		} else {
+			printf( esc_html__( 'View Blocked Member', 'buddyboss' ) );
 		}
 		?>
     </h1>
@@ -36,40 +36,7 @@ $is_member_screen = ! empty( $current_tab ) && 'blocked-members' === $current_ta
 
                                 <table class="form-table">
                                     <tbody>
-									<?php if ( $is_member_screen ) { ?>
-                                        <tr>
-                                            <th scope="row">
-                                                <label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Blocked Member', 'buddyboss' );
-													?>
-                                                </label>
-                                            </th>
-                                            <td>
-												<?php
-												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
-												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
-												?>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">
-                                                <label>
-													<?php
-													/* translators: accessibility text */
-													esc_html_e( 'Times Blocked', 'buddyboss' );
-													?>
-                                                </label>
-                                            </th>
-                                            <td>
-												<?php
-												/* translators: accessibility text */
-												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
-												?>
-                                            </td>
-                                        </tr>
-									<?php } else { ?>
+									<?php if ( $is_content_screen ) { ?>
                                         <tr>
                                             <th scope="row">
                                                 <label>
@@ -148,6 +115,39 @@ $is_member_screen = ! empty( $current_tab ) && 'blocked-members' === $current_ta
 												?>
                                             </td>
                                         </tr>
+									<?php } else { ?>
+                                        <tr>
+                                            <th scope="row">
+                                                <label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Blocked Member', 'buddyboss' );
+													?>
+                                                </label>
+                                            </th>
+                                            <td>
+												<?php
+												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+												?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <label>
+													<?php
+													/* translators: accessibility text */
+													esc_html_e( 'Times Blocked', 'buddyboss' );
+													?>
+                                                </label>
+                                            </th>
+                                            <td>
+												<?php
+												/* translators: accessibility text */
+												printf( _n( '%s time', '%s times', $moderation_request_data->count, 'buddyboss' ), esc_html( number_format_i18n( $moderation_request_data->count ) ) );
+												?>
+                                            </td>
+                                        </tr>
 									<?php } ?>
                                     </tbody>
                                 </table>
@@ -164,7 +164,8 @@ $is_member_screen = ! empty( $current_tab ) && 'blocked-members' === $current_ta
 								?>
                                 <div class="bp-moderation-actions">
 									<?php
-									if ( $is_member_screen ) {
+									if ( $is_content_screen ) {
+
 										$user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 										$user_action_type  = 'hide';
 										$user_action_label = esc_html__( 'Hide', 'buddyboss' );
