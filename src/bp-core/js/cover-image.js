@@ -140,6 +140,9 @@ window.bp = window.bp || {};
 						);
 					}
 
+					$( '#header-cover-image .header-cover-img' ).remove();
+					$( '#header-cover-image  .position-change-cover-image').remove();
+
 						// Reset the has_cover_image bp_param
 						BP_Uploader.settings.defaults.multipart_params.bp_params.has_cover_image = false;
 
@@ -265,7 +268,11 @@ window.bp = window.bp || {};
 					}
 
 					// Update the header of the page and reset the position
-					$( '#header-cover-image .header-cover-img' ).prop( 'src', model.get( 'url' ) );
+					if( $( '#header-cover-image .header-cover-img' ).length ) {
+						$( '#header-cover-image .header-cover-img' ).prop( 'src', model.get( 'url' ) );
+					} else {
+						$( '#header-cover-image' ).prepend( '<img src="'+ model.get( 'url' ) +'" class="header-cover-img" />');
+					}
 
 					if( $('#header-cover-image .header-cover-reposition-wrap .guillotine-window img').length ) {
 						var reposition_img = $('#header-cover-image .header-cover-reposition-wrap .guillotine-window img');
