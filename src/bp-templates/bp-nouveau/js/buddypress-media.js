@@ -170,7 +170,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind( this ) );
 			$( document ).on( 'click', '#bp-edit-folder-open', this.openEditFolderChildModal.bind( this ) );
 
-			$( document ).one( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( document ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
 			$( document ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
@@ -3413,7 +3413,12 @@ window.bp = window.bp || {};
 		saveAlbum: function (event) {
 			var target  = $( event.currentTarget ), self = this, title = $( '#bb-album-title' ),
 				privacy = $( '#bb-album-privacy' );
-			event.preventDefault();
+
+			if( target.hasClass('saving') ) {
+				return false;
+			}
+			
+			event.preventDefault();		
 
 			if ($.trim( title.val() ) === '') {
 				title.addClass( 'error' );
@@ -3429,7 +3434,7 @@ window.bp = window.bp || {};
 				privacy.removeClass( 'error' );
 			}
 
-			target.attr( 'disabled', true );
+			target.addClass('saving');
 			var data = {
 				'action'	: 'media_album_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,
@@ -3458,7 +3463,7 @@ window.bp = window.bp || {};
 					success: function (response) {
 						setTimeout(
 							function () {
-								target.prop( 'disabled', false );
+								target.removeClass('saving');
 							},
 							500
 						);
