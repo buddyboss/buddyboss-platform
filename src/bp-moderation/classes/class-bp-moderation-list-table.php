@@ -316,7 +316,6 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 *
 	 * Basically a duplicate of the row_actions() method, but removes the
 	 * unnecessary <button> addition.
-	 *
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $actions        The list of actions.
