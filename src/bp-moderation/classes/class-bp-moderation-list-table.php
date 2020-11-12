@@ -86,7 +86,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 2.0.0
 	 */
 	public function no_items() {
-		if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
+		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		if ( 'reported-content' === $current_tab ) {
 			esc_html_e( 'Sorry, no reported content was found.', 'buddyboss' );
 		} else {
 			esc_html_e( 'Sorry, no blocked members were found.', 'buddyboss' );
