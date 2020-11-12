@@ -51,7 +51,87 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		add_filter( 'bp_messages_recipient_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button class.
-		add_filter( 'bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10, 3 );
+		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+	}
+
+	/**
+	 * Get Blocked Messages ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_messages_hidden_ids() {
+		$messages_ids = array();
+		$threads      = self::get_sitewide_hidden_ids();
+		if ( ! empty( $threads ) ) {
+			$results = BP_Messages_Message::get(
+				array(
+					'fields'           => 'ids',
+					'include_threads'  => $threads,
+					'moderation_query' => false,
+				)
+			);
+			if ( ! empty( $results['messages'] ) ) {
+				$messages_ids = $results['messages'];
+			}
+		}
+
+		return $messages_ids;
+	}
+
+	/**
+	 * Get Blocked Message threads ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $message_id Message id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $message_id ) {
+		$message = new BP_Messages_Message( $message_id );
+
+		return ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $message_id User id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $message_id ) {
+		$message = new BP_Messages_Message( $message_id );
+
+		return ( ! empty( $message->message ) ) ? $message->message : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
 	}
 
 	/**
@@ -149,50 +229,6 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify the button class
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $button_class button class.
-	 * @param bool   $is_reported  is content reported.
-	 * @param string $item_type    content type.
-	 *
-	 * @return string
-	 */
-	public function update_button_class( $button_class, $is_reported, $item_type ) {
-
-		if ( ! empty( $item_type ) && $this->item_type === $item_type && true === $is_reported ) {
-			$button_class = 'reported-content';
-		}
-
-		return $button_class;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked Members related Messages
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_member_message_query() {
-		$action_name = current_filter();
-
-		$user_id_field = 'm.sender_id';
-		if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
-			$user_id_field = 'r.user_id';
-		}
-
-		$sql                = false;
-		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_members_ids ) ) {
-			$sql = "( {$user_id_field} NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
 	 * Get SQL for Exclude Blocked group related Messages
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -214,43 +250,6 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Get Blocked Message threads ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
-	}
-
-	/**
-	 * Get Blocked Messages ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_messages_hidden_ids() {
-		$messages_ids = array();
-		$threads      = self::get_sitewide_hidden_ids();
-		if ( ! empty( $threads ) ) {
-			$results = BP_Messages_Message::get(
-				array(
-					'fields'           => 'ids',
-					'include_threads'  => $threads,
-					'moderation_query' => false,
-				)
-			);
-			if ( ! empty( $results['messages'] ) ) {
-				$messages_ids = $results['messages'];
-			}
-		}
-
-		return $messages_ids;
 	}
 
 	/**
@@ -288,45 +287,50 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content owner id.
+	 * Function to modify the button class
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $message_id Message id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $message_id ) {
-		$message = new BP_Messages_Message( $message_id );
-
-		return ( ! empty( $message->sender_id ) ) ? $message->sender_id : 0;
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $message_id User id.
+	 * @param array  $button      Button args.
+	 * @param string $item_type   Content type.
+	 * @param string $is_reported Item reported.
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $message_id ) {
-		$message = new BP_Messages_Message( $message_id );
+	public function update_button_args( $button, $item_type, $is_reported ) {
 
-		return ( ! empty( $message->message ) ) ? $message->message : '';
+		if ( self::$moderation_type === $item_type ) {
+			if ( $is_reported ) {
+				$button['button_attr']['class'] = 'reported-content';
+			} else {
+				$button['button_attr']['class'] = 'report-content';
+			}
+		}
+
+		return $button;
 	}
 
 	/**
-	 * Report content
+	 * Get SQL for Exclude Blocked Members related Messages
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
+	 * @return string|bool
 	 */
-	public static function report( $args ) {
-		return parent::report( $args );
+	private function exclude_member_message_query() {
+		$action_name = current_filter();
+
+		$user_id_field = 'm.sender_id';
+		if ( 'bp_messages_recipient_get_where_conditions' === $action_name ) {
+			$user_id_field = 'r.user_id';
+		}
+
+		$sql                = false;
+		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = "( {$user_id_field} NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
+		}
+
+		return $sql;
 	}
 }

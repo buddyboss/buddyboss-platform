@@ -4646,3 +4646,44 @@ function bp_register_page_content() {
 	}
 }
 add_action( 'bp_before_register_page', 'bp_register_page_content' );
+
+/**
+ * Return the link to report Member
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $args Arguments
+ *
+ * @return string Link for a report a Member
+ */
+function bp_member_get_report_link( $args = array() ) {
+
+	$args = wp_parse_args(
+		$args,
+		array(
+			'id'                => 'member_report',
+			'component'         => 'moderation',
+			'position'          => 50,
+			'must_be_logged_in' => true,
+			'button_attr'       => array(
+				'data-bp-content-id'   => bp_displayed_user_id(),
+				'data-bp-content-type' => BP_Moderation_Activity::$moderation_type,
+			),
+		)
+	);
+
+	/**
+	 * Restricted Report link for admin user.
+	 */
+	$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+	if ( in_array( $args['button_attr']['data-bp-content-id'], $admins, true ) ) {
+		return array();
+	}
+
+	/**
+	 * Filter to update Member report link
+	 *
+	 * @since BuddyBoss 2.0.0
+	 */
+	return apply_filters( 'bp_member_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+}

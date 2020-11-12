@@ -49,9 +49,60 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		// Search Query.
 		/*add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
+	}
 
-		// button class.
-		add_filter( 'bp_moderation_get_report_button_class', array( $this, 'update_button_class' ), 10, 3 );
+	/**
+	 * Get blocked Document ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $document_id Document id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $document_id ) {
+		$document = new BP_Document( $document_id );
+
+		return ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $document_id document id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $document_id ) {
+		$document = new BP_Document( $document_id );
+
+		return ( ! empty( $document->title ) ) ? $document->title : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
 	}
 
 	/**
@@ -162,28 +213,6 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to modify the button class
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $button_class button class.
-	 * @param bool   $is_reported  is content reported.
-	 * @param string $item_type    content type.
-	 *
-	 * @return string
-	 */
-	public function update_button_class( $button_class, $is_reported, $item_type ) {
-
-		if ( ! empty( $item_type ) && BP_Moderation_Activity::$moderation_type === $item_type && true === $is_reported && ( bp_is_document_component() || bp_is_group_document() ) ) {
-			$button_class = 'reported-content';
-		} elseif ( ! empty( $item_type ) && BP_Moderation_Activity::$moderation_type === $item_type && ( bp_is_document_component() || bp_is_group_document() ) ) {
-			$button_class = 'report-content';
-		}
-
-		return $button_class;
-	}
-
-	/**
 	 * Get Exclude Blocked Members SQL
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -217,6 +246,36 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Get Document ids of blocked posts [ Forums/topics/replies ] from meta
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $posts_ids Posts ids.
+	 * @param string $function  Function Name to get meta.
+	 *
+	 * @return array Document IDs
+	 */
+	private static function get_document_ids_meta( $posts_ids, $function = 'get_post_meta' ) {
+		$document_ids = array();
+
+		if ( ! function_exists( $function ) ) {
+			return $document_ids;
+		}
+
+		if ( ! empty( $posts_ids ) ) {
+			foreach ( $posts_ids as $post_id ) {
+				$post_document = $function( $post_id, 'bp_document_ids', true );
+				$post_document = wp_parse_id_list( $post_document );
+				if ( ! empty( $post_document ) ) {
+					$document_ids = array_merge( $document_ids, $post_document );
+				}
+			}
+		}
+
+		return $document_ids;
 	}
 
 	/**
@@ -271,89 +330,5 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Get blocked Document ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
-	}
-
-	/**
-	 * Get Document ids of blocked posts [ Forums/topics/replies ] from meta
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array  $posts_ids Posts ids.
-	 * @param string $function  Function Name to get meta.
-	 *
-	 * @return array Document IDs
-	 */
-	private static function get_document_ids_meta( $posts_ids, $function = 'get_post_meta' ) {
-		$document_ids = array();
-
-		if ( ! function_exists( $function ) ) {
-			return $document_ids;
-		}
-
-		if ( ! empty( $posts_ids ) ) {
-			foreach ( $posts_ids as $post_id ) {
-				$post_document = $function( $post_id, 'bp_document_ids', true );
-				$post_document = wp_parse_id_list( $post_document );
-				if ( ! empty( $post_document ) ) {
-					$document_ids = array_merge( $document_ids, $post_document );
-				}
-			}
-		}
-
-		return $document_ids;
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $document_id Document id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $document_id ) {
-		$document = new BP_Document( $document_id );
-
-		return ( ! empty( $document->user_id ) ) ? $document->user_id : 0;
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int $document_id document id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $document_id ) {
-		$document = new BP_Document( $document_id );
-
-		return ( ! empty( $document->title ) ) ? $document->title : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }

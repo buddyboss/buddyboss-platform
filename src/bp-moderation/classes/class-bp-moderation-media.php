@@ -54,6 +54,60 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get blocked Media ids
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $media_id Media id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $media_id ) {
+		$media = new BP_Media( $media_id );
+
+		return ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $media_id Media id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $media_id ) {
+		$media = new BP_Media( $media_id );
+
+		return ( ! empty( $media->title ) ) ? $media->title : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -197,6 +251,36 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get media ids of blocked posts [ Forums/topics/replies ] from meta
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $posts_ids Posts ids.
+	 * @param string $function  Function Name to get meta.
+	 *
+	 * @return array Media IDs
+	 */
+	private static function get_media_ids_meta( $posts_ids, $function = 'get_post_meta' ) {
+		$media_ids = array();
+
+		if ( ! function_exists( $function ) ) {
+			return $media_ids;
+		}
+
+		if ( ! empty( $posts_ids ) ) {
+			foreach ( $posts_ids as $post_id ) {
+				$post_media = $function( $post_id, 'bp_media_ids', true );
+				$post_media = wp_parse_id_list( $post_media );
+				if ( ! empty( $post_media ) ) {
+					$media_ids = array_merge( $media_ids, $post_media );
+				}
+			}
+		}
+
+		return $media_ids;
+	}
+
+	/**
 	 * Get Exclude Blocked Group SQL
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -248,89 +332,5 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Get blocked Media ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
-	}
-
-	/**
-	 * Get media ids of blocked posts [ Forums/topics/replies ] from meta
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array  $posts_ids Posts ids.
-	 * @param string $function  Function Name to get meta.
-	 *
-	 * @return array Media IDs
-	 */
-	private static function get_media_ids_meta( $posts_ids, $function = 'get_post_meta' ) {
-		$media_ids = array();
-
-		if ( ! function_exists( $function ) ) {
-			return $media_ids;
-		}
-
-		if ( ! empty( $posts_ids ) ) {
-			foreach ( $posts_ids as $post_id ) {
-				$post_media = $function( $post_id, 'bp_media_ids', true );
-				$post_media = wp_parse_id_list( $post_media );
-				if ( ! empty( $post_media ) ) {
-					$media_ids = array_merge( $media_ids, $post_media );
-				}
-			}
-		}
-
-		return $media_ids;
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $media_id Media id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $media_id ) {
-		$media = new BP_Media( $media_id );
-
-		return ( ! empty( $media->user_id ) ) ? $media->user_id : 0;
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $media_id Media id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $media_id ) {
-		$media = new BP_Media( $media_id );
-
-		return ( ! empty( $media->title ) ) ? $media->title : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }

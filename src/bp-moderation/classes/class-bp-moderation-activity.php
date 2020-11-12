@@ -52,161 +52,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Add Moderation content type.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $content_types Supported Contents types.
-	 *
-	 * @return mixed
-	 */
-	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Activity', 'buddyboss' );
-
-		return $content_types;
-	}
-
-	/**
-	 * Prepare activity Join SQL query to filter blocked Activity
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $join_sql Activity Join sql.
-	 * @param array  $args     Query arguments.
-	 *
-	 * @return string Join sql
-	 */
-	public function update_join_sql( $join_sql, $args = array() ) {
-
-		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
-			return $join_sql;
-		}
-
-		$join_sql .= $this->exclude_joint_query( 'a.id' );
-
-		return $join_sql;
-	}
-
-	/**
-	 * Prepare activity Where SQL query to filter blocked Activity
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $where_conditions Activity Where sql.
-	 * @param array $args             Query arguments.
-	 *
-	 * @return mixed Where SQL
-	 */
-	public function update_where_sql( $where_conditions, $args = array() ) {
-
-		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
-			return $where_conditions;
-		}
-
-		$where                   = array();
-		$where['activity_where'] = $this->exclude_where_query();
-
-		/**
-		 * Exclude Blocked Member activity
-		 */
-		$members_where = $this->exclude_member_activity_query();
-		if ( $members_where ) {
-			$where['members_where'] = $members_where;
-		}
-
-		/**
-		 * Exclude Blocked Groups activity
-		 */
-		if ( bp_is_active( 'groups' ) ) {
-			$groups_where = $this->exclude_group_activity_query();
-			if ( ! empty( $groups_where ) ) {
-				$where['groups_where'] = $groups_where;
-			}
-		}
-
-		/**
-		 * Exclude Blocked Forums, Topics, Replies activity
-		 */
-		if ( bp_is_active( 'forums' ) ) {
-			$forums_where = $this->exclude_forums_activity_query();
-			if ( ! empty( $forums_where ) ) {
-				$where['forums_where'] = $forums_where;
-			}
-		}
-
-		/**
-		 * Filters the activity Moderation Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.0.0
-		 *
-		 * @param array $where array of activity moderation where query.
-		 */
-		$where = apply_filters( 'bp_moderation_activity_get_where_conditions', $where );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
-		return $where_conditions;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked Groups related activity
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_group_activity_query() {
-		$sql              = false;
-		$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_group_ids ) ) {
-			$sql = "( a.component != 'groups' OR a.item_id NOT IN ( " . implode( ',', $hidden_group_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked Members related activity
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_member_activity_query() {
-		$sql                = false;
-		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_members_ids ) ) {
-			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked Forums, topic and replies related activity
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_forums_activity_query() {
-		$sql = false;
-
-		$hidden_forums_ids        = BP_Moderation_Forums::get_sitewide_hidden_ids();
-		$hidden_forum_topics_ids  = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
-		$hidden_forum_replies_ids = BP_Moderation_Forum_Replies::get_sitewide_hidden_ids();
-
-		$hidden_ids = array_merge( $hidden_forums_ids, $hidden_forum_topics_ids, $hidden_forum_replies_ids );
-		if ( ! empty( $hidden_ids ) ) {
-			$sql = "( a.component != 'bbpress' OR a.item_id NOT IN ( " . implode( ',', $hidden_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
 	 * Get blocked Activity ids including Blocked group and Forum/topic/reply related activity.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -345,5 +190,160 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 */
 	public static function report( $args ) {
 		return parent::report( $args );
+	}
+
+	/**
+	 * Add Moderation content type.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $content_types Supported Contents types.
+	 *
+	 * @return mixed
+	 */
+	public function add_content_types( $content_types ) {
+		$content_types[ self::$moderation_type ] = __( 'Activity', 'buddyboss' );
+
+		return $content_types;
+	}
+
+	/**
+	 * Prepare activity Join SQL query to filter blocked Activity
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $join_sql Activity Join sql.
+	 * @param array  $args     Query arguments.
+	 *
+	 * @return string Join sql
+	 */
+	public function update_join_sql( $join_sql, $args = array() ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $join_sql;
+		}
+
+		$join_sql .= $this->exclude_joint_query( 'a.id' );
+
+		return $join_sql;
+	}
+
+	/**
+	 * Prepare activity Where SQL query to filter blocked Activity
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $where_conditions Activity Where sql.
+	 * @param array $args             Query arguments.
+	 *
+	 * @return mixed Where SQL
+	 */
+	public function update_where_sql( $where_conditions, $args = array() ) {
+
+		if ( isset( $args['moderation_query'] ) && false === $args['moderation_query'] ) {
+			return $where_conditions;
+		}
+
+		$where                   = array();
+		$where['activity_where'] = $this->exclude_where_query();
+
+		/**
+		 * Exclude Blocked Member activity
+		 */
+		$members_where = $this->exclude_member_activity_query();
+		if ( $members_where ) {
+			$where['members_where'] = $members_where;
+		}
+
+		/**
+		 * Exclude Blocked Groups activity
+		 */
+		if ( bp_is_active( 'groups' ) ) {
+			$groups_where = $this->exclude_group_activity_query();
+			if ( ! empty( $groups_where ) ) {
+				$where['groups_where'] = $groups_where;
+			}
+		}
+
+		/**
+		 * Exclude Blocked Forums, Topics, Replies activity
+		 */
+		if ( bp_is_active( 'forums' ) ) {
+			$forums_where = $this->exclude_forums_activity_query();
+			if ( ! empty( $forums_where ) ) {
+				$where['forums_where'] = $forums_where;
+			}
+		}
+
+		/**
+		 * Filters the activity Moderation Where SQL statement.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $where array of activity moderation where query.
+		 */
+		$where = apply_filters( 'bp_moderation_activity_get_where_conditions', $where );
+
+		if ( ! empty( array_filter( $where ) ) ) {
+			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		}
+
+		return $where_conditions;
+	}
+
+	/**
+	 * Get SQL for Exclude Blocked Members related activity
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return string|bool
+	 */
+	private function exclude_member_activity_query() {
+		$sql                = false;
+		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_members_ids ) ) {
+			$sql = '( a.user_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
+		}
+
+		return $sql;
+	}
+
+	/**
+	 * Get SQL for Exclude Blocked Groups related activity
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return string|bool
+	 */
+	private function exclude_group_activity_query() {
+		$sql              = false;
+		$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
+		if ( ! empty( $hidden_group_ids ) ) {
+			$sql = "( a.component != 'groups' OR a.item_id NOT IN ( " . implode( ',', $hidden_group_ids ) . ' ) )';
+		}
+
+		return $sql;
+	}
+
+	/**
+	 * Get SQL for Exclude Blocked Forums, topic and replies related activity
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return string|bool
+	 */
+	private function exclude_forums_activity_query() {
+		$sql = false;
+
+		$hidden_forums_ids        = BP_Moderation_Forums::get_sitewide_hidden_ids();
+		$hidden_forum_topics_ids  = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
+		$hidden_forum_replies_ids = BP_Moderation_Forum_Replies::get_sitewide_hidden_ids();
+
+		$hidden_ids = array_merge( $hidden_forums_ids, $hidden_forum_topics_ids, $hidden_forum_replies_ids );
+		if ( ! empty( $hidden_ids ) ) {
+			$sql = "( a.component != 'bbpress' OR a.item_id NOT IN ( " . implode( ',', $hidden_ids ) . ' ) )';
+		}
+
+		return $sql;
 	}
 }

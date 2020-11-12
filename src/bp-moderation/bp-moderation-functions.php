@@ -163,6 +163,14 @@ function bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include = fals
  * @return mixed|void
  */
 function bp_moderation_content_types() {
+
+	/**
+	 * Filter to update content types
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $types Content types
+	 */
 	return apply_filters( 'bp_moderation_content_types', array() );
 }
 
@@ -223,6 +231,13 @@ function bp_moderation_get_content_type( $key ) {
 
 	$content_types = bp_moderation_content_types();
 
+	/**
+	 * Filter to update Content type
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $item_type Item item.
+	 */
 	return apply_filters( 'bp_moderation_get_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
 }
 
@@ -238,10 +253,12 @@ function bp_moderation_get_content_type( $key ) {
  */
 function bp_moderation_get_report_button( $args, $html = true ) {
 
-	$item_id              = $args['button_attr']['data-bp-content-id'];
-	$item_type            = $args['button_attr']['data-bp-content-type'];
-	$button_text          = __( 'Report', 'buddyboss' );
-	$reported_button_text = __( 'Reported', 'buddyboss' );
+	$item_id   = $args['button_attr']['data-bp-content-id'];
+	$item_type = $args['button_attr']['data-bp-content-type'];
+
+	if ( empty( $item_id ) || empty( $item_type ) ){
+		return array();
+	}
 
 	// Check moderation setting enabled or not.
 	if ( BP_Moderation_Members::$moderation_type === $item_type ) {
@@ -251,6 +268,8 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 			return ! empty( $html ) ? '' : array();
 		}
 	} else {
+		$button_text          = __( 'Report', 'buddyboss' );
+		$reported_button_text = __( 'Reported', 'buddyboss' );
 		if ( ! bp_is_moderation_content_reporting_enable( 0, $item_type ) ) {
 			return ! empty( $html ) ? '' : array();
 		}
@@ -284,14 +303,23 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 
 	if ( $is_reported ) {
 		$button['link_text']            = sprintf( '<span class="bp-screen-reader-text">%s</span><span class="report-label">%s</span>', esc_html( $reported_button_text ), esc_html( $reported_button_text ) );
-		$button['button_attr']['class'] = 'button item-button bp-secondary-action reported-content';
+		$button['button_attr']['class'] = str_replace( 'report-content', 'reported-content', $button['button_attr']['class'] );
 		unset( $button['button_attr']['href'] );
 		unset( $button['button_attr']['data-bp-content-id'] );
 		unset( $button['button_attr']['data-bp-content-type'] );
 		unset( $button['button_attr']['data-bp-nonce'] );
 	}
 
-	$button['button_attr']['class'] = apply_filters( 'bp_moderation_get_report_button_class', $button['button_attr']['class'], $is_reported, $item_type );
+	/**
+	 * Filter to update report link args
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $button      Button args.
+	 * @param string $item_type   Content type.
+	 * @param string $is_reported Item reported.
+	 */
+	$button = apply_filters( 'bp_moderation_get_report_button_args', $button, $item_type, $is_reported );
 
 	if ( ! empty( $html ) ) {
 		if ( $is_reported ) {
@@ -301,6 +329,15 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		}
 	}
 
+	/**
+	 * Filter to update report link
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param mixed $button Button args or HTML.
+	 * @param array $args   button args.
+	 * @param bool  $html   Should return button html or not.
+	 */
 	return apply_filters( 'bp_moderation_get_report_button', $button, $args, $html );
 }
 

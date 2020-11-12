@@ -52,6 +52,49 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $activity_id Activity id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $activity_id ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $activity_comment_id activity id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $activity_comment_id ) {
+		$activity = new BP_Activity_Activity( $activity_comment_id );
+
+		return ( ! empty( $activity->content ) ) ? $activity->content : '';
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -167,6 +210,30 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get blocked Activity's Comments ids related to blocked activity
+	 * Note: Below link Not include direct blocked Activity comment
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_activity_comments_hidden_ids() {
+		$hidden_activity_comment_ids = array();
+
+		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
+		foreach ( $hidden_activity_ids as $hidden_activity_id ) {
+			$activity_comments     = BP_Activity_Activity::get_child_comments( $hidden_activity_id );
+			$activity_comments_ids = wp_list_pluck( $activity_comments, 'id' );
+			if ( ! empty( $activity_comments_ids ) ) {
+				$hidden_activity_ids         = array_merge( $hidden_activity_ids, $activity_comments_ids );
+				$hidden_activity_comment_ids = array_merge( $hidden_activity_comment_ids, $activity_comments_ids );
+			}
+		}
+
+		return $hidden_activity_comment_ids;
+	}
+
+	/**
 	 * Update blocked comment template
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -206,72 +273,5 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		}
 
 		return $hidden_all_activity_comment_ids;
-	}
-
-	/**
-	 * Get blocked Activity's Comments ids related to blocked activity
-	 * Note: Below link Not include direct blocked Activity comment
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_activity_comments_hidden_ids() {
-		$hidden_activity_comment_ids = array();
-
-		$hidden_activity_ids = BP_Moderation_Activity::get_sitewide_hidden_ids();
-		foreach ( $hidden_activity_ids as $hidden_activity_id ) {
-			$activity_comments     = BP_Activity_Activity::get_child_comments( $hidden_activity_id );
-			$activity_comments_ids = wp_list_pluck( $activity_comments, 'id' );
-			if ( ! empty( $activity_comments_ids ) ) {
-				$hidden_activity_ids         = array_merge( $hidden_activity_ids, $activity_comments_ids );
-				$hidden_activity_comment_ids = array_merge( $hidden_activity_comment_ids, $activity_comments_ids );
-			}
-		}
-
-		return $hidden_activity_comment_ids;
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $activity_id Activity id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $activity_id ) {
-		$activity = new BP_Activity_Activity( $activity_id );
-
-		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int $activity_comment_id activity id.
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $activity_comment_id ) {
-		$activity = new BP_Activity_Activity( $activity_comment_id );
-
-		return ( ! empty( $activity->content ) ) ? $activity->content : '';
-	}
-
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
 	}
 }

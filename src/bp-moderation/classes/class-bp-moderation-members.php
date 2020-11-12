@@ -47,6 +47,48 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
 		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// button class.
+		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $user_id User id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $user_id ) {
+		return $user_id;
+	}
+
+	/**
+	 * Get Content.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $user_id User id.
+	 *
+	 * @return string
+	 */
+	public static function get_content_excerpt( $user_id ) {
+		return bp_core_get_user_displayname( $user_id );
+	}
+
+	/**
+	 * Report content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return string
+	 */
+	public static function report( $args ) {
+		return parent::report( $args );
 	}
 
 	/**
@@ -143,41 +185,25 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content owner id.
+	 * Function to modify the button class
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $user_id User id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $user_id ) {
-		return $user_id;
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $user_id User id.
+	 * @param array  $button      Button args.
+	 * @param string $item_type   Content type.
+	 * @param string $is_reported Item reported.
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $user_id ) {
-		return bp_core_get_user_displayname( $user_id );
-	}
+	public function update_button_args( $button, $item_type, $is_reported ) {
+		if ( self::$moderation_type === $item_type ) {
+			if ( $is_reported ) {
+				$button['button_attr']['class'] = 'reported-content';
+			} else {
+				$button['button_attr']['class'] = 'report-content';
+			}
+		}
 
-	/**
-	 * Report content
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $args Content data.
-	 *
-	 * @return string
-	 */
-	public static function report( $args ) {
-		return parent::report( $args );
+		return $button;
 	}
 }
