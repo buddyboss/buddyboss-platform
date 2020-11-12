@@ -1319,7 +1319,7 @@ function groups_screen_notification_settings() {
 					?>
 					<tr id="groups-notification-settings-request-messages">
 						<td></td>
-						<td><?php _e( 'Group Message', 'buddyboss' ); ?></td>
+						<td><?php _e( 'You receive a group message', 'buddyboss' ); ?></td>
 						<td class="yes">
 							<div class="bp-radio-wrap">
 								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />
