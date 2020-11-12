@@ -125,7 +125,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			$moderation_request_args['in_types'] = array( BP_Moderation_Members::$moderation_type );
 		}
 
-		if ( 'reported-content' === $current_tab && 'active' === $moderation_status ) {
+		if ( 'reported-content' === $current_tab ) {
 			if ( 'active' === $moderation_status ) {
 				$this->view                        = 'active';
 				$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
@@ -250,61 +250,77 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	 * @since BuddyPress 2.0.0
 	 */
 	function get_views() {
-		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab               = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$blocked_members_url_base  = add_query_arg( array( 'page' => 'bp-moderation', ), bp_get_admin_url( 'admin.php' ) );
+		$reported_content_url_base = add_query_arg( array( 'tab' => 'reported-content', ), $blocked_members_url_base );
+
+		$moderation_views = apply_filters( 'bp_moderation_get_views', array(
+			'blocked-members'  => array(
+				'all'       => array(
+					'name' => esc_html__( 'All', 'buddyboss' ),
+					'link' => $blocked_members_url_base
+				),
+				'suspended' => array(
+					'name' => esc_html__( 'Suspended', 'buddyboss' ),
+					'link' => add_query_arg( array( 'moderation_status' => 'suspended' ), $blocked_members_url_base )
+				)
+			),
+			'reported-content' => array(
+				'all'    => array(
+					'name' => esc_html__( 'All', 'buddyboss' ),
+					'link' => $reported_content_url_base
+				),
+				'active' => array(
+					'name' => esc_html__( 'Active', 'buddyboss' ),
+					'link' => add_query_arg( array( 'moderation_status' => 'active' ), $reported_content_url_base )
+				),
+				'hidden' => array(
+					'name' => esc_html__( 'Hidden', 'buddyboss' ),
+					'link' => add_query_arg( array( 'moderation_status' => 'hidden' ), $reported_content_url_base )
+				),
+			)
+		) )
 		?>
         <ul class="subsubsub">
 			<?php
-			if ( 'reported-content' === $current_tab ) {
-				$url_base = add_query_arg( array(
-					'page' => 'bp-moderation',
-					'tab'  => 'reported-content'
-				), bp_get_admin_url( 'admin.php' ) );
-				?>
-                <li class="all">
-                    <a href="<?php echo esc_url( $url_base ); ?>" class="<?php if ( 'all' === $this->view ) {
-						echo 'current';
-					} ?>">
-						<?php _e( 'All', 'buddyboss' ); ?>
-                    </a> |
-                </li>
-                <li class="active">
-                    <a href="<?php echo esc_url( add_query_arg( array( 'moderation_status' => 'active' ), $url_base ) ); ?>"
-                       class="<?php if ( 'active' === $this->view ) {
-						   echo 'current';
-					   } ?>">
-						<?php _e( 'Active', 'buddyboss' ); ?>
-                    </a> |
-                </li>
-                <li class="hidden">
-                    <a href="<?php echo esc_url( add_query_arg( array( 'moderation_status' => 'hidden' ), $url_base ) ); ?>"
-                       class="<?php if ( 'hidden' === $this->view ) {
-						   echo 'current';
-					   } ?>">
-						<?php _e( 'Hidden', 'buddyboss' ); ?>
-                    </a>
-                </li>
-				<?php
+			if ( 'reported-content' === $current_tab && ! empty( $moderation_views['reported-content'] ) ) {
+				$total_count = count( $moderation_views['reported-content'] );
+				$count       = 1;
+				foreach ( $moderation_views['reported-content'] as $key => $moderation_view ) {
+					?>
+                    <li class="<?php echo esc_attr( $key ); ?>">
+                        <a href="<?php echo esc_url( $moderation_view['link'] ); ?>"
+                           class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
+							<?php echo esc_html( $moderation_view['name'] ); ?>
+                        </a>
+						<?php
+						if ( $count !== (int) $total_count ) {
+							echo " | ";
+						}
+						?>
+                    </li>
+					<?php
+					$count ++;
+				}
 			} else {
-				$url_base = add_query_arg( array(
-					'page' => 'bp-moderation',
-				), bp_get_admin_url( 'admin.php' ) );
-				?>
-                <li class="all">
-                    <a href="<?php echo esc_url( $url_base ); ?>" class="<?php if ( 'all' === $this->view ) {
-						echo 'current';
-					} ?>">
-						<?php _e( 'All', 'buddyboss' ); ?>
-                    </a> |
-                </li>
-                <li class="blocked">
-                    <a href="<?php echo esc_url( add_query_arg( array( 'moderation_status' => 'suspended' ), $url_base ) ); ?>"
-                       class="<?php if ( 'suspended' === $this->view ) {
-						   echo 'current';
-					   } ?>">
-						<?php _e( 'Suspended', 'buddyboss' ); ?>
-                    </a>
-                </li>
-				<?php
+				$total_count = count( $moderation_views['blocked-members'] );
+				$count       = 1;
+				foreach ( $moderation_views['blocked-members'] as $key => $moderation_view ) {
+					?>
+                    <li class="<?php echo esc_attr( $key ); ?>">
+                        <a href="<?php echo esc_url( $moderation_view['link'] ); ?>"
+                           class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
+							<?php echo esc_html( $moderation_view['name'] ); ?>
+                        </a>
+						<?php
+						if ( $count !== (int) $total_count ) {
+							echo " | ";
+						}
+						?>
+                    </li>
+					<?php
+					$count ++;
+				}
 			}
 			?>
         </ul>
