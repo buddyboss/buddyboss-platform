@@ -2021,6 +2021,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					),
 				)
 			);
+
+			add_filter( 'bp_rest_activity_create_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
+			add_filter( 'bp_rest_activity_update_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
+			add_filter( 'bp_rest_activity_comment_create_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
 		}
 
 		if ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) {
@@ -2040,6 +2044,10 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					),
 				)
 			);
+
+			add_filter( 'bp_rest_messages_group_collection_params', array( $this, 'bp_rest_message_query_arguments' ), 99, 3 );
+			add_filter( 'bp_rest_messages_create_item_query_arguments', array( $this, 'bp_rest_message_query_arguments' ), 99, 3 );
+			add_filter( 'bp_rest_messages_update_item_query_arguments', array( $this, 'bp_rest_message_query_arguments' ), 99, 3 );
 		}
 
 		if ( function_exists( 'bp_is_forums_document_support_enabled' ) && true === bp_is_forums_document_support_enabled() ) {
@@ -2072,6 +2080,11 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 					),
 				)
 			);
+
+			add_filter( 'bp_rest_topic_create_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
+			add_filter( 'bp_rest_topic_update_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
+			add_filter( 'bp_rest_reply_create_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
+			add_filter( 'bp_rest_reply_update_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
 		}
 
 	}
@@ -2513,5 +2526,66 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			}
 		}
 
+	}
+
+	/**
+	 * Filter Query argument for the activity for document support.
+	 *
+	 * @param array  $args   Query arguments.
+	 * @param string $method HTTP method of the request.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_activity_query_arguments( $args, $method ) {
+
+		$args['bp_documents'] = array(
+			'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+			'type'              => 'array',
+			'items'             => array( 'type' => 'integer' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $args;
+	}
+
+	/**
+	 * Extend the parameters for the Topics and Reply Endpoints.
+	 *
+	 * @param array $params Query params.
+	 *
+	 * @return mixed
+	 */
+	public function bp_rest_forums_collection_params( $params ) {
+
+		$params['bbp_documents'] = array(
+			'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+			'type'              => 'array',
+			'items'             => array( 'type' => 'integer' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $params;
+	}
+
+	/**
+	 * Filter Query argument for the Messages for document support.
+	 *
+	 * @param array $params Query arguments.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_message_query_arguments( $params ) {
+
+		$params['bp_documents'] = array(
+			'description'       => __( 'Document specific IDs.', 'buddyboss' ),
+			'type'              => 'array',
+			'items'             => array( 'type' => 'integer' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		return $params;
 	}
 }
