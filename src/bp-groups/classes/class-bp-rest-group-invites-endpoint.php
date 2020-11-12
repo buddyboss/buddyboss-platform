@@ -101,6 +101,21 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'schema' => array( $this, 'get_item_schema' ),
 			)
 		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/multiple',
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_multiple_item' ),
+					'permission_callback' => array( $this, 'create_multiple_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE, true ),
+
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
 	}
 
 	/**
@@ -486,6 +501,165 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Invite multiple member to a group.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_REST_Response | WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api            {POST} /wp-json/buddyboss/v1/groups/invites/multiple Create Group Invite
+	 * @apiName        CreateBBGroupsMultipleInvites
+	 * @apiGroup       Groups
+	 * @apiDescription Create Multiple group invitation.
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 * @apiParam {Array} user_id The ID of the users who is invited to join the Group.
+	 * @apiParam {Number} [inviter_id] The ID of the user who made the invite.
+	 * @apiParam {Number} group_id The ID of the group to which the user has been invited.
+	 * @apiParam {String} [message] The optional message to send to the invited user.
+	 * @apiParam {Boolean} [send_invite=true] Whether the invite should be sent to the invitee.
+	 */
+	public function create_multiple_item( $request ) {
+		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bp_loggedin_user_id();
+		$group          = $this->groups_endpoint->get_group_object( $request['group_id'] );
+		$user_ids       = (array) $request['user_id'];
+		$inviter        = bp_rest_get_user( $inviter_id_arg );
+		$users          = array();
+		$retval         = array();
+
+		if ( ! empty( $user_ids ) ) {
+			foreach ( $user_ids as $user_id ) {
+				$users[] = bp_rest_get_user( $user_id );
+			}
+		}
+
+		$invited = array();
+		foreach ( $users as $user ) {
+			$invited[ $user->ID ] = groups_invite_user(
+				array(
+					'user_id'     => $user->ID,
+					'group_id'    => $group->id,
+					'inviter_id'  => $inviter->ID,
+					'send_invite' => isset( $request['invite_sent'] ) ? (bool) $request['invite_sent'] : 1,
+					'content'     => $request['message'],
+				)
+			);
+		}
+
+		$invited = array_filter( $invited );
+
+		if ( ! $invited ) {
+			return new WP_Error(
+				'bp_rest_group_invite_cannot_create_item',
+				__( 'Could not invite member to the group.', 'buddyboss' ),
+				array(
+					'status' => 500,
+				)
+			);
+		}
+
+		foreach ( $invited as $invite_id ) {
+
+			$invite = new BP_Invitation( $invite_id );
+
+			// Set context.
+			$request->set_param( 'context', 'edit' );
+
+			$retval[] = $this->prepare_response_for_collection(
+				$this->prepare_item_for_response( $invite, $request )
+			);
+		}
+
+		$response = rest_ensure_response( $retval );
+
+		/**
+		 * Fires after a member is invited to a group via the REST API.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param array            $users    The invited user.
+		 * @param WP_User          $inviter  The inviter user.
+		 * @param BP_Groups_Group  $group    The group object.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 *
+		 * @param array            $invited  The invitation object.
+		 */
+		do_action( 'bp_rest_group_multiple_invites_create_item', $invited, $users, $inviter, $group, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to invite a multiple member to a group.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|WP_Error
+	 * @since 0.1.0
+	 */
+	public function create_multiple_item_permissions_check( $request ) {
+		$inviter_id_arg = $request['inviter_id'] ? $request['inviter_id'] : bp_loggedin_user_id();
+		$group          = $this->groups_endpoint->get_group_object( $request['group_id'] );
+		$inviter        = bp_rest_get_user( $inviter_id_arg );
+		$user_ids       = (array) $request['user_id'];
+		$retval         = true;
+
+		if ( ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you need to be logged in to create an invitation.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		if ( true === $retval && empty( $group->id ) ) {
+			$retval = new WP_Error(
+				'bp_rest_group_invalid_id',
+				__( 'Invalid group ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		if ( true === $retval && ( empty( $user_ids ) || in_array( $inviter->ID, $user_ids, true ) ) ) {
+			$retval = new WP_Error(
+				'bp_rest_member_invalid_id',
+				__( 'Invalid members ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		// Only a site admin or the user herself can extend invites.
+		if ( true === $retval && ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() !== $inviter_id_arg ) {
+			$retval = new WP_Error(
+				'bp_rest_group_invite_cannot_create_item',
+				__( 'Sorry, you are not allowed to create the invitation as requested.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		/**
+		 * Filter the group invites `create_item` permissions check.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param WP_REST_Request $request The request sent to the API.
+		 *
+		 * @param bool|WP_Error   $retval  Whether the request can continue.
+		 */
+		return apply_filters( 'bp_rest_group_invites_multiple_create_item_permissions_check', $retval, $request );
+	}
+
+	/**
 	 * Accept a group invitation.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -802,6 +976,10 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 				'href'       => rest_url( bp_rest_get_user_url( $invite->user_id ) ),
 				'embeddable' => true,
 			),
+			'inviter'    => array(
+				'href'       => rest_url( bp_rest_get_user_url( $invite->inviter_id ) ),
+				'embeddable' => true,
+			),
 		);
 
 		/**
@@ -835,12 +1013,14 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 	/**
 	 * Edit the type of the some properties for the CREATABLE & EDITABLE methods.
 	 *
-	 * @param string $method Optional. HTTP method of the request.
+	 * @since 0.1.0
+	 *
+	 * @param string  $method   Optional. HTTP method of the request.
+	 * @param boolean $multiple Is multiple invite or not.
 	 *
 	 * @return array Endpoint arguments.
-	 * @since 0.1.0
 	 */
-	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE ) {
+	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::CREATABLE, $multiple = false ) {
 		$args = WP_REST_Controller::get_endpoint_args_for_item_schema( $method );
 		$key  = 'get_item';
 
@@ -864,6 +1044,16 @@ class BP_REST_Group_Invites_Endpoint extends WP_REST_Controller {
 			}
 		} elseif ( WP_REST_Server::DELETABLE === $method ) {
 			$key = 'delete_item';
+		}
+
+		if ( WP_REST_Server::CREATABLE === $method && true === $multiple ) {
+			$args['user_id'] = array(
+				'description'       => __( 'Return only invitations extended to those users.', 'buddyboss' ),
+				'type'              => 'array',
+				'items'             => array( 'type' => 'integer' ),
+				'sanitize_callback' => 'wp_parse_id_list',
+				'validate_callback' => 'rest_validate_request_arg',
+			);
 		}
 
 		/**

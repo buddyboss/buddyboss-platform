@@ -187,9 +187,9 @@ function bp_media_file_upload_max_size() {
 
 	/**
 	 * Filters file media upload max limit.
-	 * 
+	 *
 	 * @param mixed $max_size media upload max limit.
-	 * 
+	 *
 	 * @since BuddyBoss 1.4.1
 	 */
 	return apply_filters( 'bp_media_file_upload_max_size', bp_media_allowed_upload_media_size() );
@@ -448,7 +448,7 @@ function bp_media_add( $args = '' ) {
 	}
 
 	if ( isset( $_POST ) && isset( $_POST['action'] ) && 'groups_get_group_members_send_message' === $_POST['action'] ) {
-		$media->privacy ='message';
+		$media->privacy = 'message';
 	}
 
 	// save media.
@@ -460,7 +460,7 @@ function bp_media_add( $args = '' ) {
 		return false;
 	}
 
-	//media is saved for attachment.
+	// media is saved for attachment.
 	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
 
 	/**
@@ -479,12 +479,12 @@ function bp_media_add( $args = '' ) {
  * Media add handler function
  *
  * @since BuddyBoss 1.2.0
- * 
- * @param array $medias
+ *
+ * @param array  $medias
  * @param string $privacy
  * @param string $content
- * @param int $group_id
- * @param int $album_id
+ * @param int    $group_id
+ * @param int    $album_id
  *
  * @return mixed|void
  */
@@ -505,13 +505,40 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
 		// save  media.
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
-				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
-			) );
+			// Update media if existing
+			if ( ! empty( $media['media_id'] ) ) {
+				$bp_media = new BP_Media( $media['media_id'] );
+
+				if ( ! empty( $bp_media->id ) ) {
+					$media_id = bp_media_add(
+						array(
+							'id'            => $bp_media->id,
+							'blog_id'       => $bp_media->blog_id,
+							'attachment_id' => $bp_media->attachment_id,
+							'user_id'       => $bp_media->user_id,
+							'title'         => $bp_media->title,
+							'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+							'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+							'activity_id'   => $bp_media->activity_id,
+							'privacy'       => $bp_media->privacy,
+							'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+							'date_created'  => $bp_media->date_created,
+						)
+					);
+				}
+			} else {
+
+				$media_id = bp_media_add(
+					array(
+						'attachment_id' => $media['id'],
+						'title'         => $media['name'],
+						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : $album_id,
+						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : $group_id,
+						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+						'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
+					)
+				);
+			}
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
@@ -541,25 +568,28 @@ function bp_media_add_handler( $medias = array(), $privacy = 'public', $content 
  *                           filters for item deletion, the argument format is
  *                           the same as BP_Media::get().
  *                           See that method for a description.
- * @param bool $from Context of deletion from. ex. attachment, activity etc.
+ * @param bool         $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the media on success. False on error.
  */
 function bp_media_delete( $args = '', $from = false ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'blog_id'       => false,
-		'attachment_id' => false,
-		'user_id'       => false,
-		'title'         => false,
-		'album_id'      => false,
-		'activity_id'   => false,
-		'group_id'      => false,
-		'privacy'       => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'            => false,
+			'blog_id'       => false,
+			'attachment_id' => false,
+			'user_id'       => false,
+			'title'         => false,
+			'album_id'      => false,
+			'activity_id'   => false,
+			'group_id'      => false,
+			'privacy'       => false,
+			'date_created'  => false,
+		)
+	);
 
 	/**
 	 * Fires before an media item proceeds to be deleted.
@@ -624,8 +654,8 @@ function bp_media_remove_all_user_data( $user_id = 0 ) {
 	 */
 	do_action( 'bp_media_remove_all_user_data', $user_id );
 }
-add_action( 'wpmu_delete_user',  'bp_media_remove_all_user_data' );
-add_action( 'delete_user',       'bp_media_remove_all_user_data' );
+add_action( 'wpmu_delete_user', 'bp_media_remove_all_user_data' );
+add_action( 'delete_user', 'bp_media_remove_all_user_data' );
 
 /**
  * Get media visibility levels out of the $bp global.
@@ -821,7 +851,7 @@ function bp_get_total_media_count() {
 function bp_media_object_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = bp_media_default_scope( 'all' );
+	$querystring['scope'] = 'all';
 
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
@@ -859,7 +889,7 @@ function bp_media_object_template_results_media_groups_scope( $querystring ) {
 	$querystring['scope']       = 'groups';
 	$querystring['page']        = 1;
 	$querystring['per_page']    = 1;
-	$querystring['user_id']     = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['user_id']     = false;
 	$querystring['count_total'] = true;
 
 	return http_build_query( $querystring );
@@ -1070,12 +1100,15 @@ function bp_album_add( $args = '' ) {
 function bp_album_delete( $args ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'user_id'       => false,
-		'group_id'      => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'           => false,
+			'user_id'      => false,
+			'group_id'     => false,
+			'date_created' => false,
+		)
+	);
 
 	/**
 	 * Fires before an album item proceeds to be deleted.
@@ -1200,7 +1233,7 @@ function bp_media_delete_orphaned_attachments() {
 	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
 
 	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach( $orphaned_attachment_query->posts as $a_id ) {
+		foreach ( $orphaned_attachment_query->posts as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
@@ -2222,7 +2255,7 @@ function bp_media_query_privacy( $user_id = 0, $group_id = 0, $scope = '' ) {
 	if (
 		bp_is_group()
 		|| ( bp_is_active( 'groups' ) && ! empty( $group_id ) )
-		|| ( !empty( $scope ) && 'groups' === $scope )
+		|| ( ! empty( $scope ) && 'groups' === $scope )
 	) {
 		$privacy = array( 'grouponly' );
 	}
@@ -2274,6 +2307,19 @@ function bp_media_default_scope( $scope ) {
 
 	$new_scope = array();
 
+	$allowed_scopes = array( 'public' );
+	if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_is_profile_media_support_enabled() ) {
+		$allowed_scopes[] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) && bp_is_group_media_support_enabled() ) {
+		$allowed_scopes[] = 'groups';
+	}
+
+	if ( ( is_user_logged_in() || bp_is_user() ) && bp_is_profile_media_support_enabled() ) {
+		$allowed_scopes[] = 'personal';
+	}
+
 	if ( ( 'all' === $scope || empty( $scope ) ) && bp_is_media_directory() ) {
 		$new_scope[] = 'public';
 
@@ -2288,16 +2334,19 @@ function bp_media_default_scope( $scope ) {
 		if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 			$new_scope[] = 'personal';
 		}
-
 	} elseif ( bp_is_user_media() && ( 'all' === $scope || empty( $scope ) ) && bp_is_profile_media_support_enabled() ) {
 		$new_scope[] = 'personal';
 	}
 
-	$new_scope = array_unique( $new_scope );
-
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
 	}
+
+	// Remove duplicate scope if added.
+	$new_scope = array_unique( $new_scope );
+
+	// Remove all unwanted scope.
+	$new_scope = array_intersect( $allowed_scopes, $new_scope );
 
 	/**
 	 * Filter to update default scope.
@@ -2360,20 +2409,20 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 
 				if ( $manage ) {
 					if ( $media->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
+						$can_manage = true;
+						$can_add    = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2389,7 +2438,12 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $media->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $media->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_view     = true;
 				$can_download = true;
@@ -2407,7 +2461,6 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'friends':
-
 			$is_friend = ( bp_is_active( 'friends' ) ) ? friends_check_friendship( $media->user_id, $user_id ) : false;
 			if ( $media->user_id === $user_id ) {
 				$can_manage   = true;
@@ -2427,7 +2480,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'forums':
-			$args       = array(
+			$args = array(
 				'user_id'         => $user_id,
 				'forum_id'        => bp_media_get_forum_id( $media_id ),
 				'check_ancestors' => false,
@@ -2446,7 +2499,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 				$can_add      = false;
 			} elseif ( $has_access ) {
 				if ( bp_current_user_can( 'bp_moderate' ) ) {
-					$can_manage   = true;
+					$can_manage = true;
 				}
 				$can_view     = true;
 				$can_download = true;
@@ -2454,7 +2507,7 @@ function bp_media_user_can_manage_media( $media_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'message':
-			$thread_id = bp_media_get_thread_id( $media_id );
+			$thread_id  = bp_media_get_thread_id( $media_id );
 			$has_access = messages_check_thread_access( $thread_id, $user_id );
 			if ( ! is_user_logged_in() ) {
 				$can_manage   = false;
@@ -2592,7 +2645,7 @@ function bp_media_ie_nocache_headers_fix( $headers ) {
 
 function bp_media_get_forum_id( $media_id ) {
 
-	$forum_id = 0;
+	$forum_id           = 0;
 	$forums_media_query = new WP_Query(
 		array(
 			'post_type'      => bbp_get_forum_post_type(),
@@ -2625,7 +2678,8 @@ function bp_media_get_forum_id( $media_id ) {
 	wp_reset_postdata();
 
 	if ( ! $forum_id ) {
-		$topics_media_query = new WP_Query( array(
+		$topics_media_query = new WP_Query(
+			array(
 				'post_type'      => bbp_get_topic_post_type(),
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
@@ -2636,7 +2690,8 @@ function bp_media_get_forum_id( $media_id ) {
 						'compare' => 'LIKE',
 					),
 				),
-			) );
+			)
+		);
 
 		if ( ! empty( $topics_media_query->found_posts ) && ! empty( $topics_media_query->posts ) ) {
 
@@ -2656,7 +2711,8 @@ function bp_media_get_forum_id( $media_id ) {
 	}
 
 	if ( ! $forum_id ) {
-		$reply_media_query = new WP_Query( array(
+		$reply_media_query = new WP_Query(
+			array(
 				'post_type'      => bbp_get_reply_post_type(),
 				'fields'         => 'ids',
 				'posts_per_page' => - 1,
@@ -2667,7 +2723,8 @@ function bp_media_get_forum_id( $media_id ) {
 						'compare' => 'LIKE',
 					),
 				),
-			) );
+			)
+		);
 
 		if ( ! empty( $reply_media_query->found_posts ) && ! empty( $reply_media_query->posts ) ) {
 
@@ -2687,7 +2744,6 @@ function bp_media_get_forum_id( $media_id ) {
 		}
 		wp_reset_postdata();
 	}
-
 
 	return apply_filters( 'bp_media_get_forum_id', $forum_id, $media_id );
 
@@ -2740,20 +2796,20 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 				$is_mod   = groups_is_user_mod( $user_id, $album->group_id );
 				if ( $manage ) {
 					if ( $album->user_id === $user_id ) {
-						$can_manage   = true;
-						$can_add      = true;
+						$can_manage = true;
+						$can_add    = true;
 					} elseif ( bp_current_user_can( 'bp_moderate' ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'members' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					} elseif ( 'admins' == $status && $is_admin ) {
-						$can_manage   = true;
-						$can_add      = false;
+						$can_manage = true;
+						$can_add    = false;
 					}
 					$can_view     = true;
 					$can_download = true;
@@ -2769,7 +2825,12 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 			break;
 
 		case 'loggedin':
-			if ( $album->user_id === $user_id ) {
+			if ( ! is_user_logged_in() ) {
+				$can_manage   = false;
+				$can_view     = false;
+				$can_download = false;
+				$can_add      = false;
+			} elseif ( $album->user_id === $user_id ) {
 				$can_manage   = true;
 				$can_add      = true;
 				$can_view     = true;

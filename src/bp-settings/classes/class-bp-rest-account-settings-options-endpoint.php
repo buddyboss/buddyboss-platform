@@ -798,22 +798,8 @@ class BP_REST_Account_Settings_Options_Endpoint extends WP_REST_Controller {
 					foreach ( $group->fields as $field ) {
 
 						// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-						$current_value = bp_get_option( 'bp-display-name-format' );
-
-						// If First Name selected then do not add last name field.
-						if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-								continue;
-							}
-							// If Nick Name selected then do not add first & last name field.
-						} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-								continue;
-							}
-						} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-							if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-								continue;
-							}
+						if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+							continue;
 						}
 
 						$fields[] = array(

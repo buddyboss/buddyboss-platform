@@ -223,8 +223,14 @@ trait BP_REST_Attachments {
 			);
 		}
 
+		// set crop true while uploading a avatar.
+		add_filter( 'bp_after_attachment_avatar_edit_image_parse_args', array( $this, 'bp_rest_after_attachment_avatar_edit_image_parse_args' ), 10, 1 );
+
 		// Get image and bail early if there is an error.
 		$image_file = $this->resize( $avatar_original['file'] );
+
+		remove_filter( 'bp_after_attachment_avatar_edit_image_parse_args', array( $this, 'bp_rest_after_attachment_avatar_edit_image_parse_args' ), 10, 1 );
+
 		if ( is_wp_error( $image_file ) ) {
 			return $image_file;
 		}
@@ -483,5 +489,21 @@ trait BP_REST_Attachments {
 	 */
 	protected function get_cover_object_component() {
 		return ( 'group' === $this->object ) ? 'groups' : 'members';
+	}
+
+	/**
+	 * Set crop true while uploading a image.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $args Argument Parameter to force crop.
+	 *
+	 * @return array
+	 */
+	public function bp_rest_after_attachment_avatar_edit_image_parse_args( $args ) {
+		if ( array_key_exists( 'crop', $args ) ) {
+			$args['crop'] = true;
+		}
+		return $args;
 	}
 }

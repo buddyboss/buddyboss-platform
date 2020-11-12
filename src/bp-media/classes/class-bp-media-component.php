@@ -412,6 +412,7 @@ class BP_Media_Component extends BP_Component {
 		parent::rest_api_init( array(
 			'BP_REST_Media_Endpoint',
 			'BP_REST_Media_Albums_Endpoint',
+			'BP_REST_Media_Details_Endpoint',
 		) );
 	}
 }
