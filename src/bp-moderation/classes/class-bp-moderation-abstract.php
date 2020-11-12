@@ -39,6 +39,22 @@ abstract class BP_Moderation_Abstract {
 	public $alias = 'mo';
 
 	/**
+	 * Check whether bypass argument pass for admin user or not.
+	 * @return bool
+	 */
+	public static function admin_bypass_check() {
+		$admin_exclude = filter_input( INPUT_GET, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
+		if ( ! empty( $admin_exclude ) ) {
+			$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+			if ( in_array( get_current_user_id(), $admins ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Prepare Join sql for exclude Blocked items
 	 *
 	 * @since BuddyBoss 2.0.0

@@ -27,7 +27,7 @@ class BP_Moderation_Members_Suspend {
 		/**
 		 * Moderation code should not add for WordPress backend
 		 */
-		if ( is_admin() && ! wp_doing_ajax() ) {
+		if ( is_admin() && ! wp_doing_ajax() || BP_Moderation_Abstract::admin_bypass_check() ) {
 			return;
 		}
 

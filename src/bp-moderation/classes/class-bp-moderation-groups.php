@@ -35,9 +35,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
-		 * Moderation code should not add for WordPress backend & IF component is not active
+		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'groups' ) ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'groups' ) || self::admin_bypass_check() ) {
 			return;
 		}
 

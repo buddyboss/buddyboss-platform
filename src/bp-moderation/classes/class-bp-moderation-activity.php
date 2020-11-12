@@ -37,9 +37,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		/**
-		 * Moderation code should not add for WordPress backend & IF component is not active
+		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'activity' ) ) {
+		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'activity' ) || self::admin_bypass_check() ) {
 			return;
 		}
 
@@ -154,12 +154,12 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $activity_comment_id Activity Comment id.
+	 * @param integer $activity_id Activity id.
 	 *
 	 * @return int
 	 */
-	public static function get_content_owner_id( $activity_comment_id ) {
-		$activity = new BP_Activity_Activity( $activity_comment_id );
+	public static function get_content_owner_id( $activity_id ) {
+		$activity = new BP_Activity_Activity( $activity_id );
 
 		return ( ! empty( $activity->user_id ) ) ? $activity->user_id : 0;
 	}
@@ -169,15 +169,33 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_comment_id activity id.
+	 * @param int $activity_id activity id.
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $activity_comment_id ) {
-		$activity = new BP_Activity_Activity( $activity_comment_id );
+	public static function get_content_excerpt( $activity_id ) {
+		$activity = new BP_Activity_Activity( $activity_id );
+		$link     = '<a href="' . esc_url( self::get_permalink( (int) $activity_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $activity->content ) ) ? $activity->content : '';
+		return ( ! empty( $activity->content ) ) ? $activity->content . ' ' .  $link : $link;
 	}
+
+	/**
+	 * Get permalink
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $activity_id activity id.
+	 *
+	 * @return string
+	 */
+	public static function get_permalink( $activity_id ) {
+		$url = bp_activity_get_permalink( $activity_id );
+
+		return add_query_arg( array( 'modbypass' => 1 ), $url );
+	}
+
+
 
 	/**
 	 * Report content
