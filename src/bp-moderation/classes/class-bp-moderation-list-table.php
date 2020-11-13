@@ -216,6 +216,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		if ( 'reported-content' === $current_tab ) {
 			$columns = array(
+				'cb'              => '<input name type="checkbox" />',
 				'content_excerpt' => esc_html__( 'Content Excerpt', 'buddyboss' ),
 				'content_type'    => esc_html__( 'Content Type', 'buddyboss' ),
 				'content_owner'   => esc_html__( 'Content Owner', 'buddyboss' ),
@@ -223,6 +224,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			);
 		} else {
 			$columns = array(
+				'cb'             => '<input name type="checkbox" />',
 				'blocked_member' => esc_html__( 'Blocked Member', 'buddyboss' ),
 				'blocked'        => esc_html__( 'Times Blocked', 'buddyboss' ),
 			);
@@ -337,6 +339,39 @@ class BP_Moderation_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Get bulk actions.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array Key/value pairs for the bulk actions dropdown.
+	 */
+	function get_bulk_actions() {
+		$actions     = array();
+		$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
+
+		if ( $current_tab === 'reported-content' ) {
+			if ( 'active' === $this->view ) {
+				$actions['bulk_hide'] = __( 'Hide', 'buddyboss' );
+			} elseif ( 'hidden' === $this->view ) {
+				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss' );
+			} else {
+				$actions['bulk_hide']   = __( 'Hide', 'buddyboss' );
+				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss' );
+			}
+		}
+
+		/**
+		 * Filters the default bulk actions so plugins can add custom actions.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $actions Default available actions for bulk operations.
+		 */
+		return apply_filters( 'bp_moderation_list_table_get_bulk_actions', $actions );
+	}
+
+	/**
 	 * Override WP_List_Table::row_actions().
 	 *
 	 * Basically a duplicate of the row_actions() method, but removes the
@@ -366,6 +401,21 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$out .= '</div>';
 
 		return $out;
+	}
+
+	/**
+	 * Checkbox column markup.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $item A singular item (one full row).
+	 *
+	 * @see   WP_List_Table::single_row_columns()
+	 *
+	 */
+	function column_cb( $item ) {
+		/* translators: accessibility text */
+		printf( '<label class="screen-reader-text" for="mid-%1$d">' . __( 'Select moderation item %1$d', 'buddyboss' ) . '</label><input type="checkbox" name="mid[]" value="%1$d" id="mid-%1$d" />', $item['id'] );
 	}
 
 	/**

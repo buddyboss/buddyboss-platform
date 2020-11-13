@@ -173,6 +173,83 @@ function bp_moderation_admin_load() {
 		);
 	}
 
+	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save' ) ) ) {
+
+		// Build redirection URL.
+		$redirect_to = remove_query_arg( array( 'mid', 'deleted', 'error', 'unhide', 'hidden' ), wp_get_referer() );
+		$redirect_to = add_query_arg( 'paged', $bp_moderation_list_table->get_pagenum(), $redirect_to );
+
+		// Get moderation IDs.
+		$moderation_ids = array_map( 'absint', (array) $_REQUEST['mid'] );
+
+		/**
+		 * Filters list of IDs being hide/unhide.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array $moderation_ids Activity IDs to spam/un-spam/delete.
+		 */
+		$moderation_ids = apply_filters( 'bp_moderation_admin_action_moderation_ids', $moderation_ids );
+
+		// Is this a bulk request?
+		if ( 'bulk_' == substr( $doaction, 0, 5 ) && ! empty( $_REQUEST['mid'] ) ) {
+
+			// Check this is a valid form submission.
+			check_admin_referer( 'bulk-moderations' );
+
+			// Trim 'bulk_' off the action name to avoid duplicating a ton of code.
+			$doaction = substr( $doaction, 5 );
+
+			// This is a request to delete, spam, or un-spam, a single item.
+		}
+
+		$moderation_action = ( 'hide' === $doaction ) ? 1 : 0;
+		$count             = 0;
+
+		foreach ( $moderation_ids as $moderation_id ) {
+			$moderation_obj     = new BP_Moderation();
+			$moderation_obj->id = $moderation_id;
+			$moderation_obj->populate();
+			$moderation_obj->hide_sitewide = $moderation_action;
+			$update_moderation             = $moderation_obj->save();
+			if ( true === $update_moderation ) {
+				$count ++;
+			}
+		}
+
+		/**
+		 * Fires before redirect for plugins to do something with moderation.
+		 *
+		 * Passes an moderation array counts how many were hide, unhide, and IDs that were errors.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param array  $value          Array holding hide, unhide, error IDs.
+		 * @param string $redirect_to    URL to redirect to.
+		 * @param array  $moderation_ids Original array of activity IDs.
+		 */
+		do_action( 'bp_moderation_admin_action_after', array( $count ), $redirect_to, $moderation_ids );
+
+		// Add arguments to the redirect URL so that on page reload, we can easily display what we've just done.
+		if ( $count && 'hide' === $doaction ) {
+			$redirect_to = add_query_arg( 'hidden', $count, $redirect_to );
+		}
+
+		if ( $count && 'unhide' === $doaction ) {
+			$redirect_to = add_query_arg( 'unhide', $count, $redirect_to );
+		}
+
+		/**
+		 * Filters redirect URL after moderation hide/unhide.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param string $redirect_to URL to redirect to.
+		 */
+		wp_safe_redirect( apply_filters( 'bp_moderation_admin_action_redirect', $redirect_to ) );
+		exit;
+	}
+
 	/**
 	 * Fires at top of Moderation admin page.
 	 *
@@ -266,6 +343,22 @@ function bp_moderation_admin() {
 function bp_moderation_admin_index() {
 	global $bp_moderation_list_table, $plugin_page;
 
+	$messages = array();
+
+	// If the user has just made a change to an activity item, build status messages.
+	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) ) {
+		$hidden = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
+		$unhide = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+
+		if ( $hidden > 0 ) {
+			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
+		}
+
+		if ( $unhide > 0 ) {
+			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+		}
+	}
+
 	$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 	$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
 
@@ -282,6 +375,11 @@ function bp_moderation_admin_index() {
 			}
 			?>
         </h1>
+		<?php if ( ! empty( $messages ) ) : ?>
+            <div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>">
+                <p><?php echo implode( "<br/>\n", $messages ); ?></p>
+            </div>
+		<?php endif; ?>
         <div class="bp-moderation-ajax-msg hidden notice notice-success">
             <p></p>
         </div>
