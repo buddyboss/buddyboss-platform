@@ -100,8 +100,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 
-		//Show Relevant Feed
-		$this->add_field( '_bp_enable_relevant_feed', __( 'Show Relevant Feed', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
+		//Relevant Activity Feeds
+		$this->add_field( '_bp_enable_relevant_feed', __( 'Relevant Activity Feeds', 'buddyboss' ), 'bp_admin_setting_callback_enable_relevant_feed', 'intval' );
 
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
