@@ -1110,3 +1110,12 @@ function bb_update_to_1_3_5() {
 		bp_groups_migrate_invitations();
 	}
 }
+
+/**
+ * Create Moderation emails.
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bb_update_to_1_5_5() {
+	bp_core_install_moderation_emails();
+}
