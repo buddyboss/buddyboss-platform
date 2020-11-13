@@ -256,7 +256,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$item_id   = $args['button_attr']['data-bp-content-id'];
 	$item_type = $args['button_attr']['data-bp-content-type'];
 
-	if ( empty( $item_id ) || empty( $item_type ) ){
+	if ( empty( $item_id ) || empty( $item_type ) ) {
 		return array();
 	}
 
@@ -575,4 +575,57 @@ function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 
 	return $retval;
+}
+
+/**
+ * Function to send member suspension email
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param string $email  user email address.
+ * @param array  $tokens user details.
+ *
+ * @return bool|BP_Email|WP_Error
+ */
+function bp_moderation_member_suspend_email( $email, $tokens ) {
+
+	return bp_send_email(
+		'user-moderation-email',
+		$email,
+		array(
+			'tokens' => array(
+				'user.name'         => $tokens['user_name'],
+				'user.timesblocked' => $tokens['times_blocked'],
+				'user.link'         => $tokens['member_link'],
+				'user.reportlink'   => $tokens['report_link'],
+			),
+		)
+	);
+}
+
+/**
+ * Function to send email when content is auto hidden
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param string $email  user email.
+ * @param array  $tokens email tokens.
+ *
+ * @return bool|BP_Email|WP_Error
+ */
+function bp_moderation_content_hide_email( $email, $tokens ) {
+	return bp_send_email(
+		'content-moderation-email',
+		$email,
+		array(
+			'tokens' => array(
+				'content.excerpt'       => $tokens['content_excerpt'],
+				'content.type'          => $tokens['content_type'],
+				'content.owner'         => $tokens['content_owner'],
+				'content.timesreported' => $tokens['content_timesreported'],
+				'content.link'          => $tokens['content_link'],
+				'content.reportlink'    => $tokens['content_reportlink'],
+			),
+		)
+	);
 }

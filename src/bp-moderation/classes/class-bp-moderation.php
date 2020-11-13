@@ -394,41 +394,39 @@ class BP_Moderation {
 			if ( ! empty( $admins ) ) {
 				foreach ( $admins as $admin ) {
 					if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
-						bp_send_email(
-							'user-moderation-email',
-							bp_core_get_user_email( $admin ),
-							array(
-								'tokens' => array(
-									'user.name'      => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
-									'user.id'        => $this->item_id,
-									'user.adminlink' => add_query_arg( array(
-										'page'         => 'bp-moderation',
-										'mid'          => $this->id,
-										'content_type' => $this->item_type,
-										'action'       => 'view',
-										'tab'          => 'blocked-members',
-									), bp_get_admin_url( 'admin.php' ) ),
-								),
-							)
+
+						$tokens = array(
+							'user_name'     => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+							'times_blocked' => $this->count,
+							'member_link'   => '',
+							'report_link'   => add_query_arg( array(
+								'page'         => 'bp-moderation',
+								'mid'          => $this->id,
+								'content_type' => $this->item_type,
+								'action'       => 'view',
+							), bp_get_admin_url( 'admin.php' ) )
 						);
+
+						bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
+
 					} elseif ( bp_is_moderation_auto_hide_enable() ) {
-						bp_send_email(
-							'content-moderation-email',
-							bp_core_get_user_email( $admin ),
-							array(
-								'tokens' => array(
-									'content.type'       => bp_moderation_get_content_type( $this->item_type ),
-									'content.id'         => $this->item_id,
-									'content.owner'      => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
-									'content.reportlink' => add_query_arg( array(
-										'page'         => 'bp-moderation',
-										'mid'          => $this->id,
-										'content_type' => $this->item_type,
-										'action'       => 'view'
-									), bp_get_admin_url( 'admin.php' ) ),
-								),
-							)
+
+						$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
+
+						$tokens = array(
+							'content_excerpt'       => '',
+							'content_type'          => bp_moderation_get_content_type( $this->item_type ),
+							'content_owner'         => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+							'content_timesreported' => $this->count,
+							'content_link'          => '',
+							'content_reportlink'    => add_query_arg( array(
+								'page'         => 'bp-moderation',
+								'mid'          => $this->id,
+								'content_type' => $this->item_type,
+								'action'       => 'view'
+							), $content_report_link ),
 						);
+						bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
 					}
 				}
 			}
