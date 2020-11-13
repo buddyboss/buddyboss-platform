@@ -160,7 +160,7 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 								$bp_moderation_report_list_table->display();
 
 								$action_type  = ( 1 === (int) $moderation_request_data->hide_sitewide ) ? 'unhide' : 'hide';
-								$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
+								$action_label = ( 'unhide' === $action_type ) ? esc_html__( 'Unhide Content', 'buddyboss' ) : esc_html__( 'Hide Content', 'buddyboss' );
 								?>
                                 <div class="bp-moderation-actions">
 									<?php
@@ -168,12 +168,10 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 
 										$user_id           = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 										$user_action_type  = 'hide';
-										$user_action_label = esc_html__( 'Hide', 'buddyboss' );
 										$user_data         = BP_Moderation::get_specific_moderation( $user_id, 'user' );
 										$user_action_text  = esc_html__( 'Suspend Content Author', 'buddyboss' );
 										if ( ! empty( $user_data ) ) {
 											$user_action_type  = ( 1 === (int) $user_data->hide_sitewide ) ? 'unhide' : 'hide';
-											$user_action_label = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unhide', 'buddyboss' ) : esc_html__( 'Hide', 'buddyboss' );
 											$user_action_text  = ( 'unhide' === $user_action_type ) ? esc_html__( 'Unsuspend Content Author', 'buddyboss' ) : esc_html__( 'Suspend Content Author', 'buddyboss' );
 										}
 										?>
@@ -193,7 +191,7 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
                                            data-id="<?php echo esc_attr( $user_id ); ?>" data-type="user"
                                            data-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ); ?>"
                                            data-action="<?php echo esc_attr( $user_action_type ); ?>"
-                                           title="<?php echo esc_attr( $user_action_label ); ?>">
+                                           title="<?php echo esc_attr( $user_action_text ); ?>">
 											<?php
 											echo esc_html( $user_action_text );
 											?>

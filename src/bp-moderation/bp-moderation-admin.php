@@ -41,9 +41,9 @@ function bp_moderation_admin_scripts( $hook ) {
 			'Bp_Moderation',
 			array(
 				'strings' => array(
-					'confirm_msg'            => esc_js( __( 'Are you sure you?', 'buddyboss' ) ),
-					'hide_label'             => esc_js( __( 'Hide', 'buddyboss' ) ),
-					'unhide_label'           => esc_js( __( 'Unhide', 'buddyboss' ) ),
+					'confirm_msg'            => esc_js( __( 'Are you sure?', 'buddyboss' ) ),
+					'hide_label'             => esc_js( __( 'Hide Content', 'buddyboss' ) ),
+					'unhide_label'           => esc_js( __( 'Unhide Content', 'buddyboss' ) ),
 					'suspend_label'          => esc_js( __( 'Suspend', 'buddyboss' ) ),
 					'unsuspend_label'        => esc_js( __( 'Unsuspend', 'buddyboss' ) ),
 					'suspend_author_label'   => esc_js( __( 'Suspend Content Author', 'buddyboss' ) ),
@@ -182,7 +182,7 @@ function bp_moderation_admin_load() {
 		);
 	}
 
-	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save' ) ) ) {
+	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save', 'view' ) ) ) {
 
 		// Build redirection URL.
 		$redirect_to = remove_query_arg( array(
