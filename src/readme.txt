@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 5.6.20
-Stable tag: 1.5.2
+Stable tag: 1.5.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,40 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.4 =
+* Profiles - Improved Profile completion module caching logic
+* Notifications - Fixed custom notification blank text issue
+* Notifications - Fixed forum reply notification incorrect timestamp
+* Notifications - Fixed notification issue when a user comments on a blog post
+* Groups - Private groups documents security issue fixed
+* Groups - Fixed forums permission issue for non-members
+* Forums - Fixed forum reply image repost issue
+* Activity - Fixed invalid avatar on the activity post form
+* Activity - Fixed blog post activity video embed issue
+* Messages - code refactoring
+* Network Search - Provided option to search for photos and albums
+* REST API - Fixed many API issues in activity, media, messages, members, and social groups
+* Compatibility - Fixed password reset email layout issue with 'Paid Memberships Pro' plugin
+
+= 1.5.3 =
+* Profiles - Improved profile and Groups cover photo upload
+* Profiles - Fixed fieldset caching issue based on profile types
+* Groups - Fixed issue to show hidden groups in the group directory page
+* Groups - Fixed group tooltip UI issue when cover photo settings disabled
+* Groups - Fixed group invite message do not show
+* Groups - Fixed groups parent setting issue in the dashboard
+* Forums - Fixed forums tab in profile when configured Forums directory as a child page
+* Forums - Fixed forums reply editor formatting issue
+* Activity - Fixed issue to show 'read more' link for blog posts activity
+* Media - Updated Dropzone 5.7.2 library
+* Media - Improved security
+* Photos - Fixed photo description editing issue in the popup
+* Messages - Fixed messages thread formatting
+* Network Search - Fixed minor network search issue
+* BuddyPanel - Fixed selected profile tab issue
+* Performance - Improved DB queries
+* Translations - Updated German (formal) language files
 
 = 1.5.2 =
 * Profiles - Provided option to re-order profile action buttons, visible when viewing other member's profiles

@@ -1157,7 +1157,7 @@ window.bp = window.bp || {};
 			target.closest( 'form' ).find( '#whats-new-toolbar #forums-gif-button' ).removeClass( 'active' );
 			target.closest( 'form' ).find( '.gif-media-search-dropdown' ).removeClass( 'open' );
 			var $forums_attached_gif_container = target.closest( 'form' ).find( '#whats-new-attachments .forums-attached-gif-container' );
-			if ($forums_attached_gif_container) {
+			if ( $forums_attached_gif_container.length ) {
 				$forums_attached_gif_container.addClass( 'closed' );
 				$forums_attached_gif_container.find( '.gif-image-container img' ).attr( 'src', '' );
 				$forums_attached_gif_container[0].style = '';
