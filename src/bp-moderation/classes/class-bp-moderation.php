@@ -390,46 +390,6 @@ class BP_Moderation {
 
 		if ( ! empty( $email_notification ) ) {
 
-			$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
-			if ( ! empty( $admins ) ) {
-				foreach ( $admins as $admin ) {
-					if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
-
-						$tokens = array(
-							'user_name'     => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
-							'times_blocked' => $this->count,
-							'member_link'   => '',
-							'report_link'   => add_query_arg( array(
-								'page'         => 'bp-moderation',
-								'mid'          => $this->id,
-								'content_type' => $this->item_type,
-								'action'       => 'view',
-							), bp_get_admin_url( 'admin.php' ) )
-						);
-
-						bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
-
-					} elseif ( bp_is_moderation_auto_hide_enable() ) {
-
-						$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
-
-						$tokens = array(
-							'content_excerpt'       => '',
-							'content_type'          => bp_moderation_get_content_type( $this->item_type ),
-							'content_owner'         => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
-							'content_timesreported' => $this->count,
-							'content_link'          => '',
-							'content_reportlink'    => add_query_arg( array(
-								'page'         => 'bp-moderation',
-								'mid'          => $this->id,
-								'content_type' => $this->item_type,
-								'action'       => 'view'
-							), $content_report_link ),
-						);
-						bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
-					}
-				}
-			}
 		}
 
 		/**
@@ -1215,5 +1175,57 @@ class BP_Moderation {
 		$updated_row = $wpdb->delete( $bp->moderation->table_name_reports, $args ); // phpcs:ignore
 
 		return ! empty( $updated_row );
+	}
+
+	/**
+	 * Function to send email as per moderation settings
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool|BP_Email|WP_Error
+	 */
+	public function send_emails() {
+
+		$admins = get_users( array( 'role' => 'Administrator', 'fields' => 'ID' ) );
+		if ( ! empty( $admins ) ) {
+			foreach ( $admins as $admin ) {
+				if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
+
+					$tokens = array(
+						'user_name'     => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+						'times_blocked' => $this->count,
+						'member_link'   => '',
+						'report_link'   => add_query_arg( array(
+							'page'         => 'bp-moderation',
+							'mid'          => $this->id,
+							'content_type' => $this->item_type,
+							'action'       => 'view',
+						), bp_get_admin_url( 'admin.php' ) )
+					);
+
+					return bp_moderation_member_suspend_email( bp_core_get_user_email( $admin ), $tokens );
+
+				} elseif ( bp_is_moderation_auto_hide_enable() ) {
+
+					$content_report_link = ( bp_is_moderation_member_blocking_enable() ) ? add_query_arg( array( 'tab' => 'reported-content' ), bp_get_admin_url( 'admin.php' ) ) : bp_get_admin_url( 'admin.php' );
+
+					$tokens = array(
+						'content_excerpt'       => '',
+						'content_type'          => bp_moderation_get_content_type( $this->item_type ),
+						'content_owner'         => bp_core_get_user_displayname( bp_moderation_get_content_owner_id( $this->item_id, $this->item_type ) ),
+						'content_timesreported' => $this->count,
+						'content_link'          => '',
+						'content_reportlink'    => add_query_arg( array(
+							'page'         => 'bp-moderation',
+							'mid'          => $this->id,
+							'content_type' => $this->item_type,
+							'action'       => 'view'
+						), $content_report_link ),
+					);
+
+					return bp_moderation_content_hide_email( bp_core_get_user_email( $admin ), $tokens );
+				}
+			}
+		}
 	}
 }
