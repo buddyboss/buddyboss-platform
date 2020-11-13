@@ -268,14 +268,16 @@ function bp_admin_setting_callback_enable_activity_edit() {
 	<?php
 }
 
-function bp_admin_setting_callback_show_relevant_feed() {
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_enable_relevant_feed() {
 	?>
-
-	<input id="_bp_show_relevant_feed" name="_bp_show_relevant_feed" type="checkbox"
-	       value="1" <?php checked( bp_is_show_relevant_feed_enabled( false ) ); ?> />
-	<label for="_bp_show_relevant_feed"><?php _e( 'Show only relevant feed to members timeline',
-			'buddyboss' ); ?></label>
-
+	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox"
+		   value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
+	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Show only relevant feed to members timeline', 'buddyboss' ); ?></label>
 	<?php
 }
 

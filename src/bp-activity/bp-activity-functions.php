@@ -5333,11 +5333,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
 				$new_scope[] = 'media';
 				$new_scope[] = 'document';
 			}
-
-			if ( bp_is_active( 'forums' ) ) {
-				$new_scope[] = 'forums';
-			}
-
 		} elseif ( bp_is_user_activity() ) {
 			if ( empty( bp_current_action() ) ) {
 				$new_scope[] = 'just-me';
@@ -5347,7 +5342,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
 		} elseif ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
 			$new_scope[] = 'groups';
 		}
-
 	} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'public';
 	}
@@ -5358,9 +5352,13 @@ function bp_activity_default_scope( $scope = 'all' ) {
 		$new_scope = (array) $scope;
 	}
 
-	if ( bp_is_show_relevant_feed_enabled() ) {
-		if ( is_array( $new_scope ) && ( $key = array_search( 'public', $new_scope ) ) !== false ) {
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'public', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
 			unset( $new_scope[ $key ] );
+			if ( bp_is_active( 'forums' ) ) {
+				$new_scope[] = 'forums';
+			}
 		}
 	}
 
@@ -5426,8 +5424,8 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	// if group activity then set privacy edit to always false.
 	if ( 0 < (int) $group_id ) {
 		$can_edit_privacy = false;
-		$group      = groups_get_group( $group_id );
-		$group_name = bp_get_group_name( $group );
+		$group            = groups_get_group( $group_id );
+		$group_name       = bp_get_group_name( $group );
 	}
 
 	/**
