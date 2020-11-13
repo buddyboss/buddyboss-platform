@@ -5,7 +5,7 @@ jQuery( document ).ready( function ( $ ) {
 			return false;
 		}
 
-		$( '.bp-moderation-ajax-msg p' ).text('').parent().addClass('hidden');
+		$( '.bp-moderation-ajax-msg p' ).text( '' ).parent().addClass( 'hidden' );
 
 		var curObj = $( this );
 		curObj.addClass( 'disabled' );
@@ -32,6 +32,12 @@ jQuery( document ).ready( function ( $ ) {
 						curObj.text( Bp_Moderation.strings.unsuspend_author_label );
 					} else if ( curObj.hasClass( 'single-report-btn' ) ) {
 						curObj.text( Bp_Moderation.strings.unsuspend_member_label );
+					} else {
+						if ( 'user' === type ) {
+							curObj.text( Bp_Moderation.strings.unsuspend_label );
+						} else {
+							curObj.text( Bp_Moderation.strings.unhide_label );
+						}
 					}
 				} else if ( 'unhide' === sub_action ) {
 					curObj.attr( 'data-action', 'hide' );
@@ -42,11 +48,20 @@ jQuery( document ).ready( function ( $ ) {
 						curObj.text( Bp_Moderation.strings.suspend_author_label );
 					} else if ( curObj.hasClass( 'single-report-btn' ) ) {
 						curObj.text( Bp_Moderation.strings.suspend_member_label );
+					} else {
+						if ( 'user' === type ) {
+							curObj.text( Bp_Moderation.strings.suspend_label );
+						} else {
+							curObj.text( Bp_Moderation.strings.unhide_label );
+						}
 					}
 				}
-				$( '.bp-moderation-ajax-msg p' ).text( result.message ).parent().removeClass('hidden');
+				$( '.bp-moderation-ajax-msg p' ).text( result.message ).parent().removeClass( 'hidden' );
+				setTimeout( function () {
+					location.reload();
+				}, 2000 );
 			} else {
-				$( '.bp-moderation-ajax-msg p' ).text( result.message.errors.bp_moderation_content_actions_request ).parent().removeClass('hidden');
+				$( '.bp-moderation-ajax-msg p' ).text( result.message.errors.bp_moderation_content_actions_request ).parent().removeClass( 'hidden' );
 			}
 			curObj.removeClass( 'disabled' );
 		} );

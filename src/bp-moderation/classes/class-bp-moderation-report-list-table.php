@@ -76,10 +76,10 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @since BuddyBoss 2.0.0
 	 */
 	public function no_items() {
-		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
-			esc_html_e( 'Sorry, no blocked members report were found.', 'buddyboss' );
-		} else {
+		if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
 			esc_html_e( 'Sorry, no reported content report was found.', 'buddyboss' );
+		} else {
+			esc_html_e( 'Sorry, no blocked members report were found.', 'buddyboss' );
 		}
 	}
 
@@ -173,15 +173,15 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 
-		if ( ! empty( $_GET['tab'] ) && 'blocked-members' === $_GET['tab'] ) {
+		if ( ! empty( $_GET['tab'] ) && 'reported-content' === $_GET['tab'] ) {
 			$columns = array(
-				'reporter' => esc_html__( 'Blocking Member', 'buddyboss' ),
+				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
+				'category' => esc_html__( 'Report/Category', 'buddyboss' ),
 				'date'     => esc_html__( 'Date', 'buddyboss' ),
 			);
 		} else {
 			$columns = array(
-				'reporter' => esc_html__( 'Reporter', 'buddyboss' ),
-				'category' => esc_html__( 'Report/Category', 'buddyboss' ),
+				'reporter' => esc_html__( 'Blocking Member', 'buddyboss' ),
 				'date'     => esc_html__( 'Date', 'buddyboss' ),
 			);
 		}

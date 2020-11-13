@@ -171,15 +171,17 @@ class BP_Moderation_Component extends BP_Component {
 			'item_css_id'     => 'reported-content',
 		);
 
-		$sub_nav[] = array(
-			'name'            => __( 'Blocked Members', 'buddyboss' ),
-			'slug'            => 'blocked-members',
-			'parent_url'      => $moderation_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'bp_moderation_screen',
-			'position'        => 15,
-			'item_css_id'     => 'blocked-members',
-		);
+		if ( bp_is_moderation_member_blocking_enable() ) {
+			$sub_nav[] = array(
+				'name'            => __( 'Blocked Members', 'buddyboss' ),
+				'slug'            => 'blocked-members',
+				'parent_url'      => $moderation_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'bp_moderation_screen',
+				'position'        => 15,
+				'item_css_id'     => 'blocked-members',
+			);
+		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
 	}
