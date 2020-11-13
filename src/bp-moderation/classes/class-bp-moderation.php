@@ -389,7 +389,7 @@ class BP_Moderation {
 		}
 
 		if ( ! empty( $email_notification ) ) {
-
+			$this->send_emails();
 		}
 
 		/**
