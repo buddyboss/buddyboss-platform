@@ -22,6 +22,19 @@ new BP_Moderation_Media();
 new BP_Moderation_Messages();
 
 /**
+ * Update modebypass Param
+ * @since BuddyBoss 2.0.0
+ *
+ * @param Array $params Array of key/value pairs for AJAX usage.
+ */
+function bp_moderation_js_strings( $params ) {
+	$params['modbypass'] = filter_input( INPUT_GET, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
+
+	return $params;
+}
+add_filter( 'bp_core_get_js_strings', 'bp_moderation_js_strings' );
+
+/**
  * Function to handle frontend report form submission.
  *
  * @since BuddyBoss 2.0.0

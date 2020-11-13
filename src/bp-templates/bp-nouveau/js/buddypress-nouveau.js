@@ -259,6 +259,13 @@ window.bp = window.bp || {};
 				postData.customized = BP_Nouveau.customizer_settings;
 			}
 
+			/**
+			 * Moderation bypass for admin
+			 */
+			if (undefined !== BP_Nouveau.modbypass) {
+				postData.modbypass = BP_Nouveau.modbypass;
+			}
+
 			this.ajax_request = $.post(BP_Nouveau.ajaxurl, postData, 'json');
 
 			return this.ajax_request;
