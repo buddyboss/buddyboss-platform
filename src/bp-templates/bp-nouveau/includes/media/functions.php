@@ -253,7 +253,7 @@ function bp_media_download_file( $attachment_id, $type = 'media' ) {
 		// get filename.
 		$file_name = basename( $the_file );
 
-		bp_media_download_file_force( $the_file, $file_name );
+		bp_media_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	}
 
 }
