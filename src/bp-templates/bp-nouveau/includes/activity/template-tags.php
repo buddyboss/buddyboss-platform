@@ -808,6 +808,15 @@ function bp_nouveau_activity_comment_form() {
 }
 
 /**
+ * Load the Activity comment edit form
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_nouveau_activity_comment_edit_form() {
+	bp_get_template_part( 'activity/comment-edit-form' );
+}
+
+/**
  * Output the action buttons for the activity comments
  *
  * @since BuddyPress 3.0.0
@@ -902,6 +911,20 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 					'class' => "acomment-reply bp-primary-action",
 					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
 				),
+			),
+			'activity_comment_edit' => array(
+					'id'                => 'activity_comment_edit',
+					'position'          => 5,
+					'component'         => 'activity',
+					'must_be_logged_in' => true,
+					'parent_element'    => $parent_element,
+					'parent_attr'       => $parent_attr,
+					'button_element'    => $button_element,
+					'link_text'         => __( 'Edit', 'buddyboss' ),
+					'button_attr'       => array(
+							'class' => "acomment-edit bp-primary-action",
+							'id'    => sprintf( 'acomment-edit-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
+					),
 			),
 			'activity_comment_delete' => array(
 				'id'                => 'activity_comment_delete',
@@ -1444,4 +1467,12 @@ function bp_nouveau_edit_activity_data() {
  */
 function bp_nouveau_get_edit_activity_data() {
 	return htmlentities( wp_json_encode( bp_activity_get_edit_data( bp_get_activity_id() ) ) );
+}
+
+function bp_nouveau_edit_activity_comment_data() {
+	echo bp_nouveau_get_edit_activity_comment_data();
+}
+
+function bp_nouveau_get_edit_activity_comment_data() {
+	return htmlentities( wp_json_encode( bp_get_activity_comment_edit_data( bp_get_activity_comment_id() ) ) );
 }

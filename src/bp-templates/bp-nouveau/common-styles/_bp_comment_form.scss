@@ -91,6 +91,20 @@ form.ac-form {
 .activity-comments li form.ac-form {
 	clear: both;
 	margin-right: $marg-med;
+
+	&.ac-edit-form .dropzone:not(:empty) {
+		margin: 20px 0;
+	}
+
+	.dz-complete .dz-remove:after {
+
+		.activity_update & {
+			left: 0;
+			top: 0;
+		}
+
+	}
+
 }
 
 .activity-comments form.root {

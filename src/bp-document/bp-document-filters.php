@@ -21,6 +21,7 @@ add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_acti
 add_action( 'bp_activity_after_delete', 'bp_document_delete_activity_document' );
 add_action( 'bp_activity_after_save', 'bp_document_activity_update_document_privacy', 2 );
 add_filter( 'bp_activity_get_edit_data', 'bp_document_get_edit_activity_data' );
+add_filter( 'bp_get_activity_comment_edit_data', 'bp_document_get_edit_activity_data' );
 
 // Search.
 add_action( 'bp_search_after_result', 'bp_document_add_theatre_template', 99999 );

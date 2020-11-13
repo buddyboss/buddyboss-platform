@@ -10,7 +10,7 @@
 
 	?>
 
-<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
+<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>" data-bp-comment="<?php ( function_exists('bp_nouveau_edit_activity_comment_data') ) ? bp_nouveau_edit_activity_comment_data() : ''; ?>">
 	<div class="acomment-avatar item-avatar">
 		<a href="<?php bp_activity_comment_user_link(); ?>">
 			<?php
@@ -38,5 +38,8 @@
 
 	<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 
+	<?php bp_nouveau_activity_comment_edit_form(); ?>
+
 	<?php bp_nouveau_activity_recurse_comments( bp_activity_current_comment() ); ?>
+
 </li>

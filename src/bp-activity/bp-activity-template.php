@@ -265,7 +265,7 @@ function bp_has_activities( $args = '' ) {
 			'spam'              => 'ham_only',   // Hide spammed items.
 
 		// Scope - pre-built activity filters for a user (friends/groups/favorites/mentions).
-			'scope'             => $scope,
+			'scope'             => 'public',
 
 			// Filtering.
 			'user_id'           => $user_id,     // user_id to filter on.
