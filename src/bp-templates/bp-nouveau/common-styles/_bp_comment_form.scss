@@ -97,8 +97,12 @@ form.ac-form {
 	}
 
 	.dz-complete .dz-remove:after {
-		left: 0;
-		top: 0;
+
+		.activity_update & {
+			left: 0;
+			top: 0;
+		}
+
 	}
 
 }

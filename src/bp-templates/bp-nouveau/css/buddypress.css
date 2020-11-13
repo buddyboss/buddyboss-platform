@@ -3917,7 +3917,7 @@ form.ac-form .ac-reply-content input {
   margin: 20px 0;
 }
 
-.activity-comments li form.ac-form .dz-complete .dz-remove:after {
+.activity_update .activity-comments li form.ac-form .dz-complete .dz-remove:after {
   left: 0;
   top: 0;
 }
