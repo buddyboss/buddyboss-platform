@@ -176,7 +176,15 @@ function bp_moderation_admin_load() {
 	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save' ) ) ) {
 
 		// Build redirection URL.
-		$redirect_to = remove_query_arg( array( 'mid', 'deleted', 'error', 'unhide', 'hidden' ), wp_get_referer() );
+		$redirect_to = remove_query_arg( array(
+			'mid',
+			'deleted',
+			'error',
+			'unhide',
+			'hidden',
+			'suspended',
+			'unsuspended'
+		), wp_get_referer() );
 		$redirect_to = add_query_arg( 'paged', $bp_moderation_list_table->get_pagenum(), $redirect_to );
 
 		// Get moderation IDs.
@@ -204,7 +212,8 @@ function bp_moderation_admin_load() {
 		}
 
 		$moderation_action = ( 'hide' === $doaction ) ? 1 : 0;
-		$count             = 0;
+		$content_count     = 0;
+		$user_count        = 0;
 
 		foreach ( $moderation_ids as $moderation_id ) {
 			$moderation_obj     = new BP_Moderation();
@@ -213,7 +222,11 @@ function bp_moderation_admin_load() {
 			$moderation_obj->hide_sitewide = $moderation_action;
 			$update_moderation             = $moderation_obj->save();
 			if ( true === $update_moderation ) {
-				$count ++;
+				if ( BP_Moderation_Members::$moderation_type === $moderation_obj->item_type ) {
+					$user_count ++;
+				} else {
+					$content_count ++;
+				}
 			}
 		}
 
@@ -228,15 +241,26 @@ function bp_moderation_admin_load() {
 		 * @param string $redirect_to    URL to redirect to.
 		 * @param array  $moderation_ids Original array of activity IDs.
 		 */
-		do_action( 'bp_moderation_admin_action_after', array( $count ), $redirect_to, $moderation_ids );
+		do_action( 'bp_moderation_admin_action_after', array(
+			$content_count,
+			$user_count
+		), $redirect_to, $moderation_ids );
 
 		// Add arguments to the redirect URL so that on page reload, we can easily display what we've just done.
-		if ( $count && 'hide' === $doaction ) {
-			$redirect_to = add_query_arg( 'hidden', $count, $redirect_to );
+		if ( $content_count && 'hide' === $doaction ) {
+			$redirect_to = add_query_arg( 'hidden', $content_count, $redirect_to );
 		}
 
-		if ( $count && 'unhide' === $doaction ) {
-			$redirect_to = add_query_arg( 'unhide', $count, $redirect_to );
+		if ( $content_count && 'unhide' === $doaction ) {
+			$redirect_to = add_query_arg( 'unhide', $content_count, $redirect_to );
+		}
+
+		if ( $user_count && 'hide' === $doaction ) {
+			$redirect_to = add_query_arg( 'suspended', $user_count, $redirect_to );
+		}
+
+		if ( $user_count && 'unhide' === $doaction ) {
+			$redirect_to = add_query_arg( 'unsuspended', $user_count, $redirect_to );
 		}
 
 		/**
@@ -346,9 +370,11 @@ function bp_moderation_admin_index() {
 	$messages = array();
 
 	// If the user has just made a change to an activity item, build status messages.
-	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) ) {
-		$hidden = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
-		$unhide = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
+		$hidden      = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
+		$unhide      = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+		$suspended   = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
+		$unsuspended = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
 
 		if ( $hidden > 0 ) {
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
@@ -356,6 +382,14 @@ function bp_moderation_admin_index() {
 
 		if ( $unhide > 0 ) {
 			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+		}
+
+		if ( $suspended > 0 ) {
+			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
+		}
+
+		if ( $unsuspended > 0 ) {
+			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
 		}
 	}
 
@@ -385,6 +419,7 @@ function bp_moderation_admin_index() {
         </div>
 		<?php $bp_moderation_list_table->views(); ?>
         <form id="bp-moseration-form" action="" method="get">
+            <input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab ); ?>"/>
             <input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
 			<?php $bp_moderation_list_table->display(); ?>
         </form>

@@ -359,6 +359,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$actions['bulk_hide']   = __( 'Hide', 'buddyboss' );
 				$actions['bulk_unhide'] = __( 'Unhide', 'buddyboss' );
 			}
+		} else {
+			if ( 'suspended' === $this->view ) {
+				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss' );
+				$actions['bulk_delete']    = __( 'Delete', 'buddyboss' );
+			} else {
+				$actions['bulk_hide'] = __( 'Suspend', 'buddyboss' );
+			}
 		}
 
 		/**
