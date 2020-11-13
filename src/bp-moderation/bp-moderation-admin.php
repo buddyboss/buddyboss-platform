@@ -114,6 +114,14 @@ function bp_moderation_admin_load() {
 	$doaction                = bp_admin_list_table_current_bulk_action();
 	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
 	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
+	$_SERVER['REQUEST_URI']  = remove_query_arg( 'hidden', $_SERVER['REQUEST_URI'] );
+	$referer                 = remove_query_arg( 'hidden', wp_get_referer() );
+	$_SERVER['REQUEST_URI']  = remove_query_arg( 'unhide', $_SERVER['REQUEST_URI'] );
+	$referer                 = remove_query_arg( 'unhide', wp_get_referer() );
+	$_SERVER['REQUEST_URI']  = remove_query_arg( 'suspended', $_SERVER['REQUEST_URI'] );
+	$referer                 = remove_query_arg( 'suspended', wp_get_referer() );
+	$_SERVER['REQUEST_URI']  = remove_query_arg( 'unsuspended', $_SERVER['REQUEST_URI'] );
+	$referer                 = remove_query_arg( 'unsuspended', wp_get_referer() );
 
 	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
 
@@ -132,6 +140,7 @@ function bp_moderation_admin_load() {
 			'<p><a href="https://www.buddyboss.com/resources/">' . esc_html__( 'Documentation', 'buddyboss' ) . '</a></p>'
 		);
 	} else {
+
 		/**
 		 * Fires at top of Moderation admin page.
 		 *
@@ -185,6 +194,7 @@ function bp_moderation_admin_load() {
 			'suspended',
 			'unsuspended'
 		), wp_get_referer() );
+
 		$redirect_to = add_query_arg( 'paged', $bp_moderation_list_table->get_pagenum(), $redirect_to );
 
 		// Get moderation IDs.
@@ -209,6 +219,25 @@ function bp_moderation_admin_load() {
 			$doaction = substr( $doaction, 5 );
 
 			// This is a request to delete, spam, or un-spam, a single item.
+		}
+
+		if ( 'delete' === $doaction ) {
+			$user_ids = array();
+			foreach ( $moderation_ids as $moderation_id ) {
+				$moderation_obj     = new BP_Moderation();
+				$moderation_obj->id = $moderation_id;
+				$moderation_obj->populate();
+				$user_ids[] = $moderation_obj->item_id;
+			}
+
+			$delete_redirect_to = add_query_arg( array(
+				'action'           => 'delete',
+				'users'            => $user_ids,
+				'_wp_http_referer' => $redirect_to,
+			), bp_get_admin_url( 'users.php' ) );
+
+			wp_safe_redirect( $delete_redirect_to );
+			exit;
 		}
 
 		$moderation_action = ( 'hide' === $doaction ) ? 1 : 0;
