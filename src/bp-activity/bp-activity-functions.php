@@ -2329,7 +2329,7 @@ function bp_activity_post_update( $args = '' ) {
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
-					'error_type'        => $r[ 'error_type' ],
+					'error_type'        => $r['error_type'],
 				)
 			);
 
@@ -2379,7 +2379,6 @@ function bp_activity_post_update( $args = '' ) {
 		 * @param string $activity_content Content of the activity update.
 		 *
 		 * @since BuddyPress 1.6.0
-		 *
 		 */
 		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
 
@@ -3897,11 +3896,11 @@ function bp_activity_create_summary( $content, $activity ) {
 		)
 	);
 
-	if ( $use_media_type === 'embeds' ) {
-		$summary .= PHP_EOL . PHP_EOL . $extracted_media['url'];
-	} elseif ( $use_media_type === 'images' ) {
+	if ( 'embeds' === $use_media_type ) {
+		$summary .= PHP_EOL . PHP_EOL . '<p>' . $extracted_media['url'] . '</p>';
+	} elseif ( 'images' === $use_media_type ) {
 		$extracted_media_url = isset( $extracted_media['url'] ) ? $extracted_media['url'] : '';
-		$summary .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
+		$summary            .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
 	} elseif ( in_array( $use_media_type, array( 'audio', 'videos' ), true ) ) {
 		$summary .= PHP_EOL . PHP_EOL . $extracted_media['original'];  // Full shortcode.
 	}

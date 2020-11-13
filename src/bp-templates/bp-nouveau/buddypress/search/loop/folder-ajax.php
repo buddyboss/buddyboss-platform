@@ -68,7 +68,7 @@ $folder_link      = bp_get_folder_folder_link();
 						$group_id = bp_get_folder_group_id();
 						if ( $group_id > 0 ) {
 							?>
-							<span class="bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
+							<span class="bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Based on group privacy', 'buddyboss' ); ?>">
 									<?php bp_document_folder_privacy(); ?>
 								</span>
 							<?php
