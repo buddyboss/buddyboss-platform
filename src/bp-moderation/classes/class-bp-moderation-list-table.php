@@ -145,6 +145,9 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			if ( 'suspended' === $moderation_status ) {
 				$this->view                        = 'suspended';
 				$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+			} elseif ( 'unsuspended' === $moderation_status ) {
+				$this->view                        = 'unsuspended';
+				$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
 			} else {
 				$this->view = 'all';
 			}
@@ -267,14 +270,18 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		$moderation_views = apply_filters( 'bp_moderation_get_views', array(
 			'blocked-members'  => array(
-				'all'       => array(
+				'all'         => array(
 					'name' => esc_html__( 'All', 'buddyboss' ),
 					'link' => $blocked_members_url_base
 				),
-				'suspended' => array(
+				'unsuspended' => array(
+					'name' => esc_html__( 'Reported', 'buddyboss' ),
+					'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base )
+				),
+				'suspended'   => array(
 					'name' => esc_html__( 'Suspended', 'buddyboss' ),
 					'link' => add_query_arg( array( 'moderation_status' => 'suspended' ), $blocked_members_url_base )
-				)
+				),
 			),
 			'reported-content' => array(
 				'all'    => array(
@@ -282,7 +289,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 					'link' => $reported_content_url_base
 				),
 				'active' => array(
-					'name' => esc_html__( 'Active', 'buddyboss' ),
+					'name' => esc_html__( 'Reported', 'buddyboss' ),
 					'link' => add_query_arg( array( 'moderation_status' => 'active' ), $reported_content_url_base )
 				),
 				'hidden' => array(
@@ -362,9 +369,12 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		} else {
 			if ( 'suspended' === $this->view ) {
 				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss' );
-				$actions['bulk_delete']    = __( 'Delete', 'buddyboss' );
-			} else {
+				$actions['bulk_delete'] = __( 'Delete', 'buddyboss' );
+			} elseif ( 'unsuspended' === $this->view ) {
 				$actions['bulk_hide'] = __( 'Suspend', 'buddyboss' );
+			} else {
+				$actions['bulk_hide']   = __( 'Suspend', 'buddyboss' );
+				$actions['bulk_unhide'] = __( 'Unsuspend', 'buddyboss' );
 			}
 		}
 
