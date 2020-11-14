@@ -32,6 +32,7 @@ function bp_moderation_js_strings( $params ) {
 
 	return $params;
 }
+
 add_filter( 'bp_core_get_js_strings', 'bp_moderation_js_strings' );
 
 /**
@@ -191,3 +192,23 @@ function bb_moderation_content_report_popup() {
 }
 
 add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
+
+/**
+ * Function to add the block user button in customizer section
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $buttons buttons array.
+ *
+ * @return mixed
+ */
+function bp_moderation_block_user_profile_button( $buttons ) {
+
+	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+		$buttons['member_report'] = __( 'BLock', 'buddyboss' );
+	}
+
+	return $buttons;
+}
+
+add_filter( 'bp_nouveau_customizer_user_profile_actions', 'bp_moderation_block_user_profile_button' );
