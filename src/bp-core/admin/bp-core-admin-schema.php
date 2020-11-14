@@ -2,8 +2,8 @@
 /**
  * BuddyPress DB schema.
  *
+ * @since   BuddyPress 2.3.0
  * @package BuddyBoss\Core\Administration
- * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -828,9 +828,9 @@ function bp_core_install_signups() {
  *
  * @since BuddyPress 2.0.1
  *
- * @see pre_schema_upgrade()
- * @link https://core.trac.wordpress.org/ticket/27855 WordPress Trac Ticket
- * @link https://buddypress.trac.wordpress.org/ticket/5563 BuddyPress Trac Ticket
+ * @see   pre_schema_upgrade()
+ * @link  https://core.trac.wordpress.org/ticket/27855 WordPress Trac Ticket
+ * @link  https://buddypress.trac.wordpress.org/ticket/5563 BuddyPress Trac Ticket
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  */
@@ -1065,9 +1065,9 @@ function bp_core_install_group_message_email() {
  *
  * @since BuddyPress 5.0.0
  *
- * @uses bp_core_set_charset()
- * @uses bp_core_get_table_prefix()
- * @uses dbDelta()
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
  */
 function bp_core_install_invitations() {
 	$sql             = array();
@@ -1110,11 +1110,11 @@ function bp_core_install_invitations() {
 /**
  * Install database tables for the Moderation
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
- * @uses bp_core_set_charset()
- * @uses bp_core_get_table_prefix()
- * @uses dbDelta()
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
  */
 function bp_core_install_moderation() {
 	$sql             = array();
@@ -1156,4 +1156,57 @@ function bp_core_install_moderation() {
 	) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/**
+ * Add moderation emails.
+ *
+ * @since BuddyBoss 2.0.0
+ */
+function bp_core_install_moderation_emails() {
+
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$emails       = bp_email_get_schema();
+	$descriptions = bp_email_get_type_schema( 'description' );
+
+	// Add these emails to the database.
+	foreach ( $emails as $id => $email ) {
+
+		if ( strpos( $id, 'content-moderation-', 0 ) === false && strpos( $id, 'user-moderation-', 0 ) === false ) {
+			continue;
+		}
+
+		// Some emails are multisite-only.
+		if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
+		}
+	}
+
+	/**
+	 * Fires after BuddyPress adds the posts for its bbp emails.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 */
+	do_action( 'bp_core_install_moderation_emails' );
 }

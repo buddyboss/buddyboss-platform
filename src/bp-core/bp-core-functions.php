@@ -3914,19 +3914,19 @@ function bp_email_get_schema() {
 		),
 		'content-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{content.type}} is auto hide', 'buddyboss' ), //Todo: Add proper email suject.
+			'post_title'   => __( '[{{{site.name}}}] Content is auto hidden', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Content id: {{content.id}}, Content Owner: {{content.owner}}, Report Link: {{content.reportlink}}", 'buddyboss' ), //Todo: Add proper content.
+			'post_content' => __( "{{content.type}} has been automatically hidden because it has been reported at least {{content.timesreported}} time(s).", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Content id: {{content.id}}, Content Owner {{content.owner}}, Report Link: {{content.reportlink}}", 'buddyboss' ), // Todo: Add proper excerpt.
+			'post_excerpt' => __( "{{content.type}} has been automatically hidden because it has been reported at least {{content.timesreported}} time(s).", 'buddyboss' ),
 		),
 		'user-moderation-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] An user is auto suspended', 'buddyboss' ), //Todo: Add proper email subject.
+			'post_title'   => __( '[{{{site.name}}}] Member is auto suspended', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "User id: {{user.id}}, User Name: {{user.name}}, User Link: {{user.adminlink}}", 'buddyboss' ), //Todo: Add proper content.
+			'post_content' => __( "{{user.name}} has been automatically suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "User id: {{user.id}}, User Name: {{user.name}}, User Link: {{user.adminlink}}", 'buddyboss' ), // Todo: Add proper excerpt.
+			'post_excerpt' => __( "{{user.name}} has been automatically suspended because they have been blocked by other members at least {{user.timesblocked}} time(s).", 'buddyboss' ),
 		),
 	);
 
