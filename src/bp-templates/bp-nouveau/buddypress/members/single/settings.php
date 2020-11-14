@@ -36,6 +36,10 @@ switch ( bp_current_action() ) :
 	case 'export':
 		bp_get_template_part( 'members/single/settings/export-data' );
 		break;
+	case 'reported-content':
+	case 'blocked-members':
+		bp_get_template_part( 'members/single/settings/moderation' );
+		break;
 	default:
 		bp_get_template_part( 'members/single/plugins' );
 		break;
