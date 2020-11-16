@@ -949,7 +949,7 @@ function bp_is_activity_edit_enabled( $default = false ) {
 /**
  * Check whether relevant feed is enabled.
  *
- * @since BuddyBoss 1.5.3
+ * @since BuddyBoss 1.5.5
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -961,7 +961,7 @@ function bp_is_relevant_feed_enabled( $default = false ){
 	/**
 	 * Filters whether or not relevant feed is enabled.
 	 *
-	 * @since BuddyBoss 1.5.3
+	 * @since BuddyBoss 1.5.5
 	 *
 	 * @param bool $value Whether or not relevant feed is enabled.
 	 */
