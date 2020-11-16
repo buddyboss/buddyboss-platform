@@ -618,13 +618,13 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 
 	bp_activity_update_meta( $activity_id, 'post_url', $post_permalink );
 
-	$get_post_type_args = array(
+	$cu_post_types_args = array(
 		'name' => $post->post_type,
 	);
 
 	$output = 'objects'; // names or objects.
 
-	$cu_post_types = get_post_types( $get_post_type_args, $output );
+	$cu_post_types = get_post_types( $cu_post_types_args, $output );
 
 	foreach ( $cu_post_types as $cu ) {
 		$singular_label_name = strtolower( $cu->labels->singular_name );
