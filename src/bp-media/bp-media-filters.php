@@ -1700,7 +1700,7 @@ function bp_media_forum_privacy_repair() {
 			if ( ! empty( $record ) ) {
 				$media_ids = get_post_meta( $record, 'bp_media_ids', true );
 				if ( $media_ids ) {
-					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ')';
+					$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $media_ids . ")";
 					$wpdb->query( $update_query );
 				}
 			}
