@@ -117,8 +117,24 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 */
 	public static function get_content_excerpt( $message_id ) {
 		$message = new BP_Messages_Message( $message_id );
+		$link    = '<a href="' . esc_url( self::get_permalink( (int) $message_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $message->message ) ) ? $message->message : '';
+		return ( ! empty( $message->message ) ) ? $message->message . ' ' . $link : $link;
+	}
+
+	/**
+	 * Get permalink
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $message_id message id.
+	 *
+	 * @return string
+	 */
+	public static function get_permalink( $message_id ) {
+		$url = bp_get_message_thread_view_link( $message_id );
+
+		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
 
 	/**
