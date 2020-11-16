@@ -818,7 +818,6 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 	if ( 'document' === $type ) {
 
 		$the_file = wp_get_attachment_url( $attachment_id );
-		$the_file = strtok( $the_file, '?' );
 
 		if ( ! $the_file ) {
 			return;
