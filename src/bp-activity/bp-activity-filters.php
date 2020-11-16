@@ -2259,3 +2259,4 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 	return $buttons;
 
 }
+
