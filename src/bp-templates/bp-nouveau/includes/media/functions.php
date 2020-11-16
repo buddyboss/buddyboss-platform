@@ -325,7 +325,7 @@ function bp_media_get_preview_image_url( $media_id, $preview_attachment_id, $siz
 
 	$media_id        = 'forbidden_' . $media_id;
 	$attachment_id   = 'forbidden_' . $preview_attachment_id;
-	$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
+	$output_file_src = bp_media_scaled_image_path( $preview_attachment_id );
 	if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
 		$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/media/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $media_id ) . '&size=' . base64_encode( $size );
 	}
