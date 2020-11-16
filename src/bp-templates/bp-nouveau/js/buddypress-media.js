@@ -173,13 +173,14 @@ window.bp = window.bp || {};
 			$(document).on('click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind(this));
 			$(document).on('click', '#bp-edit-folder-open', this.openEditFolderChildModal.bind(this));
 
-			$(document).one('click', '#bp-media-create-album-submit', this.saveAlbum.bind(this));
-			$(document).on('click', '#bp-media-create-folder-submit', this.saveFolder.bind(this));
-			$(document).on('click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind(this));
+			$( document ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 
-			bpNouveau.on('click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind(this));
-			$(document).on('click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind(this));
-			$(document).on('click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind(this));
+			bpNouveau.on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
+			$( document ).on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
+			$( document ).on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
+			$( document ).on( 'click', '.open-popup .errorPopup', this.closeErrorPopup.bind( this ) );
 
 			bpNouveau.on('click', '#bp-media-add-more', this.triggerDropzoneSelectFileDialog.bind(this));
 
@@ -1992,7 +1993,7 @@ window.bp = window.bp || {};
 									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 								this.removeFile(file);
 							}
 						}
@@ -2169,7 +2170,7 @@ window.bp = window.bp || {};
 									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 								this.removeFile(file);
 							}
 						}
@@ -2281,7 +2282,7 @@ window.bp = window.bp || {};
 									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 								this.removeFile(file);
 							}
 						}
@@ -2423,7 +2424,7 @@ window.bp = window.bp || {};
 									$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 								}
 							} else {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button open-popup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 								this.removeFile(file);
 							}
 						}
@@ -2762,7 +2763,7 @@ window.bp = window.bp || {};
 								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 							}
 						} else {
-							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 							this.removeFile(file);
 						}
 					}
@@ -2996,7 +2997,7 @@ window.bp = window.bp || {};
 								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 							}
 						} else {
-							$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+							$('body').append('<div id="bp-media-create-album" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
 							this.removeFile(file);
 						}
 					}
@@ -3919,16 +3920,17 @@ window.bp = window.bp || {};
 		closeCreateAlbumModal: function (event) {
 			event.preventDefault();
 
-			this.closeUploader(event);
-			$('#bp-media-create-album').hide();
-			$('#bb-album-title').val('');
+			this.closeUploader( event );
+			$( '#bp-media-create-album' ).hide();
+			$( '#bb-album-title' ).val( '' );
+
 		},
 
 		closeCreateFolderModal: function (event) {
 			event.preventDefault();
-			$('#bp-media-create-folder, #bp-media-create-child-folder').hide();
-			$('#bb-album-title, #bb-album-child-title').val('');
-			$('#bp-media-create-child-folder-submit').removeClass('loading');
+			$( '#bp-media-create-folder, #bp-media-create-child-folder' ).hide();
+			$( '#bb-album-title, #bb-album-child-title' ).val( '' );
+			$( '#bp-media-create-child-folder-submit' ).removeClass( 'loading' );
 		},
 
 		closeEditFolderModal: function (event) {
@@ -3936,10 +3938,14 @@ window.bp = window.bp || {};
 
 			var currentPopup = $(event.currentTarget).closest('#bp-media-edit-child-folder');
 
-			$('#bp-media-edit-child-folder').hide();
-			currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps').hide();
-			this.clearFolderLocationUI(event);
+			$( '#bp-media-edit-child-folder' ).hide();
+			currentPopup.find( '.bb-field-steps-1' ).show().siblings( '.bb-field-steps' ).hide();
+			this.clearFolderLocationUI( event );
+		},
 
+		closeErrorPopup: function (event) {
+			event.preventDefault();
+			$(event.currentTarget).closest('.open-popup').remove();
 		},
 
 		submitMedia: function (event) {
@@ -4188,8 +4194,13 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function (event) {
-			var target = $(event.currentTarget), self = this, title = $('#bb-album-title'),
-			    privacy                                             = $('#bb-album-privacy');
+			var target  = $( event.currentTarget ), self = this, title = $( '#bb-album-title' ),
+				privacy = $( '#bb-album-privacy' );
+
+			if( target.hasClass('saving') ) {
+				return false;
+			}
+
 			event.preventDefault();
 
 			if ($.trim(title.val()) === '') {
@@ -4206,6 +4217,7 @@ window.bp = window.bp || {};
 				privacy.removeClass('error');
 			}
 
+			target.addClass('saving');
 			target.attr('disabled', true);
 			var data = {
 				'action'  : 'media_album_save',
@@ -4235,6 +4247,7 @@ window.bp = window.bp || {};
 					success: function (response) {
 						setTimeout(
 							function () {
+								target.removeClass('saving');
 								target.prop('disabled', false);
 							},
 							500
