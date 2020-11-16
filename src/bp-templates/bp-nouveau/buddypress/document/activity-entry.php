@@ -130,7 +130,7 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 							<a href="<?php echo esc_url( $download_url ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
 						</li><?php
 					}
-					if ( $can_manage_btn ) {
+					if ( $can_manage_btn || bp_loggedin_user_id() === bp_get_document_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							?>
 						<li class="move_file document-action-class"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
