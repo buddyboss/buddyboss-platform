@@ -296,12 +296,12 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
 function bp_media_scaled_image_path( $attachment_id, $size ) {
 
 	$is_image         = wp_attachment_is_image( $attachment_id );
-	$img_url          = get_attached_file( $attachment_id );
+	$img_url          = wp_get_attachment_url( $attachment_id );
 	$meta             = wp_get_attachment_metadata( $attachment_id );
 	$img_url_basename = wp_basename( $img_url );
 
 	if ( ! $is_image ) {
-		if ( ! empty( $meta['sizes']['full'] ) ) {
+		if ( ! empty( $meta['sizes'][$size] ) ) {
 			$img_url = str_replace( $img_url_basename, $meta['sizes'][ $size ]['file'], $img_url );
 		}
 	}
