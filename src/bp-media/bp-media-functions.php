@@ -2889,3 +2889,53 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
 
 	return apply_filters( 'bp_media_user_can_manage_album', $data, $album_id, $user_id );
 }
+
+/**
+ * Set bb_medias folder for the media upload directory.
+ *
+ * @param $pathdata
+ *
+ * @return mixed
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_upload_dir( $pathdata ) {
+	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
+
+		if ( empty( $pathdata['subdir'] ) ) {
+			$pathdata['path']   = $pathdata['path'] . '/bb_medias';
+			$pathdata['url']    = $pathdata['url'] . '/bb_medias';
+			$pathdata['subdir'] = '/bb_medias';
+		} else {
+			$new_subdir = '/bb_medias' . $pathdata['subdir'];
+
+			$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
+		}
+	}
+	return $pathdata;
+}
+
+/**
+ * Set bb_documents folder for the document upload directory.
+ *
+ * @param $pathdata
+ *
+ * @return mixed
+ * @since BuddyBoss 1.4.1
+ */
+function bp_media_upload_dir_script( $pathdata ) {
+
+	if ( empty( $pathdata['subdir'] ) ) {
+		$pathdata['path']   = $pathdata['path'] . '/bb_medias';
+		$pathdata['url']    = $pathdata['url'] . '/bb_medias';
+		$pathdata['subdir'] = '/bb_medias';
+	} else {
+		$new_subdir = '/bb_medias' . $pathdata['subdir'];
+
+		$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
+	}
+	return $pathdata;
+}

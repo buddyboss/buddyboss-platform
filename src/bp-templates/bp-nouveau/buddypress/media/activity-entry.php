@@ -15,7 +15,8 @@ $height =  isset( $media_template->media->attachment_data->meta['height'] ) ? $m
 ?>
 
 <div class="bb-activity-media-elem <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
-	<a href="#"
+	<?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-activity-media-thumbnail' ); ?>
+    <a href="#"
 	   class="bb-open-media-theatre entry-img"
 	   data-id="<?php bp_media_id(); ?>"
 	   data-attachment-id="<?php bp_media_attachment_id(); ?>"
@@ -26,7 +27,7 @@ $height =  isset( $media_template->media->attachment_data->meta['height'] ) ? $m
 	   data-album-id="<?php bp_media_album_id(); ?>"
 	   data-group-id="<?php bp_media_group_id(); ?>"
 	>
-		<img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_activity_thumbnail(); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
+		<img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo esc_url( $attachment_url ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php if ( $media_template->media_count > 5 && $media_template->current_media == 4 ) {
 			?>

@@ -9,6 +9,7 @@
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
     <div class="bb-photo-thumb">
+	    <?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-media-thumbnail' ); ?>
         <a class="bb-open-media-theatre bb-photo-cover-wrap"
            data-id="<?php bp_media_id(); ?>"
            data-attachment-full="<?php bp_media_attachment_image(); ?>"
@@ -19,7 +20,7 @@
            data-group-id="<?php bp_media_group_id(); ?>"
 		   data-attachment-id="<?php bp_media_attachment_id(); ?>"
            href="#">
-           <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
+           <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo $attachment_url; ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
         </a>
         <?php
 		$media_privacy  = bp_media_user_can_manage_media( bp_get_media_id(), bp_loggedin_user_id() );
