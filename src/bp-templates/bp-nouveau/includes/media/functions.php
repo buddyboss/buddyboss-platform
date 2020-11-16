@@ -295,7 +295,7 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
  */
 function bp_media_scaled_image_path( $attachment_id, $size ) {
 
-	$img_url          = wp_get_attachment_url( $attachment_id );
+	$img_url          = get_attached_file( $attachment_id );
 	$meta             = wp_get_attachment_metadata( $attachment_id );
 	$img_url_basename = wp_basename( $img_url );
 
