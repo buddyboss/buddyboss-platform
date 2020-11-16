@@ -15070,6 +15070,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     margin-bottom: 15px;
     padding: 0;
   }
+  .search-media-list .media-album_thumb img {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: cover;
+  }
   .search-media-list .media-album_thumb,
   .search-media-list .media-album_details,
   .search-media-list .media-album_modified,
