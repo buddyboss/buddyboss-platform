@@ -261,7 +261,11 @@ function bp_document_change_popup_download_text_in_comment( $text ) {
  */
 function bp_document_update_activity_document_meta( $content, $user_id, $activity_id ) {
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
-	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+
+	$documents = filter_input( INPUT_POST, 'document', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$actions   = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
+	if ( ! isset( $documents ) || empty( $documents ) ) {
 
 		// delete document ids and meta for activity if empty document in request.
 		if ( ! empty( $activity_id ) && $bp_activity_edit && isset( $_POST['edit'] ) ) {
@@ -282,13 +286,23 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 		return false;
 	}
 
+	// Add in description in attachment when only one document uploaded.
+	if ( is_array( $documents ) && 1 === count( $documents ) ) {
+		foreach ( $documents as $document ) {
+			$document_attachment_post                 = array();
+			$document_attachment_post['ID']           = $document['id'];
+			$document_attachment_post['post_content'] = wp_strip_all_tags( $content );
+			wp_update_post( $document_attachment_post );
+		}
+	}
+
 	$bp_activity_post_update    = true;
 	$bp_activity_post_update_id = $activity_id;
 
 	// Update activity comment attached document privacy with parent one.
-	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $_POST['action'] ) && $_POST['action'] === 'new_activity_comment' ) {
+	if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) && isset( $actions ) && 'new_activity_comment' === $actions ) {
 		$parent_activity = new BP_Activity_Activity( $activity_id );
-		if ( $parent_activity->component === 'groups' ) {
+		if ( 'groups' === $parent_activity->component ) {
 			$_POST['privacy'] = 'grouponly';
 		} elseif ( ! empty( $parent_activity->privacy ) ) {
 			$_POST['privacy'] = $parent_activity->privacy;
@@ -300,7 +314,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	remove_action( 'bp_activity_comment_posted', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_document_activity_comments_update_document_meta', 10, 3 );
 
-	$document_ids = bp_document_add_handler( $_POST['document'], $_POST['privacy'] );
+	$document_ids = bp_document_add_handler( $documents, $_POST['privacy'] );
 
 	add_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
 	add_action( 'bp_groups_posted_update', 'bp_document_groups_activity_update_document_meta', 10, 4 );
@@ -309,7 +323,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 
 	// save document meta for activity.
 	if ( ! empty( $activity_id ) ) {
-		// Delete document if not exists in current document ids
+		// Delete document if not exists in current document ids.
 		if ( isset( $_POST['edit'] ) ) {
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
@@ -610,40 +624,22 @@ function bp_document_attach_document_to_message( &$message ) {
 		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 		$document_list = $_POST['document'];
-		$document_ids  = array();
 
-		foreach ( $document_list as $document_index => $document ) {
-			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
-			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
-			$menu_order	   = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
-
-			$attachment_data = get_post( $document['id'] );
-			$file            = get_attached_file( $document['id'] );
-			$file_type       = wp_check_filetype( $file );
-			$file_name       = basename( $file );
-
-			$document_id = bp_document_add(
-				array(
-					'attachment_id' => $attachment_id,
-					'title'         => $title,
-					'privacy'       => 'message',
-					'error_type'    => 'wp_error',
-					'menu_order'    => $menu_order,
-				)
-			);
-
-			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
-				$document_ids[] = $document_id;
-
-				// save document meta.
-				bp_document_update_meta( $document_id, 'file_name', $file_name );
-				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
-				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
-
-				// save document is saved in attachment.
-				update_post_meta( $attachment_id, 'bp_document_saved', true );
+		if ( ! empty( $document_list ) ) {
+			foreach( $document_list as $k => $document ) {
+				if( array_key_exists( 'group_id', $document ) ) {
+					unset( $document_list[ $k ]['group_id'] );
+				}
 			}
 		}
+
+		$document_ids = bp_document_add_handler( $document_list, 'message' );
+
+		if ( ! empty( $document_ids ) ) {
+			foreach( $document_ids as $document_id ) {
+				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
+			}
+        }
 
 		$document_ids = implode( ',', $document_ids );
 
@@ -1647,6 +1643,7 @@ function bp_document_activity_after_email_content( $activity ) {
 		echo wpautop( $content );
 	}
 }
+
 
 /**
  * Adds activity document data for the edit activity

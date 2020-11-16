@@ -52,16 +52,16 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$user_id          = bp_loggedin_user_id();
 	$group_id         = 0;
 	$move_to_id_popup = $user_id;
-	if ( bp_is_group_document() || bp_is_group_folders() ) {
+	if ( ( bp_is_group_media() || bp_is_group_albums() ) || ( bp_is_group_document() || bp_is_group_folders() ) ) {
 		$folder_id        = (int) bp_action_variable( 1 );
 		$type             = 'group';
 		$group_id         = ( bp_get_current_group_id() ) ? bp_get_current_group_id() : '';
 		$move_to_id_popup = $group_id;
-	} elseif ( bp_is_user_document() || bp_is_user_folders() ) {
+	} elseif ( ( bp_is_user_media() || bp_is_user_albums() ) || ( bp_is_user_document() || bp_is_user_folders() ) ) {
 		$folder_id        = (int) bp_action_variable( 0 );
 		$type             = 'profile';
 		$move_to_id_popup = $user_id;
-	} elseif ( bp_is_document_directory() ) {
+	} elseif ( ( function_exists( 'bp_is_document_directory' ) && bp_is_document_directory() ) || ( function_exists( 'bp_is_media_directory' ) && bp_is_media_directory() ) ) {
 		$folder_id = 0;
 		$type      = 'profile';
 	}
@@ -99,7 +99,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$document_options = array(
 		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'max_upload_size'           => bp_document_file_upload_max_size(),
-		'maxFiles'                  => apply_filters( 'bp_document_upload_chunk_limit', 10 ),
+		'maxFiles'                  => bp_media_allowed_upload_document_per_batch(),
 		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
 	);
 
@@ -840,26 +840,27 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$allowed_for_download             = array();
 		$allowed_file_type_with_mime_type = array();
 		foreach ( $all_extensions as $extension ) {
-			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
-				$extension_name                                      = ltrim( $extension['extension'], '.' );
+			if ( isset( $extension[ 'is_active' ] ) && true === (bool) $extension[ 'is_active' ] ) {
+				$extension_name                                      = ltrim( $extension[ 'extension' ], '.' );
 				$allowed_for_download[]                              = $extension_name;
-				$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
+				$allowed_file_type_with_mime_type[ $extension_name ] = $extension[ 'mime_type' ];
 			}
 		}
 
 		$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
-
 		$file_arr  = explode( '.', $file_name_lower );
-		$needle   = end( $file_arr );
+		$needle    = end( $file_arr );
+		$needle    = strtok( $needle, '?' );
+
 		if ( ! in_array( $needle, $whitelist ) ) {
 			exit( 'Invalid file!' );
 		}
 
 		$file_new_name = $file_name;
-		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
-		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
+		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] ) ? $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] : '';
+		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension[ 'extension' ] );
 
-		bp_document_download_file_force( $the_file, $file_name );
+		bp_document_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	} else {
 
 		// Get folder object.
@@ -867,7 +868,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Get Upload directory.
 		$upload     = wp_upload_dir();
-		$upload_dir = $upload['basedir'];
+		$upload_dir = $upload[ 'basedir' ];
 
 		// Create temp folder.
 		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
@@ -895,7 +896,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			bp_document_get_child_folders( $attachment_id, $parent_folder );
 
 			$zip_name  = $upload_dir . '/' . $folder->title . '.zip';
-			$file_name  = sanitize_file_name( $folder->title ) . '.zip';
+			$file_name = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
 			$zip = new ZipArchive();
@@ -1175,7 +1176,7 @@ function bp_document_get_preview_audio_url( $document_id, $extension, $attachmen
 		}
 	}
 
-	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
+	return apply_filters( 'bp_document_get_preview_audio_url', $attachment_url, $document_id, $extension );
 }
 
 /**

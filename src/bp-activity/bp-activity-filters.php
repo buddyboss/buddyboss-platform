@@ -1752,14 +1752,25 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		// save media meta for activity
+		// Add in description in attachment when only one media uploaded.
+		if ( ! empty( $activity_id ) && is_array( $media_ids ) && 1 === count( $media_ids ) && ! empty( $content ) ) {
+			foreach ( $media_ids as $media_id ) {
+				$media                                 = new BP_Media( $media_id );
+				$media_attachment_post                 = array();
+				$media_attachment_post['ID']           = $media->attachment_id;
+				$media_attachment_post['post_content'] = wp_strip_all_tags( $content );
+				wp_update_post( $media_attachment_post );
+			}
+		}
+
+		// save media meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
 			foreach ( (array) $added_media_ids as $media_id ) {
 				$media = new BP_Media( $media_id );
 
-				// get one of the media's privacy for the activity privacy
+				// get one of the media's privacy for the activity privacy.
 				$privacy = $media->privacy;
 
 				// get media album id
@@ -2000,7 +2011,6 @@ function bp_activity_document_add( $document ) {
 				update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
 
 				if ( ! empty( $parent_activity_id ) ) {
-
 					$document_activity                    = new BP_Activity_Activity( $activity_id );
 					$document_activity->secondary_item_id = $parent_activity_id;
 					$document_activity->save();
@@ -2063,6 +2073,17 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			);
 		} else {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		}
+
+		// Add in description in attachment when only one document uploaded.
+		if ( ! empty( $activity_id ) && is_array( $document_ids ) && 1 === count( $document_ids ) && ! empty( $content ) ) {
+			foreach ( $document_ids as $document_id ) {
+				$document                                 = new BP_Document( $document_id );
+				$document_attachment_post                 = array();
+				$document_attachment_post['ID']           = $document->attachment_id;
+				$document_attachment_post['post_content'] = wp_strip_all_tags( $content );
+				wp_update_post( $document_attachment_post );
+			}
 		}
 
 		// save document meta for activity.
