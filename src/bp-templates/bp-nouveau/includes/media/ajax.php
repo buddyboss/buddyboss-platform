@@ -311,7 +311,8 @@ function bp_nouveau_ajax_media_delete() {
 		wp_send_json_error( $response );
 	}
 
-	$media = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$media       = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $media ) ) {
 		$response['feedback'] = sprintf(
@@ -341,12 +342,17 @@ function bp_nouveau_ajax_media_delete() {
 		);
 		wp_send_json_error( $response );
 	}
-	$response = bp_media_get_activity_media( $_POST['activity_id'] );
+
+	$response = array();
+	if ( $activity_id ) {
+		$response = bp_media_get_activity_media( $_POST['activity_id'] );
+    }
+
 	wp_send_json_success(
 		array(
 			'media'         => $media,
-			'media_ids'     => $response['media_activity_ids'],
-			'media_content' => $response['content'],
+			'media_ids'     => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
+			'media_content' => ( isset( $response['content'] ) ) ? $response['content'] : '',
 		)
 	);
 }
