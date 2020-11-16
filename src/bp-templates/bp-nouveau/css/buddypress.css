@@ -10192,6 +10192,11 @@ div.bbp-reply-header {
   padding: 0;
 }
 
+#bbpress-forums div.bbp-reply-content a.gif-play-button {
+  margin-left: -40px;
+  margin-top: -40px;
+}
+
 #bbpress-forums div.bbp-topic-content h1,
 #bbpress-forums div.bbp-reply-content h1,
 #bbpress-forums div.bbp-topic-content h2,
