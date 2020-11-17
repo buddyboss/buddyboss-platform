@@ -1125,6 +1125,17 @@ a.layout-grid-view {
   overflow: auto;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .edit-activity-content-wrap,
+.activity-update-form.modal-popup .edit-activity-content-wrap {
+  max-height: calc(100vh - 230px);
+  overflow: auto;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,
+.activity-update-form.modal-popup #whats-new-form #whats-new-toolbar {
+  padding-top: 10px;
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 700px;
@@ -1201,6 +1212,11 @@ a.layout-grid-view {
   animation: spin 2s infinite linear;
   position: absolute;
   top: 15px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .dropzone .dz-preview.dz-complete .dz-progress,
+.activity-update-form.modal-popup .dropzone .dz-preview.dz-complete .dz-progress {
+  display: none;
 }
 
 @media screen and (max-width: 646px) {
@@ -9945,6 +9961,11 @@ div.bbp-reply-header {
   font-weight: 400;
   margin: 0;
   padding: 0;
+}
+
+#bbpress-forums div.bbp-reply-content a.gif-play-button {
+  margin-right: -40px;
+  margin-top: -40px;
 }
 
 #bbpress-forums div.bbp-topic-content h1,
