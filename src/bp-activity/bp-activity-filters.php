@@ -2290,14 +2290,25 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 					$iframe  = $matches[0];
 					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
 					$content .= $iframe;
+				} else {
+					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+					if( isset( $src[0] ) ) {
+						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+					}
 				}
-				$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-				if( isset( $src[0] ) ) {
-					$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
-				}
+
 			} else {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				$content = strip_tags( $content, '<a><iframe>' );
+				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
+				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+					$content = $content;
+				} else {
+					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
+					if( isset( $src[0] ) ) {
+						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+					}
+				}
 			}
 		}
 
