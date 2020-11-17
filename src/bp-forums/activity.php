@@ -162,6 +162,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// todo: but keeping this handle backward compatibility
 			// topic or reply mention notification permalink
 			add_filter( 'bp_activity_new_at_mention_permalink', array( $this, 'activity_get_notification_permalink' ), 10, 4 );
+
+			// Forum Activity scope to fetch the subscribed forums and topics feed.
+			add_filter( 'bp_activity_set_forums_scope_args', array( $this, 'activity_forums_scope' ), 10, 2 );
 		}
 
 		/**
@@ -793,6 +796,73 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_link,
 				$group_link
 			);
+		}
+
+		/**
+		 * Set up activity arguments for use with the 'forum' scope.
+		 *
+		 * For details on the syntax, see {@link BP_Activity_Query}.
+		 *
+		 * @since BuddyBoss 1.5.5
+		 *
+		 * @param array $retval Empty array by default.
+		 * @param array $filter Current activity arguments.
+		 *
+		 * @return array
+		 */
+		public function activity_forums_scope( $retval = array(), $filter = array() ) {
+
+			// Determine the user_id.
+			if ( ! empty( $filter['user_id'] ) ) {
+				$user_id = $filter['user_id'];
+			} else {
+				$user_id = bp_displayed_user_id()
+					? bp_displayed_user_id()
+					: bp_loggedin_user_id();
+			}
+
+			$forum_ids = bbp_get_user_subscribed_forum_ids( $user_id );
+			$topic_ids = bbp_get_user_subscribed_topic_ids( $user_id );
+
+			if ( empty( $forum_ids ) ) {
+				$forum_ids = array( 0 );
+			}
+
+			if ( empty( $topic_ids ) ) {
+				$topic_ids = array( 0 );
+			}
+
+			$retval = array(
+				'relation' => 'AND',
+				array(
+					'column'  => 'component',
+					'compare' => '=',
+					'value'   => 'bbpress',
+				),
+				array(
+					'relation' => 'OR',
+					array(
+						'column'  => 'secondary_item_id',
+						'compare' => 'IN',
+						'value'   => (array) $forum_ids,
+					),
+					array(
+						'column'  => 'secondary_item_id',
+						'compare' => 'IN',
+						'value'   => (array) $topic_ids,
+					),
+				),
+
+				// we should only be able to view sitewide activity content for those the user.
+				// is following.
+				array(
+					'column' => 'hide_sitewide',
+					'value'  => 0,
+				),
+
+			);
+
+			return $retval;
 		}
 	}
 endif;

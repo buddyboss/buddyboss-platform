@@ -2329,7 +2329,7 @@ function bp_activity_post_update( $args = '' ) {
 					'hide_sitewide'     => $activity->hide_sitewide,
 					'is_spam'           => $activity->is_spam,
 					'privacy'           => $r['privacy'],
-					'error_type'        => $r[ 'error_type' ],
+					'error_type'        => $r['error_type'],
 				)
 			);
 
@@ -2379,7 +2379,6 @@ function bp_activity_post_update( $args = '' ) {
 		 * @param string $activity_content Content of the activity update.
 		 *
 		 * @since BuddyPress 1.6.0
-		 *
 		 */
 		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
 
@@ -3897,11 +3896,11 @@ function bp_activity_create_summary( $content, $activity ) {
 		)
 	);
 
-	if ( $use_media_type === 'embeds' ) {
-		$summary .= PHP_EOL . PHP_EOL . $extracted_media['url'];
-	} elseif ( $use_media_type === 'images' ) {
+	if ( 'embeds' === $use_media_type ) {
+		$summary .= PHP_EOL . PHP_EOL . '<p>' . $extracted_media['url'] . '</p>';
+	} elseif ( 'images' === $use_media_type ) {
 		$extracted_media_url = isset( $extracted_media['url'] ) ? $extracted_media['url'] : '';
-		$summary .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
+		$summary            .= sprintf( ' <img src="%s">', esc_url( $extracted_media_url ) );
 	} elseif ( in_array( $use_media_type, array( 'audio', 'videos' ), true ) ) {
 		$summary .= PHP_EOL . PHP_EOL . $extracted_media['original'];  // Full shortcode.
 	}
@@ -5169,6 +5168,11 @@ function bp_activity_media_sideload_attachment( $file ) {
 
 	$file_array['name'] = basename( $matches[0] );
 
+	// Load function download_url if not exists.
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+	}
+
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER['SERVER_PROTOCOL'], 0, strpos( $_SERVER['SERVER_PROTOCOL'], '/' ) ) ) . '://', $file );
 	$file                   = str_replace( '&amp;', '&', $file );
@@ -5221,6 +5225,11 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 	$file    = $file['file'];
 	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
 	$content = '';
+
+	// Load function wp_read_image_metadata if not exists.
+	if ( ! function_exists( 'wp_read_image_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
 
 	// Use image exif/iptc data for title and caption defaults if possible.
 	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
@@ -5323,18 +5332,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 				$new_scope[] = 'media';
 				$new_scope[] = 'document';
 			}
-
-		} else if ( bp_is_user_activity() ) {
+		} elseif ( bp_is_user_activity() ) {
 			if ( empty( bp_current_action() ) ) {
 				$new_scope[] = 'just-me';
 			} else {
 				$new_scope[] = bp_current_action();
 			}
-		} else if ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
+		} elseif ( bp_is_active( 'group' ) && bp_is_group_activity() ) {
 			$new_scope[] = 'groups';
 		}
-
-	} else if( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
+	} elseif ( ! bp_loggedin_user_id() && ( 'all' === $scope || empty( $scope ) ) ) {
 		$new_scope[] = 'public';
 	}
 
@@ -5342,6 +5349,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 
 	if ( empty( $new_scope ) ) {
 		$new_scope = (array) $scope;
+	}
+
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'public', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
+			unset( $new_scope[ $key ] );
+			if ( bp_is_active( 'forums' ) ) {
+				$new_scope[] = 'forums';
+			}
+		}
 	}
 
 	/**
@@ -5352,7 +5369,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
-
 }
 
 /**
@@ -5407,8 +5423,8 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
 	// if group activity then set privacy edit to always false.
 	if ( 0 < (int) $group_id ) {
 		$can_edit_privacy = false;
-		$group      = groups_get_group( $group_id );
-		$group_name = bp_get_group_name( $group );
+		$group            = groups_get_group( $group_id );
+		$group_name       = bp_get_group_name( $group );
 	}
 
 	/**

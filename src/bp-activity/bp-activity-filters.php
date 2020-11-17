@@ -1721,7 +1721,7 @@ function bp_activity_media_add( $media ) {
 function bp_activity_create_parent_media_activity( $media_ids ) {
 	global $bp_media_upload_count, $bp_activity_post_update, $bp_media_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
 
-	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) {
+	if ( ! empty( $media_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$added_media_ids = $media_ids;
 		$content         = false;
@@ -1741,6 +1741,14 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 		$album_id = false;
 
+		// added fall back to get group_id from media.
+		if ( empty( $group_id ) && ! empty( $added_media_ids ) ) {
+			$media_object = new BP_Media( current( (array) $added_media_ids ) );
+			if ( ! empty( $media_object->group_id ) ) {
+				$group_id = $media_object->group_id;
+			}
+		}
+
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
 			$activity_id = groups_post_update(
 				array(
@@ -1752,34 +1760,34 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		// save media meta for activity
+		// save media meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
 			foreach ( (array) $added_media_ids as $media_id ) {
 				$media = new BP_Media( $media_id );
 
-				// get one of the media's privacy for the activity privacy
+				// get one of the media's privacy for the activity privacy.
 				$privacy = $media->privacy;
 
-				// get media album id
+				// get media album id.
 				if ( ! empty( $media->album_id ) ) {
 					$album_id = $media->album_id;
 				}
 
 				if ( 1 === $bp_media_upload_count ) {
-					// save media activity id in media
+					// save media activity id in media.
 					$media->activity_id = $activity_id;
 					$media->save();
 				}
 
-				// save parent activity id in attachment meta
+				// save parent activity id in attachment meta.
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $activity_id );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
 
-			// if media is from album then save album id in activity media
+			// if media is from album then save album id in activity media.
 			if ( ! empty( $album_id ) ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $album_id );
 			}
@@ -2034,7 +2042,7 @@ function bp_activity_document_add( $document ) {
 function bp_activity_create_parent_document_activity( $document_ids ) {
 	global $bp_document_upload_count, $bp_activity_post_update, $bp_document_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
 
-	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) {
+	if ( ! empty( $document_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$added_document_ids = $document_ids;
 		$content            = false;
@@ -2053,6 +2061,14 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 
 		$group_id  = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 		$folder_id = false;
+
+		// added fall back to get group_id from document.
+		if ( empty( $group_id ) && ! empty( $added_document_ids ) ) {
+			$document_object = new BP_Document( current( (array) $added_document_ids ) );
+			if ( ! empty( $document_object->group_id ) ) {
+				$group_id = $document_object->group_id;
+			}
+		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
 			$activity_id = groups_post_update(
@@ -2081,7 +2097,7 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 				}
 
 				if ( 1 === $bp_document_upload_count ) {
-					// save media activity id in media
+					// save media activity id in media.
 					$document->activity_id = $activity_id;
 					$document->group_id    = $group_id;
 					$document->save();
@@ -2243,3 +2259,4 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 	return $buttons;
 
 }
+

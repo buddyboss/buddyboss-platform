@@ -422,9 +422,15 @@ class BP_REST_Settings_Endpoint extends WP_REST_Controller {
 			$results['bp_search_number_of_results'] = get_option( 'bp_search_number_of_results', '5' );
 		}
 
+		$bp_pages = bp_core_get_directory_page_ids();
+		$terms    = isset( $bp_pages['terms'] ) ? $bp_pages['terms'] : '';
+		$privacy  = isset( $bp_pages['privacy'] ) ? $bp_pages['privacy'] : '';
+
 		// Additional.
 		$results['enable_friendship_connections'] = bp_is_active( 'friends' );
 		$results['enable_messages']               = bp_is_active( 'messages' );
+		$results['bp_page_privacy']               = $privacy;
+		$results['bp_page_terms']                 = $terms;
 
 		return $results;
 	}
