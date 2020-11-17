@@ -410,7 +410,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
 		foreach ( $actions as $action => $link ) {
-			$cls = ( 'suspend' === $action ) ? 'delete' : $action;
+			$cls = ( 'suspend' === $action || 'hide' === $action ) ? 'delete' : $action;
 			++ $i;
 			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
 			$out .= "<span class='$cls'>$link$sep</span>";
@@ -462,6 +462,10 @@ class BP_Moderation_List_Table extends WP_List_Table {
 			'suspend'     => '',
 		);
 
+		if ( 'unsuspended' !== $this->view ) {
+			$actions['delete'] = '';
+		}
+
 		$moderation_args = array(
 			'page'         => 'bp-moderation',
 			'mid'          => $item['item_id'],
@@ -479,8 +483,16 @@ class BP_Moderation_List_Table extends WP_List_Table {
 
 		// Build actions URL.
 		$view_url               = add_query_arg( $moderation_args, bp_get_admin_url( 'admin.php' ) );
+		$delete_user_url        = add_query_arg( array(
+			'mid'      => $item['id'],
+			'action'   => 'delete',
+			'_wpnonce' => wp_create_nonce( 'user-delete-' . $item['id'] )
+		), $view_url );
 		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Reports', 'buddyboss' ) );
 		$actions['suspend']     = sprintf( '<a href="#" class="bp-block-user" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $user_id ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
+		if ( 'unsuspended' !== $this->view ) {
+			$actions['delete'] = sprintf( '<a href="%s" ">%s</a>', esc_url( $delete_user_url ), esc_html__( 'Delete', 'buddyboss' ) );
+		}
 		printf( '%s <strong>%s</strong> %s', get_avatar( $user_id, '32' ), wp_kses_post( bp_core_get_userlink( $user_id ) ), wp_kses_post( $this->row_actions( $actions ) ) );
 	}
 

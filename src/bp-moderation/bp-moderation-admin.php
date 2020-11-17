@@ -219,10 +219,16 @@ function bp_moderation_admin_load() {
 			$doaction = substr( $doaction, 5 );
 
 			// This is a request to delete, spam, or un-spam, a single item.
+		} elseif ( ! empty( $_REQUEST['mid'] ) ) {
+
+			// Check this is a valid form submission.
+			check_admin_referer( 'user-delete-' . $moderation_ids[0] );
+
 		}
 
 		if ( 'delete' === $doaction ) {
 			$user_ids = array();
+
 			foreach ( $moderation_ids as $moderation_id ) {
 				$moderation_obj     = new BP_Moderation();
 				$moderation_obj->id = $moderation_id;
