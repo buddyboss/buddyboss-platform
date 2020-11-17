@@ -284,7 +284,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		$args['button_attr'],
 		array(
 			'id'                   => 'report-content-' . $args['button_attr']['data-bp-content-type'] . '-' . $args['button_attr']['data-bp-content-id'],
-			'href'                 => '#content-report',
+			'href'                 => ( BP_Moderation_Members::$moderation_type === $item_type ) ? '#block-member' : '#content-report',
 			'class'                => 'button item-button bp-secondary-action report-content',
 			'data-bp-content-id'   => '',
 			'data-bp-content-type' => '',
@@ -425,10 +425,10 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
 	$result = $moderation_obj->save();
 
 	if ( 'unhide' === $action ) {
-		$result = $moderation_obj->delete();
+		$delete_result = $moderation_obj->delete();
 	}
 
-	return $result;
+	return ( 'unhide' === $action ) ? $delete_result : $result;
 }
 
 /**

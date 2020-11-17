@@ -198,9 +198,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function update_button_args( $button, $item_type, $is_reported ) {
 		if ( self::$moderation_type === $item_type ) {
 			if ( $is_reported ) {
-				$button['button_attr']['class'] = 'reported-content';
+				$button['button_attr']['class'] = 'blocked-member';
 			} else {
-				$button['button_attr']['class'] = 'report-content';
+				$button['button_attr']['class'] = 'block-member';
 			}
 		}
 
