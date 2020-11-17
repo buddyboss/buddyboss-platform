@@ -1770,7 +1770,7 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
-			$('.report-content').magnificPopup({
+			$('.report-content, .block-member').magnificPopup({
 				type: 'inline',
 				midClick: true,
 				callbacks: {
@@ -1809,6 +1809,28 @@ window.bp = window.bp || {};
 
 				var data = {
 					action: 'bp_moderation_content_report',
+				};
+				$.each($(this).serializeArray(), function (_, kv) {
+					data[kv.name] = kv.value;
+				});
+
+				$.post(BP_Nouveau.ajaxurl, data, function (response) {
+					var result = $.parseJSON(response);
+					if (result.success) {
+						_this.resetReportPopup();
+						_this.changeReportButtonStatus(result.button);
+						$('.mfp-close').trigger('click');
+					} else {
+						_this.handleReportError(result.message.errors);
+					}
+				});
+			});
+
+			$('#bb-block-member').submit(function () {
+				$('.bp-report-form-err').empty();
+
+				var data = {
+					action: 'bp_moderation_block_member',
 				};
 				$.each($(this).serializeArray(), function (_, kv) {
 					data[kv.name] = kv.value;
