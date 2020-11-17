@@ -1031,7 +1031,7 @@ function bbp_get_forum_subscription_link( $args = array() ) {
 /**
  * Output the forum report link
  *
- * @since BuddyBoss 1.5.4
+ * @since BuddyBoss 2.0.0
  *
  * @uses  bbp_get_forum_report_link()
  */

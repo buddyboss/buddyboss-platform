@@ -86,7 +86,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the group Search query.
 			 *
-			 * @since BuddyBoss 1.5.4
+             * @since BuddyBoss 2.0.0
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -127,11 +127,9 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 				foreach ( $split_search_term as $k => $sterm ) {
 
 					if ( $k == 0 ) {
-						//$sql                .= 'meta_value LIKE %s';
 						$where_conditions['search_query'] .= 'meta_value LIKE %s';
 						$query_placeholder[]              = '%' . $wpdb->esc_like( $sterm ) . '%';
 					} else {
-						//$sql                .= 'AND meta_value LIKE %s';
 						$where_conditions['search_query'] .= 'meta_value LIKE %s';
 						$query_placeholder[]              = '%' . $wpdb->esc_like( $sterm ) . '%';
 					}
@@ -172,7 +170,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the group Search query.
 			 *
-			 * @since BuddyBoss 1.5.4
+             * @since BuddyBoss 2.0.0
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.

@@ -3,6 +3,8 @@
 /**
  * Replies Loop - Single Reply
  *
+ * @since BuddyBoss 2.0.0
+ *
  * @package BuddyBoss\Theme
  */
 $reply_id = bbp_get_reply_id();

@@ -1332,7 +1332,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+         * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
@@ -1348,7 +1348,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the From SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+         * @since BuddyBoss 2.0.0
 		 *
 		 * @param array $r    Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
