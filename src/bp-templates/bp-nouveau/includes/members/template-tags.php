@@ -779,8 +779,6 @@ function bp_nouveau_member_template_part() {
 			$template = 'media';
 		} elseif ( bp_is_user_document() ) {
 			$template = 'document';
-		} elseif ( bp_is_user_moderation() ){
-			$template = 'moderation';
 		}
 
 		bp_nouveau_member_get_template_part( $template );
