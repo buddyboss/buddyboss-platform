@@ -178,6 +178,22 @@ form.ac-form {
 			}
 
 		}
+
+		.ac-reply-toolbar .post-emoji .emojionearea-picker {
+			left: 90px;
+
+			.emojionearea-wrapper:after {
+				left: 65px;
+			}
+		}
+
+		.ac-reply-toolbar .post-gif .gif-media-search-dropdown {
+			left: 0;
+
+			&:before{
+				left: 20px;
+			}
+		}
 	}
 
 }

@@ -3991,6 +3991,22 @@ form.ac-form .ac-reply-content input {
   vertical-align: middle;
 }
 
+.activity-comments li form.ac-form.popup-open .ac-reply-toolbar .post-emoji .emojionearea-picker {
+  right: 90px;
+}
+
+.activity-comments li form.ac-form.popup-open .ac-reply-toolbar .post-emoji .emojionearea-picker .emojionearea-wrapper:after {
+  right: 65px;
+}
+
+.activity-comments li form.ac-form.popup-open .ac-reply-toolbar .post-gif .gif-media-search-dropdown {
+  right: 0;
+}
+
+.activity-comments li form.ac-form.popup-open .ac-reply-toolbar .post-gif .gif-media-search-dropdown:before {
+  right: 20px;
+}
+
 .activity-comments form.root {
   margin-right: 0;
 }
