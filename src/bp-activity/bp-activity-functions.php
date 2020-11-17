@@ -5351,6 +5351,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 		$new_scope = (array) $scope;
 	}
 
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'public', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
+			unset( $new_scope[ $key ] );
+			if ( bp_is_active( 'forums' ) ) {
+				$new_scope[] = 'forums';
+			}
+		}
+	}
+
 	/**
 	 * Filter to update default scope.
 	 *
@@ -5359,7 +5369,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
-
 }
 
 /**
