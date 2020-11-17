@@ -236,9 +236,17 @@ function bp_moderation_content_actions_request() {
 		if ( true === $action ) {
 			$response['success'] = true;
 			if ( 'user' === $type ) {
-				$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
+			    if( 'hide' === $sub_action ){
+                    $response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
+                }else{
+                    $response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' );
+                }
 			} else {
-				$response['message'] = esc_html__( 'Content has been successfully hidden.', 'buddyboss' );
+                if( 'hide' === $sub_action ) {
+                    $response['message'] = esc_html__('Content has been successfully hidden.', 'buddyboss');
+                }else{
+                    $response['message'] = esc_html__('Content has been successfully unhidden.', 'buddyboss');
+                }
 			}
 		}
 	}

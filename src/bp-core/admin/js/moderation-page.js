@@ -1,6 +1,7 @@
 /* global Bp_Moderation */
 jQuery( document ).ready( function ( $ ) {
 	$( document ).on( 'click', '.bp-hide-request, .bp-block-user', function () {
+		event.preventDefault();
 		if ( !confirm( Bp_Moderation.strings.confirm_msg ) ) {
 			return false;
 		}
@@ -56,10 +57,15 @@ jQuery( document ).ready( function ( $ ) {
 						}
 					}
 				}
-				$( '.bp-moderation-ajax-msg p' ).text( result.message ).parent().removeClass( 'hidden' );
-				setTimeout( function () {
-					location.reload();
-				}, 2000 );
+
+                var url = window.location.href;
+                if (url.indexOf('?') > -1) {
+                    url += '&moderation_msg=' + result.message;
+                } else {
+                    url += '?moderation_msg=' + result.message;
+                }
+                window.location.href = url;
+
 			} else {
 				$( '.bp-moderation-ajax-msg p' ).text( result.message.errors.bp_moderation_content_actions_request ).parent().removeClass( 'hidden' );
 			}

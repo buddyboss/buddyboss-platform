@@ -30,6 +30,12 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
                         <div id="bp_moderation_action" class="postbox">
                             <div class="inside">
 
+                                <?php if ( ! empty( $messages ) ) : ?>
+                                    <div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>">
+                                        <p><?php echo implode( "<br/>\n", $messages ); ?></p>
+                                    </div>
+                                <?php endif; ?>
+
                                 <div class="bp-moderation-ajax-msg hidden notice notice-success">
                                     <p></p>
                                 </div>
