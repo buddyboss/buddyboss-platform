@@ -122,8 +122,8 @@ function bp_moderation_admin_load() {
 	$referer                 = remove_query_arg( 'suspended', wp_get_referer() );
 	$_SERVER['REQUEST_URI']  = remove_query_arg( 'unsuspended', $_SERVER['REQUEST_URI'] );
 	$referer                 = remove_query_arg( 'unsuspended', wp_get_referer() );
-    $_SERVER['REQUEST_URI']  = remove_query_arg( 'moderation_msg', $_SERVER['REQUEST_URI'] );
-    $referer                 = remove_query_arg( 'moderation_msg', wp_get_referer() );
+	$_SERVER['REQUEST_URI']  = remove_query_arg( 'moderation_msg', $_SERVER['REQUEST_URI'] );
+	$referer                 = remove_query_arg( 'moderation_msg', wp_get_referer() );
 
 	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
 
@@ -187,15 +187,18 @@ function bp_moderation_admin_load() {
 	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save', 'view' ) ) ) {
 
 		// Build redirection URL.
-		$redirect_to = remove_query_arg( array(
-			'mid',
-			'deleted',
-			'error',
-			'unhide',
-			'hidden',
-			'suspended',
-			'unsuspended'
-		), wp_get_referer() );
+		$redirect_to = remove_query_arg(
+			array(
+				'mid',
+				'deleted',
+				'error',
+				'unhide',
+				'hidden',
+				'suspended',
+				'unsuspended',
+			),
+			wp_get_referer()
+		);
 
 		$redirect_to = add_query_arg( 'paged', $bp_moderation_list_table->get_pagenum(), $redirect_to );
 
@@ -238,11 +241,14 @@ function bp_moderation_admin_load() {
 				$user_ids[] = $moderation_obj->item_id;
 			}
 
-			$delete_redirect_to = add_query_arg( array(
-				'action'           => 'delete',
-				'users'            => $user_ids,
-				'_wp_http_referer' => $redirect_to,
-			), bp_get_admin_url( 'users.php' ) );
+			$delete_redirect_to = add_query_arg(
+				array(
+					'action'           => 'delete',
+					'users'            => $user_ids,
+					'_wp_http_referer' => $redirect_to,
+				),
+				bp_get_admin_url( 'users.php' )
+			);
 
 			wp_safe_redirect( $delete_redirect_to );
 			exit;
@@ -278,10 +284,15 @@ function bp_moderation_admin_load() {
 		 * @param string $redirect_to    URL to redirect to.
 		 * @param array  $moderation_ids Original array of activity IDs.
 		 */
-		do_action( 'bp_moderation_admin_action_after', array(
-			$content_count,
-			$user_count
-		), $redirect_to, $moderation_ids );
+		do_action(
+			'bp_moderation_admin_action_after',
+			array(
+				$content_count,
+				$user_count,
+			),
+			$redirect_to,
+			$moderation_ids
+		);
 
 		// Add arguments to the redirect URL so that on page reload, we can easily display what we've just done.
 		if ( $content_count && 'hide' === $doaction ) {
@@ -361,8 +372,8 @@ function bp_moderation_admin() {
 	// Added navigation tab on top.
 	if ( bp_core_get_moderation_admin_tabs() ) {
 		?>
-        <div class="wrap">
-            <h2 class="nav-tab-wrapper">
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper">
 				<?php
 				$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 				$current_tab = ( ! bp_is_moderation_member_blocking_enable() ) ? 'reported-content' : $current_tab;
@@ -373,8 +384,8 @@ function bp_moderation_admin() {
 					bp_core_admin_moderation_tabs( esc_html__( 'Blocked Members', 'buddyboss' ) );
 				}
 				?>
-            </h2>
-        </div>
+			</h2>
+		</div>
 		<?php
 	}
 
@@ -408,11 +419,11 @@ function bp_moderation_admin_index() {
 
 	// If the user has just made a change to an activity item, build status messages.
 	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) || ! empty( $_REQUEST['moderation_msg'] ) ) {
-        $hidden         = ! empty($_REQUEST['hidden']) ? (int)$_REQUEST['hidden'] : 0;
-        $unhide         = ! empty($_REQUEST['unhide']) ? (int)$_REQUEST['unhide'] : 0;
-        $suspended      = ! empty($_REQUEST['suspended']) ? (int)$_REQUEST['suspended'] : 0;
-        $unsuspended    = ! empty($_REQUEST['unsuspended']) ? (int)$_REQUEST['unsuspended'] : 0;
-        $moderation_msg = ! empty($_REQUEST['moderation_msg']) ? $_REQUEST['moderation_msg'] : 0;
+		$hidden         = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
+		$unhide         = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+		$suspended      = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
+		$unsuspended    = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
+		$moderation_msg = ! empty( $_REQUEST['moderation_msg'] ) ? $_REQUEST['moderation_msg'] : 0;
 
 		if ( $hidden > 0 ) {
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
@@ -430,9 +441,9 @@ function bp_moderation_admin_index() {
 			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
 		}
 
-        if ( ! empty( $moderation_msg ) ) {
-            $messages[] = $moderation_msg;
-        }
+		if ( ! empty( $moderation_msg ) ) {
+			$messages[] = $moderation_msg;
+		}
 	}
 
 	$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
@@ -441,8 +452,8 @@ function bp_moderation_admin_index() {
 	// Prepare the group items for display.
 	$bp_moderation_list_table->prepare_items();
 	?>
-    <div class="wrap">
-        <h1>
+	<div class="wrap">
+		<h1>
 			<?php
 			if ( 'reported-content' === $current_tab ) {
 				esc_html_e( 'Reported Content', 'buddyboss' );
@@ -450,22 +461,22 @@ function bp_moderation_admin_index() {
 				esc_html_e( 'Blocked Members', 'buddyboss' );
 			}
 			?>
-        </h1>
+		</h1>
 		<?php if ( ! empty( $messages ) ) : ?>
-            <div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>">
-                <p><?php echo implode( "<br/>\n", $messages ); ?></p>
-            </div>
+			<div id="moderation" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>">
+				<p><?php echo implode( "<br/>\n", $messages ); ?></p>
+			</div>
 		<?php endif; ?>
-        <div class="bp-moderation-ajax-msg hidden notice notice-success">
-            <p></p>
-        </div>
+		<div class="bp-moderation-ajax-msg hidden notice notice-success">
+			<p></p>
+		</div>
 		<?php $bp_moderation_list_table->views(); ?>
-        <form id="bp-moseration-form" action="" method="get">
-            <input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab ); ?>"/>
-            <input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
+		<form id="bp-moseration-form" action="" method="get">
+			<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab ); ?>"/>
+			<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>"/>
 			<?php $bp_moderation_list_table->display(); ?>
-        </form>
-    </div>
+		</form>
+	</div>
 	<?php
 }
 
@@ -502,16 +513,16 @@ function bp_moderation_admin_screen_options( $value, $option, $new_value ) {
  */
 function bp_moderation_admin_view() {
 
-    $messages = array();
+	$messages = array();
 
-    // If the user has just made a change to an activity item, build status messages.
-    if ( ! empty( $_REQUEST['moderation_msg'] ) ) {
-        $moderation_msg = ! empty($_REQUEST['moderation_msg']) ? $_REQUEST['moderation_msg'] : 0;
+	// If the user has just made a change to an activity item, build status messages.
+	if ( ! empty( $_REQUEST['moderation_msg'] ) ) {
+		$moderation_msg = ! empty( $_REQUEST['moderation_msg'] ) ? $_REQUEST['moderation_msg'] : 0;
 
-        if ( ! empty( $moderation_msg ) ) {
-            $messages[] = $moderation_msg;
-        }
-    }
+		if ( ! empty( $moderation_msg ) ) {
+			$messages[] = $moderation_msg;
+		}
+	}
 
 	$moderation_id           = filter_input( INPUT_GET, 'mid', FILTER_SANITIZE_NUMBER_INT );
 	$moderation_content_type = filter_input( INPUT_GET, 'content_type', FILTER_SANITIZE_STRING );
@@ -539,9 +550,9 @@ function bp_moderation_admin_category_listing_add_tab() {
 
 	if ( ( 'edit-tags.php' === $pagenow || 'term.php' === $pagenow ) && ( 'bpm_category' === $current_screen->taxonomy ) ) {
 		?>
-        <div class="wrap">
-            <h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Reporting Categories', 'buddyboss' ) ); ?></h2>
-        </div>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_moderation_tabs( esc_html__( 'Reporting Categories', 'buddyboss' ) ); ?></h2>
+		</div>
 		<?php
 	}
 }

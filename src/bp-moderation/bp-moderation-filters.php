@@ -23,6 +23,7 @@ new BP_Moderation_Messages();
 
 /**
  * Update modebypass Param
+ *
  * @since BuddyBoss 2.0.0
  *
  * @param Array $params Array of key/value pairs for AJAX usage.
@@ -144,8 +145,18 @@ function bp_moderation_block_member() {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
 
-			if ( bp_is_following( array( 'leader_id' => $item_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
-				bp_stop_following( array( 'leader_id' => $item_id, 'follower_id' => bp_loggedin_user_id() ) );
+			if ( bp_is_following(
+				array(
+					'leader_id'   => $item_id,
+					'follower_id' => bp_loggedin_user_id(),
+				)
+			) ) {
+				bp_stop_following(
+					array(
+						'leader_id'   => $item_id,
+						'follower_id' => bp_loggedin_user_id(),
+					)
+				);
 			}
 
 			$response['button'] = bp_moderation_get_report_button(
@@ -236,17 +247,17 @@ function bp_moderation_content_actions_request() {
 		if ( true === $action ) {
 			$response['success'] = true;
 			if ( 'user' === $type ) {
-			    if( 'hide' === $sub_action ){
-                    $response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
-                }else{
-                    $response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' );
-                }
+				if ( 'hide' === $sub_action ) {
+					$response['message'] = esc_html__( 'Member has been successfully suspended.', 'buddyboss' );
+				} else {
+					$response['message'] = esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' );
+				}
 			} else {
-                if( 'hide' === $sub_action ) {
-                    $response['message'] = esc_html__('Content has been successfully hidden.', 'buddyboss');
-                }else{
-                    $response['message'] = esc_html__('Content has been successfully unhidden.', 'buddyboss');
-                }
+				if ( 'hide' === $sub_action ) {
+					$response['message'] = esc_html__( 'Content has been successfully hidden.', 'buddyboss' );
+				} else {
+					$response['message'] = esc_html__( 'Content has been successfully unhidden.', 'buddyboss' );
+				}
 			}
 		}
 	}
@@ -300,43 +311,43 @@ add_filter( 'bp_nouveau_customizer_user_profile_actions', 'bp_moderation_block_u
  */
 function bp_moderation_block_member_form_content() {
 	?>
-    <span>
-        <?php
-        esc_html_e( 'This member will no longer be able to:', 'buddyboss' );
-        ?>
-    </span>
-    <ul>
-        <li>
+	<span>
+		<?php
+		esc_html_e( 'This member will no longer be able to:', 'buddyboss' );
+		?>
+	</span>
+	<ul>
+		<li>
 			<?php
 			esc_html_e( 'See your post', 'buddyboss' );
 			?>
-        </li>
-        <li>
+		</li>
+		<li>
 			<?php
 			esc_html_e( 'Tag you', 'buddyboss' );
 			?>
-        </li>
-        <li>
+		</li>
+		<li>
 			<?php
 			esc_html_e( 'Invite you in event and groups', 'buddyboss' );
 			?>
-        </li>
-        <li>
+		</li>
+		<li>
 			<?php
 			esc_html_e( 'Message you', 'buddyboss' );
 			?>
-        </li>
-        <li>
+		</li>
+		<li>
 			<?php
 			esc_html_e( 'Add you as a friend', 'buddyboss' );
 			?>
-        </li>
-    </ul>
-    <span>
-        <?php
-        esc_html_e( 'If you\'re friends, blocking member will also unfriend them', 'buddyboss' );
-        ?>
-    </span>
+		</li>
+	</ul>
+	<span>
+		<?php
+		esc_html_e( 'If you\'re friends, blocking member will also unfriend them', 'buddyboss' );
+		?>
+	</span>
 	<?php
 }
 
