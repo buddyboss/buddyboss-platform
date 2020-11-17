@@ -15,24 +15,45 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 	<div class="bp-ac-form-cotainer">
 
 		<div class="ac-reply-content">
+			<div id="whats-new-avatar">
+
+				<a href="<?php bp_activity_comment_user_link(); ?>" class="activity-post-avatar">
+					<?php
+					bp_activity_avatar(
+						array(
+							'type'    => 'thumb',
+							'user_id' => bp_get_activity_comment_user_id(),
+						)
+					);
+					?>
+					<span class="user-name"><?php bp_activity_comment_name(); ?></span>
+				</a>
+
+			</div>
 			<div class="ac-textarea">
 				<label for="ac-input-<?php bp_activity_comment_id(); ?>" class="bp-screen-reader-text">
 					<?php esc_html_e( 'Comment', 'buddyboss' ); ?>
 				</label>
-				<div contenteditable="true" id="ac-input-<?php bp_activity_comment_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_comment_id(); ?>"><?php bp_activity_comment_content(); ?></div>
 
-				<div id="ac-reply-attachments-<?php bp_activity_comment_id(); ?>" class="ac-reply-attachments">
+				<div class="edit-activity-comment-wrap">
 
-					<?php if ( bp_is_active( 'media' ) ) : ?>
+					<div contenteditable="true" id="ac-input-<?php bp_activity_comment_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_comment_id(); ?>"><?php bp_activity_comment_content(); ?></div>
 
-                        <div class="dropzone closed media" id="ac-reply-post-media-uploader-<?php bp_activity_comment_id(); ?>"></div>
+					<div id="ac-reply-attachments-<?php bp_activity_comment_id(); ?>" class="ac-reply-attachments">
 
-						<div class="dropzone closed document" id="ac-reply-post-document-uploader-<?php bp_activity_comment_id(); ?>"></div>
+						<?php if ( bp_is_active( 'media' ) ) : ?>
 
-                        <div id="ac-reply-post-gif-<?php bp_activity_comment_id(); ?>"></div>
+							<div class="dropzone closed media" id="ac-reply-post-media-uploader-<?php bp_activity_comment_id(); ?>"></div>
 
-					<?php endif; ?>
+							<div class="dropzone closed document" id="ac-reply-post-document-uploader-<?php bp_activity_comment_id(); ?>"></div>
+
+							<div id="ac-reply-post-gif-<?php bp_activity_comment_id(); ?>"></div>
+
+						<?php endif; ?>
+					</div>
+
 				</div>
+				
 
 				<div id="ac-reply-toolbar-<?php bp_activity_comment_id(); ?>" class="ac-reply-toolbar">
 

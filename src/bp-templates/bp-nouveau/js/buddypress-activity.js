@@ -1033,7 +1033,7 @@ window.bp = window.bp || {};
 				var tool_box = $( target ).closest( '.comment-item' ).find( '.ac-reply-toolbar' );
 
 
-				$( '#ac-edit-form-' + comment_id ).slideDown( 200 );
+				$( '#ac-edit-form-' + comment_id ).addClass('popup-open').slideDown( 200 );
 
 				var comment_edit_data = $( target ).closest( 'li' ).data( 'bp-comment' );
 
@@ -1453,7 +1453,7 @@ window.bp = window.bp || {};
 			// Removing the form.
 			if ( target.hasClass( 'ac-reply-cancel' ) ) {
 
-				$( target ).closest( '.ac-form' ).slideUp( 200 );
+				$( target ).closest( '.ac-form' ).slideUp( 200 ).removeClass('popup-open');
 
 				// Change the aria state back to false on comment cancel.
 				$( '.acomment-reply' ).attr( 'aria-expanded', 'false' );

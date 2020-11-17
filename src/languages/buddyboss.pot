@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-13 11:31:42+00:00\n"
+"POT-Creation-Date: 2020-11-17 11:07:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -534,7 +534,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:1156 bp-forums/replies/template.php:1756
 #: bp-groups/bp-groups-admin.php:1054
 #: bp-members/classes/class-bp-members-admin.php:2453
-#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:75
+#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:96
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:77
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
@@ -7858,7 +7858,7 @@ msgid "Group Update"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-activity-export.php:70
-#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:20
+#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:35
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:22
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:279
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:476
@@ -13674,7 +13674,7 @@ msgid "Hide formatting"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:58
-#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:42
+#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:63
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:44
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:17
@@ -13683,7 +13683,7 @@ msgid "Attach a photo"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:71
-#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:49
+#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:70
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:51
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:28
@@ -13692,7 +13692,7 @@ msgid "Attach a document"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:81
-#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:57
+#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:78
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:59
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:30
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:37
@@ -13708,7 +13708,7 @@ msgid "Search GIFs"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:101
-#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:64
+#: bp-templates/bp-nouveau/buddypress/activity/comment-edit-form.php:85
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:66
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:36
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:46
