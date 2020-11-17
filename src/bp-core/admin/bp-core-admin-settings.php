@@ -277,8 +277,8 @@ function bp_admin_setting_callback_enable_relevant_feed() {
 	?>
 	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox"
 		   value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
-	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Show logged-in member relevant activity feeds instead of sitewide activity on directory page', 'buddyboss' ); ?></label>
-	<p class="description">relevant activity are posts from logged-in member, connections, members following, groups, subscribed forums discussions, mentions, etc.</p>
+	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Restrict the Activity Feed directory to only posts that are relevant to the logged-in member', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'While logged in, members will only see activity posts from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></p>
 	<?php
 }
 
