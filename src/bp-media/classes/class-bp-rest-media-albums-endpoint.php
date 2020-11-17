@@ -905,7 +905,8 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 			'title'         => $album->title,
 			'privacy'       => $album->privacy,
 			'media'         => $album->media,
-			'user_email'    => $album->user_email,
+			'group_name'    => ( isset( $album->group_name ) ? $album->group_name : '' ),
+			'visibility'    => ( isset( $album->visibility ) ? $album->visibility : '' ),
 			'user_nicename' => $album->user_nicename,
 			'user_login'    => $album->user_login,
 			'display_name'  => $album->display_name,
@@ -990,9 +991,15 @@ class BP_REST_Media_Albums_Endpoint extends WP_REST_Controller {
 						),
 					),
 				),
-				'user_email'    => array(
+				'group_name'    => array(
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'The user\'s email id to create a media.', 'buddyboss' ),
+					'description' => __( 'Group name associate with the Album.', 'buddyboss' ),
+					'readonly'    => true,
+					'type'        => 'string',
+				),
+				'visibility'    => array(
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'description' => __( 'Visibility of the Album.', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'string',
 				),
