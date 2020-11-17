@@ -633,6 +633,9 @@ function bp_document_add_handler( $documents = array(), $privacy = 'public', $co
 				if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
 					bp_document_update_meta( $document_id, 'file_name', $file_name );
 					bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
+
+					// save document is saved in attachment.
+					update_post_meta( $document['id'], 'bp_document_saved', true );
 				}
 			}
 
