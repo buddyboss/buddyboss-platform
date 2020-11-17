@@ -109,8 +109,24 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 */
 	public static function get_content_excerpt( $topic_id ) {
 		$topic_content = get_post_field( 'post_content', $topic_id );
+		$link          = '<a href="' . esc_url( self::get_permalink( (int) $topic_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $topic_content ) ) ? $topic_content : '';
+		return ( ! empty( $topic_content ) ) ? $topic_content . ' ' . $link : $link;
+	}
+
+	/**
+	 * Get permalink
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $topic_id topic id.
+	 *
+	 * @return string
+	 */
+	public static function get_permalink( $topic_id ) {
+		$url = get_the_permalink( $topic_id );
+
+		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
 
 	/**

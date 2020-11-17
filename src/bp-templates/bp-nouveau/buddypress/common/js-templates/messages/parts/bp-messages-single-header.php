@@ -113,6 +113,18 @@
 								<?php
 							}
 							?>
+                            <# if ( true !== data.is_reported ) { #>
+                            <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}" href="#content-report"
+                                                         class="report-content" data-bp-content-id="{{data.id}}"
+                                                         data-bp-content-type="<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ); ?>"
+                                                         data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Report', 'buddyboss' ); ?></a>
+                            </li>
+                            <# } else{ #>
+                            <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
+                                                         href="javascript:void(0);"
+                                                         class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
+                            </li>
+                            <# } #>
                         </ul>
                     </div>
                 </div>

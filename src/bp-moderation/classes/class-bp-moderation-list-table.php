@@ -554,7 +554,7 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		$actions['view_report'] = sprintf( '<a href="%s" title="%s"> %s </a>', esc_url( $view_url ), esc_attr__( 'View', 'buddyboss' ), esc_html__( 'View Reports', 'buddyboss' ) );
 		$actions['hide']        = sprintf( '<a href="javascript:void(0);" class="bp-hide-request" data-id="%s" data-type="%s" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $item['item_id'] ), esc_attr( $item['item_type'] ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $action_type ), esc_attr( $action_label ), esc_html( $action_label ) );
 		$actions['suspend']     = sprintf( '<a href="javascript:void(0);" class="bp-block-user delete" data-id="%s" data-type="user" data-nonce="%s" data-action="%s" title="%s">%s</a>', esc_attr( $user_id ), esc_attr( wp_create_nonce( 'bp-hide-unhide-moderation' ) ), esc_attr( $user_action_type ), esc_attr( $user_action_label ), esc_html( $user_action_label ) );
-		echo wp_kses_post( substr( $content_excerpt, 0, 100 ) ) . ' ' . $this->row_actions( $actions );
+		printf( '<strong>%s</strong>%s', wp_kses_post( substr( $content_excerpt, 0 ) ), $this->row_actions( $actions ) );
 	}
 
 	/**
