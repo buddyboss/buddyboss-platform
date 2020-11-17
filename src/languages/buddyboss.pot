@@ -18397,8 +18397,8 @@ msgstr ""
 #: bp-media/bp-media-filters.php:2240
 #: bp-templates/bp-nouveau/buddypress/media/album-entry.php:20
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:33
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:32
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:32
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:36
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:36
 #. translators: Photos count.
 msgid "%s photo"
 msgid_plural "%s photos"
@@ -21944,14 +21944,14 @@ msgid "Following special characters are not supported:<br/> \\ / ? % * : | \" < 
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:123
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:42
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:42
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:46
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:46
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:54
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:58
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:25
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:26
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:52
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:54
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:50
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:52
 msgid "by "
 msgstr ""
 
@@ -21960,14 +21960,14 @@ msgid "-"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:165
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:79
-#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:79
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:83
+#: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:83
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:95
 #: bp-templates/bp-nouveau/buddypress/search/loop/document.php:99
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder-ajax.php:71
 #: bp-templates/bp-nouveau/buddypress/search/loop/folder.php:71
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:92
-#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:94
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos-ajax.php:90
+#: bp-templates/bp-nouveau/buddypress/search/loop/photos.php:92
 msgid "Based on group privacy"
 msgstr ""
 
