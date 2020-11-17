@@ -451,6 +451,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			$request['content'] = '&#8203;';
 		}
 
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $post_map ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
+		}
+
 		$prepared_activity = $this->prepare_item_for_database( $request );
 
 		if ( ! isset( $request['hidden'] ) && isset( $prepared_activity->hide_sitewide ) ) {
@@ -639,6 +658,25 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 
 		if ( empty( $activity_object->content ) ) {
 			$activity_object->content = '&#8203;';
+		}
+
+		/**
+		 * Map data into POST to work with link preview.
+		 */
+		$post_map = array(
+			'link_url'         => 'link_url',
+			'link_embed'       => 'link_embed',
+			'link_title'       => 'link_title',
+			'link_description' => 'link_description',
+			'link_image'       => 'link_image',
+		);
+
+		if ( ! empty( $post_map ) ) {
+			foreach ( $post_map as $key => $val ) {
+				if ( isset( $request[ $val ] ) ) {
+					$_POST[ $key ] = $request[ $val ];
+				}
+			}
 		}
 
 		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object->id );
@@ -1080,6 +1118,9 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				remove_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 			}
 
+			// Removed lazyload from link preview.
+			add_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
+
 			$rendered = apply_filters_ref_array(
 				'bp_get_activity_content_body',
 				array(
@@ -1087,6 +1128,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 					&$activity,
 				)
 			);
+
+			remove_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
 
 			// removed combined gif data with content.
 			if ( function_exists( 'bp_media_activity_embed_gif' ) ) {
@@ -1168,8 +1211,8 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 			}
 		} else {
-			$activities            = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
-			$data['comment_count'] = ! empty( $activities ) ? count( $activities ) : 0;
+			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
+			$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
 		}
 
 		if ( ! empty( $schema['properties']['user_avatar'] ) ) {
@@ -2035,5 +2078,27 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		}
 
 		return (array) $edit_activity_data;
+	}
+
+	/**
+	 * Removed lazyload from link preview embed.
+	 *
+	 * @param string               $content  Activity Content.
+	 * @param BP_Activity_Activity $activity Activity object.
+	 *
+	 * @return null|string|string[]
+	 */
+	public function bp_rest_activity_remove_lazyload( $content, $activity ) {
+		$link_embed = bp_activity_get_meta( $activity->id, '_link_embed', true );
+
+		if ( empty( $link_embed ) ) {
+			return $content;
+		}
+
+		$content = preg_replace( '/iframe(.*?)data-lazy-type="iframe"/is', 'iframe$1', $content );
+		$content = preg_replace( '/iframe(.*?)class="lazy/is', 'iframe$1class="', $content );
+		$content = preg_replace( '/iframe(.*?)data-src=/is', 'iframe$1src=', $content );
+
+		return $content;
 	}
 }
