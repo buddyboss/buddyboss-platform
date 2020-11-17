@@ -145,18 +145,8 @@ function bp_moderation_block_member() {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
 
-			if ( bp_is_following(
-				array(
-					'leader_id'   => $item_id,
-					'follower_id' => bp_loggedin_user_id(),
-				)
-			) ) {
-				bp_stop_following(
-					array(
-						'leader_id'   => $item_id,
-						'follower_id' => bp_loggedin_user_id(),
-					)
-				);
+			if ( bp_is_following( array( 'leader_id' => $item_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
+				bp_stop_following( array( 'leader_id' => $item_id, 'follower_id' => bp_loggedin_user_id() ) );
 			}
 
 			$response['button'] = bp_moderation_get_report_button(
@@ -304,51 +294,3 @@ function bp_moderation_block_user_profile_button( $buttons ) {
 }
 
 add_filter( 'bp_nouveau_customizer_user_profile_actions', 'bp_moderation_block_user_profile_button' );
-/**
- * Function to add the content in member block form.
- *
- * @since BuddyBoss 2.0.0
- */
-function bp_moderation_block_member_form_content() {
-	?>
-	<span>
-		<?php
-		esc_html_e( 'This member will no longer be able to:', 'buddyboss' );
-		?>
-	</span>
-	<ul>
-		<li>
-			<?php
-			esc_html_e( 'See your post', 'buddyboss' );
-			?>
-		</li>
-		<li>
-			<?php
-			esc_html_e( 'Tag you', 'buddyboss' );
-			?>
-		</li>
-		<li>
-			<?php
-			esc_html_e( 'Invite you in event and groups', 'buddyboss' );
-			?>
-		</li>
-		<li>
-			<?php
-			esc_html_e( 'Message you', 'buddyboss' );
-			?>
-		</li>
-		<li>
-			<?php
-			esc_html_e( 'Add you as a friend', 'buddyboss' );
-			?>
-		</li>
-	</ul>
-	<span>
-		<?php
-		esc_html_e( 'If you\'re friends, blocking member will also unfriend them', 'buddyboss' );
-		?>
-	</span>
-	<?php
-}
-
-add_action( 'bp_moderation_block_member_before_form', 'bp_moderation_block_member_form_content' );

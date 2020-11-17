@@ -277,8 +277,8 @@ class BP_Moderation_List_Table extends WP_List_Table {
 						'link' => $blocked_members_url_base,
 					),
 					'unsuspended' => array(
-						'name' => esc_html__( 'Reported', 'buddyboss' ),
-						'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base ),
+					'name' => esc_html__( 'Blocked', 'buddyboss' ),
+					'link' => add_query_arg( array( 'moderation_status' => 'unsuspended' ), $blocked_members_url_base )
 					),
 					'suspended'   => array(
 						'name' => esc_html__( 'Suspended', 'buddyboss' ),

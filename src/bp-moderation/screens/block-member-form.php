@@ -19,7 +19,39 @@
 	<?php
 	?>
     <div class="bb-report-type-wrp">
-		<?php do_action( 'bp_moderation_block_member_before_form' ); ?>
+		<span>
+			<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' );  ?>
+    	</span>
+		<ul>
+			<li>
+				<?php
+				esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
+				?>
+			</li>
+			<li>
+				<?php
+				esc_html_e( 'Tag blocked member', 'buddyboss' );
+				?>
+			</li>
+			<li>
+				<?php
+				esc_html_e( 'Invite blocked member in event and groups', 'buddyboss' );
+				?>
+			</li>
+			<li>
+				<?php
+				esc_html_e( 'Message blocked member', 'buddyboss' );
+				?>
+			</li>
+			<li>
+				<?php
+				esc_html_e( 'Add blocked member as a friend', 'buddyboss' );
+				?>
+			</li>
+		</ul>
+		<span>
+        	<?php esc_html_e( 'If you\'re friends, This action will also unfriend blocked members.', 'buddyboss' ); ?>
+    	</span>
         <form id="bb-block-member" action="javascript:void(0);">
             <div class="form-item">
                 <input type="button" class="bb-cancel-report-content"
