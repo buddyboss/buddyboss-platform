@@ -1525,6 +1525,10 @@ function bp_rest_restrict_wp_attachment_response( $response, $post ) {
 		(
 			! empty( $media_meta ) ||
 			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post->ID )
 		)
 	) {
 		$response = array();
