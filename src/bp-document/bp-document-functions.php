@@ -3572,3 +3572,25 @@ function bp_document_size_format( $bytes, $decimals = 0 ) {
 
 	return false;
 }
+
+/**
+ * Get document id for the attachment.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param integer $attachment_id Attachment ID.
+ *
+ * @return array|bool
+ */
+function bp_get_attachment_document_id( $attachment_id = 0 ) {
+	global $bp, $wpdb;
+
+	if ( ! $attachment_id ) {
+		return false;
+	}
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
+	$attachment_document_id = (int) $wpdb->get_var( "SELECT DISTINCT d.id FROM {$bp->document->table_name} d WHERE d.attachment_id = {$attachment_id}" );
+
+	return $attachment_document_id;
+}
