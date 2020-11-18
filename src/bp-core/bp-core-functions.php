@@ -1241,7 +1241,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		/**
 		 * Initializing the count variable to avoid undefined notice
 		 */
-		$count = 0;
+		$count  = 0;
 		$count2 = 0;
 
 		// Step one: the first chunk.
@@ -2876,8 +2876,8 @@ function bp_nav_menu_get_loggedin_pages() {
 					$key = 'group-invites-settings';
 				}
 
-				$link = $s_nav['link'];
-				$arr_key = $key . '-sub';
+				$link                  = $s_nav['link'];
+				$arr_key               = $key . '-sub';
 				$page_args[ $arr_key ] =
 					(object) array(
 						'ID'             => $nav_counter_child,
@@ -3327,7 +3327,7 @@ function bp_get_email( $email_type ) {
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false,
 
-		'tax_query'        => array(
+		'tax_query'              => array(
 			array(
 				'field'    => 'slug',
 				'taxonomy' => bp_get_email_tax_type(),
@@ -3731,171 +3731,182 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
  * @return array
  */
 function bp_email_get_schema() {
-	return array(
+
+	$schema = array(
 		'activity-comment'                   => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your updates:\n\n{{{activity_reply}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
 		'activity-comment-author'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your comments:\n\n{{{activity_reply}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
 		'activity-at-message'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status update:\n\n{{{status_update}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
 		'groups-at-message'                  => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
 		'core-user-registration'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
+				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
 		),
 		'core-user-registration-with-blog'   => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss' ),
+				'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss' ),
-			'args'         => array(
+				'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss' ),
+			'args'             => array(
 				'multisite' => true,
 			),
 		),
 		'friends-request'                    => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 		),
 		'friends-request-accepted'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request to connect.\n\n{{{member.card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 		),
 		'groups-details-updated'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated.\n\n{{{group.description}}}\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-invitation'                  => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: <a href=\"{{{group.url}}}\">{{group.name}}</a>.\n\n{{{group.invite_message}}}\n\n{{{group.small_card}}}\n\n<a href=\"{{{invites.url}}}\">Click here</a> to manage this and all other pending group invites.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 		),
 		'groups-member-promoted'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-membership-request'          => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
+				'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;. As you are organizer of this group, you must either accept or reject the membership request.\n\n{{{member.card}}}\n\n<a href=\"{{{group-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 		),
 		'messages-unread'                    => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'post_content' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
 		'settings-verify-email-change'       => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
+				'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">click here</a> to confirm the change. \n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
+				'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 		),
 		'groups-membership-request-accepted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-membership-request-rejected' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
+				'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'bbp-new-forum-topic'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
+				'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{discussion.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 		),
 		'bbp-new-forum-reply'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
+				'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n{{{reply.content}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
 		),
 		'invites-member-invite'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
+				'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss' ),
+				'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
+				'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
 		'group-message-email'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+				'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+				'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+				'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
 	);
+
+	/**
+	 * Filters registered email schema.
+	 *
+	 * @param array $schema Email schema.
+	 *
+	 * @returns array $schema Email schema array.
+	 * @since BuddyBoss 1.5.4
+	 */
+	return apply_filters( 'bp_email_get_schema', $schema );
 }
 
 /**
@@ -4046,7 +4057,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$bbp_new_forum_reply = array(
-		'description' => __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
+		'description' => __( 'A member replies to a discussion you are subscribed to.', 'buddyboss' ),
 		'unsubscribe' => array(
 			'meta_key' => 'notification_bbp_new_forum_reply',
 			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
@@ -4088,6 +4099,15 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'invites-member-invite'              => $invites_member_invite,
 		'group-message-email'                => $group_message_email,
 	);
+
+	/**
+	 * Filters Email type schema
+	 *
+	 * @param array $types Types array.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	$types = apply_filters( 'bp_email_get_type_schema', $types );
 
 	if ( $field !== 'all' ) {
 		return wp_list_pluck( $types, $field );
@@ -4795,9 +4815,12 @@ function bp_core_parse_url( $url ) {
 	} else {
 
 		// safely get URL and response body.
-		$response = wp_safe_remote_get( $url, array(
-			'user-agent' => '' // Default value being blocked by Cloudflare
-		));
+		$response = wp_safe_remote_get(
+			$url,
+			array(
+				'user-agent' => '', // Default value being blocked by Cloudflare
+			)
+		);
 		$body     = wp_remote_retrieve_body( $response );
 
 		// if response is not empty
@@ -5010,7 +5033,7 @@ function bp_core_hide_display_name_field( $field_id = 0 ) {
 	 * @param bool $retval   Return value.
 	 * @param int  $field_id ID for the profile field.
 	 */
-	return ( bool ) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
+	return (bool) apply_filters( 'bp_core_hide_display_name_field', $retval, $field_id );
 }
 
 /**
@@ -5066,36 +5089,149 @@ function bp_core_upload_max_size() {
 }
 
 /**
- * Function deletes Transient based on the transient name specified.
+ * Function will return the default fields groups and avatar/cover is enabled or not.
  *
- * @param type $transient_name_prefix - transient name prefix to save user progresss for profile completion module
- *
- * @global type $wpdb
- *
- * @since BuddyBoss 1.4.9
+ * @since BuddyBoss 1.5.4
  */
-function bp_core_delete_transient_query( $transient_name_prefix ) {
-	global $wpdb;
-	$sql = $wpdb->prepare(
-			"SELECT `option_name` FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
-			$transient_name_prefix
-	);
+function bp_core_profile_completion_steps_options() {
 
-	$keys = $wpdb->get_col( $sql );
+	/* Profile Groups and Profile Cover Photo VARS. */
+	$options                              = array();
+	$options['profile_groups']            = bp_xprofile_get_groups();
+	$options['is_profile_photo_disabled'] = bp_disable_avatar_uploads();
+	$options['is_cover_photo_disabled']   = bp_disable_cover_image_uploads();
 
-	if ( ! empty( $keys ) ) {
-		foreach ( $keys as $transient ) {
-			delete_transient( str_replace( '_transient_', '', $transient ) );
-		}
-	}
+	/**
+	 * Filters will return the default fields groups and avatar/cover is enabled or not.
+	 *
+	 * @param array $options of default Profile Groups and Profile Cover/Photo enabled.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 */
+	return apply_filters( 'bp_core_profile_completion_steps_options', $options );
 }
 
 /**
- * Function which return the profile completion key.
+ * Function trigger when profile updated. Profile field added/updated/deleted.
+ * Deletes Profile Completion Transient here.
  *
  * @since BuddyBoss 1.4.9
  */
-function bp_core_get_profile_completion_key() {
+function bp_core_xprofile_update_profile_completion_user_progress() {
 
-	return 'bbprofilecompletion';
+	$user_id            = get_current_user_id();
+	$steps_options      = bp_core_profile_completion_steps_options();
+	$profile_groups     = wp_list_pluck( $steps_options['profile_groups'], 'id' );
+	$profile_photo_type = array();
+
+	if ( ! $steps_options['is_profile_photo_disabled'] ) {
+		$profile_photo_type[] = 'profile_photo';
+	}
+	if ( ! $steps_options['is_cover_photo_disabled'] ) {
+		$profile_photo_type[] = 'cover_photo';
+	}
+
+	// Get logged in user Progress.
+	$user_progress_arr = bp_xprofile_get_user_progress( $profile_groups, $profile_photo_type );
+	bp_update_user_meta( $user_id, 'bp_profile_completion_widgets', $user_progress_arr );
+
+}
+
+/**
+ * Function will return the user progress based on the settings you provided.
+ *
+ * @param array $settings set of fieldset selected to show in progress & profile or cover photo selected to show in
+ *                        progress.
+ *
+ * @return array $response user progress based on widget settings.
+ */
+function bp_xprofile_get_selected_options_user_progress( $settings ) {
+
+	$profile_groups     = $settings['profile_groups'];
+	$profile_photo_type = $settings['profile_photo_type'];
+
+	// Get logged in user Progress.
+	$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	if ( ! $get_user_data ) {
+		bp_core_xprofile_update_profile_completion_user_progress();
+		$get_user_data = bp_get_user_meta( get_current_user_id(), 'bp_profile_completion_widgets', true );
+	}
+
+	$response                     = array();
+	$response['photo_type']       = array();
+	$response['groups']           = array();
+	$response['total_fields']     = 0;
+	$response['completed_fields'] = 0;
+	$total_count                  = 0;
+	$total_completed_count        = 0;
+
+	if ( ! empty( $profile_photo_type ) ) {
+		foreach ( $profile_photo_type as $option ) {
+			if ( 'profile_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['profile_photo'] ) ) {
+				$response['photo_type']['profile_photo'] = $get_user_data['photo_type']['profile_photo'];
+				$total_count                             = ++ $total_count;
+				if ( isset( $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['profile_photo']['is_uploaded'] ) {
+					$total_completed_count = ++ $total_completed_count;
+				}
+			} elseif ( 'cover_photo' === $option && isset( $get_user_data['photo_type'] ) && isset( $get_user_data['photo_type']['cover_photo'] ) ) {
+				$response['photo_type']['cover_photo'] = $get_user_data['photo_type']['cover_photo'];
+				$total_count                           = ++ $total_count;
+				if ( isset( $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) && 1 === (int) $get_user_data['photo_type']['cover_photo']['is_uploaded'] ) {
+					$total_completed_count = ++ $total_completed_count;
+				}
+			}
+		}
+	}
+
+	if ( ! empty( $profile_groups ) ) {
+		foreach ( $profile_groups as $group ) {
+			if ( isset( $get_user_data['groups'][ $group ] ) ) {
+				$response['groups'][ $group ] = $get_user_data['groups'][ $group ];
+				$total_count                  = $total_count + (int) $get_user_data['groups'][ $group ]['group_total_fields'];
+				if ( isset( $get_user_data['groups'][ $group ]['group_completed_fields'] ) && (int) $get_user_data['groups'][ $group ]['group_completed_fields'] > 0 ) {
+					$total_completed_count = $total_completed_count + (int) $get_user_data['groups'][ $group ]['group_completed_fields'];
+				}
+			}
+
+		}
+	}
+
+	if ( $total_count > 0 ) {
+		$response['total_fields'] = $total_count;
+	}
+
+	if ( $total_completed_count > 0 ) {
+		$response['completed_fields'] = $total_completed_count;
+	}
+
+	/**
+	 * Filters will return the user progress based on the settings you provided.
+	 *
+	 * @param array $response           user progress array.
+	 * @param array $profile_groups     user profile groups.
+	 * @param array $profile_photo_type user profile photo/cover data.
+	 * @param array $get_user_data      user profile cached data.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 */
+	return apply_filters( 'bp_xprofile_get_selected_options_user_progress', $response, $profile_groups, $profile_photo_type, $get_user_data );
+
+}
+
+/**
+ * Function trigger when admin make an profile field or settings changes on backend.
+ *
+ * @since BuddyBoss 1.5.4
+ */
+function bp_core_xprofile_clear_all_user_progress_cache() {
+
+	delete_metadata(
+		'user',        // the meta type.
+		0,             // this doesn't actually matter in this call.
+		'bp_profile_completion_widgets', // the meta key to be removed everywhere.
+		'',            // this also doesn't actually matter in this call.
+		true           // tells the function "yes, please remove them all".
+	);
+
 }

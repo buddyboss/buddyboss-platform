@@ -335,7 +335,7 @@ class BuddyPress {
 
 		/** Versions */
 		$this->version    = defined( 'BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined( 'BP_VERSION' ) ? BP_VERSION : '1.0.0' );
-		$this->db_version = 16201;
+		$this->db_version = 16301;
 
 		/** Loading */
 
@@ -586,6 +586,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
@@ -755,7 +756,7 @@ class BuddyPress {
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
 		if ( 'bp-rest-attachments' === $class ) {
-			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-attachments.php";
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
 		} else {
