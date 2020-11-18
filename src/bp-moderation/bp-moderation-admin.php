@@ -122,8 +122,6 @@ function bp_moderation_admin_load() {
 	$referer                 = remove_query_arg( 'suspended', wp_get_referer() );
 	$_SERVER['REQUEST_URI']  = remove_query_arg( 'unsuspended', $_SERVER['REQUEST_URI'] );
 	$referer                 = remove_query_arg( 'unsuspended', wp_get_referer() );
-	$_SERVER['REQUEST_URI']  = remove_query_arg( 'moderation_msg', $_SERVER['REQUEST_URI'] );
-	$referer                 = remove_query_arg( 'moderation_msg', wp_get_referer() );
 
 	if ( 'view' === $doaction && ! empty( $moderation_id ) && ! empty( $moderation_content_type ) && array_key_exists( $moderation_content_type, bp_moderation_content_types() ) ) {
 
@@ -418,12 +416,11 @@ function bp_moderation_admin_index() {
 	$messages = array();
 
 	// If the user has just made a change to an activity item, build status messages.
-	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) || ! empty( $_REQUEST['moderation_msg'] ) ) {
+	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
 		$hidden         = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
 		$unhide         = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
 		$suspended      = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
 		$unsuspended    = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
-		$moderation_msg = ! empty( $_REQUEST['moderation_msg'] ) ? $_REQUEST['moderation_msg'] : 0;
 
 		if ( $hidden > 0 ) {
 			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
@@ -439,10 +436,6 @@ function bp_moderation_admin_index() {
 
 		if ( $unsuspended > 0 ) {
 			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
-		}
-
-		if ( ! empty( $moderation_msg ) ) {
-			$messages[] = $moderation_msg;
 		}
 	}
 
@@ -515,12 +508,27 @@ function bp_moderation_admin_view() {
 
 	$messages = array();
 
-	// If the user has just made a change to an activity item, build status messages.
-	if ( ! empty( $_REQUEST['moderation_msg'] ) ) {
-		$moderation_msg = ! empty( $_REQUEST['moderation_msg'] ) ? $_REQUEST['moderation_msg'] : 0;
+	// If the user has just made a change to an moderation item, build status messages.
+	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
+		$hidden         = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
+		$unhide         = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
+		$suspended      = ! empty( $_REQUEST['suspended'] ) ? (int) $_REQUEST['suspended'] : 0;
+		$unsuspended    = ! empty( $_REQUEST['unsuspended'] ) ? (int) $_REQUEST['unsuspended'] : 0;
 
-		if ( ! empty( $moderation_msg ) ) {
-			$messages[] = $moderation_msg;
+		if ( $hidden > 0 ) {
+			$messages[] = sprintf( _n( '%s content item has been hidden.', '%s content items have been hidden.', $hidden, 'buddyboss' ), number_format_i18n( $hidden ) );
+		}
+
+		if ( $unhide > 0 ) {
+			$messages[] = sprintf( _n( '%s content item has been unhidden.', '%s content items have been unhidden.', $unhide, 'buddyboss' ), number_format_i18n( $unhide ) );
+		}
+
+		if ( $suspended > 0 ) {
+			$messages[] = sprintf( _n( '%s user has been suspended.', '%s users have been suspended.', $suspended, 'buddyboss' ), number_format_i18n( $suspended ) );
+		}
+
+		if ( $unsuspended > 0 ) {
+			$messages[] = sprintf( _n( '%s user has been unsuspended.', '%s users have been unsuspended.', $unsuspended, 'buddyboss' ), number_format_i18n( $unsuspended ) );
 		}
 	}
 
