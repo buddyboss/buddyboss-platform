@@ -255,35 +255,45 @@ function bbp_has_replies( $args = '' ) {
 		}
 
 		// Figure out total pages
-		if ( true === $r['hierarchical'] ) {
+		if( true === $r['hierarchical'] ) {
 			$walker      = new BBP_Walker_Reply();
 			$total_pages = ceil( (int) $walker->get_number_of_root_elements( $bbp->reply_query->posts ) / (int) $replies_per_page );
 		} else {
-			$total_pages = ceil( (int) $bbp->reply_query->found_posts / (int) $replies_per_page );
 
-			// Add pagination to query object
-			$bbp->reply_query->pagination_links = paginate_links(
-				apply_filters(
-					'bbp_replies_pagination',
-					array(
-						'base'      => $base,
-						'format'    => '',
-						'total'     => $total_pages,
-						'current'   => (int) $bbp->reply_query->paged,
-						'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
-						'next_text' => is_rtl() ? '&larr;' : '&rarr;',
-						'mid_size'  => 1,
-						'add_args'  => ( bbp_get_view_all() ) ? array( 'view' => 'all' ) : false,
-					)
-				)
-			);
-
-			// Remove first page from pagination
-			if ( $wp_rewrite->using_permalinks() ) {
-				$bbp->reply_query->pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $bbp->reply_query->pagination_links );
-			} else {
-				$bbp->reply_query->pagination_links = str_replace( '&#038;paged=1', '', $bbp->reply_query->pagination_links );
+			$reply_posts        = bbpress()->reply_query->posts;
+			$num_parent_replies = 0;
+			foreach( $reply_posts as $value ) {
+				if( $value->reply_to == 0 ) {
+					$num_parent_replies ++;
+				}
 			}
+
+			$total_pages = ceil( (int) $num_parent_replies / (int) $replies_per_page );
+
+		}
+
+		// Add pagination to query object
+		$bbp->reply_query->pagination_links = paginate_links(
+			apply_filters(
+				'bbp_replies_pagination',
+				array(
+					'base'      => $base,
+					'format'    => '',
+					'total'     => $total_pages,
+					'current'   => (int) $bbp->reply_query->paged,
+					'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
+					'next_text' => is_rtl() ? '&larr;' : '&rarr;',
+					'mid_size'  => 1,
+					'add_args'  => ( bbp_get_view_all() ) ? array( 'view' => 'all' ) : false,
+				)
+			)
+		);
+
+		// Remove first page from pagination
+		if ( $wp_rewrite->using_permalinks() ) {
+			$bbp->reply_query->pagination_links = str_replace( $wp_rewrite->pagination_base . '/1/', '', $bbp->reply_query->pagination_links );
+		} else {
+			$bbp->reply_query->pagination_links = str_replace( '&#038;paged=1', '', $bbp->reply_query->pagination_links );
 		}
 	}
 
@@ -2470,23 +2480,30 @@ function bbp_get_topic_pagination_count() {
 	// Define local variable(s)
 	$retstr = '';
 
+	$reply_posts = $bbp->reply_query->posts;
+	$total_int = 0;
+	foreach($reply_posts as $value) {
+		if( $value->reply_to == 0 ) {
+			$total_int ++;
+		}
+	}
+
 	// Set pagination values
 	$start_num = intval( ( $bbp->reply_query->paged - 1 ) * $bbp->reply_query->posts_per_page ) + 1;
 	$from_num  = bbp_number_format( $start_num );
 	$to_num    = bbp_number_format( ( $start_num + ( $bbp->reply_query->posts_per_page - 1 ) > $bbp->reply_query->found_posts ) ? $bbp->reply_query->found_posts : $start_num + ( $bbp->reply_query->posts_per_page - 1 ) );
-	$total_int = (int) $bbp->reply_query->found_posts;
 	$total     = bbp_number_format( $total_int );
 
 	// We are threading replies
 	if ( bbp_thread_replies() && bbp_is_single_topic() ) {
-		return;
-		$walker  = new BBP_Walker_Reply();
-		$threads = (int) $walker->get_number_of_root_elements( $bbp->reply_query->posts );
+		// Several replies in a topic with a single page
+		if ( empty( $to_num ) ) {
+			$retstr = sprintf( _n( 'Viewing %1$s reply', 'Viewing %1$s replies', $total_int, 'buddyboss' ), $total );
 
-		// Adjust for topic
-		$threads--;
-		$retstr = sprintf( _n( 'Viewing %1$s reply thread', 'Viewing %1$s reply threads', $threads, 'buddyboss' ), bbp_number_format( $threads ) );
-
+			// Several replies in a topic with several pages
+		} else {
+			$retstr = sprintf( _n( 'Viewing %2$s of %4$s replies', 'Viewing %2$s - %3$s of %4$s replies', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
+		}
 		// We are not including the lead topic
 	} elseif ( bbp_show_lead_topic() ) {
 

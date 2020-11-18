@@ -2348,13 +2348,14 @@ function bbp_list_replies( $args = array() ) {
 	$r = bbp_parse_args(
 		$args,
 		array(
-			'walker'       => null,
-			'max_depth'    => bbp_thread_replies_depth(),
-			'style'        => 'ul',
-			'callback'     => null,
-			'end_callback' => null,
-			'page'         => 1,
-			'per_page'     => -1,
+			'walker'         => null,
+			'max_depth'      => bbp_thread_replies_depth(),
+			'style'          => 'ul',
+			'callback'       => null,
+			'end_callback'   => null,
+			'page'           => bbp_get_paged(),
+			'posts_per_page' => bbp_get_replies_per_page(),
+			'per_page'       => bbp_get_replies_per_page(),
 		),
 		'list_replies'
 	);
