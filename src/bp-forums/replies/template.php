@@ -260,15 +260,18 @@ function bbp_has_replies( $args = '' ) {
 			$total_pages = ceil( (int) $walker->get_number_of_root_elements( $bbp->reply_query->posts ) / (int) $replies_per_page );
 		} else {
 
-			$reply_posts        = bbpress()->reply_query->posts;
-			$num_parent_replies = 0;
-			foreach( $reply_posts as $value ) {
-				if( $value->reply_to == 0 ) {
-					$num_parent_replies ++;
+			$total_pages = ceil( (int) $bbp->reply_query->found_posts / (int) $replies_per_page );
+			if( true === $r['hierarchical'] ) {
+				$reply_posts        = bbpress()->reply_query->posts;
+				$num_parent_replies = 0;
+				foreach( $reply_posts as $value ) {
+					if( $value->reply_to == 0 ) {
+						$num_parent_replies ++;
+					}
 				}
-			}
 
-			$total_pages = ceil( (int) $num_parent_replies / (int) $replies_per_page );
+				$total_pages = ceil( (int) $num_parent_replies / (int) $replies_per_page );
+			}
 
 		}
 
