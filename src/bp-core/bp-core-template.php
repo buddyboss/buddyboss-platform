@@ -4155,3 +4155,60 @@ function bp_is_user_albums() {
 
 	return $retval;
 }
+
+/**
+ * Checks if user can create a document or not.
+ *
+ * @return bool Is user can create document or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_document() {
+	return (bool) apply_filters( 'bp_user_can_create_document', true );
+}
+
+/**
+ * Checks if user can create a media or not.
+ *
+ * @return bool Is user can create media or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_media() {
+	return (bool) apply_filters( 'bp_user_can_create_media', true );
+}
+
+/**
+ * Checks if user can create a activity or not.
+ *
+ * @return bool Is user can create activity or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_create_activity() {
+	return (bool) apply_filters( 'bp_user_can_create_activity', true );
+}
+
+/**
+ * Checks if user can send messages or not.
+ *
+ * @param object $thread          The thread object.
+ * @param object $thread_template The thread template.
+ * @param string $error_type      Return error type.
+ *
+ * @return bool Is user can send messages or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_user_can_send_messages( $thread, $thread_template, $error_type = 'wp_error' ) {
+	return apply_filters( 'bp_user_can_send_messages', $thread, $thread_template, $error_type );
+}
+
+/**
+ * Checks if user can send group membership requests or not.
+ *
+ * @param bool $default  Default send the group membership requests.
+ * @param int $group_id  Group id to send membership requests.
+ *
+ * @return bool Is user can send group membership requests or not.
+ * @since BuddyBoss 1.5.4
+ */
+function bp_groups_user_can_send_membership_requests( $default = true, $group_id ) {
+	return (bool) apply_filters( 'bp_groups_user_can_send_membership_requests', $default, $group_id );
+}

@@ -92,7 +92,8 @@ function messages_new_message( $args = '' ) {
 	$message->mark_visible = $r['mark_visible'];
 
 	$new_reply       = false;
-	$is_group_thread = isset( $r['group_thread'] ) ? $r['group_thread'] : false;
+	$is_group_thread = isset( $r['group_thread'] ) ? (bool) $r['group_thread'] : false;
+
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
@@ -125,6 +126,15 @@ function messages_new_message( $args = '' ) {
 				$is_group_thread = true;
 			}
 		}
+
+		// Check user can send the reply.
+		if ( ! $is_group_thread ) {
+			$has_access = bp_user_can_send_messages( $thread, (array) $message->recipients, 'wp_error' );
+			if ( is_wp_error( $has_access ) ) {
+				return $has_access;
+			}
+		}
+
 		// ...otherwise use the recipients passed
 	} else {
 
@@ -288,6 +298,14 @@ function messages_new_message( $args = '' ) {
 					return false;
 				}
 			}
+		}
+	}
+
+	// Check user can send the message.
+	if ( true !== $is_group_thread ) {
+		$has_access = bp_user_can_send_messages( '', (array) $message->recipients, 'wp_error' );
+		if ( is_wp_error( $has_access ) ) {
+			return $has_access;
 		}
 	}
 
