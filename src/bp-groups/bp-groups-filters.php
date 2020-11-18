@@ -78,8 +78,10 @@ add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
 // Exclude Forums if group type hide.
 add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
+
 // media scope filter.
 add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
+add_filter( 'bp_video_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
 add_filter( 'bp_document_set_document_groups_scope_args', 'bp_groups_filter_document_scope', 10, 2 );
 add_filter( 'bp_document_set_folder_groups_scope_args', 'bp_groups_filter_folder_scope', 10, 2 );
 

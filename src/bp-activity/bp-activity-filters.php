@@ -136,6 +136,10 @@ add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_edit_update_media', 10 );
 
+add_action( 'bp_video_add', 'bp_activity_video_add', 9 );
+add_filter( 'bp_video_add_handler', 'bp_activity_create_parent_video_activity', 9 );
+add_filter( 'bp_video_add_handler', 'bp_activity_edit_update_video', 10 );
+
 add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 add_filter( 'bp_document_add_handler', 'bp_activity_edit_update_document', 10 );
@@ -1573,6 +1577,11 @@ function bp_activity_has_media_activity_filter( $has_activities, $activities ) {
 					$attachment_id = BP_Media::get_activity_attachment_id( $activity->id );
 					if ( ! empty( $attachment_id ) ) {
 						$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					} else {
+						$attachment_id = BP_Video::get_activity_attachment_id( $activity->id );
+						if ( ! empty( $attachment_id ) ) {
+							$parent_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
+						}
 					}
 				}
 
@@ -2237,7 +2246,7 @@ function bp_activity_edit_update_document( $document_ids ) {
 }
 
 /**
- * We removing the Edit Button on Document/Media Activity popup until we fully support on popup.
+ * We removing the Edit Button on Document/Media/Video Activity popup until we fully support on popup.
  *
  * @param $buttons
  * @param $activity_id
@@ -2247,7 +2256,7 @@ function bp_activity_edit_update_document( $document_ids ) {
  */
 function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id ) {
 
-	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity' );
+	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity', 'video_get_activity' );
 
 	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, 1 ) ) {
 		$activity = new BP_Activity_Activity( $activity_id );
@@ -2260,3 +2269,288 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 }
 
+/**
+ * Create video activity for each video uploaded
+ *
+ * @since BuddyBoss 1.6.0
+ * @param $video
+ */
+function bp_activity_video_add( $video ) {
+	global $bp_video_upload_count, $bp_new_activity_comment, $bp_activity_post_update_id, $bp_activity_post_update;
+
+	if ( ! empty( $video ) && empty( $video->activity_id ) ) {
+		$parent_activity_id = false;
+		if ( ! empty( $bp_activity_post_update ) && ! empty( $bp_activity_post_update_id ) ) {
+			$parent_activity_id = (int) $bp_activity_post_update_id;
+		}
+
+		if ( $bp_video_upload_count > 1 || ! empty( $bp_new_activity_comment ) ) {
+
+			if ( bp_is_active( 'groups' ) && ! empty( $bp_new_activity_comment ) && empty( $video->group_id ) ) {
+				$comment = new BP_Activity_Activity( $bp_new_activity_comment );
+
+				if ( ! empty( $comment->item_id ) ) {
+					$comment_activity = new BP_Activity_Activity( $comment->item_id );
+					if ( ! empty( $comment_activity->component ) && buddypress()->groups->id === $comment_activity->component ) {
+						$video->group_id = $comment_activity->item_id;
+						$video->privacy  = 'grouponly';
+					}
+				}
+			}
+
+			$args = array(
+				'hide_sitewide' => true,
+				'privacy'       => 'media',
+			);
+
+			// Create activity only if not created previously.
+			if ( ! empty( $video->group_id ) && bp_is_active( 'groups' ) ) {
+				$args['item_id'] = $video->group_id;
+				$args['type']    = 'activity_update';
+				$current_group   = groups_get_group( $video->group_id );
+				$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $video->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+				$activity_id     = groups_record_activity( $args );
+			} else {
+				$activity_id = bp_activity_post_update( $args );
+			}
+
+			if ( $activity_id ) {
+
+				// save video activity id in video
+				$video->activity_id = $activity_id;
+				$video->save();
+
+				// update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_video_activity', '1' );
+
+				// save attachment meta for activity
+				update_post_meta( $video->attachment_id, 'bp_video_activity_id', $activity_id );
+
+				if ( $parent_activity_id ) {
+
+					$video_activity                    = new BP_Activity_Activity( $activity_id );
+					$video_activity->secondary_item_id = $parent_activity_id;
+					$video_activity->save();
+
+					// save parent activity id in attachment meta
+					update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
+				}
+			}
+		} else {
+			if ( $parent_activity_id ) {
+
+				// save video activity id in video
+				$video->activity_id = $parent_activity_id;
+				$video->save();
+
+				// save parent activity id in attachment meta
+				update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $parent_activity_id );
+			}
+		}
+	}
+}
+
+/**
+ * Create main activity for the video uploaded and saved.
+ *
+ * @since BuddyBoss 1.6.0
+ *
+ * @param $video_ids
+ *
+ * @return mixed
+ */
+function bp_activity_create_parent_video_activity( $video_ids ) {
+	global $bp_video_upload_count, $bp_activity_post_update, $bp_video_upload_activity_content, $bp_activity_post_update_id, $bp_activity_edit;
+
+	if ( ! empty( $video_ids ) && empty( $bp_activity_post_update ) && ! isset( $_POST['edit'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+		$added_video_ids = $video_ids;
+		$content         = false;
+
+		if ( ! empty( $bp_video_upload_activity_content ) ) {
+
+			/**
+			 * Filters the content provided in the activity input field.
+			 *
+			 * @param string $bp_video_upload_activity_content Activity message being posted.
+			 *
+			 * @since BuddyPress 1.2.0
+			 */
+			$content = apply_filters( 'bp_activity_post_update_content', $bp_video_upload_activity_content );
+		}
+
+		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+		$album_id = false;
+
+		// added fall back to get group_id from video.
+		if ( empty( $group_id ) && ! empty( $added_video_ids ) ) {
+			$video_object = new BP_Video( current( (array) $added_video_ids ) );
+			if ( ! empty( $video_object->group_id ) ) {
+				$group_id = $video_object->group_id;
+			}
+		}
+
+		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			$activity_id = groups_post_update(
+				array(
+					'content'  => $content,
+					'group_id' => $group_id,
+				)
+			);
+		} else {
+			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		}
+
+		// save video meta for activity.
+		if ( ! empty( $activity_id ) ) {
+			$privacy = 'public';
+
+			foreach ( (array) $added_video_ids as $video_id ) {
+				$video = new BP_Video( $video_id );
+
+				// get one of the video's privacy for the activity privacy.
+				$privacy = $video->privacy;
+
+				// get video album id.
+				if ( ! empty( $video->album_id ) ) {
+					$album_id = $video->album_id;
+				}
+
+				if ( 1 === $bp_video_upload_count ) {
+					// save video activity id in video.
+					$video->activity_id = $activity_id;
+					$video->save();
+				}
+
+				// save parent activity id in attachment meta.
+				update_post_meta( $video->attachment_id, 'bp_video_parent_activity_id', $activity_id );
+			}
+
+			bp_activity_update_meta( $activity_id, 'bp_video_ids', implode( ',', $added_video_ids ) );
+
+			// if video is from album then save album id in activity video.
+			if ( ! empty( $album_id ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_video_album_activity', $album_id );
+			}
+
+			if ( empty( $group_id ) ) {
+				$main_activity = new BP_Activity_Activity( $activity_id );
+				if ( ! empty( $main_activity ) ) {
+					$main_activity->privacy = $privacy;
+					$main_activity->save();
+				}
+			}
+		}
+	}
+
+	return $video_ids;
+}
+
+/**
+ * Update video and activity for video updation and deletion while editing the activity.
+ *
+ * @param $video_ids
+ *
+ * @return mixed
+ * @since BuddyBoss 1.6.0
+ */
+function bp_activity_edit_update_video( $video_ids ) {
+	global $bp_activity_edit, $bp_activity_post_update_id;
+
+	if ( ( true === $bp_activity_edit || isset( $_POST['edit'] ) ) && ! empty( $bp_activity_post_update_id ) ) {
+		$old_video_ids = bp_activity_get_meta( $bp_activity_post_update_id, 'bp_video_ids', true );
+		$old_video_ids = explode( ',', $old_video_ids );
+
+		if ( ! empty( $old_video_ids ) ) {
+
+			// old video count 1 and new video uploaded count is greater than 1.
+			if ( 1 === count( $old_video_ids ) && 1 < count( $video_ids ) ) {
+				$old_video_id = $old_video_ids[0];
+
+				// check if old video id is in new video uploaded.
+				if ( in_array( $old_video_id, $video_ids ) ) {
+
+					// Create new video activity for old video because it has only parent activity to show right now.
+					$old_video = new BP_Video( $old_video_id );
+					$args      = array(
+						'hide_sitewide' => true,
+						'privacy'       => 'media',
+					);
+
+					if ( ! empty( $old_video->group_id ) && bp_is_active( 'groups' ) ) {
+						$args['item_id'] = $old_video->group_id;
+						$args['type']    = 'activity_update';
+						$current_group   = groups_get_group( $old_video->group_id );
+						$args['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $old_video->user_id ), '<a href="' . bp_get_group_permalink( $current_group ) . '">' . esc_attr( $current_group->name ) . '</a>' );
+						$activity_id     = groups_record_activity( $args );
+					} else {
+						$activity_id = bp_activity_post_update( $args );
+					}
+
+					// video activity for old video is created and it is being assigned to the old video.
+					// And video activity is being saved with needed data to figure out everything for it.
+					if ( $activity_id ) {
+						$old_video->activity_id = $activity_id;
+						$old_video->save();
+
+						$video_activity                    = new BP_Activity_Activity( $activity_id );
+						$video_activity->secondary_item_id = $bp_activity_post_update_id;
+						$video_activity->save();
+
+						// update activity meta to tell it is video activity.
+						bp_activity_update_meta( $activity_id, 'bp_video_activity', '1' );
+
+						// save attachment meta for activity.
+						update_post_meta( $old_video->attachment_id, 'bp_video_activity_id', $activity_id );
+
+						// save parent activity id in attachment meta.
+						update_post_meta( $old_video->attachment_id, 'bp_video_parent_activity_id', $bp_activity_post_update_id );
+					}
+				}
+
+				// old video count is greater than 1 and new video uploaded count is only 1 now.
+			} elseif ( 1 < count( $old_video_ids ) && 1 === count( $video_ids ) ) {
+				$new_video_id = $video_ids[0];
+
+				// check if new video is in old video uploaded, if yes then delete that video's video activity first.
+				if ( in_array( $new_video_id, $old_video_ids ) ) {
+					$new_video         = new BP_Video( $new_video_id );
+					$video_activity_id = $new_video->activity_id;
+
+					// delete video's assigned video activity.
+					remove_action( 'bp_activity_after_delete', 'bp_video_delete_activity_video' );
+					bp_activity_delete( array( 'id' => $video_activity_id ) );
+					add_action( 'bp_activity_after_delete', 'bp_video_delete_activity_video' );
+
+					// save parent activity id in video.
+					$new_video->activity_id = $bp_activity_post_update_id;
+					$new_video->save();
+
+					// save parent activity id in attachment meta.
+					update_post_meta( $new_video->attachment_id, 'bp_video_parent_activity_id', $bp_activity_post_update_id );
+				}
+
+				// old video and new video count is same and old video and new video are different.
+			} elseif ( 1 === count( $old_video_ids ) && 1 === count( $video_ids ) ) {
+				$new_video_id = $video_ids[0];
+
+				// check if new video is not in old video uploaded and.
+				if ( ! in_array( $new_video_id, $old_video_ids ) ) {
+					$old_video_id = $old_video_ids[0];
+					$old_video    = new BP_Video( $old_video_id );
+
+					// unset the activity id for old video and save it to save activity from deleting after.
+					if ( ! empty( $old_video->id ) ) {
+						$old_video->activity_id = false;
+						$old_video->save();
+
+						// delete attachment activity id meta.
+						delete_post_meta( $old_video->attachment_id, 'bp_video_parent_activity_id' );
+					}
+				}
+			}
+		}
+	}
+
+	return $video_ids;
+}
