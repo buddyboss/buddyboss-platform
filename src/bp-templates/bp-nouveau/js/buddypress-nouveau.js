@@ -1849,6 +1849,7 @@ window.bp = window.bp || {};
 			});
 		},
 		resetReportPopup: function () {
+			$('form#bb-report-content').trigger('reset');
 			var mf_content = $('.mfp-content');
 			mf_content.find('.bp-content-id').val('');
 			mf_content.find('.bp-content-type').val('');
