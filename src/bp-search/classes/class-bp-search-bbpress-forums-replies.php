@@ -42,18 +42,39 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 						'is_mod'   => null,
 					)
 				);
+
+				$group_memberships = wp_list_pluck( $group_memberships, 'group_id' );
+
+				$public_groups = groups_get_groups(
+					array(
+						'fields'   => 'ids',
+						'status'   => 'public',
+						'per_page' => - 1,
+					)
+				);
+
+				if ( ! empty( $public_groups ) && ! empty( $public_groups['groups'] ) ) {
+					$public_groups = $public_groups['groups'];
+				} else {
+					$public_groups = array();
+				}
+
+				$group_memberships = array_merge( $public_groups, $group_memberships );
+				$group_memberships = array_unique( $group_memberships );
 			}
 
 			$group_query = '';
 			if ( ! empty( $group_memberships ) ) {
-				$in = array_reduce(
-					array_keys( $group_memberships ),
-					function ( $carry, $group_id ) {
-						return $carry . ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-					}
+				$in = array_map(
+					function ( $group_id ) {
+						return ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
+					},
+					$group_memberships
 				);
 
-				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) OR ';
+				$in = implode( '', $in );
+
+				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) AND ';
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -77,7 +98,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$query_placeholder[] = '%' . $search_term . '%';
 
 			$sql   = 'SELECT ' . $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
-			$query = $wpdb->prepare( $sql, $query_placeholder );
+			$query = $wpdb->prepare( $sql, $query_placeholder ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 			return apply_filters(
 				'Bp_Search_Forums_sql',
