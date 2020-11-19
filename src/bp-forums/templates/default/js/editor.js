@@ -31,7 +31,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'img', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
 							imageDragging: false
@@ -50,8 +50,9 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
-							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
+							jQuery(dummy_element).find( 'img.emoji, img[data-emoji-char]' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
 								var emojis = jQuery( Obj ).attr( 'alt' );
 								jQuery( Obj ).attr( 'data-emoji-char', emojis );
@@ -113,7 +114,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'img', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
 							imageDragging: false
@@ -132,8 +133,9 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
-							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
+							jQuery(dummy_element).find( 'img.emoji, img[data-emoji-char]' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
 								var emojis = jQuery( Obj ).attr( 'alt' );
 								jQuery( Obj ).attr( 'data-emoji-char', emojis );
@@ -195,7 +197,7 @@ jQuery( document ).ready(
 									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
-								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'img', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
+								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
 								unwrapTags: [ 'ul', 'ol', 'li' ]
 							},
 							imageDragging: false
@@ -216,8 +218,9 @@ jQuery( document ).ready(
 									return this.innerText;
 								}
 							);
+
 							// transform other emoji into emojionearea emoji.
-							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
+							jQuery(dummy_element).find( 'img.emoji, img[data-emoji-char]' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
 								var emojis = jQuery( Obj ).attr( 'alt' );
 								jQuery( Obj ).attr( 'data-emoji-char', emojis );
