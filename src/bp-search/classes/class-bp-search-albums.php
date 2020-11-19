@@ -121,7 +121,7 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			/**
 			 * Filter the MySQL JOIN clause for the albums Search query.
 			 *
-			 * @since BuddyBoss 1.5.4
+             * @since BuddyBoss 2.0.0
 			 *
 			 * @param string $join_sql JOIN clause.
 			 */
@@ -152,7 +152,7 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 			/**
 			 * Filters the MySQL WHERE conditions for the albums Search query.
 			 *
-			 * @since BuddyBoss 1.5.4
+             * @since BuddyBoss 2.0.0
 			 *
 			 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 			 * @param string $search_term      Search Term.

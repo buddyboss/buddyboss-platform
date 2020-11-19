@@ -370,7 +370,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Join SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+         * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.
@@ -482,7 +482,7 @@ class BP_User_Query {
 		/**
 		 * Filters the Where SQL statement.
 		 *
-		 * @since BuddyBoss 1.5.4
+         * @since BuddyBoss 2.0.0
 		 *
 		 * @param string $sql      From SQL statement.
 		 * @param string $uid_name User ID field name.

@@ -2296,7 +2296,7 @@ function bp_is_document_component() {
 /**
  * Check whether the current page is part of the Moderation component.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 2.0.0
  *
  * @return bool True if the current page is part of the Moderation component.
  */
