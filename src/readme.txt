@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.5.3
 Requires PHP: 5.6.20
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.5 =
+* Groups - Fixed group message media shows in the photos tab
+* Groups - Fixed group message private bcc thread bug
+* Forums - Fixed GIPHY play button alignment issue in discussions
+* Activity - Added 'Relevant Activity' support
+* Activity - Improved Edit Activity popup layout
+* Activity - Improved 'read more' link logic for blog posts activity
+* Media - Fixed create album popup, title becomes empty on a validation error message
+* Media - Improved GIPHY media logic to render from GIPHY server
+* Media - Fixed download issue with signed media
+* Network Search - Fixed Media search results layout issues
+* Email Invites - Fixed recipients profile type not assigned issue
+* REST API - Fixed media API privacy issue
+* REST API - Fixed API issues in media and activity
+* WPML - Fixed private network enabled public content issue
 
 = 1.5.4 =
 * Profiles - Improved Profile completion module caching logic

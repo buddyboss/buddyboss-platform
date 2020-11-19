@@ -385,6 +385,7 @@ class BP_Messages_Thread {
 				'per_page'         => 1,
 				'page'             => 1,
 				'count_total'      => false,
+				'orderby'          => 'date_sent',
 			);
 		} else {
 			$args = array(
@@ -392,6 +393,7 @@ class BP_Messages_Thread {
 				'per_page'        => 1,
 				'page'            => 1,
 				'count_total'     => false,
+				'orderby'         => 'date_sent',
 			);
 		}
 
