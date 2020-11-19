@@ -422,13 +422,13 @@ function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
 		$moderation_obj->hide_sitewide = 0;
 	}
 
-	$result = $moderation_obj->save();
-
-	if ( 'unhide' === $action ) {
-		$delete_result = $moderation_obj->delete();
+	if ( 'unhide' === $action && ! empty( $moderation_obj->report_id ) ) {
+		$result = $moderation_obj->delete();
+	} else {
+		$result = $moderation_obj->save();
 	}
 
-	return ( 'unhide' === $action ) ? $delete_result : $result;
+	return $result;
 }
 
 /**

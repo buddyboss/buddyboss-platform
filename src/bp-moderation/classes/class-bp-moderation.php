@@ -193,14 +193,8 @@ class BP_Moderation {
 		/**
 		 * Fetch User Report data
 		 */
-		$report_row = wp_cache_get( $this->id . '_' . $this->user_id, 'bp_moderation_reporter' );
-		if ( false === $report_row ) {
-			$bp         = buddypress();
-			$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
-
-			wp_cache_set( $this->id . '_' . $this->user_id, $report_row, 'bp_moderation_reporter' );
-		}
-
+		$bp         = buddypress();
+		$report_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->moderation->table_name_reports} mr WHERE mr.moderation_id = %d AND mr.user_id = %d", $this->id, $this->user_id ) ); // phpcs:ignore
 		if ( empty( $report_row ) ) {
 			return;
 		}
@@ -334,7 +328,7 @@ class BP_Moderation {
 		/**
 		 * IF any new Content reported then do some required actions
 		 */
-		if ( empty( $this->report_id ) ) {
+		if ( empty( $this->report_id ) && ( ! empty( $this->content ) || ! empty( $this->category_id ) ) ) {
 
 			// Update last update time as new reported added.
 			$this->last_updated = current_time( 'mysql' );
@@ -371,25 +365,27 @@ class BP_Moderation {
 		/**
 		 * Manage Moderation reporter data
 		 */
-		if ( ! empty( $this->report_id ) ) {
-			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
-		} else {
-			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id ); // phpcs:ignore
+		if ( ( ! empty( $this->content ) || ! empty( $this->category_id ) ) ) {
+			if ( ! empty( $this->report_id ) ) {
+				$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
+			} else {
+				$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id ); // phpcs:ignore
 
-			bp_moderation_update_meta( $this->id, '_count', $this->count );
-		}
+				bp_moderation_update_meta( $this->id, '_count', $this->count );
+			}
 
-		if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
-			return false;
-		}
+			if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
+				return false;
+			}
 
-		// If this is a new moderation report data, set the $report_id property.
-		if ( empty( $this->report_id ) ) {
-			$this->report_id = $wpdb->insert_id;
-		}
+			// If this is a new moderation report data, set the $report_id property.
+			if ( empty( $this->report_id ) ) {
+				$this->report_id = $wpdb->insert_id;
+			}
 
-		if ( ! empty( $email_notification ) ) {
-			$this->send_emails();
+			if ( ! empty( $email_notification ) ) {
+				$this->send_emails();
+			}
 		}
 
 		/**
@@ -1134,10 +1130,11 @@ class BP_Moderation {
 		global $wpdb;
 		$bp = buddypress();
 
+		$updated_row   = false;
 		$delete_parent = $force_all;
 
 		if ( ! empty( $this->report_id ) ) {
-			$this->delete_report( $force_all );
+			$updated_row = $this->delete_report( $force_all );
 
 			if ( 1 >= $this->count ) {
 				$delete_parent = true;
