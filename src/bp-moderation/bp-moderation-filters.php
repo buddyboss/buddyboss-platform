@@ -287,7 +287,7 @@ add_action( 'wp_footer', 'bb_moderation_content_report_popup' );
 function bp_moderation_block_user_profile_button( $buttons ) {
 
 	if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
-		$buttons['member_report'] = __( 'BLock', 'buddyboss' );
+		$buttons['member_report'] = __( 'Block', 'buddyboss' );
 	}
 
 	return $buttons;
