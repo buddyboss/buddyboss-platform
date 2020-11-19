@@ -66,10 +66,10 @@ function bp_nouveau_search_enqueue_scripts() {
 
 	if ( bp_is_active( 'forums' ) ) {
 		$data['forums_autocomplete'] = (
-			bp_is_search_post_type_enable( 'forum' ) ||
-			bp_is_search_post_type_enable( 'topic' ) ||
-			bp_is_search_post_type_taxonomy_enable( bbpress()->topic_tag_tax_id, 'topic' ) ||
-			bp_is_search_post_type_enable( 'reply' )
+			bp_is_search_post_type_enable( bbp_get_forum_post_type() ) ||
+			bp_is_search_post_type_enable( bbp_get_topic_post_type() ) ||
+			bp_is_search_post_type_taxonomy_enable( bbpress()->topic_tag_tax_id, bbp_get_topic_post_type() ) ||
+			bp_is_search_post_type_enable( bbp_get_reply_post_type() )
 		);
 	}
 
