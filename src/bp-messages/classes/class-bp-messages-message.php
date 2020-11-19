@@ -160,6 +160,7 @@ class BP_Messages_Message {
 					'fields'   => 'thread_ids',
 					'per_page' => 1,
 					'page'     => 1,
+					'orderby'  => 'id',
 				)
 			);
 			$this->thread_id = ( isset( $max_thread['messages'][0] ) && is_numeric( $max_thread['messages'][0] ) ) ? (int) $max_thread['messages'][0] + 1 : 1;
@@ -301,6 +302,7 @@ class BP_Messages_Message {
 				'include_threads' => array( $thread_id ),
 				'page'            => 1,
 				'per_page'        => 1,
+				'orderby'         => 'date_sent',
 			)
 		);
 
@@ -323,6 +325,7 @@ class BP_Messages_Message {
 				'fields'  => 'ids',
 				'user_id' => $user_id,
 				'include' => array( $message_id ),
+				'orderby' => 'id',
 			)
 		);
 
@@ -815,6 +818,9 @@ class BP_Messages_Message {
 		$order_by_term = '';
 
 		switch ( $orderby ) {
+			case 'id':
+				$order_by_term = 'm.id';
+				break;
 			case 'date_sent':
 			default:
 				$order_by_term = 'm.date_sent';
