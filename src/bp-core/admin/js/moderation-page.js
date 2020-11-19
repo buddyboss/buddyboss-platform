@@ -1,6 +1,6 @@
 /* global Bp_Moderation */
 jQuery(document).ready(function ($) {
-	$(document).on('click', '.bp-hide-request, .bp-block-user', function () {
+	$(document).on('click', '.bp-hide-request, .bp-block-user', function ( event ) {
 		event.preventDefault();
 		if (!confirm(Bp_Moderation.strings.confirm_msg)) {
 			return false;
@@ -42,11 +42,7 @@ jQuery(document).ready(function ($) {
 							curObj.text(Bp_Moderation.strings.unhide_label);
 						}
 					}
-					if ('user' === type) {
-						var hideArg = 'suspended';
-					} else {
-						var hideArg = 'hidden';
-					}
+					hideArg = ('user' === type) ? 'suspended' : 'hidden';
 				} else if ('unhide' === sub_action) {
 					curObj.attr('data-action', 'hide');
 					curObj.attr('title', Bp_Moderation.strings.hide_label);
@@ -63,11 +59,7 @@ jQuery(document).ready(function ($) {
 							curObj.text(Bp_Moderation.strings.unhide_label);
 						}
 					}
-					if ('user' === type) {
-						var hideArg = 'unsuspended';
-					} else {
-						var hideArg = 'unhide';
-					}
+					hideArg = ('user' === type) ? 'unsuspended' : 'unhide';
 				}
 
 				if (url.indexOf('?') > -1) {

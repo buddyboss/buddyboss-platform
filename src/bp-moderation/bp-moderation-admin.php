@@ -415,7 +415,7 @@ function bp_moderation_admin_index() {
 
 	$messages = array();
 
-	// If the user has just made a change to an activity item, build status messages.
+	// If the user has just made a change to an Reported item, build status messages.
 	if ( ! empty( $_REQUEST['hidden'] ) || ! empty( $_REQUEST['unhide'] ) || ! empty( $_REQUEST['suspended'] ) || ! empty( $_REQUEST['unsuspended'] ) ) {
 		$hidden         = ! empty( $_REQUEST['hidden'] ) ? (int) $_REQUEST['hidden'] : 0;
 		$unhide         = ! empty( $_REQUEST['unhide'] ) ? (int) $_REQUEST['unhide'] : 0;
