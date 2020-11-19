@@ -58,7 +58,20 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.5.5 =
-* 
+* Groups - Fixed group message media shows in the photos tab
+* Groups - Fixed group message private bcc thread bug
+* Forums - Fixed GIPHY button alignment issue in discussions
+* Activity - Added 'Relevant Activity' support
+* Activity - Improved Edit Activity popup layout
+* Activity - Improved 'read more' link logic for blog posts activity
+* Media - Fixed create album title becomes empty on a validation error message
+* Media - Improved GIPHY media logic to render from GIPHY server
+* Media - Fixed download issue with signed media
+* Network Search - Media search results layout issues fixed
+* Email Invites - Fixed recipients profile type not assigned issue
+* REST API - Fixed media API privacy issue
+* REST API - Fixed API issues in media and activity
+* WPML - Fixed private network enabled public content issue
 
 = 1.5.4 =
 * Profiles - Improved Profile completion module caching logic
