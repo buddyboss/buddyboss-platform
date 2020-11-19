@@ -14,9 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * If there is no raw DB version, we infer that this is the first installation.
  *
- * @since BuddyPress 1.7.0
- *
  * @return bool True if this is a fresh BP install, otherwise false.
+ * @since BuddyPress 1.7.0
  */
 function bp_is_install() {
 	return ! bp_get_db_version_raw();
@@ -29,9 +28,8 @@ function bp_is_install() {
  * number stored in the database. If the registered version is greater, it's
  * an update.
  *
- * @since BuddyPress 1.6.0
- *
  * @return bool True if update, otherwise false.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_update() {
 
@@ -49,10 +47,10 @@ function bp_is_update() {
 /**
  * Determine whether BuddyPress is in the process of being activated.
  *
- * @since BuddyPress 1.6.0
- *
  * @param string $basename BuddyPress basename.
+ *
  * @return bool True if activating BuddyPress, false if not.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_activation( $basename = '' ) {
 	$bp     = buddypress();
@@ -93,10 +91,10 @@ function bp_is_activation( $basename = '' ) {
 /**
  * Determine whether BuddyPress is in the process of being deactivated.
  *
- * @since BuddyPress 1.6.0
- *
  * @param string $basename BuddyPress basename.
+ *
  * @return bool True if deactivating BuddyPress, false if not.
+ * @since BuddyPress 1.6.0
  */
 function bp_is_deactivation( $basename = '' ) {
 	$bp     = buddypress();
@@ -178,9 +176,9 @@ function bp_version_updater() {
 	/**
 	 * Filters the default components to activate for a new install.
 	 *
-	 * @since BuddyPress 1.7.0
-	 *
 	 * @param array $value Array of default components to activate.
+	 *
+	 * @since BuddyPress 1.7.0
 	 */
 	$default_components = apply_filters(
 		'bp_new_install_default_components',
@@ -316,6 +314,10 @@ function bp_version_updater() {
 
 		if ( $raw_db_version < 16201 ) {
 			bp_update_to_1_5_1();
+		}
+
+		if ( $raw_db_version < 16401 ) {
+			bb_update_to_1_5_5();
 		}
 	}
 
@@ -632,13 +634,13 @@ function bp_update_to_1_4_0() {
  */
 function bp_update_to_1_4_3() {
 	global $wpdb;
-	$bp = buddypress();
-	$squery = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
+	$bp      = buddypress();
+	$squery  = "SELECT GROUP_CONCAT( pm.meta_value ) as media_id FROM {$wpdb->posts} p, {$wpdb->postmeta} pm WHERE p.ID = pm.post_id and p.post_type in ( 'forum', 'topic', 'reply' ) and pm.meta_key = 'bp_media_ids' and pm.meta_value != ''";
 	$records = $wpdb->get_col( $squery );
 	if ( ! empty( $records ) && bp_is_active( 'media' ) ) {
 		$records = reset( $records );
-		if ( !empty( $records ) ) {
-			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ")";
+		if ( ! empty( $records ) ) {
+			$update_query = "UPDATE {$bp->media->table_name} SET `privacy`= 'forums' WHERE id in (" . $records . ')';
 			$wpdb->query( $update_query );
 		}
 	}
@@ -659,42 +661,39 @@ function bp_update_to_1_5_1() {
 
 function bp_update_default_doc_extensions() {
 
-	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
+	$get_extensions = bp_get_option( 'bp_document_extensions_support', array() );
 
-//	$changed_array = array(
-//		'bb_doc_52'   => array(
-//			'description' => '7z Archive XYZ',
-//		)
-//	);
-//
-//
-//	if ( !empty( $changed_array ) ) {
-//		foreach ( $changed_array as $k => $v ) {
-//			if ( array_key_exists( $k, $get_extensions ) ) {
-//				$extension = $get_extensions[$k];
-//				$get_extensions[$k] = array_replace( $extension, $v );
-//			} else {
-//				// For newly add key.
-//				$get_extensions[$k] = $v;
-//			}
-//		}
-//	}
-//
-//	$removed_array = array(
-//		'bb_doc_51'
-//	);
-//
-//	if ( !empty( $removed_array ) ) {
-//		foreach (  $removed_array as $key ) {
-//			unset( $get_extensions[$key] );
-//		}
-//
-//	}
+	// $changed_array = array(
+	// 'bb_doc_52'   => array(
+	// 'description' => '7z Archive XYZ',
+	// )
+	// );
+	//
+	//
+	// if ( !empty( $changed_array ) ) {
+	// foreach ( $changed_array as $k => $v ) {
+	// if ( array_key_exists( $k, $get_extensions ) ) {
+	// $extension = $get_extensions[$k];
+	// $get_extensions[$k] = array_replace( $extension, $v );
+	// } else {
+	// For newly add key.
+	// $get_extensions[$k] = $v;
+	// }
+	// }
+	// }
+	//
+	// $removed_array = array(
+	// 'bb_doc_51'
+	// );
+	//
+	// if ( !empty( $removed_array ) ) {
+	// foreach (  $removed_array as $key ) {
+	// unset( $get_extensions[$key] );
+	// }
+	//
+	// }
 
-
-
-	//bp_update_option( 'bp_document_extensions_support', $get_extensions );
-
+	// bp_update_option( 'bp_document_extensions_support', $get_extensions );
 }
 
 
@@ -722,8 +721,7 @@ function bp_migrate_new_member_activity_component() {
 	$bp = buddypress();
 
 	// Update the component for the new_member type.
-	$wpdb->update(
-		// Activity table.
+	$wpdb->update( // Activity table.
 		$bp->members->table_name_last_activity,
 		array(
 			'component' => $bp->members->id,
@@ -890,7 +888,7 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug    = get_page_uri( $page_id );
+				$slug = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
 				bp_update_option( '_bbp_root_slug', $slug );
@@ -924,7 +922,11 @@ function bp_add_activation_redirect() {
  */
 function bp_platform_plugin_updater() {
 	if ( class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
+		new BP_BuddyBoss_Platform_Updater(
+			'https://update.buddyboss.com/plugin',
+			basename( BP_PLUGIN_DIR ) . '/bp-loader.php',
+			847
+		);
 	}
 }
 
@@ -1101,7 +1103,6 @@ function bp_update_to_1_3_0() {
  *
  * - Create the invitations table.
  * - Migrate requests and invitations to the new table.
- *
  */
 function bb_update_to_1_3_5() {
 	bp_core_install_invitations();
