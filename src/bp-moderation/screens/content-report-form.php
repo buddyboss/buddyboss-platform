@@ -53,16 +53,14 @@
                     <input type="radio" id="report-category-other" name="report_category"
                            value="other">
 					<?php esc_html_e( 'Other', 'buddyboss' ); ?>
-                </label>
-            </div>
-            <div class="form-item">
-                <label for="report-note">
-                    <textarea id="report-note" type="text" name="note" class="bp-other-report-cat bb-hide"></textarea>
-                </label>
-            </div>
-            <div class="form-item">
-                <input type="button" class="bb-cancel-report-content"
-                       value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
+				</label>
+			</div>
+			<div class="form-item bp-hide">
+				<label for="report-note">
+					<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
+			</div>
+			<div class="form-item">
+				<input type="button" class="bb-cancel-report-content" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
                 <input type="submit" value="<?php esc_attr_e( 'Send Report', 'buddyboss' ); ?>" class="report-submit"/>
                 <input type="hidden" name="content_id" class="bp-content-id"/>
                 <input type="hidden" name="content_type" class="bp-content-type"/>

@@ -1798,9 +1798,9 @@ window.bp = window.bp || {};
 			});
 			$(document).on('click', 'input[type=radio][name=report_category]', function () {
 				if ('other' === this.value) {
-					$('.bp-other-report-cat').show();
+					$('.bp-other-report-cat').parent().closest('.form-item').removeClass('bp-hide');
 				} else {
-					$('.bp-other-report-cat').hide();
+					$('.bp-other-report-cat').parent().closest('.form-item').addClass('bp-hide');
 				}
 			});
 
