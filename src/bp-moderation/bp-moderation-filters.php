@@ -128,14 +128,12 @@ function bp_moderation_block_member() {
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_add(
-			array(
-				'content_id'   => $item_id,
-				'content_type' => $item_type,
-				'category_id'  => 0,
-				'note'         => '',
-			)
-		);
+		$moderation = bp_moderation_add( array(
+			'content_id'   => $item_id,
+			'content_type' => $item_type,
+			'category_id'  => 0,
+			'note'         => esc_html__( 'Member block', 'buddyboss' ),
+		) );
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['success']    = true;
