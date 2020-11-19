@@ -52,7 +52,7 @@ jQuery( document ).ready(
 							);
 
 							// transform other emoji into emojionearea emoji.
-							jQuery(dummy_element).find( 'img.emoji, img[data-emoji-char]' ).each(function( index, Obj) {
+							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
 								var emojis = jQuery( Obj ).attr( 'alt' );
 								jQuery( Obj ).attr( 'data-emoji-char', emojis );
@@ -135,7 +135,7 @@ jQuery( document ).ready(
 							);
 
 							// transform other emoji into emojionearea emoji.
-							jQuery(dummy_element).find( 'img.emoji, img[data-emoji-char]' ).each(function( index, Obj) {
+							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
 								var emojis = jQuery( Obj ).attr( 'alt' );
 								jQuery( Obj ).attr( 'data-emoji-char', emojis );
@@ -220,7 +220,7 @@ jQuery( document ).ready(
 							);
 
 							// transform other emoji into emojionearea emoji.
-							jQuery(dummy_element).find( 'img.emoji, img[data-emoji-char]' ).each(function( index, Obj) {
+							jQuery(dummy_element).find( 'img.emoji' ).each(function( index, Obj) {
 								jQuery( Obj ).addClass( 'emojioneemoji' );
 								var emojis = jQuery( Obj ).attr( 'alt' );
 								jQuery( Obj ).attr( 'data-emoji-char', emojis );
