@@ -40,13 +40,15 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
 					<?php if ( bp_is_active( 'media' ) ) : ?>
 
-                        <div class="post-elements-buttons-item post-media media-support">
-                            <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
-								<i class="bb-icon bb-icon-camera-small"></i>
-                            </a>
-                        </div>
+					    <?php if ( bp_user_can_create_media()  ): ?>
+                            <div class="post-elements-buttons-item post-media media-support">
+                                <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+                                    <i class="bb-icon bb-icon-camera-small"></i>
+                                </a>
+                            </div>
+						<?php endif; ?>
 
-						<?php if ( bp_is_active( 'media' ) ): ?>
+						<?php if ( bp_user_can_create_document()  ): ?>
 							<div class="post-elements-buttons-item post-media document-support">
 								<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Attach a document', 'buddyboss'); ?>" data-ac-id="<?php bp_activity_id(); ?>">
 									<i class="bb-icon bb-icon-attach"></i>
