@@ -169,15 +169,23 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_id activity id.
+	 * @param int  $activity_id activity id.
+	 * @param bool $view_link   add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $activity_id ) {
-		$activity = new BP_Activity_Activity( $activity_id );
-		$link     = '<a href="' . esc_url( self::get_permalink( (int) $activity_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
+	public static function get_content_excerpt( $activity_id, $view_link ) {
+		$activity         = new BP_Activity_Activity( $activity_id );
+		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : '';
 
-		return ( ! empty( $activity->content ) ) ? $activity->content . ' ' .  $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $activity_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$activity_content = ( ! empty( $activity_content ) ) ? $activity_content . ' ' . $link : $link;
+		}
+
+		return $activity_content;
 	}
 
 	/**
@@ -194,8 +202,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
-
-
 
 	/**
 	 * Report content

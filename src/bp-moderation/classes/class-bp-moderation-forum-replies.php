@@ -75,15 +75,21 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $reply_id Reply id.
+	 * @param integer $reply_id  Reply id.
+	 * @param bool    $view_link add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $reply_id ) {
+	public static function get_content_excerpt( $reply_id, $view_link ) {
 		$reply_content = get_post_field( 'post_content', $reply_id );
-		$link          = '<a href="' . esc_url( self::get_permalink( (int) $reply_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $reply_content ) ) ? $reply_content . ' ' . $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $reply_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+			$reply_content = ( ! empty( $reply_content ) ) ? $reply_content . ' ' . $link : $link;
+		}
+
+		return ( ! empty( $reply_content ) ) ? $reply_content : '';
 	}
 
 	/**

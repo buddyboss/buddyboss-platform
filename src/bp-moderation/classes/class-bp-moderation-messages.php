@@ -112,14 +112,22 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $message_id User id.
+	 * @param bool    $view_link  add view link.
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $message_id ) {
-		$message = new BP_Messages_Message( $message_id );
-		$link    = '<a href="' . esc_url( self::get_permalink( (int) $message_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
+	public static function get_content_excerpt( $message_id, $view_link ) {
+		$message         = new BP_Messages_Message( $message_id );
+		$message_content = ( ! empty( $message->message ) ) ? $message->message : '';
 
-		return ( ! empty( $message->message ) ) ? $message->message . ' ' . $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $message_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$message_content = ( ! empty( $message_content ) ) ? $message_content . ' ' . $link : $link;
+		}
+
+		return $message_content;
 	}
 
 	/**

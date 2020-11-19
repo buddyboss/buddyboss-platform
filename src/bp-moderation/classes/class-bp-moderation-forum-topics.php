@@ -103,15 +103,22 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $topic_id Topic id.
+	 * @param integer $topic_id  Topic id.
+	 * @param bool    $view_link add view link.
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $topic_id ) {
+	public static function get_content_excerpt( $topic_id, $view_link ) {
 		$topic_content = get_post_field( 'post_content', $topic_id );
-		$link          = '<a href="' . esc_url( self::get_permalink( (int) $topic_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $topic_content ) ) ? $topic_content . ' ' . $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $topic_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$topic_content = ( ! empty( $topic_content ) ) ? $topic_content . ' ' . $link : $link;
+		}
+
+		return ( ! empty( $topic_content ) ) ? $topic_content : '';
 	}
 
 	/**
