@@ -1431,17 +1431,18 @@ add_action( 'add_meta_boxes_' . bp_get_email_post_type(), 'bp_email_custom_metab
  */
 function bp_email_plaintext_metabox( $post ) {
 	?>
-
+	<!-- accesslint:ignore -->
     <label class="screen-reader-text" for="excerpt">
 		<?php
 		/* translators: accessibility text */
 		_e( 'Plain text email content', 'buddyboss' );
 		?>
-    </label><textarea rows="5" cols="40" name="excerpt"
+    </label>
+	<textarea rows="5" cols="40" name="excerpt"
                       id="excerpt"><?php echo $post->post_excerpt; // textarea_escaped ?></textarea>
 
     <p><?php _e( 'Most email clients support HTML email. However, some people prefer to receive plain text email. Enter a plain text alternative version of your email here.', 'buddyboss' ); ?></p>
-
+	<!-- accesslint:endignore -->
 	<?php
 }
 
@@ -1682,7 +1683,7 @@ function bp_member_type_labels_metabox( $post ) {
 	$label_name          = isset( $meta['_bp_member_type_label_name'] ) ? $meta['_bp_member_type_label_name'][0] : '';
 	$label_singular_name = isset( $meta['_bp_member_type_label_singular_name'] ) ? $meta['_bp_member_type_label_singular_name'][0] : '';
 	?>
-
+	<!-- accesslint:ignore -->
     <table class="widefat bp-postbox-table">
         <thead>
         <tr>
@@ -1714,6 +1715,7 @@ function bp_member_type_labels_metabox( $post ) {
         </tr>
         </tbody>
     </table>
+	<!-- accesslint:endignore -->
 	<?php wp_nonce_field( 'bp-member-type-edit-member-type', '_bp-member-type-nonce' ); ?>
 
 	<?php
@@ -1735,7 +1737,7 @@ function bp_member_type_permissions_metabox( $post ) {
 	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default
 	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default
 	?>
-
+	<!-- accesslint:ignore -->
     <table class="widefat bp-postbox-table">
         <thead>
         <tr>
@@ -1795,7 +1797,7 @@ function bp_member_type_permissions_metabox( $post ) {
         </tr>
         </tbody>
     </table>
-
+	<!-- accesslint:endignore -->
 	<?php
 	if ( bp_is_active( 'groups' ) && false === bp_restrict_group_creation() ) {
 		$get_all_registered_group_types = bp_get_active_group_types();
@@ -1803,6 +1805,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
 			// When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
 			?>
+			<!-- accesslint:ignore -->
             <table class="widefat bp-postbox-table">
                 <thead>
                 <tr>
@@ -1907,6 +1910,7 @@ function bp_member_type_permissions_metabox( $post ) {
 					} );
 				} );
             </script>
+			<!-- accesslint:endignore -->
 			<?php
 		}
 	}
@@ -1918,6 +1922,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
 			?>
+			<!-- accesslint:ignore -->
             <table class="widefat bp-postbox-table">
                 <thead>
                 <tr>
@@ -1955,6 +1960,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
                 </tbody>
             </table>
+			<!-- accesslint:endignore -->
 			<?php
 		}
 	}
@@ -1965,7 +1971,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		// Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
 		$enable_invite = isset( $meta['_bp_member_type_enable_invite'] ) ? $meta['_bp_member_type_enable_invite'][0] : 1; // enabled by default
 		?>
-
+		<!-- accesslint:ignore -->
         <table class="widefat bp-postbox-table">
             <thead>
             <tr>
@@ -2004,7 +2010,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
             </tbody>
         </table>
-
+		<!-- accesslint:endignore -->
 		<?php
 
 	}
@@ -2022,12 +2028,12 @@ function bp_profile_shortcode_metabox( $post ) {
 	$key = bp_get_member_type_key( $post->ID );
 
 	?>
-
+	<!-- accesslint:ignore -->
     <p><?php _e( 'To display all users with this profile type on a dedicated page, add the below shortcode to any WordPress page.', 'buddyboss' ); ?></p>
     <code id="member-type-shortcode"><?php echo '[profile type="' . $key . '"]'; ?></code>
     <button class="copy-to-clipboard button"
             data-clipboard-target="#member-type-shortcode"><?php _e( 'Copy to clipboard', 'buddyboss' ); ?></button>
-
+	<!-- accesslint:endignore -->
 	<?php
 }
 
