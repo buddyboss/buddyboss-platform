@@ -209,12 +209,12 @@ jQuery(document).ready(function($) {
 			/**
 			 * Close the suggestion box when the page scrolls
 			 */
-			window.addEventListener( 'scroll', function () {
+			/*window.addEventListener( 'scroll', function () {
 				var arrayLength = autoCompleteObjects.length;
 				for ( var i = 0; i < arrayLength; i ++ ) {
 					autoCompleteObjects[i].autocomplete( 'close' );
 				}
-			} );
+			} );*/
 		}
 	}
 	initAutoComplete();
