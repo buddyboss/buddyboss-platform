@@ -55,6 +55,9 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		// Blocked template
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+
+		// delete reply moderation data when actual reply deleted.
+		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
 	}
 
 	/**
@@ -342,8 +345,7 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 					'update_post_meta_cache' => false,
 					'update_post_term_cache' => false,
 					'suppress_filters'       => true,
-				)
-			);
+				) );
 
 			if ( $replies_query->have_posts() ) {
 				$hidden_reply_ids = array_merge( $hidden_reply_ids, $replies_query->posts );
@@ -351,5 +353,22 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		}
 
 		return $hidden_reply_ids;
+	}
+
+	/**
+	 * Function to delete reply moderation data when actual reply is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $post_id post id being deleted.
+	 * @param object $post    post data.
+	 */
+	public function delete_moderation_data( $post_id, $post ) {
+		if ( ! empty( $post_id ) && ! empty( $post ) && bbp_get_reply_post_type() === $post->post_type ) {
+			$moderation_obj = new BP_Moderation( $post_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }

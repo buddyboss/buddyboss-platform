@@ -46,6 +46,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+
+		// Delete group moderation data when group is deleted.
+		add_action( 'groups_delete_group', array( $this, 'delete_moderation_data' ), 10 );
 	}
 
 	/**
@@ -210,5 +213,21 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to delete group moderation data when actual group is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id group if
+	 */
+	public function delete_moderation_data( $group_id ) {
+		if ( ! empty( $group_id ) ) {
+			$moderation_obj = new BP_Moderation( $group_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }

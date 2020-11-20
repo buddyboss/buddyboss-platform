@@ -49,6 +49,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_forum_topic_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_topic_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+
+		// delete topic moderation data when actual topic deleted.
+		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
 	}
 
 	/**
@@ -291,5 +294,22 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to delete topic moderation data when actual topic is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $post_id post id being deleted.
+	 * @param object $post    post data.
+	 */
+	public function delete_moderation_data( $post_id, $post ) {
+		if ( ! empty( $post_id ) && ! empty( $post ) && bbp_get_topic_post_type() === $post->post_type ) {
+			$moderation_obj = new BP_Moderation( $post_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }

@@ -51,7 +51,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
 
 		// Delete activity moderation data when actual activity get deleted.
-		add_action( 'bp_activity_deleted_activities', array( $this, 'delete_ativity_moderation_data' ), 10 );
+		add_action( 'bp_activity_deleted_activities', array( $this, 'delete_moderation_data' ), 10 );
 	}
 
 	/**
@@ -376,13 +376,13 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array $activity_ids_deleted activity ids array.
+	 * @param array $activity_deleted_ids activity ids array.
 	 */
-	public function delete_ativity_moderation_data( $activity_ids_deleted ) {
+	public function delete_moderation_data( $activity_deleted_ids ) {
 
-		if ( ! empty( $activity_ids_deleted ) && is_array( $activity_ids_deleted ) ) {
-			foreach ( $activity_ids_deleted as $activity_id_deleted ) {
-				$moderation_obj = new BP_Moderation( $activity_id_deleted, self::$moderation_type );
+		if ( ! empty( $activity_deleted_ids ) && is_array( $activity_deleted_ids ) ) {
+			foreach ( $activity_deleted_ids as $activity_deleted_id ) {
+				$moderation_obj = new BP_Moderation( $activity_deleted_id, self::$moderation_type );
 				if ( ! empty( $moderation_obj->id ) ) {
 					$moderation_obj->delete( true );
 				}

@@ -49,6 +49,9 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Blocked template
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+
+		// Delete comment moderation data when actual comment is deleted.
+		add_action( 'bp_activity_delete_comment', array( $this, 'delete_moderation_data' ), 10, 2 );
 	}
 
 	/**
@@ -295,9 +298,27 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$hidden_activity_comments_ids = self::get_sitewide_activity_comments_hidden_ids();
 		if ( ! empty( $hidden_activity_comments_ids ) ) {
-			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids, $hidden_activity_comments_ids );
+			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids,
+				$hidden_activity_comments_ids );
 		}
 
 		return $hidden_all_activity_comment_ids;
+	}
+
+	/**
+	 * Function to delete comment data on deleting the actual comment
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $activity_id activity id.
+	 * @param int $comment_id  comment id.
+	 */
+	public function delete_moderation_data( $activity_id, $comment_id ) {
+		if ( ! empty( $comment_id ) ) {
+			$moderation_obj = new BP_Moderation( $comment_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }
