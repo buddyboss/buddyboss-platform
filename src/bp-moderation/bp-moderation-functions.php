@@ -415,19 +415,32 @@ function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = 
  * @return bool
  */
 function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
-	$moderation_obj = new BP_Moderation( $item_id, $item_type );
+	$moderation_obj                = new BP_Moderation( $item_id, $item_type );
+	$moderation_obj->hide_sitewide = ( 'hide' === $action ) ? 1 : 0;
 
-	if ( 'hide' === $action ) {
-		$moderation_obj->hide_sitewide = 1;
-	} elseif ( 'unhide' === $action ) {
-		$moderation_obj->hide_sitewide = 0;
-	}
+	/**
+	 * if action is unhide and Content report by current user then delete report entry otherwise update `hide_sitewide` status.
+	 */
+	$result = ( 'unhide' === $action && ! empty( $moderation_obj->report_id ) ) ? $moderation_obj->delete() : $moderation_obj->store();
 
-	if ( 'unhide' === $action && ! empty( $moderation_obj->report_id ) ) {
-		$result = $moderation_obj->delete();
+	/**
+	 * Update moderation meta to track who hide particular content.
+	 */
+	if ( 'unhide' === $action ) {
+		bp_moderation_delete_meta( $moderation_obj->id, '_hide_by');
 	} else {
-		$result = $moderation_obj->save();
+		bp_moderation_update_meta( $moderation_obj->id, '_hide_by', get_current_user_id() );
 	}
+
+	/**
+	 * Fires after an moderation report item has been hide/unhide
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param BP_Moderation $moderation_obj Current instance of moderation item being saved. Passed by reference.
+	 * @param string        $action         hide/unhide.
+	 */
+	do_action( 'bp_moderation_after_hide_unhide', $moderation_obj, $action );
 
 	return $result;
 }
