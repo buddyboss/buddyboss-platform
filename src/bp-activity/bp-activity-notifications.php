@@ -90,18 +90,9 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			break;
 
 		case 'mark_activity_favorite':
-			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity comment reply', 'buddyboss' );
 			$amount = 'single';
-
-			if ( (int) $total_items > 1 ) {
-				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
-				$amount = 'multiple';
-			} else {
-				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
-			}
+			$link =  bp_activity_get_permalink( $activity_id );
+			$text = sprintf( __( '%1$s likes your post', 'buddyboss' ), $user_fullname );
 			break;
 	}
 
@@ -201,6 +192,13 @@ function bp_activity_at_mention_add_notification( $activity, $subject, $message,
 }
 add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notification', 10, 5 );
 
+/**
+ * Notify a member when someone like their post / activity.
+ *
+ * @since BuddyBoss 1.5.6
+ *
+ * @param object $activity           Activity object.
+ */
 
 function bp_activity_like_add_notification( $activity ) {
 	bp_notifications_add_notification(
