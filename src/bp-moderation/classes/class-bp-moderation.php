@@ -310,6 +310,7 @@ class BP_Moderation {
 		// Get Moderation settings.
 		$threshold          = false;
 		$email_notification = false;
+		$auto_hide = false;
 
 		if ( BP_Moderation_Members::$moderation_type === $this->item_type && bp_is_moderation_auto_suspend_enable() ) {
 			$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
@@ -328,7 +329,7 @@ class BP_Moderation {
 		/**
 		 * IF any new Content reported then do some required actions
 		 */
-		if ( empty( $this->report_id ) && ( ! empty( $this->content ) || ! empty( $this->category_id ) ) ) {
+		if ( empty( $this->report_id ) ) {
 
 			// Update last update time as new reported added.
 			$this->last_updated = current_time( 'mysql' );
@@ -339,12 +340,56 @@ class BP_Moderation {
 			if ( ! empty( $threshold ) ) {
 				if ( $this->count >= $threshold && empty( $this->hide_sitewide ) ) {
 					$this->hide_sitewide = 1;
-					bp_moderation_update_meta( $this->id, '_auto_hide', 1 );
-				} else {
-					$email_notification = false;
+					$auto_hide = true;
 				}
 			}
 		}
+
+		/**
+		 * Manage Moderation report
+		 */
+		$result = $this->store();
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		/**
+		 * Manage Moderation reporter data
+		 */
+
+		$result = $this->store_report();
+		if ( empty( $result ) ) {
+			return false;
+		}
+
+		if ( $auto_hide ) {
+			bp_moderation_update_meta( $this->id, '_auto_hide', 1 );
+			if ( ! empty( $email_notification ) ) {
+				$this->send_emails();
+			}
+		}
+
+		/**
+		 * Fires after an moderation report item has been saved to the database.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 *
+		 * @param BP_Moderation $this Current instance of moderation item being saved. Passed by reference.
+		 */
+		do_action_ref_array( 'bp_moderation_after_save', array( &$this ) );
+
+		return true;
+	}
+
+	/**
+	 * Store Moderation entry
+	 *
+	 * @return bool
+	 */
+	public function store() {
+		global $wpdb;
+
+		$bp = buddypress();
 
 		// If we have an existing ID, update the moderation report item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
@@ -362,40 +407,35 @@ class BP_Moderation {
 			$this->id = $wpdb->insert_id;
 		}
 
-		/**
-		 * Manage Moderation reporter data
-		 */
-		if ( ( ! empty( $this->content ) || ! empty( $this->category_id ) ) ) {
-			if ( ! empty( $this->report_id ) ) {
-				$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
-			} else {
-				$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id ); // phpcs:ignore
+		return true;
+	}
 
-				bp_moderation_update_meta( $this->id, '_count', $this->count );
-			}
+	/**
+	 * Store Moderation report entry
+	 *
+	 * @return false
+	 */
+	public function store_report() {
+		global $wpdb;
 
-			if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
-				return false;
-			}
+		$bp = buddypress();
 
-			// If this is a new moderation report data, set the $report_id property.
-			if ( empty( $this->report_id ) ) {
-				$this->report_id = $wpdb->insert_id;
-			}
+		if ( ! empty( $this->report_id ) ) {
+			$q_report = $wpdb->prepare( "UPDATE {$bp->moderation->table_name_reports} SET content = %s, date_created = %s, category_id = %d WHERE id = %d AND moderation_id = %d AND user_id = %d ", $this->content, $this->date_created, $this->category_id, $this->report_id, $this->id, $this->user_id ); // phpcs:ignore
+		} else {
+			$q_report = $wpdb->prepare( "INSERT INTO {$bp->moderation->table_name_reports} ( moderation_id, user_id, content, date_created, category_id ) VALUES ( %d, %d, %s, %s, %d )", $this->id, $this->user_id, $this->content, $this->date_created, $this->category_id ); // phpcs:ignore
 
-			if ( ! empty( $email_notification ) ) {
-				$this->send_emails();
-			}
+			bp_moderation_update_meta( $this->id, '_count', $this->count );
 		}
 
-		/**
-		 * Fires after an moderation report item has been saved to the database.
-		 *
-		 * @since BuddyBoss 2.0.0
-		 *
-		 * @param BP_Moderation $this Current instance of moderation item being saved. Passed by reference.
-		 */
-		do_action_ref_array( 'bp_moderation_after_save', array( &$this ) );
+		if ( false === $wpdb->query( $q_report ) ) { // phpcs:ignore
+			return false;
+		}
+
+		// If this is a new moderation report data, set the $report_id property.
+		if ( empty( $this->report_id ) ) {
+			$this->report_id = $wpdb->insert_id;
+		}
 
 		return true;
 	}
