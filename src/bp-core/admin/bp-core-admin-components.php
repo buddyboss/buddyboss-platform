@@ -501,7 +501,7 @@ function bp_core_admin_components_settings_handler() {
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			$slug    = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
 
@@ -611,7 +611,7 @@ function bp_core_admin_components_activation_handler() {
 
 			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
 			$slug    = get_page_uri( $page_id );
-			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( '_bbp_root_slug', urldecode( $slug ) );
 		}
 	}
 
