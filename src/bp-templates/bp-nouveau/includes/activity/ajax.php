@@ -132,6 +132,9 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 			}
 		}
 
+		$activity     = new BP_Activity_Activity( $_POST['id'] );
+		bp_activity_like_add_notification( $activity );
+
 		wp_send_json_success( $response );
 	} else {
 		wp_send_json_error();
