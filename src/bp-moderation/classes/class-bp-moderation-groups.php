@@ -84,7 +84,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $group_id, $view_link ) {
+	public static function get_content_excerpt( $group_id, $view_link = false ) {
 		$group             = new BP_Groups_Group( $group_id );
 		$group_description = ( ! empty( $group->description ) ) ? $group->description : '';
 

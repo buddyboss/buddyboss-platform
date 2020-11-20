@@ -173,7 +173,7 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $activity_id, $view_link ) {
+	public static function get_content_excerpt( $activity_id, $view_link = false ) {
 		$activity = new BP_Activity_Activity( $activity_id );
 
 		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : $activity->action;

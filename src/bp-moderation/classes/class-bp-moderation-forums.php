@@ -85,7 +85,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $forum_id, $view_link ) {
+	public static function get_content_excerpt( $forum_id, $view_link = false ) {
 		$forum_content = get_post_field( 'post_content', $forum_id );
 
 		if ( true === $view_link ) {

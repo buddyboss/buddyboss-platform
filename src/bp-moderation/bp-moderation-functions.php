@@ -207,7 +207,7 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  *
  * @return string
  */
-function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type, $view_link ) {
+function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type, $view_link = false ) {
 
 	$content_excerpt = '';
 	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );

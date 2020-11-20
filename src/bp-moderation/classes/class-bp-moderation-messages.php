@@ -116,7 +116,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $message_id, $view_link ) {
+	public static function get_content_excerpt( $message_id, $view_link = false ) {
 		$message         = new BP_Messages_Message( $message_id );
 		$message_content = ( ! empty( $message->message ) ) ? $message->message : '';
 

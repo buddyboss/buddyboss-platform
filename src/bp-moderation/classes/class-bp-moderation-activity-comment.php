@@ -71,12 +71,12 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_comment_id activity id.
-	 * @param bool $view_link   add view link
+	 * @param int  $activity_comment_id activity id.
+	 * @param bool $view_link           add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $activity_comment_id, $view_link ) {
+	public static function get_content_excerpt( $activity_comment_id, $view_link = false ) {
 		$activity = new BP_Activity_Activity( $activity_comment_id );
 
 		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : '';
