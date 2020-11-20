@@ -1176,22 +1176,21 @@ class BP_Moderation {
 		if ( ! empty( $this->report_id ) ) {
 			$updated_row = $this->delete_report( $force_all );
 
-			if ( 1 >= $this->count ) {
+			if ( 1 > $this->count ) {
 				$delete_parent = true;
 			}
 		}
 
 		if ( $delete_parent ) {
 			$updated_row = $wpdb->delete( $bp->moderation->table_name, array( 'id' => $this->id ) ); // phpcs:ignore
-			$this->count -= 1;
-			bp_moderation_update_meta( $this->id, '_count', $this->count );
+			$this->delete_meta();
 		}
 
 		return ! empty( $updated_row );
 	}
 
 	/**
-	 * Function to delete Moderation.
+	 * Function to delete Moderation report.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
@@ -1210,6 +1209,28 @@ class BP_Moderation {
 		}
 
 		$updated_row = $wpdb->delete( $bp->moderation->table_name_reports, $args ); // phpcs:ignore
+
+		$this->count -= 1;
+		if ( ! empty( $updated_row ) && 1 <= $this->count ) {
+			bp_moderation_update_meta( $this->id, '_count', $this->count );
+		}
+
+		return ! empty( $updated_row );
+	}
+
+	/**
+	 * unction to delete Moderation meta.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function delete_meta() {
+		global $wpdb;
+		$bp = buddypress();
+
+		$args        = array( 'moderation_id' => $this->id );
+		$updated_row = $wpdb->delete( $bp->moderation->table_name_meta, $args ); // phpcs:ignore
 
 		return ! empty( $updated_row );
 	}
