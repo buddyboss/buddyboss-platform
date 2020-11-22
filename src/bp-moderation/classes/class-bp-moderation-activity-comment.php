@@ -52,6 +52,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Delete comment moderation data when actual comment is deleted.
 		add_action( 'bp_activity_delete_comment', array( $this, 'delete_moderation_data' ), 10, 2 );
+		add_action( 'bp_activity_delete_comment_children', array( $this, 'delete_moderation_data' ), 10, 2 );
 	}
 
 	/**
