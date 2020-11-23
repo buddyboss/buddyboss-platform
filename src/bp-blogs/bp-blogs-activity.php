@@ -147,7 +147,6 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			if ( in_array( $p_type, $bp_exclude_cpt, true ) ) {
 				continue;
 			}
-
 			$bp_allowed_cpt[] = $p_type;
 		}
 
