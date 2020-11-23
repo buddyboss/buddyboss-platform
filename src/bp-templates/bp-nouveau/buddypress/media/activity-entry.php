@@ -44,34 +44,35 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 " data-id="<?php echo esc_attr( bp_get_media_id() ); ?>">
 	<div class="media-action-wrap">
 		<?php if ( $can_manage ) { ?>
-			<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
-				<i class="bb-icon-menu-dots-v"></i>
-			</a>		
-			<div class="media-action_list">
-				<ul class="conflict-activity-ul-li-comment">
-					<?php
-					$item_id = 0;
-					if ( bp_loggedin_user_id() === bp_get_media_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
-						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-							?>
-							<li class="move_file">
-								<a href="#" data-media-id="<?php bp_media_id(); ?>" data-action="activity" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-							</li>
+			<?php
+				$item_id = 0;
+				if ( bp_loggedin_user_id() === bp_get_media_user_id() || bp_current_user_can( 'bp_moderate' ) ) { ?>
+					<a href="#" class="media-action_more" data-balloon-pos="up" data-balloon="<?php esc_attr_e( 'More actions', 'buddyboss' ); ?>">
+						<i class="bb-icon-menu-dots-v"></i>
+					</a>		
+					<div class="media-action_list">
+						<ul class="conflict-activity-ul-li-comment">
 							<?php
-						}
-						if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
-							$item_id = bp_get_activity_comment_id();
-						} else {
-							if ( bp_is_active( 'activity' ) ) {
-								$item_id = bp_get_activity_id();
-							}
-						} ?>
-						<li class="delete_file">
-						<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
-					</li>
-					<?php } ?>
-				</ul>
-			</div>
+								if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
+									?>
+									<li class="move_file">
+										<a href="#" data-media-id="<?php bp_media_id(); ?>" data-action="activity" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+									</li>
+									<?php
+								}
+								if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
+									$item_id = bp_get_activity_comment_id();
+								} else {
+									if ( bp_is_active( 'activity' ) ) {
+										$item_id = bp_get_activity_id();
+									}
+								} ?>
+								<li class="delete_file">
+								<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
+							</li>
+						</ul>
+					</div>
+				<?php } ?>
 		<?php } ?>
 	</div> <!--.media-action-wrap-->
 	<?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-activity-media-thumbnail' ); ?>
