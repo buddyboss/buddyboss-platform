@@ -55,6 +55,7 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		// Delete message moderation data when message thread is deleted.
 		//add_action( 'bp_messages_thread_after_delete', array( $this, 'delete_moderation_data' ), 10, 4 );
+		add_action( 'bp_messages_message_delete_thread', array( $this, 'delete_moderation_thread_data' ) );
 	}
 
 	/**
@@ -372,6 +373,22 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @param bool  $thread_delete True entire thread will be deleted.
 	 */
 	public function delete_moderation_data( $thread_id, $message_ids, $user_id, $thread_delete ) {
+		if ( ! empty( $thread_id ) ) {
+			$moderation_obj = new BP_Moderation( $thread_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
+	}
+
+	/**
+	 * Function to delete message moderation data when deleting the message thread
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $thread_id ID of the thread being deleted.
+	 */
+	public function delete_moderation_thread_data( $thread_id ) {
 		if ( ! empty( $thread_id ) ) {
 			$moderation_obj = new BP_Moderation( $thread_id, self::$moderation_type );
 			if ( ! empty( $moderation_obj->id ) ) {
