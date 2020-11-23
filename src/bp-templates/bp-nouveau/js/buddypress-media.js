@@ -619,11 +619,7 @@ window.bp = window.bp || {};
 			if ('group' === getCreateIn) {
 				$(document).find('.popup-on-fly-create-album .privacy-field-wrap-hide-show').hide();
 			} else {
-				if (getParentFolderId > 0) {
-					$(document).find('.popup-on-fly-create-album .privacy-field-wrap-hide-show').hide();
-				} else {
-					$(document).find('.popup-on-fly-create-album .privacy-field-wrap-hide-show').show();
-				}
+				$(document).find('.popup-on-fly-create-album .privacy-field-wrap-hide-show').show();
 			}
 
 			$('.modal-container .bb-model-footer').hide();
@@ -1049,12 +1045,21 @@ window.bp = window.bp || {};
 				}
 			}
 
-			buddyPressSelector.find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]:checked').each(
-				function () {
-					$(this).closest('.bb-photo-thumb').addClass('loading deleting');
-					media.push($(this).val());
+			if( target.hasClass('bb-delete') ) {
+
+				if ( !confirm('Are you sure you want to delete this media?') ) {
+					return false;
 				}
-			);
+				
+				buddyPressSelector.find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]:checked').each(
+					function () {
+						$(this).closest('.bb-photo-thumb').addClass('loading deleting');
+						media.push($(this).val());
+					}
+				);
+
+			}
+			
 
 			activityId = target.data('parent-activity-id');
 			if (fromWhere && fromWhere.length && 'activity' === fromWhere && media.length == 0) {
@@ -1071,7 +1076,7 @@ window.bp = window.bp || {};
 			}
 
 			target.prop('disabled', true);
-			$('#buddypress .media-list .bp-feedback').remove();
+			$('#buddypress #media-stream.media .bp-feedback').remove();
 
 			var data = {
 				'action'     : 'media_delete',
@@ -1144,7 +1149,7 @@ window.bp = window.bp || {};
 									$('#buddypress [data-bp-list="media"]').html(feedback);
 								}
 							} else {
-								$('#buddypress .media-list').prepend(response.data.feedback);
+								$('#buddypress #media-stream.media').prepend(response.data.feedback);
 							}
 						}
 
