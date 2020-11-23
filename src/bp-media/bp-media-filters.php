@@ -516,11 +516,11 @@ function bp_media_delete_activity_gif( $activities ) {
 			$activity_gif = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
 			if ( ! empty( $activity_gif ) ) {
-				if ( ! empty( $activity_gif['still'] ) ) {
+				if ( ! empty( $activity_gif['still'] ) && is_int( $activity_gif['still'] ) ) {
 					wp_delete_attachment( (int) $activity_gif['still'], true );
 				}
 
-				if ( ! empty( $activity_gif['mp4'] ) ) {
+				if ( ! empty( $activity_gif['mp4'] ) && is_int( $activity_gif['mp4'] ) ) {
 					wp_delete_attachment( (int) $activity_gif['mp4'], true );
 				}
 			}
@@ -740,8 +740,8 @@ function bp_media_forums_embed_gif( $content, $id ) {
 		return $content;
 	}
 
-	$preview_url = wp_get_attachment_url( $gif_data['still'] );
-	$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'] ;
+	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 	ob_start();
 	?>
@@ -790,8 +790,8 @@ function bp_media_forums_save_gif_data( $post_id ) {
 			return;
 		}
 
-		$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-		$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+		$still = $gif_data['images']['480w_still']['url'];
+		$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 		$gdata = array(
 			'still' => $still,
@@ -828,7 +828,16 @@ function bp_media_attach_media_to_message( &$message ) {
 		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
-		$media_ids = bp_media_add_handler( $_POST['media'], 'message' );
+		$medias = $_POST['media'];
+		if ( ! empty( $medias ) ) {
+			foreach( $medias as $k => $media ) {
+				if( array_key_exists( 'group_id', $media ) ) {
+					unset( $medias[ $k ]['group_id'] );
+				}
+			}
+		}
+
+		$media_ids = bp_media_add_handler( $medias, 'message' );
 
 		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
@@ -905,11 +914,11 @@ function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
 			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) ) {
+				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
 					wp_delete_attachment( (int) $message_gif['still'], true );
 				}
 
-				if ( ! empty( $message_gif['mp4'] ) ) {
+				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
 					wp_delete_attachment( (int) $message_gif['mp4'], true );
 				}
 			}
@@ -937,11 +946,11 @@ function bp_media_user_messages_delete_attached_gif( $thread_id, $message_ids, $
 			$message_gif = bp_messages_get_meta( $message_id, '_gif_data', true );
 
 			if ( ! empty( $message_gif ) ) {
-				if ( ! empty( $message_gif['still'] ) ) {
+				if ( ! empty( $message_gif['still'] ) && is_int( $message_gif['still'] ) ) {
 					wp_delete_attachment( (int) $message_gif['still'], true );
 				}
 
-				if ( ! empty( $message_gif['mp4'] ) ) {
+				if ( ! empty( $message_gif['mp4'] ) && is_int( $message_gif['mp4'] ) ) {
 					wp_delete_attachment( (int) $message_gif['mp4'], true );
 				}
 			}
@@ -967,8 +976,8 @@ function bp_media_messages_save_gif_data( &$message ) {
 
 	$gif_data = $_POST['gif_data'];
 
-	$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-	$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+	$still = $gif_data['images']['480w_still']['url'];
+	$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 	bp_messages_update_meta(
 		$message->id,
@@ -1039,8 +1048,8 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
 		return;
 	}
 
-	$preview_url = wp_get_attachment_url( $gif_data['still'] );
-	$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 	$preview_url = $preview_url . '?' . wp_rand() . '=' . wp_rand();
 	$video_url   = $video_url . '?' . wp_rand() . '=' . wp_rand();
 
@@ -1155,8 +1164,8 @@ function bp_media_activity_save_gif_data( $activity ) {
 	}
 
 	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {
-		$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-		$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+                $still = $gif_data['images']['480w_still']['url'];
+		$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
 		bp_activity_update_meta(
 			$activity->id,
@@ -1616,9 +1625,54 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 			__( 'Repair forum media privacy', 'buddyboss' ),
 			'bp_media_forum_privacy_repair',
 		);
+		$repair_list[] = array(
+			'bp-media-message-repair',
+			__( 'Repair messages media', 'buddyboss' ),
+			'bp_media_message_privacy_repair',
+		);
 	}
 
 	return $repair_list;
+}
+
+/**
+ * Repair BuddyBoss messages media.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_media_message_privacy_repair() {
+	global $wpdb;
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+	$bp     = buddypress();
+
+	$media_query = "SELECT id FROM {$bp->media->table_name} WHERE privacy = 'message' LIMIT 20 OFFSET $offset ";
+	$medias      = $wpdb->get_results( $media_query );
+
+	if ( ! empty( $medias ) ) {
+		foreach ( $medias as $media ) {
+			if ( ! empty( $media->id ) ) {
+				$media_obj           = new BP_Media( $media->id );
+				$media_obj->album_id = 0;
+				$media_obj->group_id = 0;
+				$media_obj->activity_id = 0;
+				$media_obj->privacy  = 'message';
+				$media_obj->save();
+			}
+			$offset ++;
+		}
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+
+		return array(
+			'status'  => 'running',
+			'offset'  => $offset,
+			'records' => $records_updated,
+		);
+	} else {
+		return array(
+			'status'  => 1,
+			'message' => __( 'Media update complete!', 'buddyboss' ),
+		);
+	}
 }
 
 /**

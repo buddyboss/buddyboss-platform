@@ -288,7 +288,7 @@ window.bp = window.bp || {};
 
 			$(document).on('click', '.gif-image-container', this.playVideo.bind(this));
 
-			$('.bp-existing-media-wrap').on('scroll', this.loadExistingMedia.bind(this));
+			$( '.bp-existing-media-wrap' ).on( 'scroll', this.loadExistingMedia.bind( this ) );
 
 			document.addEventListener('keyup', this.closePopup.bind(this));
 			document.addEventListener('keyup', this.submitPopup.bind(this));
@@ -1050,7 +1050,7 @@ window.bp = window.bp || {};
 				if ( !confirm('Are you sure you want to delete this media?') ) {
 					return false;
 				}
-				
+
 				buddyPressSelector.find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]:checked').each(
 					function () {
 						$(this).closest('.bb-photo-thumb').addClass('loading deleting');
@@ -1059,7 +1059,7 @@ window.bp = window.bp || {};
 				);
 
 			}
-			
+
 
 			activityId = target.data('parent-activity-id');
 			if (fromWhere && fromWhere.length && 'activity' === fromWhere && media.length == 0) {
