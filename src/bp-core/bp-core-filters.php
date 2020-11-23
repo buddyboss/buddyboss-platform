@@ -62,6 +62,7 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 // Removed Document and Media from WordPress media endpoints.
 add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
 add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
+add_filter( 'oembed_request_post_id', 'bp_rest_restrict_oembed_request_post_id', 999 );
 
 // Avatars.
 /**
@@ -1460,16 +1461,12 @@ add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_imag
 if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	function buddyboss_platform_plugin_update_notice() {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
-		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ),
-				'1.5.0',
-				'<' ) ) {
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
 			$class   = 'notice notice-error';
-			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.',
-				'buddyboss' );
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
-
 	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
 }
 
@@ -1524,9 +1521,45 @@ function bp_rest_restrict_wp_attachment_response( $response, $post ) {
 	$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
 	$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
 	$data          = $response->get_data();
-	if ( array_key_exists( 'media_type', $data ) && ( ! empty( $media_meta ) || ! empty( $document_meta ) ) ) {
+	if (
+		array_key_exists( 'media_type', $data ) &&
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post->ID )
+		)
+	) {
 		$response = array();
 	}
 
 	return $response;
+}
+
+/**
+ * Restrict users to access media and documents from `/wp-json/oembed/1.0/embed`
+ *
+ * @param int $post_id Current post id.
+ *
+ * @return mixed
+ */
+function bp_rest_restrict_oembed_request_post_id( $post_id ) {
+	$media_meta    = get_post_meta( $post_id, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post_id, 'bp_document_upload', true );
+	if (
+		(
+			! empty( $media_meta ) ||
+			! empty( $document_meta )
+		) &&
+		(
+			! is_user_logged_in()
+			|| ! current_user_can( 'edit_post', $post_id )
+		)
+	) {
+		$post_id = 0;
+	}
+
+	return $post_id;
 }
