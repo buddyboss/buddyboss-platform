@@ -1479,6 +1479,7 @@ function bp_media_settings_callback_media_allowed_per_batch() {
 	<input type="number"
 		   name="bp_media_allowed_per_batch"
 		   id="bp_media_allowed_per_batch"
+		   min="1"
 		   value="<?php echo esc_attr( bp_media_allowed_upload_media_per_batch() ); ?>"
 	/>
 
@@ -1507,6 +1508,7 @@ function bp_media_settings_callback_document_allowed_per_batch() {
 	<input type="number"
 		   name="bp_document_allowed_per_batch"
 		   id="bp_document_allowed_per_batch"
+		   min="1"
 		   value="<?php echo esc_attr( bp_media_allowed_upload_document_per_batch() ); ?>"
 	/>
 
