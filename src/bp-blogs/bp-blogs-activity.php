@@ -130,7 +130,16 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		$post_types = get_post_types( array( 'public' => true ) );
 
 		// Exclude BP CPT
-		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+		$bp_exclude_cpt = array(
+			'forum',
+			'topic',
+			'reply',
+			'page',
+			'attachment',
+			'bp-group-type',
+			'bp-member-type',
+			'product',
+		);
 
 		$bp_allowed_cpt = array();
 		foreach ( $post_types as $p_type ) {
