@@ -1197,12 +1197,12 @@ function bp_nouveau_ajax_delete_thread() {
 		$wpdb->query( $query ); // db call ok; no-cache ok;
 
 		// Delete messages meta.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) );
-		$wpdb->query( $query ); // db call ok; no-cache ok;
+		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) );
+		$wpdb->query( $query_meta ); // db call ok; no-cache ok;
 
 		// Delete thread.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
-		$wpdb->query( $query ); // db call ok; no-cache ok;
+		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+		$wpdb->query( $query_recipients ); // db call ok; no-cache ok;
 	}
 
 	wp_send_json_success(
