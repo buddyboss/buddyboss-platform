@@ -708,7 +708,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
 		return $content;
 	}
 
-	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'] ;
+	$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 	$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 	ob_start();
@@ -798,8 +798,8 @@ function bp_media_attach_media_to_message( &$message ) {
 
 		$medias = $_POST['media'];
 		if ( ! empty( $medias ) ) {
-			foreach( $medias as $k => $media ) {
-				if( array_key_exists( 'group_id', $media ) ) {
+			foreach ( $medias as $k => $media ) {
+				if ( array_key_exists( 'group_id', $media ) ) {
 					unset( $medias[ $k ]['group_id'] );
 				}
 			}
@@ -947,14 +947,12 @@ function bp_media_messages_save_gif_data( &$message ) {
 	$still = $gif_data['images']['480w_still']['url'];
 	$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
-	bp_messages_update_meta(
-			$message->id,
+	bp_messages_update_meta( $message->id,
 			'_gif_data',
 			array(
 					'still' => $still,
 					'mp4'   => $mp4,
-			)
-	);
+			) );
 
 	bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
 }
@@ -1132,17 +1130,15 @@ function bp_media_activity_save_gif_data( $activity ) {
 	}
 
 	if ( ! empty( $gif_data ) && ! isset( $gif_data['bp_gif_current_data'] ) ) {
-                $still = $gif_data['images']['480w_still']['url'];
+		$still = $gif_data['images']['480w_still']['url'];
 		$mp4   = $gif_data['images']['original_mp4']['mp4'];
 
-		bp_activity_update_meta(
-				$activity->id,
+		bp_activity_update_meta( $activity->id,
 				'_gif_data',
 				array(
 						'still' => $still,
 						'mp4'   => $mp4,
-				)
-		);
+				) );
 
 		bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
 	}
@@ -1588,9 +1584,9 @@ function bp_media_add_admin_repair_items( $repair_list ) {
 				'bp_media_forum_privacy_repair',
 		);
 		$repair_list[] = array(
-			'bp-media-message-repair',
-			__( 'Repair messages media', 'buddyboss' ),
-			'bp_media_message_privacy_repair',
+				'bp-media-message-repair',
+				__( 'Repair messages media', 'buddyboss' ),
+				'bp_media_message_privacy_repair',
 		);
 	}
 
@@ -1613,26 +1609,27 @@ function bp_media_message_privacy_repair() {
 	if ( ! empty( $medias ) ) {
 		foreach ( $medias as $media ) {
 			if ( ! empty( $media->id ) ) {
-				$media_obj           = new BP_Media( $media->id );
-				$media_obj->album_id = 0;
-				$media_obj->group_id = 0;
+				$media_obj              = new BP_Media( $media->id );
+				$media_obj->album_id    = 0;
+				$media_obj->group_id    = 0;
 				$media_obj->activity_id = 0;
-				$media_obj->privacy  = 'message';
+				$media_obj->privacy     = 'message';
 				$media_obj->save();
 			}
 			$offset ++;
 		}
-		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		$records_updated = sprintf( __( '%s media updated successfully.', 'buddyboss' ),
+				number_format_i18n( $offset ) );
 
 		return array(
-			'status'  => 'running',
-			'offset'  => $offset,
-			'records' => $records_updated,
+				'status'  => 'running',
+				'offset'  => $offset,
+				'records' => $records_updated,
 		);
 	} else {
 		return array(
-			'status'  => 1,
-			'message' => __( 'Media update complete!', 'buddyboss' ),
+				'status'  => 1,
+				'message' => __( 'Media update complete!', 'buddyboss' ),
 		);
 	}
 }

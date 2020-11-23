@@ -348,21 +348,17 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$user_groups = groups_get_user_groups( $user_id );
 
 			if ( empty( $group->id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_group_invalid_id',
-					__( 'Invalid group ID.', 'buddyboss' ),
-					array(
-						'status' => 404,
-					)
-				);
-			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id, wp_parse_id_list( $user_groups['groups'] ), true ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
+				$retval = new WP_Error( 'bp_rest_group_invalid_id', __( 'Invalid group ID.', 'buddyboss' ), array(
+					'status' => 404,
+				) );
+			} elseif ( ! bp_current_user_can( 'bp_moderate' ) && ! empty( $group->id ) && 'public' !== bp_get_group_status( $group ) && isset( $user_groups['groups'] ) && ! in_array( $group->id,
+					wp_parse_id_list( $user_groups['groups'] ),
+					true ) ) {
+				$retval = new WP_Error( 'bp_rest_authorization_required',
 					__( 'Sorry, Restrict access to only group members.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
-					)
-				);
+					) );
 			}
 		}
 
@@ -641,20 +637,15 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$parent_folder = new BP_Document_Folder( $request['folder_id'] );
 			if ( empty( $parent_folder->id ) ) {
 				$retval = new WP_Error(
-					'bp_rest_invalid_parent_folder_id',
-					__( 'Invalid Parent Folder ID.', 'buddyboss' ),
-					array(
+					'bp_rest_invalid_parent_folder_id', __( 'Invalid Parent Folder ID.', 'buddyboss' ), array(
 						'status' => 400,
-					)
-				);
+					) );
 			} elseif ( ! bp_folder_user_can_edit( $parent_folder->id ) ) {
-				$retval = new WP_Error(
-					'bp_rest_invalid_permission',
+				$retval = new WP_Error( 'bp_rest_invalid_permission',
 					__( 'You don\'t have a permission to create a document inside this folder.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
-					)
-				);
+					) );
 			}
 		}
 
@@ -668,41 +659,28 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				}
 
 				if ( empty( $wp_attachment ) || 'attachment' !== $wp_attachment->post_type ) {
-					$retval = new WP_Error(
-						'bp_rest_invalid_document_id',
-						sprintf(
-							/* translators: Attachment ID. */
-							__( 'Invalid attachment id: %d', 'buddyboss' ),
-							$attachment_id
-						),
+					$retval = new WP_Error( 'bp_rest_invalid_document_id',
+						sprintf( /* translators: Attachment ID. */ __( 'Invalid attachment id: %d', 'buddyboss' ),
+							$attachment_id ),
 						array(
 							'status' => 404,
-						)
-					);
+						) );
 				} elseif ( bp_loggedin_user_id() !== (int) $wp_attachment->post_author ) {
-					$retval = new WP_Error(
-						'bp_rest_invalid_document_author',
-						sprintf(
-							/* translators: Attachment ID. */
-							__( 'You are not a valid author for attachment id: %d', 'buddyboss' ),
-							$attachment_id
-						),
+					$retval = new WP_Error( 'bp_rest_invalid_document_author',
+						sprintf( /* translators: Attachment ID. */ __( 'You are not a valid author for attachment id: %d',
+							'buddyboss' ),
+							$attachment_id ),
 						array(
 							'status' => 404,
-						)
-					);
+						) );
 				} elseif ( function_exists( 'bp_get_attachment_document_id' ) && ! empty( bp_get_attachment_document_id( (int) $attachment_id ) ) ) {
-					$retval = new WP_Error(
-						'bp_rest_duplicate_document_upload_id',
-						sprintf(
-							/* translators: Attachment ID. */
-							__( 'Document already exists for attachment id: %d', 'buddyboss' ),
-							$attachment_id
-						),
+					$retval = new WP_Error( 'bp_rest_duplicate_document_upload_id',
+						sprintf( /* translators: Attachment ID. */ __( 'Document already exists for attachment id: %d',
+							'buddyboss' ),
+							$attachment_id ),
 						array(
 							'status' => 404,
-						)
-					);
+						) );
 				}
 			}
 		}
@@ -710,10 +688,11 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 		/**
 		 * Filter the document `create_item` permissions check.
 		 *
-		 * @param bool|WP_Error   $retval  Returned value.
+		 * @since 0.1.0
+		 *
 		 * @param WP_REST_Request $request The request sent to the API.
 		 *
-		 * @since 0.1.0
+		 * @param bool|WP_Error   $retval  Returned value.
 		 */
 		return apply_filters( 'bp_rest_document_create_items_permissions_check', $retval, $request );
 	}
@@ -2012,19 +1991,29 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 				'activity_comments',      // Id of the BuddyPress component the REST field is about.
 				'bp_documents', // Used into the REST response/request.
 				array(
-					'get_callback'    => array( $this, 'bp_documents_get_rest_field_callback' ),    // The function to use to get the value of the REST Field.
-					'update_callback' => array( $this, 'bp_documents_update_rest_field_callback' ), // The function to use to update the value of the REST Field.
+					'get_callback'    => array( $this, 'bp_documents_get_rest_field_callback' ),
+					// The function to use to get the value of the REST Field.
+					'update_callback' => array( $this, 'bp_documents_update_rest_field_callback' ),
+					// The function to use to update the value of the REST Field.
 					'schema'          => array(                                // The example_field REST schema.
 						'description' => 'Activity Documents.',
 						'type'        => 'object',
 						'context'     => array( 'embed', 'view', 'edit' ),
 					),
-				)
-			);
+				) );
 
-			add_filter( 'bp_rest_activity_create_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
-			add_filter( 'bp_rest_activity_update_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
-			add_filter( 'bp_rest_activity_comment_create_item_query_arguments', array( $this, 'bp_rest_activity_query_arguments' ), 99, 3 );
+			add_filter( 'bp_rest_activity_create_item_query_arguments',
+				array( $this, 'bp_rest_activity_query_arguments' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_activity_update_item_query_arguments',
+				array( $this, 'bp_rest_activity_query_arguments' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_activity_comment_create_item_query_arguments',
+				array( $this, 'bp_rest_activity_query_arguments' ),
+				99,
+				3 );
 		}
 
 		if ( function_exists( 'bp_is_messages_document_support_enabled' ) && bp_is_messages_document_support_enabled() ) {
@@ -2042,12 +2031,20 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						'type'        => 'object',
 						'context'     => array( 'view', 'edit' ),
 					),
-				)
-			);
+				) );
 
-			add_filter( 'bp_rest_messages_group_collection_params', array( $this, 'bp_rest_message_query_arguments' ), 99, 3 );
-			add_filter( 'bp_rest_messages_create_item_query_arguments', array( $this, 'bp_rest_message_query_arguments' ), 99, 3 );
-			add_filter( 'bp_rest_messages_update_item_query_arguments', array( $this, 'bp_rest_message_query_arguments' ), 99, 3 );
+			add_filter( 'bp_rest_messages_group_collection_params',
+				array( $this, 'bp_rest_message_query_arguments' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_messages_create_item_query_arguments',
+				array( $this, 'bp_rest_message_query_arguments' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_messages_update_item_query_arguments',
+				array( $this, 'bp_rest_message_query_arguments' ),
+				99,
+				3 );
 		}
 
 		if ( function_exists( 'bp_is_forums_document_support_enabled' ) && true === bp_is_forums_document_support_enabled() ) {
@@ -2067,8 +2064,7 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			);
 
 			// Reply Document Support.
-			register_rest_field(
-				'reply',
+			register_rest_field( 'reply',
 				'bbp_documents',
 				array(
 					'get_callback'    => array( $this, 'bbp_document_get_rest_field_callback' ),
@@ -2078,13 +2074,24 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 						'type'        => 'object',
 						'context'     => array( 'embed', 'view', 'edit' ),
 					),
-				)
-			);
+				) );
 
-			add_filter( 'bp_rest_topic_create_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
-			add_filter( 'bp_rest_topic_update_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
-			add_filter( 'bp_rest_reply_create_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
-			add_filter( 'bp_rest_reply_update_item_query_arguments', array( $this, 'bp_rest_forums_collection_params' ), 99, 3 );
+			add_filter( 'bp_rest_topic_create_item_query_arguments',
+				array( $this, 'bp_rest_forums_collection_params' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_topic_update_item_query_arguments',
+				array( $this, 'bp_rest_forums_collection_params' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_reply_create_item_query_arguments',
+				array( $this, 'bp_rest_forums_collection_params' ),
+				99,
+				3 );
+			add_filter( 'bp_rest_reply_update_item_query_arguments',
+				array( $this, 'bp_rest_forums_collection_params' ),
+				99,
+				3 );
 		}
 
 	}

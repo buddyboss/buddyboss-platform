@@ -78,12 +78,10 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 
 		$user_nav = buddypress()->members->nav;
 		if ( ! empty( $user_nav ) ) {
-			$navs = $user_nav->get_secondary(
-				array(
-					'parent_slug'     => 'settings',
-					'user_has_access' => true,
-				)
-			);
+			$navs = $user_nav->get_secondary( array(
+				'parent_slug'     => 'settings',
+				'user_has_access' => true,
+			) );
 		}
 
 		// if it's nouveau then let it order the tabs.
@@ -299,6 +297,7 @@ class BP_REST_Account_Settings_Endpoint extends WP_REST_Controller {
 		if ( 'groups' !== $component ) {
 			return $is_current_component;
 		}
+
 		return false;
 	}
 }

@@ -161,7 +161,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// todo: we don't need this anymore because reply and topic notification mention permalink will always be their own links not activity's
 			// todo: but keeping this handle backward compatibility
 			// topic or reply mention notification permalink
-			add_filter( 'bp_activity_new_at_mention_permalink', array( $this, 'activity_get_notification_permalink' ), 10, 4 );
+			add_filter( 'bp_activity_new_at_mention_permalink',
+				array( $this, 'activity_get_notification_permalink' ),
+				10,
+				4 );
 
 			// Forum Activity scope to fetch the subscribed forums and topics feed.
 			add_filter( 'bp_activity_set_forums_scope_args', array( $this, 'activity_forums_scope' ), 10, 2 );
@@ -790,12 +793,10 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$group      = groups_get_group( $group_id );
 			$group_link = bp_get_group_link( $group );
 
-			return sprintf(
-				esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss' ),
+			return sprintf( esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss' ),
 				$user_link,
 				$topic_link,
-				$group_link
-			);
+				$group_link );
 		}
 
 		/**
@@ -816,9 +817,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( ! empty( $filter['user_id'] ) ) {
 				$user_id = $filter['user_id'];
 			} else {
-				$user_id = bp_displayed_user_id()
-					? bp_displayed_user_id()
-					: bp_loggedin_user_id();
+				$user_id = bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id();
 			}
 
 			$forum_ids = bbp_get_user_subscribed_forum_ids( $user_id );

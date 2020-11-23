@@ -612,8 +612,8 @@ function bp_document_attach_document_to_message( &$message ) {
 		$document_list = $_POST['document'];
 
 		if ( ! empty( $document_list ) ) {
-			foreach( $document_list as $k => $document ) {
-				if( array_key_exists( 'group_id', $document ) ) {
+			foreach ( $document_list as $k => $document ) {
+				if ( array_key_exists( 'group_id', $document ) ) {
 					unset( $document_list[ $k ]['group_id'] );
 				}
 			}
@@ -622,10 +622,10 @@ function bp_document_attach_document_to_message( &$message ) {
 		$document_ids = bp_document_add_handler( $document_list, 'message' );
 
 		if ( ! empty( $document_ids ) ) {
-			foreach( $document_ids as $document_id ) {
+			foreach ( $document_ids as $document_id ) {
 				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
 			}
-        }
+		}
 
 		$document_ids = implode( ',', $document_ids );
 

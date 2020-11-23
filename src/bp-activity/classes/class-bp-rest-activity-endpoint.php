@@ -438,13 +438,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 
 		if ( true === $this->bp_rest_activity_content_validate( $request ) ) {
-			return new WP_Error(
-				'bp_rest_create_activity_empty_content',
+			return new WP_Error( 'bp_rest_create_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
 					'status' => 400,
-				)
-			);
+				) );
 		}
 
 		if ( empty( $request['content'] ) ) {
@@ -647,13 +645,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				&& empty( bp_activity_get_meta( $activity_object->id, 'bp_document_ids', true ) )
 			) && true === $this->bp_rest_activity_content_validate( $request )
 		) {
-			return new WP_Error(
-				'bp_rest_update_activity_empty_content',
+			return new WP_Error( 'bp_rest_update_activity_empty_content',
 				__( 'Please, enter some content.', 'buddyboss' ),
 				array(
 					'status' => 400,
-				)
-			);
+				) );
 		}
 
 		if ( empty( $activity_object->content ) ) {
@@ -682,22 +678,12 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 		$allow_edit = $this->bp_rest_activitiy_edit_data( $activity_object->id );
 		$activity   = new BP_Activity_Activity( $activity_object->id );
 
-		if (
-			! empty( $activity->id ) &&
-			! empty( $allow_edit ) &&
-			false === (bool) $allow_edit['can_edit_privacy'] &&
-			isset( $request['privacy'] ) &&
-			! empty( $request['privacy'] ) &&
-			isset( $activity->privacy ) &&
-			$request['privacy'] !== $activity->privacy
-		) {
-			return new WP_Error(
-				'bp_rest_update_invalid_activity_privacy',
+		if ( ! empty( $activity->id ) && ! empty( $allow_edit ) && false === (bool) $allow_edit['can_edit_privacy'] && isset( $request['privacy'] ) && ! empty( $request['privacy'] ) && isset( $activity->privacy ) && $request['privacy'] !== $activity->privacy ) {
+			return new WP_Error( 'bp_rest_update_invalid_activity_privacy',
 				__( 'Sorry, you are not allow to update the privacy', 'buddyboss' ),
 				array(
 					'status' => 400,
-				)
-			);
+				) );
 		}
 
 		$activity_id = bp_activity_add( $activity_object );
@@ -1121,13 +1107,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 			// Removed lazyload from link preview.
 			add_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
 
-			$rendered = apply_filters_ref_array(
-				'bp_get_activity_content_body',
+			$rendered = apply_filters_ref_array( 'bp_get_activity_content_body',
 				array(
 					$activity->content,
 					&$activity,
-				)
-			);
+				) );
 
 			remove_filter( 'bp_get_activity_content_body', array( $this, 'bp_rest_activity_remove_lazyload' ), 999, 2 );
 
@@ -1211,7 +1195,11 @@ class BP_REST_Activity_Endpoint extends WP_REST_Controller {
 				$data['comments'] = $this->prepare_activity_comments( $activity->children, $request );
 			}
 		} else {
-			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $request['status'], $top_level_parent_id );
+			$activity->children    = BP_Activity_Activity::get_activity_comments( $activity->id,
+				$activity->mptt_left,
+				$activity->mptt_right,
+				$request['status'],
+				$top_level_parent_id );
 			$data['comment_count'] = ! empty( $activity->children ) ? bp_activity_recurse_comment_count( $activity ) : 0;
 		}
 

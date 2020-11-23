@@ -192,20 +192,15 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				__( 'Sorry, Invalid member ID.', 'buddyboss' ),
 				array(
 					'status' => '404',
-				)
-			);
+				) );
 		}
 
 		$user = bp_rest_get_user( $current_user_id );
 
 		if ( ! $user instanceof WP_User ) {
-			return new WP_Error(
-				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			return new WP_Error( 'bp_rest_member_invalid_id', __( 'Invalid member ID.', 'buddyboss' ), array(
+				'status' => 404,
+			) );
 		}
 
 		$url = bp_core_get_user_domain( $current_user_id );
@@ -349,10 +344,11 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		/**
 		 * Fires after a list of members details is fetched via the REST API.
 		 *
-		 * @param WP_REST_Response $response The response data.
+		 * @since 0.1.0
+		 *
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 0.1.0
+		 * @param WP_REST_Response $response The response data.
 		 */
 		do_action( 'bp_rest_members_detail_get_items', $response, $request );
 
@@ -1288,6 +1284,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		if ( 'groups' !== $component ) {
 			return $is_current_component;
 		}
+
 		return false;
 	}
 

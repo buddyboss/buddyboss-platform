@@ -840,10 +840,10 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$allowed_for_download             = array();
 		$allowed_file_type_with_mime_type = array();
 		foreach ( $all_extensions as $extension ) {
-			if ( isset( $extension[ 'is_active' ] ) && true === (bool) $extension[ 'is_active' ] ) {
-				$extension_name                                      = ltrim( $extension[ 'extension' ], '.' );
+			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
+				$extension_name                                      = ltrim( $extension['extension'], '.' );
 				$allowed_for_download[]                              = $extension_name;
-				$allowed_file_type_with_mime_type[ $extension_name ] = $extension[ 'mime_type' ];
+				$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
 			}
 		}
 
@@ -857,8 +857,10 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		}
 
 		$file_new_name = $file_name;
-		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] ) ? $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] : '';
-		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension[ 'extension' ] );
+		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
+		$content_type  = apply_filters( 'bp_document_download_file_content_type',
+			$content_type,
+			$file_extension['extension'] );
 
 		bp_document_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	} else {
@@ -868,7 +870,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Get Upload directory.
 		$upload     = wp_upload_dir();
-		$upload_dir = $upload[ 'basedir' ];
+		$upload_dir = $upload['basedir'];
 
 		// Create temp folder.
 		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
@@ -902,7 +904,8 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			$zip = new ZipArchive();
 			$zip->open( $zip_name, ZipArchive::CREATE | ZipArchive::OVERWRITE );
 
-			$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ), RecursiveIteratorIterator::LEAVES_ONLY );
+			$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $rootPath ),
+				RecursiveIteratorIterator::LEAVES_ONLY );
 
 			foreach ( $files as $name => $file ) {
 				$filePath     = $file->getRealPath();

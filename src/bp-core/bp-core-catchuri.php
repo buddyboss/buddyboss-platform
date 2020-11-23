@@ -1188,7 +1188,8 @@ function bp_private_network_template_redirect() {
 						// Check if strict match
 						if ( false !== $check_is_full_url && ( ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && $request_url === $un_trailing_slash_it_url ) ) {
 							return;
-						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
+						} elseif ( false === $check_is_full_url && ! empty( $request_url ) && ! empty( $un_trailing_slash_it_url ) && strpos( $request_url,
+								$un_trailing_slash_it_url ) !== false ) {
 							$fragments = explode( '/', $request_url );
 
 							// Allow to view if fragment matched.
@@ -1199,8 +1200,10 @@ function bp_private_network_template_redirect() {
 							}
 
 							// Allow to view if fragment matched with the trailing slash.
-							$is_matched_fragment = substr( $_SERVER['REQUEST_URI'], 0, strrpos( $_SERVER['REQUEST_URI'], '/' ) );
-							if( $is_matched_fragment === $url ) {
+							$is_matched_fragment = substr( $_SERVER['REQUEST_URI'],
+								0,
+								strrpos( $_SERVER['REQUEST_URI'], '/' ) );
+							if ( $is_matched_fragment === $url ) {
 								return;
 							}
 
@@ -1209,7 +1212,7 @@ function bp_private_network_template_redirect() {
 								return;
 							}
 
-						// Check URL is fully matched without remove trailing slash.
+							// Check URL is fully matched without remove trailing slash.
 						} elseif ( false !== $check_is_full_url && ( ! empty( $request_url ) && $request_url === $check_is_full_url ) ) {
 							return;
 						}

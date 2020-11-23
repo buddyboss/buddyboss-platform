@@ -89,7 +89,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 				'name' => $post_type,
 			);
 
-			$output = 'objects'; // names or objects.
+			$output = 'objects'; // names or objects
 
 			$cu_post_types = get_post_types( $args, $output );
 
@@ -129,8 +129,17 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 
 		$post_types = get_post_types( array( 'public' => true ) );
 
-		// Exclude BP CPT.
-		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
+		// Exclude BP CPT
+		$bp_exclude_cpt = array(
+			'forum',
+			'topic',
+			'reply',
+			'page',
+			'attachment',
+			'bp-group-type',
+			'bp-member-type',
+			'product',
+		);
 
 		$bp_allowed_cpt = array();
 		foreach ( $post_types as $p_type ) {
@@ -138,7 +147,6 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			if ( in_array( $p_type, $bp_exclude_cpt, true ) ) {
 				continue;
 			}
-
 			$bp_allowed_cpt[] = $p_type;
 		}
 
@@ -914,7 +922,6 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 */
 	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
-	$resave_activity->content = '';
 	$resave_activity->save();
 
 	// Add the edit activity comment hook back.

@@ -42,6 +42,7 @@ add_action( 'wp_enqueue_scripts', 'bp_enqueue_scripts', 10 );
 add_action( 'enqueue_embed_scripts', 'bp_enqueue_embed_scripts', 10 );
 add_action( 'admin_bar_menu', 'bp_setup_admin_bar', 20 ); // After WP core.
 add_action( 'template_redirect', 'bp_template_redirect', 10 );
+add_action( 'template_redirect', 'bp_activity_mark_blog_post_notification_read', 10 );
 add_action( 'widgets_init', 'bp_widgets_init', 10 );
 add_action( 'generate_rewrite_rules', 'bp_generate_rewrite_rules', 10 );
 
@@ -114,7 +115,7 @@ add_action( 'bp_template_redirect', 'bp_private_network_template_redirect', 10 )
 /**
  * Add the BuddyPress functions file and the Theme Compat Default features.
  */
-add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency', -10 );
+add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency', - 10 );
 add_action( 'bp_after_setup_theme', 'bp_load_theme_functions', 1 );
 add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
 
@@ -138,16 +139,19 @@ if ( is_admin() ) {
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
 // Set the "Document" component active/inactive based on the media components.
-add_action( 'bp_init', function() {
-	$component = bp_get_option( 'bp-active-components' );
-	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-		$component['document'] = '1';
-		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-		unset($component['document']);
-		bp_update_option( 'bp-active-components', $component );
-	}
-}, 10, 2 );
+add_action( 'bp_init',
+	function () {
+		$component = bp_get_option( 'bp-active-components' );
+		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
+			$component['document'] = '1';
+			bp_update_option( 'bp-active-components', $component );
+		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
+			unset( $component['document'] );
+			bp_update_option( 'bp-active-components', $component );
+		}
+	},
+	10,
+	2 );
 
 /**
  * Restrict user when visit attachment url from media/document.
@@ -161,11 +165,9 @@ function bp_restrict_single_attachment() {
 		if ( ! empty( $post ) ) {
 			$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
 			$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
-			if (
-				! empty( $media_meta ) ||
-				! empty( $document_meta )
-			) {
+			if ( ! empty( $media_meta ) || ! empty( $document_meta ) ) {
 				bp_do_404();
+
 				return;
 			}
 		}

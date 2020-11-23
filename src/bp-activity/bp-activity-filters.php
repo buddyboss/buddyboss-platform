@@ -549,7 +549,9 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	$maybe_truncate_text = apply_filters(
 		'bp_activity_maybe_truncate_entry',
-		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array( 'new_blog_post' ), true )
+		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type,
+			array( 'new_blog_post' ),
+			true )
 	);
 
 	// The full text of the activity update should always show on the single activity screen.
@@ -580,7 +582,11 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	if ( strlen( $excerpt ) < strlen( strip_shortcodes( $text ) ) ) {
 		$id      = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
-		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );
+		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>',
+			$excerpt,
+			$id,
+			bp_get_activity_thread_permalink(),
+			$append_text );
 	}
 
 	/**
@@ -1726,9 +1732,10 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			/**
 			 * Filters the content provided in the activity input field.
 			 *
+			 * @since BuddyPress 1.2.0
+			 *
 			 * @param string $value Activity message being posted.
 			 *
-			 * @since BuddyPress 1.2.0
 			 */
 			$content = apply_filters( 'bp_activity_post_update_content', $bp_media_upload_activity_content );
 		}
@@ -1745,12 +1752,10 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			$activity_id = groups_post_update(
-				array(
-					'content'  => $content,
-					'group_id' => $group_id,
-				)
-			);
+			$activity_id = groups_post_update( array(
+				'content'  => $content,
+				'group_id' => $group_id,
+			) );
 		} else {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
@@ -2047,9 +2052,10 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			/**
 			 * Filters the content provided in the activity input field.
 			 *
+			 * @since BuddyPress 1.2.0
+			 *
 			 * @param string $value Activity message being posted.
 			 *
-			 * @since BuddyPress 1.2.0
 			 */
 			$content = apply_filters( 'bp_activity_post_update_content', $bp_document_upload_activity_content );
 		}
@@ -2066,12 +2072,10 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 		}
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			$activity_id = groups_post_update(
-				array(
-					'content'  => $content,
-					'group_id' => $group_id,
-				)
-			);
+			$activity_id = groups_post_update( array(
+				'content'  => $content,
+				'group_id' => $group_id,
+			) );
 		} else {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
@@ -2244,7 +2248,9 @@ function bp_nouveau_remove_edit_activity_entry_buttons( $buttons, $activity_id )
 
 	$exclude_action_arr = array( 'media_get_activity', 'document_get_activity' );
 
-	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], $exclude_action_arr, 1 ) ) {
+	if ( bp_is_activity_edit_enabled() && isset( $_REQUEST ) && isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'],
+			$exclude_action_arr,
+			1 ) ) {
 		$activity = new BP_Activity_Activity( $activity_id );
 		if ( in_array( $activity->privacy, array( 'document', 'media' ), 1 ) ) {
 			unset( $buttons['activity_edit'] );
@@ -2267,7 +2273,7 @@ function bp_blogs_activity_content_set_temp_content() {
 	global $activities_template;
 
 	$activity = $activities_template->activity;
-	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) &&  'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$content = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
 		if ( is_a( $content, 'WP_Post' ) ) {
@@ -2282,33 +2288,38 @@ add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read
 /**
  * Function which set the content on activity blog post.
  *
- * @param $content
+ * @since BuddyBoss 1.5.5
+ *
  * @param $activity
+ *
+ * @param $content
  *
  * @return string
  *
- * @since BuddyBoss 1.5.5
  */
 function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 
-	if( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
+	if ( ( 'blogs' === $activity->component ) && isset( $activity->secondary_item_id ) && 'new_blog_' . get_post_type( $activity->secondary_item_id ) === $activity->type ) {
 		$blog_post = get_post( $activity->secondary_item_id );
 		// If we converted $content to an object earlier, flip it back to a string.
-		if( is_a( $blog_post, 'WP_Post' ) ) {
+		if ( is_a( $blog_post, 'WP_Post' ) ) {
 			$content = bp_create_excerpt( html_entity_decode( $blog_post->post_content ) );
-			if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+			if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 				$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 				$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_permalink( $blog_post ), $append_text );
+				$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>',
+					$content,
+					get_permalink( $blog_post ),
+					$append_text );
 				$content     = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$iframe  = $matches[0];
 					$content = strip_tags( preg_replace( '/<iframe.*?\/iframe>/i', '', $content ), '<a>' );
 					$content .= $iframe;
 				} else {
 					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-					if( isset( $src[0] ) ) {
+					if ( isset( $src[0] ) ) {
 						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
 					}
 				}
@@ -2317,11 +2328,11 @@ function bp_blogs_activity_content_with_read_more( $content, $activity ) {
 				$content = apply_filters_ref_array( 'bp_get_activity_content', array( $content, $activity ) );
 				$content = strip_tags( $content, '<a><iframe>' );
 				preg_match( '/<iframe.*src=\"(.*)\".*><\/iframe>/isU', $content, $matches );
-				if( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
+				if ( isset( $matches ) && array_key_exists( 0, $matches ) && ! empty( $matches[0] ) ) {
 					$content = $content;
 				} else {
 					$src = wp_get_attachment_image_src( get_post_thumbnail_id( $blog_post->ID ), 'full', false );
-					if( isset( $src[0] ) ) {
+					if ( isset( $src[0] ) ) {
 						$content .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
 					}
 				}
@@ -2339,28 +2350,35 @@ add_filter( 'bp_get_activity_content', 'bp_blogs_activity_comment_content_with_r
 /**
  * Function which set the content on activity blog post comment.
  *
- * @param $content
+ * @since BuddyBoss 1.5.5
+ *
  * @param $activity
  *
+ * @param $content
+ *
  * @return string
- * @since BuddyBoss 1.5.5
  */
 function bp_blogs_activity_comment_content_with_read_more( $content, $activity ) {
 
-	if( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
+	if ( 'activity_comment' === $activity->type && $activity->item_id && $activity->item_id > 0 ) {
 		// Get activity object.
 		$comment_activity = new BP_Activity_Activity( $activity->item_id );
-		if( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
+		if ( 'blogs' === $comment_activity->component && isset( $comment_activity->secondary_item_id ) && 'new_blog_' . get_post_type( $comment_activity->secondary_item_id ) === $comment_activity->type ) {
 			$comment_post_type = $comment_activity->secondary_item_id;
 			$get_post_type     = get_post_type( $comment_post_type );
-			$comment_id        = bp_activity_get_meta( $activity->id, 'bp_blogs_' . $get_post_type . '_comment_id', true );
-			if( $comment_id ) {
+			$comment_id        = bp_activity_get_meta( $activity->id,
+				'bp_blogs_' . $get_post_type . '_comment_id',
+				true );
+			if ( $comment_id ) {
 				$comment = get_comment( $comment_id );
 				$content = bp_create_excerpt( html_entity_decode( $comment->comment_content ) );
-				if( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
+				if ( false !== strrpos( $content, __( '&hellip;', 'buddyboss' ) ) ) {
 					$content     = str_replace( ' [&hellip;]', '&hellip;', $content );
 					$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
-					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>', $content, get_comment_link( $comment_id ), $append_text );
+					$content     = sprintf( '%1$s<span class="activity-blog-post-link"><a href="%2$s" rel="nofollow">%3$s</a></span>',
+						$content,
+						get_comment_link( $comment_id ),
+						$append_text );
 				}
 			}
 		}

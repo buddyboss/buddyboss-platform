@@ -835,7 +835,9 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 
 			if ( empty( $activity_args['id'] ) ) {
 				// The activity metadata to inform about the corresponding comment ID
-				bp_activity_update_meta( $activity_id, "bp_blogs_{$comment->post->post_type}_comment_id", $comment->comment_ID );
+				bp_activity_update_meta( $activity_id,
+					"bp_blogs_{$comment->post->post_type}_comment_id",
+					$comment->comment_ID );
 
 				// The comment metadata to inform about the corresponding activity ID
 				add_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', $activity_id );
@@ -843,7 +845,9 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 				// These activity metadatas are used to build the new_blog_comment action string
 				if ( 'new_blog_comment' === $activity_post_object->comment_action_id ) {
 					bp_activity_update_meta( $activity_id, 'post_title', $comment->post->post_title );
-					bp_activity_update_meta( $activity_id, 'post_url', esc_url_raw( add_query_arg( 'p', $comment->post->ID, home_url( '/' ) ) ) );
+					bp_activity_update_meta( $activity_id,
+						'post_url',
+						esc_url_raw( add_query_arg( 'p', $comment->post->ID, home_url( '/' ) ) ) );
 				}
 			}
 
@@ -1505,15 +1509,17 @@ function bp_core_admin_get_active_custom_post_type_feed() {
 
 	bp_update_option( 'bp_core_admin_get_active_custom_post_type_feed', $post_types );
 }
+
 add_action( 'init', 'bp_core_admin_get_active_custom_post_type_feed' );
 
 /**
  * Pass the empty content on blog or custom post types comments.
  *
+ * @since BuddyBoss 1.5.5
+ *
  * @param $content
  *
  * @return string
- * @since BuddyBoss 1.5.5
  */
 function bp_activity_empty_post_comment_content( $content ) {
 
