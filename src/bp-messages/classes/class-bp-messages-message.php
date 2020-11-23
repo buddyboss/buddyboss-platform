@@ -155,12 +155,12 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$max_thread      = self::get(
+			$max_thread = self::get(
 				array(
 					'fields'   => 'thread_ids',
 					'per_page' => 1,
 					'page'     => 1,
-					'orderby'  => 'id',
+					'orderby'  => 'thread_id',
 				)
 			);
 			$this->thread_id = ( isset( $max_thread['messages'][0] ) && is_numeric( $max_thread['messages'][0] ) ) ? (int) $max_thread['messages'][0] + 1 : 1;
@@ -820,6 +820,13 @@ class BP_Messages_Message {
 		switch ( $orderby ) {
 			case 'id':
 				$order_by_term = 'm.id';
+				break;
+			case 'thread_id':
+				$order_by_term = 'm.thread_id';
+				break;
+			case 'user_id':
+			case 'sender_id':
+				$order_by_term = 'm.sender_id';
 				break;
 			case 'date_sent':
 			default:
