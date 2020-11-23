@@ -610,38 +610,20 @@ function bp_document_attach_document_to_message( &$message ) {
 		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 		$document_list = $_POST['document'];
-		$document_ids  = array();
 
-		foreach ( $document_list as $document_index => $document ) {
-			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
-			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
-			$menu_order	   = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
+		if ( ! empty( $document_list ) ) {
+			foreach ( $document_list as $k => $document ) {
+				if ( array_key_exists( 'group_id', $document ) ) {
+					unset( $document_list[ $k ]['group_id'] );
+				}
+			}
+		}
 
-			$attachment_data = get_post( $document['id'] );
-			$file            = get_attached_file( $document['id'] );
-			$file_type       = wp_check_filetype( $file );
-			$file_name       = basename( $file );
+		$document_ids = bp_document_add_handler( $document_list, 'message' );
 
-			$document_id = bp_document_add(
-				array(
-					'attachment_id' => $attachment_id,
-					'title'         => $title,
-					'privacy'       => 'message',
-					'error_type'    => 'wp_error',
-					'menu_order'    => $menu_order,
-				)
-			);
-
-			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
-				$document_ids[] = $document_id;
-
-				// save document meta.
-				bp_document_update_meta( $document_id, 'file_name', $file_name );
+		if ( ! empty( $document_ids ) ) {
+			foreach ( $document_ids as $document_id ) {
 				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
-				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
-
-				// save document is saved in attachment.
-				update_post_meta( $attachment_id, 'bp_document_saved', true );
 			}
 		}
 

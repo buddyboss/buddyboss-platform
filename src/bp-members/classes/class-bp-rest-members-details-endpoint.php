@@ -177,6 +177,7 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 	public function get_item( $request ) {
 		$retval = array();
 		global $bp;
+		$tmp_bp = $bp;
 
 		$current_user_id = $request->get_param( 'id' );
 		if ( empty( $current_user_id ) ) {
@@ -191,25 +192,64 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 				__( 'Sorry, Invalid member ID.', 'buddyboss' ),
 				array(
 					'status' => '404',
-				)
-			);
+				) );
 		}
 
 		$user = bp_rest_get_user( $current_user_id );
 
 		if ( ! $user instanceof WP_User ) {
-			return new WP_Error(
-				'bp_rest_member_invalid_id',
-				__( 'Invalid member ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			return new WP_Error( 'bp_rest_member_invalid_id', __( 'Invalid member ID.', 'buddyboss' ), array(
+				'status' => 404,
+			) );
 		}
 
-		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+		$url = bp_core_get_user_domain( $current_user_id );
 
-		bp_setup_nav();
+		$tempurl = ( ! empty( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '' );
+
+		/**
+		 * Member navigation tabs creation start
+		 *
+		 * Member Navigation tab only setup on member page request so for fetch member's tabs we need set member url as `REQUEST_URI` forcefully and
+		 * Once our job done switch back to original url.
+		 * With below process BuddyPress state might be change so we need to rest it once our job done.
+		 *
+		 * After set Member url forcefully we need to re-execute core hook which load component and setup tabs for given group.
+		 */
+		$_SERVER['REQUEST_URI'] = $url;
+
+		bp_core_set_uri_globals();
+
+		add_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+		add_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
+
+		remove_action( 'bp_init', 'bp_register_taxonomies', 2 );
+		remove_action( 'bp_init', 'bp_register_post_types', 2 );
+		remove_action( 'bp_init', 'bp_setup_title', 8 );
+		remove_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
+		remove_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
+		remove_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
+		remove_action( 'bp_init', 'bp_add_permastructs', 40 );
+		remove_action( 'bp_init', 'bp_init_background_updater', 50 );
+		remove_all_actions( 'bp_actions' );
+
+		/**
+		 * Remove other hooks if needed.
+		 */
+		do_action( 'bp_rest_member_detail' );
+
+		do_action( 'bp_init' );
+
+		add_action( 'bp_init', 'bp_register_taxonomies', 2 );
+		add_action( 'bp_init', 'bp_register_post_types', 2 );
+		add_action( 'bp_init', 'bp_setup_title', 8 );
+		add_action( 'bp_init', 'bp_core_load_admin_bar_css', 12 );
+		add_action( 'bp_init', 'bp_add_rewrite_tags', 20 );
+		add_action( 'bp_init', 'bp_add_rewrite_rules', 30 );
+		add_action( 'bp_init', 'bp_add_permastructs', 40 );
+		add_action( 'bp_init', 'bp_init_background_updater', 50 );
+
+		$_SERVER['REQUEST_URI'] = $tempurl;
 
 		$profile_tabs = array();
 		$default_tab  = 'profile';
@@ -294,17 +334,21 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 
 		$retval['tabs'] = array_values( $profile_tabs );
 
-		$response = rest_ensure_response( $retval );
-
+		remove_filter( 'bp_is_current_component', array( $this, 'bp_rest_is_current_component' ), 999, 2 );
 		remove_filter( 'bp_displayed_user_id', array( $this, 'bp_rest_get_displayed_user' ), 999 );
+
+		$bp = $tmp_bp;
+		unset( $tmp_bp );
+		$response = rest_ensure_response( $retval );
 
 		/**
 		 * Fires after a list of members details is fetched via the REST API.
 		 *
-		 * @param WP_REST_Response $response The response data.
+		 * @since 0.1.0
+		 *
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 *
-		 * @since 0.1.0
+		 * @param WP_REST_Response $response The response data.
 		 */
 		do_action( 'bp_rest_members_detail_get_items', $response, $request );
 
@@ -1227,5 +1271,21 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 		return $branch;
 	}
 
+	/**
+	 * Unset group component while using this
+	 * - added for phpunit fix.
+	 *
+	 * @param boolean $is_current_component Check is valid component.
+	 * @param string  $component            Current component name.
+	 *
+	 * @return boolean
+	 */
+	public function bp_rest_is_current_component( $is_current_component, $component ) {
+		if ( 'groups' !== $component ) {
+			return $is_current_component;
+		}
+
+		return false;
+	}
 
 }

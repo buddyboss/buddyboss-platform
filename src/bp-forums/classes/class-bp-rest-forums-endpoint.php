@@ -329,31 +329,24 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 				__( 'Invalid forum ID.', 'buddyboss' ),
 				array(
 					'status' => 404,
-				)
-			);
+				) );
 		}
 
 		if ( true === $retval && ( ! isset( $forum->post_type ) || 'forum' !== $forum->post_type ) ) {
-			$retval = new WP_Error(
-				'bp_rest_forum_invalid_id',
-				__( 'Invalid forum ID.', 'buddyboss' ),
-				array(
-					'status' => 404,
-				)
-			);
+			$retval = new WP_Error( 'bp_rest_forum_invalid_id', __( 'Invalid forum ID.', 'buddyboss' ), array(
+				'status' => 404,
+			) );
 		}
 
-		if ( true === $retval && isset( $forum->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $forum->post_type ) ) {
 			$post_type = get_post_type_object( $forum->post_type );
 
 			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
+				$retval = new WP_Error( 'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this forum.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
-					)
-				);
+					) );
 			}
 		}
 

@@ -1319,17 +1319,23 @@ function groups_screen_notification_settings() {
 					?>
 					<tr id="groups-notification-settings-request-messages">
 						<td></td>
-						<td><?php _e( 'Group Message', 'buddyboss' ); ?></td>
+						<td><?php _e( 'A group sends you a new message', 'buddyboss' ); ?></td>
 						<td class="yes">
 							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message, 'yes', true ); ?> />
-								<label for="notification-groups-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $group_message,
+										'yes',
+										true ); ?> />
+								<label for="notification-groups-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email',
+												'buddyboss' ); ?></span></label>
 							</div>
 						</td>
 						<td class="no">
 							<div class="bp-radio-wrap">
-								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-no" class="bs-styled-radio" value="no" <?php checked( $group_message, 'no', true ); ?> />
-								<label for="notification-groups-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+								<input type="radio" name="notifications[notification_group_messages_new_message]" id="notification-groups-messages-no" class="bs-styled-radio" value="no" <?php checked( $group_message,
+										'no',
+										true ); ?> />
+								<label for="notification-groups-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email',
+												'buddyboss' ); ?></span></label>
 							</div>
 						</td>
 					</tr>

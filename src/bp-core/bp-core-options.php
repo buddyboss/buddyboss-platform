@@ -943,17 +943,43 @@ function bp_is_activity_edit_enabled( $default = false ) {
 	 *
 	 * @param bool $value Whether or not Activity edit is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_edit_enabled',
+		(bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+}
+
+/**
+ * Check whether relevant feed is enabled.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ *
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+
+function bp_is_relevant_feed_enabled( $default = false ) {
+
+	/**
+	 * Filters whether or not relevant feed is enabled.
+	 *
+	 * @since BuddyBoss 1.5.5
+	 *
+	 * @param bool $value Whether or not relevant feed is enabled.
+	 */
+
+	return (bool) apply_filters( 'bp_is_relevant_feed_enabled',
+		(bool) bp_get_option( '_bp_enable_relevant_feed', $default ) );
 }
 
 /**
  * single time slot by time key.
  *
+ * @since BuddyBoss 1.5.0
+ *
  * @param null $time Return single time slot by time key.
  *
  * @return mixed|void
- * @since BuddyBoss 1.5.0
- *
  */
 function bp_activity_edit_times( $time = null ) {
 

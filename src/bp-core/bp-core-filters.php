@@ -59,7 +59,11 @@ add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
-// Avatars
+// Removed Document and Media from WordPress media endpoints.
+add_filter( 'rest_attachment_query', 'bp_rest_restrict_wp_attachment_query', 999 );
+add_filter( 'rest_prepare_attachment', 'bp_rest_restrict_wp_attachment_response', 999, 2 );
+
+// Avatars.
 /**
  * Disable gravatars fallback for member avatars.
  *
@@ -783,7 +787,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 		} else {
 			if ( in_array( $current, array( bp_loggedin_user_domain() ) ) ) {
 				if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-					$tab = bp_nouveau_get_appearance_settings( 'user_default_tab' );
+					$tab       = bp_nouveau_get_appearance_settings( 'user_default_tab' );
 					$component = $tab;
 					if ( $component && in_array( $component, array( 'document' ), true ) ) {
 						$component = 'media';
@@ -792,7 +796,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 					}
 					if ( bp_is_active( $component ) ) {
 						if ( strpos( $menu_item->url, $tab ) !== false ) {
-							$menu_item->classes = is_array( $menu_item->classes ) ? $menu_item->classes : array() ;
+							$menu_item->classes   = is_array( $menu_item->classes ) ? $menu_item->classes : array();
 							$menu_item->classes[] = 'current_page_item';
 							$menu_item->classes[] = 'current-menu-item';
 						}
@@ -1410,7 +1414,7 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
  */
 function bp_pages_terms_and_privacy_exclude( $pages ) {
 
-	if ( !empty( $pages ) ) {
+	if ( ! empty( $pages ) ) {
 
 		// Removed terms page as non component page.
 		if ( property_exists( $pages, 'terms' ) ) {
@@ -1456,11 +1460,73 @@ add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_core_get_cover_imag
 if ( ! function_exists( 'buddyboss_platform_plugin_update_notice' ) ) {
 	function buddyboss_platform_plugin_update_notice() {
 		$buddyboss_theme = wp_get_theme( 'buddyboss-theme' );
-		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare(  $buddyboss_theme->get( 'Version' ), '1.5.0', '<' ) ) {
+		if ( $buddyboss_theme->exists() && $buddyboss_theme->get( 'Version' ) && function_exists( 'buddyboss_theme' ) && version_compare( $buddyboss_theme->get( 'Version' ),
+				'1.5.0',
+				'<' ) ) {
 			$class   = 'notice notice-error';
-			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.', 'buddyboss' );
+			$message = __( 'Please update BuddyBoss Theme to v1.5.0 to maintain compatibility with BuddyBoss Platform. Some icons in your theme will look wrong until you update.',
+				'buddyboss' );
 			printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
 		}
 	}
+
 	add_action( 'admin_notices', 'buddyboss_platform_plugin_update_notice' );
+}
+
+/**
+ * Update attachment rest query argument to hide media/document from media endpoints.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param array $args WP_Query parsed arguments.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_query( $args ) {
+	$meta_query = ( array_key_exists( 'meta_query', $args ) ? $args['meta_query'] : array() );
+
+	// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+	$args['meta_query'] = array(
+		array(
+			'key'     => 'bp_media_upload',
+			'compare' => 'NOT EXISTS',
+		),
+		array(
+			'key'     => 'bp_document_upload',
+			'compare' => 'NOT EXISTS',
+		),
+	);
+
+	if ( ! empty( $meta_query ) ) {
+		$args['meta_query'][] = $meta_query;
+	}
+
+	if ( count( $args['meta_query'] ) > 1 ) {
+		$args['meta_query']['relation'] = 'AND';
+	}
+
+	return $args;
+}
+
+/**
+ * Empty response in single WordPress Media endpoint when fetch media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param WP_REST_Response $response The response object.
+ * @param WP_Post          $post     The original attachment post.
+ *
+ * @return array
+ */
+function bp_rest_restrict_wp_attachment_response( $response, $post ) {
+	$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+	$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+	$data          = $response->get_data();
+	if ( array_key_exists( 'media_type', $data ) && ( ! empty( $media_meta ) || ! empty( $document_meta ) ) ) {
+		$response = array();
+	}
+
+	return $response;
 }

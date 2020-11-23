@@ -290,12 +290,17 @@ div.bbp-reply-header {
 
 #bbpress-forums div.bbp-topic-content a:not(.entry-img),
 #bbpress-forums div.bbp-reply-content a:not(.entry-img) {
-	background: none;
-	border: none;
-	display: inline;
-	font-weight: 400;
-	margin: 0;
-	padding: 0;
+  background: none;
+  border: none;
+  display: inline;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+
+#bbpress-forums div.bbp-reply-content a.gif-play-button {
+  margin-left: -40px;
+  margin-top: -40px;
 }
 
 #bbpress-forums div.bbp-topic-content h1,

@@ -1550,6 +1550,7 @@ window.bp = window.bp || {};
 			if ( $( currentTarget ).hasClass( 'field-actions-remove' ) ) {
 
 				if ( $( this ).closest( 'tr' ).siblings().length > 1 ) {
+
 					$( this ).closest( 'tr' ).remove();
 					currentDataTable.find( '.field-actions-add.disabled' ).removeClass( 'disabled' );
 				} else {
@@ -1578,12 +1579,13 @@ window.bp = window.bp || {};
 			var data_rows = currentDataTable.find( 'tr:not(:last-child)' );
 			$.each(
 				data_rows,
-				function(index){
-					$( this ).find( '.field-name > input' ).attr( 'name','invitee[' + index + '][]' );
-					$( this ).find( '.field-name > input' ).attr( 'id','invitee_' + index + '_title' );
-					$( this ).find( '.field-email > input' ).attr( 'name','email[' + index + '][]' );
-					$( this ).find( '.field-email > input' ).attr( 'id','email_' + index + '_email' );
-
+				function (index) {
+					$(this).find('.field-name > input').attr('name', 'invitee[' + index + '][]');
+					$(this).find('.field-name > input').attr('id', 'invitee_' + index + '_title');
+					$(this).find('.field-email > input').attr('name', 'email[' + index + '][]');
+					$(this).find('.field-email > input').attr('id', 'email_' + index + '_email');
+					$(this).find('.field-member-type > select').attr('name', 'member-type[' + index + '][]');
+					$(this).find('.field-member-type > select').attr('id', 'member_type_' + index + '_member_type');
 				}
 			);
 		},

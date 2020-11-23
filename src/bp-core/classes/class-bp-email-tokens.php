@@ -646,11 +646,11 @@ class BP_Email_Tokens {
 														<?php
 														/**
 														 * Display text before activity comment.
-														 * 
+														 *
 														 * @since BuddyBoss 1.4.7
 														 *
 														 * @param object $activity_comment BP_Activity_Activity object,
-														 * 
+														 *
 														 */
 														do_action( 'bp_activity_before_email_content', $activity_comment );
 
@@ -659,13 +659,13 @@ class BP_Email_Tokens {
 														}
 														echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) );
 
-                                                        /**
+														/**
 														 * Display text after activity comment.
-														 * 
+														 *
 														 * @since BuddyBoss 1.4.7
 														 *
 														 * @param object $activity_comment BP_Activity_Activity object,
-														 * 
+														 *
 														 */
 														do_action( 'bp_activity_after_email_content', $activity_comment );
 														?>
@@ -847,9 +847,12 @@ class BP_Email_Tokens {
 															<div class="gif-image-container">
 																<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
 																	<span class="bb-icon-play-thin"></span>
-																	<img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
-																</a>
-																<span class="gif-icon"></span>
+																	<?php if ( is_int( $gif_data['still'] ) ) { ?>
+																		<img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>"/>
+																	<?php } else { ?>
+																		<img src="<?php echo esc_url( $gif_data['still'] ); ?>"/>
+																	<?php } ?>
+																</a> <span class="gif-icon"></span>
 															</div>
 														</div>
 													<?php endif; ?>

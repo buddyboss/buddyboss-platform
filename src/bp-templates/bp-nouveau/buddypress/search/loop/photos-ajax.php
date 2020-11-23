@@ -7,13 +7,11 @@
 
 $listing_class  = '';
 $attachment_id  = bp_get_media_attachment_id();
-$attachment_url = '';
 $media_id       = bp_get_media_id();
 $filename       = basename( get_attached_file( $attachment_id ) );
 $photo_title    = '';
 $media_type     = '';
 if ( $attachment_id ) {
-	$attachment_url = wp_get_attachment_url( $attachment_id );
 	$listing_class  = 'ac-media-list';
 	$media_type     = 'photos';
 	$photo_title    = bp_get_media_title();
@@ -33,14 +31,13 @@ $media_created = bp_get_media_date_created();
 			<div class="media-album_items ac-album-list">
 				<div class="media-album_thumb">
 					<a href="<?php echo esc_url( $media_link ); ?>">
-						<img src="<?php echo esc_url( $attachment_url ); ?>" alt="<?php echo esc_html( $photo_title ); ?>" />
+						<img src="<?php bp_media_attachment_image_thumbnail() ?>" alt="<?php echo esc_html( $photo_title ); ?>"/>
 					</a>
 				</div>
 
 				<div class="media-album_details">
 					<a class="media-album_name " href="<?php echo esc_url( $media_link ); ?>">
-						<span><?php echo esc_html( $photo_title ); ?></span>
-					</a>
+						<span><?php echo esc_html( $photo_title ); ?></span> </a>
 				</div>
 
 				<div class="media-album_modified">
@@ -49,7 +46,7 @@ $media_created = bp_get_media_date_created();
 						<?php
 						if ( ! bp_is_user() ) {
 							?>
-								<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
+							<span class="media-album_author"><?php esc_html_e( 'by ', 'buddyboss' ); ?>
 								<a href="<?php echo esc_url( $media_link ); ?>"><?php bp_media_author(); ?></a></span>
 								<?php
 						}

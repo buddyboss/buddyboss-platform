@@ -317,6 +317,10 @@ function bp_version_updater() {
 		if ( $raw_db_version < 16201 ) {
 			bp_update_to_1_5_1();
 		}
+
+		if ( $raw_db_version < 16301 ) {
+			bp_update_to_1_5_5();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -1109,4 +1113,20 @@ function bb_update_to_1_3_5() {
 	if ( bp_is_active( 'groups' ) ) {
 		bp_groups_migrate_invitations();
 	}
+}
+
+/**
+ * Fix message media showing in group photos tab.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_update_to_1_5_5() {
+
+	global $wpdb;
+	$bp = buddypress();
+
+	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )",
+		'message' ) );
 }

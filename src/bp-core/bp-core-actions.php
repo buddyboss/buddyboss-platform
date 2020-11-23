@@ -115,9 +115,12 @@ add_action( 'bp_template_redirect', 'bp_private_network_template_redirect', 10 )
 /**
  * Add the BuddyPress functions file and the Theme Compat Default features.
  */
-add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency', -10 );
+add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency', - 10 );
 add_action( 'bp_after_setup_theme', 'bp_load_theme_functions', 1 );
 add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar', 9999999 );
+
+// Restrict user when view media/document from url.
+add_action( 'template_redirect', 'bp_restrict_single_attachment', 999 );
 
 // Load the admin.
 if ( is_admin() ) {
@@ -127,7 +130,7 @@ if ( is_admin() ) {
 // Activation redirect.
 add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
-// Add Platform plugin updater code
+// Add Platform plugin updater code.
 if ( is_admin() ) {
 	add_action( 'bp_init', 'bp_platform_plugin_updater' );
 }
@@ -136,13 +139,37 @@ if ( is_admin() ) {
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );
 
 // Set the "Document" component active/inactive based on the media components.
-add_action( 'bp_init', function() {
-	$component = bp_get_option( 'bp-active-components' );
-	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
-		$component['document'] = '1';
-		bp_update_option( 'bp-active-components', $component );
-	} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
-		unset($component['document']);
-		bp_update_option( 'bp-active-components', $component );
+add_action( 'bp_init',
+	function () {
+		$component = bp_get_option( 'bp-active-components' );
+		if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && empty( $component['document'] ) ) {
+			$component['document'] = '1';
+			bp_update_option( 'bp-active-components', $component );
+		} elseif ( isset( $component ) && isset( $component['document'] ) && empty( $component['media'] ) ) {
+			unset( $component['document'] );
+			bp_update_option( 'bp-active-components', $component );
+		}
+	},
+	10,
+	2 );
+
+/**
+ * Restrict user when visit attachment url from media/document.
+ * - Privacy security.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_restrict_single_attachment() {
+	if ( is_attachment() ) {
+		global $post;
+		if ( ! empty( $post ) ) {
+			$media_meta    = get_post_meta( $post->ID, 'bp_media_upload', true );
+			$document_meta = get_post_meta( $post->ID, 'bp_document_upload', true );
+			if ( ! empty( $media_meta ) || ! empty( $document_meta ) ) {
+				bp_do_404();
+
+				return;
+			}
+		}
 	}
-}, 10, 2 );
+}

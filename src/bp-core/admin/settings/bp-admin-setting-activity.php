@@ -83,22 +83,46 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		) );
 
 		// Allow subscriptions setting.
-		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
+		$this->add_field( '_bp_enable_heartbeat_refresh',
+			__( 'Activity auto-refresh', 'buddyboss' ),
+			'bp_admin_setting_callback_heartbeat',
+			'intval' );
 
 		// Allow auto-load.
-		$this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
+		$this->add_field( '_bp_enable_activity_autoload',
+			__( 'Activity auto-load', 'buddyboss' ),
+			'bp_admin_setting_callback_enable_activity_autoload',
+			'intval' );
 
 		// Allow scopes/tabs.
-		$this->add_field( '_bp_enable_activity_tabs', __( 'Activity tabs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_tabs', 'intval' );
+		$this->add_field( '_bp_enable_activity_tabs',
+			__( 'Activity tabs', 'buddyboss' ),
+			'bp_admin_setting_callback_enable_activity_tabs',
+			'intval' );
 
 		// Allow follow.
-		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
+		$this->add_field( '_bp_enable_activity_follow',
+			__( 'Follow', 'buddyboss' ),
+			'bp_admin_setting_callback_enable_activity_follow',
+			'intval' );
 
 		// Allow like.
-		$this->add_field( '_bp_enable_activity_like', __( 'Likes', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_like', 'intval' );
+		$this->add_field( '_bp_enable_activity_like',
+			__( 'Likes', 'buddyboss' ),
+			'bp_admin_setting_callback_enable_activity_like',
+			'intval' );
 
 		// Allow link preview.
-		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
+		$this->add_field( '_bp_enable_activity_link_preview',
+			__( 'Link Previews', 'buddyboss' ),
+			'bp_admin_setting_callback_enable_activity_link_preview',
+			'intval' );
+
+		//Relevant Activity Feeds
+		$this->add_field( '_bp_enable_relevant_feed',
+			__( 'Relevant Activity', 'buddyboss' ),
+			'bp_admin_setting_callback_enable_relevant_feed',
+			'intval' );
 
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {

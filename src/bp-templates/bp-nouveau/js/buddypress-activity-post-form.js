@@ -259,32 +259,36 @@ window.bp = window.bp || {};
 							}
 						};
 
-						if ( self.dropzone ) {
+						if (self.dropzone) {
 
-							self.dropzone.files.push( doc_file );
-							self.dropzone.emit( 'addedfile', doc_file );
-							self.dropzone.emit( 'complete', doc_file );
+							self.dropzone.files.push(doc_file);
+							self.dropzone.emit('addedfile', doc_file);
+							self.dropzone.emit('complete', doc_file);
 						}
 					}
 				}
-				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
+				self.postForm.$el.find('#whats-new').trigger('keyup');
 				self.postForm.$el.removeClass('loading');
 
+				//Wrap content section for better scroll
+				$('#whats-new-content, #whats-new-attachments').wrapAll('<div class="edit-activity-content-wrap"></div>');
+
+
 				// Make selected current privacy.
-				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
+				var $activityPrivacySelect = self.postForm.$el.find('#bp-activity-privacy');
 
-				$activityPrivacySelect.val( activity_data.privacy );
+				$activityPrivacySelect.val(activity_data.privacy);
 
-				var privacy = $( '[data-bp-list="activity"] #activity-' + activity_data.id ).find( 'ul.activity-privacy li.selected' ).data( 'value' );
-				if ( ! _.isUndefined( privacy ) ) {
-					$activityPrivacySelect.val( privacy );
+				var privacy = $('[data-bp-list="activity"] #activity-' + activity_data.id).find('ul.activity-privacy li.selected').data('value');
+				if (!_.isUndefined(privacy)) {
+					$activityPrivacySelect.val(privacy);
 				}
 
 				// Do not allow the edit privacy if activity is belongs to any folder/album.
-				if ( ! bp.privacyEditable ) {
-					$activityPrivacySelect.parent().css( 'display', 'none');
+				if (!bp.privacyEditable) {
+					$activityPrivacySelect.parent().css('display', 'none');
 				} else {
-					$activityPrivacySelect.parent().css( 'display', 'block');
+					$activityPrivacySelect.parent().css('display', 'block');
 				}
 			},0 );
 
@@ -374,23 +378,28 @@ window.bp = window.bp || {};
 
 		},
 
-		postActivityEditHideModal : function(){
+		postActivityEditHideModal : function() {
 
 			// Reset Global variable after edit activity.
 			bp.privacyEditable = true;
-			bp.album_id        = 0;
-			bp.folder_id       = 0;
-			bp.group_id        = 0;
-			bp.privacy         = 'public';
+			bp.album_id = 0;
+			bp.folder_id = 0;
+			bp.group_id = 0;
+			bp.privacy = 'public';
 
 			$('.activity-update-form.modal-popup').removeClass('modal-popup group-activity');
 
-			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
-			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+			var $activityFormPlaceholder = $('#bp-nouveau-activity-form-placeholder');
+			var $singleActivityFormWrap = $('#bp-nouveau-single-activity-edit-form-wrap');
+
+			//unwrap hw wrapped content section
+			if ($('#whats-new-content').parent().is('.edit-activity-content-wrap')) {
+				$('#whats-new-content').unwrap();
+			}
 
 			$activityFormPlaceholder.hide();
 
-			if ( $singleActivityFormWrap.length ){
+			if ($singleActivityFormWrap.length) {
 				$singleActivityFormWrap.hide();
 			}
 		},

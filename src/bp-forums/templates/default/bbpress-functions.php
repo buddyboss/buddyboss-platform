@@ -386,13 +386,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = wp_get_attachment_url( $gif_data['still'] );
-						$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+						$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 						$params['topic_edit_gif_data'] = array(
-							'preview_url'  => $preview_url,
-							'video_url'    => $video_url,
-							'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
+								'preview_url'  => $preview_url,
+								'video_url'    => $video_url,
+								'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
 						);
 					}
 				}
@@ -464,13 +464,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = wp_get_attachment_url( $gif_data['still'] );
-						$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+						$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 						$params['reply_edit_gif_data'] = array(
-							'preview_url'  => $preview_url,
-							'video_url'    => $video_url,
-							'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
+								'preview_url'  => $preview_url,
+								'video_url'    => $video_url,
+								'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
 						);
 					}
 				}
@@ -543,13 +543,13 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					$gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
-						$preview_url = wp_get_attachment_url( $gif_data['still'] );
-						$video_url   = wp_get_attachment_url( $gif_data['mp4'] );
+						$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+						$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 
 						$params['forum_edit_gif_data'] = array(
-							'preview_url'  => $preview_url,
-							'video_url'    => $video_url,
-							'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
+								'preview_url'  => $preview_url,
+								'video_url'    => $video_url,
+								'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
 						);
 					}
 				}

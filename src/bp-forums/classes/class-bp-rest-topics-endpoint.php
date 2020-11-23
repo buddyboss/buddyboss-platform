@@ -569,14 +569,13 @@ class BP_REST_Topics_Endpoint extends WP_REST_Controller {
 		if ( isset( $topic->post_type ) ) {
 			$post_type = get_post_type_object( $topic->post_type );
 
-			if ( true === $retval && ! current_user_can( $post_type->cap->read_post, $topic->ID ) ) {
-				$retval = new WP_Error(
-					'bp_rest_authorization_required',
+			if ( true === $retval && is_user_logged_in() && ! current_user_can( $post_type->cap->read_post,
+					$topic->ID ) ) {
+				$retval = new WP_Error( 'bp_rest_authorization_required',
 					__( 'Sorry, you are not allowed to access this topic.', 'buddyboss' ),
 					array(
 						'status' => rest_authorization_required_code(),
-					)
-				);
+					) );
 			}
 		}
 

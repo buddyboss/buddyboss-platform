@@ -618,13 +618,13 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 
 	bp_activity_update_meta( $activity_id, 'post_url', $post_permalink );
 
-	$args = array(
+	$cu_post_types_args = array(
 		'name' => $post->post_type,
 	);
 
-	$output = 'objects'; // names or objects
+	$output = 'objects'; // names or objects.
 
-	$cu_post_types = get_post_types( $args, $output );
+	$cu_post_types = get_post_types( $cu_post_types_args, $output );
 
 	foreach ( $cu_post_types as $cu ) {
 		$singular_label_name = strtolower( $cu->labels->singular_name );
@@ -824,11 +824,20 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 
 		// Record in activity feeds
 		if ( ! empty( $activity_args ) ) {
+
+			// Added the filter pass the empty content on blog or custom post types comments.
+			add_filter( 'bp_activity_comment_content', 'bp_activity_empty_post_comment_content', 9999 );
+
 			$activity_id = bp_activity_new_comment( $activity_args );
+
+			// Removed the filter get back activity content.
+			remove_filter( 'bp_activity_comment_content', 'bp_activity_empty_post_comment_content', 9999 );
 
 			if ( empty( $activity_args['id'] ) ) {
 				// The activity metadata to inform about the corresponding comment ID
-				bp_activity_update_meta( $activity_id, "bp_blogs_{$comment->post->post_type}_comment_id", $comment->comment_ID );
+				bp_activity_update_meta( $activity_id,
+					"bp_blogs_{$comment->post->post_type}_comment_id",
+					$comment->comment_ID );
 
 				// The comment metadata to inform about the corresponding activity ID
 				add_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', $activity_id );
@@ -836,7 +845,9 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 				// These activity metadatas are used to build the new_blog_comment action string
 				if ( 'new_blog_comment' === $activity_post_object->comment_action_id ) {
 					bp_activity_update_meta( $activity_id, 'post_title', $comment->post->post_title );
-					bp_activity_update_meta( $activity_id, 'post_url', esc_url_raw( add_query_arg( 'p', $comment->post->ID, home_url( '/' ) ) ) );
+					bp_activity_update_meta( $activity_id,
+						'post_url',
+						esc_url_raw( add_query_arg( 'p', $comment->post->ID, home_url( '/' ) ) ) );
 				}
 			}
 
@@ -1498,4 +1509,19 @@ function bp_core_admin_get_active_custom_post_type_feed() {
 
 	bp_update_option( 'bp_core_admin_get_active_custom_post_type_feed', $post_types );
 }
+
 add_action( 'init', 'bp_core_admin_get_active_custom_post_type_feed' );
+
+/**
+ * Pass the empty content on blog or custom post types comments.
+ *
+ * @since BuddyBoss 1.5.5
+ *
+ * @param $content
+ *
+ * @return string
+ */
+function bp_activity_empty_post_comment_content( $content ) {
+
+	return '';
+}

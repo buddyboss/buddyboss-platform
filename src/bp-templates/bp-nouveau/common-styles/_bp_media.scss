@@ -2728,8 +2728,15 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		}
 
 		.media-album_thumb {
-			margin-bottom: 15px;
-			padding: 0;
+		  margin-bottom: 15px;
+		  padding: 0;
+
+		  img {
+			width: 100%;
+			height: auto;
+			max-height: 220px;
+			object-fit: cover;
+		  }
 		}
 
 		.media-album_thumb,

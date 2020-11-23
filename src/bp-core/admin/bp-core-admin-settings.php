@@ -261,12 +261,30 @@ function bp_admin_setting_callback_enable_activity_edit() {
 		<?php foreach ( $edit_times as $time ) {
 			$value      = isset( $time['value'] ) ? $time['value'] : 0;
 			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
-			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
+			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time,
+							$value,
+							false ) . '>' . esc_html( $time_level ) . '</option>';
 		} ?>
 	</select>
 
 	<?php
 }
+
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_enable_relevant_feed() {
+	?>
+	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox" value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
+	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Restrict the Activity Feed directory to only posts that are relevant to the logged-in member',
+				'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'While logged in, members will only see activity posts from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.',
+				'buddyboss' ); ?></p>
+	<?php
+}
+
 
 /**
  * Enable activity scopes like groups, friends, mentions, following etc.

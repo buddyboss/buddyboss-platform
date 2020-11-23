@@ -336,21 +336,18 @@ class BP_REST_Members_Endpoint extends WP_REST_Users_Controller {
 	public function get_item_permissions_check( $request ) {
 		$retval = true;
 
-		if ( ! is_user_logged_in() ) {
-			$retval = new WP_Error(
-				'bp_rest_authorization_required',
-				__( 'Sorry, you are not allowed to view members.', 'buddyboss' ),
+		if ( function_exists( 'bp_enable_private_network' ) && true !== bp_enable_private_network() && ! is_user_logged_in() ) {
+			$retval = new WP_Error( 'bp_rest_authorization_required',
+				__( 'Sorry, Restrict access to only logged-in members.', 'buddyboss' ),
 				array(
 					'status' => rest_authorization_required_code(),
-				)
-			);
+				) );
 		}
 
 		$user = bp_rest_get_user( $request['id'] );
 
 		if ( true === $retval && ! $user instanceof WP_User ) {
-			$retval = new WP_Error(
-				'bp_rest_member_invalid_id',
+			$retval = new WP_Error( 'bp_rest_member_invalid_id',
 				__( 'Invalid member ID.', 'buddyboss' ),
 				array(
 					'status' => 404,

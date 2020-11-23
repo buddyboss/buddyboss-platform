@@ -2481,8 +2481,15 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 
 	// Backward compatibility filters for the 'blogs' component.
 	if ( 'blogs' == $activity_post_object->component_id ) {
-		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content', $post->post_content, $post, $post_url, $post->post_type );
-		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link', $post_url, $post_id, $post->post_type );
+		$activity_content      = apply_filters( 'bp_blogs_activity_new_post_content',
+			'',
+			$post,
+			$post_url,
+			$post->post_type );
+		$activity_primary_link = apply_filters( 'bp_blogs_activity_new_post_primary_link',
+			$post_url,
+			$post_id,
+			$post->post_type );
 	} else {
 		$activity_content      = $post->post_content;
 		$activity_primary_link = $post_url;
@@ -3764,7 +3771,7 @@ function bp_activity_create_summary( $content, $activity ) {
 	);
 
 	// Get the WP_Post object if this activity type is a blog post.
-	if ( $activity['type'] === 'new_blog_post' ) {
+	if ( 'new_blog_post' === $activity['type'] ) {
 		$content = get_post( $activity['secondary_item_id'] );
 	}
 
@@ -4954,11 +4961,12 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		// get the excerpt first of post.
 		$excerpt = get_the_excerpt( $post->ID );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = ( $excerpt ) ?: $post->post_content;
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
+
 			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
 
 			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
@@ -4968,6 +4976,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 			} elseif ( isset( $_POST ) && isset( $_POST['_featured_image_id'] ) && ! empty( $_POST['_featured_image_id'] ) ) {
 				$activity_summary .= sprintf( '<br/><img src="%s">', esc_url( wp_get_attachment_url( $_POST['_featured_image_id'] ) ) );
 			}
+
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
 				$activity->content = apply_filters(
@@ -4992,25 +5001,24 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
-				$activity->content = apply_filters(
-					'bp_update_activity_feed_of_custom_post_content',
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
 					$activity_summary,
 					$post->post_content,
 					(array) $activity,
-					$post->post_type
-				);
+					$post->post_type );
 			} else {
 				$activity->content = $activity_summary;
 			}
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
 }
-add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+
+//add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
 
 
 /**
@@ -5067,7 +5075,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		// get the excerpt first of post.
 		$excerpt = get_the_excerpt( $post->ID );
 
-		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		// if excerpt found then take content as a excerpt otherwise take the content as a post content.
 		$content = ( $excerpt ) ?: $post->post_content;
 
 		// If content not empty.
@@ -5076,13 +5084,11 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
-				$activity->content = apply_filters(
-					'bp_update_activity_feed_of_custom_post_content',
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
 					$activity_summary,
 					$content,
 					(array) $activity,
-					$post->post_type
-				);
+					$post->post_type );
 			} else {
 				$activity->content = $activity_summary;
 			}
@@ -5096,25 +5102,24 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 
 			// Backward compatibility filter for the blogs component.
 			if ( 'blogs' == $activity_post_object->component_id ) {
-				$activity->content = apply_filters(
-					'bp_update_activity_feed_of_custom_post_content',
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
 					$activity_summary,
 					$post->post_content,
 					(array) $activity,
-					$post->post_type
-				);
+					$post->post_type );
 			} else {
 				$activity->content = $activity_summary;
 			}
 		}
 
 		// Save the updated activity.
-		$updated = $activity->save();
+		$activity->save();
 
 	}
 
 }
-add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+
+//add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
 
 /**
  * AJAX endpoint for link preview URL parser.
@@ -5351,6 +5356,16 @@ function bp_activity_default_scope( $scope = 'all' ) {
 		$new_scope = (array) $scope;
 	}
 
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() && bp_is_relevant_feed_enabled() ) {
+		$key = array_search( 'public', $new_scope, true );
+		if ( is_array( $new_scope ) && false !== $key ) {
+			unset( $new_scope[ $key ] );
+			if ( bp_is_active( 'forums' ) ) {
+				$new_scope[] = 'forums';
+			}
+		}
+	}
+
 	/**
 	 * Filter to update default scope.
 	 *
@@ -5359,7 +5374,6 @@ function bp_activity_default_scope( $scope = 'all' ) {
 	$new_scope = apply_filters( 'bp_activity_default_scope', $new_scope );
 
 	return implode( ',', $new_scope );
-
 }
 
 /**
