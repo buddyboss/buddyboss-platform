@@ -1078,7 +1078,7 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		$attachment_id   = 'forbidden_' . $preview_attachment_id;
 		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
 		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-			$attachment_url = home_url( '/' ) . 'document-preview?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+			$attachment_url = home_url( '/' ) . 'bb-platform-document-preview?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
 		}
 	}
 

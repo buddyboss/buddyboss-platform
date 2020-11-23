@@ -1685,7 +1685,7 @@ function bp_document_get_edit_activity_data( $activity ) {
 function bp_document_preview_image_file() {
 
 	$url_path = trim( parse_url( add_query_arg( array() ), PHP_URL_PATH ), '/' );
-	if( 'document-preview' === $url_path ) {
+	if( 'bb-platform-document-preview' === $url_path ) {
 
 		if( empty( $_REQUEST ) && empty( $_REQUEST['id'] ) && empty( $_REQUEST['id1'] ) ) {
 			echo '// Silence is golden.';
