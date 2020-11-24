@@ -52,7 +52,7 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Delete comment moderation data when actual comment is deleted.
 		add_action( 'bp_activity_delete_comment', array( $this, 'delete_moderation_data' ), 10, 2 );
-		add_action( 'bp_activity_delete_comment_children', array( $this, 'delete_moderation_data' ), 10, 2 );
+		add_action( 'bp_activity_deleted_activities', array( $this, 'delete_comment_moderation_data' ), 10 );
 	}
 
 	/**
@@ -319,6 +319,25 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 			$moderation_obj = new BP_Moderation( $comment_id, self::$moderation_type );
 			if ( ! empty( $moderation_obj->id ) ) {
 				$moderation_obj->delete( true );
+			}
+		}
+	}
+
+	/**
+	 * Function to delete activity moderation data when actual activity is getting deleted.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $activity_deleted_ids activity ids array.
+	 */
+	public function delete_comment_moderation_data( $activity_deleted_ids ) {
+
+		if ( ! empty( $activity_deleted_ids ) && is_array( $activity_deleted_ids ) ) {
+			foreach ( $activity_deleted_ids as $activity_deleted_id ) {
+				$moderation_obj = new BP_Moderation( $activity_deleted_id, self::$moderation_type );
+				if ( ! empty( $moderation_obj->id ) ) {
+					$moderation_obj->delete( true );
+				}
 			}
 		}
 	}

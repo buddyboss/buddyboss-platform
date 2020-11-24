@@ -3508,16 +3508,6 @@ function bp_activity_delete_children( $activity_id, $comment_id ) {
 	if ( ! empty( $children ) ) {
 		foreach ( (array) $children as $child ) {
 			bp_activity_delete_children( $activity_id, $child->id );
-
-			/**
-			 * Fires after deleting all the chidren comment of comment.
-			 *
-			 * @since BuddyPress 2.0.0
-			 *
-			 * @param int   $activity_id Activity item id.
-			 * @param array $children    array of children item of comment.
-			 */
-			do_action( 'bp_activity_delete_comment_children', $activity_id, $child->id );
 		}
 	}
 
