@@ -52,6 +52,9 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 
 		// button class.
 		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+
+		// Delete message moderation data when message thread is deleted.
+		add_action( 'bp_messages_message_delete_thread', array( $this, 'delete_moderation_data' ) );
 	}
 
 	/**
@@ -112,14 +115,22 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param integer $message_id User id.
+	 * @param bool    $view_link  add view link.
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $message_id ) {
-		$message = new BP_Messages_Message( $message_id );
-		$link    = '<a href="' . esc_url( self::get_permalink( (int) $message_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
+	public static function get_content_excerpt( $message_id, $view_link = false ) {
+		$message         = new BP_Messages_Message( $message_id );
+		$message_content = ( ! empty( $message->message ) ) ? $message->message : '';
 
-		return ( ! empty( $message->message ) ) ? $message->message . ' ' . $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $message_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$message_content = ( ! empty( $message_content ) ) ? $message_content . ' ' . $link : $link;
+		}
+
+		return $message_content;
 	}
 
 	/**
@@ -348,5 +359,21 @@ class BP_Moderation_Messages extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to delete message moderation data when deleting the message thread
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $thread_id ID of the thread being deleted.
+	 */
+	public function delete_moderation_data( $thread_id ) {
+		if ( ! empty( $thread_id ) ) {
+			$moderation_obj = new BP_Moderation( $thread_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }

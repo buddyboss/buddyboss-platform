@@ -49,6 +49,9 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		// Search Query.
 		add_filter( 'bp_activity_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_activity_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+
+		// Delete activity moderation data when actual activity get deleted.
+		add_action( 'bp_activity_deleted_activities', array( $this, 'delete_moderation_data' ), 10 );
 	}
 
 	/**
@@ -87,18 +90,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		if ( bp_is_active( 'forums' ) ) {
 			$hidden_group_ids = BP_Moderation_Groups::get_sitewide_hidden_ids();
 			if ( ! empty( $hidden_group_ids ) ) {
-				$activities = BP_Activity_Activity::get(
-					array(
-						'moderation_query' => false,
-						'per_page'         => 0,
-						'fields'           => 'ids',
-						'show_hidden'      => true,
-						'filter'           => array(
-							'primary_id' => $hidden_group_ids,
-							'object'     => 'groups',
-						),
-					)
-				);
+				$activities = BP_Activity_Activity::get( array(
+					'moderation_query' => false,
+					'per_page'         => 0,
+					'fields'           => 'ids',
+					'show_hidden'      => true,
+					'filter'           => array(
+						'primary_id' => $hidden_group_ids,
+						'object'     => 'groups',
+					),
+				) );
 
 				if ( ! empty( $activities['activities'] ) ) {
 					$hidden_group_activity_ids = $activities['activities'];
@@ -127,18 +128,16 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 			$hidden_ids = array_merge( $hidden_forums_ids, $hidden_forum_topics_ids, $hidden_forum_replies_ids );
 			if ( ! empty( $hidden_ids ) ) {
 
-				$activities = BP_Activity_Activity::get(
-					array(
-						'moderation_query' => false,
-						'per_page'         => 0,
-						'fields'           => 'ids',
-						'show_hidden'      => true,
-						'filter'           => array(
-							'primary_id' => $hidden_ids,
-							'object'     => 'bbpress',
-						),
-					)
-				);
+				$activities = BP_Activity_Activity::get( array(
+					'moderation_query' => false,
+					'per_page'         => 0,
+					'fields'           => 'ids',
+					'show_hidden'      => true,
+					'filter'           => array(
+						'primary_id' => $hidden_ids,
+						'object'     => 'bbpress',
+					),
+				) );
 
 				if ( ! empty( $activities['activities'] ) ) {
 					$hidden_forum_activity_ids = $activities['activities'];
@@ -169,15 +168,24 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_id activity id.
+	 * @param int  $activity_id activity id.
+	 * @param bool $view_link   add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $activity_id ) {
+	public static function get_content_excerpt( $activity_id, $view_link = false ) {
 		$activity = new BP_Activity_Activity( $activity_id );
-		$link     = '<a href="' . esc_url( self::get_permalink( (int) $activity_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $activity->content ) ) ? $activity->content . ' ' .  $link : $link;
+		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : $activity->action;
+
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $activity_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$activity_content = ( ! empty( $activity_content ) ) ? $activity_content . ' ' . $link : $link;
+		}
+
+		return $activity_content;
 	}
 
 	/**
@@ -194,8 +202,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
-
-
 
 	/**
 	 * Report content
@@ -363,5 +369,24 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to delete activity moderation data when actual activity is getting deleted.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $activity_deleted_ids activity ids array.
+	 */
+	public function delete_moderation_data( $activity_deleted_ids ) {
+
+		if ( ! empty( $activity_deleted_ids ) && is_array( $activity_deleted_ids ) ) {
+			foreach ( $activity_deleted_ids as $activity_deleted_id ) {
+				$moderation_obj = new BP_Moderation( $activity_deleted_id, self::$moderation_type );
+				if ( ! empty( $moderation_obj->id ) ) {
+					$moderation_obj->delete( true );
+				}
+			}
+		}
 	}
 }

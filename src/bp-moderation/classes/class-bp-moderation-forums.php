@@ -49,6 +49,9 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_forums_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forums_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+
+		// delete forum moderation data when actual forum deleted.
+		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
 	}
 
 	/**
@@ -80,15 +83,22 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $forum_id Forum id.
+	 * @param integer $forum_id  Forum id.
+	 * @param bool    $view_link add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $forum_id ) {
+	public static function get_content_excerpt( $forum_id, $view_link = false ) {
 		$forum_content = get_post_field( 'post_content', $forum_id );
-		$link          = '<a href="' . esc_url( self::get_permalink( (int) $forum_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
 
-		return ( ! empty( $forum_content ) ) ? $forum_content . ' ' . $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $forum_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';
+
+			$forum_content = ( ! empty( $forum_content ) ) ? $forum_content . ' ' . $link : $link;
+		}
+
+		return $forum_content;
 	}
 
 	/**
@@ -233,5 +243,22 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to delete forum moderation data when actual forum is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $post_id post id being deleted.
+	 * @param object $post    post data.
+	 */
+	public function delete_moderation_data( $post_id, $post ) {
+		if ( ! empty( $post_id ) && ! empty( $post ) && bbp_get_forum_post_type() === $post->post_type ) {
+			$moderation_obj = new BP_Moderation( $post_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }

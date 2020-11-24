@@ -1223,12 +1223,21 @@ function bp_nouveau_ajax_delete_thread() {
 		$wpdb->query( $query ); // db call ok; no-cache ok;
 
 		// Delete messages meta.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) );
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)",
+				implode( ',', $message_ids ) );
 		$wpdb->query( $query ); // db call ok; no-cache ok;
 
 		// Delete thread.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d",
+				$thread_id );
 		$wpdb->query( $query ); // db call ok; no-cache ok;
+
+		/**
+		 * Fires after message thread deleted.
+		 *
+		 * @since BuddyBoss 2.0.0
+		 */
+		do_action( 'bp_messages_message_delete_thread', $thread_id );
 	}
 
 	wp_send_json_success(

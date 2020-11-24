@@ -50,6 +50,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		// button class.
 		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+
+		// Delete user moderation data when actual user is deleted.
+		add_action( 'deleted_user', array( $this, 'delete_moderation_data' ), 10, 3 );
 	}
 
 	/**
@@ -205,5 +208,22 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		return $button;
+	}
+
+	/**
+	 * Delete moderation data when actual user is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int    $user_id  user id of the user that is being deleted.
+	 * @param int    $reassign user id of the user that all content is going to assign.
+	 * @param object $user     user data.
+	 */
+	public function delete_moderation_data( $user_id, $reassign, $user ) {
+
+		$moderation_obj = new BP_Moderation( $user_id, self::$moderation_type );
+		if ( ! empty( $moderation_obj->id ) ) {
+			$moderation_obj->delete( true );
+		}
 	}
 }

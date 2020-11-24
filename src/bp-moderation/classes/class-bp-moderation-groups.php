@@ -46,6 +46,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
+
+		// Delete group moderation data when group is deleted.
+		add_action( 'groups_delete_group', array( $this, 'delete_moderation_data' ), 10 );
 	}
 
 	/**
@@ -79,15 +82,23 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $group_id Group id.
+	 * @param integer $group_id  Group id.
+	 * @param bool    $view_link add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $group_id ) {
-		$group = new BP_Groups_Group( $group_id );
-		$link  = '<a href="' . esc_url( self::get_permalink( (int) $group_id ) ) . '">' . esc_html__( 'View', 'buddyboss' ) . '</a>';;
+	public static function get_content_excerpt( $group_id, $view_link = false ) {
+		$group             = new BP_Groups_Group( $group_id );
+		$group_description = ( ! empty( $group->description ) ) ? $group->description : '';
 
-		return ( ! empty( $group->description ) ) ? $group->description . ' ' . $link : $link;
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $group_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$group_description = ( ! empty( $group_description ) ) ? $group_description . ' ' . $link : $link;
+		}
+
+		return $group_description;
 	}
 
 	/**
@@ -202,5 +213,21 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
+	}
+
+	/**
+	 * Function to delete group moderation data when actual group is deleted
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $group_id group if
+	 */
+	public function delete_moderation_data( $group_id ) {
+		if ( ! empty( $group_id ) ) {
+			$moderation_obj = new BP_Moderation( $group_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
 	}
 }

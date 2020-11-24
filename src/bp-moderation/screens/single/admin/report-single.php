@@ -83,7 +83,9 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</th>
 											<td>
 												<?php
-												$content_excerpt = bp_moderation_get_content_excerpt( $moderation_request_data->item_id, $moderation_request_data->item_type );
+												$content_excerpt = bp_moderation_get_content_excerpt( $moderation_request_data->item_id,
+														$moderation_request_data->item_type,
+														true );
 												echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
 												?>
 											</td>

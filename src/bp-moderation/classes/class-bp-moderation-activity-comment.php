@@ -49,6 +49,10 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		// Blocked template
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
+
+		// Delete comment moderation data when actual comment is deleted.
+		add_action( 'bp_activity_delete_comment', array( $this, 'delete_moderation_data' ), 10, 2 );
+		add_action( 'bp_activity_deleted_activities', array( $this, 'delete_comment_moderation_data' ), 10 );
 	}
 
 	/**
@@ -71,14 +75,40 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int $activity_comment_id activity id.
+	 * @param int  $activity_comment_id activity id.
+	 * @param bool $view_link           add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $activity_comment_id ) {
+	public static function get_content_excerpt( $activity_comment_id, $view_link = false ) {
 		$activity = new BP_Activity_Activity( $activity_comment_id );
 
-		return ( ! empty( $activity->content ) ) ? $activity->content : '';
+		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : '';
+
+		if ( true === $view_link ) {
+			$link = '<a href="' . esc_url( self::get_permalink( (int) $activity_comment_id ) ) . '">' . esc_html__( 'View',
+					'buddyboss' ) . '</a>';;
+
+			$activity_content = ( ! empty( $activity_content ) ) ? $activity_content . ' ' . $link : $link;
+		}
+
+		return $activity_content;
+	}
+
+
+	/**
+	 * Get permalink
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $activity_id activity id.
+	 *
+	 * @return string
+	 */
+	public static function get_permalink( $activity_id ) {
+		$url = bp_activity_get_permalink( $activity_id );
+
+		return add_query_arg( array( 'modbypass' => 1 ), $url );
 	}
 
 	/**
@@ -269,9 +299,46 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 
 		$hidden_activity_comments_ids = self::get_sitewide_activity_comments_hidden_ids();
 		if ( ! empty( $hidden_activity_comments_ids ) ) {
-			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids, $hidden_activity_comments_ids );
+			$hidden_all_activity_comment_ids = array_merge( $hidden_all_activity_comment_ids,
+				$hidden_activity_comments_ids );
 		}
 
 		return $hidden_all_activity_comment_ids;
+	}
+
+	/**
+	 * Function to delete comment data on deleting the actual comment
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $activity_id activity id.
+	 * @param int $comment_id  comment id.
+	 */
+	public function delete_moderation_data( $activity_id, $comment_id ) {
+		if ( ! empty( $comment_id ) ) {
+			$moderation_obj = new BP_Moderation( $comment_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
+			}
+		}
+	}
+
+	/**
+	 * Function to delete activity moderation data when actual activity is getting deleted.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $activity_deleted_ids activity ids array.
+	 */
+	public function delete_comment_moderation_data( $activity_deleted_ids ) {
+
+		if ( ! empty( $activity_deleted_ids ) && is_array( $activity_deleted_ids ) ) {
+			foreach ( $activity_deleted_ids as $activity_deleted_id ) {
+				$moderation_obj = new BP_Moderation( $activity_deleted_id, self::$moderation_type );
+				if ( ! empty( $moderation_obj->id ) ) {
+					$moderation_obj->delete( true );
+				}
+			}
+		}
 	}
 }

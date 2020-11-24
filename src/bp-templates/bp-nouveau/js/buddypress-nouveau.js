@@ -1798,9 +1798,9 @@ window.bp = window.bp || {};
 			});
 			$(document).on('click', 'input[type=radio][name=report_category]', function () {
 				if ('other' === this.value) {
-					$('.bp-other-report-cat').show();
+					$('.bp-other-report-cat').parent().closest('.form-item').removeClass('bp-hide');
 				} else {
-					$('.bp-other-report-cat').hide();
+					$('.bp-other-report-cat').parent().closest('.form-item').addClass('bp-hide');
 				}
 			});
 
@@ -1849,6 +1849,7 @@ window.bp = window.bp || {};
 			});
 		},
 		resetReportPopup: function () {
+			$('form#bb-report-content').trigger('reset');
 			var mf_content = $('.mfp-content');
 			mf_content.find('.bp-content-id').val('');
 			mf_content.find('.bp-content-type').val('');

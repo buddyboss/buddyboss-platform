@@ -30,25 +30,26 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
 		<?php
 		echo esc_html( bp_get_moderation_item_id() );
 		?>
-    </td>
-    <td class="moderation-content-owner">
+	</td>
+	<td class="moderation-content-owner">
 		<?php
 		$user_id = bp_moderation_get_content_owner_id( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
 		echo wp_kses_post( bp_core_get_userlink( $user_id ) );
 		?>
-    </td>
-    <td class="moderation-content-excerpt">
+	</td>
+	<td class="moderation-content-excerpt">
 		<?php
-		$content_excerpt = bp_moderation_get_content_excerpt( bp_get_moderation_item_id(), bp_get_moderation_item_type() );
+		$content_excerpt = bp_moderation_get_content_excerpt( bp_get_moderation_item_id(),
+				bp_get_moderation_item_type() );
 		echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
 		?>
-    </td>
-    <td class="moderation-content-category">
+	</td>
+	<td class="moderation-content-category">
 		<?php
 		echo esc_html( bp_get_moderation_reported_category() );
 		?>
-    </td>
-    <td class="moderation-item-last-updated">
+	</td>
+	<td class="moderation-item-last-updated">
 		<?php
 		echo esc_html( bbp_get_time_since( bp_get_moderation_last_updated() ) );
 		?>
