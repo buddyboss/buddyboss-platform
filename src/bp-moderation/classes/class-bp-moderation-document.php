@@ -49,9 +49,6 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		// Search Query.
 		/*add_filter( 'bp_document_search_join_sql', array( $this, 'update_join_sql' ), 10 );*/
 		add_filter( 'bp_document_search_where_conditions_document', array( $this, 'update_where_sql' ), 10 );
-
-		// Delete document related moderation data when actual document is deleted.
-		add_action( 'bp_document_after_delete', array( $this, 'delete_moderation_data' ) );
 	}
 
 	/**
@@ -333,25 +330,5 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		}
 
 		return $sql;
-	}
-
-	/**
-	 * Delete moderation data when actual document is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $documents_data deleted document data.
-	 */
-	public function delete_moderation_data( $documents_data ) {
-		$activity_ids = wp_parse_id_list( wp_list_pluck( $documents_data, 'activity_id' ) );
-
-		if ( ! empty( $activity_ids ) && is_array( $activity_ids ) ) {
-			foreach ( $activity_ids as $activity_id ) {
-				$moderation_obj = new BP_Moderation( $activity_id, BP_Moderation_Activity::$moderation_type );
-				if ( ! empty( $moderation_obj->id ) ) {
-					$moderation_obj->delete( true );
-				}
-			}
-		}
 	}
 }
