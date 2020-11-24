@@ -265,7 +265,7 @@ function bp_nouveau_media_activity_edit_button( $buttons, $activity_id ) {
  *
  * @param $attachment_id
  * @param $size
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_scaled_image_path( $attachment_id, $size ) {
 
@@ -292,7 +292,7 @@ function bp_media_scaled_image_path( $attachment_id, $size ) {
  *
  * @return mixed|void
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_get_preview_image_url( $media_id, $preview_attachment_id, $size ) {
 	$attachment_url = '';

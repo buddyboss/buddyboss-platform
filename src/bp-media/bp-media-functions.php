@@ -2896,7 +2896,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  * @param $pathdata
  *
  * @return mixed
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_upload_dir( $pathdata ) {
 	if ( isset( $_POST['action'] ) && 'media_upload' === $_POST['action'] ) { // WPCS: CSRF ok, input var ok.
@@ -2922,7 +2922,7 @@ function bp_media_upload_dir( $pathdata ) {
  * @param $pathdata
  *
  * @return mixed
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_upload_dir_script( $pathdata ) {
 

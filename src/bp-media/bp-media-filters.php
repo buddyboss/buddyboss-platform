@@ -2255,7 +2255,7 @@ function bp_media_get_edit_activity_data( $activity ) {
  *
  * @param string $rewrite rewrite rules.
  * @return string
- * @since BuddyBoss 1.4.1
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_protect_download_rewite_rules( $rewrite ) {
 	if ( ! is_multisite() ) {
@@ -2273,6 +2273,11 @@ function bp_media_protect_download_rewite_rules( $rewrite ) {
 }
 add_filter( 'mod_rewrite_rules', 'bp_media_protect_download_rewite_rules' );
 
+/**
+ * Function will protect the download album.
+ *
+ * @since BuddyBoss 1.5.6
+ */
 function bp_media_check_download_album_protection() {
 
 	$upload_dir     = wp_get_upload_dir();
