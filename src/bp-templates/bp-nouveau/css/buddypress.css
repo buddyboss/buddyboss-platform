@@ -12340,9 +12340,16 @@ body.login .login-popup .mfp-close:hover {
   min-width: 0;
 }
 
+.bb-media-length-1 .bb-activity-media-elem.media-activity {
+  flex: none;
+  min-width: 230px;
+}
+
 .bb-media-length-1 .bb-activity-media-elem .entry-img img {
   min-height: auto;
   min-width: auto;
+  margin: 0 auto;
+  display: block;
 }
 
 .bb-activity-media-elem {

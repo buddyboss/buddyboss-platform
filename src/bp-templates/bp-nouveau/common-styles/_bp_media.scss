@@ -38,11 +38,18 @@
 
 .bb-media-length-1 .bb-activity-media-elem {
 
+	&.media-activity {
+		flex: none;
+		min-width: 230px;
+	}
+
 	.entry-img {
 
 		img {
 			min-height: auto;
 			min-width: auto;
+			margin: 0 auto;
+			display: block;
 		}
 	}
 }
