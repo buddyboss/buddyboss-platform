@@ -73,6 +73,7 @@ window.bp = window.bp || {};
 				maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
 				maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 				dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+				dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 			};
 
 			if ($('#bp-media-uploader').hasClass('bp-media-document-uploader')) {
@@ -89,19 +90,21 @@ window.bp = window.bp || {};
 					maxFiles             : typeof BP_Nouveau.document.maxFiles !== 'undefined' ? BP_Nouveau.document.maxFiles : 10,
 					maxFilesize          : typeof BP_Nouveau.document.max_upload_size !== 'undefined' ? BP_Nouveau.document.max_upload_size : 2,
 					dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+					dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 				};
 			} else {
 				this.options = {
-					url               : BP_Nouveau.ajaxurl,
-					timeout           : 3 * 60 * 60 * 1000,
-					dictFileTooBig    : BP_Nouveau.media.dictFileTooBig,
-					dictDefaultMessage: BP_Nouveau.media.dropzone_media_message,
-					acceptedFiles     : 'image/*',
-					autoProcessQueue  : true,
-					addRemoveLinks    : true,
-					uploadMultiple    : false,
-					maxFiles          : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
-					maxFilesize       : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					url                 : BP_Nouveau.ajaxurl,
+					timeout             : 3 * 60 * 60 * 1000,
+					dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+					dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+					acceptedFiles       : 'image/*',
+					autoProcessQueue    : true,
+					addRemoveLinks      : true,
+					uploadMultiple      : false,
+					maxFiles            : typeof BP_Nouveau.media.maxFiles !== 'undefined' ? BP_Nouveau.media.maxFiles : 10,
+					maxFilesize         : typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+					dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 				};
 			}
 

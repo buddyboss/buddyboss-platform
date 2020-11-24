@@ -83,16 +83,17 @@ window.bp = window.bp || {};
 			window.Dropzone.autoDiscover = false;
 
 			this.dropzone_options = {
-				url						: BP_Nouveau.ajaxurl,
-				timeout					: 3 * 60 * 60 * 1000,
-				dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-				dictDefaultMessage 		: BP_Nouveau.media.dropzone_media_message,
-				acceptedFiles			: 'image/*',
-				autoProcessQueue		: true,
-				addRemoveLinks			: true,
-				uploadMultiple			: false,
-				maxFiles				: ! _.isUndefined( BP_Nouveau.media.maxFiles ) ? BP_Nouveau.media.maxFiles : 10,
-				maxFilesize				: ! _.isUndefined( BP_Nouveau.media.max_upload_size ) ? BP_Nouveau.media.max_upload_size : 2,
+				url                 : BP_Nouveau.ajaxurl,
+				timeout             : 3 * 60 * 60 * 1000,
+				dictFileTooBig      : BP_Nouveau.media.dictFileTooBig,
+				dictDefaultMessage  : BP_Nouveau.media.dropzone_media_message,
+				acceptedFiles       : 'image/*',
+				autoProcessQueue    : true,
+				addRemoveLinks      : true,
+				uploadMultiple      : false,
+				maxFiles            : !_.isUndefined(BP_Nouveau.media.maxFiles) ? BP_Nouveau.media.maxFiles : 10,
+				maxFilesize         : !_.isUndefined(BP_Nouveau.media.max_upload_size) ? BP_Nouveau.media.max_upload_size : 2,
+				dictMaxFilesExceeded: BP_Nouveau.media.media_dict_file_exceeded,
 			};
 
 			// if defined, add custom dropzone options.
@@ -779,18 +780,19 @@ window.bp = window.bp || {};
 				self.destroyDocument();
 
 				var dropzone_options = {
-					url						: BP_Nouveau.ajaxurl,
-					timeout					: 3 * 60 * 60 * 1000,
-					dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-					acceptedFiles			: BP_Nouveau.media.document_type,
-					createImageThumbnails 	: false,
-					dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
-					autoProcessQueue		: true,
-					addRemoveLinks			: true,
-					uploadMultiple			: false,
-					maxFiles				: ! _.isUndefined( BP_Nouveau.document.maxFiles ) ? BP_Nouveau.document.maxFiles : 10,
-					maxFilesize				: ! _.isUndefined( BP_Nouveau.document.max_upload_size ) ? BP_Nouveau.document.max_upload_size : 2,
-					dictInvalidFileType		: BP_Nouveau.document.dictInvalidFileType,
+					url                  : BP_Nouveau.ajaxurl,
+					timeout              : 3 * 60 * 60 * 1000,
+					dictFileTooBig       : BP_Nouveau.media.dictFileTooBig,
+					acceptedFiles        : BP_Nouveau.media.document_type,
+					createImageThumbnails: false,
+					dictDefaultMessage   : BP_Nouveau.media.dropzone_document_message,
+					autoProcessQueue     : true,
+					addRemoveLinks       : true,
+					uploadMultiple       : false,
+					maxFiles             : !_.isUndefined(BP_Nouveau.document.maxFiles) ? BP_Nouveau.document.maxFiles : 10,
+					maxFilesize          : !_.isUndefined(BP_Nouveau.document.max_upload_size) ? BP_Nouveau.document.max_upload_size : 2,
+					dictInvalidFileType  : BP_Nouveau.document.dictInvalidFileType,
+					dictMaxFilesExceeded : BP_Nouveau.media.document_dict_file_exceeded,
 				};
 
 				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-document-uploader', dropzone_options );
