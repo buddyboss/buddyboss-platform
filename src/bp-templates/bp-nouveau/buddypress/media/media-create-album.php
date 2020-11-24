@@ -3,7 +3,7 @@
 /**
  * BuddyBoss - Media Create Album
  *
- * @since BuddyBoss 1.4.0
+ * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  */
 

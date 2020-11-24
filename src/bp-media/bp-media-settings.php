@@ -1472,7 +1472,7 @@ function bp_media_allowed_upload_document_size() {
 /**
  * Setting > Media > Photos > Allowed Per Batch
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_settings_callback_media_allowed_per_batch() {
 	?>
@@ -1490,7 +1490,7 @@ function bp_media_settings_callback_media_allowed_per_batch() {
  * Allowed per batch for the media.
  *
  * @return int Allowed upload per batch for the media.
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_allowed_upload_media_per_batch() {
 
@@ -1501,7 +1501,7 @@ function bp_media_allowed_upload_media_per_batch() {
 /**
  * Setting > Media > Documents > Allowed Per Batch
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_settings_callback_document_allowed_per_batch() {
 	?>
@@ -1519,7 +1519,7 @@ function bp_media_settings_callback_document_allowed_per_batch() {
  * Allowed per batch for the document.
  *
  * @return int Allowed per batch for the document.
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_allowed_upload_document_per_batch() {
 

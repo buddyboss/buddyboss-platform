@@ -2890,7 +2890,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  * @param int $group_id
  *
  * @return string
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
@@ -2945,7 +2945,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
  * @param bool  $first
  *
  * @return string
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_album_recursive_li_list( $array, $first = false ) {
 
@@ -2977,7 +2977,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
  * @param int $group_id group id.
  *
  * @return bool|int
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id = 0 ) {
 
@@ -3168,6 +3168,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
  * @param int $activity_id activity id.
  *
  * @return array|void
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_get_activity_media( $activity_id ) {
 

@@ -3,7 +3,7 @@
 /**
  * BuddyBoss - Media Activity Album Move
  *
- * @since BuddyBoss 1.5.0
+ * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  */
 

@@ -1049,7 +1049,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 /**
  * Return the album view.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_nouveau_ajax_media_get_album_view() {
 
@@ -1084,7 +1084,7 @@ function bp_nouveau_ajax_media_get_album_view() {
 /**
  * Ajax media move.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_nouveau_ajax_media_move() {
 
