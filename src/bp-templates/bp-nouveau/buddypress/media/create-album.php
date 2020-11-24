@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Media Albums Create
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.0.0
  */
 ?>
 

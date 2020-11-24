@@ -1769,7 +1769,7 @@ function bp_get_album_visibility() {
  * @param bool $media BP_Media object or ID of the media.
  *
  * @return bool True if can edit, false otherwise.
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_user_can_edit( $media = false ) {
 
@@ -1825,7 +1825,7 @@ function bp_media_user_can_edit( $media = false ) {
 	/**
 	 * Filters whether the current user can edit an media item.
 	 *
-	 * @since BuddyBoss 1.5.5
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $can_edit Whether the user can edit the item.
 	 * @param object $media   Current media item object.
@@ -1839,7 +1839,7 @@ function bp_media_user_can_edit( $media = false ) {
  * @param bool $album BP_Media_Album object or ID of the album.
  *
  * @return bool True if can edit, false otherwise.
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  *
  */
 function bp_album_user_can_edit( $album = false ) {
@@ -1877,7 +1877,7 @@ function bp_album_user_can_edit( $album = false ) {
 	/**
 	 * Filters whether the current user can edit an album item.
 	 *
-	 * @since BuddyBoss 1.5.5
+	 * @since BuddyBoss 1.5.6
 	 *
 	 * @param bool   $can_edit Whether the user can edit the item.
 	 * @param object $album   Current album item object.

@@ -75,7 +75,6 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 				<?php } ?>
 		<?php } ?>
 	</div> <!--.media-action-wrap-->
-	<?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-activity-media-thumbnail' ); ?>
 	<a href="#"
 		class="bb-open-media-theatre entry-img"
 		data-id="<?php bp_media_id(); ?>"
@@ -87,7 +86,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 		data-album-id="<?php bp_media_album_id(); ?>"
 		data-group-id="<?php bp_media_group_id(); ?>"
 	>
-		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo esc_url( $attachment_url ); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
+		<img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_activity_thumbnail(); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php
 		if ( $media_template->media_count > 5 && 4 === $media_template->current_media ) {

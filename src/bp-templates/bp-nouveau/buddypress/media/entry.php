@@ -41,10 +41,9 @@ if ( $group_id > 0 ) {
 				</div>
 			<?php } ?>
 		</div> <!--.media-action-wrap-->
-		<?php $attachment_url = bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'bp-media-thumbnail' ); ?>
 		<a class="bb-open-media-theatre bb-photo-cover-wrap"
 			data-id="<?php bp_media_id(); ?>"
-			data-attachment-full="<?php echo esc_attr( bp_media_get_preview_image_url( bp_get_media_id(), bp_get_media_attachment_id(), 'full' ) ); ?>"
+			data-attachment-full="<?php bp_media_attachment_image(); ?>"
 			data-activity-id="<?php bp_media_activity_id(); ?>"
 			data-privacy="<?php bp_media_privacy(); ?>"
 			data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
@@ -52,7 +51,7 @@ if ( $group_id > 0 ) {
 			data-group-id="<?php bp_media_group_id(); ?>"
 			data-attachment-id="<?php bp_media_attachment_id(); ?>"
 			href="#">
-		   <img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php echo esc_url( $attachment_url ); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
+		   <img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
 		if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) :

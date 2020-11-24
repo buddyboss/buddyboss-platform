@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Media Privacy Change
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  * @package BuddyBoss\Core
  */
 

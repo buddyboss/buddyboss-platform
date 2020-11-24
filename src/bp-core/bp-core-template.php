@@ -4142,7 +4142,7 @@ function bp_is_group_messages() {
 /**
  * Is the current page a user's album page?
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  *
  * @return bool True if the current page is a album page.
  */

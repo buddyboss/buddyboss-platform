@@ -2855,7 +2855,7 @@ function bp_media_user_can_manage_album( $album_id = 0, $user_id = 0 ) {
  * @param int $group_id
  *
  * @return string
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 0 ) {
 
@@ -2910,7 +2910,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
  * @param bool  $first
  *
  * @return string
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_album_recursive_li_list( $array, $first = false ) {
 
@@ -2942,7 +2942,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
  * @param int $group_id group id.
  *
  * @return bool|int
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id = 0 ) {
 
@@ -3133,6 +3133,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
  * @param int $activity_id activity id.
  *
  * @return array|void
+ * @since BuddyBoss 1.5.6
  */
 function bp_media_get_activity_media( $activity_id ) {
 
@@ -3227,59 +3228,4 @@ function bp_media_get_activity_media( $activity_id ) {
 	$response['media_activity_ids'] = $media_activity_ids;
 
 	return $response;
-}
-
-/**
- * Set bb_medias folder for the media upload directory.
- *
- * @param array $pathdata upload directory path.
- *
- * @return mixed
- * @since BuddyBoss 1.5.5
- */
-function bp_media_upload_dir( $pathdata ) {
-
-	$actions = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
-
-	if ( isset( $actions ) && 'media_upload' === $actions ) { // WPCS: CSRF ok, input var ok.
-
-		if ( empty( $pathdata['subdir'] ) ) {
-			$pathdata['path']   = $pathdata['path'] . '/bb_medias';
-			$pathdata['url']    = $pathdata['url'] . '/bb_medias';
-			$pathdata['subdir'] = '/bb_medias';
-		} else {
-			$new_subdir = '/bb_medias' . $pathdata['subdir'];
-
-			$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
-			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
-			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
-		}
-	}
-
-	return $pathdata;
-}
-
-/**
- * Set bb_medias folder for the media upload directory.
- *
- * @param array $pathdata upload directory.
- *
- * @return mixed
- * @since BuddyBoss 1.5.5
- */
-function bp_media_upload_dir_script( $pathdata ) {
-
-	if ( empty( $pathdata['subdir'] ) ) {
-		$pathdata['path']   = $pathdata['path'] . '/bb_medias';
-		$pathdata['url']    = $pathdata['url'] . '/bb_medias';
-		$pathdata['subdir'] = '/bb_medias';
-	} else {
-		$new_subdir = '/bb_medias' . $pathdata['subdir'];
-
-		$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
-		$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
-		$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
-	}
-
-	return $pathdata;
 }

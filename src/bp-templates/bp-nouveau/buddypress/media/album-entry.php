@@ -12,8 +12,7 @@
     <div class="bb-album-cover-wrap">
         <a class="bs-cover-wrap" href="<?php bp_album_link(); ?>">
             <?php if ( ! empty( $media_album_template->album->media['medias'] ) ) : ?>
-                <?php $attachment_url = bp_media_get_preview_image_url( $media_album_template->album->media['medias'][0]->id, $media_album_template->album->media['medias'][0]->attachment_id, 'bp-activity-media-thumbnail' ); ?>
-                <img src="<?php echo esc_url( $attachment_url ); ?>" />
+                <img src="<?php echo $media_album_template->album->media['medias'][0]->attachment_data->thumb; ?>" />
                 
             <?php endif; ?>
 

@@ -203,12 +203,8 @@ function bp_nouveau_ajax_media_upload() {
 		wp_send_json_error( $response, 500 );
 	}
 
-	add_filter( 'upload_dir', 'bp_media_upload_dir' );
-
 	// Upload file.
 	$result = bp_media_upload();
-
-	remove_filter( 'upload_dir', 'bp_media_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = $result->get_error_message();
@@ -1053,7 +1049,7 @@ function bp_nouveau_ajax_media_get_media_description() {
 /**
  * Return the album view.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_nouveau_ajax_media_get_album_view() {
 
@@ -1088,7 +1084,7 @@ function bp_nouveau_ajax_media_get_album_view() {
 /**
  * Ajax media move.
  *
- * @since BuddyBoss 1.5.5
+ * @since BuddyBoss 1.5.6
  */
 function bp_nouveau_ajax_media_move() {
 

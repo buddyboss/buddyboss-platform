@@ -612,9 +612,9 @@ class BP_Media {
 
 			// fetch attachment data
 			$attachment_data                 = new stdClass();
-			$attachment_data->full           = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'full' );
-			$attachment_data->thumb          = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-media-thumbnail' );
-			$attachment_data->activity_thumb = bp_media_get_preview_image_url( $media->id, $media->attachment_id, 'bp-activity-media-thumbnail' );
+			$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
+			$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
+			$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
 			$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
 
