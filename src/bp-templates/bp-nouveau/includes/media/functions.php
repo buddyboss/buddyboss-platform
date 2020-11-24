@@ -176,6 +176,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
 	);
 
 	return $params;

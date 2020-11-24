@@ -1039,18 +1039,18 @@ window.bp = window.bp || {};
 			var activityId = '';
 
 			if ('album' === type) {
-				if (!confirm('Are you sure you want to delete this album?')) {
+				if ( !confirm( BP_Nouveau.media.i18n_strings.album_delete_confirm ) ) {
 					return false;
 				}
 			} else if ('media' === type) {
-				if (!confirm('Are you sure you want to delete this media?')) {
+				if ( !confirm( BP_Nouveau.media.i18n_strings.media_delete_confirm ) ) {
 					return false;
 				}
 			}
 
 			if( target.hasClass('bb-delete') ) {
 
-				if ( !confirm('Are you sure you want to delete this media?') ) {
+				if (  !confirm( BP_Nouveau.media.i18n_strings.media_delete_confirm)   ) {
 					return false;
 				}
 
