@@ -17633,6 +17633,10 @@ span.CodeMirror-selectedtext {
   padding-top: 35px !important;
 }
 
+.dropzone.dz-max-files-reached .dz-default.dz-message {
+  display: none;
+}
+
 /*
 *-----------------------------------------
 * @section 16.0 - Group Messages
