@@ -1179,6 +1179,19 @@ function bp_nouveau_ajax_groups_send_message() {
 						bp_message_thread();
 						$thread_id = bp_get_message_thread_id();
 
+						// Check the first message meta to check for all users and open type when missed entries found into DB.
+						$first_thread_message = BP_Messages_Thread::get_first_message( $thread_id );
+
+						if ( ! empty( $first_thread_message ) ) {
+							$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+							$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+							$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+
+							if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+								$thread_id = 0;
+							}
+						}
+
 						if ( $thread_id ) {
 							break;
 						}
