@@ -5493,9 +5493,19 @@ function bp_activity_get_report_link( $args = array() ) {
  */
 function bp_activity_comment_get_report_link( $args = array() ) {
 
-	$parent_comment_id = bp_activity_get_meta( bp_get_activity_comment_id(), 'bp_blogs_post_comment_id', true );
-	$content_id        = ( ! empty( $parent_comment_id ) ) ? $parent_comment_id : bp_get_activity_comment_id();
-	$content_type      = ( ! empty( $parent_comment_id ) ) ? BP_Moderation_Comment::$moderation_type : BP_Moderation_Activity_Comment::$moderation_type;
+	$activity_id        = bp_get_activity_id();
+	$activity_post_type = get_post_type( bp_get_activity_secondary_item_id( $activity_id ) );
+	$activity_post_type = ( ! empty( $activity_post_type ) ) ? $activity_post_type : '';
+	$content_id         = bp_get_activity_comment_id();
+	$content_type       = BP_Moderation_Activity_Comment::$moderation_type;
+	$parent_comment_id  = bp_activity_get_meta( bp_get_activity_comment_id(),
+		"bp_blogs_{$activity_post_type}_comment_id",
+		true );
+
+	if ( ! empty( $parent_comment_id ) ) {
+		$content_id   = $parent_comment_id;
+		$content_type = BP_Moderation_Comment::$moderation_type;
+	}
 
 	$args = wp_parse_args( $args,
 		array(
@@ -5507,13 +5517,14 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 				'data-bp-content-id'   => $content_id,
 				'data-bp-content-type' => $content_type,
 			),
-		)
-	);
+		) );
 
 	/**
 	 * Filter Activity comment report link
 	 *
 	 * @since BuddyBoss 2.0.0
 	 */
-	return apply_filters( 'bp_activity_comment_get_report_link', bp_moderation_get_report_button( $args, false ), $args );
+	return apply_filters( 'bp_activity_comment_get_report_link',
+		bp_moderation_get_report_button( $args, false ),
+		$args );
 }

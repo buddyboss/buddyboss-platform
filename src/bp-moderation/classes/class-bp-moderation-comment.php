@@ -126,58 +126,58 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 				<div class="comment-content-wrap">
 					<div class="comment-meta comment-metadata">
 						<?php printf( __( '%s', 'buddyboss-theme' ),
-								sprintf( '<cite class="fn comment-author">%s</cite>',
-										get_comment_author_link( $comment ) ) ); ?>
+							sprintf( '<cite class="fn comment-author">%s</cite>',
+								get_comment_author_link( $comment ) ) ); ?>
 						<a class="comment-date" href="<?php echo esc_url( get_comment_link( $comment,
-								$args ) ); ?>"><?php printf( __( '%1$s', 'buddyboss-theme' ),
-									get_comment_date( '', $comment ),
-									get_comment_time() ); ?></a>
+							$args ) ); ?>"><?php printf( __( '%1$s', 'buddyboss-theme' ),
+								get_comment_date( '', $comment ),
+								get_comment_time() ); ?></a>
 					</div>
 
 					<?php if ( '0' == $comment->comment_approved ) { ?>
 						<p>
 							<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.',
-										'buddyboss-theme' ); ?></em>
+									'buddyboss-theme' ); ?></em>
 						</p>
 					<?php } ?>
 
 					<div class="comment-text">
 						<?php
 						comment_text( $comment,
-								array_merge( $args,
-										array(
-												'add_below' => $add_below,
-												'depth'     => $depth,
-												'max_depth' => $args['max_depth'],
-										) ) );
+							array_merge( $args,
+								array(
+									'add_below' => $add_below,
+									'depth'     => $depth,
+									'max_depth' => $args['max_depth'],
+								) ) );
 						?>
 					</div>
 
 					<footer class="comment-footer">
 						<?php
 						comment_reply_link( array_merge( $args,
-								array(
-										'add_below' => $add_below,
-										'depth'     => $depth,
-										'max_depth' => $args['max_depth'],
-										'before'    => '',
-										'after'     => '',
-								) ) );
+							array(
+								'add_below' => $add_below,
+								'depth'     => $depth,
+								'max_depth' => $args['max_depth'],
+								'before'    => '',
+								'after'     => '',
+							) ) );
 						?>
 
 						<?php edit_comment_link( __( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
 
 						<?php
 						echo bp_moderation_get_report_button( array(
-								'id'                => 'comment_report',
-								'component'         => 'moderation',
-								'must_be_logged_in' => true,
-								'button_attr'       => array(
-										'data-bp-content-id'   => get_comment_ID(),
-										'data-bp-content-type' => self::$moderation_type,
-								),
+							'id'                => 'comment_report',
+							'component'         => 'moderation',
+							'must_be_logged_in' => true,
+							'button_attr'       => array(
+								'data-bp-content-id'   => get_comment_ID(),
+								'data-bp-content-type' => self::$moderation_type,
+							),
 						),
-								true );
+							true );
 						?>
 					</footer>
 				</div>
@@ -237,7 +237,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 
 		if ( true === $view_link ) {
 			$link = '<a href="' . esc_url( self::get_permalink( (int) $comment_id ) ) . '">' . esc_html__( 'View',
-							'buddyboss' ) . '</a>';;
+					'buddyboss' ) . '</a>';;
 
 			$comment_content = ( ! empty( $comment_content ) ) ? $comment_content . ' ' . $link : $link;
 		}
