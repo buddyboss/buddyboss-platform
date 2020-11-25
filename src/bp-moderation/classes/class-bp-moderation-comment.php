@@ -107,7 +107,7 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		?>
 
 		<<?php echo $tag; ?><?php comment_class( $args['has_children'] ? 'parent' : '',
-				$comment ); ?> id="comment-<?php comment_ID(); ?>">
+			$comment ); ?> id="comment-<?php comment_ID(); ?>">
 
 		<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 
