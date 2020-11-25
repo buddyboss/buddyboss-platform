@@ -1969,7 +1969,7 @@ class BP_Document {
 				$is_pdf         = true;
 				$output_file     = wp_get_attachment_image_url( $attachment_id, 'full' );
 				$output_file_src = bp_document_scaled_image_path( $attachment_id );
-				if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
+				if ( $output_file && '' !== basename( $output_file ) ) {
 					add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 					$upload_dir = $upload_dir['basedir'];
 
@@ -2033,10 +2033,67 @@ class BP_Document {
 					$pdf_preview = true;
 					BP_Document::bp_document_remove_temp_directory( $preview_folder );
 					remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+				} elseif( class_exists( 'WP_Offload_Media_Autoloader' ) && extension_loaded( 'imagick' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+					$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+					if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
+
+						// If the function it's not available, require it.
+						if ( ! function_exists( 'download_url' ) ) {
+							require_once ABSPATH . 'wp-admin/includes/file.php';
+						}
+
+						$downloaded_file = download_url( wp_get_attachment_url( $attachment_id ) );
+
+						// Create temp folder.
+						$upload_dir = $upload_dir['basedir'] . '/aws-preview-image-folder-' . time();
+
+						// If folder not exists then create.
+						if ( ! is_dir( $upload_dir ) && $downloaded_file ) {
+
+							// Create temp folder.
+							wp_mkdir_p( $upload_dir );
+							chmod( $upload_dir, 0777 );
+
+							$pdf_upload_dir = $upload_dir . '/temp.pdf';
+
+							// Copies the file to the final destination and deletes temporary file.
+							copy( $downloaded_file, $pdf_upload_dir );
+
+							if ( file_exists( $pdf_upload_dir ) ) {
+
+								if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+									require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+									require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+									require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+								}
+
+								add_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
+
+
+								$editor = wp_get_image_editor( $pdf_upload_dir );
+
+								if ( ! is_wp_error( $editor ) ) { // No support for this type of file.
+									/*
+									 * PDFs may have the same file filename as JPEGs.
+									 * Ensure the PDF preview image does not overwrite any JPEG images that already exist.
+									 */
+									$preview_file = $upload_dir . '/test-pdf.jpg';
+
+									$uploaded = $editor->save( $preview_file, 'image/jpeg' );
+									unset( $editor );
+								}
+
+								remove_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
+
+							}
+
+						}
+
+					}
 				}
 			} else if ( 'css' === $extension || 'txt' === $extension || 'js' === $extension || 'html' === $extension || 'htm' === $extension || 'csv' === $extension ) {
 				$absolute_path  = get_attached_file( $attachment_id );
-				if ( '' !== $absolute_path && '' !== basename( $absolute_path ) && strstr( $absolute_path, 'bb_documents/' ) ) {
+				if ( '' !== $absolute_path && '' !== basename( $absolute_path ) ) {
 					$upload_dir = $upload_dir['basedir'];
 
 					// Create temp folder.
@@ -2186,7 +2243,7 @@ class BP_Document {
 						$output_file     = wp_get_attachment_image_url( $id, 'full' );
 						$output_file_src = bp_document_scaled_image_path( $id );
 
-						if ( '' !== $output_file && '' !== basename( $output_file ) && strstr( $output_file, 'bb_documents/' ) ) {
+						if ( $output_file && '' !== basename( $output_file ) ) {
 							add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 							$upload_dir = $upload_dir['basedir'];
 
