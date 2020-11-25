@@ -5498,13 +5498,13 @@ function bp_activity_comment_get_report_link( $args = array() ) {
 	$activity_post_type = ( ! empty( $activity_post_type ) ) ? $activity_post_type : '';
 	$content_id         = bp_get_activity_comment_id();
 	$content_type       = BP_Moderation_Activity_Comment::$moderation_type;
+	$parent_comment_id  = bp_activity_get_meta( bp_get_activity_comment_id(),
+		"bp_blogs_{$activity_post_type}_comment_id",
+		true );
 
 	if ( ! empty( $parent_comment_id ) ) {
-		$parent_comment_id = bp_activity_get_meta( bp_get_activity_comment_id(),
-			"bp_blogs_{$activity_post_type}_comment_id",
-			true );
-		$content_id        = $parent_comment_id;
-		$content_type      = BP_Moderation_Comment::$moderation_type;
+		$content_id   = $parent_comment_id;
+		$content_type = BP_Moderation_Comment::$moderation_type;
 	}
 
 	$args = wp_parse_args( $args,
