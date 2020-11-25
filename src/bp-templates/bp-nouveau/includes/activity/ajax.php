@@ -370,8 +370,8 @@ function bp_nouveau_ajax_new_activity_comment() {
 	if ( ! is_user_logged_in() ) {
 		wp_send_json_error( $response );
 	}
-
-	if ( empty( $_POST['content'] ) ) {
+       
+	if ( empty( $_POST['content'] ) && empty($_POST['gif_data']) ) {
 		wp_send_json_error(
 			array(
 				'feedback' => sprintf(
