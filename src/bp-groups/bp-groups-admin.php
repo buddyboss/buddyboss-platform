@@ -2465,7 +2465,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_remove = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
 
 	$member_type                           = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
-	$member_type_group_invites             = $_POST['bp-member-type-group-invites'];
+	$member_type_group_invites             = ( isset( $_POST['bp-member-type-group-invites'] ) ) ? $_POST['bp-member-type-group-invites'] : '';
 	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
 	$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
