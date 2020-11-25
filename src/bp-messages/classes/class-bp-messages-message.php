@@ -547,6 +547,7 @@ class BP_Messages_Message {
 			'group_by'          => '',
 			'subject'           => '',
 			'count_total'       => false,
+			'debug'             => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_messages_message_get' );
@@ -697,6 +698,9 @@ class BP_Messages_Message {
 		 */
 		$paged_messages_sql = apply_filters( 'bp_messages_message_get_paged_sql', $paged_messages_sql, $sql, $r );
 
+		if ( ! empty( $r['debug'] ) ) {
+			error_log( $paged_messages_sql );
+		}
 		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$paged_messages = array();
