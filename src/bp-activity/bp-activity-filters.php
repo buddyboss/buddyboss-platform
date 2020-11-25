@@ -2277,29 +2277,6 @@ function bp_blogs_activity_content_set_temp_content() {
 
 }
 
-add_action( 'bp_before_activity_activity_content', 'bp_activity_content_set_temp_gif_content');
-
-/**
- * Function which set the temporary content on the blog post activity when there is gif content.
- *
- * @since BuddyBoss 1.5.5
- */
-function bp_activity_content_set_temp_gif_content() {
-
-    global $activities_template;
-
-    $activity = $activities_template->activity;
-    $activity_id = $activity->id;
-    
-    if (empty($activities_template->activity->content)) {
-        $activity_meta = bp_activity_get_meta($activity_id);
-        
-        if (array_key_exists('_gif_data', $activity_meta)) {
-            $activities_template->activity->content = '&#8203;';
-        }
-    }
-}
-
 add_filter( 'bp_get_activity_content_body', 'bp_blogs_activity_content_with_read_more', 9999, 2 );
 
 /**

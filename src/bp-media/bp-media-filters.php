@@ -65,6 +65,9 @@ add_action( 'init', 'bp_media_download_url_file' );
 add_filter( 'bp_search_label_search_type', 'bp_media_search_label_search' );
 add_action( 'bp_activity_after_email_content', 'bp_media_activity_after_email_content' );
 
+// set temp content to GIF activity.
+add_action( 'bp_before_activity_activity_content', 'bp_activity_content_set_temp_gif_content');
+
 /**
  * Add Media items for search
  */
@@ -2302,4 +2305,20 @@ function bp_media_get_edit_activity_data( $activity ) {
 	}
 
 	return $activity;
+}
+
+/**
+ * Function which set the temporary content on the blog post activity when there is gif content.
+ *
+ * @since BuddyBoss 1.5.6
+ */
+function bp_activity_content_set_temp_gif_content() {
+	global $activities_template;
+	$activity_id = $activities_template->activity->id;
+	if( empty( $activities_template->activity->content ) ) {
+		$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+		if( $gif_data ) {
+			$activities_template->activity->content = '&#8203;';
+		}
+	}
 }
