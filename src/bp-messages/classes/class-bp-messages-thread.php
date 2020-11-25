@@ -604,11 +604,14 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $thread_id
-	 * @param mix $user_id
+	 * @param int $thread_id The message thread ID.
+	 * @param int $user_id   The ID of the user in the thread.
+	 *
+	 * @return bool
 	 */
-	public static function is_thread_recipient( $thread_id = 0, $user_id = null ) {
-		if ( ! $user_id = $user_id ?: bp_loggedin_user_id() ) {
+	public static function is_thread_recipient( $thread_id = 0, $user_id = 0 ) {
+		$user_id = $user_id ? $user_id : bp_loggedin_user_id();
+		if ( ! $user_id ) {
 			return true;
 		}
 
@@ -873,6 +876,7 @@ class BP_Messages_Thread {
 				'meta_query'   => array(),
 				'fields'       => 'all',
 				'having_sql'   => false,
+				'debug'        => true,
 			)
 		);
 
@@ -1066,8 +1070,15 @@ class BP_Messages_Thread {
 		 */
 		$sql['from']  = apply_filters( 'bp_messages_recipient_get_join_sql', $sql['from'], $r );
 
+		$qq = implode( ' ', $sql );
+
+		// for debug.
+		if ( ! empty( $r['debug'] ) ) {
+			error_log( $qq );
+		}
+
 		// Get thread IDs.
-		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) );
+		$thread_ids = $wpdb->get_results( $qq );
 		// print_r($qq);die();
 		if ( empty( $thread_ids ) ) {
 			return false;
@@ -1544,6 +1555,7 @@ class BP_Messages_Thread {
 			'fields'               => 'all',
 			'count_total'          => false,
 			'exclude_active_users' => false,
+			'debug'                => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1660,6 +1672,11 @@ class BP_Messages_Thread {
 		 * @param array  $r     Array of parsed arguments for the get method.
 		 */
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
+
+		// for debug.
+		if ( ! empty( $r['debug'] ) ) {
+			error_log( $paged_recipients_sql );
+		}
 
 		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$paged_recipients    = array();

@@ -105,7 +105,7 @@ class BP_Messages_Message {
 			)
 		);
 
-		$fetched_message = ( ! empty( $message['messages'][0] ) && is_object( $message['messages'][0] ) ) ? $message['messages'][0] : array();
+		$fetched_message = ( ! empty( $message['messages'] ) ? current( $message['messages'] ) : array() );
 
 		if ( ! empty( $fetched_message ) ) {
 			$this->id        = (int) $fetched_message->id;
@@ -160,10 +160,11 @@ class BP_Messages_Message {
 					'fields'   => 'thread_ids',
 					'per_page' => 1,
 					'page'     => 1,
-					'orderby'  => 'id',
+					'orderby'  => 'thread_id',
+					'debug'    => true,
 				)
 			);
-			$this->thread_id = ( isset( $max_thread['messages'][0] ) && is_numeric( $max_thread['messages'][0] ) ) ? (int) $max_thread['messages'][0] + 1 : 1;
+			$this->thread_id = ( ! empty( $max_thread['messages'] ) ? (int) current( $max_thread['messages'] ) + 1 : 1 );
 			$new_thread      = true;
 		}
 
@@ -192,7 +193,6 @@ class BP_Messages_Message {
 			if ( true === $this->is_hidden ) {
 				$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_hidden = %d WHERE thread_id = %d AND user_id = %d", 1, $this->thread_id, $this->sender_id ) );
 			}
-
 		} else {
 			// Update the unread count for all recipients.
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
@@ -232,7 +232,7 @@ class BP_Messages_Message {
 		$results = BP_Messages_Thread::get(
 			array(
 				'per_page'        => - 1,
-				'include_threads' => array( $this->thread_id )
+				'include_threads' => array( $this->thread_id ),
 			)
 		);
 
@@ -303,10 +303,11 @@ class BP_Messages_Message {
 				'page'            => 1,
 				'per_page'        => 1,
 				'orderby'         => 'date_sent',
+				'debug'           => true,
 			)
 		);
 
-		return ( isset( $query['messages'][0] ) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
+		return ( ! empty( $query['messages'] ) ? (int) current( $query['messages'] ) : null );
 	}
 
 	/**
@@ -326,10 +327,11 @@ class BP_Messages_Message {
 				'user_id' => $user_id,
 				'include' => array( $message_id ),
 				'orderby' => 'id',
+				'debug'   => 'true',
 			)
 		);
 
-		return ( isset( $query['messages'][0] ) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
+		return ( ! empty( $query['messages'] ) ? (int) current( $query['messages'] ) : null );
 	}
 
 	/**
@@ -341,22 +343,22 @@ class BP_Messages_Message {
 	 */
 	public static function get_message_sender( $message_id ) {
 
-		$query = BP_Messages_Message::get(
+		$query = self::get(
 			array(
 				'fields'  => 'sender_ids',
 				'include' => array( $message_id ),
 			)
 		);
 
-		return ( isset( $query['messages'][0] ) && is_numeric( $query['messages'][0] ) ) ? (int) $query['messages'][0] : null;
+		return ( ! empty( $query['messages'] ) ? (int) current( $query['messages'] ) : null );
 	}
 
 	/**
 	 * Delete all the message send by user
 	 *
-	 * @BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $user_id user id whom message should get deleted
+	 * @param int $user_id user id whom message should get deleted.
 	 */
 	public static function delete_user_message( $user_id ) {
 		global $wpdb;
@@ -364,29 +366,38 @@ class BP_Messages_Message {
 		$bp = buddypress();
 
 		// Get the message ids in order to delete their metas.
-		$messages = BP_Messages_Message::get(
+		$messages = self::get(
 			array(
-				'fields'  => 'ids',
-				'user_id' => $user_id,
+				'fields'   => 'ids',
+				'user_id'  => $user_id,
+				'orderby'  => 'id',
+				'per_page' => - 1,
 			)
 		);
-		$message_ids  = ( isset( $messages['messages'] ) ) ? $messages['messages'] : array();
 
-		// Get the all thread ids for unread messages
-		$threads = BP_Messages_Message::get(
+		$message_ids = ( isset( $messages['messages'] ) ) ? $messages['messages'] : array();
+
+		// Get the all thread ids for unread messages.
+		$threads = self::get(
 			array(
-				'fields'  => 'thread_ids',
-				'user_id' => $user_id,
+				'fields'   => 'thread_ids',
+				'user_id'  => $user_id,
+				'orderby'  => 'thread_id',
+				'order'    => 'ASC',
+				'per_page' => - 1,
 			)
 		);
-		$thread_ids  = isset( $threads['messages'] ) ? $threads['messages'] : array();
+
+		$thread_ids = isset( $threads['messages'] ) ? $threads['messages'] : array();
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
 			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$wpdb->query( $query ); // db call ok; no-cache ok;
 			// bp_messages_delete_meta( $message_id );
 			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
@@ -394,15 +405,16 @@ class BP_Messages_Message {
 			bp_messages_update_meta( $message_id, 'bp_media_ids', '' );
 			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
 		}
-		// unread theread message.
+
+		// unread thread message.
 		if ( ! empty( $thread_ids ) ) {
 			$thread_ids = implode( ',', $thread_ids );
-
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.QuotedSimplePlaceholder
 			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
 		}
 
 		// Delete the thread of user.
-		if ( bp_has_message_threads( array( 'user_id' => $user_id, ) ) ) {
+		if ( bp_has_message_threads( array( 'user_id' => $user_id ) ) ) {
 			while ( bp_message_threads() ) :
 				bp_message_thread();
 				$thread_id = bp_get_message_thread_id();
@@ -419,8 +431,10 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array   $recipient_ids
-	 * @param integer $sender
+	 * @param array   $recipient_ids The ID of the users in the thread.
+	 * @param integer $sender        The ID of the sender user.
+	 *
+	 * @return null|int
 	 */
 	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
@@ -432,20 +446,23 @@ class BP_Messages_Message {
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$having_sql = $wpdb->prepare( "HAVING recipient_list = %s", implode( ',', $recipient_ids ) );
-		$results = BP_Messages_Thread::get_threads_for_user( array(
-			'fields'     => 'ids',
-			'having_sql' => $having_sql,
-			'limit'      => 1,
-			'page'       => 1
-		) );
+		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
+		$results    = BP_Messages_Thread::get_threads_for_user(
+			array(
+				'fields'     => 'ids',
+				'having_sql' => $having_sql,
+				'limit'      => 1,
+				'page'       => 1,
+			)
+		);
 
 		if ( empty( $results['threads'] ) ) {
 			return null;
 		}
 
-		$thread_id = $results['threads'][0];
-		if ( ! $is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender ) ) {
+		$thread_id           = current( $results['threads'] );
+		$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender );
+		if ( ! $is_active_recipient ) {
 			return null;
 		}
 
@@ -457,22 +474,26 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param array   $recipient_ids
-	 * @param integer $sender
+	 * @param array   $recipient_ids The ID of the users in the thread.
+	 * @param integer $sender        The ID of the sender user.
+	 *
+	 * @return null|mixed
 	 */
 	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
 
-		// add the sender into the recipient list and order by id ascending
+		// add the sender into the recipient list and order by id ascending.
 		$recipient_ids[] = $sender;
 		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
 		sort( $recipient_ids );
 
-		$having_sql = $wpdb->prepare( "HAVING recipient_list = %s", implode( ',', $recipient_ids ) );
-		$results = BP_Messages_Thread::get_threads_for_user( array(
-			'fields'     => 'select',
-			'having_sql' => $having_sql,
-		) );
+		$having_sql = $wpdb->prepare( 'HAVING recipient_list = %s', implode( ',', $recipient_ids ) );
+		$results    = BP_Messages_Thread::get_threads_for_user(
+			array(
+				'fields'     => 'select',
+				'having_sql' => $having_sql,
+			)
+		);
 
 		if ( empty( $results['threads'] ) ) {
 			return null;
@@ -534,7 +555,7 @@ class BP_Messages_Message {
 			'per_page'          => 20,
 			'page'              => 1,
 			'user_id'           => 0,
-			'meta_query'        => false,
+			'meta_query'        => false, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'date_query'        => false,
 			'include'           => false,
 			'exclude'           => false,
@@ -634,7 +655,7 @@ class BP_Messages_Message {
 			$where_conditions['subject'] = $wpdb->prepare( 'm.subject != %s', $r['subject'] );
 		}
 
-		/* Order/orderby ********************************************/
+		/* Order/OrderBy ********************************************/
 
 		$order   = $r['order'];
 		$orderby = $r['orderby'];
@@ -686,7 +707,6 @@ class BP_Messages_Message {
 
 		$paged_messages_sql = "{$sql['select']} FROM {$sql['from']} {$where} {$sql['orderby']} {$sql['pagination']}";
 
-
 		/**
 		 * Filters the pagination SQL statement.
 		 *
@@ -698,9 +718,11 @@ class BP_Messages_Message {
 		 */
 		$paged_messages_sql = apply_filters( 'bp_messages_message_get_paged_sql', $paged_messages_sql, $sql, $r );
 
+		// for debug.
 		if ( ! empty( $r['debug'] ) ) {
 			error_log( $paged_messages_sql );
 		}
+
 		$paged_message_ids = $wpdb->get_col( $paged_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$paged_messages = array();
@@ -770,7 +792,7 @@ class BP_Messages_Message {
 		if ( ! empty( $meta_query ) ) {
 			$message_meta_query = new WP_Meta_Query( $meta_query );
 
-			// WP_Meta_Query expects the table name at
+			// WP_Meta_Query expects the table name at.
 			$wpdb->messagemeta = buddypress()->messages->table_name_meta;
 
 			$meta_sql           = $message_meta_query->get_sql( 'message', 'm', 'id' );
@@ -824,6 +846,13 @@ class BP_Messages_Message {
 		switch ( $orderby ) {
 			case 'id':
 				$order_by_term = 'm.id';
+				break;
+			case 'thread_id':
+				$order_by_term = 'm.thread_id';
+				break;
+			case 'sender_id':
+			case 'user_id':
+				$order_by_term = 'm.sender_id';
 				break;
 			case 'date_sent':
 			default:
