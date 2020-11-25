@@ -225,8 +225,8 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param int  $activity_id comment id.
-	 * @param bool $view_link   add view link
+	 * @param int  $comment_id comment id.
+	 * @param bool $view_link  add view link
 	 *
 	 * @return string
 	 */
