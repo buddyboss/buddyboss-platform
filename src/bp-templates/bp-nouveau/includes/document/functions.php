@@ -1079,6 +1079,7 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
 		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
 			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		// WP OFFLOAD MEDIA Support.
 		} elseif( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 			$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
 			$is_image                   = wp_get_attachment_image_url( $preview_attachment_id );
