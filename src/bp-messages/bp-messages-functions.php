@@ -118,11 +118,13 @@ function messages_new_message( $args = '' ) {
 			}
 		}
 
-		$new_reply = true;
-
-		if ( isset( $thread->messages[0]->id ) ) {
-			$group = bp_messages_get_meta( $thread->messages[0]->id, 'group_id', true ); // group id
-			if ( ! empty( $group ) ) {
+		$new_reply     = true;
+		$first_message = BP_Messages_Thread::get_first_message( (int) $r['thread_id'] );
+		$message_id    = $first_message->id;
+		if( isset( $message_id ) ) {
+			$group        = bp_messages_get_meta( $message_id, 'group_id', true ); // group id.
+			$group_thread = (int) groups_get_groupmeta( $group, 'group_message_thread' );
+			if( ! empty( $group ) && bp_is_active( 'groups' ) && $group_thread > 0 && (int) $r['thread_id'] === $group_thread ) {
 				$is_group_thread = true;
 			}
 		}
