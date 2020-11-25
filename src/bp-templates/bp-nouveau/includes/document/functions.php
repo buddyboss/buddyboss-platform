@@ -1068,17 +1068,23 @@ function bp_document_get_preview_text_from_attachment( $attachment_id ) {
 function bp_document_get_preview_image_url( $document_id, $extension, $preview_attachment_id ) {
 	$attachment_url = '';
 
-	if ( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
-		$get_preview            = $preview_attachment_id;
-		$preview_attachment_id  = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
-		if ( ! $preview_attachment_id ) {
+	if( in_array( $extension, bp_get_document_preview_doc_extensions(), true ) ) {
+		$get_preview           = $preview_attachment_id;
+		$preview_attachment_id = bp_document_get_meta( $document_id, 'preview_attachment_id', true );
+		if( ! $preview_attachment_id ) {
 			$preview_attachment_id = $get_preview;
 		}
-		$document_id        = 'forbidden_' . $document_id;
-		$attachment_id      = 'forbidden_' . $preview_attachment_id;
-		$output_file_src     = bp_document_scaled_image_path( $preview_attachment_id );
-		if ( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-			$attachment_url     = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		$document_id     = 'forbidden_' . $document_id;
+		$attachment_id   = 'forbidden_' . $preview_attachment_id;
+		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
+		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+		} elseif( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+			$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+			$is_image                   = wp_get_attachment_image_url( $preview_attachment_id );
+			if( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] && $is_image && @getimagesize($is_image) ) {
+				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&id2=' . base64_encode( 'aws' );
+			}
 		}
 	}
 

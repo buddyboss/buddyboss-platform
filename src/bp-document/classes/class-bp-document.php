@@ -2035,33 +2035,35 @@ class BP_Document {
 					remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 				} elseif( class_exists( 'WP_Offload_Media_Autoloader' ) && extension_loaded( 'imagick' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 					$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-					if ( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
+					if( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] ) {
 
 						// If the function it's not available, require it.
-						if ( ! function_exists( 'download_url' ) ) {
+						if( ! function_exists( 'download_url' ) ) {
 							require_once ABSPATH . 'wp-admin/includes/file.php';
 						}
 
-						$downloaded_file = download_url( wp_get_attachment_url( $attachment_id ) );
+						$downloaded_file        = download_url( wp_get_attachment_url( $attachment_id ) );
+						$document_name_with_ext = basename( wp_get_attachment_url( $attachment_id ) );
+						$document_name          = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $document_name_with_ext );
 
 						// Create temp folder.
 						$upload_dir = $upload_dir['basedir'] . '/aws-preview-image-folder-' . time();
 
 						// If folder not exists then create.
-						if ( ! is_dir( $upload_dir ) && $downloaded_file ) {
+						if( ! is_dir( $upload_dir ) && $downloaded_file ) {
 
 							// Create temp folder.
 							wp_mkdir_p( $upload_dir );
 							chmod( $upload_dir, 0777 );
 
-							$pdf_upload_dir = $upload_dir . '/temp.pdf';
+							$pdf_upload_dir = $upload_dir . '/' . $document_name_with_ext;
 
 							// Copies the file to the final destination and deletes temporary file.
 							copy( $downloaded_file, $pdf_upload_dir );
 
-							if ( file_exists( $pdf_upload_dir ) ) {
+							if( file_exists( $pdf_upload_dir ) ) {
 
-								if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+								if( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
 									require_once ABSPATH . 'wp-admin' . '/includes/image.php';
 									require_once ABSPATH . 'wp-admin' . '/includes/file.php';
 									require_once ABSPATH . 'wp-admin' . '/includes/media.php';
@@ -2072,23 +2074,44 @@ class BP_Document {
 
 								$editor = wp_get_image_editor( $pdf_upload_dir );
 
-								if ( ! is_wp_error( $editor ) ) { // No support for this type of file.
+								if( ! is_wp_error( $editor ) ) { // No support for this type of file.
 									/*
 									 * PDFs may have the same file filename as JPEGs.
 									 * Ensure the PDF preview image does not overwrite any JPEG images that already exist.
 									 */
-									$preview_file = $upload_dir . '/test-pdf.jpg';
+									$preview_file = $upload_dir . '/' . $document_name . '.jpg';
+									$uploaded     = $editor->save( $preview_file, 'image/jpeg' );
 
-									$uploaded = $editor->save( $preview_file, 'image/jpeg' );
+									if( ! empty( $uploaded ) ) {
+										add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+
+										$wp_filetype = wp_check_filetype( $document_name_with_ext, null );
+										$attachment  = array(
+											'post_mime_type' => $wp_filetype['type'],
+											'post_title'     => sanitize_file_name( $document_name ),
+											'post_content'   => '',
+											'post_status'    => 'inherit',
+										);
+
+										$preview_attachment_id = wp_insert_attachment( $attachment, $uploaded['path'] );
+										if( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+											require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+											require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+											require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+										}
+										$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $uploaded['path'] );
+										wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+										update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+										update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
+										$pdf_preview = true;
+										remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+									}
 									unset( $editor );
 								}
-
 								remove_filter( 'wp_image_editors', array( $this, 'bp_document_wp_image_editors' ) );
-
 							}
-
+							BP_Document::bp_document_remove_temp_directory( $upload_dir );
 						}
-
 					}
 				}
 			} else if ( 'css' === $extension || 'txt' === $extension || 'js' === $extension || 'html' === $extension || 'htm' === $extension || 'csv' === $extension ) {
