@@ -132,6 +132,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'current_album'                      => $album_id,
 		'current_type'                       => $type,
 		'move_to_id_popup'                   => $move_to_id_popup,
+		'media_dict_file_exceeded'           => sprintf( __( 'You can upload only %s photos at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_media_per_batch() ) ),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -175,6 +176,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'upload_status'        => __( '%1$d out of %2$d uploaded', 'buddyboss' ),
 		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'media_delete_confirm' => __( 'Are you sure you want to delete this media?', 'buddyboss' ),
 	);
 
 	return $params;

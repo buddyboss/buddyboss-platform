@@ -66,7 +66,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$type      = 'profile';
 	}
 
-	$exclude = array_merge( $mime_types, $extensions );
+	$exclude         = array_merge( $mime_types, $extensions );
 	$document_params = array(
 		'profile_document'                => bp_is_profile_document_support_enabled(),
 		'group_document'                  => bp_is_group_document_support_enabled(),
@@ -80,13 +80,13 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'current_group_id'                => $group_id,
 		'target_text'                     => __( 'Documents', 'buddyboss' ),
 		'create_folder_error_title'       => __( 'Please enter title of folder', 'buddyboss' ),
-		'invalid_file_type'                => __( 'Unable to upload the file', 'buddyboss' ),
+		'invalid_file_type'               => __( 'Unable to upload the file', 'buddyboss' ),
 		'document_select_error'           => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
 		'dropzone_document_message'       => __( 'Drop files here to upload', 'buddyboss' ),
 		'is_document_directory'           => ( bp_is_document_directory() ) ? 'yes' : 'no',
 		'document_preview_error'          => __( 'Sorry! something went wrong we are not able to preview.', 'buddyboss' ),
 		'move_to_folder'                  => __( 'Move folder to...', 'buddyboss' ),
-		'move_to_file'                     => __( 'Move document to...', 'buddyboss' ),
+		'move_to_file'                    => __( 'Move document to...', 'buddyboss' ),
 		'copy_to_clip_board_text'         => __( 'Copied to Clipboard', 'buddyboss' ),
 		'download_button'                 => __( 'Download', 'buddyboss' ),
 		'document_size_error_header'      => __( 'File too large ', 'buddyboss' ),
@@ -94,20 +94,19 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'sidebar_download_text'           => __( 'Download', 'buddyboss' ),
 		'sidebar_view_text'               => __( 'View', 'buddyboss' ),
 		'create_folder'                   => __( 'Create Folder', 'buddyboss' ),
+		'document_dict_file_exceeded'     => sprintf( __( 'You can upload only %s documents at a time.', 'buddyboss' ), number_format_i18n( bp_media_allowed_upload_document_per_batch() ) ),
 	);
 
 	$document_options = array(
-		'dictInvalidFileType'       => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
-		'max_upload_size'           => bp_document_file_upload_max_size(),
-		'maxFiles'                  => bp_media_allowed_upload_document_per_batch(),
-		'mp3_preview_extension'     => implode( ',', bp_get_document_preview_music_extensions() )
+		'dictInvalidFileType'   => __( 'Please upload only the following file types: ', 'buddyboss' ) . '<br /><div class="bb-allowed-file-types">' . implode( ', ', array_unique( $extensions ) ) . '</div>',
+		'max_upload_size'       => bp_document_file_upload_max_size(),
+		'maxFiles'              => bp_media_allowed_upload_document_per_batch(),
+		'mp3_preview_extension' => implode( ',', bp_get_document_preview_music_extensions() ),
 	);
 
 	$params['document'] = $document_options;
-
-	$old_media = $params['media'];
-
-	$params['media'] = array_merge( $old_media, $document_params );
+	$old_media          = $params['media'];
+	$params['media']    = array_merge( $old_media, $document_params );
 
 	if ( bp_is_single_folder() ) {
 		$params['media']['folder_id'] = (int) bp_action_variable( 0 );
