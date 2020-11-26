@@ -9,59 +9,64 @@
 
 ?>
 
-<div id="content-report" class="content-report-popup bb-modal mfp-hide">
-	<h2>
-		<?php
-		esc_html_e( 'Report Content', 'buddyboss' );
-		?>
-		<button title="Close (Esc)" type="button" class="mfp-close"></button>
-	</h2>
-	<?php
-	$reports_terms = get_terms( 'bpm_category',
-			array(
-					'hide_empty' => false,
-			) );
-	?>
-	<div class="bb-report-type-wrp">
-		<form id="bb-report-content" action="javascript:void(0);">
+<div id="content-report" class="content-report-popup moderation-popup mfp-hide">
+	<div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+		<div class="modal-wrapper">
+			<div class="modal-container">
+				<header class="bb-model-header">
+					<h4><?php esc_html_e( 'Report Content', 'buddyboss' ); ?></h4>
+					<button title="Close (Esc)" type="button" class="mfp-close"></button>
+				</header>
+				<?php
+				$reports_terms = get_terms( 'bpm_category',
+						array(
+								'hide_empty' => false,
+						) );
+				?>
+				<div class="bb-report-type-wrp">
+					<form id="bb-report-content" action="javascript:void(0);">
 
-			<?php
-			if ( ! empty( $reports_terms ) ) {
-				$count = 1;
-				foreach ( $reports_terms as $reports_term ) {
-					$checked = ( 1 === $count ) ? 'checked' : '';
-					?>
-					<div class="form-item">
-						<label for="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>">
-							<input type="radio" id="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>" name="report_category" value="<?php echo esc_attr( $reports_term->term_id ); ?>" <?php echo esc_attr( $checked ); ?>>
-							<?php echo esc_html( $reports_term->name ); ?>
-						</label><br/> <span><?php echo esc_html( $reports_term->description ); ?></span>
-					</div>
-					<?php
-					$count ++;
-				}
-			}
-			?>
+						<?php
+						if ( ! empty( $reports_terms ) ) {
+							$count = 1;
+							foreach ( $reports_terms as $reports_term ) {
+								$checked = ( 1 === $count ) ? 'checked' : '';
+								?>
+								<div class="form-item">
+									<label for="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>">
+										<input type="radio" id="report-category-<?php echo esc_attr( $reports_term->term_id ); ?>" name="report_category" value="<?php echo esc_attr( $reports_term->term_id ); ?>" <?php echo esc_attr( $checked ); ?>>
+										<span><?php echo esc_html( $reports_term->name ); ?></span>
+									</label>
+									<span><?php echo esc_html( $reports_term->description ); ?></span>
+								</div>
+								<?php
+								$count ++;
+							}
+						}
+						?>
 
-			<div class="form-item">
-				<label for="report-category-other">
-					<input type="radio" id="report-category-other" name="report_category" value="other">
-					<?php esc_html_e( 'Other', 'buddyboss' ); ?>
-				</label>
+						<div class="form-item">
+							<label for="report-category-other">
+								<input type="radio" id="report-category-other" name="report_category" value="other">
+								<span><?php esc_html_e( 'Other', 'buddyboss' ); ?></span>
+							</label>
+						</div>
+						<div class="form-item bp-hide">
+							<label for="report-note">
+								<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
+						</div>
+						<footer class="bb-model-footer">
+							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
+							<input type="submit" value="<?php esc_attr_e( 'Send Report', 'buddyboss' ); ?>" class="report-submit button"/>
+							<input type="hidden" name="content_id" class="bp-content-id"/>
+							<input type="hidden" name="content_type" class="bp-content-type"/>
+							<input type="hidden" name="_wpnonce" class="bp-nonce"/>
+						</footer>
+					</form>
+					<div class="bp-report-form-err"></div>
+				</div>
 			</div>
-			<div class="form-item bp-hide">
-				<label for="report-note">
-					<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
-			</div>
-			<div class="form-item">
-				<input type="button" class="bb-cancel-report-content" value="<?php esc_attr_e( 'Cancel',
-						'buddyboss' ); ?>"/> <input type="submit" value="<?php esc_attr_e( 'Send Report',
-						'buddyboss' ); ?>" class="report-submit"/>
-				<input type="hidden" name="content_id" class="bp-content-id"/>
-				<input type="hidden" name="content_type" class="bp-content-type"/>
-				<input type="hidden" name="_wpnonce" class="bp-nonce"/>
-			</div>
-		</form>
-		<div class="bp-report-form-err"></div>
+		</div>
 	</div>
+
 </div>

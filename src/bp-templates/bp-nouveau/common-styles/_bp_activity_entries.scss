@@ -330,6 +330,18 @@
 				content: "\eaea";
 			}
 
+			.reported-content:before,
+			.report-content:before {
+				content: "\e8ea";
+				position: relative;
+				top: -1px;
+				font-size: 15px;
+				width: 22px;
+				display: inline-block;
+				height: auto;
+				line-height: 1;
+			}
+
 			.spam-activity:before {
 				content: "\e8c9";
 			}

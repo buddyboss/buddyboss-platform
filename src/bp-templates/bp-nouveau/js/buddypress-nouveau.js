@@ -1793,14 +1793,14 @@ window.bp = window.bp || {};
 			$(document).on('click', '.bb-cancel-report-content', function (e) {
 				e.preventDefault();
 				$('form#bb-report-content').trigger('reset');
-				$('.bp-other-report-cat').hide();
-				$('.mfp-close').trigger('click');
+				$(this).closest('.moderation-popup').find('.bp-other-report-cat').closest('.form-item').addClass('bp-hide');
+				$(this).closest('.moderation-popup').find('.mfp-close').trigger('click');
 			});
 			$(document).on('click', 'input[type=radio][name=report_category]', function () {
 				if ('other' === this.value) {
-					$('.bp-other-report-cat').parent().closest('.form-item').removeClass('bp-hide');
+					$(this).closest('.moderation-popup').find('.bp-other-report-cat').closest('.form-item').removeClass('bp-hide');
 				} else {
-					$('.bp-other-report-cat').parent().closest('.form-item').addClass('bp-hide');
+					$(this).closest('.moderation-popup').find('.bp-other-report-cat').closest('.form-item').addClass('bp-hide');
 				}
 			});
 

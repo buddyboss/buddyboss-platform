@@ -3975,3 +3975,99 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		margin: 20px;
 	}
 }
+
+
+.moderation-popup .modal-container {
+	max-height: 95vh;
+	overflow: auto;
+
+	.bb-model-header {
+		margin-bottom: 25px;
+
+		h4 {
+			font-size: 17px;
+			font-weight: 500;
+		}
+
+	}
+
+	.bb-model-footer {
+		text-align: right;
+
+		.button {
+			width: auto;
+
+			&.bb-cancel-report-content {
+				color: #a5a7ab;
+				background-color: transparent;
+				box-shadow: none;
+				margin: 0 20px 0 0;
+				padding: 0;
+				min-width: inherit;
+			}
+		}
+
+	}
+
+	#bb-block-member,
+	#bb-report-content {
+		margin-bottom: 0;
+	}
+
+	.form-item {
+		margin-bottom: 10px;
+
+		> span {
+			font-size: 14px;
+			padding-left: 28px;
+			display: inline-block;
+			line-height: 1.4;
+		}
+
+		label {
+			margin-bottom: 0;
+
+			> input[type="radio"] {
+				margin-right: 10px;
+				vertical-align: middle;
+				height: 15px;
+				width: 15px;
+			}
+
+			> span {
+				font-size: 16px;
+				font-weight: 500;
+				vertical-align: middle;
+			}
+
+			> textarea {
+				margin-left: 28px;
+				width: calc(100% - 26px);
+			}
+
+		}
+
+	}
+}
+
+.moderation-popup .bb-report-type-wrp {
+	font-size: 15px;
+
+	p {
+		margin-bottom: 10px;
+
+		&:last-child {
+			margin-bottom: 10px;
+		}
+
+	}
+
+	ul {
+		margin-bottom: 10px;
+	}
+
+	.bb-model-footer {
+		margin-top: 15px;
+	}
+
+}

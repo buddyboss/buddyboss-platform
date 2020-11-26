@@ -2315,6 +2315,18 @@ input.search-query-input {
   content: "\eaea";
 }
 
+.activity-list .activity-item .bp-generic-meta.action .reported-content:before,
+.activity-list .activity-item .bp-generic-meta.action .report-content:before {
+  content: "\e8ea";
+  position: relative;
+  top: -1px;
+  font-size: 15px;
+  width: 22px;
+  display: inline-block;
+  height: auto;
+  line-height: 1;
+}
+
 .activity-list .activity-item .bp-generic-meta.action .spam-activity:before {
   content: "\e8c9";
 }
@@ -15826,6 +15838,95 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 #media-stream.document-parent > #bp-ajax-loader {
   margin: 20px;
+}
+
+.moderation-popup .modal-container {
+  max-height: 95vh;
+  overflow: auto;
+}
+
+.moderation-popup .modal-container .bb-model-header {
+  margin-bottom: 25px;
+}
+
+.moderation-popup .modal-container .bb-model-header h4 {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.moderation-popup .modal-container .bb-model-footer {
+  text-align: left;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button {
+  width: auto;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button.bb-cancel-report-content {
+  color: #a5a7ab;
+  background-color: transparent;
+  box-shadow: none;
+  margin: 0 0 0 20px;
+  padding: 0;
+  min-width: inherit;
+}
+
+.moderation-popup .modal-container #bb-block-member,
+.moderation-popup .modal-container #bb-report-content {
+  margin-bottom: 0;
+}
+
+.moderation-popup .modal-container .form-item {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .modal-container .form-item > span {
+  font-size: 14px;
+  padding-right: 28px;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+.moderation-popup .modal-container .form-item label {
+  margin-bottom: 0;
+}
+
+.moderation-popup .modal-container .form-item label > input[type="radio"] {
+  margin-left: 10px;
+  vertical-align: middle;
+  height: 15px;
+  width: 15px;
+}
+
+.moderation-popup .modal-container .form-item label > span {
+  font-size: 16px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.moderation-popup .modal-container .form-item label > textarea {
+  margin-right: 28px;
+  width: calc(100% - 26px);
+}
+
+.moderation-popup .bb-report-type-wrp {
+  font-size: 15px;
+}
+
+.moderation-popup .bb-report-type-wrp p {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .bb-report-type-wrp p:last-child {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .bb-report-type-wrp ul {
+  margin-bottom: 10px;
+}
+
+.moderation-popup .bb-report-type-wrp .bb-model-footer {
+  margin-top: 15px;
 }
 
 /* BASICS */
