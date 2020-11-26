@@ -258,7 +258,6 @@ class BP_Messages_Thread {
 	 * @return array
 	 */
 	public function get_recipients( $thread_id = 0 ) {
-
 		if ( empty( $thread_id ) ) {
 			$thread_id = $this->thread_id;
 		}
@@ -266,6 +265,7 @@ class BP_Messages_Thread {
 		$thread_id = (int) $thread_id;
 
 		$recipients = wp_cache_get( 'thread_recipients_' . $thread_id, 'bp_messages' );
+
 		if ( false === $recipients ) {
 
 			$recipients = array();
@@ -273,7 +273,7 @@ class BP_Messages_Thread {
 			$results = self::get(
 				array(
 					'per_page'        => - 1,
-					'include_threads' => array( $thread_id )
+					'include_threads' => array( $thread_id ),
 				)
 			);
 
@@ -365,7 +365,7 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @param $thread_id
+	 * @param int $thread_id Message thread ID.
 	 *
 	 * @return object|null
 	 */
@@ -385,7 +385,6 @@ class BP_Messages_Thread {
 				'per_page'         => 1,
 				'page'             => 1,
 				'count_total'      => false,
-				'orderby'          => 'date_sent',
 			);
 		} else {
 			$args = array(
@@ -393,17 +392,12 @@ class BP_Messages_Thread {
 				'per_page'        => 1,
 				'page'            => 1,
 				'count_total'     => false,
-				'orderby'         => 'date_sent',
 			);
 		}
 
 		$messages = BP_Messages_Message::get( $args );
 
-		if ( ! empty( $messages ) ) {
-			$messages = $messages['messages'];
-		}
-
-		return $messages ? (object) $messages[0] : null;
+		return ( ! empty( $messages['messages'] ) ? (object) current( $messages['messages'] ) : null );
 	}
 
 	/**
@@ -411,7 +405,7 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyBoss 1.2.9
 	 *
-	 * @param $thread_id
+	 * @param int $thread_id Message thread ID.
 	 *
 	 * @return object|stdClass
 	 */
@@ -430,14 +424,10 @@ class BP_Messages_Thread {
 			)
 		);
 
-		if ( ! empty( $messages ) ) {
-			$messages = $messages['messages'];
-		}
-
 		$blank_object     = new stdClass();
 		$blank_object->id = 0;
 
-		return $messages ? (object) $messages[0] : $blank_object;
+		return ( ! empty( $messages['messages'] ) ? (object) current( $messages['messages'] ) : $blank_object );
 	}
 
 	/**
@@ -445,7 +435,9 @@ class BP_Messages_Thread {
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 * @param int $thread_id The message thread ID.
+	 * @param int  $thread_id The message thread ID.
+	 * @param null $before    Messages to get before a specific date.
+	 * @param int  $perpage   Number of messages to retrieve.
 	 *
 	 * @return object List of messages associated with a thread.
 	 */
@@ -465,24 +457,27 @@ class BP_Messages_Thread {
 			global $wpdb;
 			$bp                     = buddypress();
 			$last_deleted_id        = static::$last_deleted_message ? static::$last_deleted_message->id : 0;
-			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00';
+			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 			if ( ! $before ) {
 				$before = bp_core_current_time();
 				// $before = gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + 1 ) ) );
 			}
 
-			$query = BP_Messages_Message::get( array(
-				'include_threads' => $thread_id,
-				'date_query'      => array(
-					'after'     => $last_deleted_timestamp,
-					'before'    => $before,
-					'inclusive' => true,
-				),
-				'per_page'        => $perpage,
-			) );
+			$query = BP_Messages_Message::get(
+				array(
+					'include_threads' => $thread_id,
+					'date_query'      => array(
+						'after'     => $last_deleted_timestamp,
+						'before'    => $before,
+						'inclusive' => true,
+					),
+					'per_page'        => $perpage,
+					'debug'           => true,
+				)
+			);
 
-			$messages = ( ! empty( $query['messages'] ) ) ? $query['messages'] : array();
+			$messages = ( ! empty( $query['messages'] ) ? $query['messages'] : array() );
 
 			wp_cache_set( $cache_key, (array) $messages, 'bp_messages_threads' );
 		}
@@ -1735,6 +1730,9 @@ class BP_Messages_Thread {
 		$order_by_term = '';
 
 		switch ( $orderby ) {
+			case 'thread_id':
+				$order_by_term = 'r.thread_id';
+				break;
 			case 'id':
 			default:
 				$order_by_term = 'r.id';
