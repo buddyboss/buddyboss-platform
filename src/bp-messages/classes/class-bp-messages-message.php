@@ -161,7 +161,6 @@ class BP_Messages_Message {
 					'per_page' => 1,
 					'page'     => 1,
 					'orderby'  => 'thread_id',
-					'debug'    => true,
 				)
 			);
 			$this->thread_id = ( ! empty( $max_thread['messages'] ) ? (int) current( $max_thread['messages'] ) + 1 : 1 );
@@ -303,7 +302,6 @@ class BP_Messages_Message {
 				'page'            => 1,
 				'per_page'        => 1,
 				'orderby'         => 'date_sent',
-				'debug'           => true,
 			)
 		);
 
@@ -327,7 +325,6 @@ class BP_Messages_Message {
 				'user_id' => $user_id,
 				'include' => array( $message_id ),
 				'orderby' => 'id',
-				'debug'   => 'true',
 			)
 		);
 
