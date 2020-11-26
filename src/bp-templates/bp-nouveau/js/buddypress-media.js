@@ -836,6 +836,8 @@ window.bp = window.bp || {};
 									$('body #buddypress .activity-list li#activity-' + activityId).remove();
 									$('body .bb-activity-media-elem.document-activity.' + id).remove();
 									$('body .activity-comments li#acomment-' + activityId).remove();
+								} else {
+									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
 								}
 							}
 						}
@@ -1086,6 +1088,7 @@ window.bp = window.bp || {};
 				'_wpnonce'   : BP_Nouveau.nonces.media,
 				'media'      : media,
 				'activity_id': activityId,
+				'from_where' : fromWhere,
 			};
 
 			$.ajax(
@@ -1113,21 +1116,40 @@ window.bp = window.bp || {};
 								if (length == 0) {
 									$('#activity-stream ul.activity-list li[data-bp-activity-id="' + activityId + '"]').remove();
 								}
+
+								if (false === response.data.delete_activity) {
+									$( 'body #buddypress .activity-list li#activity-' + activityId ).replaceWith( response.data.activity_content );
+								}
 							}
 						} else if (fromWhere && fromWhere.length && 'media' === fromWhere) {
 							if (response.success) {
-								$.each(media, function (index, value) {
-									if ($('#media-stream ul.media-list li[data-id="' + value + '"]').length) {
-										$('#media-stream ul.media-list li[data-id="' + value + '"]').remove();
+								if ('yes' === BP_Nouveau.media.is_media_directory) {
+									var store = bp.Nouveau.getStorage('bp-media');
+									var scope = store.scope;
+									if ('personal' === scope) {
+										$(document).find('li#media-personal a').trigger('click');
+										$(document).find('li#media-personal').trigger('click');
+									} else if ('groups' === scope) {
+										$(document).find('li#media-groups a').trigger('click');
+										$(document).find('li#media-groups').trigger('click');
+									} else {
+										$(document).find('li#media-all a').trigger('click');
+										$(document).find('li#media-all').trigger('click');
 									}
-								});
-								if ($('#buddypress').find('.media-list:not(.existing-media-list)').find('li:not(.load-more)').length == 0) {
-									$('.bb-photos-actions').hide();
-									feedback = '<aside class="bp-feedback bp-messages info">\n' +
-										'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
-										'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
-										'\t</aside>';
-									$('#buddypress [data-bp-list="media"]').html(feedback);
+								} else {
+									$.each(media, function (index, value) {
+										if ($('#media-stream ul.media-list li[data-id="' + value + '"]').length) {
+											$('#media-stream ul.media-list li[data-id="' + value + '"]').remove();
+										}
+									});
+									if ($('#buddypress').find('.media-list:not(.existing-media-list)').find('li:not(.load-more)').length == 0) {
+										$('.bb-photos-actions').hide();
+										feedback = '<aside class="bp-feedback bp-messages info">\n' +
+											'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
+											'\t<p>' + BP_Nouveau.media.i18n_strings.no_photos_found + '</p>\n' +
+											'\t</aside>';
+										$('#buddypress [data-bp-list="media"]').html(feedback);
+									}
 								}
 							}
 						} else {
