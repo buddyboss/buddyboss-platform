@@ -43,7 +43,14 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 			return;
 		}
 
-		add_filter( 'wp_list_comments_args', array( $this, 'set_comments_callback' ), 10 );
+		add_filter( 'comment_text', array( $this, 'blocked_comment_text' ), 10, 2 );
+		add_filter( 'get_comment_author_link', array( $this, 'blocked_get_comment_author_link' ), 10, 3 );
+		add_filter( 'get_comment_author', array( $this, 'blocked_get_comment_author' ), 10, 2 );
+		add_filter( 'get_comment_link', array( $this, 'blocked_get_comment_link' ), 10, 2 );
+		add_filter( 'get_comment_date', array( $this, 'blocked_get_comment_date' ), 10, 3 );
+		add_filter( 'get_comment_time', array( $this, 'blocked_get_comment_time' ), 10, 5 );
+		add_filter( 'comment_reply_link', array( $this, 'blocked_comment_reply_link' ), 10, 3 );
+		add_filter( 'edit_comment_link', array( $this, 'blocked_edit_comment_link' ), 10, 2 );
 
 		// button class.
 		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
@@ -65,144 +72,199 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Function to set the comment html callback
+	 * Check comment is blocked or not.
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param array $args comment arguments.
+	 * @param int       $comment_id        The comment ID.
+	 * @param int|false $comment_author_id The comment author ID.
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
-	public function set_comments_callback( $args ) {
-
-		if ( bp_is_active( 'moderation' ) ) {
-			$args['callback'] = array( $this, 'render_blocked_comment' );
+	private function is_blocked( $comment_id, $comment_author_id = false ) {
+		if ( in_array( $comment_id, self::get_sitewide_hidden_ids(), true ) ||
+			 ( ! empty( $comment_author_id ) && bp_moderation_is_user_suspended( $comment_author_id, true ) ) ) {
+			return true;
 		}
 
-		return $args;
+		return false;
 	}
 
 	/**
-	 * Function to override comment listing
+	 * Update comment text for blocked comment.
 	 *
-	 * @param object $comment comment data.
-	 * @param array  $args    comment options.
-	 * @param int    $depth   comment depth.
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string          $comment_text Text of the current comment.
+	 * @param WP_Comment|null $comment      The comment object. Null if not found.
+	 *
+	 * @return string
 	 */
-	function render_blocked_comment( $comment, $args, $depth ) {
-
-		if ( 'div' == $args['style'] ) {
-			$tag       = 'div';
-			$add_below = 'comment';
-		} else {
-			$tag       = 'li';
-			$add_below = 'div-comment';
+	public function blocked_comment_text( $comment_text, $comment ) {
+		if ( ! $comment instanceof WP_Comment ){
+			return $comment_text;
 		}
 
-		$is_user_blocked = $is_user_suspended = false;
-		if ( bp_is_active( 'moderation' ) ) {
-			$is_user_blocked   = bp_moderation_is_user_suspended( (int) $comment->user_id, true );
-			$is_user_suspended = bp_moderation_is_user_suspended( (int) $comment->user_id );
-		}
-		?>
-
-		<<?php echo $tag; ?><?php comment_class( $args['has_children'] ? 'parent' : '',
-			$comment ); ?> id="comment-<?php comment_ID(); ?>">
-
-		<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
-
-			<?php
-			if ( ! $is_user_blocked ) {
-				if ( 0 != $args['avatar_size'] ) {
-					$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $comment->user_id ) : get_comment_author_url( $comment );
-					?>
-					<div class="comment-author vcard">
-						<a href="<?php echo $user_link; ?>">
-							<?php echo get_avatar( $comment, $args['avatar_size'] ); ?>
-						</a>
-					</div>
-				<?php } ?>
-
-				<div class="comment-content-wrap">
-					<div class="comment-meta comment-metadata">
-						<?php printf( __( '%s', 'buddyboss-theme' ),
-							sprintf( '<cite class="fn comment-author">%s</cite>',
-								get_comment_author_link( $comment ) ) ); ?>
-						<a class="comment-date" href="<?php echo esc_url( get_comment_link( $comment,
-							$args ) ); ?>"><?php printf( __( '%1$s', 'buddyboss-theme' ),
-								get_comment_date( '', $comment ),
-								get_comment_time() ); ?></a>
-					</div>
-
-					<?php if ( '0' == $comment->comment_approved ) { ?>
-						<p>
-							<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.',
-									'buddyboss-theme' ); ?></em>
-						</p>
-					<?php } ?>
-
-					<div class="comment-text">
-						<?php
-						comment_text( $comment,
-							array_merge( $args,
-								array(
-									'add_below' => $add_below,
-									'depth'     => $depth,
-									'max_depth' => $args['max_depth'],
-								) ) );
-						?>
-					</div>
-
-					<footer class="comment-footer">
-						<?php
-						comment_reply_link( array_merge( $args,
-							array(
-								'add_below' => $add_below,
-								'depth'     => $depth,
-								'max_depth' => $args['max_depth'],
-								'before'    => '',
-								'after'     => '',
-							) ) );
-						?>
-
-						<?php edit_comment_link( __( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
-
-						<?php
-						echo bp_moderation_get_report_button( array(
-							'id'                => 'comment_report',
-							'component'         => 'moderation',
-							'must_be_logged_in' => true,
-							'button_attr'       => array(
-								'data-bp-content-id'   => get_comment_ID(),
-								'data-bp-content-type' => self::$moderation_type,
-							),
-						),
-							true );
-						?>
-					</footer>
-				</div>
-				<?php
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->is_blocked( (int) $comment->comment_ID, (int) $comment_author_id ) ) {
+			$is_user_blocked   = bp_moderation_is_user_suspended( $comment_author_id, true );
+			$is_user_suspended = bp_moderation_is_user_suspended( $comment_author_id );
+			if ( $is_user_suspended ) {
+				$comment_text = esc_html__( 'Content from suspended user.', 'buddyboss' );
+			} elseif ( $is_user_blocked ) {
+				$comment_text = esc_html__( 'Content from blocked user.', 'buddyboss' );
 			} else {
-				?>
-				<div class="comment-author vcard">
-					<?php echo get_avatar( 0 ); ?>
-				</div>
-				<div class="comment-content-wrap">
-					<div class="comment-text">
-						<?php if ( $is_user_suspended ) {
-							esc_html_e( 'Content from suspended user.', 'buddyboss' );
-						} elseif ( $is_user_blocked ) {
-							esc_html_e( 'Content from blocked user.', 'buddyboss' );
-						} else {
-							esc_html_e( 'Blocked Content.', 'buddyboss' );
-						} ?>
-					</div>
-				</div>
-				<?php
+				$comment_text = esc_html__( 'Blocked Content.', 'buddyboss' );
 			}
-			?>
-		</article>
-		<?php
+		}
+
+		return $comment_text;
+	}
+
+	/**
+	 * Update comment author link for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $return     The HTML-formatted comment author link.
+	 *                           Empty for an invalid URL.
+	 * @param string $author     The comment author's username.
+	 * @param int    $comment_id The comment ID.
+	 *
+	 * @return string
+	 */
+	public function blocked_get_comment_author_link( $return, $author, $comment_id ) {
+		$comment_author_id = self::get_content_owner_id( $comment_id );
+		if ( $this->is_blocked( (int) $comment_id, (int) $comment_author_id ) ) {
+			$is_user_blocked   = bp_moderation_is_user_suspended( $comment_author_id, true );
+			if ( $is_user_blocked ) {
+				$return = esc_html__( 'User Blocked.', 'buddyboss' );
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Update comment author for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string     $author     The comment author's username.
+	 * @param int        $comment_id The comment ID.
+	 *
+	 * @return string
+	 */
+	public function blocked_get_comment_author( $author, $comment_id ) {
+		$comment_author_id = self::get_content_owner_id( $comment_id );
+		if ( $this->is_blocked( (int) $comment_id, (int) $comment_author_id ) ) {
+			$is_user_blocked   = bp_moderation_is_user_suspended( $comment_author_id, true );
+			if ( $is_user_blocked ) {
+				$author = esc_html__( 'User Blocked.', 'buddyboss' );
+			}
+		}
+
+		return $author;
+	}
+
+	/**
+	 * Update comment link for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string     $link    The comment permalink with '#comment-$id' appended.
+	 * @param WP_Comment $comment The current comment object.
+	 *
+	 * @return string
+	 */
+	public function blocked_get_comment_link( $link, $comment ) {
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->is_blocked( (int) $comment->comment_ID, (int) $comment_author_id ) ) {
+			$link = '';
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Update comment date for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string|int $date    Formatted date string or Unix timestamp.
+	 * @param string     $format  The format of the date.
+	 * @param WP_Comment $comment The comment object.
+	 *
+	 * @return string
+	 */
+	public function blocked_get_comment_date( $date, $format, $comment ) {
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->is_blocked( (int) $comment->comment_ID, (int) $comment_author_id ) ) {
+			$date = '';
+		}
+
+		return $date;
+	}
+
+	/**
+	 * Update comment time for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string|int $date      The comment time, formatted as a date string or Unix timestamp.
+	 * @param string     $format    Date format.
+	 * @param bool       $gmt       Whether the GMT date is in use.
+	 * @param bool       $translate Whether the time is translated.
+	 * @param WP_Comment $comment   The comment object.
+	 *
+	 * @return string
+	 */
+	public function blocked_get_comment_time( $date, $format, $gmt, $translate, $comment ) {
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->is_blocked( (int) $comment->comment_ID, (int) $comment_author_id ) ) {
+			$date = '';
+		}
+
+		return $date;
+	}
+
+	/**
+	 * Update comment reply link for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string     $link    The HTML markup for the comment reply link.
+	 * @param array      $args    An array of arguments overriding the defaults.
+	 * @param WP_Comment $comment The object of the comment being replied.
+	 *
+	 * @return string
+	 */
+	public function blocked_comment_reply_link( $link, $args, $comment ) {
+		$comment_author_id = ( ! empty( $comment->user_id ) ) ? $comment->user_id : 0;
+		if ( $this->is_blocked( (int) $comment->comment_ID, (int) $comment_author_id ) ) {
+			$link = '';
+		}
+
+		return $link;
+	}
+
+	/**
+	 * Update comment edit link for blocked comment.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $link       Anchor tag for the edit link.
+	 * @param int    $comment_id Comment ID.
+	 *
+	 * @return string
+	 */
+	public function blocked_edit_comment_link( $link, $comment_id ) {
+		$comment_author_id = self::get_content_owner_id( $comment_id );
+		if ( $this->is_blocked( (int) $comment_id, (int) $comment_author_id ) ) {
+			$link = '';
+		}
+
+		return $link;
 	}
 
 	/**
@@ -258,6 +320,19 @@ class BP_Moderation_Comment extends BP_Moderation_Abstract {
 		$url = get_comment_link( $comment_id );
 
 		return add_query_arg( array( 'modbypass' => 1 ), $url );
+	}
+
+	/**
+	 * Get blocked comment ids.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_sitewide_hidden_ids() {
+		$hidden_comment_id = self::get_sitewide_hidden_item_ids( self::$moderation_type );
+
+		return $hidden_comment_id;
 	}
 
 	/**
