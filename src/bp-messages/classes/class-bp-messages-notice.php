@@ -74,12 +74,15 @@ class BP_Messages_Notice {
 	 * @since BuddyPress 1.0.0
 	 */
 	public function populate() {
-		$notices = self::get( array(
-			'include'  => $this->id,
-			'per_page' => 1,
-		) );
+		$notices = self::get(
+			array(
+				'include'  => $this->id,
+				'per_page' => 1,
+				'orderby'  => 'id',
+			)
+		);
 
-		$notice = ! empty( $notices['notices'] ) ? $notices['notices'][0] : false;
+		$notice = ( ! empty( $notices['notices'] ) ? current( $notices['notices'] ) : false );
 
 		if ( ! empty( $notice ) ) {
 			$this->subject   = $notice->subject;
@@ -215,7 +218,7 @@ class BP_Messages_Notice {
 	 *
 	 * @since BuddyBoss 1.5.4
 	 *
-	 * @param array       $args        {
+	 * @param array $args        {
 	 * Array of parameters. All items are optional.
 	 *
 	 * @type string       $orderby     Optional. Property to sort by. Default: 'date_sent'.
@@ -253,6 +256,7 @@ class BP_Messages_Notice {
 			'fields'      => 'all',
 			'is_active'   => null,
 			'count_total' => false,
+			'debug'       => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_messages_notice_get' );
@@ -296,7 +300,6 @@ class BP_Messages_Notice {
 		 * @param string $orderby Original orderby value.
 		 *
 		 * @since BuddyBoss 1.5.4
-		 *
 		 */
 		$orderby = apply_filters( 'bp_messages_notice_get_orderby', self::convert_orderby_to_order_by_term( $orderby ), $orderby );
 
@@ -313,7 +316,6 @@ class BP_Messages_Notice {
 		 * @param array $where_conditions Where conditions SQL statement.
 		 *
 		 * @since BuddyBoss 1.5.4
-		 *
 		 */
 		$where_conditions = apply_filters( 'bp_messages_notice_get_where_conditions', $where_conditions, $r );
 
@@ -330,7 +332,6 @@ class BP_Messages_Notice {
 		 * @param string $sql From SQL statement.
 		 *
 		 * @since BuddyBoss 1.5.4
-		 *
 		 */
 		$sql['from'] = apply_filters( 'bp_messages_notice_get_join_sql', $sql['from'], $r );
 
@@ -344,9 +345,13 @@ class BP_Messages_Notice {
 		 * @param array  $r     Array of parsed arguments for the get method.
 		 *
 		 * @since BuddyBoss 1.5.4
-		 *
 		 */
 		$paged_notices_sql = apply_filters( 'bp_messages_notice_get_paged_sql', $paged_notices_sql, $sql, $r );
+
+		// for debug.
+		if ( ! empty( $r['debug'] ) ) {
+			error_log( $paged_notices_sql );
+		}
 
 		$paged_notice_ids = $wpdb->get_col( $paged_notices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
@@ -383,10 +388,14 @@ class BP_Messages_Notice {
 			 * @param array  $r         Array of parsed arguments for the get method.
 			 *
 			 * @since BuddyPress 1.5.0
-			 *
 			 */
 			$total_notices_sql = apply_filters( 'bp_messages_notice_get_total_sql', $total_notices_sql, $sql, $r );
 
+			// for debug.
+			if ( ! empty( $r['debug'] ) ) {
+				error_log( $total_notices_sql );
+			}
+			
 			$total_notices   = (int) $wpdb->get_var( $total_notices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total'] = $total_notices;
 		}
@@ -402,10 +411,12 @@ class BP_Messages_Notice {
 	 * @param string $orderby Orderby term as passed to get().
 	 *
 	 * @return string $order_by_term SQL-friendly orderby term.
-	 *
 	 */
 	protected static function convert_orderby_to_order_by_term( $orderby ) {
 		switch ( $orderby ) {
+			case 'id':
+				$order_by_term = 'mn.id';
+				break;
 			case 'date_sent':
 			default:
 				$order_by_term = 'mn.date_sent';
@@ -439,10 +450,12 @@ class BP_Messages_Notice {
 			)
 		);
 
-		$notices = self::get( array(
-			'per_page' => $r['pag_num'],
-			'page'     => $r['pag_page'],
-		) );
+		$notices = self::get(
+			array(
+				'per_page' => $r['pag_num'],
+				'page'     => $r['pag_page'],
+			)
+		);
 
 		$notices = ! empty( $notices['notices'] ) ? $notices['notices'] : array();
 
@@ -472,11 +485,13 @@ class BP_Messages_Notice {
 	 * @return int
 	 */
 	public static function get_total_notice_count() {
-		$notices = self::get( array(
-			'fields'      => 'ids',
-			'per_page'    => 1,
-			'count_total' => true,
-		) );
+		$notices = self::get(
+			array(
+				'fields'      => 'ids',
+				'per_page'    => 1,
+				'count_total' => true,
+			)
+		);
 
 		$notice_count = ! empty( $notices['total'] ) ? $notices['total'] : 0;
 
@@ -499,13 +514,16 @@ class BP_Messages_Notice {
 		$notice = wp_cache_get( 'active_notice', 'bp_messages' );
 
 		if ( false === $notice ) {
-			$notices = self::get( array(
-				'fields'    => 'ids',
-				'is_active' => 1,
-				'per_page'  => 1,
-			) );
-			$notice_id = ! empty( $notices['notices'] ) ? $notices['notices'][0] : false;
+			$notices = self::get(
+				array(
+					'fields'    => 'ids',
+					'orderby'   => 'id',
+					'is_active' => 1,
+					'per_page'  => 1,
+				)
+			);
 
+			$notice_id = ! empty( $notices['notices'] ) ? current( $notices['notices'] ) : false;
 			$notice    = new BP_Messages_Notice( $notice_id );
 
 			wp_cache_set( 'active_notice', $notice, 'bp_messages' );
