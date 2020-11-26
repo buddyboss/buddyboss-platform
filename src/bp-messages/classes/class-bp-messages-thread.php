@@ -876,7 +876,6 @@ class BP_Messages_Thread {
 				'meta_query'   => array(),
 				'fields'       => 'all',
 				'having_sql'   => false,
-				'debug'        => true,
 			)
 		);
 
