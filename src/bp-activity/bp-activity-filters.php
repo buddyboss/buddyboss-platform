@@ -1755,17 +1755,6 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		// Add in description in attachment when only one media uploaded.
-		if ( ! empty( $activity_id ) && is_array( $media_ids ) && 1 === count( $media_ids ) && ! empty( $content ) ) {
-			foreach ( $media_ids as $media_id ) {
-				$media                                 = new BP_Media( $media_id );
-				$media_attachment_post                 = array();
-				$media_attachment_post['ID']           = $media->attachment_id;
-				$media_attachment_post['post_content'] = wp_strip_all_tags( $content );
-				wp_update_post( $media_attachment_post );
-			}
-		}
-
 		// save media meta for activity.
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
@@ -2084,17 +2073,6 @@ function bp_activity_create_parent_document_activity( $document_ids ) {
 			);
 		} else {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
-		}
-
-		// Add in description in attachment when only one document uploaded.
-		if ( ! empty( $activity_id ) && is_array( $document_ids ) && 1 === count( $document_ids ) && ! empty( $content ) ) {
-			foreach ( $document_ids as $document_id ) {
-				$document                                 = new BP_Document( $document_id );
-				$document_attachment_post                 = array();
-				$document_attachment_post['ID']           = $document->attachment_id;
-				$document_attachment_post['post_content'] = wp_strip_all_tags( $content );
-				wp_update_post( $document_attachment_post );
-			}
 		}
 
 		// save document meta for activity.
