@@ -1971,6 +1971,8 @@ class BP_Document {
 				$output_file_src = bp_document_scaled_image_path( $attachment_id );
 				if ( $output_file && '' !== basename( $output_file ) ) {
 					add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+					add_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+					add_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 					$upload_dir = $upload_dir['basedir'];
 
 					// Create temp folder.
@@ -2032,6 +2034,8 @@ class BP_Document {
 					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
 					$pdf_preview = true;
 					BP_Document::bp_document_remove_temp_directory( $preview_folder );
+					remove_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+					remove_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 					remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 				} elseif( class_exists( 'WP_Offload_Media_Autoloader' ) && extension_loaded( 'imagick' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 					$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
@@ -2044,7 +2048,7 @@ class BP_Document {
 
 						$downloaded_file        = download_url( wp_get_attachment_url( $attachment_id ) );
 						$document_name_with_ext = basename( wp_get_attachment_url( $attachment_id ) );
-						$document_name          = preg_replace( '/\\.[^.\\s]{3,4}$/', '', $document_name_with_ext );
+						$document_name          = preg_replace( '/\\.[^.\\s]{3,4}$/', '', strtok( $document_name_with_ext, '?' ) );
 
 						// Create temp folder.
 						$upload_dir = $upload_dir['basedir'] . '/aws-preview-image-folder-' . time();
@@ -2056,7 +2060,7 @@ class BP_Document {
 							wp_mkdir_p( $upload_dir );
 							chmod( $upload_dir, 0777 );
 
-							$pdf_upload_dir = $upload_dir . '/' . $document_name_with_ext;
+							$pdf_upload_dir = $upload_dir . '/' . strtok( $document_name_with_ext, '?' );
 
 							// Copies the file to the final destination and deletes temporary file.
 							copy( $downloaded_file, $pdf_upload_dir );
@@ -2079,16 +2083,18 @@ class BP_Document {
 									 * PDFs may have the same file filename as JPEGs.
 									 * Ensure the PDF preview image does not overwrite any JPEG images that already exist.
 									 */
-									$preview_file = $upload_dir . '/' . $document_name . '.jpg';
+									$preview_file = $upload_dir . '/' . strtok( $document_name, '?' ) . '.jpg';
 									$uploaded     = $editor->save( $preview_file, 'image/jpeg' );
 
-									if( ! empty( $uploaded ) ) {
+									if( ! empty( $uploaded ) && ! is_wp_error( $uploaded ) ) {
 										add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+										add_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+										add_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 
-										$wp_filetype = wp_check_filetype( $document_name_with_ext, null );
+										$wp_filetype = wp_check_filetype( strtok( $uploaded['path'], '?' ), null );
 										$attachment  = array(
 											'post_mime_type' => $wp_filetype['type'],
-											'post_title'     => sanitize_file_name( $document_name ),
+											'post_title'     => sanitize_file_name( strtok( $document_name, '?' ) ),
 											'post_content'   => '',
 											'post_status'    => 'inherit',
 										);
@@ -2104,6 +2110,8 @@ class BP_Document {
 										update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
 										update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
 										$pdf_preview = true;
+										remove_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+										remove_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 										remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 									}
 									unset( $editor );
@@ -2268,6 +2276,8 @@ class BP_Document {
 
 						if ( $output_file && '' !== basename( $output_file ) ) {
 							add_filter( 'upload_dir', 'bp_document_upload_dir_script' );
+							add_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+							add_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 							$upload_dir = $upload_dir['basedir'];
 
 							// Create temp folder.
@@ -2329,6 +2339,8 @@ class BP_Document {
 							update_post_meta( $id, 'document_preview_attachment_id', $preview_attachment_id );
 							bp_document_update_meta( $document_id, 'preview_attachment_id', $preview_attachment_id );
 							BP_Document::bp_document_remove_temp_directory( $preview_folder );
+							remove_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+							remove_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 							remove_filter( 'upload_dir', 'bp_document_upload_dir_script' );
 						}
 					}

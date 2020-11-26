@@ -155,10 +155,14 @@ function bp_nouveau_ajax_document_upload() {
 	}
 
 	add_filter( 'upload_dir', 'bp_document_upload_dir' );
+	add_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+	add_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 
 	// Upload file.
 	$result = bp_document_upload();
 
+	remove_filter( 'as3cf_upload_acl', 'bp_document_private_upload_acl', 10, 1 );
+	remove_filter( 'as3cf_upload_acl_sizes', 'bp_document_private_upload_acl', 10, 1 );
 	remove_filter( 'upload_dir', 'bp_document_upload_dir' );
 
 	if ( is_wp_error( $result ) ) {

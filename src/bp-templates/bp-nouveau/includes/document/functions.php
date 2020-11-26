@@ -1082,7 +1082,7 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		// WP OFFLOAD MEDIA Support.
 		} elseif( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
 			$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
-			$is_image                   = wp_get_attachment_image_url( $preview_attachment_id );
+			$is_image                   = wp_get_attachment_url( $preview_attachment_id );
 			if( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] && $is_image && @getimagesize($is_image) ) {
 				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&id2=' . base64_encode( 'aws' );
 			}

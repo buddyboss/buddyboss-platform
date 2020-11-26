@@ -42,7 +42,7 @@ if( isset( $explode_attachment_arr ) && ! empty( $explode_attachment_arr ) && is
 	} elseif( $can_view && '' !== $encode_is_aws ) {
 		if ( wp_get_attachment_image_url( $attachment_id ) ) {
 			$type            = get_post_mime_type( $attachment_id );
-			$output_file_src = wp_get_attachment_image_url( $attachment_id );
+			$output_file_src = wp_get_attachment_url( $attachment_id );
 			header( "Content-Type: $type" );
 			readfile( "$output_file_src" );
 		}
