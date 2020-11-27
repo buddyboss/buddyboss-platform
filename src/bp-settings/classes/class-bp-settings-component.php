@@ -182,26 +182,14 @@ class BP_Settings_Component extends BP_Component {
 			'user_has_access' => $access,
 		);
 
-		if( bp_is_active( 'moderation' ) ){
-			if ( bp_is_moderation_member_blocking_enable() ) {
-				$sub_nav[] = array(
-					'name'            => __( 'Blocked Members', 'buddyboss' ),
-					'slug'            => 'blocked-members',
-					'parent_url'      => $settings_link,
-					'parent_slug'     => $slug,
-					'screen_function' => 'bp_moderation_screen',
-					'position'        => 65,
-					'user_has_access' => $access,
-				);
-			}
-
+		if( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ){
 			$sub_nav[] = array(
-				'name'            => __( 'Reported Content', 'buddyboss' ),
-				'slug'            => 'reported-content',
+				'name'            => __( 'Blocked Members', 'buddyboss' ),
+				'slug'            => 'blocked-members',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
 				'screen_function' => 'bp_moderation_screen',
-				'position'        => 70,
+				'position'        => 65,
 				'user_has_access' => $access,
 			);
 		}
@@ -297,24 +285,13 @@ class BP_Settings_Component extends BP_Component {
 				);
 			}
 
-			if( bp_is_active( 'moderation' ) ){
-				if ( bp_is_moderation_member_blocking_enable() ) {
-					// Blocked Members.
-					$wp_admin_nav[] = array(
-						'parent'   => 'my-account-' . $this->id,
-						'id'       => 'my-account-' . $this->id . '-blocked-members',
-						'title'    => __( 'Blocked Members', 'buddyboss' ),
-						'href'     => trailingslashit( $settings_link . 'blocked-members/' ),
-						'position' => 31,
-					);
-				}
-
-				// Reported Content.
+			if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable() ) {
+				// Blocked Members.
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-reported-content',
-					'title'    => __( 'Reported Content', 'buddyboss' ),
-					'href'     => trailingslashit( $settings_link . 'reported-content/' ),
+					'id'       => 'my-account-' . $this->id . '-blocked-members',
+					'title'    => __( 'Blocked Members', 'buddyboss' ),
+					'href'     => trailingslashit( $settings_link . 'blocked-members/' ),
 					'position' => 31,
 				);
 			}

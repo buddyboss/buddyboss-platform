@@ -1013,14 +1013,6 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
 		),
-		'moderation-reported-content-loading' => array(
-			'type'    => 'loading',
-			'message' => __( 'Loading your reported content. Please wait.', 'buddyboss' ),
-		),
-		'moderation-reported-content-none' => array(
-			'type'    => 'loading',
-			'message' => __( 'Sorry, no reported content was found.', 'buddyboss' ),
-		),
 		'moderation-block-member-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading your blocked members. Please wait.', 'buddyboss' ),

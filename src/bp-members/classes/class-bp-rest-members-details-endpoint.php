@@ -817,12 +817,6 @@ class BP_REST_Members_Details_Endpoint extends WP_REST_Users_Controller {
 						'count' => '',
 					);
 				}
-				$item_settings['children'][] = array(
-					'ID'    => 'reported-content',
-					'title' => __( 'Reported Content', 'buddyboss' ),
-					'url'   => esc_url( trailingslashit( $settings_link . 'reported-content' ) ),
-					'count' => '',
-				);
 			}
 
 			if ( bp_core_can_edit_settings() ) {
