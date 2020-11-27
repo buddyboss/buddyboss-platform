@@ -359,6 +359,11 @@
 			li.delete_thread a:before {
 				content: "\e937";
 			}
+
+			li.report_thread a:before {
+				content: "\e8ea";
+			}
+
 		}
 	}
 

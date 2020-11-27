@@ -239,15 +239,6 @@ if ( $attachment_id ) {
                             <a href="<?php echo esc_url( $download_link ); ?>"><?php esc_html_e( 'Copy Download Link', 'buddyboss' ); ?></a>
                         </li>
 						<?php
-						if ( bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) ) ) {
-							?>
-                            <li class="report">
-								<?php
-								echo bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) );
-								?>
-                            </li>
-							<?php
-						}
 					}
 					if ( $can_manage ) {
 						if ( ( 'document' === $document_type || 'folder' === $document_type ) && 0 === $group_id && 0 === bp_get_document_parent_id() ) {
@@ -311,8 +302,15 @@ if ( $attachment_id ) {
                                data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>"
                                data-type="<?php echo esc_attr( $document_type ); ?>"
                                href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
-                        </li>
+						</li>
 						<?php
+						if ( bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) ) ) {
+							?>
+                            <li class="report_file">
+								<?php echo bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) ); ?>
+                            </li>
+							<?php
+						}
 					}
 					?>
                 </ul>

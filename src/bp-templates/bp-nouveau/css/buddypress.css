@@ -2349,6 +2349,21 @@ input.search-query-input {
   color: #0061ac;
 }
 
+#buddypress .activity-list .comment-item .bp-generic-meta.action a.report-content.button:hover span, #buddypress
+.activity-list .comment-item .bp-generic-meta.action a.report-content.button span, #buddypress
+.activity-list .comment-item .bp-generic-meta.action a.reported-content.button:hover span, #buddypress
+.activity-list .comment-item .bp-generic-meta.action a.reported-content.button span {
+  font-weight: 500;
+  font-size: 12px;
+  color: #939597;
+  vertical-align: middle;
+}
+
+.activity-list .comment-item .bp-generic-meta.action a.report-content.button:before,
+.activity-list .comment-item .bp-generic-meta.action a.reported-content.button:before {
+  display: none;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity-list.bp-list {
     padding: 30px;
@@ -6048,6 +6063,10 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_thread a:before {
   content: "\e937";
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
+  content: "\e8ea";
 }
 
 .bp-messages-content .single-thread-title {
@@ -14513,6 +14532,27 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.delete_file a:before {
   content: "\e937";
   font-size: 15px;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a {
+  background-color: transparent;
+  text-align: left;
+  font-weight: 400;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: auto;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:before {
+  content: "\e8ea";
+  font-size: 14px;
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:hover,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.report_file a:hover {
+  background-color: #f5f5f5;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before,
