@@ -2194,6 +2194,16 @@ body .section-repair_community .settings fieldset .checkbox label code {
 	}
 }
 
+#the-moderation-request-list {
+
+	.blocked_member > img,
+	.content_owner > img {
+		vertical-align: middle;
+		margin-right: 5px;
+	}
+
+}
+
 @keyframes contentLoader {
 
 	0% {

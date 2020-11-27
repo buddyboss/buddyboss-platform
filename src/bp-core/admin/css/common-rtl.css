@@ -2081,6 +2081,12 @@ body .section-repair_community .settings fieldset .checkbox label code {
   animation-delay: 0;
 }
 
+#the-moderation-request-list .blocked_member > img,
+#the-moderation-request-list .content_owner > img {
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
 @keyframes contentLoader {
   0% {
     top: 8px;
