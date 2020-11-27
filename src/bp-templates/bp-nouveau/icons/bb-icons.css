@@ -481,4 +481,12 @@
 .bb-icon-rounded-dribbble:before { content: '\ede2'; }
 .bb-icon-rounded-pinterest:before { content: '\ede3'; }
 .bb-icon-attach:before { content: '\e980'; }
+.bb-icon-banknote:before { content: '\e964'; }
+.bb-icon-calendar-list:before { content: '\e972'; }
+.bb-icon-ask-bubble:before { content: '\e9cb'; }
+.bb-icon-figure:before { content: '\e9cc'; }
+.bb-icon-log-out-circle:before { content: '\e9cd'; }
+.bb-icon-qa:before { content: '\e9ce'; }
+.bb-icon-wallet:before { content: '\e9cf'; }
+.bb-icon-scroll-doc:before { content: '\e9d0'; }
  /* stylelint-enable */
