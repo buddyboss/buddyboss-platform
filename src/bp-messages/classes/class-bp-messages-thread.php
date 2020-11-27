@@ -449,22 +449,22 @@ class BP_Messages_Thread {
 		$messages  = wp_cache_get( $cache_key, 'bp_messages_threads' );
 
 		if ( false === $messages || static::$noCache ) {
-			// if current user isn't the recpient, then return empty array
+			// if current user isn't the recpient, then return empty array.
 			if ( ! static::is_thread_recipient( $thread_id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
 
 				return array();
 			}
 
-			global $wpdb;
-			$bp                     = buddypress();
-			$last_deleted_id        = static::$last_deleted_message ? static::$last_deleted_message->id : 0;
-			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
+			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00';
 
 			if ( ! $before ) {
 				$before = bp_core_current_time();
 				// $before = gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + 1 ) ) );
 			}
+
+			// Added last_deleted_id in the sql.
+			add_filter( 'bp_messages_message_get_where_conditions', array( __CLASS__, 'bp_filter_messages_message_get_where_conditions' ), 10, 2 );
 
 			$query = BP_Messages_Message::get(
 				array(
@@ -477,6 +477,9 @@ class BP_Messages_Thread {
 					'per_page'        => $perpage,
 				)
 			);
+
+			// Removed last_deleted_id in the sql.
+			remove_filter( 'bp_messages_message_get_where_conditions', array( __CLASS__, 'bp_filter_messages_message_get_where_conditions' ), 10, 2 );
 
 			$messages = ( ! empty( $query['messages'] ) ? $query['messages'] : array() );
 
@@ -1366,7 +1369,6 @@ class BP_Messages_Thread {
 					'user_id'    => $user_id,
 					'per_page'   => - 1,
 					'is_deleted' => 0,
-					'debug'      => true,
 				)
 			);
 
@@ -1767,5 +1769,23 @@ class BP_Messages_Thread {
 		}
 
 		return $order_by_term;
+	}
+
+	/**
+	 * Filters the Where SQL statement.
+	 *
+	 * @since BuddyBoss 1.5.4
+	 *
+	 * @param array $where_conditions Where conditions SQL statement.
+	 * @param array $r                Array of parsed arguments for the get method.
+	 *
+	 * @return mixed
+	 */
+	public static function bp_filter_messages_message_get_where_conditions( $where_conditions, $r ) {
+		global $wpdb;
+		$last_deleted_id             = static::$last_deleted_message ? static::$last_deleted_message->id : 0;
+		$where_conditions['columns'] = $wpdb->prepare( 'm.id > %d', $last_deleted_id );
+
+		return $where_conditions;
 	}
 }
