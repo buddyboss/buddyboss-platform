@@ -233,11 +233,13 @@ function bp_nouveau_ajax_joinleave_group() {
 			}
 			break;
 
-		case 'groups_request_membership' :
-			if ( ! groups_send_membership_request( array(
-				'user_id'  => bp_loggedin_user_id(),
-				'group_id' => $group->id
-			) ) ) {
+		case 'groups_request_membership':
+			if ( ! groups_send_membership_request(
+				array(
+					'user_id'  => bp_loggedin_user_id(),
+					'group_id' => $group->id,
+				)
+			) ) {
 				$response = array(
 					'feedback' => sprintf(
 						'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
@@ -535,36 +537,36 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	foreach ( $potential_invites->users as $user ) {
 		?>
-        <li class="<?php echo $user['id']; ?>">
-            <div class="item-avatar">
-                <a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
-                    <img src="<?php echo $user['avatar']; ?>" class="avatar" alt=""/> </a>
-            </div>
+		<li class="<?php echo $user['id']; ?>">
+			<div class="item-avatar">
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
+					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt=""/> </a>
+			</div>
 
-            <div class="item">
-                <div class="list-title member-name">
-                    <a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
+			<div class="item">
+				<div class="list-title member-name">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
 						<?php echo $user['name']; ?>
-                    </a>
-                </div>
+					</a>
+				</div>
 
 				<?php if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] ) { ?>
-                    <div class="item-meta">
+					<div class="item-meta">
 						<?php if ( isset( $user ) && isset( $user['invited_by'] ) && '' !== $user['invited_by'] ) { ?>
-                            <ul class="group-inviters">
-                                <li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
+							<ul class="group-inviters">
+								<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
 								<?php foreach ( $user['invited_by'] as $inviter ) { ?>
-                                    <li>
-                                        <a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
-                                           data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
-                                            <img src="<?php echo $inviter['avatar']; ?>" width="30px"
-                                                 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
-                                        </a>
-                                    </li>
+									<li>
+										<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip"
+										   data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
+											<img src="<?php echo $inviter['avatar']; ?>" width="30px"
+												 class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+										</a>
+									</li>
 								<?php } ?>
-                            </ul>
+							</ul>
 						<?php } ?>
-                        <p class="status">
+						<p class="status">
 							<?php
 							if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {
 								?>
@@ -573,27 +575,27 @@ function bp_nouveau_ajax_get_users_to_invite() {
 							} else {
 								?>
 								<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?><?php } ?>
-                        </p>
-                    </div>
+						</p>
+					</div>
 				<?php } ?>
-            </div>
-            <div class="action">
+			</div>
+			<div class="action">
 				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
-                    <button data-bp-user-id="<?php echo $user['id']; ?>"
-                            data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
+					<button data-bp-user-id="<?php echo $user['id']; ?>"
+							data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons
 														<?php
-					if ( isset( $user['selected'] ) && $user['selected'] ) {
-						?>
+														if ( isset( $user['selected'] ) && $user['selected'] ) {
+															?>
 						 selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="
 						<?php
-					if ( isset( $user['selected'] ) && $user['selected'] ) {
-						?>
+						if ( isset( $user['selected'] ) && $user['selected'] ) {
+							?>
 												<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>
 							<?php
-					} else {
-						?>
+						} else {
+							?>
 							<?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
-                        <span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
+						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 						<?php
 						if ( isset( $user['selected'] ) && $user['selected'] ) {
 							?>
@@ -603,48 +605,48 @@ function bp_nouveau_ajax_get_users_to_invite() {
 							?>
 							<?php esc_html_e( 'Invite', 'buddyboss' ); ?><?php } ?>
 					</span>
-                    </button>
+					</button>
 				<?php } ?>
 
 				<?php
 				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
 					if ( 'invited' === $request['scope'] ) {
 						?>
-                        <button data-bp-user-id="<?php echo $user['id']; ?>"
-                                data-bp-user-name="<?php echo $user['name']; ?>" type="button"
-                                class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
-                                data-bp-tooltip-pos="left"
-                                data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
-                            <span class=" icons" aria-hidden="true"></span>
-                            <span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
-                        </button>
+						<button data-bp-user-id="<?php echo $user['id']; ?>"
+								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+								class="button remove-button group-remove-invite-button bp-tooltip bp-icons"
+								data-bp-tooltip-pos="left"
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+							<span class=" icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+						</button>
 						<?php
 					} else {
 						?>
-                        <button data-bp-user-id="<?php echo $user['id']; ?>"
-                                data-bp-user-name="<?php echo $user['name']; ?>" type="button"
-                                class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
-                                data-bp-tooltip-pos="left"
-                                data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
-                            <span class=" icons" aria-hidden="true"></span>
-                            <span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
-                        </button>
+						<button data-bp-user-id="<?php echo $user['id']; ?>"
+								data-bp-user-name="<?php echo $user['name']; ?>" type="button"
+								class="button invite-button group-remove-invite-button bp-tooltip bp-icons"
+								data-bp-tooltip-pos="left"
+								data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+							<span class=" icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+						</button>
 						<?php
 					}
 					?>
 				<?php } ?>
-            </div>
-        </li>
+			</div>
+		</li>
 		<?php
 	}
 
 	if ( $total_page !== (int) $_POST['page'] ) {
 		?>
-        <li class="load-more">
-            <div class="center">
-                <i class="bb-icons bb-icon-loader animate-spin"></i>
-            </div>
-        </li>
+		<li class="load-more">
+			<div class="center">
+				<i class="bb-icons bb-icon-loader animate-spin"></i>
+			</div>
+		</li>
 		<?php
 	}
 
@@ -659,20 +661,20 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	if ( $total_page > 1 ) {
 		if ( 1 !== $page ) {
 			?>
-            <a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip"
-               data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
-                <span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-                <span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip"
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+				<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
+				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
 			<?php
 		}
 
 		if ( $total_page !== $page ) {
 			$page = $page + 1;
 			?>
-            <a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip"
-               data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
-                        class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
-                <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
+			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip"
+			   data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
+						class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+				<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 			<?php
 		}
 	}
@@ -680,10 +682,10 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$paginate = ob_get_contents();
 	ob_clean();
 
-	// Set a message to explain use of the current scope
+	// Set a message to explain use of the current scope.
 	$potential_invites->feedback = $message;
 
-	// Set a pagination
+	// Set a pagination.
 	$potential_invites->pagination = $paginate;
 	$potential_invites->page       = $page;
 
@@ -705,7 +707,7 @@ function bp_nouveau_ajax_send_group_invites() {
 		'type'     => 'error',
 	);
 
-	// Verify nonce
+	// Verify nonce.
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_send_invites' ) ) {
 		wp_send_json_error( $response );
 	}
@@ -726,7 +728,7 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
-	// For feedback
+	// For feedback.
 	$invited = array();
 
 	foreach ( (array) $_POST['users'] as $user_id ) {
@@ -796,18 +798,20 @@ function bp_nouveau_ajax_remove_group_invite() {
 		'type'     => 'error',
 	);
 
-	// Verify nonce
+	// Verify nonce.
 	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'groups_invite_uninvite_user' ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Verify that a sent invite exists.
-	$inviter_ids = groups_get_invites( array(
-		'user_id'     => $user_id,
-		'item_id'     => $group_id,
-		'invite_sent' => 'sent',
-		'fields'      => 'inviter_ids'
-	) );
+	$inviter_ids = groups_get_invites(
+		array(
+			'user_id'     => $user_id,
+			'item_id'     => $group_id,
+			'invite_sent' => 'sent',
+			'fields'      => 'inviter_ids',
+		)
+	);
 
 	if ( empty( $inviter_ids ) ) {
 		wp_send_json_error( $response );
@@ -927,41 +931,41 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$name = bp_core_get_user_displayname( $member->ID );
 			?>
-            <li class="group-message-member-li <?php echo $member->ID; ?>">
-                <div class="item-avatar">
-                    <a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+			<li class="group-message-member-li <?php echo $member->ID; ?>">
+				<div class="item-avatar">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 						<?php echo $image; ?>
-                    </a>
-                </div>
-                <div class="item">
-                    <div class="list-title member-name">
-                        <a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+					</a>
+				</div>
+				<div class="item">
+					<div class="list-title member-name">
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
 							<?php echo $name; ?>
-                        </a>
-                    </div>
-                </div>
-                <div class="action">
-                    <button type="button"
-                            class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
-                            data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
-                            data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
-                            data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
-                        <span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
+						</a>
+					</div>
+				</div>
+				<div class="action">
+					<button type="button"
+							class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons"
+							data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>"
+							data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left"
+							data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+						<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 							<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
 						</span>
-                    </button>
-                </div>
-            </li>
+					</button>
+				</div>
+			</li>
 			<?php
 		}
 
 		if ( $total_page !== (int) $_POST['page'] ) {
 			?>
-            <li class="load-more">
-                <div class="center">
-                    <i class="bb-icon-loader animate-spin"></i>
-                </div>
-            </li>
+			<li class="load-more">
+				<div class="center">
+					<i class="bb-icon-loader animate-spin"></i>
+				</div>
+			</li>
 			<?php
 		}
 
@@ -974,22 +978,22 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			if ( 1 !== (int) $_POST['page'] ) {
 				?>
-                <a href="javascript:void(0);" id="bp-group-messages-prev-page"
-                   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
-                   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
-                    <span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-                    <span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+				<a href="javascript:void(0);" id="bp-group-messages-prev-page"
+				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
+				   data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
+					<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
 				<?php
 			}
 
 			if ( $total_page !== (int) $_POST['page'] ) {
 				$page = $page + 1;
 				?>
-                <a href="javascript:void(0);" id="bp-group-messages-next-page"
-                   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
-                   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
-                            class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
-                    <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
+				<a href="javascript:void(0);" id="bp-group-messages-next-page"
+				   class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up"
+				   data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>"> <span
+							class="bp-screen-reader-text"><?php esc_html_e( 'Next page', 'buddyboss' ); ?></span>
+					<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
 				<?php
 			}
 
@@ -1106,9 +1110,9 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	$group         = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id
-	$message_users = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual
-	$message_type  = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private
+	$group         = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
+	$message_users = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual.
+	$message_type  = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
 
 	if ( empty( $group ) ) {
 		$response['feedback'] = 'No group Selected.';
@@ -1128,6 +1132,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$_POST['message_meta_users_list'] = $message_users_ids;
 
 			$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
+			$is_deleted                   = false;
 			$group_thread_id              = '';
 			$_POST['message_thread_type'] = '';
 
@@ -1147,12 +1152,12 @@ function bp_nouveau_ajax_groups_send_message() {
 
 					if ( empty( $_POST['message_thread_type'] ) ) {
 						$total_threads = BP_Messages_Thread::get(
-								array(
-										'include_threads' => array( $group_thread ),
-										'per_page'        => 1,
-										'count_total'     => true,
-										'is_deleted'      => 1
-								)
+							array(
+								'include_threads' => array( $group_thread ),
+								'per_page'        => 1,
+								'count_total'     => true,
+								'is_deleted'      => 1,
+							)
 						);
 
 						$is_deleted = ( ! empty( $total_threads['total'] ) ) ? true : false;
