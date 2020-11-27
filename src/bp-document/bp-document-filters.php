@@ -314,6 +314,10 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 			$old_document_ids = bp_activity_get_meta( $activity_id, 'bp_document_ids', true );
 			$old_document_ids = explode( ',', $old_document_ids );
 			if ( ! empty( $old_document_ids ) ) {
+
+				// This is hack to update/delete parent activity if new media added in edit.
+				bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', array_unique( array_merge( $document_ids, $old_document_ids ) ) ) );
+
 				foreach ( $old_document_ids as $document_id ) {
 					if ( ! in_array( $document_id, $document_ids ) ) {
 						bp_document_delete( array( 'id' => $document_id ) );
@@ -606,40 +610,22 @@ function bp_document_attach_document_to_message( &$message ) {
 		remove_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
 
 		$document_list = $_POST['document'];
-		$document_ids  = array();
 
-		foreach ( $document_list as $document_index => $document ) {
-			$title         = ! empty( $document['name'] ) ? $document['name'] : '&nbsp;';
-			$attachment_id = ! empty( $document['id'] ) ? $document['id'] : 0;
-			$menu_order	   = ! empty( $document['menu_order'] ) ? $document['menu_order'] : 0;
-
-			$attachment_data = get_post( $document['id'] );
-			$file            = get_attached_file( $document['id'] );
-			$file_type       = wp_check_filetype( $file );
-			$file_name       = basename( $file );
-
-			$document_id = bp_document_add(
-				array(
-					'attachment_id' => $attachment_id,
-					'title'         => $title,
-					'privacy'       => 'message',
-					'error_type'    => 'wp_error',
-					'menu_order'    => $menu_order,
-				)
-			);
-
-			if ( ! empty( $document_id ) && ! is_wp_error( $document_id ) ) {
-				$document_ids[] = $document_id;
-
-				// save document meta.
-				bp_document_update_meta( $document_id, 'file_name', $file_name );
-				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
-				bp_document_update_meta( $document_id, 'extension', '.' . $file_type['ext'] );
-
-				// save document is saved in attachment.
-				update_post_meta( $attachment_id, 'bp_document_saved', true );
+		if ( ! empty( $document_list ) ) {
+			foreach( $document_list as $k => $document ) {
+				if( array_key_exists( 'group_id', $document ) ) {
+					unset( $document_list[ $k ]['group_id'] );
+				}
 			}
 		}
+
+		$document_ids = bp_document_add_handler( $document_list, 'message' );
+
+		if ( ! empty( $document_ids ) ) {
+			foreach( $document_ids as $document_id ) {
+				bp_document_update_meta( $document_id, 'thread_id', $message->thread_id );
+			}
+        }
 
 		$document_ids = implode( ',', $document_ids );
 
@@ -711,7 +697,7 @@ function bp_document_user_messages_delete_attached_document( $thread_id, $messag
  * @param array|object $post              Request object.
  *
  * @return bool
- * 
+ *
  * @since BuddyBoss 1.5.1
  */
 function bp_document_message_validated_content( $validated_content, $content, $post ) {

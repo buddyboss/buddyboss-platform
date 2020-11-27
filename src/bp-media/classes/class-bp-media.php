@@ -574,6 +574,9 @@ class BP_Media {
 		// Get BuddyPress.
 		$bp = buddypress();
 
+		// Media Privacy array
+		$media_privacy = bp_media_get_visibility_levels();
+
 		$medias       = array();
 		$uncached_ids = bp_get_non_cached_ids( $media_ids, 'bp_media' );
 
@@ -614,6 +617,22 @@ class BP_Media {
 			$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
 			$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
 			$media->attachment_data          = $attachment_data;
+
+			$group_name = '';
+			if ( bp_is_active( 'groups') && $media->group_id > 0 ) {
+				$group      = groups_get_group( $media->group_id );
+				$group_name = bp_get_group_name( $group );
+				$status     = bp_get_group_status( $group );
+				if ( 'hidden' === $status || 'private' === $status ) {
+					$visibility = esc_html__( 'Group Members', 'buddyboss' );
+				} else {
+					$visibility = ucfirst( $status );
+				}
+			} else {
+				$visibility       = isset( $media_privacy[ $media->privacy ] ) ? $media_privacy[ $media->privacy ] : $media->privacy;
+			}
+			$media->group_name = $group_name;
+			$media->visibility = $visibility;
 
 			$medias[] = $media;
 		}
@@ -1007,7 +1026,7 @@ class BP_Media {
 					}
 				}
 
-				if ( empty( $from ) || 'activity' === $from ) {
+				if ( empty( $from ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
@@ -1033,15 +1052,12 @@ class BP_Media {
 
 					// Deleting an activity.
 					} else {
-						// Do not delete the activity if action did via edit.
-						if ( bp_is_active( 'activity' ) && 'activity' !== $from ) {
-							if ( bp_activity_delete( array(
-									'id'      => $activity->id,
-									'user_id' => $activity->user_id,
-								) ) ) {
-								/** This action is documented in bp-activity/bp-activity-actions.php */
-								do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
-							}
+						if ( 'activity' !== $from && bp_activity_delete( array(
+								'id'      => $activity->id,
+								'user_id' => $activity->user_id,
+							) ) ) {
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 					}
 				}

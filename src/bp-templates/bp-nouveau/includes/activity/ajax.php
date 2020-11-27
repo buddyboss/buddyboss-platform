@@ -663,8 +663,10 @@ function bp_nouveau_ajax_post_update() {
 			 *
 			 * @param string/bool $is_private Privacy status for the update.
 			 */
-			'is_private'   => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
-			'is_directory' => bp_is_activity_directory(),
+			'is_private'              => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
+			'is_directory'            => bp_is_activity_directory(),
+			'is_user_activity'        => bp_is_user_activity(),
+			'is_active_activity_tabs' => bp_is_activity_tabs_active(),
 		)
 	);
 }

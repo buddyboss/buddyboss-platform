@@ -1033,7 +1033,7 @@ function bp_nouveau_ajax_groups_send_message() {
 		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
 	}
 
-	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -1107,16 +1107,36 @@ function bp_nouveau_ajax_groups_send_message() {
 			$_POST['message_thread_type'] = '';
 
 			if ( '' !== $group_thread ) {
-				$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
-				foreach ( $total_threads as $thread ) {
-					if ( 1 === (int) $thread->is_deleted ) {
-						$is_deleted = true;
-						break;
-					}
-				}
+				if ( messages_is_valid_thread( $group_thread ) ) {
+					$first_thread_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-				if ( $is_deleted ) {
-					// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+					if ( ! empty( $first_thread_message ) ) {
+						$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+						$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+						$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+
+						if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+							$_POST['message_thread_type'] = 'new';
+						}
+					}
+
+					if ( empty( $_POST['message_thread_type'] ) ) {
+					    // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, Squiz.Commenting.InlineComment.InvalidEndChar
+						$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
+
+						foreach ( $total_threads as $thread ) {
+							if ( 1 === (int) $thread->is_deleted ) {
+								$is_deleted = true;
+								break;
+							}
+						}
+
+						if ( $is_deleted ) {
+							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
+							$_POST['message_thread_type'] = 'new';
+						}
+					}
+				} else {
 					$_POST['message_thread_type'] = 'new';
 				}
 			}
@@ -1158,6 +1178,19 @@ function bp_nouveau_ajax_groups_send_message() {
 					while ( bp_message_threads() ) {
 						bp_message_thread();
 						$thread_id = bp_get_message_thread_id();
+
+						// Check the first message meta to check for all users and open type when missed entries found into DB.
+						$first_thread_message = BP_Messages_Thread::get_first_message( $thread_id );
+
+						if ( ! empty( $first_thread_message ) ) {
+							$users      = bp_messages_get_meta( $first_thread_message->id, 'group_message_users', true );
+							$type       = bp_messages_get_meta( $first_thread_message->id, 'group_message_type', true );
+							$group_from = bp_messages_get_meta( $first_thread_message->id, 'message_from', true );
+
+							if ( 'all' !== $users || 'open' !== $type || 'group' !== $group_from ) {
+								$thread_id = 0;
+							}
+						}
 
 						if ( $thread_id ) {
 							break;

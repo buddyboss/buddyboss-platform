@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 5.6.20
-Stable tag: 1.5.1.1
+Stable tag: 1.5.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,75 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.5.5.1 =
+* Messages - Fixed message threads critical security bug
+* Messages - code refactoring
+
+= 1.5.5 =
+* Groups - Fixed group message media shows in the photos tab
+* Groups - Fixed group message private bcc thread bug
+* Forums - Fixed GIPHY play button alignment issue in discussions
+* Activity - Added 'Relevant Activity' support
+* Activity - Improved Edit Activity popup layout
+* Activity - Improved 'read more' link logic for blog posts activity
+* Media - Fixed create album popup, title becomes empty on a validation error message
+* Media - Improved GIPHY media logic to render from GIPHY server
+* Media - Fixed download issue with signed media
+* Network Search - Fixed Media search results layout issues
+* Email Invites - Fixed recipients profile type not assigned issue
+* REST API - Fixed media API privacy issue
+* REST API - Fixed API issues in media and activity
+* WPML - Fixed private network enabled public content issue
+
+= 1.5.4 =
+* Profiles - Improved Profile completion module caching logic
+* Notifications - Fixed custom notification blank text issue
+* Notifications - Fixed forum reply notification incorrect timestamp
+* Notifications - Fixed notification issue when a user comments on a blog post
+* Groups - Private groups documents security issue fixed
+* Groups - Fixed forums permission issue for non-members
+* Forums - Fixed forum reply image repost issue
+* Activity - Fixed invalid avatar on the activity post form
+* Activity - Fixed blog post activity video embed issue
+* Messages - code refactoring
+* Network Search - Provided option to search for photos and albums
+* REST API - Fixed many API issues in activity, media, messages, members, and social groups
+* Compatibility - Fixed password reset email layout issue with 'Paid Memberships Pro' plugin
+
+= 1.5.3 =
+* Profiles - Improved profile and Groups cover photo upload
+* Profiles - Fixed fieldset caching issue based on profile types
+* Groups - Fixed issue to show hidden groups in the group directory page
+* Groups - Fixed group tooltip UI issue when cover photo settings disabled
+* Groups - Fixed group invite message do not show
+* Groups - Fixed groups parent setting issue in the dashboard
+* Forums - Fixed forums tab in profile when configured Forums directory as a child page
+* Forums - Fixed forums reply editor formatting issue
+* Activity - Fixed issue to show 'read more' link for blog posts activity
+* Media - Updated Dropzone 5.7.2 library
+* Media - Improved security
+* Photos - Fixed photo description editing issue in the popup
+* Messages - Fixed messages thread formatting
+* Network Search - Fixed minor network search issue
+* BuddyPanel - Fixed selected profile tab issue
+* Performance - Improved DB queries
+* Translations - Updated German (formal) language files
+
+= 1.5.2 =
+* Profiles - Provided option to re-order profile action buttons, visible when viewing other member's profiles
+* Profiles - Fixed profile completion widget issue when first or last name field disabled
+* Profiles - Fixed registration duplicate field issue when profile type enabled
+* Forums - Fixed forums 404 issue when configured as a child page
+* Activity - Fixed URL preview for Cloudflare sites not allowing default 'user-agent'
+* Activity - Fixed activity editor, formatting toolbar focus issue
+* Activity - Fixed activity update in other member's profile
+* Photos - Fixed add photos popup layout issues
+* Documents - Fixed document sub-folder download issue
+* Messages - Fixed invalid gravatar issue in private messages module
+* Messages - Allowing admin always to send private messages to all members on the site
+* Compatibility - Fixed profile cropping compatibility issue with Jetpack plugin
+* Translations - Updated German (formal) language files
 
 = 1.5.1.1 =
 * Photos - Fixed private messages photos and documents attachments security issue

@@ -269,6 +269,21 @@ function bp_admin_setting_callback_enable_activity_edit() {
 }
 
 /**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_enable_relevant_feed() {
+	?>
+	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox"
+		   value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
+	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Restrict the Activity Feed directory to only posts that are relevant to the logged-in member', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'While logged in, members will only see activity posts from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+
+/**
  * Enable activity scopes like groups, friends, mentions, following etc.
  *
  * @since BuddyBoss 1.1.6
@@ -680,15 +695,15 @@ function bp_core_admin_integrations() {
 }
 
 /**
- * Load the AppBoss integration admin screen.
+ * Load the BuddyBoss App integration admin screen.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_appboss() {
+function bp_core_admin_buddyboss_app() {
 	?>
 		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-appboss.php'; ?>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 		</div>
 		<?php
 }

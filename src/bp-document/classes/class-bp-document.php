@@ -1715,7 +1715,7 @@ class BP_Document {
 					}
 				}
 
-				if ( empty( $from ) || 'activity' === $from ) {
+				if ( empty( $from ) ) {
 					wp_delete_attachment( $attachment_id, true );
 				}
 			}
@@ -1741,15 +1741,12 @@ class BP_Document {
 
 					// Deleting an activity.
 					} else {
-						// Do not delete the activity if action did via edit.
-						if ( bp_is_active( 'activity' ) && 'activity' !== $from ) {
-							if ( bp_activity_delete( array(
-									'id'      => $activity->id,
-									'user_id' => $activity->user_id,
-								) ) ) {
-								/** This action is documented in bp-activity/bp-activity-actions.php */
-								do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
-							}
+						if ( 'activity' !== $from && bp_activity_delete( array(
+								'id'      => $activity->id,
+								'user_id' => $activity->user_id,
+							) ) ) {
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 					}
 				}

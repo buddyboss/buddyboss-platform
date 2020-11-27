@@ -131,7 +131,7 @@ function bp_nouveau_ajax_messages_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	$content = filter_input( INPUT_POST, 'message_content', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'message_content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -331,7 +331,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		wp_send_json_error( $response );
 	}
 
-	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
 
 	/**
 	 * Filter to validate message content.
@@ -601,8 +601,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
-			$preview_url  = wp_get_attachment_url( $gif_data['still'] );
-			$video_url    = wp_get_attachment_url( $gif_data['mp4'] );
+			$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+			$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 			$reply['gif'] = array(
 				'preview_url' => $preview_url,
 				'video_url'   => $video_url,
@@ -1197,12 +1197,12 @@ function bp_nouveau_ajax_delete_thread() {
 		$wpdb->query( $query ); // db call ok; no-cache ok;
 
 		// Delete messages meta.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) );
-		$wpdb->query( $query ); // db call ok; no-cache ok;
+		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) );
+		$wpdb->query( $query_meta ); // db call ok; no-cache ok;
 
 		// Delete thread.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
-		$wpdb->query( $query ); // db call ok; no-cache ok;
+		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+		$wpdb->query( $query_recipients ); // db call ok; no-cache ok;
 	}
 
 	wp_send_json_success(
@@ -1742,7 +1742,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 		$message_type            = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
 		$message_from            = bp_messages_get_meta( $first_message->id, 'message_from', true ); // group
 
-		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id  && 'open' === $message_type ) {
+		if ( 'group' === $message_from && bp_get_the_thread_id() === (int) $group_message_thread_id && 'all' === $message_users && 'open' === $message_type ) {
 			$is_group_thread = 1;
 			unset($thread->feedback_error);
 		}
@@ -2156,8 +2156,8 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$preview_url                   = wp_get_attachment_url( $gif_data['still'] );
-				$video_url                     = wp_get_attachment_url( $gif_data['mp4'] );
+				$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+				$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 				$thread->messages[ $i ]['gif'] = array(
 					'preview_url' => $preview_url,
 					'video_url'   => $video_url,

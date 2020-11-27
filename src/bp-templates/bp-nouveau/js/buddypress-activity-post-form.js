@@ -270,6 +270,10 @@ window.bp = window.bp || {};
 				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 				self.postForm.$el.removeClass('loading');
 
+				//Wrap content section for better scroll
+				$( '#whats-new-content, #whats-new-attachments' ).wrapAll('<div class="edit-activity-content-wrap"></div>');
+
+
 				// Make selected current privacy.
 				var $activityPrivacySelect = self.postForm.$el.find( '#bp-activity-privacy' );
 
@@ -387,6 +391,11 @@ window.bp = window.bp || {};
 
 			var $activityFormPlaceholder = $( '#bp-nouveau-activity-form-placeholder' );
 			var $singleActivityFormWrap = $( '#bp-nouveau-single-activity-edit-form-wrap' );
+
+			//unwrap hw wrapped content section
+			if( $( '#whats-new-content').parent().is( '.edit-activity-content-wrap' ) ) {
+				$( '#whats-new-content').unwrap();
+			}
 
 			$activityFormPlaceholder.hide();
 
@@ -1628,7 +1637,7 @@ window.bp = window.bp || {};
 												],
 												cleanAttrs: ['class', 'style', 'dir', 'id'],
 												cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
-												unwrapTags: []
+												unwrapTags: [ 'ul', 'ol', 'li' ]
 											},
 											imageDragging: false
 										  }
@@ -2859,6 +2868,14 @@ window.bp = window.bp || {};
 							 toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || 'group' === self.model.get( 'object' ) ) ) || ( self.model.get( 'object' ) + 's' === store.scope );
 						}
 
+						/**
+						 * In the user activity timeline, user is posting on other user's timeline
+						 * it will not have activity to prepend/append because of scope and privacy.
+						 */
+						if ( '' === response.activity && response.is_user_activity && response.is_active_activity_tabs ) {
+							toPrepend = false;
+						}
+
 						var medias = self.model.get( 'media' );
 						if ( ! _.isUndefined( medias ) && medias.length ) {
 							for ( var k = 0; k < medias.length; k++ ) {
@@ -2879,11 +2896,6 @@ window.bp = window.bp || {};
 							}
 							self.model.set( 'document', documents );
 						}
-
-						// Reset formatting of editor
-
-						//window.activity_editor.execAction( 'selectAll' );
-						//window.activity_editor.execAction( 'removeFormate' );
 
 						// Reset the form.
 						self.resetForm();
