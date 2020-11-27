@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-26 15:40:08+00:00\n"
+"POT-Creation-Date: 2020-11-27 10:20:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -538,7 +538,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:26
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:28
 #: bp-templates/bp-nouveau/buddypress/document/document-create-folder.php:24
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:112
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:116
 #: bp-templates/bp-nouveau/buddypress/groups/single/cover-image-header.php:49
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/buddypress/media/media-create-album.php:24
@@ -988,11 +988,11 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:787
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:13
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:148
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:268
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:159
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:279
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:12
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:71
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:38
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:79
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:56
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:555
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:556
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:914
@@ -8570,8 +8570,8 @@ msgid "Document Folders"
 msgstr ""
 
 #: bp-document/bp-document-filters.php:249
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:116
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:215
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:117
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:219
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1331
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1408
 #: bp-templates/bp-nouveau/includes/document/ajax.php:439
@@ -8934,14 +8934,14 @@ msgid "Privacy of the document."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1300
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:161
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:172
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:525
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2100
 msgid "Your browser does not support the audio element."
 msgstr ""
 
 #: bp-document/classes/class-bp-rest-document-endpoint.php:1323
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:187
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:198
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:552
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2127
 msgid "Click to expand"
@@ -13560,10 +13560,14 @@ msgstr ""
 #: bp-forums/replies/template.php:2300
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:27
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:29
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:136
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:262
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:59
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:35
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:139
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:145
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:266
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:272
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:60
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:66
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:43
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:49
 #: bp-templates/bp-nouveau/buddypress/media/media-move.php:26
 msgid "Move"
 msgstr ""
@@ -14025,7 +14029,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:256
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:259
 msgid "Rename"
 msgstr ""
 
@@ -15187,7 +15191,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:113
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:117
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:42
 #: bp-templates/bp-nouveau/includes/functions.php:1410
 #: bp-templates/bp-nouveau/includes/functions.php:1462
@@ -20475,7 +20479,7 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/document/entry.php:18
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:61
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:79
 #: bp-templates/bp-nouveau/includes/media/functions.php:169
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:204
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
@@ -21928,30 +21932,30 @@ msgstr ""
 msgid "Create new folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:55
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:56
 msgid " view"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:111
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:112
 msgid "Click to"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:115
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:116
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:588
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2163
 msgid "Collapse"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:120
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:121
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:50
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:29
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:34
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:590
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2165
 msgid "More actions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:129
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:218
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:130
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:222
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:589
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:2164
 msgid "Copy Download Link"
@@ -21991,17 +21995,17 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:105
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:109
 msgid ""
 "Following special characters are not supported:<br/> ? [ ] / \\\\ = < > : ; "
 ", ' \" & $ # * ( ) | ~ ` ! { } % + {space}"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:107
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:111
 msgid "Following special characters are not supported:<br/> \\ / ? % * : | \" < >"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:125
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:129
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:46
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:46
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:54
@@ -22013,11 +22017,11 @@ msgstr ""
 msgid "by "
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:151
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:155
 msgid "-"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:167
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:171
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums-ajax.php:83
 #: bp-templates/bp-nouveau/buddypress/search/loop/albums.php:83
 #: bp-templates/bp-nouveau/buddypress/search/loop/document-ajax.php:95
@@ -22029,11 +22033,11 @@ msgstr ""
 msgid "Based on group privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:226
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:230
 msgid "Edit Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:238
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:242
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1179
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:1196
 msgid "Edit Post Privacy"
@@ -22382,7 +22386,7 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:95
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:103
 msgid "More Photos"
 msgstr ""
 
