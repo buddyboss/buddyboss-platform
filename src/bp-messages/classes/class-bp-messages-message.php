@@ -681,8 +681,8 @@ class BP_Messages_Message {
 		 *
 		 * @since BuddyBoss 1.5.4
 		 *
-		 * @param array $r                Array of parsed arguments for the get method.
 		 * @param array $where_conditions Where conditions SQL statement.
+		 * @param array $r                Array of parsed arguments for the get method.
 		 */
 		$where_conditions = apply_filters( 'bp_messages_message_get_where_conditions', $where_conditions, $r );
 
