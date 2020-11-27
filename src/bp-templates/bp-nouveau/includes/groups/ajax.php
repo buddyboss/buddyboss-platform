@@ -1160,7 +1160,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							)
 						);
 
-						$is_deleted = ( ! empty( $total_threads['total'] ) ) ? true : false;
+						$is_deleted = ( ! empty( $total_threads['total'] ) ? true : false );
 
 						if ( $is_deleted ) {
 							// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".

@@ -457,13 +457,13 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
 		if ( ! empty( $media_ids ) && bp_has_media(
-				array(
-					'include'  => $media_ids,
-					'privacy'  => array( 'message' ),
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-				)
-			) ) {
+			array(
+				'include'  => $media_ids,
+				'privacy'  => array( 'message' ),
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			)
+		) ) {
 			$reply['media'] = array();
 			while ( bp_media() ) {
 				bp_the_media();
@@ -487,12 +487,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
 
 		if ( ! empty( $document_ids ) && bp_has_document(
-				array(
-					'include'  => $document_ids,
-					'order_by' => 'menu_order',
-					'sort'     => 'ASC',
-				)
-			) ) {
+			array(
+				'include'  => $document_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			)
+		) ) {
 			$reply['document'] = array();
 			while ( bp_document() ) {
 				bp_the_document();
@@ -529,20 +529,20 @@ function bp_nouveau_ajax_messages_send_reply() {
 				if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 					$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 					?>
-                    <div class="document-audio-wrap">
-                        <audio controls controlsList="nodownload">
-                            <source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+					<div class="document-audio-wrap">
+						<audio controls controlsList="nodownload">
+							<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
 							<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
-                        </audio>
-                    </div>
+						</audio>
+					</div>
 					<?php
 				}
 				$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 				if ( $attachment_url ) {
 					?>
-                    <div class="document-preview-wrap">
-                        <img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
-                    </div><!-- .document-preview-wrap -->
+					<div class="document-preview-wrap">
+						<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
+					</div><!-- .document-preview-wrap -->
 					<?php
 				}
 				$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
@@ -552,17 +552,17 @@ function bp_nouveau_ajax_messages_send_reply() {
 						$file_data = $data['text'];
 						$more_text = $data['more_text']
 						?>
-                        <div class="document-text-wrap">
-                            <div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-                                <textarea class="document-text-file-data-hidden"
-                                          style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
-                            </div>
-                            <div class="document-expand">
-                                <a href="#" class="document-expand-anchor"><i
-                                            class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
-                                </a>
-                            </div>
-                        </div> <!-- .document-text-wrap -->
+						<div class="document-text-wrap">
+							<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
+								<textarea class="document-text-file-data-hidden"
+										  style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+							</div>
+							<div class="document-expand">
+								<a href="#" class="document-expand-anchor"><i
+											class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+								</a>
+							</div>
+						</div> <!-- .document-text-wrap -->
 						<?php
 						if ( true === $more_text ) {
 
@@ -615,8 +615,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
-			$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
-			$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
+			$preview_url  = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+			$video_url    = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
 			$reply['gif'] = array(
 				'preview_url' => $preview_url,
 				'video_url'   => $video_url,
@@ -1202,9 +1202,9 @@ function bp_nouveau_ajax_delete_thread() {
 
 		// Removed the thread id from the group meta.
 		if ( bp_is_active( 'groups' ) && function_exists( 'bp_disable_group_messages' ) && true === bp_disable_group_messages() ) {
-			// Get the group id from the first message
+			// Get the group id from the first message.
 			$first_message    = BP_Messages_Thread::get_first_message( (int) $thread_id );
-			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+			$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
 			if ( $message_group_id > 0 ) {
 				$group_thread = (int) groups_get_groupmeta( $message_group_id, 'group_message_thread' );
 				if ( $group_thread > 0 && $group_thread === (int) $thread_id ) {
@@ -1214,13 +1214,16 @@ function bp_nouveau_ajax_delete_thread() {
 		}
 
 		// Get the message ids in order to pass to the action.
-		$messages    = BP_Messages_Message::get(
+		$messages = BP_Messages_Message::get(
 			array(
 				'fields'          => 'ids',
 				'include_threads' => array( $thread_id ),
-				'order'           => 'ASC',
+				'order'           => 'DESC',
+				'per_page'        => - 1,
+				'orderby'         => 'id',
 			)
 		);
+
 		$message_ids = ( isset( $messages['messages'] ) && is_array( $messages['messages'] ) ) ? $messages['messages'] : array();
 
 		if ( bp_is_active( 'notifications' ) ) {
@@ -1229,15 +1232,18 @@ function bp_nouveau_ajax_delete_thread() {
 		}
 
 		// Delete thread messages.
-		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
-		$wpdb->query( $query ); // db call ok; no-cache ok;
+		$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $query ); // db call ok; no-cache ok.
 
 		// Delete messages meta.
-		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) );
-		$wpdb->query( $query_meta ); // db call ok; no-cache ok;
+		$query_meta = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode( ',', $message_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+		$wpdb->query( $query_meta ); // db call ok; no-cache ok.
 
 		// Delete thread.
-		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+		$query_recipients = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		$wpdb->query( $query_recipients ); // db call ok; no-cache ok;
 
 		/**
@@ -1448,9 +1454,9 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 
 	$response = array(
 		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __(
-				'There was a problem dismissing the notice. Please try again.',
-				'buddyboss'
-			) . '</p></div>',
+			'There was a problem dismissing the notice. Please try again.',
+			'buddyboss'
+		) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -1487,9 +1493,9 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 		wp_send_json_success(
 			array(
 				'feedback' => '<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p>' . __(
-						'Sitewide notice dismissed',
-						'buddyboss'
-					) . '</p></div>',
+					'Sitewide notice dismissed',
+					'buddyboss'
+				) . '</p></div>',
 				'type'     => 'success',
 			)
 		);
@@ -1508,9 +1514,9 @@ function bp_nouveau_ajax_dsearch_recipients() {
 
 	$response = array(
 		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __(
-				'There was a problem loading recipients. Please try again.',
-				'buddyboss'
-			) . '</p></div>',
+			'There was a problem loading recipients. Please try again.',
+			'buddyboss'
+		) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -1528,24 +1534,24 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		array(
 			'term'         => sanitize_text_field( $_GET['term'] ),
 			'type'         => 'members',
-			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message()
+			'only_friends' => bp_is_active( 'friends' ) && bp_force_friendship_to_message(),
 		)
 	);
 
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
 
 	wp_send_json_success(
-		[
+		array(
 			'results' => array_map(
 				function ( $result ) {
-					return [
+					return array(
 						'id'   => "@{$result->ID}",
 						'text' => $result->name,
-					];
+					);
 				},
 				$results
 			),
-		]
+		)
 	);
 }
 
@@ -1557,7 +1563,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
 		$user_query['exclude'] = array();
-	} else if ( ! empty( $user_query['exclude'] ) ) {
+	} elseif ( ! empty( $user_query['exclude'] ) ) {
 		$user_query['exclude'] = wp_parse_id_list( $user_query['exclude'] );
 	}
 
@@ -1595,13 +1601,14 @@ function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
 add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients_exclude_non_friend' );
 
 /**
- * messages for each thread.
+ * Messages for each thread.
  *
  * @since BuddyBoss 1.3.0
  *
+ * @param int   $thread_id thread id.
  * @param array $post      $_POST data.
  *
- * @param int   $thread_id thread id.
+ * @return stdClass|void
  */
 function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	global $thread_template, $media_template, $wpdb, $document_template;
@@ -1799,10 +1806,13 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			'fields'          => 'ids',
 			'include_threads' => array( $thread_template->thread->thread_id ),
 			'user_id'         => bp_loggedin_user_id(),
-			'subject'         => $subject_deleted_text
+			'subject'         => $subject_deleted_text,
+			'orderby'         => 'id',
+			'per_page'        => - 1,
 		)
 	);
-	$is_participated      = ( !empty( $participated['messages'] ) ) ? $participated['messages'] : array();
+
+	$is_participated = ( ! empty( $participated['messages'] ) ? $participated['messages'] : array() );
 
 	$thread->thread = array(
 		'id'                        => bp_get_the_thread_id(),
@@ -2065,14 +2075,14 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
 			if ( ! empty( $media_ids ) && bp_has_media(
-					array(
-						'include'  => $media_ids,
-						'privacy'  => array( 'message' ),
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-						'user_id'  => false,
-					)
-				) ) {
+				array(
+					'include'  => $media_ids,
+					'privacy'  => array( 'message' ),
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+					'user_id'  => false,
+				)
+			) ) {
 				$thread->messages[ $i ]['media'] = array();
 				while ( bp_media() ) {
 					bp_the_media();
@@ -2096,12 +2106,12 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) && bp_has_document(
-					array(
-						'include'  => $document_ids,
-						'order_by' => 'menu_order',
-						'sort'     => 'ASC',
-					)
-				) ) {
+				array(
+					'include'  => $document_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				)
+			) ) {
 				$thread->messages[ $i ]['document'] = array();
 				while ( bp_document() ) {
 					bp_the_document();
@@ -2142,20 +2152,20 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 					if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) ) {
 						$audio_url = bp_document_get_preview_audio_url( bp_get_document_id(), $extension, $attachment_id );
 						?>
-                        <div class="document-audio-wrap">
-                            <audio controls controlsList="nodownload">
-                                <source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
+						<div class="document-audio-wrap">
+							<audio controls controlsList="nodownload">
+								<source src="<?php echo esc_url( $audio_url ); ?>" type="audio/mpeg">
 								<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
-                            </audio>
-                        </div>
+							</audio>
+						</div>
 						<?php
 					}
 					$attachment_url = bp_document_get_preview_image_url( bp_get_document_id(), $extension, bp_get_document_preview_attachment_id() );
 					if ( $attachment_url ) {
 						?>
-                        <div class="document-preview-wrap">
-                            <img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
-                        </div><!-- .document-preview-wrap -->
+						<div class="document-preview-wrap">
+							<img src="<?php echo esc_url( $attachment_url ); ?>" alt=""/>
+						</div><!-- .document-preview-wrap -->
 						<?php
 					}
 					$sizes = is_file( get_attached_file( $attachment_id ) ) ? get_attached_file( $attachment_id ) : 0;
@@ -2165,17 +2175,17 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 							$file_data = $data['text'];
 							$more_text = $data['more_text']
 							?>
-                            <div class="document-text-wrap">
-                                <div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
-                                    <textarea class="document-text-file-data-hidden"
-                                              style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
-                                </div>
-                                <div class="document-expand">
-                                    <a href="#" class="document-expand-anchor"><i
-                                                class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
-                                    </a>
-                                </div>
-                            </div> <!-- .document-text-wrap -->
+							<div class="document-text-wrap">
+								<div class="document-text" data-extension="<?php echo esc_attr( $extension ); ?>">
+									<textarea class="document-text-file-data-hidden"
+											  style="display: none;"><?php echo wp_kses_post( $file_data ); ?></textarea>
+								</div>
+								<div class="document-expand">
+									<a href="#" class="document-expand-anchor"><i
+												class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?>
+									</a>
+								</div>
+							</div> <!-- .document-text-wrap -->
 							<?php
 							if ( true === $more_text ) {
 
@@ -2228,8 +2238,9 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
-				$preview_url = ( is_int( $gif_data['still'] )) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
+				$preview_url = ( is_int( $gif_data['still'] ) ) ? wp_get_attachment_url( $gif_data['still'] ) : $gif_data['still'];
 				$video_url   = ( is_int( $gif_data['mp4'] ) ) ? wp_get_attachment_url( $gif_data['mp4'] ) : $gif_data['mp4'];
+
 				$thread->messages[ $i ]['gif'] = array(
 					'preview_url' => $preview_url,
 					'video_url'   => $video_url,
@@ -2258,7 +2269,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
 
-	// pagination
+	// pagination.
 	$thread->per_page                = $thread_template->thread->messages_perpage;
 	$thread->messages_count          = $thread_template->thread->total_messages;
 	$thread->next_messages_timestamp = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
