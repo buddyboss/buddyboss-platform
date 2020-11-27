@@ -1325,19 +1325,15 @@ class BP_Messages_Thread {
 	 * @return string|bool The user link on success. Boolean false on failure.
 	 */
 	public static function get_last_sender( $thread_id ) {
-		global $wpdb;
-
-		$bp = buddypress();
-
-		$senders   = BP_Messages_Message::get(
+		$senders = BP_Messages_Message::get(
 			array(
 				'fields'          => 'sender_ids',
 				'include_threads' => array( $thread_id ),
 				'per_page'        => 1,
-				'page'            => 1,
 			)
 		);
-		$sender_id = ( isset( $senders['messages'][0] ) ) ? $senders['messages'][0] : null;
+
+		$sender_id = ( ! empty( $senders['messages'] ) ? current( $senders['messages'] ) : null );
 
 		if ( ! $sender_id ) {
 			return false;
@@ -1370,13 +1366,14 @@ class BP_Messages_Thread {
 					'user_id'    => $user_id,
 					'per_page'   => - 1,
 					'is_deleted' => 0,
+					'debug'      => true,
 				)
 			);
-			$unread_count  = 0;
+
+			$unread_count = 0;
 			if ( ! empty( $unread_counts['recipients'] ) ) {
-				foreach ( $unread_counts['recipients'] as $unread_count_item ) {
-					$unread_count += $unread_count_item->unread_count;
-				}
+				$message_counts = array_column( $unread_counts['recipients'], 'unread_count' );
+				$unread_count   = ( ! empty( $message_counts ) ? array_sum( $message_counts ) : $unread_count );
 			}
 
 			wp_cache_set( $user_id, $unread_count, 'bp_messages_unread_count' );
