@@ -256,7 +256,6 @@ class BP_Messages_Notice {
 			'fields'      => 'all',
 			'is_active'   => null,
 			'count_total' => false,
-			'debug'       => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_messages_notice_get' );
@@ -348,11 +347,6 @@ class BP_Messages_Notice {
 		 */
 		$paged_notices_sql = apply_filters( 'bp_messages_notice_get_paged_sql', $paged_notices_sql, $sql, $r );
 
-		// for debug.
-		if ( ! empty( $r['debug'] ) ) {
-			error_log( $paged_notices_sql );
-		}
-
 		$paged_notice_ids = $wpdb->get_col( $paged_notices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$paged_notices = array();
@@ -391,11 +385,6 @@ class BP_Messages_Notice {
 			 */
 			$total_notices_sql = apply_filters( 'bp_messages_notice_get_total_sql', $total_notices_sql, $sql, $r );
 
-			// for debug.
-			if ( ! empty( $r['debug'] ) ) {
-				error_log( $total_notices_sql );
-			}
-			
 			$total_notices   = (int) $wpdb->get_var( $total_notices_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total'] = $total_notices;
 		}
