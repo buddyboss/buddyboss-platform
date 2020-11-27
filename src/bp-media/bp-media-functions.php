@@ -3264,3 +3264,40 @@ function bp_media_get_activity_media( $activity_id ) {
 
 	return $response;
 }
+
+/**
+ * Check given photo is activity comment photo.
+ *
+ * @param $photo
+ *
+ * @return bool
+ */
+function bp_media_is_activity_comment_photo( $photo ) {
+
+	$is_comment_photo = false;
+	if( is_object( $photo ) ) {
+		$photo_activity_id = $photo->activity_id;
+	} else {
+		$photo             = new BP_Media( $photo );
+		$photo_activity_id = $photo->activity_id;
+	}
+
+	if ( bp_is_active( 'activity' ) ) {
+		$activity = new BP_Activity_Activity( $photo_activity_id );
+
+		if( $activity ) {
+			if( $activity->secondary_item_id ) {
+				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id  );
+				if( $load_parent_activity ) {
+					if( 'activity_comment' === $load_parent_activity->type ) {
+						$is_comment_photo = true;
+					}
+				}
+			}
+		}
+	} elseif( $photo_activity_id ) {
+		$is_comment_photo = true;
+	}
+	return $is_comment_photo;
+
+}

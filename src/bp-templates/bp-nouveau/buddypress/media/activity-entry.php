@@ -27,7 +27,7 @@ if ( $group_id > 0 ) {
 	$move_id   = bp_get_media_user_id();
 	$move_type = 'profile';
 }
-
+$is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 $more_media = $media_template->media_count > 5 ? true : false;
 ?>
 
@@ -54,11 +54,19 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 						<ul class="conflict-activity-ul-li-comment">
 							<?php
 								if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-									?>
-									<li class="move_file">
-										<a href="#" data-media-id="<?php bp_media_id(); ?>" data-action="activity" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
-									</li>
-									<?php
+								    if ( $is_comment_pic ) {
+									    ?>
+                                        <li class="move_file move-disabled">
+                                            <a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+                                        </li>
+									    <?php
+								    } else {
+									    ?>
+                                        <li class="move_file">
+                                            <a href="#" data-media-id="<?php bp_media_id(); ?>" data-action="activity" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
+                                        </li>
+									    <?php
+								    }
 								}
 								if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {
 									$item_id = bp_get_activity_comment_id();

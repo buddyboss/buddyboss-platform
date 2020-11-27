@@ -5,6 +5,8 @@
  * @since BuddyBoss 1.0.0
  */
 
+global $media_template;
+
 $attachment_id = bp_get_media_attachment_id();
 $download_url  = bp_media_download_link( $attachment_id, bp_get_media_id() );
 $group_id      = bp_get_media_group_id();
@@ -20,6 +22,9 @@ if ( $group_id > 0 ) {
 	$move_id   = bp_get_media_user_id();
 	$move_type = 'profile';
 }
+
+$is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
+
 ?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
@@ -31,9 +36,22 @@ if ( $group_id > 0 ) {
 				</a>
 				<div class="media-action_list">
 					<ul>
-						<li class="move_file">
-							<a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
-						</li>
+                        <?php
+                        if ( $is_comment_pic ) {
+	                        ?>
+                            <li class="move_file move-disabled">
+                                <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                            </li>
+	                        <?php
+                        } else {
+                            ?>
+                            <li class="move_file">
+                                <a href="#" data-action="media" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                            </li>
+                            <?php
+                        }
+                        ?>
+
 						<li class="delete_file">
 							<a class="media-file-delete" data-media-id="<?php bp_media_id(); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-item-from="media" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>
