@@ -504,7 +504,7 @@ class BP_REST_Reply_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && isset( $reply->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $reply->post_type ) ) {
 			$post_type = get_post_type_object( $reply->post_type );
 			if ( ! current_user_can( $post_type->cap->read_post, $reply->ID ) ) {
 				$retval = new WP_Error(

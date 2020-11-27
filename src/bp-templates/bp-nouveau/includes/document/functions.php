@@ -818,7 +818,6 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 	if ( 'document' === $type ) {
 
 		$the_file = wp_get_attachment_url( $attachment_id );
-		$the_file = strtok( $the_file, '?' );
 
 		if ( ! $the_file ) {
 			return;
@@ -841,26 +840,27 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 		$allowed_for_download             = array();
 		$allowed_file_type_with_mime_type = array();
 		foreach ( $all_extensions as $extension ) {
-			if ( isset( $extension['is_active'] ) && true === (bool) $extension['is_active'] ) {
-				$extension_name                                      = ltrim( $extension['extension'], '.' );
+			if ( isset( $extension[ 'is_active' ] ) && true === (bool) $extension[ 'is_active' ] ) {
+				$extension_name                                      = ltrim( $extension[ 'extension' ], '.' );
 				$allowed_for_download[]                              = $extension_name;
-				$allowed_file_type_with_mime_type[ $extension_name ] = $extension['mime_type'];
+				$allowed_file_type_with_mime_type[ $extension_name ] = $extension[ 'mime_type' ];
 			}
 		}
 
 		$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
-
 		$file_arr  = explode( '.', $file_name_lower );
-		$needle   = end( $file_arr );
+		$needle    = end( $file_arr );
+		$needle    = strtok( $needle, '?' );
+
 		if ( ! in_array( $needle, $whitelist ) ) {
 			exit( 'Invalid file!' );
 		}
 
 		$file_new_name = $file_name;
-		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
-		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension['extension'] );
+		$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] ) ? $allowed_file_type_with_mime_type[ $file_extension[ 'extension' ] ] : '';
+		$content_type  = apply_filters( 'bp_document_download_file_content_type', $content_type, $file_extension[ 'extension' ] );
 
-		bp_document_download_file_force( $the_file, $file_name );
+		bp_document_download_file_force( $the_file, strtok( $file_name, '?' ) );
 	} else {
 
 		// Get folder object.
@@ -868,7 +868,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 
 		// Get Upload directory.
 		$upload     = wp_upload_dir();
-		$upload_dir = $upload['basedir'];
+		$upload_dir = $upload[ 'basedir' ];
 
 		// Create temp folder.
 		$upload_dir = $upload_dir . '/' . $folder->user_id . '-download-folder-' . time();
@@ -896,7 +896,7 @@ function bp_document_download_file( $attachment_id, $type = 'document' ) {
 			bp_document_get_child_folders( $attachment_id, $parent_folder );
 
 			$zip_name  = $upload_dir . '/' . $folder->title . '.zip';
-			$file_name  = sanitize_file_name( $folder->title ) . '.zip';
+			$file_name = sanitize_file_name( $folder->title ) . '.zip';
 			$rootPath  = realpath( "$upload_dir" );
 
 			$zip = new ZipArchive();
