@@ -693,7 +693,7 @@ class BP_Messages_Thread {
 		$message_deleted_text = '<p> </p>';
 
 		// Update the message subject & content of particular user messages.
-		$update_messages = BP_Messages_Message::get(
+		$update_messages    = BP_Messages_Message::get(
 			array(
 				'fields'          => 'ids',
 				'include_threads' => array( $thread_id ),
@@ -900,7 +900,8 @@ class BP_Messages_Thread {
 			)
 		);
 
-		$pag_sql        = $user_threads_query = $having_sql = '';
+		$pag_sql = $type_sql = $search_sql = $user_id_sql = $sender_sql = $having_sql = '';
+
 		$meta_query_sql = array(
 			'join'  => '',
 			'where' => '',
@@ -918,15 +919,15 @@ class BP_Messages_Thread {
 		} elseif ( ! empty( $r['user_id'] ) ) {
 			$user_threads_sql = "SELECT DISTINCT(thread_id) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0";
 			if ( false === $r['is_hidden'] && empty( $r['search_terms'] ) ) {
-				$user_threads_sql .= " AND is_hidden = 0";
+				$user_threads_sql .= ' AND is_hidden = 0';
 			}
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$user_threads_query = $wpdb->prepare( $user_threads_sql, $r['user_id'] );
 		}
 
 		$group_thread_in = array();
 		if ( ! empty( $r['search_terms'] ) ) {
 
-			// Search in xprofile field.
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
 
@@ -945,7 +946,7 @@ class BP_Messages_Thread {
 				$search_terms_like
 			);
 
-			// Search in xprofile field
+			// Search in xprofile field.
 			if ( bp_is_active( 'xprofile' ) ) {
 				// Explode the value if there is a space in search term.
 				$split_name = explode( ' ', $r['search_terms'] );
@@ -964,17 +965,25 @@ class BP_Messages_Thread {
 
 			$participants_sql['where'] .= " AND ( {$participants_sql['where_like']} )";
 			$participants_sql          = "{$participants_sql['select']} {$participants_sql['from']} {$participants_sql['where']}";
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 			$current_user_participants = $wpdb->get_results( $wpdb->prepare( $participants_sql, $participants_args ) );
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
 			$current_user_participants_ids = array_diff( $current_user_participants_ids, array( bp_loggedin_user_id() ) );
 
-			// Search Group Thread via Group Name via search_terms
-			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$groups            = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$bp->groups->table_name} g WHERE g.name LIKE %s", $search_terms_like ) );
+			if ( bp_is_active( 'groups' ) ) {
+				$groups_table = $bp->groups->table_name;
+			} else {
+				$prefix       = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table = $prefix . 'bp_groups';
+			}
+
+			// Search Group Thread via Group Name via search_terms.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$groups            = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$groups_table} g WHERE g.name LIKE %s", $search_terms_like ) );
 			$group_creator_ids = array_map( 'intval', wp_list_pluck( $groups, 'creator_id' ) );
 
-			// If Group Found
+			// If Group Found.
 			if ( ! empty( $group_creator_ids ) ) {
 				if ( is_array( $current_user_participants_ids ) ) {
 					$current_user_participants_ids = array_merge( $current_user_participants_ids, $group_creator_ids );
@@ -983,8 +992,8 @@ class BP_Messages_Thread {
 				}
 			}
 
-			// Search for deleted Group OR Deleted Users. Todo: Need refactor code
-			$value = "(deleted)|(group)|(Deleted)|(group)|(user)|(User)|(del)|(Del)|(dele)|(Dele)|(dele)|(Dele)|(delet)|(Delet)|(use)|(Use)";
+			// Search for deleted Group OR Deleted Users.
+			$value = '(deleted)|(group)|(Deleted)|(group)|(user)|(User)|(del)|(Del)|(dele)|(Dele)|(dele)|(Dele)|(delet)|(Delet)|(use)|(Use)';
 			if ( preg_match_all( '/\b' . $value . '\b/i', $r['search_terms'], $dest ) ) {
 
 				// For deleted users.
@@ -1014,17 +1023,18 @@ class BP_Messages_Thread {
 				);
 				$thread_ids = ( ! empty( $threads['recipients'] ) ) ? array_map( 'intval', wp_list_pluck( $threads['recipients'], 'thread_id' ) ) : array();
 
-				// If Group Found
+				// If Group Found.
 				if ( ! empty( $thread_ids ) ) {
 					foreach ( $thread_ids as $thread ) {
-						// Get the group id from the first message
-						$first_message    = BP_Messages_Thread::get_first_message( $thread );
-						$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id
+						// Get the group id from the first message.
+						$first_message    = self::get_first_message( $thread );
+						$message_group_id = (int) bp_messages_get_meta( $first_message->id, 'group_id', true ); // group id.
 						if ( $message_group_id ) {
 							if ( bp_is_active( 'groups' ) ) {
 								$group_name = bp_get_group_name( groups_get_group( $message_group_id ) );
 							} else {
-								$group_name = $wpdb->get_var( "SELECT name FROM {$groups_table} WHERE id = '{$message_group_id}';" ); // db call ok; no-cache ok;
+								// phpcs:ignore ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+								$group_name = $wpdb->get_var( "SELECT name FROM {$groups_table} WHERE id = '{$message_group_id}';" ); // db call ok; no-cache ok.
 							}
 							if ( empty( $group_name ) ) {
 								$group_thread_in[] = $thread;
@@ -1032,11 +1042,11 @@ class BP_Messages_Thread {
 						}
 					}
 				}
-
 			}
 
 			if ( $current_user_participants_ids ) {
 				$user_ids  = implode( ',', array_unique( $current_user_participants_ids ) );
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$where_sql = '( ' . $wpdb->prepare( "m.message LIKE %s OR r.user_id IN ({$user_ids})", $search_terms_like );
 				if ( ! empty( $group_thread_in ) ) {
 					$thread_in = implode( ',', $group_thread_in );
@@ -1088,7 +1098,7 @@ class BP_Messages_Thread {
 		 * @param array  $r   Array of parsed arguments for the get method.
 		 * @param string $sql From SQL statement.
 		 */
-		$sql['from']  = apply_filters( 'bp_messages_recipient_get_join_sql', $sql['from'], $r );
+		$sql['from'] = apply_filters( 'bp_messages_recipient_get_join_sql', $sql['from'], $r );
 
 		$qq = implode( ' ', $sql );
 
@@ -1098,8 +1108,7 @@ class BP_Messages_Thread {
 		}
 
 		// Get thread IDs.
-		$thread_ids = $wpdb->get_results( $qq );
-		// print_r($qq);die();
+		$thread_ids = $wpdb->get_results( $qq ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		if ( empty( $thread_ids ) ) {
 			return false;
 		}
@@ -1107,7 +1116,7 @@ class BP_Messages_Thread {
 		// Adjust $sql to work for thread total.
 		$sql['select'] = 'SELECT COUNT( DISTINCT m.thread_id )';
 		unset( $sql['misc'] );
-		$total_threads = $wpdb->get_var( implode( ' ', $sql ) );
+		$total_threads = $wpdb->get_var( implode( ' ', $sql ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		// Sort threads by date_sent.
 		foreach ( (array) $thread_ids as $thread ) {
@@ -1537,11 +1546,11 @@ class BP_Messages_Thread {
 	 *                                 Default: false.
 	 * @type array  $exclude              Optional. Array of recipients IDs. Results will exclude the listed recipients.
 	 *                                 Default: false.
-	 * @type array  $include_threads   Optional. Array of thread IDs. Results will include the listed recipients with given thread ids.
+	 * @type array  $include_threads      Optional. Array of thread IDs. Results will include the listed recipients with given thread ids.
 	 *                                 Default: false.
-	 * @type array  $exclude_threads   Optional. Array of thread IDs. Results will exclude the listed recipients with given thread ids.
+	 * @type array  $exclude_threads      Optional. Array of thread IDs. Results will exclude the listed recipients with given thread ids.
 	 *                                 Default: false.
-	 * @type array  $is_new            Optional. Retried Thread which has unread_count not equal to zero ( unread thread ) if is_new is 1 otherwise return thread which has unread_count equal to zero ( read thread )
+	 * @type array  $is_new               Optional. Retried Thread which has unread_count not equal to zero ( unread thread ) if is_new is 1 otherwise return thread which has unread_count equal to zero ( read thread )
 	 *                                 Default: Null.
 	 * @type string $fields               Which fields to return. Specify 'ids' to fetch a list of IDs.
 	 *                                 Default: 'all' (return BP_Messages_Thread objects).
