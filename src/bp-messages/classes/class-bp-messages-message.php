@@ -758,6 +758,11 @@ class BP_Messages_Message {
 			 */
 			$total_messages_sql = apply_filters( 'bp_messages_message_get_total_sql', $total_messages_sql, $sql, $r );
 
+			// for debug.
+			if ( ! empty( $r['debug'] ) ) {
+				error_log( $total_messages_sql );
+			}
+
 			$total_messages  = (int) $wpdb->get_var( $total_messages_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total'] = $total_messages;
 		}
