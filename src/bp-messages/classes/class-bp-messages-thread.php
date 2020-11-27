@@ -1102,11 +1102,6 @@ class BP_Messages_Thread {
 
 		$qq = implode( ' ', $sql );
 
-		// for debug.
-		if ( ! empty( $r['debug'] ) ) {
-			error_log( $qq );
-		}
-
 		// Get thread IDs.
 		$thread_ids = $wpdb->get_results( $qq ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		if ( empty( $thread_ids ) ) {
@@ -1582,7 +1577,6 @@ class BP_Messages_Thread {
 			'fields'               => 'all',
 			'count_total'          => false,
 			'exclude_active_users' => false,
-			'debug'                => false,
 		);
 
 		$r = bp_parse_args( $args, $defaults, 'bp_recipients_recipient_get' );
@@ -1700,11 +1694,6 @@ class BP_Messages_Thread {
 		 */
 		$paged_recipients_sql = apply_filters( 'bp_recipients_recipient_get_paged_sql', $paged_recipients_sql, $sql, $r );
 
-		// for debug.
-		if ( ! empty( $r['debug'] ) ) {
-			error_log( $paged_recipients_sql );
-		}
-
 		$paged_recipient_ids = $wpdb->get_col( $paged_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 		$paged_recipients    = array();
 
@@ -1742,11 +1731,6 @@ class BP_Messages_Thread {
 			 * @param array  $r         Array of parsed arguments for the get method.
 			 */
 			$total_recipients_sql = apply_filters( 'bp_recipients_recipient_get_total_sql', $total_recipients_sql, $sql, $r );
-
-			// for debug.
-			if ( ! empty( $r['debug'] ) ) {
-				error_log( $total_recipients_sql );
-			}
 
 			$total_recipients = (int) $wpdb->get_var( $total_recipients_sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$retval['total']  = $total_recipients;
