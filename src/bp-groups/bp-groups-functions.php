@@ -3545,6 +3545,7 @@ function bp_get_active_group_types( $args = array() ) {
 	$args = bp_parse_args( $args, array(
 		'posts_per_page' => - 1,
 		'post_type'      => bp_groups_get_group_type_post_type(),
+                'post_status'    => 'publish',
 		'orderby'        => 'menu_order',
 		'order'          => 'ASC',
 		'fields'         => 'ids'
