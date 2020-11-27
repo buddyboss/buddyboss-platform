@@ -8,7 +8,7 @@
 
 if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FILTER_SANITIZE_STRING ) ) :
 	?>
-    <table id="moderation-list">
+    <table id="moderation-list" class="bp-tables-user">
     <thead>
     <th>
 		<?php
