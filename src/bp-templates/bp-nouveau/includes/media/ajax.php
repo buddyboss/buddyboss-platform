@@ -309,6 +309,7 @@ function bp_nouveau_ajax_media_delete() {
 
 	$media       = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_SANITIZE_NUMBER_INT );
+	$from_where  = filter_input( INPUT_POST, 'from_where', FILTER_SANITIZE_STRING );
 
 	if ( empty( $media ) ) {
 		$response['feedback'] = sprintf(
@@ -344,11 +345,38 @@ function bp_nouveau_ajax_media_delete() {
 		$response = bp_media_get_activity_media( $_POST['activity_id'] );
     }
 
+	$delete_box = false;
+	$activity_content = '';
+	if ( 'activity' === $from_where ) {
+		// Get activity object.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		if ( empty( $activity->id ) ) {
+			$delete_box = true;
+		} else {
+			ob_start();
+			if ( bp_has_activities(
+				array(
+					'include'     => $activity_id,
+				)
+			) ) {
+				while ( bp_activities() ) {
+					bp_the_activity();
+					bp_get_template_part( 'activity/entry' );
+				}
+			}
+			$activity_content = ob_get_contents();
+			ob_end_clean();
+		}
+    }
+
 	wp_send_json_success(
 		array(
-			'media'         => $media,
-			'media_ids'     => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
-			'media_content' => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'media'            => $media,
+			'media_ids'        => ( isset( $response['media_activity_ids'] ) ) ? $response['media_activity_ids'] : '',
+			'media_content'    => ( isset( $response['content'] ) ) ? $response['content'] : '',
+			'delete_activity'  => $delete_box,
+			'activity_content' => $activity_content,
 		)
 	);
 }

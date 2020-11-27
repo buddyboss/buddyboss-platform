@@ -24,6 +24,7 @@ $db_privacy        = bp_get_db_document_privacy();
 $extension_lists   = bp_document_extensions_list();
 $attachment_url    = '';
 $mirror_text       = '';
+$is_comment_doc    = bp_document_is_activity_comment_document( $document_template->document );
 
 if ( $attachment_id ) {
 	$text_attachment_url = wp_get_attachment_url( $attachment_id );
@@ -132,9 +133,19 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 					}
 					if ( $can_manage_btn || bp_loggedin_user_id() === bp_get_document_user_id() || bp_current_user_can( 'bp_moderate' ) ) {
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
-							?>
-						<li class="move_file document-action-class"><a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
-							<?php
+							if ( $is_comment_doc ) {
+								?>
+                                <li class="move_file document-action-class move-disabled">
+                                    <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                                </li>
+								<?php
+                            } else {
+								?>
+                                <li class="move_file document-action-class">
+                                    <a href="#" data-action="document" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
+                                </li>
+								<?php
+                            }
 						}
 						$item_id = 0;
 						if ( bp_is_active( 'activity' ) && bp_get_activity_comment_id() ) {

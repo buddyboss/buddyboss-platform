@@ -286,16 +286,6 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 		return false;
 	}
 
-	// Add in description in attachment when only one document uploaded.
-	if ( is_array( $documents ) && 1 === count( $documents ) ) {
-		foreach ( $documents as $document ) {
-			$document_attachment_post                 = array();
-			$document_attachment_post['ID']           = $document['id'];
-			$document_attachment_post['post_content'] = wp_strip_all_tags( $content );
-			wp_update_post( $document_attachment_post );
-		}
-	}
-
 	$bp_activity_post_update    = true;
 	$bp_activity_post_update_id = $activity_id;
 
@@ -1669,18 +1659,24 @@ function bp_document_get_edit_activity_data( $activity ) {
 			foreach( $document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 
+				$size = 0;
+				$file = get_attached_file( $document->attachment_id );
+				if ( $file && file_exists( $file ) ) {
+				    $size = filesize( $file );
+                }
+
 				$activity['document'][] = array(
-						'id'            => $document_id,
-						'doc_id'        => $document->attachment_id,
-						'name'          => $document->title,
-						'group_id'      => $document->group_id,
-						'folder_id'      => $document->folder_id,
-						'activity_id'   => $document->activity_id,
-						'type'          => 'document',
-						'url'           => wp_get_attachment_url( $document->attachment_id ),
-						'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
-						'saved'         => true,
-						'menu_order'    => $document->menu_order,
+					'id'          => $document_id,
+					'doc_id'      => $document->attachment_id,
+					'name'        => $document->title,
+					'group_id'    => $document->group_id,
+					'folder_id'   => $document->folder_id,
+					'activity_id' => $document->activity_id,
+					'type'        => 'document',
+					'url'         => wp_get_attachment_url( $document->attachment_id ),
+					'size'        => $size,
+					'saved'       => true,
+					'menu_order'  => $document->menu_order,
 				);
 			}
 		}

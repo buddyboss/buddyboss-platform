@@ -3594,3 +3594,40 @@ function bp_get_attachment_document_id( $attachment_id = 0 ) {
 
 	return $attachment_document_id;
 }
+
+/**
+ * Check given document is activity comment document.
+ *
+ * @param $document
+ *
+ * @return bool
+ */
+function bp_document_is_activity_comment_document( $document ) {
+
+	$is_comment_document = false;
+	if( is_object( $document ) ) {
+		$document_activity_id = $document->activity_id;
+	} else {
+		$document             = new BP_Document( $document );
+		$document_activity_id = $document->activity_id;
+	}
+
+	if ( bp_is_active( 'activity' ) ) {
+		$activity = new BP_Activity_Activity( $document_activity_id );
+
+		if( $activity ) {
+			if( $activity->secondary_item_id ) {
+				$load_parent_activity = new BP_Activity_Activity( $activity->secondary_item_id );
+				if( $load_parent_activity ) {
+					if( 'activity_comment' === $load_parent_activity->type ) {
+						$is_comment_document = true;
+					}
+				}
+			}
+		}
+	} elseif( $document_activity_id ) {
+		$is_comment_document = true;
+	}
+	return $is_comment_document;
+
+}
