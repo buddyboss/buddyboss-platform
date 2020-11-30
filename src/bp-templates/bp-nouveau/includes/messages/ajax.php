@@ -1112,11 +1112,6 @@ function bp_nouveau_ajax_get_thread_messages() {
 		'type'     => 'info',
 	);
 
-	$response_no_more = array(
-		'feedback' => __( 'Sorry, no more messages can be loaded.', 'buddyboss' ),
-		'type'     => 'info',
-	);
-
 	if ( empty( $_POST['id'] ) ) {
 		wp_send_json_error( $response );
 	}
@@ -1622,6 +1617,16 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 
 	// Override bp_current_action().
 	$bp->current_action = 'view';
+
+	$response = array(
+		'feedback' => __( 'Sorry, no messages were found.', 'buddyboss' ),
+		'type'     => 'info',
+	);
+
+	$response_no_more = array(
+		'feedback' => __( 'Sorry, no more messages can be loaded.', 'buddyboss' ),
+		'type'     => 'info',
+	);
 
 	bp_get_thread( array( 'thread_id' => $thread_id ) );
 

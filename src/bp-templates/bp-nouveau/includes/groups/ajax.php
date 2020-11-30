@@ -1047,20 +1047,26 @@ function bp_nouveau_ajax_groups_send_message() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'send_messages_users' ) ) {
+	$wp_nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
+
+	if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'send_messages_users' ) ) {
 		wp_send_json_error( $response );
 	}
 
-	if ( isset( $_POST['gif_data'] ) && '' !== $_POST['gif_data'] ) {
-		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $_POST['gif_data'] ), true );
+	$gif_data = filter_input( INPUT_POST, 'gif_data', FILTER_DEFAULT );
+	$media    = filter_input( INPUT_POST, 'media', FILTER_DEFAULT );
+	$document = filter_input( INPUT_POST, 'document', FILTER_DEFAULT );
+
+	if ( isset( $gif_data ) && '' !== $gif_data ) {
+		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $gif_data ), true );
 	}
 
-	if ( isset( $_POST['media'] ) && '' !== $_POST['media'] ) {
-		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST['media'] ), true );
+	if ( isset( $media ) && '' !== $media ) {
+		$_POST['media'] = json_decode( wp_kses_stripslashes( $media ), true );
 	}
 
-	if ( isset( $_POST['document'] ) && '' !== $_POST['document'] ) {
-		$_POST['document'] = json_decode( wp_kses_stripslashes( $_POST['document'] ), true );
+	if ( isset( $document ) && '' !== $document ) {
+		$_POST['document'] = json_decode( wp_kses_stripslashes( $document ), true );
 	}
 
 	$content = filter_input( INPUT_POST, 'content', FILTER_DEFAULT );
@@ -1086,36 +1092,32 @@ function bp_nouveau_ajax_groups_send_message() {
 		$content = '&nbsp;';
 	}
 
+	$group         = filter_input( INPUT_POST, 'group', FILTER_VALIDATE_INT ); // Group id.
+	$message_users = filter_input( INPUT_POST, 'users', FILTER_SANITIZE_STRING ); // all - individual.
+	$message_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING ); // open - private.
+
 	// Get Members list if "All Group Members" selected.
-	if ( 'all' === $_POST['users'] ) {
-
+	if ( 'all' === $message_users ) {
 		// Fetch all the group members.
-		$args = array(
-			'per_page'            => 9999999999999999999,
-			'group_id'            => trim( $_POST['group'] ),
-			'exclude'             => array( bp_loggedin_user_id() ),
-			'exclude_admins_mods' => false,
-		);
+		$members = BP_Groups_Member::get_group_member_ids( (int) $group );
 
-		$group_members = groups_get_group_members( $args );
-		$members       = wp_list_pluck( $group_members['members'], 'ID' );
+		// Exclude logged-in user ids from the members list.
+		if ( in_array( bp_loggedin_user_id(), $members ) ) {
+			$members = array_values( array_diff( $members, array( bp_loggedin_user_id() ) ) );
+		}
 
 		// We get members array from $_POST['users_list'] because user already selected them.
 	} else {
-		$members = $_POST['users_list'];
+		$members = filter_input( INPUT_POST, 'users_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	}
 
 	if ( empty( $members ) ) {
-		$response['feedback'] = 'No Members Selected.';
+		$response['feedback'] = __( 'No Members Selected.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
-	$group         = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id.
-	$message_users = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual.
-	$message_type  = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private.
-
 	if ( empty( $group ) ) {
-		$response['feedback'] = 'No group Selected.';
+		$response['feedback'] = __( 'No group Selected.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
@@ -1315,7 +1317,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						// Store thread recipients to $previous_ids array.
 						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 								$previous_thread_recipients[] = $thread_recipient->user_id;
 							}
 						}
@@ -1353,7 +1355,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 					// Store thread recipients to $previous_ids array.
 					foreach ( $thread_recipients as $thread_recipient ) {
-						if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+						if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 							$previous_thread_recipients[] = $thread_recipient->user_id;
 						}
 					}
@@ -1396,7 +1398,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 									// Store thread recipients to $previous_ids array.
 									foreach ( $thread_recipients as $thread_recipient ) {
-										if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+										if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 											$previous_thread_recipients[] = $thread_recipient->user_id;
 										}
 									}
@@ -1462,7 +1464,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 								// Store thread recipients to $previous_ids array.
 								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 										$previous_thread_recipients[] = $thread_recipient->user_id;
 									}
 								}
@@ -1483,7 +1485,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								$message_ids  = wp_list_pluck( $thread->messages, 'id' );
 								$add_existing = true;
 								foreach ( $message_ids as $id ) {
-									// group_message_users not open
+									// group_message_users not open.
 									$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 									if ( 'all' === $message_users ) {
 										$add_existing = false;
@@ -1531,7 +1533,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							// Store thread recipients to $previous_ids array.
 							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 									$previous_thread_recipients[] = $thread_recipient->user_id;
 								}
 							}
@@ -1552,7 +1554,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							$message_ids  = wp_list_pluck( $thread->messages, 'id' );
 							$add_existing = true;
 							foreach ( $message_ids as $id ) {
-								// group_message_users not open
+								// group_message_users not open.
 								$message_users = bp_messages_get_meta( $id, 'group_message_users', true ); // all - individual.
 								if ( 'all' === $message_users ) {
 									$add_existing = false;
@@ -1649,7 +1651,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 						// Store thread recipients to $previous_ids array.
 						foreach ( $thread_recipients as $thread_recipient ) {
-							if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+							if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 								$previous_thread_recipients[] = $thread_recipient->user_id;
 							}
 						}
@@ -1714,7 +1716,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 								// Store thread recipients to $previous_ids array.
 								foreach ( $thread_recipients as $thread_recipient ) {
-									if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+									if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 										$previous_thread_recipients[] = $thread_recipient->user_id;
 									}
 								}
@@ -1734,7 +1736,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 								$first_message = BP_Messages_Thread::get_first_message( $thread->thread_id );
 								$message_user  = bp_messages_get_meta( $first_message->id, 'group_message_users', true );
-								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private
+								$message_type  = bp_messages_get_meta( $first_message->id, 'group_message_type', true ); // open - private.
 
 								// check both previous and current recipients are same.
 								$is_recipient_match = ( $previous_thread_recipients == $members );
@@ -1814,7 +1816,7 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							// Store thread recipients to $previous_ids array.
 							foreach ( $thread_recipients as $thread_recipient ) {
-								if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+								if ( bp_loggedin_user_id() !== $thread_recipient->user_id ) {
 									$previous_thread_recipients[] = $thread_recipient->user_id;
 								}
 							}
@@ -1895,7 +1897,7 @@ function bp_nouveau_ajax_groups_send_message() {
 			$response['feedback'] = $message->get_error_message();
 			wp_send_json_error( $response );
 		} elseif ( ! empty( $message ) ) {
-			if ( 'all' !== $_POST['users'] ) {
+			if ( 'all' !== $message_users ) {
 				$response['feedback'] = __( 'Your message was sent privately to %%count%% members of this group.', 'buddyboss' );
 			} else {
 				$response['feedback'] = __( 'Your message was sent privately to all members of this group.', 'buddyboss' );
