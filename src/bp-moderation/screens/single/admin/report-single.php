@@ -43,14 +43,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 									<tbody>
 									<?php if ( $is_content_screen ) { ?>
 										<tr>
-											<th scope="row">
+											<td scope="row" style="width: 20%;">
 												<label>
-													<?php
+													<strong><?php
 													/* translators: accessibility text */
 													esc_html_e( 'Content Type', 'buddyboss' );
-													?>
+													?></strong>
 												</label>
-											</th>
+											</td>
 											<td>
 												<?php
 												echo esc_html( bp_moderation_get_content_type( $moderation_request_data->item_type ) );
@@ -58,14 +58,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</td>
 										</tr>
 										<tr>
-											<th scope="row">
-												<label>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
 													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Content ID', 'buddyboss' );
 													?>
-												</label>
-											</th>
+												</label></strong>
+											</td>
 											<td>
 												<?php
 												echo esc_html( $moderation_request_data->item_id );
@@ -73,14 +73,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</td>
 										</tr>
 										<tr>
-											<th scope="row">
-												<label>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
 													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Content Excerpt', 'buddyboss' );
 													?>
-												</label>
-											</th>
+												</label></strong>
+											</td>
 											<td>
 												<?php
 												$content_excerpt = bp_moderation_get_content_excerpt( $moderation_request_data->item_id,
@@ -91,14 +91,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</td>
 										</tr>
 										<tr>
-											<th scope="row">
-												<label>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
 													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Content Owner', 'buddyboss' );
 													?>
-												</label>
-											</th>
+												</label></strong>
+											</td>
 											<td>
 												<?php
 												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
@@ -107,14 +107,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</td>
 										</tr>
 										<tr>
-											<th scope="row">
-												<label>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
 													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Reported (Count)', 'buddyboss' );
 													?>
-												</label>
-											</th>
+												</label></strong>
+											</td>
 											<td>
 												<?php
 												/* translators: accessibility text */
@@ -124,14 +124,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 										</tr>
 									<?php } else { ?>
 										<tr>
-											<th scope="row">
-												<label>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
 													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Blocked Member', 'buddyboss' );
 													?>
-												</label>
-											</th>
+												</label></strong>
+											</td>
 											<td>
 												<?php
 												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
@@ -140,14 +140,14 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 											</td>
 										</tr>
 										<tr>
-											<th scope="row">
-												<label>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
 													<?php
 													/* translators: accessibility text */
 													esc_html_e( 'Times Blocked', 'buddyboss' );
 													?>
-												</label>
-											</th>
+												</label></strong>
+											</td>
 											<td>
 												<?php
 												/* translators: accessibility text */
