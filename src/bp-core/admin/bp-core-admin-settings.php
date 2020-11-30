@@ -244,6 +244,46 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 }
 
 /**
+ * Enable activity edit
+ *
+ * @since BuddyBoss 1.5.0
+ */
+function bp_admin_setting_callback_enable_activity_edit() {
+	$edit_times = bp_activity_edit_times();
+	$edit_time  = bp_get_activity_edit_time();
+	?>
+
+	<input id="_bp_enable_activity_edit" name="_bp_enable_activity_edit" type="checkbox" value="1" <?php checked( bp_is_activity_edit_enabled( false ) ); ?> />
+	<label for="_bp_enable_activity_edit"><?php _e( 'Allow members to edit their activity posts for a duration of', 'buddyboss' ); ?></label>
+
+	<select name="_bp_activity_edit_time">
+		<option value="-1"><?php _e('Forever', 'buddyboss'); ?></option>
+		<?php foreach ( $edit_times as $time ) {
+			$value      = isset( $time['value'] ) ? $time['value'] : 0;
+			$time_level = isset( $time['label'] ) ? $time['label'] : 0;
+			echo '<option value="' . esc_attr( $value ) . '" ' . selected( $edit_time, $value, false ) . '>' . esc_html( $time_level ) . '</option>';
+		} ?>
+	</select>
+
+	<?php
+}
+
+/**
+ * Enable relevant activity.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_admin_setting_callback_enable_relevant_feed() {
+	?>
+	<input id="_bp_enable_relevant_feed" name="_bp_enable_relevant_feed" type="checkbox"
+		   value="1" <?php checked( bp_is_relevant_feed_enabled( false ) ); ?> />
+	<label for="_bp_enable_relevant_feed"><?php esc_html_e( 'Restrict the Activity Feed directory to only posts that are relevant to the logged-in member', 'buddyboss' ); ?></label>
+	<p class="description"><?php esc_html_e( 'While logged in, members will only see activity posts from their own timeline, their connections, members they followed, groups they joined, forum discussions they subscribed to, and posts they are mentioned in.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+
+/**
  * Enable activity scopes like groups, friends, mentions, following etc.
  *
  * @since BuddyBoss 1.1.6
@@ -266,7 +306,7 @@ function bp_admin_setting_callback_enable_activity_follow() {
 	?>
 
 	<input id="_bp_enable_activity_follow" name="_bp_enable_activity_follow" type="checkbox" value="1" <?php checked( bp_is_activity_follow_active( false ) ); ?> />
-	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your users to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_follow"><?php _e( 'Allow your members to follow the activity of each other on their timeline', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -280,7 +320,7 @@ function bp_admin_setting_callback_enable_activity_like() {
 	?>
 
 	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
-	<label for="_bp_enable_activity_like"><?php _e( 'Allow your users to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_like"><?php _e( 'Allow your members to "Like" each other\'s activity posts', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -555,6 +595,18 @@ function bp_admin_setting_callback_group_hierarchies() {
 }
 
 /**
+ * 'Hide subgroups from Groups Directory & Group Type Shortcode field markup.
+ *
+ * @since BuddyBoss 1.5.1
+ */
+function bp_admin_setting_callback_group_hide_subgroups() {
+	?>
+    <input id="bp-enable-group-hide-subgroups" name="bp-enable-group-hide-subgroups" type="checkbox" value="1" <?php checked( bp_enable_group_hide_subgroups() ); ?> />
+    <label for="bp-enable-group-hide-subgroups"><?php _e( 'Hide subgroups from Groups Directory & Group Type Shortcode', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
  * Enable group restrict invites field markup.
  *
  * @since BuddyBoss 1.0.0
@@ -643,15 +695,15 @@ function bp_core_admin_integrations() {
 }
 
 /**
- * Load the AppBoss integration admin screen.
+ * Load the BuddyBoss App integration admin screen.
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_admin_appboss() {
+function bp_core_admin_buddyboss_app() {
 	?>
 		 <div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
-			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-appboss.php'; ?>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'BuddyBoss App', 'buddyboss' ) ); ?></h2>
+			<?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-buddyboss-app.php'; ?>
 		</div>
 		<?php
 }

@@ -997,12 +997,12 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'message' => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Information for the user.', 'buddyboss' ),
 					'type'        => 'string',
 				),
 				'data'    => array(
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'description' => __( 'Message thread', 'buddyboss' ),
 					'readonly'    => true,
 					'type'        => 'object',
@@ -1125,6 +1125,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				'append_thread' => false,
 				'is_hidden'     => false,
 				'mark_visible'  => false,
+				'group_thread'  => true,
 				'error_type'    => 'wp_error',
 			),
 			'bp_groups_messages_new_message'
@@ -1181,7 +1182,7 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				return $fields_update;
 			}
 
-			$retval['data'] = $this->prepare_response_for_collection(
+			$retval['data'][] = $this->prepare_response_for_collection(
 				$this->message_endppoint->prepare_item_for_response( $thread, $request )
 			);
 

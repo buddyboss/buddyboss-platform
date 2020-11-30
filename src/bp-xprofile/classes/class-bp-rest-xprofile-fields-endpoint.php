@@ -174,23 +174,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				/**
 				 * Added support for display name format support from platform.
 				 */
-				// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-				$current_value = bp_get_option( 'bp-display-name-format' );
-
-				// If First Name selected then do not add last name field.
-				if ( 'first_name' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
-						continue;
-					}
-					// If Nick Name selected then do not add first & last name field.
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_lastname_field_id' ) && bp_xprofile_lastname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
-						continue;
-					}
-				} elseif ( 'nickname' === $current_value && function_exists( 'bp_xprofile_firstname_field_id' ) && bp_xprofile_firstname_field_id() === $field->id ) {
-					if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
-						continue;
-					}
+				if ( function_exists( 'bp_core_hide_display_name_field' ) && true === bp_core_hide_display_name_field( $field->id ) ) {
+					continue;
 				}
 
 				if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
@@ -883,10 +868,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 		if ( ! empty( $request['fetch_visibility_level'] ) ) {
 			$data['visibility_level']        = $field->visibility_level;
-			$data['allow_custom_visibility'] = (
-				! empty( $field->__get( 'allow_custom_visibility' ) )
-				&& 'allowed' === $field->__get( 'allow_custom_visibility' )
-			) ? $field->__get( 'allow_custom_visibility' ) : 'disabled';
+			$data['allow_custom_visibility'] = $this->bp_rest_get_field_visibility( $field );
 		}
 
 		if ( true === wp_validate_boolean( $request->get_param( 'fetch_field_data' ) ) ) {
@@ -895,8 +877,8 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 			}
 
 			$data['data']['value'] = array(
-				'raw'          => ( isset( $field->data->value ) ? $field->data->value : '' ),
-				'unserialized' => $this->get_profile_field_unserialized_value( ( isset( $field->data->value ) ? $field->data->value : '' ) ),
+				'raw'          => $this->get_profile_field_raw_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
+				'unserialized' => $this->get_profile_field_unserialized_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
 				'rendered'     => $this->get_profile_field_rendered_value( ( isset( $field->data->value ) ? $field->data->value : '' ), $field ),
 			);
 		}
@@ -1066,16 +1048,59 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
+	 * Retrieve the field raw data.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string                    $value         The raw value of the field.
+	 * @param integer|BP_XProfile_Field $profile_field The ID or the full object for the field.
+	 *
+	 * @return array Field raw data.
+	 */
+	public function get_profile_field_raw_value( $value = '', $profile_field = null ) {
+		if ( empty( $value ) ) {
+			return '';
+		}
+
+		if ( ! empty( $profile_field ) ) {
+			$profile_field = xprofile_get_field( $profile_field );
+
+			if ( ! isset( $profile_field->id ) ) {
+				return '';
+			}
+
+			if ( 'telephone' === $profile_field->type ) {
+				$value = wp_strip_all_tags( html_entity_decode( $value ) );
+			}
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Retrieve the unserialized value of a profile field.
 	 *
-	 * @param string $value The raw value of the field.
+	 * @param string                    $value The raw value of the field.
+	 * @param integer|BP_XProfile_Field $profile_field The ID or the full object for the field.
 	 *
 	 * @return array         The unserialized field value.
 	 * @since 0.1.0
 	 */
-	public function get_profile_field_unserialized_value( $value = '' ) {
+	public function get_profile_field_unserialized_value( $value = '', $profile_field = null ) {
 		if ( empty( $value ) ) {
 			return array();
+		}
+
+		if ( ! empty( $profile_field ) ) {
+			$profile_field = xprofile_get_field( $profile_field );
+
+			if ( ! isset( $profile_field->id ) ) {
+				return '';
+			}
+
+			if ( 'telephone' === $profile_field->type ) {
+				$value = wp_strip_all_tags( html_entity_decode( $value ) );
+			}
 		}
 
 		$unserialized_value = maybe_unserialize( $value );
@@ -1589,6 +1614,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 				$option->value = $option->name;
 				$key           = bp_social_network_search_key( $option->name, $providers );
 				$option->name  = $providers[ $key ]->name;
+				$option->icon  = $providers[ $key ]->svg;
 				$options[ $k ] = $option;
 			}
 		}
@@ -1605,14 +1631,34 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	 * @return array
 	 */
 	public function get_gender_type_options( $field, $request ) {
+
 		$options = $field->get_children();
+
+		if ( isset( $field->id ) && ! empty( $field->id ) ) {
+			$order = bp_xprofile_get_meta( $field->id, 'field', 'gender-option-order' );
+		} else {
+			$order = array();
+		}
+
 		for ( $k = 0, $count = count( $options ); $k < $count; ++ $k ) {
-			if ( '1' === $options[ $k ]->option_order ) {
-				$options[ $k ]->value = 'his_' . $options[ $k ]->name;
-			} elseif ( '2' === $options[ $k ]->option_order ) {
-				$options[ $k ]->value = 'her_' . $options[ $k ]->name;
+			if ( ! empty( $order ) ) {
+				$key = $order[ $k ];
+
+				if ( 'male' === $key ) {
+					$options[ $k ]->value = 'his_' . $options[ $k ]->name;
+				} elseif ( 'female' === $key ) {
+					$options[ $k ]->value = 'her_' . $options[ $k ]->name;
+				} else {
+					$options[ $k ]->value = 'their_' . $options[ $k ]->name;
+				}
 			} else {
-				$options[ $k ]->value = 'their_' . $options[ $k ]->name;
+				if ( '1' === $options[ $k ]->option_order ) {
+					$options[ $k ]->value = 'his_' . $options[ $k ]->name;
+				} elseif ( '2' === $options[ $k ]->option_order ) {
+					$options[ $k ]->value = 'her_' . $options[ $k ]->name;
+				} else {
+					$options[ $k ]->value = 'their_' . $options[ $k ]->name;
+				}
 			}
 		}
 
@@ -1630,7 +1676,7 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 	public function get_repeater_fields_data( $field, $request ) {
 		global $bp, $wpdb;
 
-		if ( empty( $field ) || ! bp_loggedin_user_id() ) {
+		if ( empty( $field ) ) {
 			return;
 		}
 
@@ -1658,11 +1704,13 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 
 				$data[ $k ]['id'] = $sub_field_id;
 
+				$field_data = $this->get_xprofile_field_data_object( $sub_field_id, $user_id );
+
 				if ( ! empty( $request['fetch_field_data'] ) ) {
 					$data[ $k ]['value'] = array(
-						'raw'          => xprofile_get_field_data( $sub_field_id, $user_id ),
-						'unserialized' => $this->get_profile_field_unserialized_value( xprofile_get_field_data( $sub_field_id, $user_id ) ),
-						'rendered'     => $this->get_profile_field_rendered_value( xprofile_get_field_data( $sub_field_id, $user_id ), $field_id ),
+						'raw'          => $this->get_profile_field_raw_value( $field_data->value, $sub_field_id ),
+						'unserialized' => $this->get_profile_field_unserialized_value( $field_data->value, $sub_field_id ),
+						'rendered'     => $this->get_profile_field_rendered_value( $field_data->value, $sub_field_id ),
 					);
 				}
 				if ( ! empty( $request['fetch_visibility_level'] ) ) {
@@ -1696,30 +1744,10 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		 * Added support for display name format support from platform.
 		 */
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-		$current_value = bp_get_option( 'bp-display-name-format' );
 		if (
-			// If First Name selected then do not add last name field.
 			(
-				'first_name' === $current_value
-				&& function_exists( 'bp_xprofile_lastname_field_id' )
-				&& bp_xprofile_lastname_field_id() === $field_id
-				&& function_exists( 'bp_hide_last_name' )
-				&& false === bp_hide_last_name()
-			)
-			// If Nick Name selected then do not add first & last name field.
-			|| (
-				'nickname' === $current_value
-				&& function_exists( 'bp_xprofile_lastname_field_id' )
-				&& bp_xprofile_lastname_field_id() === $field_id
-				&& function_exists( 'bp_hide_nickname_last_name' )
-				&& false === bp_hide_nickname_last_name()
-			)
-			|| (
-				'nickname' === $current_value
-				&& function_exists( 'bp_xprofile_firstname_field_id' )
-				&& bp_xprofile_firstname_field_id() === $field_id
-				&& function_exists( 'bp_hide_nickname_first_name' )
-				&& false === bp_hide_nickname_first_name()
+				function_exists( 'bp_core_hide_display_name_field' )
+				&& true === bp_core_hide_display_name_field( $field_id )
 			)
 			|| (
 				function_exists( 'bp_member_type_enable_disable' )
@@ -1738,5 +1766,49 @@ class BP_REST_XProfile_Fields_Endpoint extends WP_REST_Controller {
 		}
 
 		return $retval;
+	}
+
+	/**
+	 * Check current user can edit the visibility or not.
+	 *
+	 * @param BP_XProfile_Field $field_object Field Object.
+	 *
+	 * @return string
+	 */
+	public function bp_rest_get_field_visibility( $field_object ) {
+		global $field;
+
+		// Get the field id into for user check.
+		$GLOBALS['profile_template']              = new stdClass();
+		$GLOBALS['profile_template']->in_the_loop = true;
+
+		// Setup current user id into global.
+		$field = $field_object;
+
+		return (
+			! bp_current_user_can( 'bp_xprofile_change_field_visibility' )
+			? 'disabled'
+			: (
+				(
+					! empty( $field->__get( 'allow_custom_visibility' ) )
+					&& 'allowed' === $field->__get( 'allow_custom_visibility' )
+				)
+				? $field->__get( 'allow_custom_visibility' )
+				: 'disabled'
+			)
+		);
+	}
+
+	/**
+	 * Get XProfile field data object.
+	 *
+	 * @param int $field_id Field id.
+	 * @param int $user_id User id.
+	 *
+	 * @return BP_XProfile_ProfileData
+	 * @since 0.1.0
+	 */
+	public function get_xprofile_field_data_object( $field_id, $user_id ) {
+		return new BP_XProfile_ProfileData( $field_id, $user_id );
 	}
 }

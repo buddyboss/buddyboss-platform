@@ -80,14 +80,21 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$sql                .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON 
+				$sql                .= " OR  r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON
 					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 				$query_placeholder[] = '%' . $search_term . '%';
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			// Post should be publish
-			$sql                .= " ) AND p.post_type = %s AND p.post_status = 'publish'";
+			// If post is not attachment Post should be publish &
+			// else attachment should be inherit and that not include media and document as we have separate search for that
+			$sql .= ' ) AND p.post_type = %s';
+			if ( 'attachment' == $this->cpt_name ) {
+				$sql .= " AND p.post_status = 'inherit' AND p.ID NOT IN ( SELECT post_id FROM {$wpdb->postmeta} pm WHERE pm.`meta_key` IN ('bp_media_upload','bp_document_upload') )";
+			} else {
+				$sql .= " AND p.post_status = 'publish'";
+			}
+
 			$query_placeholder[] = $this->cpt_name;
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
@@ -113,8 +120,9 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			// lets do a wp_query and generate html for all posts
 			$qry      = new WP_Query(
 				array(
-					'post_type' => $this->cpt_name,
-					'post__in'  => $post_ids,
+					'post_type'      => $this->cpt_name,
+					'post__in'       => $post_ids,
+					'post_status'    => ( 'attachment' === $this->cpt_name ) ? 'inherit' : 'publish',
 					'posts_per_page' => 20,
 				)
 			);

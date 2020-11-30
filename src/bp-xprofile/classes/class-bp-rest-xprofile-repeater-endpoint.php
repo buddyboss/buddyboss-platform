@@ -27,14 +27,34 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	protected $group_fields_endpoint;
 
 	/**
+	 * XProfile Fields Class.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @var BP_REST_XProfile_Fields_Endpoint
+	 */
+	protected $xprofile_fields_endpoint;
+
+	/**
+	 * XProfile Update Class.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @var BP_REST_XProfile_Update_Endpoint class
+	 */
+	protected $xprofile_update_endpoint;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1.0
 	 */
 	public function __construct() {
-		$this->namespace             = bp_rest_namespace() . '/' . bp_rest_version();
-		$this->rest_base             = buddypress()->profile->id . '/repeater';
-		$this->group_fields_endpoint = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$this->namespace                = bp_rest_namespace() . '/' . bp_rest_version();
+		$this->rest_base                = buddypress()->profile->id . '/repeater';
+		$this->group_fields_endpoint    = new BP_REST_XProfile_Field_Groups_Endpoint();
+		$this->xprofile_fields_endpoint = new BP_REST_XProfile_Fields_Endpoint();
+		$this->xprofile_update_endpoint = new BP_REST_XProfile_Update_Endpoint();
 	}
 
 	/**
@@ -58,6 +78,20 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::DELETABLE ),
+				),
+				'schema' => array( $this, 'get_item_schema' ),
+			)
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/order/(?P<id>[\d]+)',
+			array(
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 				),
 				'schema' => array( $this, 'get_item_schema' ),
 			)
@@ -102,7 +136,7 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 
 		$user_id = get_current_user_id();
 		if ( ! $user_id ) {
-			new WP_Error(
+			return new WP_Error(
 				'bp_rest_authorization_required',
 				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
 				array(
@@ -124,6 +158,19 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 				}
 			}
 		}
+
+		/**
+		 * Clear cache when creating a new field set.
+		 * - from xprofile_clear_profile_field_object_cache();
+		 */
+		// Clear default visibility level cache.
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+		// Modified fields can alter parent group status, in particular when
+		// the group goes from empty to non-empty. Bust its cache, as well as
+		// the global 'all' cache.
+		wp_cache_delete( 'all', 'bp_xprofile_groups' );
+		wp_cache_delete( $field_group->id, 'bp_xprofile_groups' );
 
 		$field_group = $this->group_fields_endpoint->get_xprofile_field_group_object( $request );
 
@@ -208,6 +255,264 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		 * @param WP_REST_Request $request The request sent to the API.
 		 */
 		return apply_filters( 'bp_rest_xprofile_repeater_fields_items_permissions_check', $retval, $request );
+	}
+
+	/**
+	 * Reorder a new Repeater Group.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 * @since 0.1.0
+	 *
+	 * @api            {PATCH} /wp-json/buddyboss/v1/xprofile/repeater/order/:id Reorder xProfile Repeater
+	 * @apiName        UpdateBBxProfileRepeaterFields
+	 * @apiGroup       Profile Fields
+	 * @apiDescription Reorder the order of the repeater.
+	 * @apiVersion     1.0.0
+	 * @apiPermission  LoggedInUser
+	 * @apiParam {Number} id A unique numeric ID for the group of profile fields.
+	 * @apiParam {Array} fields Fields array with order of field set with field ID and value to reorder.
+	 * @apiParam {Boolean} [fetch_fields=true] Whether to fetch the fields for each group.
+	 * @apiParam {Boolean} [fetch_field_data=true] Whether to fetch data for each field. Requires a $user_id.
+	 * @apiParam {Boolean} [fetch_visibility_level=true] Whether to fetch the visibility level for each field.
+	 */
+	public function update_item( $request ) {
+		// Setting context.
+		$request->set_param( 'context', 'edit' );
+
+		// Get the field group before it's deleted.
+		$field_group = xprofile_get_field_group( (int) $request['id'] );
+
+		if ( empty( $field_group->id ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_id',
+				__( 'Invalid field group ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			return new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		$field_group  = $this->group_fields_endpoint->get_xprofile_field_group_object( $request );
+		$fields       = $field_group->fields;
+		$final_fields = array();
+
+		// Get fields and its repeater fields and set with the field.
+		if ( ! empty( $fields ) ) {
+			foreach ( $fields as $field ) {
+				$sub_fields = $this->xprofile_fields_endpoint->get_repeater_fields_data( $field, $request );
+				foreach ( $sub_fields as $key => $sub_field ) {
+					$field_object                              = $this->xprofile_fields_endpoint->get_xprofile_field_object( $sub_field['id'] );
+					$final_fields[ $key ][ $field_object->id ] = array(
+						'id'    => $field_object->id,
+						'type'  => $field_object->type,
+						'value' => $sub_field['value']['raw'],
+					);
+				}
+			}
+		}
+
+		$final_fields = array_filter( $final_fields );
+		$form_data    = $request->get_param( 'fields' );
+
+		if ( ! empty( $form_data ) ) {
+			foreach ( $form_data as $k => $v ) {
+				foreach ( $v as $id => $value ) {
+					$field_object           = $this->xprofile_fields_endpoint->get_xprofile_field_object( $id );
+					$form_data[ $k ][ $id ] = array(
+						'id'    => $field_object->id,
+						'type'  => $field_object->type,
+						'value' => $value,
+					);
+				}
+			}
+		}
+
+		ksort( $final_fields );
+		ksort( $form_data );
+
+		if ( ! $this->array_equal( $final_fields, $form_data ) ) {
+			return new WP_Error(
+				'bp_rest_invalid_fields',
+				__( 'Sorry, Fields are not matched with original field set to reorder.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		if ( ! empty( $final_fields ) && ! empty( $form_data ) ) {
+			foreach ( $final_fields as $key => $value ) {
+				$array_1              = array_column( $value, 'id' );
+				$data                 = array_column( $form_data[ $key ], 'value' );
+				$final_fields[ $key ] = array_combine( $array_1, $data );
+			}
+		}
+
+		$return = array();
+		array_walk(
+			$final_fields,
+			function( $a ) use ( &$return ) {
+				$return = $return + $a;
+			}
+		);
+
+		$updated = true;
+		$errors  = array();
+		if ( ! empty( $return ) ) {
+
+			foreach ( $return as $field_id => $value ) {
+				$field = xprofile_get_field( $field_id );
+
+				if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
+					if ( is_serialized( $value ) ) {
+						$value = maybe_unserialize( $value );
+					}
+
+					$value = json_decode( wp_json_encode( $value ), true );
+
+					if ( ! is_array( $value ) ) {
+						$value = (array) $value;
+					}
+				}
+
+				$validation = $this->xprofile_update_endpoint->validate_update( $field_id, $user_id, $value );
+				if ( ! empty( $validation ) ) {
+					$updated             = false;
+					$errors[ $field_id ] = $validation;
+				}
+			}
+
+			if ( true === $updated ) {
+				foreach ( $return as $field_id => $value ) {
+					$field = xprofile_get_field( $field_id );
+
+					if ( 'checkbox' === $field->type || 'socialnetworks' === $field->type || 'multiselectbox' === $field->type ) {
+						if ( is_serialized( $value ) ) {
+							$value = maybe_unserialize( $value );
+						}
+
+						$value = json_decode( wp_json_encode( $value ), true );
+
+						if ( ! is_array( $value ) ) {
+							$value = (array) $value;
+						}
+					}
+
+					xprofile_set_field_data( $field_id, $user_id, $value, $field->is_required );
+				}
+			}
+		}
+
+		/**
+		 * Clear cache when creating a new field set.
+		 * - from xprofile_clear_profile_field_object_cache();
+		 */
+		// Clear default visibility level cache.
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+		// Modified fields can alter parent group status, in particular when
+		// the group goes from empty to non-empty. Bust its cache, as well as
+		// the global 'all' cache.
+		wp_cache_delete( 'all', 'bp_xprofile_groups' );
+		wp_cache_delete( $field_group->id, 'bp_xprofile_groups' );
+
+		$field_group = $this->group_fields_endpoint->get_xprofile_field_group_object( $request );
+
+		$retval = $this->group_fields_endpoint->prepare_response_for_collection(
+			$this->group_fields_endpoint->prepare_item_for_response( $field_group, $request )
+		);
+
+		$response = new WP_REST_Response();
+		$response->set_data(
+			array(
+				'updated' => $updated,
+				'error'   => $errors,
+				'data'    => $retval,
+			)
+		);
+
+		/**
+		 * Fires after a XProfile repeater fields created via the REST API.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param BP_XProfile_Group $field_group Deleted field group.
+		 * @param WP_REST_Response  $response  The response data.
+		 * @param WP_REST_Request   $request   The request sent to the API.
+		 */
+		do_action( 'bp_rest_xprofile_repeater_fields_create_item', $field_group, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Check if a given request has access to update a Repeater Group.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|bool
+	 */
+	public function update_item_permissions_check( $request ) {
+		$retval = true;
+
+		if ( ! is_user_logged_in() ) {
+			$retval = new WP_Error(
+				'bp_rest_authorization_required',
+				__( 'Sorry, you are not allowed to update your profile repeater fields.', 'buddyboss' ),
+				array(
+					'status' => rest_authorization_required_code(),
+				)
+			);
+		}
+
+		// Get the field group before it's deleted.
+		$field_group = xprofile_get_field_group( (int) $request['id'] );
+
+		if ( true === $retval && empty( $field_group->id ) ) {
+			$retval = new WP_Error(
+				'bp_rest_invalid_id',
+				__( 'Invalid Group ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		$repeater_enabled = bp_xprofile_get_meta( $field_group->id, 'group', 'is_repeater_enabled', true );
+
+		if ( empty( $field_group ) || 'on' !== $repeater_enabled ) {
+			$retval = new WP_Error(
+				'bp_rest_invalid_repeater_id',
+				__( 'Invalid Repeater Group ID.', 'buddyboss' ),
+				array(
+					'status' => 404,
+				)
+			);
+		}
+
+		/**
+		 * Filter the XProfile repeater fields `update_item` permissions check.
+		 *
+		 * @since 0.1.0
+		 *
+		 * @param bool|WP_Error   $retval  Returned value.
+		 * @param WP_REST_Request $request The request sent to the API.
+		 */
+		return apply_filters( 'bp_rest_xprofile_repeater_fields_update_item_permissions_check', $retval, $request );
 	}
 
 	/**
@@ -314,6 +619,19 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		$repeater_set_sequence = array_unique( $field_set_sequence );
 
 		$this->bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $repeater_set_sequence, $deleted_field_ids, $field_group->id );
+
+		/**
+		 * Clear cache when deleting fields.
+		 * - from xprofile_clear_profile_field_object_cache();
+		 */
+		// Clear default visibility level cache.
+		wp_cache_delete( 'default_visibility_levels', 'bp_xprofile' );
+
+		// Modified fields can alter parent group status, in particular when
+		// the group goes from empty to non-empty. Bust its cache, as well as
+		// the global 'all' cache.
+		wp_cache_delete( 'all', 'bp_xprofile_groups' );
+		wp_cache_delete( $field_group->id, 'bp_xprofile_groups' );
 
 		$field_group = $this->group_fields_endpoint->get_xprofile_field_group_object( $request );
 
@@ -443,13 +761,22 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 	public function get_endpoint_args_for_item_schema( $method = WP_REST_Server::DELETABLE ) {
 		$args = $this->get_collection_params();
 
-		$args['fields'] = array(
-			'description'       => __( 'Pass Field IDs which you want to delete it.', 'buddyboss' ),
-			'type'              => 'array',
-			'required'          => true,
-			'items'             => array( 'type' => 'int' ),
-			'validate_callback' => 'rest_validate_request_arg',
-		);
+		if ( WP_REST_Server::DELETABLE === $method ) {
+			$args['fields'] = array(
+				'description'       => __( 'Pass Field IDs which you want to delete it.', 'buddyboss' ),
+				'type'              => 'array',
+				'required'          => true,
+				'items'             => array( 'type' => 'integer' ),
+				'validate_callback' => 'rest_validate_request_arg',
+			);
+		} elseif ( WP_REST_Server::EDITABLE === $method ) {
+			$args['fields'] = array(
+				'description' => __( 'Fields array with order of field set with field ID and value to reorder.', 'buddyboss' ),
+				'type'        => 'array',
+				'items'       => array( 'type' => 'object' ),
+				'required'    => true,
+			);
+		}
 
 		/**
 		 * Filters the method query arguments.
@@ -647,6 +974,44 @@ class BP_REST_XProfile_Repeater_Endpoint extends WP_REST_Controller {
 		}
 
 		bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
+	}
+
+	/**
+	 * Check the array is equal or not.
+	 *
+	 * @param array $a Array first.
+	 * @param array $b Array two.
+	 *
+	 * @return bool
+	 */
+	public function array_equal( $a, $b ) {
+
+		$a_final = $this->array_column_ext( $a, 'type' );
+		$b_final = $this->array_column_ext( $b, 'type' );
+
+		return (
+			is_array( $a )
+			&& is_array( $b )
+			&& count( $a ) === count( $b )
+			&& count( $a_final ) === count( $b_final )
+			&& $a_final === $b_final
+		);
+	}
+
+	/**
+	 * Array column for recursive Multidimensional array.
+	 *
+	 * @param array  $array Multidimensional Array.
+	 * @param string $columnkey Array key name to get.
+	 *
+	 * @return array
+	 */
+	public function array_column_ext( $array, $columnkey ) {
+		$result = array();
+		foreach ( $array as $k => $sub ) {
+			$result[ $k ] = array_column( $sub, $columnkey );
+		}
+		return $result;
 	}
 
 }

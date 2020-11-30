@@ -1071,6 +1071,7 @@ class BP_Document {
 
 		$documents = self::array_msort( $documents, array( $r['order_by'] => $direction ) );
 
+		$retval['total']          = ( ! empty( $documents ) ? count( $documents ) : 0 );
 		$retval['has_more_items'] = ! empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $documents ) > $r['per_page'];
 
 		if ( isset( $r['per_page'] ) && isset( $r['page'] ) && ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $retval['has_more_items'] ) {
@@ -1084,8 +1085,6 @@ class BP_Document {
 		} else {
 			$retval['documents'] = $documents;
 		}
-
-		$retval['total'] = count( $retval['documents'] );
 
 		return $retval;
 	}
@@ -1740,14 +1739,12 @@ class BP_Document {
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
 
-						// Deleting an activity.
+					// Deleting an activity.
 					} else {
-						if ( bp_activity_delete(
-							array(
+						if ( 'activity' !== $from && bp_activity_delete( array(
 								'id'      => $activity->id,
 								'user_id' => $activity->user_id,
-							)
-						) ) {
+							) ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
