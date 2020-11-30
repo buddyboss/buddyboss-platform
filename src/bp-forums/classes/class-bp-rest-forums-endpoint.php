@@ -343,7 +343,7 @@ class BP_REST_Forums_Endpoint extends WP_REST_Controller {
 			);
 		}
 
-		if ( true === $retval && isset( $forum->post_type ) ) {
+		if ( true === $retval && is_user_logged_in() && isset( $forum->post_type ) ) {
 			$post_type = get_post_type_object( $forum->post_type );
 
 			if ( ! current_user_can( $post_type->cap->read_post, $forum->ID ) ) {

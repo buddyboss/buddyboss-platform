@@ -1125,6 +1125,17 @@ a.layout-grid-view {
   overflow: auto;
 }
 
+.bp-nouveau-activity-form-placeholder-.modal-popup .edit-activity-content-wrap,
+.activity-update-form.modal-popup .edit-activity-content-wrap {
+  max-height: calc(100vh - 230px);
+  overflow: auto;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form #whats-new-toolbar,
+.activity-update-form.modal-popup #whats-new-form #whats-new-toolbar {
+  padding-top: 10px;
+}
+
 .bp-nouveau-activity-form-placeholder-.modal-popup #whats-new-form,
 .activity-update-form.modal-popup #whats-new-form {
   width: 700px;
@@ -1201,6 +1212,11 @@ a.layout-grid-view {
   animation: spin 2s infinite linear;
   position: absolute;
   top: 15px;
+}
+
+.bp-nouveau-activity-form-placeholder-.modal-popup .dropzone .dz-preview.dz-complete .dz-progress,
+.activity-update-form.modal-popup .dropzone .dz-preview.dz-complete .dz-progress {
+  display: none;
 }
 
 @media screen and (max-width: 646px) {
@@ -9947,6 +9963,11 @@ div.bbp-reply-header {
   padding: 0;
 }
 
+#bbpress-forums div.bbp-reply-content a.gif-play-button {
+  margin-right: -40px;
+  margin-top: -40px;
+}
+
 #bbpress-forums div.bbp-topic-content h1,
 #bbpress-forums div.bbp-reply-content h1,
 #bbpress-forums div.bbp-topic-content h2,
@@ -14698,6 +14719,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     margin-bottom: 15px;
     padding: 0;
   }
+  .search-media-list .media-album_thumb img {
+    width: 100%;
+    height: auto;
+    max-height: 220px;
+    object-fit: cover;
+  }
   .search-media-list .media-album_thumb,
   .search-media-list .media-album_details,
   .search-media-list .media-album_modified,
@@ -17336,6 +17363,20 @@ span.icons:before {
 #group-messages-container div#group-messages-new-submit {
   margin-right: auto;
   display: flex;
+}
+
+#group-messages-container div#group-messages-new-submit #send_group_message_button.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  /* stylelint-disable-line */
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+  vertical-align: middle;
 }
 
 #group-messages-container #whats-new-toolbar {
