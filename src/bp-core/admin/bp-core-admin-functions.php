@@ -1807,7 +1807,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
 				<tr>
 					<td colspan="2">
-						<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>'
+						<input class="group-type-checkboxes" type="checkbox" name="bp-group-type[]" value="<?php echo esc_attr( 'none' ); ?>"
 																													  <?php
 																														checked(
 																															in_array(
@@ -1830,7 +1830,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
 					<tr>
 						<td colspan="2">
-							<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>'
+							<input class="group-type-checkboxes" type="checkbox" name="bp-group-type[]" value="<?php echo esc_attr( $group_type_key ); ?>"
 																														  <?php
 																															checked(
 																																in_array(
@@ -1852,10 +1852,8 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').click(function () {
 						var checkValues = jQuery(this).val();
 						if ('none' === checkValues && jQuery(this).is(':checked')) {
-							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('checked', false);
-							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', true);
-							jQuery(this).attr('checked', true);
-							jQuery(this).attr('disabled', false);
+							jQuery('#bp-member-type-permissions .inside input.group-type-checkboxes[value!="none"]').attr('checked', false);
+							jQuery('#bp-member-type-permissions .inside input.group-type-checkboxes[value!="none"]').attr('disabled', true);
 						} else {
 							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', false);
 						}
@@ -1864,10 +1862,8 @@ function bp_member_type_permissions_metabox( $post ) {
 					jQuery("#bp-member-type-permissions .inside .group-type-checkboxes").each(function () {
 						var checkValues = jQuery(this).val();
 						if ('none' === checkValues && jQuery(this).is(':checked')) {
-							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('checked', false);
-							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', true);
-							jQuery(this).attr('checked', true);
-							jQuery(this).attr('disabled', false);
+							jQuery('#bp-member-type-permissions input.group-type-checkboxes[value!="none"]').attr('checked', false);
+							jQuery('#bp-member-type-permissions input.group-type-checkboxes[value!="none"]').attr('disabled', true);
 							return false;
 						} else {
 							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', false);
