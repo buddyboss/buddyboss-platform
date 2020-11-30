@@ -1030,8 +1030,8 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'acomment-edit' ) ) {
 
 				var comment_id = $( target ).closest( '.comment-item' ).attr( 'data-bp-activity-comment-id' );
+				var content_data = $( target ).closest( '.comment-item' ).data( 'bp-comment' );
 				var tool_box = $( target ).closest( '.comment-item' ).find( '.ac-reply-toolbar' );
-
 
 				$( '#ac-edit-form-' + comment_id ).addClass('popup-open').slideDown( 200 );
 
@@ -1268,6 +1268,9 @@ window.bp = window.bp || {};
 							}
 						}
 					);
+
+					//Setting Content Again for Emoji Support
+					$( '#ac-input-' + comment_id ).html( content_data.content );
 				}
 
 
