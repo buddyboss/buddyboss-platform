@@ -15896,6 +15896,14 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   cursor: pointer;
 }
 
+.location-album-list-wrap-main .no-folder-exists,
+.location-album-list-wrap-main .no-album-exists,
+.location-folder-list-wrap-main .no-folder-exists,
+.location-folder-list-wrap-main .no-album-exists {
+  margin: 20px 0 0 0;
+  display: block;
+}
+
 .location-album-list-wrap-main .ac_document_search_folder_list h4,
 .location-album-list-wrap-main .location-folder-list-wrap h4,
 .location-album-list-wrap-main .location-album-list-wrap h4,

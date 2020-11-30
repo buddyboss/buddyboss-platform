@@ -3819,6 +3819,12 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		cursor: pointer;
 	}
 
+	.no-folder-exists,
+	.no-album-exists {
+		margin: 20px 0 0 0;
+		display: block;
+	}
+
 	.ac_document_search_folder_list,
 	.location-folder-list-wrap,
 	.location-album-list-wrap {

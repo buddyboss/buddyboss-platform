@@ -1294,6 +1294,7 @@ window.bp = window.bp || {};
 			$('#bp-media-add-more').hide();
 			$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.upload);
 			$('#bp-media-uploader-modal-status-text').text('');
+			$('#bp-media-post-content').val('');
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
 
@@ -2730,9 +2731,9 @@ window.bp = window.bp || {};
 									$(document).find('.location-album-list-wrap h4 span.where-to-move-profile-or-group-media').html(response.data.first_span_text);
 									if ('' === response.data.html) {
 										$(document).find('.open-popup .location-album-list-wrap').hide();
-										$(document).find('.open-popup .location-album-list-wrap-main span.no-folder-exists').show();
+										$(document).find('.open-popup .location-album-list-wrap-main span.no-album-exists').show();
 									} else {
-										$(document).find('.open-popup .location-album-list-wrap-main span.no-folder-exists').hide();
+										$(document).find('.open-popup .location-album-list-wrap-main span.no-album-exists').hide();
 										$(document).find('.open-popup .location-album-list-wrap').show();
 									}
 
