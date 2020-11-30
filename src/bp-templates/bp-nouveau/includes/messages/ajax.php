@@ -1982,7 +1982,7 @@ function bp_nouveau_get_thread_messages( $thread_id, $post ) {
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
 				$content = '<p class="joined">' . wp_strip_all_tags( bp_get_the_thread_message_content() ) . '</p>';
 			} else {
-				`$content` = do_shortcode( bp_get_the_thread_message_content() );
+				$content = do_shortcode( bp_get_the_thread_message_content() );
 			}
 
 			$thread->messages[ $i ] = array(
