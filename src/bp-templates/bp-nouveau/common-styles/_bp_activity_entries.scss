@@ -1361,9 +1361,17 @@ span.dashicons.dashicons-admin-file:before {
 							}
 						}
 
-						&.move_file a:before {
-							content: "\e959";
-							font-size: 13px;
+						&.move_file {
+
+							&.move-disabled a {
+								pointer-events: none;
+								opacity: 0.7;
+							}
+
+							a:before {
+								content: "\e959";
+								font-size: 13px;
+							}
 						}
 
 						&.delete_file a:before {
