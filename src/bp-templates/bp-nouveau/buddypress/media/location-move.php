@@ -23,6 +23,6 @@
 			</div>
 		</div> <!-- .location-album-list-wrap -->
 		<input type="hidden" class="bb-album-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-album-selected-id" value="<?php echo bp_get_album_id() ? esc_attr( bp_get_album_id() ) : '0'; ?>" readonly/>
+		<input type="hidden" class="bb-album-selected-id" value="<?php echo bp_get_album_id() ? esc_attr( bp_get_album_id() ) : '0'; ?>" data-value="<?php echo bp_get_album_id() ? esc_attr( bp_get_album_id() ) : '0'; ?>" readonly/>
 	</div>
 </div>

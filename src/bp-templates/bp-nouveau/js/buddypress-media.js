@@ -2713,8 +2713,8 @@ window.bp = window.bp || {};
 
 				if ($('#bp-media-uploader').find('.bb-field-steps.bb-field-steps-2').length) {
 					currentTarget = '#bp-media-uploader.bp-media-photo-uploader';
-					if (Number($(currentTarget).find('.bb-album-selected-id').val()) !== 0) {
-						parentsOpen = $(currentTarget).find('.bb-album-selected-id').val();
+					if (Number($(currentTarget).find('.bb-album-selected-id').data('value')) !== 0) {
+						parentsOpen = $(currentTarget).find('.bb-album-selected-id').data('value');
 						$(currentTarget).find('#bb-document-privacy').prop('disabled', true);
 					} else {
 						parentsOpen = 0;
@@ -2950,8 +2950,8 @@ window.bp = window.bp || {};
 				if ($('#bp-media-uploader.bp-media-document-uploader').find('.bb-field-steps.bb-field-steps-2').length) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
 					var parentsOpen;
-					if (Number($(currentTarget).find('.bb-folder-selected-id').val()) !== 0) {
-						parentsOpen = $(currentTarget).find('.bb-folder-selected-id').val();
+					if (Number($(currentTarget).find('.bb-folder-selected-id').data('value')) !== 0) {
+						parentsOpen = $(currentTarget).find('.bb-folder-selected-id').data('value');
 						$(currentTarget).find('#bb-document-privacy').prop('disabled', true);
 					} else {
 						parentsOpen = 0;
