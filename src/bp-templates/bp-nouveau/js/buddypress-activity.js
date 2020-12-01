@@ -1037,15 +1037,14 @@ window.bp = window.bp || {};
 
 				var comment_edit_data = $( target ).closest( 'li' ).data( 'bp-comment' );
 
-
 				/**
 				 * Remove Previous Dropzone Instance
 				 */
 
-				var instance_id;
+				var instance_id, i;
 
 				if ( Dropzone.instances.length ){
-					for ( var i = 0; i < Dropzone.instances.length; i++ ){
+					for ( i = 0; i < Dropzone.instances.length; i++ ){
 						var instance = Dropzone.instances[ i ];
 						instance_id = instance.element.attributes.id;
 
@@ -1056,10 +1055,8 @@ window.bp = window.bp || {};
 							self.dropzone_obj = null;
 							self.dropzone_media = [];
 						}
-
 					}
 				}
-
 
 				/**
 				 * Check if has dropzone instance but doesn't
@@ -1087,10 +1084,8 @@ window.bp = window.bp || {};
 					tool_box.find( '.toolbar-button' ).removeClass( 'active' );
 					tool_box.find( '.ac-reply-media-button' ).addClass( 'active' );
 
-					//bp.Nouveau.Activity.postForm.displayEditActivityForm( comment_edit_data );
-
 					var media_file = false;
-					for ( var i = 0; i < comment_edit_data.media.length; i++ ) {
+					for ( i = 0; i < comment_edit_data.media.length; i++ ) {
 						media_file = false;
 
 						media_file = {
@@ -1117,9 +1112,6 @@ window.bp = window.bp || {};
 							}
 						};
 
-
-						//console.log( '#ac-reply-post-media-uploader-' + comment_id );
-
 						if ( ! self.dropzone_obj ) {
 							self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + comment_id, self.dropzone_options );
 						}
@@ -1131,11 +1123,9 @@ window.bp = window.bp || {};
 							self.dropzone_obj.emit( 'complete', media_file );
 							self.createThumbnailFromUrl( media_file );
 						}
-
 					}
 
 					self.prepareDropzoneForEditcomment();
-
 				}
 
 				/**
@@ -1153,10 +1143,8 @@ window.bp = window.bp || {};
 					tool_box.find( '.toolbar-button' ).removeClass( 'active' );
 					tool_box.find( '.ac-reply-document-button' ).addClass( 'active' );
 
-					//bp.Nouveau.Activity.postForm.displayEditActivityForm( comment_edit_data );
-
 					var document_file = false;
-					for ( var i = 0; i < comment_edit_data.document.length; i++ ) {
+					for ( i = 0; i < comment_edit_data.document.length; i++ ) {
 						document_file = false;
 
 						document_file = {
@@ -1187,21 +1175,15 @@ window.bp = window.bp || {};
 							}
 						};
 
-
-						//console.log( '#ac-reply-post-media-uploader-' + comment_id );
-
 						if ( ! self.dropzone_obj ) {
 							self.dropzone_obj = new Dropzone( '#ac-reply-post-media-uploader-' + comment_id, self.dropzone_options );
 						}
 
 						if ( self.dropzone_obj ) {
-
 							self.dropzone_obj.files.push( document_file );
 							self.dropzone_obj.emit( 'addedfile', document_file );
 							self.dropzone_obj.emit( 'complete', document_file );
-
 						}
-
 					}
 
 					self.dropzone_obj.on(
@@ -1215,37 +1197,27 @@ window.bp = window.bp || {};
 					);
 
 					self.prepareDropzoneForEditcomment();
-
 				}
-
-
 
 				//GIF
 				if ( ! _.isUndefined( comment_edit_data.gif ) && Object.keys( comment_edit_data.gif ).length ) {
-					// close and destroy existing media instance
-					//self.activityToolbar.toggleGifSelector( bpActivityEvent );
-					//self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', comment_edit_data.gif );
 
 					// Make tool box button disable.
-
 					tool_box.find( '.post-elements-buttons-item' ).addClass( 'disable no-click' );
 					tool_box.find( '.ac-reply-gif-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable no-click' );
 					tool_box.find( '.toolbar-button' ).removeClass( 'active' );
 					tool_box.find( '.ac-reply-gif-button' ).addClass( 'active' );
 					// END Toolbox Button
 
-					$gifAttachmentEl = $( '#ac-reply-post-gif-' + comment_id );
+					var $gifAttachmentEl = $( '#ac-reply-post-gif-' + comment_id );
 
-					var model                      = new bp.Models.ACReply();
+					model                      = new bp.Models.ACReply();
 					var activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
 					activityAttachedGifPreview.model.set( 'gif_data', comment_edit_data.gif );
 					$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
 
-					//self.model.set( 'gif_data', comment_edit_data.gif );
-
 					this.models[comment_id] = activityAttachedGifPreview.model;
 				}
-
 
 				/**
 				 * Process Emojis
@@ -1272,14 +1244,12 @@ window.bp = window.bp || {};
 					//Setting Content Again for Emoji Support
 					$( '#ac-input-' + comment_id ).html( content_data.content );
 				}
-
-
-
 			}
 
 			// Updating comments .
+			var comment_content, comment_data, comment_value, atwho_query;
+
 			if ( 'ac_edit_form_submit' === target.prop( 'name' ) ) {
-				var comment_content, comment_data;
 
 				form    = target.closest( 'form' );
 				item_id = activity_id;
@@ -1297,9 +1267,9 @@ window.bp = window.bp || {};
 				comment_content = $( form ).find( '.ac-input' ).first();
 
 				// replacing atwho query from the comment content to disable querying it in the requests.
-				var atwho_query = comment_content.find( 'span.atwho-query' );
-				for ( var i = 0; i < atwho_query.length; i++ ) {
-					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var ii = 0; ii < atwho_query.length; ii++ ) {
+					$( atwho_query[ii] ).replaceWith( atwho_query[ii].innerText );
 				}
 
 				// transform other emoji into emojionearea emoji.
@@ -1319,7 +1289,7 @@ window.bp = window.bp || {};
 
 				target.addClass( 'loading' ).prop( 'disabled', true );
 				comment_content.addClass( 'loading' ).prop( 'disabled', true );
-				var comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
+				comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
 
 				comment_data = {
 					action                        : 'edit_activity_comment',
@@ -1470,7 +1440,6 @@ window.bp = window.bp || {};
 
 			// Submitting comments and replies.
 			if ( 'ac_form_submit' === target.prop( 'name' ) ) {
-				var comment_content, comment_data;
 
 				form    = target.closest( 'form' );
 				item_id = activity_id;
@@ -1485,9 +1454,9 @@ window.bp = window.bp || {};
 				comment_content = $( form ).find( '.ac-input' ).first();
 
 				// replacing atwho query from the comment content to disable querying it in the requests.
-				var atwho_query = comment_content.find( 'span.atwho-query' );
-				for ( var i = 0; i < atwho_query.length; i++ ) {
-					$( atwho_query[i] ).replaceWith( atwho_query[i].innerText );
+				atwho_query = comment_content.find( 'span.atwho-query' );
+				for ( var iii = 0; iii < atwho_query.length; iii++ ) {
+					$( atwho_query[iii] ).replaceWith( atwho_query[iii].innerText );
 				}
 
 				// transform other emoji into emojionearea emoji.
@@ -1507,7 +1476,7 @@ window.bp = window.bp || {};
 
 				target.addClass( 'loading' ).prop( 'disabled', true );
 				comment_content.addClass( 'loading' ).prop( 'disabled', true );
-				var comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
+				comment_value = comment_content[0].innerHTML.replace( /<div>/gi,'\n' ).replace( /<\/div>/gi,'' );
 
 				comment_data = {
 					action                        : 'new_activity_comment',
