@@ -1865,6 +1865,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			margin-bottom: 15px;
 			clear: both;
+			text-transform: capitalize;
 
 			> i {
 				margin-right: 5px;
@@ -1980,6 +1981,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			margin-bottom: 15px;
 			clear: both;
+			text-transform: capitalize;
 
 			> i {
 				font-size: 15px;
@@ -3734,6 +3736,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			&.bp-media-open-create-popup-folder {
 				float: left;
 				margin-top: 7px;
+				text-transform: capitalize;
 			}
 
 		}

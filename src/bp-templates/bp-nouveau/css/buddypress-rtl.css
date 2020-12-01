@@ -14075,6 +14075,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   display: block;
   margin-bottom: 15px;
   clear: both;
+  text-transform: capitalize;
 }
 
 #buddypress .bp-media-document-uploader .document-uploader-footer .bp-document-open-create-popup-folder > i {
@@ -14161,6 +14162,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   display: block;
   margin-bottom: 15px;
   clear: both;
+  text-transform: capitalize;
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-footer .bp-media-open-create-popup-folder > i {
@@ -15798,6 +15800,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .bp-media-move-folder .bb-model-footer a.bp-media-open-create-popup-folder {
   float: right;
   margin-top: 7px;
+  text-transform: capitalize;
 }
 
 .bp-media-move-file .close-create-popup-album,
