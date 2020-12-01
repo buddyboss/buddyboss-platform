@@ -14115,6 +14115,18 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   }
 }
 
+@media screen and (max-width: 480px) {
+  #buddypress #bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content,
+  #buddypress #bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  #buddypress #bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next,
+  #buddypress #bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+    display: inline-block !important;
+    margin-top: 0;
+  }
+}
+
 #buddypress .bp-media-photo-uploader .media-uploader-wrapper {
   margin-bottom: 5px;
 }
@@ -16414,12 +16426,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   display: block;
 }
 
-body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content,
+#bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content,
+#bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
   margin-bottom: -55px;
 }
 
 body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
-body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next,
+#bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
+#bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next,
+#bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
+#bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
   display: inline-block !important;
   margin-top: 15px;
 }

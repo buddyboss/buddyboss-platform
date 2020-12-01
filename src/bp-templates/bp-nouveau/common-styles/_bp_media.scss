@@ -1924,6 +1924,23 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 }
 
+@media screen and (max-width: 480px) {
+
+	#buddypress #bp-media-single-folder,
+	#buddypress #bp-media-single-album {
+
+		.modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+			margin-bottom: 0;
+
+			#bp-media-document-next {
+				display: inline-block !important;
+				margin-top: 0;
+			}
+
+		}
+	}
+}
+
 #buddypress .bp-media-photo-uploader {
 
 	.media-uploader-wrapper {
@@ -4082,7 +4099,9 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 		&.controls-added #bp-dropzone-content {
 
-			body.groups & {
+			body.groups &,
+			#bp-media-single-folder &,
+			#bp-media-single-album & {
 				margin-bottom: -55px;
 
 				#bp-media-photo-next,
@@ -4094,6 +4113,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			}
 
 		}
+
 	}
 
 	#bp-media-create-child-folder-submit,
