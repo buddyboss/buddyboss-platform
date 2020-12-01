@@ -80,7 +80,6 @@ add_filter( 'bp_activity_get_embed_excerpt', 'make_clickable', 9 );
 add_filter( 'bp_acomment_name', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_action', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_content', 'stripslashes_deep', 5 );
-add_filter( 'bp_get_activity_content_body', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_parent_content', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_latest_update', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'stripslashes_deep', 5 );
