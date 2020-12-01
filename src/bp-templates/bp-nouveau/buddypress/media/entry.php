@@ -72,7 +72,7 @@ $is_comment_pic = bp_media_is_activity_comment_photo( $media_template->media );
 		   <img src="<?php echo esc_url( buddypress()->plugin_url ); ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
 		</a>
 		<?php
-		if ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) :
+		if ( ( ( bp_is_my_profile() || bp_current_user_can( 'bp_moderate' ) ) || ( bp_is_group() && ( ( bp_is_group_media() && $can_manage ) || ( bp_is_group_albums() && $can_manage ) ) ) ) && !bp_is_media_directory() ) :
 			?>
 			<div class="bb-media-check-wrap">
 				<input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
