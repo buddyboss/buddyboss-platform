@@ -300,6 +300,11 @@
 		max-height: 90vh;
 		overflow: auto;
 	}
+
+	&#boss-media-create-album-popup .bb-model-header {
+		margin-bottom: 20px;
+	}
+
 }
 
 .bbm-model-wrap {
@@ -1832,10 +1837,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		display: none;
 	}
 
-	.location-folder-list-wrap {
-		margin-top: 25px;
-	}
-
 	#bp-media-document-next {
 		text-align: center;
 
@@ -1905,6 +1906,20 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		}
 
+		body.groups & {
+
+			.modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+				margin-bottom: 0;
+
+				#bp-media-document-next {
+					display: inline-block !important;
+					margin-top: 0;
+				}
+
+			}
+
+		}
+
 	}
 
 }
@@ -1918,10 +1933,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	#bp-media-prev,
 	#bp-media-photo-next {
 		display: none;
-	}
-
-	.location-album-list-wrap {
-		margin-top: 25px;
 	}
 
 	#bp-media-photo-next {
@@ -1990,6 +2001,20 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				text-align: center;
 				margin: 10px 0 0 0;
 				width: 100%;
+			}
+
+		}
+
+		body.groups & {
+
+			.modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+				margin-bottom: 0;
+
+				#bp-media-photo-next {
+					display: inline-block !important;
+					margin-top: 0;
+				}
+
 			}
 
 		}
@@ -3830,7 +3855,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 	.location-album-list-wrap {
 
 		h4 {
-			margin: 0 !important;
+			margin: 15px 0 0 0 !important;
 			font-size: 17px;
 			font-weight: 500;
 		}
@@ -4054,6 +4079,21 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	&.bb-field-steps-1 {
 		display: block;
+
+		&.controls-added #bp-dropzone-content {
+
+			body.groups & {
+				margin-bottom: -55px;
+
+				#bp-media-photo-next,
+				#bp-media-document-next {
+					display: inline-block !important;
+					margin-top: 15px;
+				}
+
+			}
+
+		}
 	}
 
 	#bp-media-create-child-folder-submit,

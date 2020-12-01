@@ -1307,6 +1307,7 @@ window.bp = window.bp || {};
 			if (currentPopup.find('.bb-field-steps').length) {
 				currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps-2').hide();
 				currentPopup.find('.bb-field-steps-1 #bp-media-photo-next, .bb-field-steps-1 #bp-media-document-next ').hide();
+				currentPopup.find('.bb-field-steps-1').removeClass('controls-added');
 				currentPopup.find('#bp-media-document-prev, #bp-media-prev, #bp-media-document-submit, #bp-media-submit, .bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, .create-popup-folder-wrap, .create-popup-album-wrap').hide();
 			}
 
@@ -2888,6 +2889,7 @@ window.bp = window.bp || {};
 						}
 
 						$('.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit').show();
+						$('.bb-field-steps-1').addClass('controls-added');
 						$('#bp-media-add-more').show();
 						$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
 						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
@@ -2913,6 +2915,7 @@ window.bp = window.bp || {};
 						if (!self.dropzone_obj.getAcceptedFiles().length) {
 							$('#bp-media-uploader-modal-status-text').text('');
 							$('#bp-media-add-more, #bp-media-photo-next').hide();
+							$('.bb-field-steps-1').removeClass('controls-added');
 							$('#bp-media-submit').hide();
 						} else {
 							$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
@@ -3143,6 +3146,7 @@ window.bp = window.bp || {};
 						}
 
 						$('.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit').show();
+						$('.bb-field-steps-1').addClass('controls-added');
 						$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
 						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
 					}

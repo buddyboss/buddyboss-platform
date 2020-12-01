@@ -12588,6 +12588,10 @@ body.login .login-popup .mfp-close:hover {
   overflow: auto;
 }
 
+.modal-container#boss-media-create-album-popup .bb-model-header {
+  margin-bottom: 20px;
+}
+
 .bbm-model-wrap input,
 .bbm-model-wrap textarea {
   width: 100%;
@@ -14046,10 +14050,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   display: none;
 }
 
-#buddypress .bp-media-document-uploader .location-folder-list-wrap {
-  margin-top: 25px;
-}
-
 #buddypress .bp-media-document-uploader #bp-media-document-next {
   text-align: center;
 }
@@ -14106,6 +14106,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     margin: 10px 0 0 0;
     width: 100%;
   }
+  body.groups #buddypress .bp-media-document-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  body.groups #buddypress .bp-media-document-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+    display: inline-block !important;
+    margin-top: 0;
+  }
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-wrapper {
@@ -14115,10 +14122,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #buddypress .bp-media-photo-uploader #bp-media-prev,
 #buddypress .bp-media-photo-uploader #bp-media-photo-next {
   display: none;
-}
-
-#buddypress .bp-media-photo-uploader .location-album-list-wrap {
-  margin-top: 25px;
 }
 
 #buddypress .bp-media-photo-uploader #bp-media-photo-next {
@@ -14176,6 +14179,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     text-align: center;
     margin: 10px 0 0 0;
     width: 100%;
+  }
+  body.groups #buddypress .bp-media-photo-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  body.groups #buddypress .bp-media-photo-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next {
+    display: inline-block !important;
+    margin-top: 0;
   }
 }
 
@@ -15910,7 +15920,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .location-folder-list-wrap-main .ac_document_search_folder_list h4,
 .location-folder-list-wrap-main .location-folder-list-wrap h4,
 .location-folder-list-wrap-main .location-album-list-wrap h4 {
-  margin: 0 !important;
+  margin: 15px 0 0 0 !important;
   font-size: 17px;
   font-weight: 500;
 }
@@ -16402,6 +16412,16 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .modal-container .bb-field-steps.bb-field-steps-1 {
   display: block;
+}
+
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+  margin-bottom: -55px;
+}
+
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+  display: inline-block !important;
+  margin-top: 15px;
 }
 
 .modal-container .bb-field-steps #bp-media-create-child-folder-submit,

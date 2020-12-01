@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-30 09:31:39+00:00\n"
+"POT-Creation-Date: 2020-12-01 08:16:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21926,7 +21926,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:17
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:31
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:49
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:50
 msgid "Create new folder"
 msgstr ""
 
@@ -22057,12 +22057,12 @@ msgstr ""
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:36
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:35
 #: bp-templates/bp-nouveau/buddypress/document/location-move.php:24
 msgid "Select Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:67
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:68
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:76
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:59
@@ -22070,7 +22070,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:68
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:69
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:113
 msgid "Back"
 msgstr ""
