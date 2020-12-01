@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-11-25 09:10:16+00:00\n"
+"POT-Creation-Date: 2020-12-01 12:54:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -682,7 +682,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-functions.php:1264
 #: bp-core/admin/bp-core-admin-functions.php:676
-#: bp-core/admin/bp-core-admin-functions.php:2341
+#: bp-core/admin/bp-core-admin-functions.php:2337
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:222
 #: bp-core/admin/bp-core-admin-tools.php:863
@@ -2672,21 +2672,21 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1819
-#: bp-core/admin/bp-core-admin-functions.php:2029
+#: bp-core/admin/bp-core-admin-functions.php:2025
 msgid "(None)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1893
+#: bp-core/admin/bp-core-admin-functions.php:1889
 msgid "Group Type Membership Approval"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1900
+#: bp-core/admin/bp-core-admin-functions.php:1896
 msgid ""
 "Selected group types will automatically approve all membership requests "
 "from users of this profile type:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1940
+#: bp-core/admin/bp-core-admin-functions.php:1936
 #: bp-core/bp-core-functions.php:2626 bp-invites/bp-invites-functions.php:59
 #: bp-invites/classes/class-bp-invites-component.php:216
 #: bp-invites/classes/class-bp-invites-component.php:283
@@ -2694,31 +2694,31 @@ msgstr ""
 msgid "Email Invites"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1947
+#: bp-core/admin/bp-core-admin-functions.php:1943
 msgid ""
 "Allow members to select the profile type that the invited recipient will be "
 "automatically assigned to on registration. If checked, select which of the "
 "below profile types can be assigned to the recipient:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1991
+#: bp-core/admin/bp-core-admin-functions.php:1987
 msgid ""
 "To display all users with this profile type on a dedicated page, add the "
 "below shortcode to any WordPress page."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1993
+#: bp-core/admin/bp-core-admin-functions.php:1989
 #: bp-groups/bp-groups-admin.php:2249 bp-members/bp-members-functions.php:3799
 msgid "Copy to clipboard"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2021
+#: bp-core/admin/bp-core-admin-functions.php:2017
 msgid ""
 "Users of this profile type will be auto-assigned to the following WordPress "
 "roles (includes existing users):"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2172
+#: bp-core/admin/bp-core-admin-functions.php:2168
 msgid ""
 "As your profile is currently assigned to this profile type, you cannot "
 "change its associated WordPress role. Changing this setting would remove "
@@ -2728,36 +2728,36 @@ msgid ""
 "WordPress role."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2256
-#: bp-core/admin/bp-core-admin-functions.php:2258
+#: bp-core/admin/bp-core-admin-functions.php:2252
+#: bp-core/admin/bp-core-admin-functions.php:2254
 msgid "Profile type updated."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2260
+#: bp-core/admin/bp-core-admin-functions.php:2256
 msgid "Profile type published. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2262
+#: bp-core/admin/bp-core-admin-functions.php:2258
 msgid "Profile type saved."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2316
-#: bp-core/admin/bp-core-admin-functions.php:2317
-#: bp-core/admin/bp-core-admin-functions.php:2871
-#: bp-core/admin/bp-core-admin-functions.php:2888
-#: bp-core/admin/bp-core-admin-functions.php:2889
+#: bp-core/admin/bp-core-admin-functions.php:2312
+#: bp-core/admin/bp-core-admin-functions.php:2313
+#: bp-core/admin/bp-core-admin-functions.php:2867
+#: bp-core/admin/bp-core-admin-functions.php:2884
+#: bp-core/admin/bp-core-admin-functions.php:2885
 #: bp-core/admin/bp-core-admin-tools.php:232
 msgid "Repair Community"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2353
-#: bp-core/admin/bp-core-admin-functions.php:2855
-#: bp-core/admin/bp-core-admin-functions.php:2897
-#: bp-core/admin/bp-core-admin-functions.php:2898
+#: bp-core/admin/bp-core-admin-functions.php:2349
+#: bp-core/admin/bp-core-admin-functions.php:2851
+#: bp-core/admin/bp-core-admin-functions.php:2893
+#: bp-core/admin/bp-core-admin-functions.php:2894
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2357
+#: bp-core/admin/bp-core-admin-functions.php:2353
 msgid ""
 "Import your existing <a href=\"%s\">profile types</a> (or \"member types\" "
 "in BuddyPress). You may have created these types <strong>manually via "
@@ -2766,25 +2766,25 @@ msgid ""
 "Then you can remove the old code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2367
+#: bp-core/admin/bp-core-admin-functions.php:2363
 #: bp-media/bp-media-filters.php:1327
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2397
+#: bp-core/admin/bp-core-admin-functions.php:2393
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2429
+#: bp-core/admin/bp-core-admin-functions.php:2425
 msgid "Successfully Imported"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2521
+#: bp-core/admin/bp-core-admin-functions.php:2517
 msgid "Added successfully"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2573
-#: bp-core/admin/bp-core-admin-functions.php:2744
+#: bp-core/admin/bp-core-admin-functions.php:2569
+#: bp-core/admin/bp-core-admin-functions.php:2740
 #: bp-core/bp-core-functions.php:3189 bp-core/classes/class-bp-admin.php:645
 #: bp-core/classes/class-bp-admin.php:646
 #: bp-core/classes/class-bp-admin.php:656
@@ -2794,14 +2794,14 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2652
+#: bp-core/admin/bp-core-admin-functions.php:2648
 #: bp-groups/bp-groups-admin.php:598
 #: bp-groups/classes/class-bp-rest-groups-details-endpoint.php:521
 #: bp-templates/bp-nouveau/includes/groups/functions.php:574
 msgid "All Groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2666
+#: bp-core/admin/bp-core-admin-functions.php:2662
 #: bp-core/admin/settings/bp-admin-setting-groups.php:57
 #: bp-core/admin/settings/bp-admin-setting-groups.php:60
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
@@ -2811,37 +2811,37 @@ msgstr ""
 msgid "Group Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2676
+#: bp-core/admin/bp-core-admin-functions.php:2672
 #: bp-templates/bp-nouveau/includes/groups/functions.php:759
 msgid "Group Navigation"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2750
+#: bp-core/admin/bp-core-admin-functions.php:2746
 msgid "Customize Layout"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2832
+#: bp-core/admin/bp-core-admin-functions.php:2828
 #: bp-core/admin/bp-core-admin-tools.php:44
 msgid "Default Data"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2907 bp-forums/admin/admin.php:207
+#: bp-core/admin/bp-core-admin-functions.php:2903 bp-forums/admin/admin.php:207
 #: bp-forums/admin/functions.php:239 bp-forums/admin/functions.php:271
 #: bp-forums/admin/tools.php:40
 msgid "Repair Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2908 bp-forums/admin/admin.php:208
+#: bp-core/admin/bp-core-admin-functions.php:2904 bp-forums/admin/admin.php:208
 msgid "Forum Repair"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2916 bp-forums/admin/admin.php:218
+#: bp-core/admin/bp-core-admin-functions.php:2912 bp-forums/admin/admin.php:218
 #: bp-forums/admin/converter.php:86 bp-forums/admin/functions.php:243
 #: bp-forums/admin/functions.php:293
 msgid "Import Forums"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2917 bp-forums/admin/admin.php:219
+#: bp-core/admin/bp-core-admin-functions.php:2913 bp-forums/admin/admin.php:219
 msgid "Forum Import"
 msgstr ""
 
