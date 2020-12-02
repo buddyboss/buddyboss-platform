@@ -230,7 +230,7 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 */
 	public function column_category( $item = array() ) {
 		$term_data = get_term( $item['category_id'] );
-		$term_name = ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) ) ? $term_data->name : '';
+		$term_name = ( ! is_wp_error( $term_data ) && ! empty( $term_data->name ) ) ? $term_data->name : $item['content'];
 		echo esc_html( $term_name );
 	}
 

@@ -60,6 +60,10 @@ function bp_moderation_content_report() {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
 	}
 
+	if( 'other' === $category && empty( $item_note ) ){
+		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Please specify reason to report this content.', 'buddyboss' ) );
+	}
+
 	if ( bp_moderation_report_exist( $item_id, $item_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
 	}
