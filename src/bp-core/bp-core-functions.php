@@ -5235,3 +5235,17 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 	);
 
 }
+
+function bp_core_is_empty_directory( $dir ) {
+	$handle = opendir( $dir );
+	while( false !== ( $entry = readdir( $handle ) ) ) {
+		if( $entry != "." && $entry != ".." ) {
+			closedir( $handle );
+
+			return false;
+		}
+	}
+	closedir( $handle );
+
+	return true;
+}

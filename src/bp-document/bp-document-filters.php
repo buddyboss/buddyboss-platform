@@ -1657,18 +1657,23 @@ function bp_document_get_edit_activity_data( $activity ) {
 			foreach( $document_ids as $document_id ) {
 				$document = new BP_Document( $document_id );
 
+				$file = get_attached_file( ( $document->attachment_id ) );
+				$size = 0;
+				if ( $file && file_exists( $file ) ) {
+					$size = filesize( $file );
+                }
 				$activity['document'][] = array(
-						'id'            => $document_id,
-						'doc_id'        => $document->attachment_id,
-						'name'          => $document->title,
-						'group_id'      => $document->group_id,
-						'folder_id'      => $document->folder_id,
-						'activity_id'   => $document->activity_id,
-						'type'          => 'document',
-						'url'           => wp_get_attachment_url( $document->attachment_id ),
-						'size'           => filesize( get_attached_file( ( $document->attachment_id ) ) ),
-						'saved'         => true,
-						'menu_order'    => $document->menu_order,
+					'id'          => $document_id,
+					'doc_id'      => $document->attachment_id,
+					'name'        => $document->title,
+					'group_id'    => $document->group_id,
+					'folder_id'   => $document->folder_id,
+					'activity_id' => $document->activity_id,
+					'type'        => 'document',
+					'url'         => wp_get_attachment_url( $document->attachment_id ),
+					'size'        => $size,
+					'saved'       => true,
+					'menu_order'  => $document->menu_order,
 				);
 			}
 		}

@@ -1074,12 +1074,86 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 		if( ! $preview_attachment_id ) {
 			$preview_attachment_id = $get_preview;
 		}
-		$document_id     = 'forbidden_' . $document_id;
-		$attachment_id   = 'forbidden_' . $preview_attachment_id;
-		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
-			$attachment_url = home_url( '/' ) . 'bb-platform-document-preview?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+//		$document_id     = 'forbidden_' . $document_id;
+//		$attachment_id   = 'forbidden_' . $preview_attachment_id;
+//		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
+//		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+//			$attachment_url = home_url( '/' ) . 'bb-platform-document-preview?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+//		}
+//		$document_id     = 'forbidden_' . $document_id;
+//		$attachment_id   = 'forbidden_' . $preview_attachment_id;
+//		$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
+//		if( ! empty( $preview_attachment_id ) && wp_attachment_is_image( $preview_attachment_id ) && file_exists( $output_file_src ) ) {
+//			$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id );
+//		// WP OFFLOAD MEDIA Support.
+//		} elseif( ! empty( $preview_attachment_id ) && class_exists( 'WP_Offload_Media_Autoloader' ) && class_exists( 'Amazon_S3_And_CloudFront' ) ) {
+//			$remove_local_files_setting = bp_get_option( Amazon_S3_And_CloudFront::SETTINGS_KEY );
+//			$is_image                   = wp_get_attachment_url( $preview_attachment_id );
+//			if( isset( $remove_local_files_setting ) && isset( $remove_local_files_setting['remove-local-file'] ) && '1' === $remove_local_files_setting['remove-local-file'] && $is_image && @getimagesize($is_image) ) {
+//				$attachment_url = trailingslashit( buddypress()->plugin_url ) . 'bp-templates/bp-nouveau/includes/document/preview.php?id=' . base64_encode( $attachment_id ) . '&id1=' . base64_encode( $document_id ) . '&id2=' . base64_encode( 'aws' );
+//			}
+//		}
+
+		if ( ! defined( 'BP_DOCUMENT_DIR_SYMLINK' ) ) {
+			define( 'BP_DOCUMENT_DIR_SYMLINK', 'APMMFXGh0p' );
 		}
+
+		if ( ! defined( 'BP_DOCUMENT_CHILD_DIR_SYMLINK' ) ) {
+			define( 'BP_DOCUMENT_CHILD_DIR_SYMLINK', 'uLFgQH2hF5' );
+		}
+
+		$upload_dir = wp_upload_dir();
+		$upload_dir = $upload_dir['basedir'];
+
+		$parent_directory_name = $upload_dir . '/bp-platform-' . md5( BP_DOCUMENT_DIR_SYMLINK . BP_DOCUMENT_CHILD_DIR_SYMLINK . 'preview' );
+		if ( ! is_dir( $parent_directory_name ) ) {
+			wp_mkdir_p( $parent_directory_name );
+			chmod( $parent_directory_name, 0777 );
+		}
+
+		$inner_directory_name  = $parent_directory_name . '/' . md5( BP_DOCUMENT_DIR_SYMLINK . 'bb_documents' );
+		if ( ! is_dir( $inner_directory_name ) ) {
+			wp_mkdir_p( $inner_directory_name );
+			chmod( $inner_directory_name, 0777 );
+		}
+
+		$timestamp_folder_create = $inner_directory_name . '/WARNING_BB_DOCUMENTS_DO_NOT_DELETE';
+		if ( ! is_dir( $timestamp_folder_create ) ) {
+			wp_mkdir_p( $timestamp_folder_create );
+			chmod( $timestamp_folder_create, 0777 );
+		}
+
+		if( bp_core_is_empty_directory( $timestamp_folder_create ) ) {
+			$timestamp           = current_time( 'timestamp' );
+			$timestamp_file_name = $timestamp . '.txt';
+			$timestamp_dir       = $timestamp_folder_create . '/' . $timestamp_file_name;
+			$file_handle         = fopen( $timestamp_dir, 'a+' );
+			fwrite( $file_handle, $timestamp );
+			fclose( $file_handle );
+		} else {
+			$files      = scandir( $timestamp_folder_create );
+			$timestamp  = $timestamp_folder_create . '/' . $files[2];
+			$path_parts = pathinfo( $timestamp );
+			$timestamp  = $path_parts['filename'];
+		}
+
+		$symlink_timestamp_folder = $inner_directory_name .'/' . $timestamp;
+		if ( ! is_dir( $symlink_timestamp_folder ) ) {
+			wp_mkdir_p( $symlink_timestamp_folder );
+			chmod( $symlink_timestamp_folder, 0777 );
+		}
+
+		$attachment_url = $inner_directory_name . '/' . $timestamp . '/' . md5( BP_DOCUMENT_DIR_SYMLINK . $document_id ) . '_full';
+		$upload_directory = wp_get_upload_dir();
+		if ( file_exists( $attachment_url ) ) {
+			$attachment_url = $attachment_url;
+		} else {
+			$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
+			$attachment_url = @symlink( $output_file_src, $attachment_url );
+		}
+
+		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_url );
+
 	}
 
 	return apply_filters( 'bp_document_get_preview_image_url', $attachment_url, $document_id, $extension );
