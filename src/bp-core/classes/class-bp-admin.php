@@ -852,7 +852,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				return;
 			}
 
-			include $this->admin_dir . 'templates/check-document-mime-type.php';
+			include $this->admin_dir . 'templates/check-video-mime-type.php';
 		}
 
 		/**
