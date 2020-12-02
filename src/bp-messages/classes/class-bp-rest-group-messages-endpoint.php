@@ -148,22 +148,21 @@ class BP_REST_Group_Messages_Endpoint extends WP_REST_Controller {
 				$_POST['message_meta_users_list'] = $message_users_ids;
 
 				$group_thread                 = groups_get_groupmeta( (int) $group, 'group_message_thread' );
+				$is_deleted                   = false;
 				$group_thread_id              = '';
 				$_POST['message_thread_type'] = '';
 
 				if ( '' !== $group_thread ) {
-					$total_threads = BP_Messages_Thread::get(
-						array(
-							'include_threads' => array( $group_thread ),
-							'per_page'        => 1,
-							'count_total'     => true,
-							'is_deleted'      => 1,
-						)
-					);
+					// phpcs:ignore
+					$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
+					foreach ( $total_threads as $thread ) {
+						if ( 1 === (int) $thread->is_deleted ) {
+							$is_deleted = true;
+							break;
+						}
+					}
 
-					$is_deleted = ! empty( $total_threads['total'] );
-
-					if ( $is_deleted || empty( $total_threads['recipients'] ) ) {
+					if ( $is_deleted || empty( $total_threads ) ) {
 						// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type".
 						$_POST['message_thread_type'] = 'new';
 					}
