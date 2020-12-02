@@ -61,24 +61,24 @@
                             <li class="hide_thread"><a data-bp-action="hide_thread"
                                                        href="#"><?php esc_html_e( 'Hide conversation', 'buddyboss' ); ?></a>
                             </li>
+							<# if ( true !== data.is_reported ) { #>
+							<li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}" href="#content-report"
+														 class="report-content" data-bp-content-id="{{data.id}}"
+														 data-bp-content-type="<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ); ?>"
+														 data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Report', 'buddyboss' ); ?></a>
+							</li>
+							<# } else{ #>
+							<li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
+														 href="javascript:void(0);"
+														 class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
+							</li>
+							<# } #>
                             <li class="delete_messages"><a data-bp-action="delete"
                                                            href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
                             </li>
                             <li class="delete_thread"><a data-bp-action="delete_thread"
                                                          href="#"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></a>
                             </li>
-                            <# if ( true !== data.is_reported ) { #>
-                            <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}" href="#content-report"
-                                                         class="report-content" data-bp-content-id="{{data.id}}"
-                                                         data-bp-content-type="<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ); ?>"
-                                                         data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Report', 'buddyboss' ); ?></a>
-                            </li>
-                            <# } else{ #>
-                            <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
-                                                         href="javascript:void(0);"
-                                                         class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
-                            </li>
-                            <# } #>
                         </ul>
                     </div>
                 </div>
@@ -101,6 +101,18 @@
                             <li class="hide_thread"><a data-bp-action="hide_thread"
                                                        href="#"><?php esc_html_e( 'Hide conversation', 'buddyboss' ); ?></a>
                             </li>
+							<# if ( true !== data.is_reported ) { #>
+							<li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}" href="#content-report"
+														 class="report-content" data-bp-content-id="{{data.id}}"
+														 data-bp-content-type="<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ); ?>"
+														 data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Report', 'buddyboss' ); ?></a>
+							</li>
+							<# } else{ #>
+							<li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
+														 href="javascript:void(0);"
+														 class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
+							</li>
+							<# } #>
                             <li class="delete_messages" data-bp-action="delete"><a data-bp-action="delete"
                                                                                    href="#"><?php esc_html_e( 'Delete your messages', 'buddyboss' ); ?></a>
                             </li>
@@ -113,18 +125,6 @@
 								<?php
 							}
 							?>
-                            <# if ( true !== data.is_reported ) { #>
-                            <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}" href="#content-report"
-                                                         class="report-content" data-bp-content-id="{{data.id}}"
-                                                         data-bp-content-type="<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ); ?>"
-                                                         data-bp-nonce="<?php echo esc_attr( wp_create_nonce( 'bp-moderation-content' ) ); ?>"><?php esc_html_e( 'Report', 'buddyboss' ); ?></a>
-                            </li>
-                            <# } else{ #>
-                            <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
-                                                         href="javascript:void(0);"
-                                                         class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
-                            </li>
-                            <# } #>
                         </ul>
                     </div>
                 </div>

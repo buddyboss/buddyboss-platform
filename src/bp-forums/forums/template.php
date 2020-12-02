@@ -1049,7 +1049,7 @@ function bbp_forum_report_link( $args = array() ) {
  */
 function bbp_get_forum_report_link( $args = array() ) {
 
-	if ( ! bp_is_active( 'moderation' ) ) {
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
 		// No link
 		$retval = false;
 	}else{

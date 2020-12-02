@@ -3242,6 +3242,10 @@ function bbp_get_topic_spam_link( $args = '' ) {
  */
 function bbp_get_topic_report_link( $args = '' ) {
 
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
 	$report_btn_arr = bp_moderation_get_report_button(
 		array(
 			'id'                => 'topic_report',
