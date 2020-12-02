@@ -360,9 +360,18 @@
 				content: "\e937";
 			}
 
-			li.report_thread a:before {
-				content: "\e8ea";
-				vertical-align: middle;
+			li.report_thread a {
+
+				&.reported-content {
+					pointer-events: none;
+					opacity: 0.9;
+				}
+
+				&:before {
+					content: "\e8ea";
+					vertical-align: middle;
+				}
+
 			}
 
 		}

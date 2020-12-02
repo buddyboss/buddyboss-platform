@@ -342,6 +342,11 @@
 				line-height: 1;
 			}
 
+			.reported-content {
+				opacity: 0.8 !important;
+				pointer-events: none;
+			}
+
 			.spam-activity:before {
 				content: "\e8c9";
 			}

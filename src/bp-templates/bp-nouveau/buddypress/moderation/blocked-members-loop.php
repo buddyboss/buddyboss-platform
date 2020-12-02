@@ -20,11 +20,7 @@ if ( empty( $_POST['page'] ) || 1 === (int) filter_input( INPUT_POST, 'page', FI
 		esc_html_e( 'Blocked', 'buddyboss' );
 		?>
     </th>
-    <th>
-		<?php
-		esc_html_e( 'Actions', 'buddyboss' );
-		?>
-    </th>
+    <th></th>
     </thead>
     <tbody>
 <?php
@@ -42,8 +38,8 @@ endif;
 if ( bp_moderation_has_more_items() ) :
 	?>
     <div class="pager">
-        <div class="md-more-container load-more">
-            <a class="button outline full" href="<?php bp_moderation_load_more_link(); ?>">
+        <div class="md-more-container load-more text-center">
+            <a class="button outline" href="<?php bp_moderation_load_more_link(); ?>">
 				<?php
 				esc_html_e( 'Load More', 'buddyboss' );
 				?>

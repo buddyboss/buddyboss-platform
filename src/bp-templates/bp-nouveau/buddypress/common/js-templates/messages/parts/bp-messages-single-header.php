@@ -76,7 +76,7 @@
                             <# } else{ #>
                             <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
                                                          href="javascript:void(0);"
-                                                         class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
+                                                         class="reported-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
                             </li>
                             <# } #>
                         </ul>
@@ -122,7 +122,7 @@
                             <# } else{ #>
                             <li class="report_thread"><a id="report-content-<?php echo esc_attr( BP_Moderation_Messages::$moderation_type ) ?>-{{data.id}}"
                                                          href="javascript:void(0);"
-                                                         class="report-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
+                                                         class="reported-content"><?php esc_html_e( 'Reported', 'buddyboss' ); ?></a>
                             </li>
                             <# } #>
                         </ul>

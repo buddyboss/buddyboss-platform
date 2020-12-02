@@ -2327,6 +2327,11 @@ input.search-query-input {
   line-height: 1;
 }
 
+.activity-list .activity-item .bp-generic-meta.action .reported-content {
+  opacity: 0.8 !important;
+  pointer-events: none;
+}
+
 .activity-list .activity-item .bp-generic-meta.action .spam-activity:before {
   content: "\e8c9";
 }
@@ -6063,6 +6068,11 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.delete_thread a:before {
   content: "\e937";
+}
+
+.bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a.reported-content {
+  pointer-events: none;
+  opacity: 0.9;
 }
 
 .bp-messages-content .single-message-thread-header .message_actions .message_action__list li.report_thread a:before {
@@ -15902,6 +15912,24 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .moderation-popup .modal-container .bb-model-footer .button {
   width: auto;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button.report-submit.loading {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.moderation-popup .modal-container .bb-model-footer .button.report-submit.loading:after {
+  font: normal normal 400 14px/1 bb-icons;
+  speak: none;
+  display: inline-block;
+  margin: 0 6px 0 0;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\E838";
+  animation: spin 2s infinite linear;
 }
 
 .moderation-popup .modal-container .bb-model-footer .button.bb-cancel-report-content {

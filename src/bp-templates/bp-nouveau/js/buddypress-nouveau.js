@@ -1805,6 +1805,9 @@ window.bp = window.bp || {};
 			});
 
 			$('#bb-report-content').submit(function () {
+
+				$('#bb-report-content').find('.report-submit').addClass('loading');
+
 				$('.bp-report-form-err').empty();
 
 				var data = {
@@ -1819,14 +1822,19 @@ window.bp = window.bp || {};
 					if (result.success) {
 						_this.resetReportPopup();
 						_this.changeReportButtonStatus(result.button);
+						$('#bb-report-content').find('.report-submit').removeClass('loading');
 						$('.mfp-close').trigger('click');
 					} else {
+						$('#bb-report-content').find('.report-submit').removeClass('loading');
 						_this.handleReportError(result.message.errors);
 					}
 				});
 			});
 
 			$('#bb-block-member').submit(function () {
+
+				$('#bb-block-member').find('.report-submit').addClass('loading');
+
 				$('.bp-report-form-err').empty();
 
 				var data = {
@@ -1841,8 +1849,10 @@ window.bp = window.bp || {};
 					if (result.success) {
 						_this.resetReportPopup();
 						_this.changeReportButtonStatus(result.button);
+						$('#bb-block-member').find('.report-submit').removeClass('loading');
 						$('.mfp-close').trigger('click');
 					} else {
+						$('#bb-block-member').find('.report-submit').removeClass('loading');
 						_this.handleReportError(result.message.errors);
 					}
 				});

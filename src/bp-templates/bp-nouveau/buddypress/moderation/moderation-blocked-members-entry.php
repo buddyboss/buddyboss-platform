@@ -29,7 +29,7 @@ $hide_sitewide = ( 1 === (int) bp_get_moderation_hide_site_wide() ) ? true : fal
 		echo esc_html( bbp_get_time_since( bp_get_moderation_last_updated() ) );
 		?>
     </td>
-    <td class="moderation-item-actions" data-title="<?php esc_html_e( 'Actions', 'buddyboss' ); ?>">
+    <td class="moderation-item-actions">
 		<?php
 		$btn_cls = ( true === $hide_sitewide ) ? 'button disabled' : 'button bp-unblock-user';
 		?>
