@@ -2944,20 +2944,15 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a i {
-  font-size: 19px;
-  color: #9ca8b4;
-  background-color: #fff;
-  padding: 7px;
-  border: 1px solid #e7e9ec;
+  font-size: 14px;
+  padding: 4px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a:hover,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover {
-  color: #461212;
-}
-
-#media-stream.media .bb-photo-thumb .media-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover i {
   color: #461212;
 }
 
@@ -2975,7 +2970,12 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_more i,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a.media-action_more i {
-  border-radius: 3px;
+  border-radius: 50%;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_more i:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a.media-action_more i:before {
+  content: "\e81a";
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_download i,
@@ -2987,7 +2987,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list {
   position: absolute;
-  top: 36px;
+  top: 26px;
   right: 1px;
   opacity: 0;
   visibility: hidden;
@@ -3069,7 +3069,7 @@ span.dashicons.dashicons-admin-file:before {
   height: 0;
   top: 0;
   margin: 0 auto;
-  right: 13px;
+  right: 8px;
   box-sizing: border-box;
   border: 6px solid #000;
   border-color: #fff #fff transparent transparent;
@@ -12421,6 +12421,27 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 10px;
 }
 
+.bb-activity-media-elem.media-activity .entry-img:before {
+  content: " ";
+  position: absolute;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  transition: 0.3s all;
+  opacity: 0;
+  visibility: visible;
+}
+
+.bb-activity-media-elem.media-activity.is-visible .entry-img:before,
+.bb-activity-media-elem.media-activity:hover .entry-img:before {
+  opacity: 1;
+  visibility: visible;
+}
+
 .bb-media-length-4 .act-grid-1-2 {
   flex: 0 0 33.33%;
   max-width: 33.33%;
@@ -12812,8 +12833,8 @@ body.login .login-popup .mfp-close:hover {
 .bb-media-check-wrap {
   position: absolute;
   transition: 0.3s all;
-  bottom: 15px;
-  right: 15px;
+  top: 25px;
+  left: 15px;
   color: #fff;
   width: 20px;
   height: 20px;

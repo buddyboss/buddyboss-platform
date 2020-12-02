@@ -253,10 +253,11 @@ function bp_media_activity_append_media( $content, $activity ) {
 			?>
 			">
 				<?php
-				while ( bp_media() ) {
-					bp_the_media();
-					bp_get_template_part( 'media/activity-entry' );
-				}
+					bp_get_template_part( 'media/media-move' );
+					while ( bp_media() ) {
+						bp_the_media();
+						bp_get_template_part( 'media/activity-entry' );
+					}
 				?>
 			</div>
 			<?php
