@@ -50,12 +50,15 @@
 							</li>
 						</ul>
 						<p>
-							<?php esc_html_e( 'If you\'re friends, This action will also unfriend blocked members.', 'buddyboss' ); ?>
+							<?php esc_html_e( 'If you\'re friends, This action will also unfriend blocked members.',
+									'buddyboss' ); ?>
 						</p>
 						<form id="bb-block-member" action="javascript:void(0);">
 							<footer class="bb-model-footer">
-								<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
-								<input type="submit" value="<?php esc_attr_e( 'Confirm', 'buddyboss' ); ?>" class="report-submit button"/>
+								<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel',
+										'buddyboss' ); ?>"/>
+								<button type="submit" class="report-submit button"><?php esc_attr_e( 'Confirm',
+											'buddyboss' ); ?></button>
 								<input type="hidden" name="content_id" class="bp-content-id"/>
 								<input type="hidden" name="content_type" class="bp-content-type"/>
 								<input type="hidden" name="_wpnonce" class="bp-nonce"/>
@@ -68,5 +71,5 @@
 				</div>
 			</div>
 	</div>
-   
+
 </div>

@@ -352,18 +352,27 @@
 				content: "\e8f7";
 			}
 
-			li.delete_messages a:before {
-				content: "\e938";
+		  li.delete_messages a:before {
+			content: "\e938";
+		  }
+
+		  li.delete_thread a:before {
+			content: "\e937";
+		  }
+
+		  li.report_thread a {
+
+			&.reported-content {
+			  pointer-events: none;
+			  opacity: 0.9;
 			}
 
-			li.delete_thread a:before {
-				content: "\e937";
+			&:before {
+			  content: "\e8ea";
+			  vertical-align: middle;
 			}
 
-			li.report_thread a:before {
-				content: "\e8ea";
-				vertical-align: middle;
-			}
+		  }
 
 		}
 	}

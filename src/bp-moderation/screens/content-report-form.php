@@ -48,16 +48,18 @@
 						<div class="form-item">
 							<label for="report-category-other">
 								<input type="radio" id="report-category-other" name="report_category" value="other">
-								<span><?php esc_html_e( 'Other', 'buddyboss' ); ?></span>
-							</label>
+								<span><?php esc_html_e( 'Other', 'buddyboss' ); ?></span> </label>
 						</div>
 						<div class="form-item bp-hide">
 							<label for="report-note">
-								<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea> </label>
+								<textarea id="report-note" type="text" name="note" class="bp-other-report-cat"></textarea>
+							</label>
 						</div>
 						<footer class="bb-model-footer">
-							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>"/>
-							<input type="submit" value="<?php esc_attr_e( 'Send Report', 'buddyboss' ); ?>" class="report-submit button"/>
+							<input type="button" class="bb-cancel-report-content button" value="<?php esc_attr_e( 'Cancel',
+									'buddyboss' ); ?>"/>
+							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Send Report',
+										'buddyboss' ); ?></button>
 							<input type="hidden" name="content_id" class="bp-content-id"/>
 							<input type="hidden" name="content_type" class="bp-content-type"/>
 							<input type="hidden" name="_wpnonce" class="bp-nonce"/>

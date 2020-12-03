@@ -50,6 +50,9 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		add_filter( 'bp_forum_topic_search_join_sql', array( $this, 'update_join_sql' ), 10 );
 		add_filter( 'bp_forum_topic_search_where_sql', array( $this, 'update_where_sql' ), 10 );
 
+		// button class.
+		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+
 		// delete topic moderation data when actual topic deleted.
 		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
 	}
@@ -254,6 +257,30 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		}
 
 		return $where_conditions;
+	}
+
+	/**
+	 * Function to modify the button class
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array  $button      Button args.
+	 * @param string $item_type   Content type.
+	 * @param string $is_reported Item reported.
+	 *
+	 * @return string
+	 */
+	public function update_button_args( $button, $item_type, $is_reported ) {
+
+		if ( self::$moderation_type === $item_type ) {
+			if ( $is_reported ) {
+				$button['button_attr']['class'] = 'button item-button bp-secondary-action outline reported-content';
+			} else {
+				$button['button_attr']['class'] = 'button item-button bp-secondary-action outline report-content';
+			}
+		}
+
+		return $button;
 	}
 
 	/**

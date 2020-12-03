@@ -4015,16 +4015,35 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		text-align: right;
 
 		.button {
-			width: auto;
+		  width: auto;
 
-			&.bb-cancel-report-content {
-				color: #a5a7ab;
-				background-color: transparent;
-				box-shadow: none;
-				margin: 0 20px 0 0;
-				padding: 0;
-				min-width: inherit;
+		  &.report-submit.loading {
+			pointer-events: none;
+			opacity: 0.9;
+
+			&:after {
+			  font: normal normal 400 14px/1 bb-icons;
+			  speak: none;
+			  display: inline-block;
+			  margin: 0 0 0 6px;
+			  text-decoration: inherit;
+			  text-transform: none;
+			  -webkit-font-smoothing: antialiased;
+			  -moz-osx-font-smoothing: grayscale;
+			  content: "\E838";
+			  animation: spin 2s infinite linear;
 			}
+
+		  }
+
+		  &.bb-cancel-report-content {
+			color: #a5a7ab;
+			background-color: transparent;
+			box-shadow: none;
+			margin: 0 20px 0 0;
+			padding: 0;
+			min-width: inherit;
+		  }
 		}
 
 	}
