@@ -333,7 +333,9 @@ function bp_get_moderation_last_updated() {
 		$moderation_reported_date = $moderation_template->moderation->reporters[0]->date_created;
 	}
 
-	return apply_filters( 'bp_get_moderation_last_updated', $moderation_reported_date );
+	return apply_filters( 'bp_get_moderation_last_updated',
+		date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+			strtotime( $moderation_reported_date ) ) );
 }
 
 /**

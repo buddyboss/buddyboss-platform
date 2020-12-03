@@ -242,7 +242,8 @@ class BP_Moderation_Report_List_Table extends WP_List_Table {
 	 * @param array $item item data.
 	 */
 	public function column_date( $item = array() ) {
-		echo esc_html( bbp_get_time_since( bbp_convert_date( $item['date_created'] ) ) );
+		echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ),
+				strtotime( $item['date_created'] ) ) );
 	}
 
 	/**

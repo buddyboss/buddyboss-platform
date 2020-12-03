@@ -141,7 +141,7 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Groups', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Group', 'buddyboss' );
 
 		return $content_types;
 	}

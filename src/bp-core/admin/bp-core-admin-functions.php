@@ -1502,29 +1502,29 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 		// Admin URL could be single site or network.
 		$url = bp_get_admin_url( 'users.php' );
 
-		// If spammed, create unspam link.
-		if ( bp_is_user_spammer( $user_id ) ) {
-			$url            = add_query_arg(
-				array(
-					'action' => 'ham',
+		// If suspended, create unsuspend link.
+		if ( bp_moderation_is_user_suspended( $user_id ) ) {
+			$url                  = add_query_arg( array(
+					'action' => 'unsuspend',
 					'user'   => $user_id,
-				),
-				$url
-			);
-			$unspam_link    = wp_nonce_url( $url, 'bp-spam-user' );
-			$actions['ham'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $unspam_link ), esc_html__( 'Not Spam', 'buddyboss' ) );
+			),
+					$url );
+			$unsuspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
+			$actions['unsuspend'] = sprintf( '<a href="%1$s">%2$s</a>',
+					esc_url( $unsuspend_link ),
+					esc_html__( 'Unsuspend', 'buddyboss' ) );
 
 			// If not already spammed, create spam link.
 		} else {
-			$url             = add_query_arg(
-				array(
-					'action' => 'spam',
+			$url                = add_query_arg( array(
+					'action' => 'suspend',
 					'user'   => $user_id,
-				),
-				$url
-			);
-			$spam_link       = wp_nonce_url( $url, 'bp-spam-user' );
-			$actions['spam'] = sprintf( '<a class="submitdelete" href="%1$s">%2$s</a>', esc_url( $spam_link ), esc_html__( 'Spam', 'buddyboss' ) );
+			),
+					$url );
+			$suspend_link       = wp_nonce_url( $url, 'bp-suspend-user' );
+			$actions['suspend'] = sprintf( '<a class="submitdelete" href="%1$s">%2$s</a>',
+					esc_url( $suspend_link ),
+					esc_html__( 'Suspend', 'buddyboss' ) );
 		}
 	}
 
@@ -1556,9 +1556,9 @@ function bp_core_admin_user_manage_spammers() {
 	}
 
 	// Process a spam/ham request.
-	if ( ! empty( $action ) && in_array( $action, array( 'spam', 'ham' ) ) ) {
+	if ( ! empty( $action ) && in_array( $action, array( 'suspend', 'unsuspend' ) ) ) {
 
-		check_admin_referer( 'bp-spam-user' );
+		check_admin_referer( 'bp-suspend-user' );
 
 		$user_id = ! empty( $_REQUEST['user'] ) ? intval( $_REQUEST['user'] ) : false;
 
@@ -1568,10 +1568,14 @@ function bp_core_admin_user_manage_spammers() {
 
 		$redirect = wp_get_referer();
 
-		$status = ( $action == 'spam' ) ? 'spam' : 'ham';
+		$status = ( $action == 'suspend' ) ? 'suspend' : 'unsuspend';
 
 		// Process the user.
-		bp_core_process_spammer_status( $user_id, $status );
+		if ( 'suspend' === $status ) {
+			bp_moderation_hide_unhide_request( $user_id, BP_Moderation_Members::$moderation_type, 'hide' );
+		} else {
+			bp_moderation_hide_unhide_request( $user_id, BP_Moderation_Members::$moderation_type, 'unhide' );
+		}
 
 		$redirect = add_query_arg( array( 'updated' => 'marked-' . $status ), $redirect );
 

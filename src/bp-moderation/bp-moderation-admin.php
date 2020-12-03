@@ -220,36 +220,6 @@ function bp_moderation_admin_load() {
 
 			// Trim 'bulk_' off the action name to avoid duplicating a ton of code.
 			$doaction = substr( $doaction, 5 );
-
-			// This is a request to delete, spam, or un-spam, a single item.
-		} elseif ( ! empty( $_REQUEST['mid'] ) ) {
-
-			// Check this is a valid form submission.
-			check_admin_referer( 'user-delete-' . $moderation_ids[0] );
-
-		}
-
-		if ( 'delete' === $doaction ) {
-			$user_ids = array();
-
-			foreach ( $moderation_ids as $moderation_id ) {
-				$moderation_obj     = new BP_Moderation();
-				$moderation_obj->id = $moderation_id;
-				$moderation_obj->populate();
-				$user_ids[] = $moderation_obj->item_id;
-			}
-
-			$delete_redirect_to = add_query_arg(
-				array(
-					'action'           => 'delete',
-					'users'            => $user_ids,
-					'_wp_http_referer' => $redirect_to,
-				),
-				bp_get_admin_url( 'users.php' )
-			);
-
-			wp_safe_redirect( $delete_redirect_to );
-			exit;
 		}
 
 		$moderation_action = ( 'hide' === $doaction ) ? 1 : 0;

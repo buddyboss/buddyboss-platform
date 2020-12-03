@@ -162,7 +162,7 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Discussions', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Forum Discussion', 'buddyboss' );
 
 		return $content_types;
 	}
