@@ -2092,6 +2092,7 @@ window.bp = window.bp || {};
 				'click #activity-gif-button': 'toggleGifSelector',
 				'click #activity-media-button': 'toggleMediaSelector',
 				'click #activity-document-button': 'toggleDocumentSelector',
+				'click #activity-video-button': 'toggleVideoSelector',
 				'click .post-elements-buttons-item:not( .post-gif ):not( .post-media )': 'activeButton',
 				'click .post-elements-buttons-item.post-gif': 'activeMediaButton',
 				'click .post-elements-buttons-item.post-media': 'activeMediaButton',
@@ -2172,6 +2173,17 @@ window.bp = window.bp || {};
 				this.closeGifSelector();
 				this.closeMediaSelector();
 				var event = new Event( 'activity_document_toggle' );
+				document.dispatchEvent( event );
+			},
+
+			toggleVideoSelector: function ( e ) {
+				e.preventDefault();
+
+				this.closeMediaSelector();
+				this.closeDocumentSelector();
+				this.closeGifSelector();
+
+				var event = new Event( 'activity_video_toggle' );
 				document.dispatchEvent( event );
 			},
 
@@ -2272,6 +2284,9 @@ window.bp = window.bp || {};
 
 					this.activityDocument = new bp.Views.ActivityDocument( { model: this.model } );
 					this.views.add( this.activityDocument );
+
+					this.activityVideo = new bp.Views.ActivityVideo( { model: this.model } );
+					this.views.add( this.activityVideo );
 				}
 
 				if ( ! _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
