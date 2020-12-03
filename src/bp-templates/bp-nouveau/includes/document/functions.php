@@ -1117,39 +1117,58 @@ function bp_document_get_preview_image_url( $document_id, $extension, $preview_a
 			chmod( $inner_directory_name, 0777 );
 		}
 
-		$timestamp_folder_create = $inner_directory_name . '/WARNING_BB_DOCUMENTS_DO_NOT_DELETE';
-		if ( ! is_dir( $timestamp_folder_create ) ) {
-			wp_mkdir_p( $timestamp_folder_create );
-			chmod( $timestamp_folder_create, 0777 );
-		}
+//		$timestamp_folder_create = $inner_directory_name . '/WARNING_BB_DOCUMENTS_DO_NOT_DELETE';
+//		if ( ! is_dir( $timestamp_folder_create ) ) {
+//			wp_mkdir_p( $timestamp_folder_create );
+//			chmod( $timestamp_folder_create, 0777 );
+//		}
 
-		if( bp_core_is_empty_directory( $timestamp_folder_create ) ) {
-			$timestamp           = current_time( 'timestamp' );
-			$timestamp_file_name = $timestamp . '.txt';
-			$timestamp_dir       = $timestamp_folder_create . '/' . $timestamp_file_name;
-			$file_handle         = fopen( $timestamp_dir, 'a+' );
-			fwrite( $file_handle, $timestamp );
+		$current_timestamp_file = $inner_directory_name . '/timestamp_bb_documents';
+
+		if ( ! file_exists( $current_timestamp_file ) ) {
+			$file_handle = fopen( $current_timestamp_file, 'a+' );
+			fwrite( $file_handle, '' );
 			fclose( $file_handle );
-		} else {
-			$files      = scandir( $timestamp_folder_create );
-			$timestamp  = $timestamp_folder_create . '/' . $files[2];
-			$path_parts = pathinfo( $timestamp );
-			$timestamp  = $path_parts['filename'];
 		}
 
-		$symlink_timestamp_folder = $inner_directory_name .'/' . $timestamp;
+		$current_timestamp_file_timestamp = filemtime( $current_timestamp_file );
+
+		if ( ( $current_timestamp_file_timestamp + ( 60*5 ) ) < time() ) {
+			$current_timestamp_file_timestamp = time();
+			touch( $current_timestamp_file, $current_timestamp_file_timestamp );
+
+			$all_dirs = glob( $inner_directory_name . '/*', GLOB_ONLYDIR );
+			if ( ! empty( $all_dirs ) ) {
+				foreach ( $all_dirs as $dir ) {
+					$dir_handle = opendir( $dir );
+					if ( ! $dir_handle ) {
+						return false;
+					}
+					while ( $file = readdir( $dir_handle ) ) {
+						if ( $file != "." && $file != ".." ) {
+							if ( ! is_dir( $dir . "/" . $file ) ) {
+								unlink( $dir . "/" . $file );
+							}
+						}
+					}
+					closedir( $dir_handle );
+					rmdir( $dir );
+				}
+			}
+		}
+
+		$symlink_timestamp_folder = $inner_directory_name . '/' . $current_timestamp_file_timestamp;
 		if ( ! is_dir( $symlink_timestamp_folder ) ) {
 			wp_mkdir_p( $symlink_timestamp_folder );
 			chmod( $symlink_timestamp_folder, 0777 );
 		}
 
-		$attachment_url = $inner_directory_name . '/' . $timestamp . '/' . md5( BP_DOCUMENT_DIR_SYMLINK . $document_id ) . '_full';
+		$attachment_url = $inner_directory_name . '/' . $current_timestamp_file_timestamp . '/' . md5( BP_DOCUMENT_DIR_SYMLINK . $document_id ) . '_full';
+
 		$upload_directory = wp_get_upload_dir();
-		if ( file_exists( $attachment_url ) ) {
-			$attachment_url = $attachment_url;
-		} else {
+		if ( ! file_exists( $attachment_url ) ) {
 			$output_file_src = bp_document_scaled_image_path( $preview_attachment_id );
-			$attachment_url = @symlink( $output_file_src, $attachment_url );
+			@symlink( $output_file_src, $attachment_url );
 		}
 
 		$attachment_url = str_replace( $upload_directory['basedir'], $upload_directory['baseurl'], $attachment_url );
