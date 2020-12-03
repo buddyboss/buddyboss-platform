@@ -5,7 +5,7 @@
  * This file contains information about BuddyBoss.
  *
  * @package BuddyBoss
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.6.0
  */
 
 // Exit if accessed directly.
