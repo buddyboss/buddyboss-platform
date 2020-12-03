@@ -117,6 +117,31 @@
 			margin-bottom: 10px;
 		}
 	}
+
+	&.media-activity {
+
+		.entry-img:before {
+			content: " ";
+			position: absolute;
+			background: rgba(0, 0, 0, 0.35);
+			border-radius: 3px;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			z-index: 1;
+			transition: 0.3s all;
+			opacity: 0;
+			visibility: visible;
+		}
+
+		&.is-visible .entry-img:before,
+		&:hover .entry-img:before {
+			opacity: 1;
+			visibility: visible;
+		}
+
+	}
 }
 
 .bb-media-length-4 {
@@ -300,6 +325,11 @@
 		max-height: 90vh;
 		overflow: auto;
 	}
+
+	&#boss-media-create-album-popup .bb-model-header {
+		margin-bottom: 20px;
+	}
+
 }
 
 .bbm-model-wrap {
@@ -535,8 +565,8 @@
 .bb-media-check-wrap {
 	position: absolute;
 	transition: 0.3s all;
-	bottom: 15px;
-	right: 15px;
+	top: 25px;
+	left: 15px;
 	color: #fff;
 	width: 20px;
 	height: 20px;
@@ -1832,10 +1862,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 		display: none;
 	}
 
-	.location-folder-list-wrap {
-		margin-top: 25px;
-	}
-
 	#bp-media-document-next {
 		text-align: center;
 
@@ -1864,6 +1890,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			margin-bottom: 15px;
 			clear: both;
+			text-transform: capitalize;
 
 			> i {
 				margin-right: 5px;
@@ -1905,8 +1932,39 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 
 		}
 
+		body.groups & {
+
+			.modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+				margin-bottom: 0;
+
+				#bp-media-document-next {
+					display: inline-block !important;
+					margin-top: 0;
+				}
+
+			}
+
+		}
+
 	}
 
+}
+
+@media screen and (max-width: 480px) {
+
+	#buddypress #bp-media-single-folder,
+	#buddypress #bp-media-single-album {
+
+		.modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+			margin-bottom: 0;
+
+			#bp-media-document-next {
+				display: inline-block !important;
+				margin-top: 0;
+			}
+
+		}
+	}
 }
 
 #buddypress .bp-media-photo-uploader {
@@ -1918,10 +1976,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 	#bp-media-prev,
 	#bp-media-photo-next {
 		display: none;
-	}
-
-	.location-album-list-wrap {
-		margin-top: 25px;
 	}
 
 	#bp-media-photo-next {
@@ -1952,6 +2006,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 			display: block;
 			margin-bottom: 15px;
 			clear: both;
+			text-transform: capitalize;
 
 			> i {
 				font-size: 15px;
@@ -1990,6 +2045,20 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader,
 				text-align: center;
 				margin: 10px 0 0 0;
 				width: 100%;
+			}
+
+		}
+
+		body.groups & {
+
+			.modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+				margin-bottom: 0;
+
+				#bp-media-photo-next {
+					display: inline-block !important;
+					margin-top: 0;
+				}
+
 			}
 
 		}
@@ -3692,6 +3761,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 			&.bp-media-open-create-popup-folder {
 				float: left;
 				margin-top: 7px;
+				text-transform: capitalize;
 			}
 
 		}
@@ -3819,12 +3889,18 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 		cursor: pointer;
 	}
 
+	.no-folder-exists,
+	.no-album-exists {
+		margin: 20px 0 0 0;
+		display: block;
+	}
+
 	.ac_document_search_folder_list,
 	.location-folder-list-wrap,
 	.location-album-list-wrap {
 
 		h4 {
-			margin: 0 !important;
+			margin: 15px 0 0 0 !important;
 			font-size: 17px;
 			font-weight: 500;
 		}
@@ -4048,6 +4124,24 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 	&.bb-field-steps-1 {
 		display: block;
+
+		&.controls-added #bp-dropzone-content {
+
+			body.groups &,
+			#bp-media-single-folder &,
+			#bp-media-single-album & {
+				margin-bottom: -55px;
+
+				#bp-media-photo-next,
+				#bp-media-document-next {
+					display: inline-block !important;
+					margin-top: 15px;
+				}
+
+			}
+
+		}
+
 	}
 
 	#bp-media-create-child-folder-submit,

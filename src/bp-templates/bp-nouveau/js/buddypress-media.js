@@ -444,6 +444,20 @@ window.bp = window.bp || {};
 							if ('' !== privacySelector) {
 								privacySelector.val('public');
 							}
+							$(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)').each(function (i) {
+
+								if (i > 0) {
+									if ($(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item').width() > $(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb').width()) {
+							
+										$(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span.hidden').append($(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span').eq(2));
+							
+										if (!$(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item .more_options').length) {
+											$('<span class="more_options">...</span>').insertAfter($(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span').eq(0));
+										}
+							
+									}
+								}
+							});
 						}
 					}
 				}
@@ -535,6 +549,20 @@ window.bp = window.bp || {};
 							if ('' !== privacySelector) {
 								privacySelector.val('public');
 							}
+							$(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span:not(.hidden)').each(function (i) {
+
+								if (i > 0) {
+									if ($(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item').width() > $(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb').width()) {
+							
+										$(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span.hidden').append($(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span').eq(2));
+							
+										if (!$(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item .more_options').length) {
+											$('<span class="more_options">...</span>').insertAfter($(targetPopup).find('.breadcrumbs-append-ul-li .breadcrumb .item span').eq(0));
+										}
+							
+									}
+								}
+							});
 
 							$(event.currentTarget).removeClass('loading');
 						}
@@ -1266,6 +1294,7 @@ window.bp = window.bp || {};
 			$('#bp-media-add-more').hide();
 			$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.upload);
 			$('#bp-media-uploader-modal-status-text').text('');
+			$('#bp-media-post-content').val('');
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
 
@@ -1278,6 +1307,7 @@ window.bp = window.bp || {};
 			if (currentPopup.find('.bb-field-steps').length) {
 				currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps-2').hide();
 				currentPopup.find('.bb-field-steps-1 #bp-media-photo-next, .bb-field-steps-1 #bp-media-document-next ').hide();
+				currentPopup.find('.bb-field-steps-1').removeClass('controls-added');
 				currentPopup.find('#bp-media-document-prev, #bp-media-prev, #bp-media-document-submit, #bp-media-submit, .bp-media-open-create-popup-folder, .bp-document-open-create-popup-folder, .create-popup-folder-wrap, .create-popup-album-wrap').hide();
 			}
 
@@ -2037,7 +2067,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								if(!jQuery('.forum-document-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 								}
 								this.removeFile(file);
 							}
@@ -2058,7 +2088,7 @@ window.bp = window.bp || {};
 								self.addMediaIdsToForumsForm(dropzone_container);
 							} else {
 								if(!jQuery('.forum-media-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 								}
 								this.removeFile(file);
 							}
@@ -2218,7 +2248,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								if(!jQuery('.group-media-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup group-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup group-media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 								}
 								this.removeFile(file);
 							}
@@ -2239,7 +2269,7 @@ window.bp = window.bp || {};
 								self.addMediaIdsToGroupMessagesForm();
 							} else {
 								if(!jQuery('.group-message-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup group-message-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup group-message-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 								}
 								this.removeFile(file);
 							}
@@ -2334,7 +2364,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								if(!jQuery('.group-document-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup group-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup group-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 								}
 								this.removeFile(file);
 							}
@@ -2478,7 +2508,7 @@ window.bp = window.bp || {};
 								}
 							} else {
 								if(!jQuery('.forum-document-error-popup').length) {
-									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+									$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup forum-document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 								}
 								this.removeFile(file);
 							}
@@ -2683,8 +2713,8 @@ window.bp = window.bp || {};
 
 				if ($('#bp-media-uploader').find('.bb-field-steps.bb-field-steps-2').length) {
 					currentTarget = '#bp-media-uploader.bp-media-photo-uploader';
-					if (Number($(currentTarget).find('.bb-album-selected-id').val()) !== 0) {
-						parentsOpen = $(currentTarget).find('.bb-album-selected-id').val();
+					if (Number($(currentTarget).find('.bb-album-selected-id').data('value')) !== 0) {
+						parentsOpen = $(currentTarget).find('.bb-album-selected-id').data('value');
 						$(currentTarget).find('#bb-document-privacy').prop('disabled', true);
 					} else {
 						parentsOpen = 0;
@@ -2702,9 +2732,9 @@ window.bp = window.bp || {};
 									$(document).find('.location-album-list-wrap h4 span.where-to-move-profile-or-group-media').html(response.data.first_span_text);
 									if ('' === response.data.html) {
 										$(document).find('.open-popup .location-album-list-wrap').hide();
-										$(document).find('.open-popup .location-album-list-wrap-main span.no-folder-exists').show();
+										$(document).find('.open-popup .location-album-list-wrap-main span.no-album-exists').show();
 									} else {
-										$(document).find('.open-popup .location-album-list-wrap-main span.no-folder-exists').hide();
+										$(document).find('.open-popup .location-album-list-wrap-main span.no-album-exists').hide();
 										$(document).find('.open-popup .location-album-list-wrap').show();
 									}
 
@@ -2819,7 +2849,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if(!jQuery('.media-error-popup').length) {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 							}
 							this.removeFile(file);
 						}
@@ -2853,12 +2883,13 @@ window.bp = window.bp || {};
 							self.dropzone_media.push(response.data);
 						} else {
 							if(!jQuery('.media-error-popup').length) {
-								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-folder" style="display: block;" class="open-popup media-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_media_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 							}
 							this.removeFile(file);
 						}
 
 						$('.bb-field-steps-1 #bp-media-photo-next, #bp-media-submit').show();
+						$('.bb-field-steps-1').addClass('controls-added');
 						$('#bp-media-add-more').show();
 						$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
 						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
@@ -2884,6 +2915,7 @@ window.bp = window.bp || {};
 						if (!self.dropzone_obj.getAcceptedFiles().length) {
 							$('#bp-media-uploader-modal-status-text').text('');
 							$('#bp-media-add-more, #bp-media-photo-next').hide();
+							$('.bb-field-steps-1').removeClass('controls-added');
 							$('#bp-media-submit').hide();
 						} else {
 							$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
@@ -2918,8 +2950,8 @@ window.bp = window.bp || {};
 				if ($('#bp-media-uploader.bp-media-document-uploader').find('.bb-field-steps.bb-field-steps-2').length) {
 					currentTarget = '#bp-media-uploader.bp-media-document-uploader';
 					var parentsOpen;
-					if (Number($(currentTarget).find('.bb-folder-selected-id').val()) !== 0) {
-						parentsOpen = $(currentTarget).find('.bb-folder-selected-id').val();
+					if (Number($(currentTarget).find('.bb-folder-selected-id').data('value')) !== 0) {
+						parentsOpen = $(currentTarget).find('.bb-folder-selected-id').data('value');
 						$(currentTarget).find('#bb-document-privacy').prop('disabled', true);
 					} else {
 						parentsOpen = 0;
@@ -3057,7 +3089,7 @@ window.bp = window.bp || {};
 							}
 						} else {
 							if(!jQuery('.document-error-popup').length) {
-								$('body').append('<div id="bp-media-create-album" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response + '</p></div></div></div></div></transition></div>');
+								$('body').append('<div id="bp-media-create-album" style="display: block;" class="open-popup document-error-popup"><transition name="modal"><div class="modal-mask bb-white bbm-model-wrap"><div class="modal-wrapper"><div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI"><header class="bb-model-header"><h4>' + BP_Nouveau.media.invalid_file_type + '</h4><a class="bb-model-close-button errorPopup" href="#"><span class="dashicons dashicons-no-alt"></span></a></header><div class="bb-field-wrap"><p>' + response.data.feedback + '</p></div></div></div></div></transition></div>');
 							}
 							this.removeFile(file);
 						}
@@ -3114,6 +3146,7 @@ window.bp = window.bp || {};
 						}
 
 						$('.bb-field-steps-1 #bp-media-document-next, #bp-media-document-submit').show();
+						$('.bb-field-steps-1').addClass('controls-added');
 						$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
 						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
 					}

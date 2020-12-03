@@ -2944,20 +2944,15 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a i,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a i {
-  font-size: 19px;
-  color: #9ca8b4;
-  background-color: #fff;
-  padding: 7px;
-  border: 1px solid #e7e9ec;
+  font-size: 14px;
+  padding: 4px;
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a:hover,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover {
-  color: #461212;
-}
-
-#media-stream.media .bb-photo-thumb .media-action-wrap > a:hover i,
-.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a:hover i {
   color: #461212;
 }
 
@@ -2975,7 +2970,12 @@ span.dashicons.dashicons-admin-file:before {
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_more i,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a.media-action_more i {
-  border-radius: 3px;
+  border-radius: 50%;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_more i:before,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap > a.media-action_more i:before {
+  content: "\e81a";
 }
 
 #media-stream.media .bb-photo-thumb .media-action-wrap > a.media-action_download i,
@@ -2987,7 +2987,7 @@ span.dashicons.dashicons-admin-file:before {
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list {
   position: absolute;
-  top: 36px;
+  top: 26px;
   left: 1px;
   opacity: 0;
   visibility: hidden;
@@ -3069,7 +3069,7 @@ span.dashicons.dashicons-admin-file:before {
   height: 0;
   top: 0;
   margin: 0 auto;
-  left: 13px;
+  left: 8px;
   box-sizing: border-box;
   border: 6px solid #000;
   border-color: #fff transparent transparent #fff;
@@ -3328,6 +3328,11 @@ span.dashicons.dashicons-admin-file:before {
   margin-left: 10px;
   width: 20px;
   text-align: center;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file.move-disabled a {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file a:before {
@@ -12416,6 +12421,27 @@ body.login .login-popup .mfp-close:hover {
   margin-bottom: 10px;
 }
 
+.bb-activity-media-elem.media-activity .entry-img:before {
+  content: " ";
+  position: absolute;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 3px;
+  width: 100%;
+  height: 100%;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  transition: 0.3s all;
+  opacity: 0;
+  visibility: visible;
+}
+
+.bb-activity-media-elem.media-activity.is-visible .entry-img:before,
+.bb-activity-media-elem.media-activity:hover .entry-img:before {
+  opacity: 1;
+  visibility: visible;
+}
+
 .bb-media-length-4 .act-grid-1-2 {
   flex: 0 0 33.33%;
   max-width: 33.33%;
@@ -12581,6 +12607,10 @@ body.login .login-popup .mfp-close:hover {
 .modal-container.has-folderlocationUI {
   max-height: 90vh;
   overflow: auto;
+}
+
+.modal-container#boss-media-create-album-popup .bb-model-header {
+  margin-bottom: 20px;
 }
 
 .bbm-model-wrap input,
@@ -12803,8 +12833,8 @@ body.login .login-popup .mfp-close:hover {
 .bb-media-check-wrap {
   position: absolute;
   transition: 0.3s all;
-  bottom: 15px;
-  left: 15px;
+  top: 25px;
+  right: 15px;
   color: #fff;
   width: 20px;
   height: 20px;
@@ -14041,10 +14071,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   display: none;
 }
 
-#buddypress .bp-media-document-uploader .location-folder-list-wrap {
-  margin-top: 25px;
-}
-
 #buddypress .bp-media-document-uploader #bp-media-document-next {
   text-align: center;
 }
@@ -14070,6 +14096,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   display: block;
   margin-bottom: 15px;
   clear: both;
+  text-transform: capitalize;
 }
 
 #buddypress .bp-media-document-uploader .document-uploader-footer .bp-document-open-create-popup-folder > i {
@@ -14101,6 +14128,25 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     margin: 10px 0 0 0;
     width: 100%;
   }
+  body.groups #buddypress .bp-media-document-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  body.groups #buddypress .bp-media-document-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+    display: inline-block !important;
+    margin-top: 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #buddypress #bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content,
+  #buddypress #bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  #buddypress #bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next,
+  #buddypress #bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+    display: inline-block !important;
+    margin-top: 0;
+  }
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-wrapper {
@@ -14110,10 +14156,6 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 #buddypress .bp-media-photo-uploader #bp-media-prev,
 #buddypress .bp-media-photo-uploader #bp-media-photo-next {
   display: none;
-}
-
-#buddypress .bp-media-photo-uploader .location-album-list-wrap {
-  margin-top: 25px;
 }
 
 #buddypress .bp-media-photo-uploader #bp-media-photo-next {
@@ -14141,6 +14183,7 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
   display: block;
   margin-bottom: 15px;
   clear: both;
+  text-transform: capitalize;
 }
 
 #buddypress .bp-media-photo-uploader .media-uploader-footer .bp-media-open-create-popup-folder > i {
@@ -14171,6 +14214,13 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
     text-align: center;
     margin: 10px 0 0 0;
     width: 100%;
+  }
+  body.groups #buddypress .bp-media-photo-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+    margin-bottom: 0;
+  }
+  body.groups #buddypress .bp-media-photo-uploader .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next {
+    display: inline-block !important;
+    margin-top: 0;
   }
 }
 
@@ -15771,6 +15821,7 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 .bp-media-move-folder .bb-model-footer a.bp-media-open-create-popup-folder {
   float: right;
   margin-top: 7px;
+  text-transform: capitalize;
 }
 
 .bp-media-move-file .close-create-popup-album,
@@ -15891,13 +15942,21 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
   cursor: pointer;
 }
 
+.location-album-list-wrap-main .no-folder-exists,
+.location-album-list-wrap-main .no-album-exists,
+.location-folder-list-wrap-main .no-folder-exists,
+.location-folder-list-wrap-main .no-album-exists {
+  margin: 20px 0 0 0;
+  display: block;
+}
+
 .location-album-list-wrap-main .ac_document_search_folder_list h4,
 .location-album-list-wrap-main .location-folder-list-wrap h4,
 .location-album-list-wrap-main .location-album-list-wrap h4,
 .location-folder-list-wrap-main .ac_document_search_folder_list h4,
 .location-folder-list-wrap-main .location-folder-list-wrap h4,
 .location-folder-list-wrap-main .location-album-list-wrap h4 {
-  margin: 0 !important;
+  margin: 15px 0 0 0 !important;
   font-size: 17px;
   font-weight: 500;
 }
@@ -16389,6 +16448,22 @@ body.document #bp-media-single-folder .album-single-view .bp-media-header-wrap .
 
 .modal-container .bb-field-steps.bb-field-steps-1 {
   display: block;
+}
+
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content,
+#bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content,
+#bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content {
+  margin-bottom: -55px;
+}
+
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
+body.groups .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next,
+#bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
+#bp-media-single-folder .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next,
+#bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-photo-next,
+#bp-media-single-album .modal-container .bb-field-steps.bb-field-steps-1.controls-added #bp-dropzone-content #bp-media-document-next {
+  display: inline-block !important;
+  margin-top: 15px;
 }
 
 .modal-container .bb-field-steps #bp-media-create-child-folder-submit,

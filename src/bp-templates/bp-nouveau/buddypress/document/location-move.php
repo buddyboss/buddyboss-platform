@@ -41,6 +41,6 @@ if ( bp_is_group_document() || bp_is_group_folders() ) {
 			<ul class="location-folder-list"></ul>
 		</div>
 		<input type="hidden" class="bb-folder-create-from" value="profile" readonly/>
-		<input type="hidden" class="bb-folder-selected-id" value="<?php echo bp_get_document_folder_id() ? esc_attr( bp_get_document_folder_id() ) : esc_attr( '0' ); ?>" readonly/>
+		<input type="hidden" class="bb-folder-selected-id" value="<?php echo bp_get_document_folder_id() ? esc_attr( bp_get_document_folder_id() ) : esc_attr( '0' ); ?>" data-value="<?php echo bp_get_document_folder_id() ? esc_attr( bp_get_document_folder_id() ) : esc_attr( '0' ); ?>" readonly/>
 	</div>
 </div>
