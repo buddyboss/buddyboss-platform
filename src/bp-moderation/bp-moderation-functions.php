@@ -196,9 +196,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	}
 
 	// Hide if content is created by current user.
-	/*if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
+	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
 		return ! empty( $html ) ? '' : array();
-	}*/
+	}
 
 	$args['button_attr'] = wp_parse_args(
 		$args['button_attr'],

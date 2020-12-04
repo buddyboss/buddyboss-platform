@@ -218,7 +218,9 @@ abstract class BP_Moderation_Abstract {
 
 	protected function blocked_user_query(){
 		$bp = buddypress();
-		return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (6)";
+
+		// todo: Get current user Blocked member ids.
+		return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (0)";
 	}
 
 	/**

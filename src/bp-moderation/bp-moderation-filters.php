@@ -253,7 +253,7 @@ function bp_moderation_content_actions_request() {
 			) );
 			if ( $moderation->hide_sitewide === 0 ) {
 				$response['success'] = true;
-				$response['message'] = 'user' === $item_type ? esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' ) : esc_html__( 'Content has been successfully hidden.', 'unhidden' );
+				$response['message'] = 'user' === $item_type ? esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' ) : esc_html__( 'Content has been successfully unhidden.', 'buddyboss' );
 			}
 		}
 	}
