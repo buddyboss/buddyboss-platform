@@ -872,8 +872,6 @@ class BP_Moderation {
 	}
 
 	/**
-	 * Todo: Need to delete
-	 *
 	 * Get specific moderation item id
 	 *
 	 * @since BuddyBoss 2.0.0

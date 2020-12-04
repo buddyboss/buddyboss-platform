@@ -162,6 +162,42 @@ function bp_moderation_get( $args = '' ) {
 }
 
 /**
+ * Retrieve sitewide hidden items ids of particular item type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param string $type Moderation items type.
+ *
+ * @return array $moderation See BP_Moderation::get() for description.
+ */
+function bp_moderation_get_hidden_user_ids() {
+
+	$args         = array(
+		'in_types'          => BP_Moderation_Members::$moderation_type,
+		'update_meta_cache' => false,
+		'filter_query'      => array(
+			'relation' => 'OR',
+			array(
+				'column' => 'hide_sitewide',
+				'value'  => 1,
+			),
+			array(
+				'column' => 'user_id',
+				'value'  => get_current_user_id(),
+			)
+		),
+	);
+	$hidden_users = bp_moderation_get( $args );
+
+	$hidden_users_ids = array();
+	if ( ! empty( $hidden_users['moderations'] ) ) {
+		$hidden_users_ids = wp_list_pluck( $hidden_users['moderations'], 'item_id'  );
+	}
+
+	return $hidden_users_ids;
+}
+
+/**
  * Function to get Report button
  *
  * @since BuddyBoss 2.0.0
