@@ -2093,9 +2093,10 @@ window.bp = window.bp || {};
 				'click #activity-media-button': 'toggleMediaSelector',
 				'click #activity-document-button': 'toggleDocumentSelector',
 				'click #activity-video-button': 'toggleVideoSelector',
-				'click .post-elements-buttons-item:not( .post-gif ):not( .post-media )': 'activeButton',
+				'click .post-elements-buttons-item:not( .post-gif ):not( .post-media ):not( .post-video )': 'activeButton',
 				'click .post-elements-buttons-item.post-gif': 'activeMediaButton',
 				'click .post-elements-buttons-item.post-media': 'activeMediaButton',
+				'click .post-elements-buttons-item.post-video': 'activeVideoButton',
 				'click .show-toolbar': 'toggleToolbarSelector'
 			},
 			gifMediaSearchDropdownView: false,
@@ -2119,6 +2120,8 @@ window.bp = window.bp || {};
 				this.closeMediaSelector();
 				this.closeGifSelector();
 				this.closeDocumentSelector();
+				this.closeVideoSelector();
+
 				if ( this.model.get( 'link_scrapping' ) ) {
 					event = new Event( 'activity_link_preview_close' );
 				} else {
@@ -2137,6 +2140,8 @@ window.bp = window.bp || {};
 				// this.closeURLInput();
 				this.closeMediaSelector();
 				this.closeDocumentSelector();
+				this.closeVideoSelector();
+
 				if ( this.$gifPickerEl.is( ':empty' ) ) {
 					this.gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( { model: this.model } );
 					this.$gifPickerEl.html( this.gifMediaSearchDropdownView.render().el );
@@ -2163,6 +2168,8 @@ window.bp = window.bp || {};
 				// this.closeURLInput();
 				this.closeGifSelector();
 				this.closeDocumentSelector();
+				this.closeVideoSelector();
+
 				var event = new Event( 'activity_media_toggle' );
 				document.dispatchEvent( event );
 			},
@@ -2172,6 +2179,8 @@ window.bp = window.bp || {};
 				// this.closeURLInput();
 				this.closeGifSelector();
 				this.closeMediaSelector();
+				this.closeVideoSelector();
+
 				var event = new Event( 'activity_document_toggle' );
 				document.dispatchEvent( event );
 			},
@@ -2194,6 +2203,11 @@ window.bp = window.bp || {};
 
 			closeDocumentSelector: function () {
 				var event = new Event( 'activity_document_close' );
+				document.dispatchEvent( event );
+			},
+
+			closeVideoSelector: function () {
+				var event = new Event( 'activity_video_close' );
 				document.dispatchEvent( event );
 			},
 
@@ -2240,9 +2254,19 @@ window.bp = window.bp || {};
 
 			activeMediaButton: function ( event ) {
 				if ( $( event.currentTarget ).hasClass( 'active' ) ) {
-					this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media' ).removeClass( 'active' );
+					this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media, .post-elements-buttons-item.post-video' ).removeClass( 'active' );
 				} else {
-					this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media' ).removeClass( 'active' );
+					this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media, .post-elements-buttons-item.post-video' ).removeClass( 'active' );
+					event.currentTarget.classList.add( 'active' );
+				}
+			},
+
+			activeVideoButton: function( event ){
+				this.$el.find( '.post-elements-buttons-item.post-gif, .post-elements-buttons-item.post-media' ).removeClass( 'active' );
+
+				if ( $( event.currentTarget ).hasClass( 'active' ) ) {
+					event.currentTarget.classList.remove( 'active' );
+				} else{
 					event.currentTarget.classList.add( 'active' );
 				}
 			},

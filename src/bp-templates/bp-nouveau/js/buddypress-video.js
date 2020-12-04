@@ -82,10 +82,6 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#bp-add-video', this.openUploader.bind( this ) );
 			$( document ).on( 'click', '#bp-video-submit', this.submitVideo.bind( this ) );
-
-			//$( document ).on( 'click', '#activity-video-button', this.attachVideo.bind( this ) );
-
-			//document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
 		},
 
 		submitVideo: function (event) {
@@ -356,18 +352,7 @@ window.bp = window.bp || {};
 			}
 		},
 
-		attachVideo : function ( event ){
-			event.preventDefault();
-
-			bp.Nouveau.Activity.postForm.activityToolbar.closeMediaSelector();
-			bp.Nouveau.Activity.postForm.activityToolbar.closeDocumentSelector();
-			bp.Nouveau.Activity.postForm.activityToolbar.closeGifSelector();
-
-			var event = new Event( 'activity_video_toggle' );
-			document.dispatchEvent( event );
-		},
-
-		toggle_video_uploader: function ( event ){
+		toggle_video_uploader: function (){
 			var self = this;
 
 			self.open_video_uploader();
@@ -403,17 +388,16 @@ window.bp = window.bp || {};
 				document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
 			},
 
-			/*
 			toggle_video_uploader: function () {
-
 				var self = this;
+
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
 					self.destroyVideo();
 				} else {
-					self.toggle_video_uploader();
+					self.open_video_uploader();
 				}
 			},
-*/
+
 			destroyVideo: function () {
 				var self = this;
 				if ( ! _.isNull( self.videoDropzoneObj ) ) {
@@ -423,13 +407,13 @@ window.bp = window.bp || {};
 				self.video = [];
 				self.$el.find( '#activity-post-video-uploader' ).removeClass( 'open' ).addClass( 'closed' );
 
-				document.removeEventListener( 'activity_document_toggle', this.toggle_video_uploader.bind( this ) );
-				document.removeEventListener( 'activity_document_close', this.destroyVideo.bind( this ) );
+				document.removeEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
+				document.removeEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
 
 				$( '#whats-new-attachments' ).addClass( 'empty' );
 			},
 
-			toggle_video_uploader: function() {
+			open_video_uploader: function() {
 				var self = this;
 
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
@@ -440,15 +424,15 @@ window.bp = window.bp || {};
 				var dropzone_options = {
 					url						: BP_Nouveau.ajaxurl,
 					timeout					: 3 * 60 * 60 * 1000,
-					dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
-					acceptedFiles        : BP_Nouveau.video.video_type,
+					dictFileTooBig          : BP_Nouveau.video.dictFileTooBig,
+					acceptedFiles           : BP_Nouveau.video.video_type,
 					createImageThumbnails 	: false,
-					dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
+					dictDefaultMessage      : BP_Nouveau.video.dropzone_video_message,
 					autoProcessQueue		: true,
 					addRemoveLinks			: true,
 					uploadMultiple			: false,
-					maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
-					maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
+					maxFiles                : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+					maxFilesize             : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 					dictInvalidFileType		: BP_Nouveau.video.dictInvalidFileType,
 				};
 
