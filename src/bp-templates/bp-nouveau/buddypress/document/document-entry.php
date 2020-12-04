@@ -304,10 +304,10 @@ if ( $attachment_id ) {
                                href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 						</li>
 						<?php
-						if ( bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) ) ) {
+						if ( bp_document_get_report_link( array( 'id' => bp_get_document_id() ) ) ) {
 							?>
                             <li class="report_file">
-								<?php echo bp_document_get_report_link( array( 'id' => bp_get_document_activity_id() ) ); ?>
+								<?php echo bp_document_get_report_link( array( 'id' => bp_get_document_id() ) ); ?>
                             </li>
 							<?php
 						}

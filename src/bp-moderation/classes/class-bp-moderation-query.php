@@ -50,7 +50,6 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 		'user_id',
 		'item_type',
 		'last_updated',
-		'hide_sitewide',
 		'blog_id',
 	);
 
@@ -95,7 +94,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 	 *
 	 * @return array SQL fragment to append to the main query.
 	 */
-	public function get_sql( $alias = 'mo' ) {
+	public function get_sql( $alias = 'ms' ) {
 		if ( ! empty( $alias ) ) {
 			$this->table_alias = sanitize_title( $alias );
 		}
@@ -173,7 +172,7 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 		$alias = ! empty( $this->table_alias ) ? "{$this->table_alias}." : '';
 
 		if ( in_array( $column, array( 'user_id' ), true ) ) {
-			$sql_chunks['join'][] = "LEFT JOIN {$bp->moderation->table_name_reports} mr ON mo.id = mr.moderation_id ";
+			$sql_chunks['join'][] = "LEFT JOIN {$bp->moderation->table_name_reports} mr ON ms.id = mr.moderation_id ";
 			$alias                = 'mr.';
 		}
 
@@ -188,42 +187,36 @@ class BP_Moderation_Query extends BP_Recursive_Query {
 				}
 			}
 
-			// Tinyint.
-			if ( ! empty( $column ) && true === in_array( $column, array( 'hide_sitewide', 'is_spam' ), true ) ) {
-				$sql_chunks['where'][] = $wpdb->prepare( "{$alias}{$column} = %d", $value ); // phpcs:ignore
+			switch ( $compare ) {
+				// IN uses different syntax.
+				case 'IN':
+				case 'NOT IN':
+					$in_sql = BP_Moderation::get_in_operator_sql( "{$alias}{$column}", $value );
 
-			} else {
-				switch ( $compare ) {
-					// IN uses different syntax.
-					case 'IN':
-					case 'NOT IN':
-						$in_sql = BP_Moderation::get_in_operator_sql( "{$alias}{$column}", $value );
+					// 'NOT IN' operator is as easy as a string replace!
+					if ( 'NOT IN' === $compare ) {
+						$in_sql = str_replace( 'IN', 'NOT IN', $in_sql );
+					}
 
-						// 'NOT IN' operator is as easy as a string replace!
-						if ( 'NOT IN' === $compare ) {
-							$in_sql = str_replace( 'IN', 'NOT IN', $in_sql );
-						}
+					$sql_chunks['where'][] = $in_sql;
+					break;
 
-						$sql_chunks['where'][] = $in_sql;
-						break;
+				case 'BETWEEN':
+				case 'NOT BETWEEN':
+					$value = array_slice( $value, 0, 2 );
+					$where = $wpdb->prepare( '%s AND %s', $value[0], $value[1] );
+					break;
 
-					case 'BETWEEN':
-					case 'NOT BETWEEN':
-						$value = array_slice( $value, 0, 2 );
-						$where = $wpdb->prepare( '%s AND %s', $value[0], $value[1] );
-						break;
+				case 'LIKE':
+				case 'NOT LIKE':
+					$value = '%' . bp_esc_like( $value ) . '%';
+					$where = $wpdb->prepare( '%s', $value );
+					break;
 
-					case 'LIKE':
-					case 'NOT LIKE':
-						$value = '%' . bp_esc_like( $value ) . '%';
-						$where = $wpdb->prepare( '%s', $value );
-						break;
+				default:
+					$where = $wpdb->prepare( '%s', $value );
+					break;
 
-					default:
-						$where = $wpdb->prepare( '%s', $value );
-						break;
-
-				}
 			}
 
 			if ( $where ) {

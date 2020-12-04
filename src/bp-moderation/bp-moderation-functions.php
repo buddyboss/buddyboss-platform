@@ -12,9 +12,49 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/** Moderation Core functions ************************************************/
+
 /**
- * Moderation Core functions
+ * Function to get the moderation content types.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @return mixed|void
  */
+function bp_moderation_content_types() {
+
+	/**
+	 * Filter to update content types
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $types Content types
+	 */
+	return apply_filters( 'bp_moderation_content_types', array() );
+}
+
+/**
+ * Function to get specific moderation content type.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param string $key content type key.
+ *
+ * @return mixed|void
+ */
+function bp_moderation_get_content_type( $key ) {
+
+	$content_types = bp_moderation_content_types();
+
+	/**
+	 * Filter to update Content type
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $item_type Item item.
+	 */
+	return apply_filters( 'bp_moderation_get_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
+}
 
 /**
  * Retrieve an Moderation reports.
@@ -122,127 +162,6 @@ function bp_moderation_get( $args = '' ) {
 }
 
 /**
- * Retrieve sitewide hidden items ids of particular item type.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param string $type         Moderation items type.
- * @param bool   $user_include Include item which report by current user even if it's not hidden.
- *
- * @return array $moderation See BP_Moderation::get() for description.
- */
-function bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include = false ) {
-
-	$args = array(
-		'in_types'          => $type,
-		'update_meta_cache' => false,
-		'filter_query'      => array(
-			array(
-				'column' => 'hide_sitewide',
-				'value'  => 1,
-			),
-		),
-	);
-
-	if ( $user_include ) {
-		$args['filter_query']['relation'] = 'OR';
-		$args['filter_query'][]           = array(
-			'column' => 'user_id',
-			'value'  => get_current_user_id(),
-		);
-	}
-
-	return bp_moderation_get( $args );
-}
-
-/**
- * Function to get the moderation content types.
- *
- * @since BuddyBoss 2.0.0
- *
- * @return mixed|void
- */
-function bp_moderation_content_types() {
-
-	/**
-	 * Filter to update content types
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $types Content types
-	 */
-	return apply_filters( 'bp_moderation_content_types', array() );
-}
-
-/**
- * Function get content owner id.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $moderation_item_id   content id.
- * @param string $moderation_item_type content type.
- *
- * @return int
- */
-function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
-
-	$user_id = 0;
-	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
-
-	if ( method_exists( $class, 'get_content_owner_id' ) ) {
-		$user_id = $class::get_content_owner_id( $moderation_item_id );
-	}
-
-	return (int) $user_id;
-}
-
-/**
- * Function to get the content based on type.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $moderation_item_id   moderation id to get the content.
- * @param string $moderation_item_type item type.
- * @param bool   $view_link            add content link with content.
- *
- * @return string
- */
-function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type, $view_link = false ) {
-
-	$content_excerpt = '';
-	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );
-
-	if ( method_exists( $class, 'get_content_excerpt' ) ) {
-		$content_excerpt = $class::get_content_excerpt( $moderation_item_id, $view_link );
-	}
-
-	return $content_excerpt;
-}
-
-/**
- * Function to get specific moderation content type.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param string $key content type key.
- *
- * @return mixed|void
- */
-function bp_moderation_get_content_type( $key ) {
-
-	$content_types = bp_moderation_content_types();
-
-	/**
-	 * Filter to update Content type
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $item_type Item item.
-	 */
-	return apply_filters( 'bp_moderation_get_content_type', key_exists( $key, $content_types ) ? $content_types[ $key ] : '' );
-}
-
-/**
  * Function to get Report button
  *
  * @since BuddyBoss 2.0.0
@@ -277,9 +196,9 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	}
 
 	// Hide if content is created by current user.
-	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
+	/*if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_id, $item_type ) ) {
 		return ! empty( $html ) ? '' : array();
-	}
+	}*/
 
 	$args['button_attr'] = wp_parse_args(
 		$args['button_attr'],
@@ -343,6 +262,59 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 }
 
 /**
+ * Function to Check content Reported by current usr or not.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $item_id   Item id.
+ * @param string $item_type Item type.
+ *
+ * @return bool
+ */
+function bp_moderation_report_exist( $item_id, $item_type ) {
+	$response = false;
+
+	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
+		$moderation = new BP_Moderation( $item_id, $item_type );
+		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+	}
+
+	return $response;
+}
+
+/**
+ * Check whether a user has been marked as a blocked by current user.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int $user_id The ID for the user.
+ *
+ * @return bool True if suspended, otherwise false.
+ */
+function bp_moderation_is_user_blocked( $user_id ) {
+	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
+		return false;
+	}
+
+	return bp_moderation_report_exist( $user_id, BP_Moderation_Members::$moderation_type );
+}
+
+/**
+ * Check user is suspended or not.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param $user_id
+ *
+ * @return bool
+ */
+function bp_moderation_is_user_suspended( $user_id ) {
+	return BP_Core_Suspend::check_user_suspend( $user_id );
+}
+
+/** Moderation actions *******************************************************/
+
+/**
  * Function to Report content.
  *
  * @since BuddyBoss 2.0.0
@@ -366,109 +338,153 @@ function bp_moderation_add( $args = array() ) {
 }
 
 /**
- * Function to Check content Reported by current usr or not.
+ * Function to hide content.
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int    $item_id   Item id.
- * @param string $item_type Item type.
+ * @param array $args Report args.
  *
  * @return bool
  */
-function bp_moderation_report_exist( $item_id, $item_type ) {
+function bp_moderation_hide( $args = array() ) {
 	$response = false;
 
-	if ( ! empty( $item_id ) && ! empty( $item_type ) ) {
-		$moderation = new BP_Moderation( $item_id, $item_type );
-		$response   = ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) );
+	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+
+		if ( method_exists( $class, 'hide' ) ) {
+			$response = $class::hide( $args );
+		}
 	}
 
 	return $response;
 }
 
 /**
- * Function to unblock user from frontend.
+ * Function to unhide content.
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int    $item_id   Item id.
- * @param string $item_type Item type.
- * @param bool   $force_all Should delete all reported entry.
- *
- * @return false|int
- */
-function bp_moderation_delete_reported_item( $item_id, $item_type, $force_all = false ) {
-	$moderation_obj = new BP_Moderation( $item_id, $item_type );
-
-	return $moderation_obj->delete( $force_all );
-}
-
-/**
- * Function to hide unhide moderation request.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $item_id   Item id.
- * @param string $item_type Item type.
- * @param string $action    hide/unhide action.
+ * @param array $args Report args.
  *
  * @return bool
  */
-function bp_moderation_hide_unhide_request( $item_id, $item_type, $action ) {
-	$moderation_obj                = new BP_Moderation( $item_id, $item_type );
-	$moderation_obj->hide_sitewide = ( 'hide' === $action ) ? 1 : 0;
+function bp_moderation_unhide( $args = array() ) {
+	$response = false;
 
-	/**
-	 * if action is unhide and Content report by current user then delete report entry otherwise update `hide_sitewide` status.
-	 */
-	$result = ( 'unhide' === $action && ! empty( $moderation_obj->report_id ) ) ? $moderation_obj->delete() : $moderation_obj->store();
+	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
 
-	/**
-	 * Update moderation meta to track who hide particular content.
-	 */
-	if ( 'unhide' === $action ) {
-		bp_moderation_delete_meta( $moderation_obj->id, '_hide_by');
-	} else {
-		bp_moderation_update_meta( $moderation_obj->id, '_hide_by', get_current_user_id() );
+		if ( method_exists( $class, 'unhide' ) ) {
+			$response = $class::unhide( $args );
+		}
 	}
 
-	/**
-	 * Fires after an moderation report item has been hide/unhide
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param BP_Moderation $moderation_obj Current instance of moderation item being saved. Passed by reference.
-	 * @param string        $action         hide/unhide.
-	 */
-	do_action( 'bp_moderation_after_hide_unhide', $moderation_obj, $action );
-
-	return $result;
+	return $response;
 }
 
 /**
- * Check whether a user has been marked as a suspended.
+ * Function to unhide content.
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int  $user_id      The ID for the user.
- * @param bool $user_include Include item which report by current user even if it's not hidden.
+ * @param array $args Report args.
  *
- * @return bool True if suspended, otherwise false.
+ * @return bool
  */
-function bp_moderation_is_user_suspended( $user_id, $user_include = false ) {
-	if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
-		return false;
+function bp_moderation_delete( $args = array() ) {
+	$response = false;
+
+	if ( ! empty( $args['content_id'] ) && ! empty( $args['content_type'] ) ) {
+		$class = BP_Moderation_Abstract::get_class( $args['content_type'] );
+
+		if ( method_exists( $class, 'delete' ) ) {
+			$response = $class::delete( $args );
+		}
 	}
 
-	$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids( $user_include );
-	if ( in_array( $user_id, $hidden_members_ids, true ) ) {
-		return true;
-	}
-
-	return false;
+	return $response;
 }
 
 /** Meta *********************************************************************/
+
+/**
+ * Get metadata for a given moderation item.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $moderation_id ID of the moderation item whose metadata is being requested.
+ * @param string $meta_key      Optional. If present, only the metadata matching
+ *                              that meta key will be returned. Otherwise, all metadata for the
+ *                              moderation item will be fetched.
+ * @param bool   $single        Optional. If true, return only the first value of the
+ *                              specified meta_key. This parameter has no effect if meta_key is not
+ *                              specified. Default: true.
+ *
+ * @return mixed The meta value(s) being requested.
+ */
+function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = get_metadata( 'moderation', $moderation_id, $meta_key, $single );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	/**
+	 * Filters the metadata for a specified moderation item.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param mixed  $retval        The meta values for the moderation item.
+	 * @param int    $moderation_id ID of the moderation item.
+	 * @param string $meta_key      Meta key for the value being requested.
+	 * @param bool   $single        Whether to return one matched meta key row or all.
+	 */
+	return apply_filters( 'bp_moderation_get_meta', $retval, $moderation_id, $meta_key, $single );
+}
+
+/**
+ * Add a piece of moderation metadata.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $moderation_id ID of the moderation item.
+ * @param string $meta_key      Metadata key.
+ * @param mixed  $meta_value    Metadata value.
+ * @param bool   $unique        Optional. Whether to enforce a single metadata value for the
+ *                              given key. If true, and the object already has a value for
+ *                              the key, no change will be made. Default: false.
+ *
+ * @return int|bool The meta ID on successful update, false on failure.
+ */
+function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = add_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $unique );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
+
+/**
+ * Update a piece of moderation meta.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param int    $moderation_id ID of the moderation item whose metadata is being updated.
+ * @param string $meta_key      Key of the metadata being updated.
+ * @param mixed  $meta_value    Value to be set.
+ * @param mixed  $prev_value    Optional. If specified, only update existing metadata entries
+ *                              with the specified value. Otherwise, update all entries.
+ *
+ * @return bool|int Returns false on failure. On successful update of existing
+ *                  metadata, returns true. On successful creation of new metadata,
+ *                  returns the integer ID of the new metadata row.
+ */
+function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
+	add_filter( 'query', 'bp_filter_metaid_column_name' );
+	$retval = update_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $prev_value );
+	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+
+	return $retval;
+}
 
 /**
  * Delete a meta entry from the DB for an moderation item.
@@ -513,82 +529,51 @@ function bp_moderation_delete_meta( $moderation_id, $meta_key = '', $meta_value 
 	return $retval;
 }
 
+/** other *********************************************************************/
+
 /**
- * Get metadata for a given moderation item.
+ * Function get content owner id.
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int    $moderation_id ID of the moderation item whose metadata is being requested.
- * @param string $meta_key      Optional. If present, only the metadata matching
- *                              that meta key will be returned. Otherwise, all metadata for the
- *                              moderation item will be fetched.
- * @param bool   $single        Optional. If true, return only the first value of the
- *                              specified meta_key. This parameter has no effect if meta_key is not
- *                              specified. Default: true.
+ * @param int    $moderation_item_id   content id.
+ * @param string $moderation_item_type content type.
  *
- * @return mixed The meta value(s) being requested.
+ * @return int
  */
-function bp_moderation_get_meta( $moderation_id = 0, $meta_key = '', $single = true ) {
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = get_metadata( 'moderation', $moderation_id, $meta_key, $single );
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_item_type ) {
 
-	/**
-	 * Filters the metadata for a specified moderation item.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param mixed  $retval        The meta values for the moderation item.
-	 * @param int    $moderation_id ID of the moderation item.
-	 * @param string $meta_key      Meta key for the value being requested.
-	 * @param bool   $single        Whether to return one matched meta key row or all.
-	 */
-	return apply_filters( 'bp_moderation_get_meta', $retval, $moderation_id, $meta_key, $single );
+	$user_id = 0;
+	$class   = BP_Moderation_Abstract::get_class( $moderation_item_type );
+
+	if ( method_exists( $class, 'get_content_owner_id' ) ) {
+		$user_id = $class::get_content_owner_id( $moderation_item_id );
+	}
+
+	return (int) $user_id;
 }
 
 /**
- * Update a piece of moderation meta.
+ * Function to get the content based on type.
  *
  * @since BuddyBoss 2.0.0
  *
- * @param int    $moderation_id ID of the moderation item whose metadata is being updated.
- * @param string $meta_key      Key of the metadata being updated.
- * @param mixed  $meta_value    Value to be set.
- * @param mixed  $prev_value    Optional. If specified, only update existing metadata entries
- *                              with the specified value. Otherwise, update all entries.
+ * @param int    $moderation_item_id   moderation id to get the content.
+ * @param string $moderation_item_type item type.
+ * @param bool   $view_link            add content link with content.
  *
- * @return bool|int Returns false on failure. On successful update of existing
- *                  metadata, returns true. On successful creation of new metadata,
- *                  returns the integer ID of the new metadata row.
+ * @return string
  */
-function bp_moderation_update_meta( $moderation_id, $meta_key, $meta_value, $prev_value = '' ) {
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = update_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $prev_value );
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type, $view_link = false ) {
 
-	return $retval;
-}
+	$content_excerpt = '';
+	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
-/**
- * Add a piece of moderation metadata.
- *
- * @since BuddyBoss 2.0.0
- *
- * @param int    $moderation_id ID of the moderation item.
- * @param string $meta_key      Metadata key.
- * @param mixed  $meta_value    Metadata value.
- * @param bool   $unique        Optional. Whether to enforce a single metadata value for the
- *                              given key. If true, and the object already has a value for
- *                              the key, no change will be made. Default: false.
- *
- * @return int|bool The meta ID on successful update, false on failure.
- */
-function bp_moderation_add_meta( $moderation_id, $meta_key, $meta_value, $unique = false ) {
-	add_filter( 'query', 'bp_filter_metaid_column_name' );
-	$retval = add_metadata( 'moderation', $moderation_id, $meta_key, $meta_value, $unique );
-	remove_filter( 'query', 'bp_filter_metaid_column_name' );
+	if ( method_exists( $class, 'get_content_excerpt' ) ) {
+		$content_excerpt = $class::get_content_excerpt( $moderation_item_id, $view_link );
+	}
 
-	return $retval;
+	return $content_excerpt;
 }
 
 /**

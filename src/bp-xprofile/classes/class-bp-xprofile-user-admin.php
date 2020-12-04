@@ -128,7 +128,7 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 				'user_id'      => $user_id,
 			);
 
-			if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable( 0 ) && bp_moderation_is_user_suspended( $user_id ) && bp_has_profile( $profile_args ) ) {
+			if ( bp_is_active( 'moderation' ) && bp_moderation_is_user_suspended( $user_id ) && bp_has_profile( $profile_args ) ) {
 
 				// If member is already a suspended , show a generic metabox.
 				add_meta_box(

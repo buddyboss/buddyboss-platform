@@ -34,47 +34,23 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		/**
-		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
-		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'groups' ) || self::admin_bypass_check() ) {
+		// Check Component is disabled
+		if ( ! bp_is_active( 'groups' ) ){
 			return;
 		}
 
-		add_filter( 'bp_groups_get_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_groups_get_where_conditions', array( $this, 'update_where_sql' ), 10 );
-
-		add_filter( 'bp_group_search_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_group_search_where_conditions', array( $this, 'update_where_sql' ), 10 );
-
 		// Delete group moderation data when group is deleted.
-		add_action( 'groups_delete_group', array( $this, 'delete_moderation_data' ), 10 );
-	}
+		add_action( 'groups_delete_group', array( $this, 'sync_moderation_data_on_delete' ), 10 );
 
-	/**
-	 * Get blocked Groups ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type );
-	}
+		/**
+		 * Moderation code should not add for WordPress backend or IF Bypass argument passed for admin
+		 */
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
+			return;
+		}
 
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $group_id Group id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $group_id ) {
-		$group = new BP_Groups_Group( $group_id );
-
-		return ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
+		// Remove hidden/blocked users content
+		add_filter( 'bp_suspend_group_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 	}
 
 	/**
@@ -132,6 +108,60 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Hide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function hide( $args ) {
+		return parent::hide( $args );
+	}
+
+	/**
+	 * Unhide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function unhide( $args ) {
+		return parent::unhide( $args );
+	}
+
+	/**
+	 * Delete Moderated report
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function delete( $args ) {
+		return parent::delete( $args );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $group_id Group id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $group_id ) {
+		$group = new BP_Groups_Group( $group_id );
+
+		return ( ! empty( $group->creator_id ) ) ? $group->creator_id : 0;
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -141,78 +171,9 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Groups', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Group', 'buddyboss' );
 
 		return $content_types;
-	}
-
-	/**
-	 * Prepare Groups Join SQL query to filter blocked Groups
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $join_sql Groups Join sql.
-	 *
-	 * @return string Join sql
-	 */
-	public function update_join_sql( $join_sql ) {
-		$join_sql .= $this->exclude_joint_query( 'g.id' );
-
-		return $join_sql;
-	}
-
-	/**
-	 * Prepare Groups Where SQL query to filter blocked Groups
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array $where_conditions Groups Where sql.
-	 *
-	 * @return mixed Where SQL
-	 */
-	public function update_where_sql( $where_conditions ) {
-		$where                 = array();
-		$where['groups_where'] = $this->exclude_where_query();
-
-		/**
-		 * Exclude block member activity
-		 */
-		$members_where = $this->exclude_member_group_query();
-		if ( $members_where ) {
-			$where['members_where'] = $members_where;
-		}
-
-		/**
-		 * Filters the groups Moderation Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.0.0
-		 *
-		 * @param array $where array of groups moderation where query.
-		 */
-		$where = apply_filters( 'bp_moderation_groups_get_where_conditions', $where );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
-		}
-
-		return $where_conditions;
-	}
-
-	/**
-	 * Get Exclude Blocked Members SQL
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_member_group_query() {
-		$sql                = false;
-		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_members_ids ) ) {
-			$sql = '( g.creator_id NOT IN ( ' . implode( ',', $hidden_members_ids ) . ' ) )';
-		}
-
-		return $sql;
 	}
 
 	/**
@@ -222,12 +183,29 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	 *
 	 * @param int $group_id group if
 	 */
-	public function delete_moderation_data( $group_id ) {
+	public function sync_moderation_data_on_delete( $group_id ) {
 		if ( ! empty( $group_id ) ) {
 			$moderation_obj = new BP_Moderation( $group_id, self::$moderation_type );
 			if ( ! empty( $moderation_obj->id ) ) {
 				$moderation_obj->delete( true );
 			}
 		}
+	}
+
+	/**
+	 * Update where query remove hidden/blocked user's groups
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $where groups Where sql
+	 * @param object $suspend suspend object
+	 *
+	 * @return array
+	 */
+	public function update_where_sql( $where, $suspend ) {
+		$this->alias               = $suspend->alias;
+		$where['moderation_where'] = $this->exclude_where_query();
+
+		return $where;
 	}
 }

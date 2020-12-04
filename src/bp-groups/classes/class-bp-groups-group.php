@@ -1029,6 +1029,8 @@ class BP_Groups_Group {
 	 *                                            Default: null (no limit).
 	 *     @type int          $user_id            Optional. If provided, results will be limited to groups
 	 *                                            of which the specified user is a member. Default: null.
+	 *     @type int          $creator_id         Optional. If provided, results will be limited to groups
+	 *                                            of which the created by given user. Default: null.
 	 *     @type array|string $slug               Optional. Array or comma-separated list of group slugs to limit
 	 *                                            results to.
 	 *                                            Default: false.
@@ -1102,6 +1104,7 @@ class BP_Groups_Group {
 			'per_page'           => null,
 			'page'               => null,
 			'user_id'            => 0,
+			'creator_id'         => 0,
 			'slug'               => array(),
 			'search_terms'       => false,
 			'search_columns'     => array(),
@@ -1235,6 +1238,10 @@ class BP_Groups_Group {
 
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = $wpdb->prepare( 'm.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0', $r['user_id'] );
+		}
+
+		if ( ! empty( $r['creator_id'] ) ) {
+			$where_conditions['creator'] = $wpdb->prepare( "g.creator_id = %d", $r['creator_id'] );
 		}
 
 		if ( ! empty( $r['include'] ) ) {

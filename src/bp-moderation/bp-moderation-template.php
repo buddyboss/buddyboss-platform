@@ -117,12 +117,8 @@ function bp_has_moderation( $args = '' ) {
 	$args = bp_parse_args( $args );
 
 	if ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) {
-		$args['in_types']          = array( 'user' );
-		$args['display_reporters'] = true;
-	}
-
-	if ( bp_is_user_moderation() ) {
-		$args['user_id'] = bbp_get_displayed_user_id();
+		$args['in_types'] = array( 'user' );
+		$args['user_id']  = bp_loggedin_user_id();
 	}
 
 	/*

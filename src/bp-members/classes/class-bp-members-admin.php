@@ -1229,7 +1229,7 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 							<label class="approved"><input type="radio" name="user_status" value="ham" <?php checked( $is_spammer, false ); ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></label><br />
 
 							<?php
-							if ( bp_is_active( 'moderation' ) && bp_is_moderation_member_blocking_enable( 0 ) ) {
+							if ( bp_is_active( 'moderation' ) ) {
 								$is_suspend = bp_moderation_is_user_suspended( $user->ID );
 								?>
 								<label class="suspend"><input type="radio" name="user_status" id="user_status" value="suspend" <?php checked( $is_suspend, true ); ?>><?php esc_html_e( 'Suspend', 'buddyboss' ); ?></label>
@@ -1514,9 +1514,9 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 				$is_suspend = stripslashes( $_POST['user_status'] );
 
 				if ( ! empty( $is_suspend ) && 'suspend' === $is_suspend ) {
-					bp_moderation_hide_unhide_request( $user_id, BP_Moderation_Members::$moderation_type, 'hide' );
+					BP_Suspend_Member::suspend_user( $user_id );
 				} elseif ( bp_moderation_is_user_suspended( $user_id ) ) {
-					bp_moderation_hide_unhide_request( $user_id, BP_Moderation_Members::$moderation_type, 'unhide' );
+					BP_Suspend_Member::unsuspend_user( $user_id );
 				}
 			}
 		}

@@ -35,42 +35,29 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		/**
-		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
-		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'forums' ) || self::admin_bypass_check() ) {
+		// Check Component is disabled
+		if ( ! bp_is_active( 'document' ) ){
 			return;
 		}
 
-		$this->alias = $this->alias . 'fr'; // fr: Forum Reply.
+		// delete reply moderation data when actual reply deleted.
+		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
 
-		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
+		/**
+		 * Moderation code should not add for WordPress backend oror Bypass argument passed for admin
+		 */
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
+			return;
+		}
 
-		add_filter( 'bp_forum_reply_search_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_forum_reply_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+		// Remove hidden/blocked users content
+		add_filter( 'bp_suspend_forum_reply_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button class.
 		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
 
 		// Blocked template
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
-
-		// delete reply moderation data when actual reply deleted.
-		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $reply_id Reply id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $reply_id ) {
-		return get_post_field( 'post_author', $reply_id );
 	}
 
 	/**
@@ -124,6 +111,58 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Hide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function hide( $args ) {
+		return parent::hide( $args );
+	}
+
+	/**
+	 * Unhide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function unhide( $args ) {
+		return parent::unhide( $args );
+	}
+
+	/**
+	 * Delete Moderated report
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function delete( $args ) {
+		return parent::delete( $args );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $reply_id Reply id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $reply_id ) {
+		return get_post_field( 'post_author', $reply_id );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -133,141 +172,41 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Replies', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Reply', 'buddyboss' );
 
 		return $content_types;
 	}
 
 	/**
-	 * Prepare Forum Replies Join SQL query to filter blocked Forum Replies
+	 * Function to delete reply moderation data when actual reply is deleted
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $join_sql Forum Replies Join sql.
-	 * @param object $wp_query WP_Query object.
-	 *
-	 * @return string Join sql
+	 * @param int    $reply_id reply id being deleted.
+	 * @param object $reply    reply data.
 	 */
-	public function update_join_sql( $join_sql, $wp_query = null ) {
-		global $wpdb;
-		$action_name = current_filter();
-
-		if ( 'bp_forum_reply_search_join_sql' === $action_name ) {
-			$join_sql .= $this->exclude_joint_query( 'p.ID' );
-		} else {
-			if ( false !== $wp_query->get( 'moderation_query' ) ) {
-				$reply_slug = bbp_get_reply_post_type();
-				$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-				if ( ! empty( $post_types ) && in_array( $reply_slug, $post_types, true ) ) {
-					$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
-				}
+	public function sync_moderation_data_on_delete( $reply_id, $reply ) {
+		if ( ! empty( $reply_id ) && ! empty( $reply ) && bbp_get_reply_post_type() === $reply->post_type ) {
+			$moderation_obj = new BP_Moderation( $reply_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
 			}
 		}
-
-		return $join_sql;
 	}
 
 	/**
-	 * Prepare Forum Replies Where SQL query to filter blocked Forum Replies
+	 * Update where query Remove hidden/blocked user's forum's replies
 	 *
-	 * @since BuddyBoss 2.0.0
+	 * @param string $where   forum's replies Where sql
+	 * @param object $suspend suspend object
 	 *
-	 * @param string $where_conditions Forum Replies Where sql.
-	 * @param object $wp_query         WP_Query object.
-	 *
-	 * @return mixed Where SQL
+	 * @return array
 	 */
-	public function update_where_sql( $where_conditions, $wp_query = null ) {
+	public function update_where_sql( $where, $suspend ) {
+		$this->alias               = $suspend->alias;
+		$where['moderation_where'] = $this->exclude_where_query();
 
-		$action_name = current_filter();
-
-		if ( 'bp_forum_reply_search_where_sql' !== $action_name ) {
-			$reply_slug = bbp_get_reply_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( false === $wp_query->get( 'moderation_query' ) || empty( $post_types ) || ! in_array( $reply_slug, $post_types, true ) ) {
-				return $where_conditions;
-			}
-		}
-
-		$where                        = array();
-		$where['forum_replies_where'] = $this->exclude_where_query();
-
-		/**
-		 * Exclude block member forum replies [ it'll Show placeholder for blocked content everywhere except search ]
-		 */
-		if ( 'bp_forum_reply_search_where_sql' === $action_name ) {
-			$members_where = $this->exclude_member_reply_query();
-			if ( $members_where ) {
-				$where['members_where'] = $members_where;
-			}
-		}
-
-		/**
-		 * Exclude block Topic replies
-		 */
-		$topics_where = $this->exclude_topic_reply_query();
-		if ( $topics_where ) {
-			$where['topics_where'] = $topics_where;
-		}
-
-		/**
-		 * Filters the Forum Replies Moderation Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.0.0
-		 *
-		 * @param array $where array of Forum Replies moderation where query.
-		 */
-		$where = apply_filters( 'bp_moderation_forum_replies_get_where_conditions', $where );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forum_reply_search_where_sql' === $action_name ) {
-				$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
-			} else {
-				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
-			}
-		}
-
-		return $where_conditions;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked Members related replies
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_member_reply_query() {
-		global $wpdb;
-		$sql                = false;
-		$action_name        = current_filter();
-		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_members_ids ) ) {
-			$reply_alias = ( 'bp_forum_reply_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
-			$sql         = "( {$reply_alias}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked topic related replies
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_topic_reply_query() {
-		global $wpdb;
-		$sql              = false;
-		$action_name      = current_filter();
-		$hidden_topic_ids = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_topic_ids ) ) {
-			$reply_alias = ( 'bp_forum_reply_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
-			$sql         = "( {$reply_alias}.post_parent NOT IN ( " . implode( ',', $hidden_topic_ids ) . ' ) )';
-		}
-
-		return $sql;
+		return $where;
 	}
 
 	/**
@@ -311,64 +250,12 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 			}
 		}
 
-		$reply_id        = bbp_get_reply_id();
-		$reply_author_id = bbp_get_reply_author_id( $reply_id );
+		$reply_id = bbp_get_reply_id();
 
-		if ( in_array( $reply_id, self::get_sitewide_hidden_ids(), true ) ||
-		     bp_moderation_is_user_suspended( $reply_author_id, true ) ) {
+		if ( BP_Core_Suspend::check_hidden_content( $reply_id, self::$moderation_type ) ) {
 			return 'loop-blocked-single-reply.php';
 		}
 
 		return $template_names;
-	}
-
-	/**
-	 * Get blocked Replies that also include Blocked forum & topic replies
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		$hidden_reply_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
-
-		$hidden_topic_ids = BP_Moderation_Forum_Topics::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_topic_ids ) ) {
-			$replies_query = new WP_Query(
-				array(
-					'fields'                 => 'ids',
-					'post_type'              => bbp_get_reply_post_type(),
-					'post_status'            => 'publish',
-					'post_parent__in'        => $hidden_topic_ids,
-					'posts_per_page'         => - 1,
-					// Need to get all topics id of hidden forums.
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-					'suppress_filters'       => true,
-				) );
-
-			if ( $replies_query->have_posts() ) {
-				$hidden_reply_ids = array_merge( $hidden_reply_ids, $replies_query->posts );
-			}
-		}
-
-		return $hidden_reply_ids;
-	}
-
-	/**
-	 * Function to delete reply moderation data when actual reply is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $post_id post id being deleted.
-	 * @param object $post    post data.
-	 */
-	public function delete_moderation_data( $post_id, $post ) {
-		if ( ! empty( $post_id ) && ! empty( $post ) && bbp_get_reply_post_type() === $post->post_type ) {
-			$moderation_obj = new BP_Moderation( $post_id, self::$moderation_type );
-			if ( ! empty( $moderation_obj->id ) ) {
-				$moderation_obj->delete( true );
-			}
-		}
 	}
 }

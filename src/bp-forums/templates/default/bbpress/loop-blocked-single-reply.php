@@ -3,16 +3,16 @@
 /**
  * Replies Loop - Single Reply
  *
- * @since BuddyBoss 2.0.0
+ * @since   BuddyBoss 2.0.0
  *
  * @package BuddyBoss\Theme
  */
-$reply_id = bbp_get_reply_id();
+$reply_id        = bbp_get_reply_id();
 $reply_author_id = bbp_get_reply_author_id( $reply_id );
 $is_user_blocked = $is_user_suspended = false;
-if ( bp_is_active( 'moderation' ) ){
-	$is_user_blocked   = bp_moderation_is_user_suspended( $reply_author_id, true );
+if ( bp_is_active( 'moderation' ) ) {
 	$is_user_suspended = bp_moderation_is_user_suspended( $reply_author_id );
+	$is_user_blocked   = bp_moderation_is_user_blocked( $reply_author_id );
 }
 ?>
 
@@ -26,13 +26,14 @@ if ( bp_is_active( 'moderation' ) ){
 
 			<span class="bbp-header">
 				<?php _e( 'in reply to: ', 'buddyboss' ); ?>
-				<a class="bbp-topic-permalink" href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a>
+				<a class="bbp-topic-permalink"
+				   href="<?php bbp_topic_permalink( bbp_get_reply_topic_id() ); ?>"><?php bbp_topic_title( bbp_get_reply_topic_id() ); ?></a>
 			</span>
 
 		<?php endif; ?>
 
 
-		<?php if ( ! $is_user_blocked ) { ?>
+		<?php if ( ! $is_user_suspended || $is_user_blocked ) { ?>
 
 			<a href="<?php bbp_reply_url(); ?>" class="bbp-reply-permalink">#<?php bbp_reply_id(); ?></a>
 
@@ -54,7 +55,7 @@ if ( bp_is_active( 'moderation' ) ){
 
 		<?php do_action( 'bbp_theme_before_reply_author_details' ); ?>
 
-		<?php if ( $is_user_blocked ) { ?>
+		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
 			<span class="bbp-author-avatar">
 				<?php echo get_avatar( 0 ); ?>
 			</span>
@@ -62,10 +63,10 @@ if ( bp_is_active( 'moderation' ) ){
 			<span class="bbp-author-name"><?php esc_html_e( 'User Blocked', 'buddyboss' ); ?></span>
 		<?php } else {
 			bbp_reply_author_link(
-				array(
-					'sep'       => '<br />',
-					'show_role' => true,
-				)
+					array(
+							'sep'       => '<br />',
+							'show_role' => true,
+					)
 			);
 		}
 		?>

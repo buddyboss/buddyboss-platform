@@ -35,60 +35,27 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
-		/**
-		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
-		 */
-		if ( ( is_admin() && ! wp_doing_ajax() ) || ! bp_is_active( 'forums' ) || self::admin_bypass_check() ) {
+		// Check Component is disabled
+		if ( ! bp_is_active( 'document' ) ){
 			return;
 		}
 
-		$this->alias = $this->alias . 'ft'; // ft: Forum Topic.
+		// delete topic moderation data when actual topic deleted.
+		add_action( 'after_delete_post', array( $this, 'sync_moderation_data_on_delete' ), 10, 2 );
 
-		add_filter( 'posts_join', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'posts_where', array( $this, 'update_where_sql' ), 10, 2 );
+		/**
+		 * Moderation code should not add for WordPress backend oror Bypass argument passed for admin
+		 */
+		if ( ( is_admin() && ! wp_doing_ajax() ) || self::admin_bypass_check() ) {
+			return;
+		}
 
-		add_filter( 'bp_forum_topic_search_join_sql', array( $this, 'update_join_sql' ), 10 );
-		add_filter( 'bp_forum_topic_search_where_sql', array( $this, 'update_where_sql' ), 10 );
+		// Remove hidden/blocked users content
+		add_filter( 'bp_suspend_forum_topic_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button class.
 		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
 
-		// delete topic moderation data when actual topic deleted.
-		add_action( 'after_delete_post', array( $this, 'delete_moderation_data' ), 10, 2 );
-	}
-
-	/**
-	 * Get blocked Topics that also include Blocked forum's topics
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_sitewide_hidden_ids() {
-		$hidden_topic_ids = self::get_sitewide_hidden_item_ids( self::$moderation_type );
-
-		$hidden_forum_ids = BP_Moderation_Forums::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_forum_ids ) ) {
-			$topics_query = new WP_Query(
-				array(
-					'fields'                 => 'ids',
-					'post_type'              => bbp_get_topic_post_type(),
-					'post_status'            => 'publish',
-					'post_parent__in'        => $hidden_forum_ids,
-					'posts_per_page'         => - 1,
-					// Need to get all topics id of hidden forums.
-					'update_post_meta_cache' => false,
-					'update_post_term_cache' => false,
-					'suppress_filters'       => true,
-				)
-			);
-
-			if ( $topics_query->have_posts() ) {
-				$hidden_topic_ids = array_merge( $hidden_topic_ids, $topics_query->posts );
-			}
-		}
-
-		return $hidden_topic_ids;
 	}
 
 	/**
@@ -156,6 +123,45 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Hide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function hide( $args ) {
+		return parent::hide( $args );
+	}
+
+	/**
+	 * Unhide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function unhide( $args ) {
+		return parent::unhide( $args );
+	}
+
+	/**
+	 * Delete Moderated report
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function delete( $args ) {
+		return parent::delete( $args );
+	}
+
+	/**
 	 * Add Moderation content type.
 	 *
 	 * @since BuddyBoss 2.0.0
@@ -165,98 +171,43 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	 * @return mixed
 	 */
 	public function add_content_types( $content_types ) {
-		$content_types[ self::$moderation_type ] = __( 'Discussions', 'buddyboss' );
+		$content_types[ self::$moderation_type ] = __( 'Discussion', 'buddyboss' );
 
 		return $content_types;
 	}
 
 	/**
-	 * Prepare Forum Topics Join SQL query to filter blocked Forum Topics
+	 * Function to delete topic moderation data when actual topic is deleted
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $join_sql Forum Topics Join sql.
-	 * @param object $wp_query WP_Query object.
-	 *
-	 * @return string Join sql
+	 * @param int    $topic_id topic id being deleted.
+	 * @param object $topic    topic data.
 	 */
-	public function update_join_sql( $join_sql, $wp_query = null ) {
-		global $wpdb;
-
-		$action_name = current_filter();
-
-		if ( 'bp_forum_topic_search_join_sql' === $action_name ) {
-			$join_sql .= $this->exclude_joint_query( 'p.ID' );
-		} else {
-			$topic_slug = bbp_get_topic_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( ! empty( $post_types ) && in_array( $topic_slug, $post_types, true ) ) {
-				$join_sql .= $this->exclude_joint_query( "{$wpdb->posts}.ID" );
+	public function sync_moderation_data_on_delete( $topic_id, $topic ) {
+		if ( ! empty( $topic_id ) && ! empty( $topic ) && bbp_get_topic_post_type() === $topic->post_type ) {
+			$moderation_obj = new BP_Moderation( $topic_id, self::$moderation_type );
+			if ( ! empty( $moderation_obj->id ) ) {
+				$moderation_obj->delete( true );
 			}
 		}
-
-		return $join_sql;
 	}
 
 	/**
-	 * Prepare Forum Topics Where SQL query to filter blocked Forum Topics
+	 * Update where query remove hidden/blocked user's forum's topic
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where_conditions Forum Topics Where sql.
-	 * @param object $wp_query         WP_Query object.
+	 * @param string $where forum's topic Where sql
+	 * @param object $suspend suspend object
 	 *
-	 * @return mixed Where SQL
+	 * @return array
 	 */
-	public function update_where_sql( $where_conditions, $wp_query = null ) {
+	public function update_where_sql( $where, $suspend ) {
+		$this->alias               = $suspend->alias;
+		$where['moderation_where'] = $this->exclude_where_query();
 
-		$action_name = current_filter();
-
-		if ( 'bp_forum_topic_search_where_sql' !== $action_name ) {
-			$topic_slug = bbp_get_topic_post_type();
-			$post_types = wp_parse_slug_list( $wp_query->get( 'post_type' ) );
-			if ( empty( $post_types ) || ! in_array( $topic_slug, $post_types, true ) ) {
-				return $where_conditions;
-			}
-		}
-
-		$where                       = array();
-		$where['forum_topics_where'] = $this->exclude_where_query();
-
-		/**
-		 * Exclude block member forum topics
-		 */
-		$members_where = $this->exclude_member_topic_query();
-		if ( $members_where ) {
-			$where['members_where'] = $members_where;
-		}
-
-		/**
-		 * Exclude block Topic replies
-		 */
-		$forums_where = $this->exclude_forum_topic_query();
-		if ( $forums_where ) {
-			$where['forums_where'] = $forums_where;
-		}
-
-		/**
-		 * Filters the Forum Topics Moderation Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.0.0
-		 *
-		 * @param array $where array of Forum Topics moderation where query.
-		 */
-		$where = apply_filters( 'bp_moderation_forum_topics_get_where_conditions', $where );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			if ( 'bp_forum_topic_search_where_sql' === $action_name ) {
-				$where_conditions['moderation_query'] = '( ' . implode( ' AND ', $where ) . ' )';
-			} else {
-				$where_conditions .= ' AND ( ' . implode( ' AND ', $where ) . ' )';
-			}
-		}
-
-		return $where_conditions;
+		return $where;
 	}
 
 	/**
@@ -281,62 +232,5 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 		}
 
 		return $button;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked Members related topics
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_member_topic_query() {
-		global $wpdb;
-		$sql                = false;
-		$action_name        = current_filter();
-		$hidden_members_ids = BP_Moderation_Members::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_members_ids ) ) {
-			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
-			$sql         = "( {$topic_alias}.post_author NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * Get SQL for Exclude Blocked forum related topics
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|bool
-	 */
-	private function exclude_forum_topic_query() {
-		global $wpdb;
-		$sql              = false;
-		$action_name      = current_filter();
-		$hidden_forum_ids = BP_Moderation_Forums::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_forum_ids ) ) {
-			$topic_alias = ( 'bp_forum_topic_search_where_sql' === $action_name ) ? 'p' : $wpdb->posts;
-			$sql         = "( {$topic_alias}.post_parent NOT IN ( " . implode( ',', $hidden_forum_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * Function to delete topic moderation data when actual topic is deleted
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $post_id post id being deleted.
-	 * @param object $post    post data.
-	 */
-	public function delete_moderation_data( $post_id, $post ) {
-		if ( ! empty( $post_id ) && ! empty( $post ) && bbp_get_topic_post_type() === $post->post_type ) {
-			$moderation_obj = new BP_Moderation( $post_id, self::$moderation_type );
-			if ( ! empty( $moderation_obj->id ) ) {
-				$moderation_obj->delete( true );
-			}
-		}
 	}
 }

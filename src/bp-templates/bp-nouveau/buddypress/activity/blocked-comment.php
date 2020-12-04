@@ -8,16 +8,16 @@
  * @version BuddyBoss 2.0.0
  */
 $is_user_blocked = $is_user_suspended = false;
-if ( bp_is_active( 'moderation' ) ){
-	$is_user_blocked   = bp_moderation_is_user_suspended( bp_get_activity_comment_user_id(), true );
+if ( bp_is_active( 'moderation' ) ) {
 	$is_user_suspended = bp_moderation_is_user_suspended( bp_get_activity_comment_user_id() );
+	$is_user_blocked   = bp_moderation_is_user_blocked( bp_get_activity_comment_user_id() );
 }
 ?>
 
 <li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>"
 	data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
 	<div class="acomment-avatar item-avatar">
-		<?php if ( $is_user_blocked ) { ?>
+		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
 			<span>
 				<?php
 				bp_activity_avatar(
@@ -44,7 +44,7 @@ if ( bp_is_active( 'moderation' ) ){
 
 	<div class="acomment-meta">
 
-		<?php if ( $is_user_blocked ) { ?>
+		<?php if ( $is_user_suspended || $is_user_blocked ) { ?>
 			<span class="author-name"><?php esc_html_e( 'User Blocked', 'buddyboss' ); ?></span>
 		<?php } else {
 			bp_nouveau_activity_comment_action();

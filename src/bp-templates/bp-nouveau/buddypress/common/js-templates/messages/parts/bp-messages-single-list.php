@@ -9,7 +9,7 @@
 		<div class="bp-avatar-wrap">
 			<# if ( data.is_deleted ) { #>
 				<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
-			<# } else if ( data.is_user_blocked || data.is_user_suspended ) { #>
+			<# } else if ( data.is_user_suspended || data.is_user_blocked  ) { #>
 				<img class="avatar" src="{{{data.sender_avatar}}}" alt="" />
 			<# } else { #>
 				<a href="{{data.sender_link}}" class="bp-user-avatar">
@@ -30,7 +30,7 @@
 					<# } else { #>
 					<strong class="bp-user-deleted">{{data.sender_name}}</strong>
 					<# } #>
-				<# } else if ( data.is_user_blocked || data.is_user_suspended ) { #>
+				<# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
 					<strong class="bp-user-blocked"><?php _e( 'User Blocked', 'buddyboss' ); ?></strong>
 				<# } else { #>
 					<a href="{{data.sender_link}}" class="bp-user-link">
@@ -42,7 +42,7 @@
 					</a>
 				<# } #>
 
-				<# if ( ! data.is_user_blocked && ! data.is_user_suspended ) { #>
+				<# if ( ! data.is_user_suspended && ! data.is_user_blocked ) { #>
 					<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>
 
 					<# if ( data.afterMeta ) { #>
@@ -51,7 +51,7 @@
 				<# } #>
 			</div>
 
-			<# if ( data.is_user_blocked || data.is_user_suspended ) { #>
+			<# if ( data.is_user_suspended || data.is_user_blocked ) { #>
 
 				<# if ( data.is_user_suspended ) { #>
 					<div class="bp-message-content-wrap"><?php _e( 'Content from suspended user.', 'buddyboss' ); ?></div>

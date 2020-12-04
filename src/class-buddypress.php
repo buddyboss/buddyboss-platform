@@ -620,6 +620,7 @@ class BuddyPress {
 			'media',
 			'document',
 			'gdpr',
+			'suspend',
 			'invites',
 			'moderation',
 		);
@@ -679,6 +680,17 @@ class BuddyPress {
 			'BP_Registration_Theme_Compat'    => 'members',
 			'BP_Signup'                       => 'members',
 			'BP_BuddyBoss_Platform_Updater'   => 'core',
+			'BP_Core_Suspend'                 => 'suspend',
+			'BP_Suspend_Abstract'             => 'suspend',
+			'BP_Suspend_Member'               => 'suspend',
+			'BP_Suspend_Activity'             => 'suspend',
+			'BP_Suspend_Activity_Comment'     => 'suspend',
+			'BP_Suspend_Group'                => 'suspend',
+			'BP_Suspend_Forum'                => 'suspend',
+			'BP_Suspend_Forum_Topic'          => 'suspend',
+			'BP_Suspend_Forum_Reply'          => 'suspend',
+			'BP_Suspend_Document'             => 'suspend',
+			'BP_Suspend_Media'                => 'suspend',
 
 			// BuddyBoss Platform Rest API classes.
 			'BP_REST_Components_Endpoint'                  => 'core',
@@ -755,6 +767,8 @@ class BuddyPress {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/trait-bp-rest-attachments.php";
 		} elseif ( 'gdpr' === $component ) {
 			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
+		} elseif ( 'suspend' === $component ) {
+			$path = dirname( __FILE__ ) . "/bp-moderation/classes/suspend/class-{$class}.php";
 		} else {
 			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
 		}
@@ -769,7 +783,7 @@ class BuddyPress {
 		 * Skip if PHPUnit is running, or BuddyPress is installing for the first time.
 		 */
 		if (
-			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'profiletype' ), true ) &&
+			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'suspend', 'profiletype' ), true ) &&
 			! bp_is_active( $component ) &&
 			! function_exists( 'tests_add_filter' )
 		) {

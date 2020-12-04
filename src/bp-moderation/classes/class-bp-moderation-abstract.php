@@ -36,16 +36,19 @@ abstract class BP_Moderation_Abstract {
 	 *
 	 * @var string
 	 */
-	public $alias = 'mo';
+	public $alias;
 
 	/**
 	 * Check whether bypass argument pass for admin user or not.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
 	 * @return bool
 	 */
 	public static function admin_bypass_check() {
 		$admin_exclude = filter_input( INPUT_GET, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
 
-		if ( empty( $admin_exclude ) ){
+		if ( empty( $admin_exclude ) ) {
 			$admin_exclude = filter_input( INPUT_POST, 'modbypass', FILTER_SANITIZE_NUMBER_INT );
 		}
 
@@ -58,63 +61,6 @@ abstract class BP_Moderation_Abstract {
 
 		return false;
 	}
-
-	/**
-	 * Prepare Join sql for exclude Blocked items
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $item_id_field Items ID field name with alias of table.
-	 *
-	 * @return string|void
-	 */
-	protected function exclude_joint_query( $item_id_field ) {
-		global $wpdb;
-		$bp = buddypress();
-
-		return ' ' . $wpdb->prepare( "LEFT JOIN {$bp->moderation->table_name} {$this->alias} ON ( {$this->alias}.item_id = $item_id_field AND {$this->alias}.item_type = %s )", $this->item_type ); // phpcs:ignore
-	}
-
-	/**
-	 * Prepare Where sql for exclude Blocked items
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @return string|void
-	 */
-	protected function exclude_where_query() {
-		return "( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL )";
-	}
-
-	/**
-	 * Retrieve sitewide hidden items ids of particular item type.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param string $type         Moderation items type.
-	 * @param bool   $user_include Include item which report by current user even if it's not hidden.
-	 *
-	 * @return array $moderation See BP_Moderation::get() for description.
-	 */
-	public static function get_sitewide_hidden_item_ids( $type, $user_include = false ) {
-		$hidden_ids  = array();
-		$moderations = bp_moderation_get_sitewide_hidden_item_ids( $type, $user_include );
-
-		if ( ! empty( $moderations ) && ! empty( $moderations['moderations'] ) ) {
-			$hidden_ids = wp_list_pluck( $moderations['moderations'], 'item_id' );
-		}
-
-		return $hidden_ids;
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $item_id Content item id.
-	 */
-	abstract public static function get_content_owner_id( $item_id );
 
 	/**
 	 * Get class from content type.
@@ -137,13 +83,43 @@ abstract class BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $item_id Content item id.
+	 */
+	abstract public static function get_content_owner_id( $item_id );
+
+	/**
+	 * Get Content excerpt.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $item_id   Content item id.
+	 * @param bool    $view_link add view link
+	 */
+	abstract public static function get_content_excerpt( $item_id, $view_link = false );
+
+	/**
+	 * Get permalink
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $item_id Content item id.
+	 *
+	 * @return string
+	 */
+	abstract public static function get_permalink( $item_id );
+
+	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array $args Content data.
 	 *
-	 * @return string
+	 * @return BP_Moderation|WP_Error
 	 */
 	public static function report( $args ) {
 		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
@@ -160,21 +136,100 @@ abstract class BP_Moderation_Abstract {
 			return new WP_Error( 'moderation_not_enable', __( 'Moderation not enabled.', 'buddyboss' ) );
 		}
 
-		$args['category_id'] = isset( $args['category_id'] ) && 'other' !== $args['category_id'] ? $args['category_id'] : 0;
-
 		if ( empty( $moderation->id ) ) {
 			$moderation->item_id   = $args['content_id'];
 			$moderation->item_type = $args['content_type'];
 		}
 
-		$moderation->category_id = isset( $args['category_id'] ) ? $args['category_id'] : 0;
-		$moderation->content     = ! empty( $args['note'] ) ? $args['note'] : '';
-
-		$moderation->user_id      = get_current_user_id();
+		$moderation->category_id  = isset( $args['category_id'] ) ? $args['category_id'] : 0;
+		$moderation->content      = ! empty( $args['note'] ) ? $args['note'] : '';
 		$moderation->last_updated = current_time( 'mysql' );
 
 		$moderation->save();
 
 		return $moderation;
+	}
+
+	/**
+	 * Hide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function hide( $args ) {
+		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$moderation->hide();
+
+		return $moderation;
+	}
+
+	/**
+	 * unhide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function unhide( $args ) {
+		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+
+		$moderation->unhide();
+
+		return $moderation;
+	}
+
+	/**
+	 * Delete Moderated report
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function delete( $args ) {
+		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
+
+		$moderation->delete( $args['force_all'] );
+
+		return $moderation;
+	}
+
+	/**
+	 * Retrieve sitewide hidden items ids of particular item type.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param string $type         Moderation items type.
+	 * @param bool   $user_include Include item which report by current user even if it's not hidden.
+	 *
+	 * @return array $moderation See BP_Moderation::get() for description.
+	 */
+	public static function get_sitewide_hidden_item_ids( $type, $user_include = false ) {
+		$hidden_ids = array();
+
+		return $hidden_ids;
+	}
+
+	protected function blocked_user_query(){
+		$bp = buddypress();
+		return "SELECT suspend_id FROM {$bp->table_prefix}bp_suspend_details WHERE `user_id` IN (6)";
+	}
+
+	/**
+	 * Prepare Where sql for exclude Blocked items
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @return string|void
+	 */
+	protected function exclude_where_query() {
+		$blocked_query = $this->blocked_user_query();
+		return "( ( ( {$this->alias}.hide_parent = 0 OR {$this->alias}.hide_parent IS NULL ) AND ( {$this->alias}.hide_sitewide = 0 OR {$this->alias}.hide_sitewide IS NULL ) AND {$this->alias}.id IS NULL ) OR ( {$this->alias}.id NOT IN ( $blocked_query ) ) )";
 	}
 }

@@ -116,7 +116,7 @@ if ( ! class_exists( 'Bp_Search_Media' ) ) :
 				$sql['select'] .= $wpdb->prepare( " DISTINCT m.id, 'photos' as type, m.title LIKE %s AS relevance, m.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] = " FROM {$bp->media->table_name} m WHERE";
+			$sql['from'] = " FROM {$bp->media->table_name} m";
 
 			/**
 			 * Filter the MySQL JOIN clause for the media Search query.

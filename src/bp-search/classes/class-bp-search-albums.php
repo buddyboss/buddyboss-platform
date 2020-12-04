@@ -116,7 +116,7 @@ if ( ! class_exists( 'Bp_Search_Albums' ) ) :
 				$sql['select'] .= $wpdb->prepare( " DISTINCT ma.id, 'albums' as type, ma.title LIKE %s AS relevance, ma.date_created as entry_date  ", '%' . $wpdb->esc_like( $search_term ) . '%' );
 			}
 
-			$sql['from'] =  " FROM {$bp->media->table_name_albums} ma WHERE";
+			$sql['from'] =  " FROM {$bp->media->table_name_albums} ma";
 
 			/**
 			 * Filter the MySQL JOIN clause for the albums Search query.

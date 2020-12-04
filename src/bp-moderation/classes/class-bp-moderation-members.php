@@ -35,6 +35,9 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
+		// Delete user moderation data when actual user is deleted.
+		add_action( 'deleted_user', array( $this, 'sync_moderation_data_on_delete' ), 10, 3 );
+
 		/**
 		 * Moderation code should not add for WordPress backend or IF component is not active or Bypass argument passed for admin
 		 */
@@ -42,30 +45,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 			return;
 		}
 
-		add_filter( 'bp_user_query_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_user_query_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
-
-		add_filter( 'bp_user_search_join_sql', array( $this, 'update_join_sql' ), 10, 2 );
-		add_filter( 'bp_user_search_where_sql', array( $this, 'update_where_sql' ), 10, 2 );
+		// Remove hidden/blocked users content
+		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// button class.
 		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
 
-		// Delete user moderation data when actual user is deleted.
-		add_action( 'deleted_user', array( $this, 'delete_moderation_data' ), 10, 3 );
-	}
-
-	/**
-	 * Get Content owner id.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $user_id User id.
-	 *
-	 * @return int
-	 */
-	public static function get_content_owner_id( $user_id ) {
-		return $user_id;
+		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 	}
 
 	/**
@@ -73,12 +59,26 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param integer $user_id User id.
+	 * @param integer $user_id   User id.
+	 * @param bool    $view_link add view link
 	 *
 	 * @return string
 	 */
-	public static function get_content_excerpt( $user_id ) {
+	public static function get_content_excerpt( $user_id, $view_link = false ) {
 		return bp_core_get_user_displayname( $user_id );
+	}
+
+	/**
+	 * Get permalink
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param int $member_id member id.
+	 *
+	 * @return string
+	 */
+	public static function get_permalink( $member_id ) {
+		return '';
 	}
 
 	/**
@@ -92,6 +92,58 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public static function report( $args ) {
 		return parent::report( $args );
+	}
+
+	/**
+	 * Hide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function hide( $args ) {
+		return parent::hide( $args );
+	}
+
+	/**
+	 * Unhide Moderated content
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function unhide( $args ) {
+		return parent::unhide( $args );
+	}
+
+	/**
+	 * Delete Moderated report
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args Content data.
+	 *
+	 * @return BP_Moderation|WP_Error
+	 */
+	public static function delete( $args ) {
+		return parent::delete( $args );
+	}
+
+	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $member_id Group id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $member_id ) {
+		return ( ! empty( $member_id ) ) ? $member_id : 0;
 	}
 
 	/**
@@ -110,81 +162,37 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Prepare Members Join SQL query to filter blocked Members
+	 * Delete moderation data when actual user is deleted
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $join_sql Members sql.
-	 * @param string $uid_name User ID field name.
-	 *
-	 * @return string Join sql
+	 * @param int    $user_id  user id of the user that is being deleted.
+	 * @param int    $reassign user id of the user that all content is going to assign.
+	 * @param object $user     user data.
 	 */
-	public function update_join_sql( $join_sql, $uid_name ) {
-		$join_sql .= $this->exclude_joint_query( 'u.' . $uid_name );
+	public function sync_moderation_data_on_delete( $user_id, $reassign, $user ) {
 
-		return $join_sql;
-	}
-
-	/**
-	 * Prepare Members Where SQL query to filter blocked Members
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param array  $where_conditions Members where sql.
-	 * @param string $uid_name         User ID field name.
-	 *
-	 * @return mixed Where SQL
-	 */
-	public function update_where_sql( $where_conditions, $uid_name ) {
-		$where                = array();
-		$where['users_where'] = $this->exclude_where_query( $uid_name );
-
-		/**
-		 * Filters the Members Moderation Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.0.0
-		 *
-		 * @param array $where array of Members moderation where query.
-		 */
-		$where = apply_filters( 'bp_moderation_groups_get_where_conditions', $where );
-
-		if ( ! empty( array_filter( $where ) ) ) {
-			$where_conditions['moderation_where'] = '( ' . implode( ' AND ', $where ) . ' )';
+		$moderation_obj = new BP_Moderation( $user_id, self::$moderation_type );
+		if ( ! empty( $moderation_obj->id ) ) {
+			$moderation_obj->delete( true );
 		}
-
-		return $where_conditions;
 	}
 
 	/**
-	 * Prepare Where sql for exclude Blocked items
+	 * Update where query remove blocked users
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $uid_name User ID field name.
-	 *
-	 * @return string|void
-	 */
-	protected function exclude_where_query( $uid_name = '' ) {
-		$sql                = false;
-		$hidden_members_ids = self::get_sitewide_hidden_ids();
-		if ( ! empty( $hidden_members_ids ) ) {
-			$sql = "( u.$uid_name NOT IN ( " . implode( ',', $hidden_members_ids ) . ' ) )';
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * Get blocked Member ids
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param bool $user_include Include item which report by current user even if it's not hidden.
+	 * @param string $where   blocked users Where sql
+	 * @param object $suspend suspend object
 	 *
 	 * @return array
 	 */
-	public static function get_sitewide_hidden_ids( $user_include = true ) {
-		return self::get_sitewide_hidden_item_ids( self::$moderation_type, $user_include );
+	public function update_where_sql( $where, $suspend ) {
+		$this->alias               = $suspend->alias;
+		$where['moderation_where'] = $this->exclude_where_query();
+
+		return $where;
 	}
 
 	/**
@@ -211,19 +219,17 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Delete moderation data when actual user is deleted
+	 * If the displayed user is marked as a blocked, Show 404.
 	 *
 	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int    $user_id  user id of the user that is being deleted.
-	 * @param int    $reassign user id of the user that all content is going to assign.
-	 * @param object $user     user data.
 	 */
-	public function delete_moderation_data( $user_id, $reassign, $user ) {
+	public function restrict_member_profile() {
+		$user_id = bp_displayed_user_id();
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
+			buddypress()->displayed_user->id = 0;
+			bp_do_404();
 
-		$moderation_obj = new BP_Moderation( $user_id, self::$moderation_type );
-		if ( ! empty( $moderation_obj->id ) ) {
-			$moderation_obj->delete( true );
+			return;
 		}
 	}
 }

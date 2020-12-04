@@ -93,6 +93,8 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_moderation();
 	}
 
+	bp_core_install_suspend();
+
 	do_action( 'bp_core_install', $active_components );
 
 	// Reset the permalink to fix the 404 on some pages.
@@ -1106,6 +1108,48 @@ function bp_core_install_invitations() {
 	do_action( 'bp_core_install_invitations' );
 }
 
+/** Suspend *********************************************************/
+/**
+ * Install database tables for the Suspend
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @uses  bp_core_set_charset()
+ * @uses  bp_core_get_table_prefix()
+ * @uses  dbDelta()
+ */
+function bp_core_install_suspend() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   item_id bigint(20) NOT NULL,
+	   item_type varchar(20) NOT NULL,
+	   hide_sitewide tinyint(1) NOT NULL,
+	   hide_parent tinyint(1) NOT NULL,
+	   user_suspended tinyint(1) NOT NULL,
+	   reported tinyint(1) NOT NULL,
+	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
+	   blog_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY suspend_item_id (item_id,item_type,blog_id),
+	   KEY suspend_item (item_id,item_type),
+	   KEY item_id (item_id)
+    ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_suspend_details(
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   suspend_id bigint(20) NOT NULL,
+	   user_id bigint(20) NOT NULL,
+	   PRIMARY KEY  (id),
+	   KEY suspend_details_id (suspend_id,user_id)
+    ) {$charset_collate};";
+
+	dbDelta( $sql );
+}
+
 /** Moderation *********************************************************/
 /**
  * Install database tables for the Moderation
@@ -1122,19 +1166,6 @@ function bp_core_install_moderation() {
 	$bp_prefix       = bp_core_get_table_prefix();
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation (
-	   id bigint(20) NOT NULL AUTO_INCREMENT,
-	   item_id bigint(20) NOT NULL,
-	   item_type varchar(120) NOT NULL,
-	   hide_sitewide tinyint(1) NOT NULL,
-	   last_updated datetime NULL DEFAULT '0000-00-00 00:00:00',
-	   blog_id bigint(20) NOT NULL,
-	   PRIMARY KEY  (id),
-	   KEY moderation_report_id (item_id,item_type,blog_id),
-	   KEY moderation_report_item (item_id,item_type),
-	   KEY item_id (item_id)
-    ) {$charset_collate};";
-
-	$sql[] = "CREATE TABLE {$bp_prefix}bp_moderation_reports (
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
 	   moderation_id bigint(20) NOT NULL,
 	   user_id bigint(20) NOT NULL,
