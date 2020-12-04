@@ -68,14 +68,15 @@
 			<div class="thread-subject">
 				<span class="last-message-sender">
 				  <# if ( data.sender_is_you ) { #>
-					<?php _e('You', 'buddyboss'); ?>:
+					<?php _e( 'You', 'buddyboss' ); ?>:
 				  <# } else if ( data.is_user_suspended || data.is_user_blocked ) { #>
 					<?php _e( 'User Blocked', 'buddyboss' ); ?>:
 				  <# } else if ( other_recipients && other_recipients.length ) { #>
 					{{ data.sender_name }}:
 				  <# } #>
-				</span>
-				{{{data.excerpt}}}
+				</span> <# if ( data.is_user_suspended ) { #>
+				<?php _e( 'Content from suspended user', 'buddyboss' ); ?>: <# } else if ( data.is_user_blocked ) { #>
+				<?php _e( 'Content from blocked user', 'buddyboss' ); ?>: <# } else { #> {{{data.excerpt}}} <# } #>
 			</div>
 		</div>
 
