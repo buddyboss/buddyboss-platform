@@ -1503,7 +1503,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 		$url = bp_get_admin_url( 'users.php' );
 
 		// If spammed, create unspam link.
-		if ( bp_is_active( 'moderation' ) ) {
+		if ( ! bp_is_active( 'moderation' ) ) {
 			if ( bp_is_user_spammer( $user_id ) ) {
 				$url            = add_query_arg( array(
 						'action' => 'ham',
