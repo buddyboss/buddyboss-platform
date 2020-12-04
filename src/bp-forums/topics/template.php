@@ -3242,14 +3242,17 @@ function bbp_get_topic_spam_link( $args = '' ) {
  */
 function bbp_get_topic_report_link( $args = '' ) {
 
-	$report_btn_arr = bp_moderation_get_report_button(
-		array(
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$report_btn_arr = bp_moderation_get_report_button( array(
 			'id'                => 'topic_report',
 			'component'         => 'moderation',
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
-				'data-bp-content-id'   => $args['id'],
-				'data-bp-content-type' => BP_Moderation_Forum_Topics::$moderation_type,
+					'data-bp-content-id'   => $args['id'],
+					'data-bp-content-type' => BP_Moderation_Forum_Topics::$moderation_type,
 			),
 		),
 		true

@@ -568,15 +568,23 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		}
 	}
 
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_report'] = bp_activity_get_report_link( array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => $parent_attr,
+						'button_element' => $button_element,
+				) );
+	}
+
 	$buttons['activity_delete'] = array(
-		'id'                => 'activity_delete',
-		'position'          => 35,
-		'component'         => 'activity',
-		'parent_element'    => $parent_element,
-		'parent_attr'       => $parent_attr,
-		'must_be_logged_in' => true,
-		'button_element'    => $button_element,
-		'button_attr'       => array(
+			'id'                => 'activity_delete',
+			'position'          => 35,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
 			'id'            => $delete_args['link_id'],
 			'href'          => $delete_args['link_href'],
 			'class'         => $delete_args['link_class'],
@@ -624,16 +632,6 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 		$buttons['activity_spam']['button_attr'][ $data_element ] = wp_nonce_url(
 			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_id . '/',
 			'bp_activity_akismet_spam_' . $activity_id
-		);
-	}
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_report'] = bp_activity_get_report_link(
-			array(
-				'parent_element' => $parent_element,
-				'parent_attr'    => $parent_attr,
-				'button_element' => $button_element,
-			)
 		);
 	}
 
@@ -899,8 +897,9 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$button_element = 'a';
 	}
 
-	$buttons = array(
-		'activity_comment_reply'  => array(
+	$buttons = array();
+
+	$buttons['activity_comment_reply'] = array(
 			'id'                => 'activity_comment_reply',
 			'position'          => 5,
 			'component'         => 'activity',
@@ -910,11 +909,20 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			'button_element'    => $button_element,
 			'link_text'         => __( 'Reply', 'buddyboss' ),
 			'button_attr'       => array(
-				'class' => "acomment-reply bp-primary-action",
-				'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
+					'class' => "acomment-reply bp-primary-action",
+					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
 			),
-		),
-		'activity_comment_delete' => array(
+	);
+
+	if ( bp_is_active( 'moderation' ) ) {
+		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link( array(
+						'parent_element' => $parent_element,
+						'parent_attr'    => $parent_attr,
+						'button_element' => $button_element,
+				) );
+	}
+
+	$buttons['activity_comment_delete'] = array(
 			'id'                => 'activity_comment_delete',
 			'position'          => 15,
 			'component'         => 'activity',
@@ -924,10 +932,9 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 			'button_element'    => $button_element,
 			'link_text'         => __( 'Delete', 'buddyboss' ),
 			'button_attr'       => array(
-				'class' => 'delete acomment-delete confirm bp-secondary-action',
-				'rel'   => 'nofollow',
+					'class' => 'delete acomment-delete confirm bp-secondary-action',
+					'rel'   => 'nofollow',
 			),
-		),
 	);
 
 	// If button element set add nonce link to data-attr attr
@@ -967,16 +974,6 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 		$buttons['activity_comment_spam']['button_attr'][ $data_element ] = wp_nonce_url(
 			bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . $activity_comment_id . '/?cid=' . $activity_comment_id,
 			'bp_activity_akismet_spam_' . $activity_comment_id
-		);
-	}
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$buttons['activity_comment_report'] = bp_activity_comment_get_report_link(
-				array(
-						'parent_element' => $parent_element,
-						'parent_attr'    => $parent_attr,
-						'button_element' => $button_element,
-				)
 		);
 	}
 

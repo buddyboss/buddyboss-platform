@@ -5453,6 +5453,10 @@ function bp_activity_get_edit_data( $activity_id = 0 ) {
  */
 function bp_activity_get_report_link( $args = array() ) {
 
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
 	/**
 	 * Restricted Report link for Auto-created activity. Like Group create, Group join, Reply create etc.
 	 */
@@ -5460,8 +5464,7 @@ function bp_activity_get_report_link( $args = array() ) {
 		return array();
 	}*/
 
-	$args = wp_parse_args(
-		$args,
+	$args = wp_parse_args( $args,
 		array(
 			'id'                => 'activity_report',
 			'component'         => 'moderation',
@@ -5493,8 +5496,11 @@ function bp_activity_get_report_link( $args = array() ) {
  */
 function bp_activity_comment_get_report_link( $args = array() ) {
 
-	$args = wp_parse_args(
-		$args,
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
+	$args = wp_parse_args( $args,
 		array(
 			'id'                => 'activity_comment_report',
 			'component'         => 'moderation',

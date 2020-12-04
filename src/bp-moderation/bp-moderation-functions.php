@@ -173,6 +173,10 @@ function bp_moderation_get( $args = '' ) {
  */
 function bp_moderation_get_report_button( $args, $html = true ) {
 
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
 	$item_id   = $args['button_attr']['data-bp-content-id'];
 	$item_type = $args['button_attr']['data-bp-content-type'];
 

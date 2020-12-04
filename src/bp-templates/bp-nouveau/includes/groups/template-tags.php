@@ -1005,36 +1005,34 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 
                 // If button element set add nonce 'href' link to data-attr attr.
                 if ( 'button' === $button_element ) {
-                    $buttons['group_membership']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
-                } else {
-                // Else this is an anchor so use an 'href' attr.
-                    $buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
-                }
+					$buttons['group_membership']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
+				} else {
+					// Else this is an anchor so use an 'href' attr.
+					$buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
+				}
 
 				unset( bp_nouveau()->groups->button_args );
 			}
 		}
 
-		if ( bp_is_active( 'moderation' ) && bp_is_group_single() ){
-			$buttons['group_report'] = bp_moderation_get_report_button(
-				array(
+		if ( bp_is_active( 'moderation' ) && bp_is_group_single() && is_user_logged_in() ) {
+			$buttons['group_report'] = bp_moderation_get_report_button( array(
 					'id'                => 'group_report',
 					'position'          => 50,
 					'component'         => 'moderation',
 					'parent_element'    => $parent_element,
 					'parent_attr'       => array(
-						'id'    => $button_args['wrapper_id'],
-						'class' => $parent_class,
+							'id'    => $button_args['wrapper_id'],
+							'class' => $parent_class,
 					),
 					'must_be_logged_in' => true,
 					'button_element'    => $button_element,
 					'button_attr'       => array(
-						'data-bp-content-id'   => $group->id,
-						'data-bp-content-type' => BP_Moderation_Groups::$moderation_type,
+							'data-bp-content-id'   => $group->id,
+							'data-bp-content-type' => BP_Moderation_Groups::$moderation_type,
 					),
-				),
-				false
-			);
+			),
+					false );
 		}
 
 		// Exclude Kick & Ban button for the site admin.

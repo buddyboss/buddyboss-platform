@@ -1049,17 +1049,16 @@ function bbp_forum_report_link( $args = array() ) {
  */
 function bbp_get_forum_report_link( $args = array() ) {
 
-	if ( ! bp_is_active( 'moderation' ) ) {
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
 		// No link
 		$retval = false;
-	}else{
-		$retval = bp_moderation_get_report_button(
-			array(
+	} else {
+		$retval = bp_moderation_get_report_button( array(
 				'id'                => 'forum_report',
 				'component'         => 'moderation',
 				'must_be_logged_in' => true,
 				'button_attr'       => array(
-					'data-bp-content-id'   => $args['id'],
+						'data-bp-content-id' => $args['id'],
 					'data-bp-content-type' => BP_Moderation_Forums::$moderation_type,
 				),
 			),

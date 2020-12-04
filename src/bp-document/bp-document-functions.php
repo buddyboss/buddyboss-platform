@@ -3640,22 +3640,20 @@ function bp_document_size_format( $bytes, $decimals = 0 ) {
  */
 function bp_document_get_report_link( $args = array() ) {
 
-	$report_btn = false;
-
-	if ( bp_is_active( 'moderation' ) ) {
-		$report_btn = bp_moderation_get_report_button(
-			array(
-				'id'                => 'document_report',
-				'component'         => 'moderation',
-				'must_be_logged_in' => true,
-				'button_attr'       => array(
-					'data-bp-content-id'   => $args['id'],
-					'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
-				),
-			),
-			true
-		);
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
 	}
+
+	$report_btn = bp_moderation_get_report_button( array(
+		'id'                => 'document_report',
+		'component'         => 'moderation',
+		'must_be_logged_in' => true,
+		'button_attr'       => array(
+			'data-bp-content-id'   => $args['id'],
+			'data-bp-content-type' => BP_Moderation_Document::$moderation_type,
+		),
+	),
+		true );
 
 	return apply_filters( 'bp_document_get_report_link', $report_btn, $args );
 }
