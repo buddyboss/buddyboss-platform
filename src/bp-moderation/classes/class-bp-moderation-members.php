@@ -55,20 +55,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $user_id   User id.
-	 * @param bool    $view_link add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $user_id, $view_link = false ) {
-		return bp_core_get_user_displayname( $user_id );
-	}
-
-	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0

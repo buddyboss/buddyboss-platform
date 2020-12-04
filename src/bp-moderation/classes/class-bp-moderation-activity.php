@@ -57,31 +57,6 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content excerpt.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int  $activity_id activity id.
-	 * @param bool $view_link   add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $activity_id, $view_link = false ) {
-		$activity = new BP_Activity_Activity( $activity_id );
-
-		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : $activity->action;
-
-		if ( true === $view_link ) {
-			$link = '<a href="' . esc_url( self::get_permalink( (int) $activity_id ) ) . '">' . esc_html__( 'View',
-					'buddyboss' ) . '</a>';;
-
-			$activity_content = ( ! empty( $activity_content ) ) ? $activity_content . ' ' . $link : $link;
-		}
-
-		return $activity_content;
-	}
-
-	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0

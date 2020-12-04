@@ -54,30 +54,6 @@ class BP_Moderation_Groups extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $group_id  Group id.
-	 * @param bool    $view_link add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $group_id, $view_link = false ) {
-		$group             = new BP_Groups_Group( $group_id );
-		$group_description = ( ! empty( $group->description ) ) ? $group->description : '';
-
-		if ( true === $view_link ) {
-			$link = '<a href="' . esc_url( self::get_permalink( (int) $group_id ) ) . '">' . esc_html__( 'View',
-					'buddyboss' ) . '</a>';;
-
-			$group_description = ( ! empty( $group_description ) ) ? $group_description . ' ' . $link : $link;
-		}
-
-		return $group_description;
-	}
-
-	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0

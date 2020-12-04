@@ -55,29 +55,6 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $forum_id  Forum id.
-	 * @param bool    $view_link add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $forum_id, $view_link = false ) {
-		$forum_content = get_post_field( 'post_content', $forum_id );
-
-		if ( true === $view_link ) {
-			$link = '<a href="' . esc_url( self::get_permalink( (int) $forum_id ) ) . '">' . esc_html__( 'View',
-					'buddyboss' ) . '</a>';
-
-			$forum_content = ( ! empty( $forum_content ) ) ? $forum_content . ' ' . $link : $link;
-		}
-
-		return $forum_content;
-	}
-
-	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0

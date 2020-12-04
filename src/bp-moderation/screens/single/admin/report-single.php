@@ -77,24 +77,6 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 												<strong><label>
 													<?php
 													/* translators: accessibility text */
-													esc_html_e( 'Content Excerpt', 'buddyboss' );
-													?>
-												</label></strong>
-											</td>
-											<td>
-												<?php
-												$content_excerpt = bp_moderation_get_content_excerpt( $moderation_request_data->item_id,
-														$moderation_request_data->item_type,
-														true );
-												echo wp_kses_post( substr( $content_excerpt, 0, 100 ) );
-												?>
-											</td>
-										</tr>
-										<tr>
-											<td scope="row" style="width: 20%;">
-												<strong><label>
-													<?php
-													/* translators: accessibility text */
 													esc_html_e( 'Content Owner', 'buddyboss' );
 													?>
 												</label></strong>
@@ -103,6 +85,24 @@ $is_content_screen = ! empty( $current_tab ) && 'reported-content' === $current_
 												<?php
 												$user_id = bp_moderation_get_content_owner_id( $moderation_request_data->item_id, $moderation_request_data->item_type );
 												printf( '<strong>%s</strong>', wp_kses_post( bp_core_get_userlink( $user_id ) ) );
+												?>
+											</td>
+										</tr>
+										<tr>
+											<td scope="row" style="width: 20%;">
+												<strong><label>
+														<?php
+														/* translators: accessibility text */
+														esc_html_e( 'Permalink', 'buddyboss' );
+														?>
+													</label></strong>
+											</td>
+											<td>
+												<?php
+												echo wp_kses_post( sprintf( '<a href="%s" title="%s"> %s </a>',
+														esc_url( bp_moderation_get_Permalink( $moderation_request_data->item_id, $moderation_request_data->item_type ) ),
+														esc_attr__( 'View', 'buddyboss' ),
+														esc_html__( 'View Content', 'buddyboss' ) ) );
 												?>
 											</td>
 										</tr>

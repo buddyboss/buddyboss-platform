@@ -600,20 +600,19 @@ function bp_moderation_get_content_owner_id( $moderation_item_id, $moderation_it
  *
  * @param int    $moderation_item_id   moderation id to get the content.
  * @param string $moderation_item_type item type.
- * @param bool   $view_link            add content link with content.
  *
  * @return string
  */
-function bp_moderation_get_content_excerpt( $moderation_item_id, $moderation_item_type, $view_link = false ) {
+function bp_moderation_get_Permalink( $moderation_item_id, $moderation_item_type ) {
 
-	$content_excerpt = '';
+	$link = '';
 	$class           = BP_Moderation_Abstract::get_class( $moderation_item_type );
 
 	if ( method_exists( $class, 'get_content_excerpt' ) ) {
-		$content_excerpt = $class::get_content_excerpt( $moderation_item_id, $view_link );
+		$link = $class::get_permalink( $moderation_item_id );
 	}
 
-	return $content_excerpt;
+	return $link;
 }
 
 /**

@@ -56,33 +56,6 @@ class BP_Moderation_Activity_Comment extends BP_Moderation_Abstract {
 		add_filter( 'bp_suspend_activity_comment_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		add_filter( 'bp_locate_template_names', array( $this, 'locate_blocked_template' ) );
-
-
-	}
-
-	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int  $activity_comment_id activity id.
-	 * @param bool $view_link           add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $activity_comment_id, $view_link = false ) {
-		$activity = new BP_Activity_Activity( $activity_comment_id );
-
-		$activity_content = ( ! empty( $activity->content ) ) ? $activity->content : '';
-
-		if ( true === $view_link ) {
-			$link = '<a href="' . esc_url( self::get_permalink( (int) $activity_comment_id ) ) . '">' . esc_html__( 'View',
-					'buddyboss' ) . '</a>';;
-
-			$activity_content = ( ! empty( $activity_content ) ) ? $activity_content . ' ' . $link : $link;
-		}
-
-		return $activity_content;
 	}
 
 	/**

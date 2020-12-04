@@ -92,16 +92,6 @@ abstract class BP_Moderation_Abstract {
 	abstract public static function get_content_owner_id( $item_id );
 
 	/**
-	 * Get Content excerpt.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $item_id   Content item id.
-	 * @param bool    $view_link add view link
-	 */
-	abstract public static function get_content_excerpt( $item_id, $view_link = false );
-
-	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0

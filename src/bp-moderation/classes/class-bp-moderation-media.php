@@ -51,22 +51,6 @@ class BP_Moderation_Media extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param integer $media_id  Media id.
-	 * @param bool    $view_link add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $media_id, $view_link = false ) {
-		$media = new BP_Media( $media_id );
-
-		return ( ! empty( $media->title ) ) ? $media->title : '';
-	}
-
-	/**
 	 * Report content
 	 *
 	 * @since BuddyBoss 2.0.0

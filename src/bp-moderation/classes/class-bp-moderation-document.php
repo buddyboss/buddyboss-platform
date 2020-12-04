@@ -53,22 +53,6 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	}
 
 	/**
-	 * Get Content.
-	 *
-	 * @since BuddyBoss 2.0.0
-	 *
-	 * @param int  $document_id document id.
-	 * @param bool $view_link   add view link
-	 *
-	 * @return string
-	 */
-	public static function get_content_excerpt( $document_id, $view_link = false ) {
-		$document = new BP_Document( $document_id );
-
-		return ( ! empty( $document->title ) ) ? $document->title : '';
-	}
-
-	/**
 	 * Get permalink.
 	 *
 	 * @since BuddyBoss 2.0.0
