@@ -1799,8 +1799,10 @@ window.bp = window.bp || {};
 			$(document).on('click', 'input[type=radio][name=report_category]', function () {
 				if ('other' === this.value) {
 					$(this).closest('.moderation-popup').find('.bp-other-report-cat').closest('.form-item').removeClass('bp-hide');
+					$(this).closest('.moderation-popup').find('.bp-other-report-cat').prop('required', true);
 				} else {
 					$(this).closest('.moderation-popup').find('.bp-other-report-cat').closest('.form-item').addClass('bp-hide');
+					$(this).closest('.moderation-popup').find('.bp-other-report-cat').prop('required', false);
 				}
 			});
 
