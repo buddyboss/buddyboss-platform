@@ -1770,19 +1770,36 @@ window.bp = window.bp || {};
 			}
 		},
 		reportPopUp: function () {
+			var _this = this;
 			$('.report-content, .block-member').magnificPopup({
 				type: 'inline',
 				midClick: true,
 				callbacks: {
 					open: function () {
-						var mf_content = $('.mfp-content');
 						var contentId = this.currItem.el.data('bp-content-id');
 						var contentType = this.currItem.el.data('bp-content-type');
 						var nonce = this.currItem.el.data('bp-nonce');
+						if ('undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce) {
+							_this.setFormValues({contentId: contentId, contentType: contentType, nonce: nonce});
+						}
+					}
+				}
+			});
 
-						mf_content.find('.bp-content-id').val(contentId);
-						mf_content.find('.bp-content-type').val(contentType);
-						mf_content.find('.bp-nonce').val(nonce);
+			$('.mass-block-member').magnificPopup({
+				type: 'inline',
+				midClick: true,
+				callbacks: {
+					change: function () {
+						var _self = this;
+						setTimeout(function () {
+							var contentId = _self.currItem.el.data('bp-content-id');
+							var contentType = _self.currItem.el.data('bp-content-type');
+							var nonce = _self.currItem.el.data('bp-nonce');
+							if ('undefined' !== typeof contentId && 'undefined' !== typeof contentType && 'undefined' !== typeof nonce) {
+								_this.setFormValues({contentId: contentId, contentType: contentType, nonce: nonce});
+							}
+						}, 1);
 					}
 				}
 			});
@@ -1890,6 +1907,12 @@ window.bp = window.bp || {};
 			}
 
 			$('.bp-report-form-err').html(message);
+		},
+		setFormValues: function (data) {
+			var mf_content = $('.mfp-content');
+			mf_content.find('.bp-content-id').val(data.contentId);
+			mf_content.find('.bp-content-type').val(data.contentType);
+			mf_content.find('.bp-nonce').val(data.nonce);
 		},
 		togglePassword: function () {
 			$(document).on('click', '.bb-toggle-password', function (e) {
