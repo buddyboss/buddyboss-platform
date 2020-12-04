@@ -393,36 +393,38 @@ window.bp = window.bp || {};
 			className	: 'activity-video-container',
 			template	: bp.template( 'activity-video' ),
 			video	: [],
+			videoDropzoneObj : null,
 
 			initialize: function () {
 
 				this.model.set( 'video', this.video );
 
 				document.addEventListener( 'activity_video_toggle', this.toggle_video_uploader.bind( this ) );
-				document.addEventListener( 'activity_video_close', this.destroyDocument.bind( this ) );
+				document.addEventListener( 'activity_video_close', this.destroyVideo.bind( this ) );
 			},
 
+			/*
 			toggle_video_uploader: function () {
 
 				var self = this;
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
-					self.destroyDocument();
+					self.destroyVideo();
 				} else {
 					self.toggle_video_uploader();
 				}
 			},
-
-			destroyDocument: function () {
+*/
+			destroyVideo: function () {
 				var self = this;
-				if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
-					bp.Nouveau.Activity.postForm.dropzone.destroy();
+				if ( ! _.isNull( self.videoDropzoneObj ) ) {
+					self.videoDropzoneObj.destroy();
 					self.$el.find( '#activity-post-video-uploader' ).html( '' );
 				}
 				self.video = [];
 				self.$el.find( '#activity-post-video-uploader' ).removeClass( 'open' ).addClass( 'closed' );
 
 				document.removeEventListener( 'activity_document_toggle', this.toggle_video_uploader.bind( this ) );
-				document.removeEventListener( 'activity_document_close', this.destroyDocument.bind( this ) );
+				document.removeEventListener( 'activity_document_close', this.destroyVideo.bind( this ) );
 
 				$( '#whats-new-attachments' ).addClass( 'empty' );
 			},
@@ -433,40 +435,41 @@ window.bp = window.bp || {};
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
 					return false;
 				}
-				self.destroyDocument();
+				self.destroyVideo();
 
 				var dropzone_options = {
 					url						: BP_Nouveau.ajaxurl,
 					timeout					: 3 * 60 * 60 * 1000,
-					dictFileTooBig			: BP_Nouveau.media.dictFileTooBig,
-					acceptedFiles			: BP_Nouveau.media.document_type,
+					dictFileTooBig       : BP_Nouveau.video.dictFileTooBig,
+					acceptedFiles        : BP_Nouveau.video.video_type,
 					createImageThumbnails 	: false,
-					dictDefaultMessage 		: BP_Nouveau.media.dropzone_document_message,
+					dictDefaultMessage   : BP_Nouveau.video.dropzone_video_message,
 					autoProcessQueue		: true,
 					addRemoveLinks			: true,
 					uploadMultiple			: false,
-					maxFiles				: ! _.isUndefined( BP_Nouveau.video.maxFiles ) ? BP_Nouveau.video.maxFiles : 10,
-					maxFilesize				: ! _.isUndefined( BP_Nouveau.video.max_upload_size ) ? BP_Nouveau.video.max_upload_size : 2,
+					maxFiles             : typeof BP_Nouveau.video.maxFiles !== 'undefined' ? BP_Nouveau.video.maxFiles : 10,
+					maxFilesize          : typeof BP_Nouveau.video.max_upload_size !== 'undefined' ? BP_Nouveau.video.max_upload_size : 2,
 					dictInvalidFileType		: BP_Nouveau.video.dictInvalidFileType,
 				};
 
-				bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone( '#activity-post-video-uploader', dropzone_options );
+				self.videoDropzoneObj = new window.Dropzone( '#activity-post-video-uploader', dropzone_options );
 
-				bp.Nouveau.Activity.postForm.dropzone.on(
+
+				self.videoDropzoneObj.on(
 					'addedfile',
 					function ( file ) {
 						if ( file.document_edit_data ) {
-							self.document.push( file.document_edit_data );
-							self.model.set( 'document', self.document );
+							self.video.push( file.document_edit_data );
+							self.model.set( 'document', self.video );
 						}
 					}
 				);
 
-				bp.Nouveau.Activity.postForm.dropzone.on(
+				self.videoDropzoneObj.on(
 					'sending',
 					function(file, xhr, formData) {
-						formData.append( 'action', 'document_document_upload' );
-						formData.append( '_wpnonce', BP_Nouveau.nonces.media );
+						formData.append( 'action', 'video_upload' );
+						formData.append( '_wpnonce', BP_Nouveau.nonces.video );
 
 						var tool_box = self.$el.parents( '#whats-new-form' );
 						if ( tool_box.find( '#activity-media-button' ) ) {
@@ -481,9 +484,10 @@ window.bp = window.bp || {};
 					}
 				);
 
-				bp.Nouveau.Activity.postForm.dropzone.on(
+				self.videoDropzoneObj.on(
 					'success',
 					function(file, response) {
+						console.log( response);
 						if ( response.data.id ) {
 
 							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
@@ -498,8 +502,8 @@ window.bp = window.bp || {};
 							response.data.group_id   = ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.group_id ) ? BP_Nouveau.media.group_id : false;
 							response.data.saved      = false;
 							response.data.menu_order = $( file.previewElement ).closest( '.dropzone' ).find( file.previewElement ).index() - 1;
-							self.document.push( response.data );
-							self.model.set( 'document', self.document );
+							self.video.push( response.data );
+							self.model.set( 'video', self.video );
 						} else {
 							var node, _i, _len, _ref, _results;
 							var message = response.data.feedback;
@@ -515,7 +519,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				bp.Nouveau.Activity.postForm.dropzone.on(
+				self.videoDropzoneObj.on(
 					'accept',
 					function( file, done ) {
 						if (file.size == 0) {
@@ -526,7 +530,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				bp.Nouveau.Activity.postForm.dropzone.on(
+				self.videoDropzoneObj.on(
 					'error',
 					function(file,response) {
 						if ( file.accepted ) {
@@ -540,22 +544,22 @@ window.bp = window.bp || {};
 					}
 				);
 
-				bp.Nouveau.Activity.postForm.dropzone.on(
+				self.videoDropzoneObj.on(
 					'removedfile',
 					function(file) {
-						if ( self.document.length ) {
-							for ( var i in self.document ) {
-								if ( file.id === self.document[i].id ) {
-									if ( ! _.isUndefined( self.document[i].saved ) && ! self.document[i].saved ) {
+						if ( self.video.length ) {
+							for ( var i in self.video ) {
+								if ( file.id === self.video[i].id ) {
+									if ( ! _.isUndefined( self.video[i].saved ) && ! self.video[i].saved ) {
 										bp.Nouveau.Media.removeAttachment( file.id );
 									}
-									self.document.splice( i, 1 );
-									self.model.set( 'document', self.document );
+									self.video.splice( i, 1 );
+									self.model.set( 'video', self.video );
 								}
 							}
 						}
 
-						if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone.files ) && bp.Nouveau.Activity.postForm.dropzone.files.length === 0 ) {
+						if ( ! _.isNull( self.videoDropzoneObj.files ) && self.videoDropzoneObj.files.length === 0 ) {
 							var tool_box = self.$el.parents( '#whats-new-form' );
 							if ( tool_box.find( '#activity-media-button' ) ) {
 								tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).removeClass( 'disable active no-click' );
