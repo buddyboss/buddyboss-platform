@@ -1583,12 +1583,12 @@ function bp_core_admin_user_manage_spammers() {
 	}
 
 	// Display feedback.
-	if ( ! empty( $updated ) && in_array( $updated, array( 'marked-spam', 'marked-ham' ) ) ) {
+	if ( ! empty( $updated ) && in_array( $updated, array( 'marked-suspend', 'marked-unsuspend' ) ) ) {
 
-		if ( 'marked-spam' === $updated ) {
-			$notice = __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss' );
+		if ( 'marked-suspend' === $updated ) {
+			$notice = __( 'User suspended.', 'buddyboss' );
 		} else {
-			$notice = __( 'User removed from spam.', 'buddyboss' );
+			$notice = __( 'User unsuspended.', 'buddyboss' );
 		}
 
 		bp_core_add_admin_notice( $notice );
