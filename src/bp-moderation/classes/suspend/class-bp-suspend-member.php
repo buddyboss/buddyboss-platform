@@ -348,7 +348,7 @@ class BP_Suspend_Member extends BP_Suspend_Abstract {
 	protected function prepare_suspend_args( $member_id, $hide_sitewide, $args ) {
 
 		$action_suspend = false;
-		if ( ! empty( $args['action'] ) ) {
+		if ( isset( $args['action'] ) ) {
 			$action_suspend = in_array( $args['action'], array( 'suspended', 'unsuspended' ), true );
 			unset( $args['action'] );
 		}

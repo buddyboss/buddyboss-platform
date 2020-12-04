@@ -193,8 +193,8 @@ abstract class BP_Moderation_Abstract {
 	 * @return BP_Moderation|WP_Error
 	 */
 	public static function delete( $args ) {
-		$moderation = new BP_Moderation( $args['content_id'], $args['content_type'] );
-
+		$moderation        = new BP_Moderation( $args['content_id'], $args['content_type'] );
+		$args['force_all'] = isset( $args['force_all'] ) ? $args['force_all'] : false;
 		$moderation->delete( $args['force_all'] );
 
 		return $moderation;

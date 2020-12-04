@@ -173,7 +173,7 @@ class BP_Core_Suspend {
 			if ( ! empty( $member ) && empty( $action_suspend ) ) {
 				self::remove_suspend_details( array(
 					'suspend_id' => $recode->id,
-					'user_id'    => $args['blocked_user'],
+					'user_id'    => $member,
 				) );
 			}
 
