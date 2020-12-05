@@ -1090,13 +1090,22 @@
 						return;
 					}
 
-					$( document ).find ( '#bp-document-file-input' ).val( '' );
-					$( document ).find ( '.show-document-mime-type' ).hide();
-					$( document ).find ( '.show-document-mime-type input#mime-type' ).val( '' );
+					$(document).find('#bp-document-file-input').val('');
+					$(document).find('.show-document-mime-type').hide();
+					$(document).find('.show-document-mime-type input#mime-type').val('');
 				},
 				false
 			);
 
+			$(document).on('click', '.bp-active-moderation', function () {
+				$('#bp-hello-backdrop').show();
+				$('#bp-hello-container').show();
+			});
+
+			$(document).on('click', '.close-modal', function () {
+				$('#bp-hello-backdrop').hide();
+				$('#bp-hello-container').hide();
+			});
 		}
 	);
 

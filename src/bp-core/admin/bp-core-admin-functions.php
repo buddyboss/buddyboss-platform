@@ -1469,14 +1469,43 @@ function bp_admin_wp_nav_menu_restrict_items() {
 			var settings = jQuery( this ).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
 			var css_class = settings.find( '.edit-menu-item-classes' );
 
-			if ( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
-				css_class.attr( 'readonly', 'readonly' );
-				settings.find( '.field-url' ).css( 'display', 'none' );
+			if (css_class.val().indexOf('bp-menu') === 0) {
+				css_class.attr('readonly', 'readonly');
+				settings.find('.field-url').css('display', 'none');
 			}
-		} );
-    </script>
+		});
+	</script>
 	<?php
 }
+
+function add_active_moderation_popup() {
+	?>
+	<div id="bp-hello-backdrop" style="display: none"></div>
+	<div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none">
+		<div class="bp-hello-header" role="document">
+			<div class="bp-hello-close">
+				<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="Close pop-up">
+					<?php
+					esc_html_e( 'Close', 'buddyboss' );
+					?>
+				</button>
+			</div>
+
+			<div class="bp-hello-title">
+				<h1 id="bp-hello-title" tabindex="-1">Modeartion</h1>
+			</div>
+		</div>
+
+		<div class="bp-hello-content">
+			<?php
+			esc_html_e( 'For making user spam you need to activate the moderation component.', 'buddyboss' );
+			?>
+		</div>
+	</div>
+	<?php
+}
+
+add_action( 'admin_footer', 'add_active_moderation_popup' );
 
 /**
  * Add "Mark as Spam/Ham" button to user row actions.
@@ -1522,9 +1551,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 						'user'   => $user_id,
 				),
 						$url );
-				$spam_link       = wp_nonce_url( $url, 'bp-spam-user' );
-				$actions['spam'] = sprintf( '<a class="submitdelete" href="%1$s">%2$s</a>',
-						esc_url( $spam_link ),
+				$actions['spam'] = sprintf( '<a class="submitdelete bp-active-moderation" href="javascript:void(0)">%1$s</a>',
 						esc_html__( 'Spam', 'buddyboss' ) );
 			}
 		} else {
