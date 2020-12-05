@@ -1752,6 +1752,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 							} else {
 								$retval['edit_post_privacy'] = $document->activity_id;
 							}
+						} else {
+							$retval['edit_privacy'] = 1;
 						}
 					} else {
 						$retval['edit_privacy'] = 1;
