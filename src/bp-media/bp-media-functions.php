@@ -2902,11 +2902,7 @@ function bp_media_user_media_album_tree_view_li_html( $user_id = 0, $group_id = 
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
 	}
 
-	if ( $group_id > 0 ) {
-		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE group_id = %d ORDER BY id DESC", $group_id );
-	} else {
-		$media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
-	}
+    $media_album_query = $wpdb->prepare( "SELECT * FROM {$media_album_table} WHERE user_id = %d AND group_id = %d ORDER BY id DESC", $user_id, $group_id );
 
 	// db call ok; no-cache ok;
 	$data = $wpdb->get_results( $media_album_query, ARRAY_A );
