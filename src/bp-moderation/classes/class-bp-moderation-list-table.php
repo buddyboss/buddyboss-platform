@@ -307,11 +307,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$total_count = count( $moderation_views['reported-content'] );
 				$count       = 1;
 				foreach ( $moderation_views['reported-content'] as $key => $moderation_view ) {
+					$record_count = bp_moderation_item_count( array( 'type' => 'content', 'status' => $key ) );
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
-						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>"
-						   class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
-							<?php echo esc_html( $moderation_view['name'] ); ?>
+						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
+							<?php printf( __( '%s <span class="count">(%s)</span>', 'buddyboss' ),
+									esc_html( $moderation_view['name'] ),
+									number_format_i18n( $record_count ) ); ?>
 						</a>
 						<?php
 						if ( $count !== (int) $total_count ) {
@@ -326,11 +328,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$total_count = count( $moderation_views['blocked-members'] );
 				$count       = 1;
 				foreach ( $moderation_views['blocked-members'] as $key => $moderation_view ) {
+					$record_count = bp_moderation_item_count( array( 'type' => 'user', 'status' => $key ) );
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
-						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>"
-						   class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
-							<?php echo esc_html( $moderation_view['name'] ); ?>
+						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
+							<?php printf( __( '%s <span class="count">(%s)</span>', 'buddyboss' ),
+									esc_html( $moderation_view['name'] ),
+									number_format_i18n( $record_count ) ); ?>
 						</a>
 						<?php
 						if ( $count !== (int) $total_count ) {

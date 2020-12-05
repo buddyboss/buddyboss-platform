@@ -664,6 +664,37 @@ function bp_moderation_content_hide_email( $email, $tokens ) {
 				'content.link'          => $tokens['content_link'],
 				'content.reportlink'    => $tokens['content_reportlink'],
 			),
-		)
+		) );
+}
+
+/**
+ * Function to get the moderation item count based on status.
+ *
+ * @since BuddyBoss 2.0.0
+ *
+ * @param array $args arguments array.
+ *
+ * @return mixed|void
+ */
+function bp_moderation_item_count( $args = array() ) {
+	$moderation_request_args = array(
+		'per_page'    => - 1,
+		'count_total' => true,
 	);
+
+	if ( 'content' === $args['type'] ) {
+		$moderation_request_args['exclude_types'] = array( BP_Moderation_Members::$moderation_type );
+	} else {
+		$moderation_request_args['in_types'] = array( BP_Moderation_Members::$moderation_type );
+	}
+
+	if ( 'unsuspended' === $args['status'] || 'active' === $args['status'] ) {
+		$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+	} elseif ( 'suspended' === $args['status'] || 'hidden' === $args['status'] ) {
+		$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+	}
+
+	$result = BP_Moderation::get( $moderation_request_args );
+
+	return apply_filters( 'bp_moderation_item_count', ! empty( $result['total'] ) ? $result['total'] : 0 );
 }

@@ -82,6 +82,19 @@ class BP_Moderation_Forum_Topics extends BP_Moderation_Abstract {
 	}
 
 	/**
+	 * Get Content owner id.
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param integer $topic_id Topic id.
+	 *
+	 * @return int
+	 */
+	public static function get_content_owner_id( $topic_id ) {
+		return get_post_field( 'post_author', $topic_id );
+	}
+
+	/**
 	 * Get permalink
 	 *
 	 * @since BuddyBoss 2.0.0
