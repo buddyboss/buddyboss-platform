@@ -160,7 +160,7 @@
 							<button title="Close (Esc)" type="button" class="mfp-close"></button>
 						</header>
 						<div class="bb-report-type-wrp">
-							<# _.reject(other_recipients, function(item) { if( true === item.is_reported || false == item.can_be_blocked ) { return false; } #>
+							<# _.reject(other_recipients, function(item) { if( true === item.is_reported || true == item.is_user_blocked || false == item.can_be_blocked ) { return false; } #>
 							<div class="user-item-wrp">
 								<div class="user-avatar">
 									<img src="{{item.avatar}}" alt="{{item.user_name}}">
