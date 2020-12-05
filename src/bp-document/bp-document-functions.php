@@ -2272,6 +2272,10 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						// Delete child activity no need anymore because assigned all the data to parent activity.
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
+						// Update parent activity privacy to destination privacy.
+						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->save();
+
 					} elseif( count( $parent_activity_document_ids ) > 2 ) {
 
 						// Get the child activity.

@@ -3115,6 +3115,10 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						// Delete child activity no need anymore because assigned all the data to parent activity.
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
+						// Update parent activity privacy to destination privacy.
+						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->save();
+
 					} elseif( count( $parent_activity_media_ids ) > 2 ) {
 
 						// Get the child activity.
