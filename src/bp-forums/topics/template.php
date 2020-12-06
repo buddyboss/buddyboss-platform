@@ -3251,8 +3251,8 @@ function bbp_get_topic_report_link( $args = '' ) {
 			'component'         => 'moderation',
 			'must_be_logged_in' => true,
 			'button_attr'       => array(
-					'data-bp-content-id'   => $args['id'],
-					'data-bp-content-type' => BP_Moderation_Forum_Topics::$moderation_type,
+				'data-bp-content-id'   => $args['id'],
+				'data-bp-content-type' => BP_Moderation_Forum_Topics::$moderation_type,
 			),
 		),
 		true

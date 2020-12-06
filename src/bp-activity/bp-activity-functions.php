@@ -5457,13 +5457,6 @@ function bp_activity_get_report_link( $args = array() ) {
 		return false;
 	}
 
-	/**
-	 * Restricted Report link for Auto-created activity. Like Group create, Group join, Reply create etc.
-	 */
-	/*if ( in_array( bp_get_activity_type(), array( 'created_group', 'friendship_created', 'joined_group' ), true ) ) {
-		return array();
-	}*/
-
 	$args = wp_parse_args( $args,
 		array(
 			'id'                => 'activity_report',

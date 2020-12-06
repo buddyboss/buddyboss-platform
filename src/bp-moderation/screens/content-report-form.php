@@ -60,6 +60,8 @@
 							<button type="submit" class="report-submit button"><?php esc_attr_e( 'Send Report', 'buddyboss' ); ?></button>
 							<input type="hidden" name="content_id" class="bp-content-id"/>
 							<input type="hidden" name="content_type" class="bp-content-type"/>
+							<input type="hidden" name="content_sub_id" class="bp-content-sub-id"/>
+							<input type="hidden" name="content_sub_type" class="bp-content-sub-type"/>
 							<input type="hidden" name="_wpnonce" class="bp-nonce"/>
 						</footer>
 					</form>

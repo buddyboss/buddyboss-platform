@@ -53,8 +53,8 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 		// Remove hidden/blocked users content
 		add_filter( 'bp_suspend_forum_reply_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
-		// button class.
-		add_filter( 'bp_moderation_get_report_button_args', array( $this, 'update_button_args' ), 10, 3 );
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button", array( $this, 'update_button' ), 10, 2 );
 
 		// Blocked template
 		add_filter( 'bbp_locate_template_names', array( $this, 'locate_blocked_template' ) );
@@ -193,19 +193,16 @@ class BP_Moderation_Forum_Replies extends BP_Moderation_Abstract {
 	 * @since BuddyBoss 2.0.0
 	 *
 	 * @param array  $button      Button args.
-	 * @param string $item_type   Content type.
 	 * @param string $is_reported Item reported.
 	 *
 	 * @return string
 	 */
-	public function update_button_args( $button, $item_type, $is_reported ) {
+	public function update_button( $button, $is_reported ) {
 
-		if ( self::$moderation_type === $item_type ) {
-			if ( $is_reported ) {
-				$button['button_attr']['class'] = 'reported-content';
-			} else {
-				$button['button_attr']['class'] = 'report-content';
-			}
+		if ( $is_reported ) {
+			$button['button_attr']['class'] = 'reported-content';
+		} else {
+			$button['button_attr']['class'] = 'report-content';
 		}
 
 		return $button;
