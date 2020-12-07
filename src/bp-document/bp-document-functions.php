@@ -2194,7 +2194,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 	$document->folder_id     = $folder_id;
 	$document->group_id      = $group_id;
 	$document->date_modified = bp_core_current_time();
-	$document->privacy       = $destination_privacy;
+	$document->privacy       = ( $group_id > 0 ) ? 'grouponly' : $destination_privacy;
 	$document->save();
 
 	// Update document activity privacy.
