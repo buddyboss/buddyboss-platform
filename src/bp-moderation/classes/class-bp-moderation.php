@@ -977,7 +977,7 @@ class BP_Moderation {
 			$threshold          = bp_moderation_get_setting( 'bpm_blocking_auto_suspend_threshold', '5' );
 			$email_notification = bp_is_moderation_blocking_email_notification_enable();
 		} elseif ( bp_is_moderation_auto_hide_enable( false, $this->item_type ) ) {
-			$threshold          = bpm_reporting_settings_callback_auto_hide_threshold( '5', $this->item_type );
+			$threshold          = bp_moderation_reporting_auto_hide_threshold( '5', $this->item_type );
 			$email_notification = bp_is_moderation_reporting_email_notification_enable();
 		}
 
