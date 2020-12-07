@@ -213,11 +213,10 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 		return false;
 	}
 
-	$item_id   = $args['button_attr']['data-bp-content-id'];
-	$item_type = $args['button_attr']['data-bp-content-type'];
-
-	$item_sub_id   = $args['button_attr']['data-bp-content-sub-id'];
-	$item_sub_type = $args['button_attr']['data-bp-content-sub-type'];
+	$item_id       = isset( $args['button_attr']['data-bp-content-id'] ) ? $args['button_attr']['data-bp-content-id'] : false;
+	$item_type     = isset( $args['button_attr']['data-bp-content-type'] ) ? $args['button_attr']['data-bp-content-type'] : false;
+	$item_sub_id   = isset( $args['button_attr']['data-bp-content-sub-id'] ) ? $args['button_attr']['data-bp-content-sub-id'] : false;
+	$item_sub_type = isset( $args['button_attr']['data-bp-content-sub-type'] ) ? $args['button_attr']['data-bp-content-sub-type'] : false;
 
 	/**
 	 * Filter to update report link args
@@ -230,7 +229,7 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$args = apply_filters( "bp_moderation_{$item_type}_button_args", $args, $item_id );
 
 
-	if ( empty( $item_id ) || empty( $item_type ) ) {
+	if ( empty( $item_id ) || empty( $item_type ) || empty( $args ) ) {
 		return array();
 	}
 

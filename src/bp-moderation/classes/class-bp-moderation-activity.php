@@ -215,8 +215,15 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 
 		switch ( $activity_type ) {
 			case 'bbp_forum_create';
-				$args['button_attr']['data-bp-content-sub-id']   = bp_get_activity_item_id();
-				$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Forums::$moderation_type;
+				$forum_id = bp_get_activity_item_id();
+				if ( function_exists( 'bbp_is_forum_group_forum' )
+				     && bbp_is_forum_group_forum( $forum_id ) ) {
+					$args['button_attr']['data-bp-content-sub-id']   = current( bbp_get_forum_group_ids( $forum_id ) );
+					$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Groups::$moderation_type;
+				} else {
+					$args['button_attr']['data-bp-content-sub-id']   = bp_get_activity_item_id();
+					$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Forums::$moderation_type;
+				}
 				break;
 			case 'bbp_topic_create';
 				$args['button_attr']['data-bp-content-sub-id']   = bp_get_activity_item_id();

@@ -3258,6 +3258,10 @@ function bbp_get_topic_report_link( $args = '' ) {
 		true
 	);
 
+	if ( empty( $report_btn_arr ) ) {
+		$report_btn_arr = false;
+	}
+
 	return apply_filters( 'bbp_get_topic_report_link', $report_btn_arr, $args );
 }
 
@@ -3330,6 +3334,10 @@ function bbp_get_topic_reply_link( $args = array() ) {
  */
 function bbp_get_reply_report_link( $args = array() ) {
 
+	if ( ! bp_is_active( 'moderation' ) || ! is_user_logged_in() ) {
+		return false;
+	}
+
 	$report_btn_arr = bp_moderation_get_report_button(
 		array(
 			'id'                => 'reply_report',
@@ -3342,6 +3350,10 @@ function bbp_get_reply_report_link( $args = array() ) {
 		),
 		true
 	);
+
+	if ( empty( $report_btn_arr ) ) {
+		$report_btn_arr = false;
+	}
 
 	return apply_filters( 'bbp_get_reply_report_link', $report_btn_arr, $args );
 
