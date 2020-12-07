@@ -369,3 +369,7 @@ html[dir="rtl"] .wp-customizer {
     right: inherit;
   }
 }
+
+html[dir="rtl"] .theme-editor-php .CodeMirror-code {
+  margin-right: 20px;
+}

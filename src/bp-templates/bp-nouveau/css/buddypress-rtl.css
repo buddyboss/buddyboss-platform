@@ -17156,6 +17156,10 @@ html[dir="rtl"] .wp-customizer .CodeMirror-vscrollbar {
   left: inherit;
 }
 
+html[dir="rtl"] .theme-editor-php .CodeMirror-code {
+  margin-left: 20px;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone
