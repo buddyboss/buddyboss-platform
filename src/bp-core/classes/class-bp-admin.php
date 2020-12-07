@@ -177,6 +177,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Hello BuddyBoss/App.
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
 			add_action( 'admin_footer', array( $this, 'document_extension_mime_type_check_screen' ) );
+			add_action( 'admin_footer', array( $this, 'video_extension_mime_type_check_screen' ) );
 			add_action( 'admin_footer', array( $this, 'about_buddyboss_app_screen' ) );
 
 			/* Filters ***********************************************************/
@@ -791,6 +792,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' === $_GET['tab'] ) {
+				wp_enqueue_style( 'bp-hello-css' );
+				wp_enqueue_script( 'bp-hello-js' );
+			}
+
 	        wp_enqueue_script( 'bp-fitvids-js' );
 
 	        wp_enqueue_script( 'bp-wp-api-js' );
@@ -839,6 +845,14 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			include $this->admin_dir . 'templates/check-document-mime-type.php';
+		}
+
+		public function video_extension_mime_type_check_screen(){
+			if ( isset( $_GET ) && isset( $_GET['tab'] ) && 'bp-video' !== $_GET['tab'] ) {
+				return;
+			}
+
+			include $this->admin_dir . 'templates/check-video-mime-type.php';
 		}
 
 		/**
