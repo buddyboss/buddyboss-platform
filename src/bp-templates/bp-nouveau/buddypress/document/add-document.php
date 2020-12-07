@@ -12,7 +12,7 @@ if ( bp_is_my_profile() || ( bp_is_active( 'groups' ) && bp_is_group() && is_use
 
 	if ( ! empty( $active_extensions ) && is_user_logged_in() ) {
 
-		if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) && bp_user_can_create_document() ) {
+		if ( bp_is_group() && groups_can_user_manage_document( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
 			?>
 			<div class="bb-media-actions-wrap">
 				<div class="bb-media-actions">

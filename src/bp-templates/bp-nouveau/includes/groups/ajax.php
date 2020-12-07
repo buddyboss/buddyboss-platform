@@ -423,6 +423,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				}
 			}
 		}
+		$request = apply_filters( 'groups_get_group_potential_invites_requests_args', $request );
 	}
 
 	$bp->groups->invites_scope = 'members';

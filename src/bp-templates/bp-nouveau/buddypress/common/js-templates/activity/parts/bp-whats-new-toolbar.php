@@ -7,7 +7,7 @@
 		</a>
 	</div>
 	<?php endif; ?>
-	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) && bp_user_can_create_media() ) : ?>
+	<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( ( bp_is_profile_media_support_enabled() && bp_user_can_create_media() ) || bp_is_group_media_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_media_support_enabled() && bp_user_can_create_media() ) || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ) : ?>
 		<div class="post-elements-buttons-item post-media media-support">
 			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a photo', 'buddyboss' ); ?>">
 				<i class="bb-icon bb-icon-camera-small"></i>
@@ -16,7 +16,7 @@
 	<?php endif; ?>
 	<?php
 	$extensions = ( function_exists( 'bp_document_get_allowed_extension' ) ) ? bp_document_get_allowed_extension() : '';
-	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) && bp_user_can_create_document() ) :
+	if ( bp_is_active( 'media' ) && ! empty( $extensions ) && ( ( bp_is_activity_directory() && ( ( bp_is_profile_document_support_enabled() && bp_user_can_create_document() ) || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() && bp_user_can_create_document() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ) :
 		?>
 		<div class="post-elements-buttons-item post-media document-support">
 			<a href="#" id="activity-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_html_e( 'Attach a document', 'buddyboss' ); ?>">
