@@ -628,18 +628,17 @@ window.bp = window.bp || {};
 					if ( self.videoDropzoneObj ) {
 						self.videoDropzoneObj.files.push( video_file );
 						self.videoDropzoneObj.emit( 'addedfile', video_file );
-						self.createVideoThumbnailFromUrl( video_file );
+						self.createThumbnailFromUrl( video_file );
 						//self.videoDropzoneObj.emit( 'complete', video_file );
 					}
 				}
 
 			},
 
-
-			createVideoThumbnailFromUrl: function ( mock_file ) {
+			createThumbnailFromUrl: function ( mock_file ) {
 				var self = this;
-				console.log( self.videoDropzoneObj );
-				self.videoDropzoneObj.createVideoThumbnailFromUrl(
+
+				self.videoDropzoneObj.createThumbnailFromUrl(
 					mock_file,
 					self.videoDropzoneObj.options.thumbnailWidth,
 					self.videoDropzoneObj.options.thumbnailHeight,
