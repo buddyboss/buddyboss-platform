@@ -241,7 +241,7 @@ function bp_media_get_settings_fields() {
 	);
 
 	$fields['bp_media_settings_photos']['bp_media_allowed_per_batch'] = array(
-		'title'             => __( 'Allowed Per Batch', 'buddyboss' ),
+		'title'             => __( 'Upload Limit', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_media_allowed_per_batch',
 		'sanitize_callback' => 'absint',
 		'args'              => array(),
@@ -255,7 +255,7 @@ function bp_media_get_settings_fields() {
 	);
 
 	$fields['bp_media_settings_documents']['bp_document_allowed_per_batch'] = array(
-		'title'             => __( 'Allowed Per Batch', 'buddyboss' ),
+		'title'             => __( 'Upload Limit', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_document_allowed_per_batch',
 		'sanitize_callback' => 'absint',
 		'args'              => array(),
@@ -1389,13 +1389,12 @@ function bp_media_settings_callback_media_allowed_size() {
 	<input type="number"
 		   name="bp_media_allowed_size"
 		   id="bp_media_allowed_size"
-		   class="regular-text"
+		   class="small-text"
 		   min="1"
 		   step="1"
 		   max="<?php echo esc_attr( $max_size_mb ); ?>"
 		   required
 		   value="<?php echo esc_attr( bp_media_allowed_upload_media_size() ); ?>"
-		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
@@ -1435,13 +1434,12 @@ function bp_media_settings_callback_document_allowed_size() {
 	<input type="number"
 		   name="bp_document_allowed_size"
 		   id="bp_document_allowed_size"
-		   class="regular-text"
+		   class="small-text"
 		   min="1"
 		   step="1"
 		   max="<?php echo esc_attr( $max_size_mb ); ?>"
 		   required
 		   value="<?php echo esc_attr( bp_media_allowed_upload_document_size() ); ?>"
-		   style="width: 70px;"
 	/> <?php esc_html_e( 'MB', 'buddyboss' ); ?>
 	<p class="description">
 		<?php
@@ -1479,10 +1477,15 @@ function bp_media_settings_callback_media_allowed_per_batch() {
 	<input type="number"
 		   name="bp_media_allowed_per_batch"
 		   id="bp_media_allowed_per_batch"
+		   class="small-text"
 		   min="1"
 		   value="<?php echo esc_attr( bp_media_allowed_upload_media_per_batch() ); ?>"
-	/>
-
+	/> <?php esc_html_e( 'per batch', 'buddyboss' ); ?>
+	<p class="description">
+		<?php
+		_e( 'Set a maximum photos upload limit per batch at the time of activity update, personal and group photos upload.', 'buddyboss' )
+		?>
+	</p>
 	<?php
 }
 
@@ -1508,10 +1511,15 @@ function bp_media_settings_callback_document_allowed_per_batch() {
 	<input type="number"
 		   name="bp_document_allowed_per_batch"
 		   id="bp_document_allowed_per_batch"
+		   class="small-text"
 		   min="1"
 		   value="<?php echo esc_attr( bp_media_allowed_upload_document_per_batch() ); ?>"
-	/>
-
+	/> <?php esc_html_e( 'per batch', 'buddyboss' ); ?>
+	<p class="description">
+		<?php
+		_e( 'Set a maximum documents upload limit per batch at the time of activity update, personal and group documents upload.', 'buddyboss' )
+		?>
+	</p>
 	<?php
 }
 
