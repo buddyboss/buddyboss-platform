@@ -2140,6 +2140,10 @@ function bp_video_get_edit_activity_data( $activity ) {
 					'activity_id'   => $video->activity_id,
 					'saved'         => true,
 					'menu_order'    => $video->menu_order,
+
+					//Placeholder until video thumb generator
+					'placeholder_thumb'    => buddypress()->plugin_url . "bp-templates/bp-nouveau/images/placeholder.png",
+					'placeholder_url'    => buddypress()->plugin_url . "bp-templates/bp-nouveau/images/placeholder.png",
 				);
 			}
 		}

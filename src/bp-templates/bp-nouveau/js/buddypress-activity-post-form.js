@@ -267,6 +267,19 @@ window.bp = window.bp || {};
 						}
 					}
 				}
+
+				/**
+				 * Video
+				 */
+				if ( ! _.isUndefined( activity_data.video ) && activity_data.video.length ) {
+
+					if ( ! _.isUndefined( self.activityToolbar ) ) {
+						bp.Views.ActivityVideoData = activity_data;
+						self.activityToolbar.toggleVideoSelector( bpActivityEvent );
+					}
+
+				}
+
 				self.postForm.$el.find( '#whats-new' ).trigger( 'keyup' );
 				self.postForm.$el.removeClass('loading');
 

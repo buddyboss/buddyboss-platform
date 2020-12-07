@@ -379,6 +379,7 @@ window.bp = window.bp || {};
 			template	: bp.template( 'activity-video' ),
 			video	: [],
 			videoDropzoneObj : null,
+			editActivityData : null,
 
 			initialize: function () {
 
@@ -391,10 +392,15 @@ window.bp = window.bp || {};
 			toggle_video_uploader: function () {
 				var self = this;
 
+				if ( ! _.isUndefined( bp.Views.ActivityVideoData ) ) {
+					self.editActivityData = bp.Views.ActivityVideoData;
+				}
+
 				if ( self.$el.find( '#activity-post-video-uploader' ).hasClass( 'open' ) ) {
 					self.destroyVideo();
 				} else {
 					self.open_video_uploader();
+					self.prepareEditVideoActivity();
 				}
 			},
 
@@ -442,9 +448,9 @@ window.bp = window.bp || {};
 				self.videoDropzoneObj.on(
 					'addedfile',
 					function ( file ) {
-						if ( file.document_edit_data ) {
-							self.video.push( file.document_edit_data );
-							self.model.set( 'document', self.video );
+						if ( file.video_edit_data ) {
+							self.video.push( file.video_edit_data );
+							self.model.set( 'video', self.video );
 						}
 					}
 				);
@@ -471,7 +477,6 @@ window.bp = window.bp || {};
 				self.videoDropzoneObj.on(
 					'success',
 					function(file, response) {
-						console.log( response);
 						if ( response.data.id ) {
 
 							// Set the folder_id and group_id if activity belongs to any folder and group in edit activity on new uploaded media id.
@@ -560,7 +565,92 @@ window.bp = window.bp || {};
 
 				self.$el.find( '#activity-post-video-uploader' ).addClass( 'open' ).removeClass( 'closed' );
 				$( '#whats-new-attachments' ).removeClass( 'empty' );
-			}
+			},
+
+			prepareEditVideoActivity : function(){
+				var self = this;
+
+				if ( _.isUndefined( self.editActivityData ) ){
+					return false;
+				}
+
+				var activity_data = self.editActivityData;
+
+				var tool_box = $( '#whats-new-toolbar' );
+
+				// Make tool box button disable.
+				if ( tool_box.find( '#activity-media-button' ) ) {
+					tool_box.find( '#activity-media-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				if ( tool_box.find( '#activity-document-button' ) ) {
+					tool_box.find( '#activity-document-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				if ( tool_box.find( '#activity-video-button' ) ) {
+					tool_box.find( '#activity-video-button' ).parents( '.post-elements-buttons-item' ).addClass( 'active no-click' );
+				}
+				if ( tool_box.find( '#activity-gif-button' ) ) {
+					tool_box.find( '#activity-gif-button' ).parents( '.post-elements-buttons-item' ).addClass( 'no-click' );
+				}
+				// END Toolbox Button
+
+
+				var video_file = false;
+				for ( var videoi = 0; videoi < activity_data.video.length; videoi++ ) {
+					video_file = false;
+
+					video_file = {
+						name		: activity_data.video[videoi].title,
+						accepted	: true,
+						kind		: 'image',
+						upload: {
+							filename	: activity_data.video[videoi].title,
+							uuid	: activity_data.video[videoi].attachment_id
+						},
+						dataURL	: activity_data.video[videoi].placeholder_url,
+						id		: activity_data.video[videoi].attachment_id,
+						video_edit_data: {
+							'id'			: activity_data.video[videoi].attachment_id,
+							'media_id'		: activity_data.video[videoi].id,
+							'name'			: activity_data.video[videoi].name,
+							//'thumb'			: activity_data.video[videoi].thumb,
+							//'url'			: activity_data.video[videoi].url,
+
+							'thumb'			: activity_data.video[videoi].placeholder_thumb,
+							'url'			: activity_data.video[videoi].placeholder_url,
+							'uuid'			: activity_data.video[videoi].attachment_id,
+							'menu_order'	: activity_data.video[videoi].menu_order,
+							'album_id'	: activity_data.video[videoi].album_id,
+							'group_id'	: activity_data.video[videoi].group_id,
+							'saved'			: true
+						}
+					};
+
+					if ( self.videoDropzoneObj ) {
+						self.videoDropzoneObj.files.push( video_file );
+						self.videoDropzoneObj.emit( 'addedfile', video_file );
+						self.createVideoThumbnailFromUrl( video_file );
+						//self.videoDropzoneObj.emit( 'complete', video_file );
+					}
+				}
+
+			},
+
+
+			createVideoThumbnailFromUrl: function ( mock_file ) {
+				var self = this;
+				console.log( self.videoDropzoneObj );
+				self.videoDropzoneObj.createVideoThumbnailFromUrl(
+					mock_file,
+					self.videoDropzoneObj.options.thumbnailWidth,
+					self.videoDropzoneObj.options.thumbnailHeight,
+					self.videoDropzoneObj.options.thumbnailMethod,
+					true,
+					function ( thumbnail ) {
+						self.videoDropzoneObj.emit( 'thumbnail', mock_file, thumbnail );
+						self.videoDropzoneObj.emit( 'complete', mock_file );
+					}
+				);
+			},
 
 		}
 	);
