@@ -201,7 +201,7 @@ class BP_Moderation_Forums extends BP_Moderation_Abstract {
 		// Remove report button if forum is group forums
 		if ( function_exists( 'bbp_is_forum_group_forum' )
 		     && bbp_is_forum_group_forum( $item_id ) ) {
-			return $args;
+			return array();
 		}
 
 		return $args;

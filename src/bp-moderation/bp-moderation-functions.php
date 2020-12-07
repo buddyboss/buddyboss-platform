@@ -228,7 +228,6 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	 */
 	$args = apply_filters( "bp_moderation_{$item_type}_button_args", $args, $item_id );
 
-
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $args ) ) {
 		return array();
 	}
