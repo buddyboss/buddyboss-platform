@@ -19,7 +19,7 @@ new BP_Moderation_Forum_Topics();
 new BP_Moderation_Forum_Replies();
 new BP_Moderation_Document();
 new BP_Moderation_Media();
-//new BP_Moderation_Messages();
+// new BP_Moderation_Messages();
 
 /**
  * Update modebypass Param
@@ -59,13 +59,17 @@ function bp_moderation_content_report() {
 	$item_note = filter_input( INPUT_POST, 'note', FILTER_SANITIZE_STRING );
 
 	if ( empty( $item_id ) || empty( $item_type ) || empty( $category ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_data',
-			esc_html__( 'Required field missing.', 'buddyboss' ) );
+		$response['message'] = new WP_Error(
+			'bp_moderation_missing_data',
+			esc_html__( 'Required field missing.', 'buddyboss' )
+		);
 	}
 
 	if ( 'other' === $category && empty( $item_note ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_missing_data',
-			esc_html__( 'Please specify reason to report this content.', 'buddyboss' ) );
+		$response['message'] = new WP_Error(
+			'bp_moderation_missing_data',
+			esc_html__( 'Please specify reason to report this content.', 'buddyboss' )
+		);
 	}
 
 	/**
@@ -73,17 +77,20 @@ function bp_moderation_content_report() {
 	 * Like For Forum create activity, When reporting Activity it'll report actual forum
 	 */
 	if ( empty( $item_sub_id ) && empty( $item_sub_type ) ) {
-		$item_sub_id = $item_id;
+		$item_sub_id   = $item_id;
 		$item_sub_type = $item_type;
 	}
 
 	if ( bp_moderation_report_exist( $item_sub_id, $item_sub_type ) ) {
-		$response['message'] = new WP_Error( 'bp_moderation_already_reported',
-			esc_html__( 'Already reported this item.', 'buddyboss' ) );
+		$response['message'] = new WP_Error(
+			'bp_moderation_already_reported',
+			esc_html__( 'Already reported this item.', 'buddyboss' )
+		);
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_add( array(
+		$moderation = bp_moderation_add(
+			array(
 				'content_id'   => $item_sub_id,
 				'content_type' => $item_sub_type,
 				'category_id'  => $category,
@@ -146,12 +153,18 @@ function bp_moderation_block_member() {
 		$response['message'] = new WP_Error( 'bp_moderation_already_reported', esc_html__( 'Already reported this item.', 'buddyboss' ) );
 	}
 
+	if ( (int) bp_loggedin_user_id() === (int) $item_id ) {
+		$response['message'] = new WP_Error( 'bp_moderation_invalid_item_id', esc_html__( 'Sorry, you can not able to block him self.', 'buddyboss' ) );
+	}
+
 	if ( wp_verify_nonce( $nonce, 'bp-moderation-content' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_add( array(
-			'content_id'   => $item_id,
-			'content_type' => BP_Moderation_Members::$moderation_type,
-			'note'         => esc_html__( 'Member block', 'buddyboss' ),
-		) );
+		$moderation = bp_moderation_add(
+			array(
+				'content_id'   => $item_id,
+				'content_type' => BP_Moderation_Members::$moderation_type,
+				'note'         => esc_html__( 'Member block', 'buddyboss' ),
+			)
+		);
 
 		if ( ! empty( $moderation->id ) && ! empty( $moderation->report_id ) ) {
 			$response['success']    = true;
@@ -161,8 +174,18 @@ function bp_moderation_block_member() {
 				friends_remove_friend( bp_loggedin_user_id(), $item_id );
 			}
 
-			if ( bp_is_following( array( 'leader_id' => $item_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
-				bp_stop_following( array( 'leader_id' => $item_id, 'follower_id' => bp_loggedin_user_id() ) );
+			if ( bp_is_following(
+				array(
+					'leader_id'   => $item_id,
+					'follower_id' => bp_loggedin_user_id(),
+				)
+			) ) {
+				bp_stop_following(
+					array(
+						'leader_id'   => $item_id,
+						'follower_id' => bp_loggedin_user_id(),
+					)
+				);
 			}
 
 			$response['button'] = bp_moderation_get_report_button(
@@ -214,10 +237,12 @@ function bp_moderation_unblock_user() {
 	}
 
 	if ( wp_verify_nonce( $nonce, 'bp-unblock-user' ) && ! is_wp_error( $response['message'] ) ) {
-		$moderation = bp_moderation_delete( array(
-			'content_id'   => $item_id,
-			'content_type' => BP_Moderation_Members::$moderation_type,
-		) );
+		$moderation = bp_moderation_delete(
+			array(
+				'content_id'   => $item_id,
+				'content_type' => BP_Moderation_Members::$moderation_type,
+			)
+		);
 
 		if ( empty( $moderation->report_id ) ) {
 			$response['success'] = true;
@@ -248,9 +273,9 @@ function bp_moderation_content_actions_request() {
 	);
 
 	$nonce      = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
-	$item_type       = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$item_type  = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 	$sub_action = filter_input( INPUT_POST, 'sub_action', FILTER_SANITIZE_STRING );
-	$item_id         = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
+	$item_id    = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT );
 
 	if ( empty( $item_id ) || empty( $item_type ) ) {
 		$response['message'] = new WP_Error( 'bp_moderation_missing_data', esc_html__( 'Required field missing.', 'buddyboss' ) );
@@ -258,19 +283,23 @@ function bp_moderation_content_actions_request() {
 
 	if ( wp_verify_nonce( $nonce, 'bp-hide-unhide-moderation' ) && ! is_wp_error( $response['message'] ) ) {
 		if ( 'hide' === $sub_action ) {
-			$moderation = bp_moderation_hide( array(
-				'content_id'   => $item_id,
-				'content_type' => $item_type,
-			) );
+			$moderation = bp_moderation_hide(
+				array(
+					'content_id'   => $item_id,
+					'content_type' => $item_type,
+				)
+			);
 			if ( $moderation->hide_sitewide === 1 ) {
 				$response['success'] = true;
 				$response['message'] = 'user' === $item_type ? esc_html__( 'Member has been successfully suspended.', 'buddyboss' ) : esc_html__( 'Content has been successfully hidden.', 'buddyboss' );
 			}
 		} else {
-			$moderation = bp_moderation_unhide( array(
-				'content_id'   => $item_id,
-				'content_type' => $item_type,
-			) );
+			$moderation = bp_moderation_unhide(
+				array(
+					'content_id'   => $item_id,
+					'content_type' => $item_type,
+				)
+			);
 			if ( $moderation->hide_sitewide === 0 ) {
 				$response['success'] = true;
 				$response['message'] = 'user' === $item_type ? esc_html__( 'Member has been successfully unsuspended.', 'buddyboss' ) : esc_html__( 'Content has been successfully unhidden.', 'buddyboss' );
