@@ -70,6 +70,15 @@ function bp_moderation_content_report() {
 		);
 	}
 
+	// Check the current has access to report the item ot not.
+	$user_can = bp_moderation_user_can( $item_id, $item_type );
+	if ( false === (bool) $user_can ) {
+		$response['message'] = new WP_Error(
+			'bp_moderation_invalid_access',
+			esc_html__( 'Sorry, you can not able to report this item.', 'buddyboss' )
+		);
+	}
+
 	/**
 	 * If Sub item id and sub type is empty then actual item is reported otherwise Connected item will be reported
 	 * Like For Forum create activity, When reporting Activity it'll report actual forum
