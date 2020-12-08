@@ -283,10 +283,7 @@ function bp_nouveau_ajax_media_save() {
     }
 
     if ( bp_is_group_media() ) {
-	    add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
-	    bp_has_media( bp_ajax_querystring( 'groups' ) );
-	    $media_group_count = $GLOBALS['media_template']->total_media_count;
-	    remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+	    $media_group_count = bp_media_get_total_group_media_count();
     }
 
 	wp_send_json_success(
@@ -402,10 +399,7 @@ function bp_nouveau_ajax_media_delete() {
 		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_personal_scope', 20 );
 	}
 	if( bp_is_group_media() ) {
-		add_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
-		bp_has_media( bp_ajax_querystring( 'groups' ) );
-		$media_group_count = $GLOBALS['media_template']->total_media_count;
-		remove_filter( 'bp_ajax_querystring', 'bp_media_object_template_results_media_groups_scope', 20 );
+		$media_group_count = bp_media_get_total_group_media_count();
 	}
 
 	wp_send_json_success(
