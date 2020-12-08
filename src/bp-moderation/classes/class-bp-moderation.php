@@ -254,6 +254,7 @@ class BP_Moderation {
 	 * @type bool        $update_meta_cache Whether to pre-fetch metadata for queried moderation items. Default: true.
 	 * @type string|bool $count_total       If true, an additional DB query is run to count the total moderation items
 	 *                                           for the query. Default: false.
+	 * @type int         $hidden            whether to get hidden items or not. Default: false
 	 * }
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located moderations
@@ -290,8 +291,8 @@ class BP_Moderation {
 				'display_reporters' => false,           // Whether or not to fetch user data.
 				'update_meta_cache' => true,            // Whether or not to update meta cache.
 				'count_total'       => false,           // Whether or not to use count_total.
-			)
-		);
+				'hidden'            => false,           // Get the moderation item base on it's hide status.
+			) );
 
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT ms.id';
@@ -368,7 +369,8 @@ class BP_Moderation {
 
 		// Exclude specified items type.
 		if ( ! empty( $r['exclude_types'] ) ) {
-			$not_in_types                      = "'" . implode( "', '", wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
+			$not_in_types                      = "'" . implode( "', '",
+					wp_parse_slug_list( $r['exclude_types'] ) ) . "'";
 			$where_conditions['exclude_types'] = "ms.item_type NOT IN ({$not_in_types})";
 		}
 
@@ -376,6 +378,13 @@ class BP_Moderation {
 		if ( ! empty( $r['in_types'] ) ) {
 			$in_types                     = "'" . implode( "', '", wp_parse_slug_list( $r['in_types'] ) ) . "'";
 			$where_conditions['in_types'] = "ms.item_type IN ({$in_types})";
+		}
+
+		// The specified items type to which you want to limit the query..
+		if ( 1 === $r['hidden'] ) {
+			$where_conditions['hidden'] = "ms.hide_sitewide=1";
+		} elseif ( 0 === $r['hidden'] ) {
+			$where_conditions['hidden'] = "ms.hide_sitewide=0";
 		}
 
 		// Process meta_query into SQL.

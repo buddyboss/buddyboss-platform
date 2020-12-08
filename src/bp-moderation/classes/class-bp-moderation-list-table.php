@@ -134,20 +134,20 @@ class BP_Moderation_List_Table extends WP_List_Table {
 		if ( 'reported-content' === $current_tab ) {
 			if ( 'active' === $moderation_status ) {
 				$this->view                        = 'active';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+				$moderation_request_args['hidden'] = 0;
 			} elseif ( 'hidden' === $moderation_status ) {
 				$this->view                        = 'hidden';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+				$moderation_request_args['hidden'] = 1;
 			} else {
 				$this->view = 'all';
 			}
 		} else {
 			if ( 'suspended' === $moderation_status ) {
 				$this->view                        = 'suspended';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 1 );
+				$moderation_request_args['hidden'] = 1;
 			} elseif ( 'unsuspended' === $moderation_status ) {
 				$this->view                        = 'unsuspended';
-				$moderation_request_args['filter'] = array( 'hide_sitewide' => 0 );
+				$moderation_request_args['hidden'] = 0;
 			} else {
 				$this->view = 'all';
 			}
@@ -307,11 +307,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$total_count = count( $moderation_views['reported-content'] );
 				$count       = 1;
 				foreach ( $moderation_views['reported-content'] as $key => $moderation_view ) {
+					$record_count = bp_moderation_item_count( array( 'type' => 'content', 'status' => $key ) );
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
-						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>"
-						   class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
-							<?php echo esc_html( $moderation_view['name'] ); ?>
+						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
+							<?php printf( __( '%s <span class="count">(%s)</span>', 'buddyboss' ),
+									esc_html( $moderation_view['name'] ),
+									number_format_i18n( $record_count ) ); ?>
 						</a>
 						<?php
 						if ( $count !== (int) $total_count ) {
@@ -326,11 +328,13 @@ class BP_Moderation_List_Table extends WP_List_Table {
 				$total_count = count( $moderation_views['blocked-members'] );
 				$count       = 1;
 				foreach ( $moderation_views['blocked-members'] as $key => $moderation_view ) {
+					$record_count = bp_moderation_item_count( array( 'type' => 'user', 'status' => $key ) );
 					?>
 					<li class="<?php echo esc_attr( $key ); ?>">
-						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>"
-						   class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
-							<?php echo esc_html( $moderation_view['name'] ); ?>
+						<a href="<?php echo esc_url( $moderation_view['link'] ); ?>" class="<?php echo ( $key === $this->view ) ? 'current' : ''; ?>">
+							<?php printf( __( '%s <span class="count">(%s)</span>', 'buddyboss' ),
+									esc_html( $moderation_view['name'] ),
+									number_format_i18n( $record_count ) ); ?>
 						</a>
 						<?php
 						if ( $count !== (int) $total_count ) {
