@@ -316,8 +316,12 @@ function bp_version_updater() {
 			bp_update_to_1_5_1();
 		}
 
+		if ( $raw_db_version < 16301 ) {
+			bp_update_to_1_5_5();
+		}
+
 		if ( $raw_db_version < 16401 ) {
-			bb_update_to_1_5_5();
+			bb_update_to_1_5_6();
 		}
 	}
 
@@ -661,39 +665,39 @@ function bp_update_to_1_5_1() {
 
 function bp_update_default_doc_extensions() {
 
-	$get_extensions = bp_get_option( 'bp_document_extensions_support', array() );
+	$get_extensions = bp_get_option( 'bp_document_extensions_support', array());
 
-	// $changed_array = array(
-	// 'bb_doc_52'   => array(
-	// 'description' => '7z Archive XYZ',
-	// )
-	// );
+	//	$changed_array = array(
+	//		'bb_doc_52'   => array(
+	//			'description' => '7z Archive XYZ',
+	//		)
+	//	);
 	//
 	//
-	// if ( !empty( $changed_array ) ) {
-	// foreach ( $changed_array as $k => $v ) {
-	// if ( array_key_exists( $k, $get_extensions ) ) {
-	// $extension = $get_extensions[$k];
-	// $get_extensions[$k] = array_replace( $extension, $v );
-	// } else {
-	// For newly add key.
-	// $get_extensions[$k] = $v;
-	// }
-	// }
-	// }
+	//	if ( !empty( $changed_array ) ) {
+	//		foreach ( $changed_array as $k => $v ) {
+	//			if ( array_key_exists( $k, $get_extensions ) ) {
+	//				$extension = $get_extensions[$k];
+	//				$get_extensions[$k] = array_replace( $extension, $v );
+	//			} else {
+	//				// For newly add key.
+	//				$get_extensions[$k] = $v;
+	//			}
+	//		}
+	//	}
 	//
-	// $removed_array = array(
-	// 'bb_doc_51'
-	// );
+	//	$removed_array = array(
+	//		'bb_doc_51'
+	//	);
 	//
-	// if ( !empty( $removed_array ) ) {
-	// foreach (  $removed_array as $key ) {
-	// unset( $get_extensions[$key] );
-	// }
+	//	if ( !empty( $removed_array ) ) {
+	//		foreach (  $removed_array as $key ) {
+	//			unset( $get_extensions[$key] );
+	//		}
 	//
-	// }
+	//	}
 
-	// bp_update_option( 'bp_document_extensions_support', $get_extensions );
+	//bp_update_option( 'bp_document_extensions_support', $get_extensions );
 }
 
 
@@ -721,7 +725,8 @@ function bp_migrate_new_member_activity_component() {
 	$bp = buddypress();
 
 	// Update the component for the new_member type.
-	$wpdb->update( // Activity table.
+	$wpdb->update(
+		// Activity table.
 		$bp->members->table_name_last_activity,
 		array(
 			'component' => $bp->members->id,
@@ -888,7 +893,7 @@ function bp_add_activation_redirect() {
 				$page_id = wp_insert_post( $new_page );
 
 				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
-				$slug = get_page_uri( $page_id );
+				$slug    = get_page_uri( $page_id );
 
 				// Set BBPress root Slug
 				bp_update_option( '_bbp_root_slug', $slug );
@@ -922,11 +927,7 @@ function bp_add_activation_redirect() {
  */
 function bp_platform_plugin_updater() {
 	if ( class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater(
-			'https://update.buddyboss.com/plugin',
-			basename( BP_PLUGIN_DIR ) . '/bp-loader.php',
-			847
-		);
+		new BP_BuddyBoss_Platform_Updater( 'https://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
 	}
 }
 
@@ -1103,6 +1104,7 @@ function bp_update_to_1_3_0() {
  *
  * - Create the invitations table.
  * - Migrate requests and invitations to the new table.
+ *
  */
 function bb_update_to_1_3_5() {
 	bp_core_install_invitations();
@@ -1113,10 +1115,25 @@ function bb_update_to_1_3_5() {
 }
 
 /**
+ * Fix message media showing in group photos tab.
+ *
+ * @since BuddyBoss 1.5.5
+ */
+function bp_update_to_1_5_5() {
+
+	global $wpdb;
+	$bp = buddypress();
+
+	// Reset the message media to group_id to 0, activity_id to 0, album_id to 0 as it's never associated with the groups, activity and album.
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->query( $wpdb->prepare( "UPDATE {$bp->media->table_name} SET `group_id`= 0, `activity_id`= 0, `album_id`= 0 WHERE privacy = %s and ( group_id > 0 OR activity_id > 0 OR album_id > 0 )", 'message' ) );
+}
+
+/**
  * Create Moderation emails.
  *
  * @since BuddyBoss 2.0.0
  */
-function bb_update_to_1_5_5() {
+function bb_update_to_1_5_6() {
 	bp_core_install_moderation_emails();
 }
