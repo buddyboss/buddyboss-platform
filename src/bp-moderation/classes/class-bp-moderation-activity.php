@@ -213,7 +213,10 @@ class BP_Moderation_Activity extends BP_Moderation_Abstract {
 		 * Restricted Report link for Auto-created activity. Like Group create, Group join, Reply create etc.
 		 */
 		if ( in_array( $activity->type, array( 'new_member', 'new_avatar', 'updated_profile', 'created_group', 'joined_group', 'group_details_updated', 'friendship_created', 'friendship_accepted', 'friends_register_activity_action', 'new_blog_post', 'new_blog' ), true ) ) {
-			return array();
+			return array(
+				'id' => false,
+				'type' => false,
+			);
 		}
 
 		$sub_items = [];

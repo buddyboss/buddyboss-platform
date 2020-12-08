@@ -249,6 +249,10 @@ function bp_moderation_get_report_button( $args, $html = true ) {
 	$item_sub_id   = isset( $sub_items['id'] ) ? $sub_items['id'] : $item_id;
 	$item_sub_type = isset( $sub_items['type'] ) ? $sub_items['type'] : $item_type;
 
+	if ( empty( $item_sub_id ) || empty( $item_sub_type ) ) {
+		return array();
+	}
+
 	// Hide if content is created by current user.
 	if ( bp_loggedin_user_id() === bp_moderation_get_content_owner_id( $item_sub_id, $item_sub_type ) ) {
 		return ! empty( $html ) ? '' : array();
@@ -388,7 +392,7 @@ function bp_moderation_get_sub_items( $item_id, $item_type ) {
 	 */
 	$sub_items = apply_filters( "bp_moderation_{$item_type}_button_sub_items", $item_id );
 
-	if ( empty( $sub_items ) || empty( $sub_items['id'] ) || empty( $sub_items['type'] ) ) {
+	if ( empty( $sub_items ) ) {
 		$sub_items = array(
 			'id'   => $item_id,
 			'type' => $item_type,
