@@ -56,13 +56,13 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 								if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 								    if ( $is_comment_pic ) {
 									    ?>
-                                        <li class="move_file move-disabled">
+                                        <li class="move_file media-action-class move-disabled" data-balloon-pos="down" data-balloon="Photos added in comment cannot be moved">
                                             <a href="#"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
                                         </li>
 									    <?php
 								    } else {
 									    ?>
-                                        <li class="move_file">
+                                        <li class="move_file media-action-class">
                                             <a href="#" data-media-id="<?php bp_media_id(); ?>" data-action="activity" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-activity-id="<?php bp_media_activity_id(); ?>" data-type="<?php echo esc_attr( $move_type ); ?>" id="<?php echo esc_attr( $move_id ); ?>" class="ac-media-move"><?php esc_attr_e( 'Move', 'buddyboss' ); ?></a>
                                         </li>
 									    <?php
@@ -75,7 +75,7 @@ echo ( $more_media && 4 === $media_template->current_media ) ? esc_attr( ' no_mo
 										$item_id = bp_get_activity_id();
 									}
 								} ?>
-								<li class="delete_file">
+								<li class="delete_file media-action-class">
 								<a class="media-file-delete" data-item-activity-id="<?php echo esc_attr( $item_id ); ?>" data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>" data-item-from="activity" data-item-id="<?php bp_media_id(); ?>" data-type="media" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 							</li>
 						</ul>

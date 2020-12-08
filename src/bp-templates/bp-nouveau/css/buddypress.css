@@ -3038,6 +3038,17 @@ span.dashicons.dashicons-admin-file:before {
   text-align: center;
 }
 
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file.move-disabled a,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file.move-disabled a {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+#media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file.move-disabled[data-balloon]:after,
+.bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file.move-disabled[data-balloon]:after {
+  content: attr(data-balloon);
+}
+
 #media-stream.media .bb-photo-thumb .media-action-wrap .media-action_list ul li.move_file a:before,
 .bb-activity-media-wrap .bb-activity-media-elem.media-activity .media-action-wrap .media-action_list ul li.move_file a:before {
   content: "\e959";
@@ -3333,6 +3344,10 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file.move-disabled a {
   pointer-events: none;
   opacity: 0.7;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file.move-disabled[data-balloon]:after {
+  content: attr(data-balloon);
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file a:before {
@@ -14923,6 +14938,12 @@ body.messages #buddypress #item-body #bp-group-messages-post-document-uploader .
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.rename_file a:before,
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.rename_file a:before {
   content: "\e80c";
+}
+
+.search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move a,
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file.disabled-move a {
+  pointer-events: none;
+  opacity: 0.7;
 }
 
 .search-document-list .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before,

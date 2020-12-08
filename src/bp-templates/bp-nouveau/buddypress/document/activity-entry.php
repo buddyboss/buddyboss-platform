@@ -135,7 +135,7 @@ if ( in_array( $extension, bp_get_document_preview_music_extensions(), true ) &&
 						if ( ! in_array( $db_privacy, array( 'forums', 'message' ), true ) ) {
 							if ( $is_comment_doc ) {
 								?>
-                                <li class="move_file document-action-class move-disabled">
+                                <li class="move_file document-action-class move-disabled" data-balloon-pos="down" data-balloon="Documents added in comment cannot be moved">
                                     <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
                                 </li>
 								<?php
