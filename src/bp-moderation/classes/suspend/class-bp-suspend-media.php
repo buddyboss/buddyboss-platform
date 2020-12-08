@@ -191,14 +191,6 @@ class BP_Suspend_Media extends BP_Suspend_Abstract {
 	 * @return array
 	 */
 	protected function get_related_contents( $media_id ) {
-
-		$related_contents = array();
-		$media            = new BP_Media( $media_id );
-
-		if ( bp_is_active( 'activity' ) ) {
-			$related_contents[ BP_Suspend_Activity::$type ] = array( $media->activity_id );
-		}
-
-		return $related_contents;
+		return array();
 	}
 }

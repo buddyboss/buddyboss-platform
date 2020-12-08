@@ -37,7 +37,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		add_filter( 'bp_moderation_content_types', array( $this, 'add_content_types' ) );
 
 		// Check Component is disabled
-		if ( ! bp_is_active( 'document' ) ){
+		if ( ! bp_is_active( 'document' ) ) {
 			return;
 		}
 
@@ -50,6 +50,9 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 
 		// Remove hidden/blocked users content
 		add_filter( 'bp_suspend_document_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
+
+		// button.
+		add_filter( "bp_moderation_{$this->item_type}_button_args", array( $this, 'update_button_args' ), 10, 2 );
 	}
 
 	/**
@@ -152,7 +155,7 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 2.0.0
 	 *
-	 * @param string $where documents Where sql
+	 * @param string $where   documents Where sql
 	 * @param object $suspend suspend object
 	 *
 	 * @return array
@@ -162,6 +165,26 @@ class BP_Moderation_Document extends BP_Moderation_Abstract {
 		$where['moderation_where'] = $this->exclude_where_query();
 
 		return $where;
+	}
+
+	/**
+	 * Function to modify the button args
+	 *
+	 * @since BuddyBoss 2.0.0
+	 *
+	 * @param array $args    Button args.
+	 * @param int   $item_id Item id.
+	 *
+	 * @return array
+	 */
+	public function update_button_args( $args, $item_id ) {
+		$document = new BP_Document( $item_id );
+		if ( bp_is_active('activity') && ! empty( $document->activity_id ) ) {
+			$args['button_attr']['data-bp-content-sub-id']   = $document->activity_id;
+			$args['button_attr']['data-bp-content-sub-type'] = BP_Moderation_Activity::$moderation_type;
+		}
+
+		return $args;
 	}
 
 }
