@@ -1165,6 +1165,13 @@ window.bp = window.bp || {};
 										$(document).find('li#media-all').trigger('click');
 									}
 								} else {
+									if (response.data.media_personal_count) {
+										$('#buddypress').find('.bp-wrap .users-nav ul li#media-personal-li a span.count').text( response.data.media_personal_count );
+									}
+
+									if (response.data.media_group_count) {
+										$('#buddypress').find('.bp-wrap .users-nav ul li#photos-groups-li a span.count').text( response.data.media_group_count );
+									}
 									$.each(media, function (index, value) {
 										if ($('#media-stream ul.media-list li[data-id="' + value + '"]').length) {
 											$('#media-stream ul.media-list li[data-id="' + value + '"]').remove();
@@ -4102,6 +4109,14 @@ window.bp = window.bp || {};
 
 								// Prepend the activity.
 								bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
+
+								if (response.data.media_personal_count) {
+									$('#buddypress').find('.bp-wrap .users-nav ul li#media-personal-li a span.count').text( response.data.media_personal_count );
+								}
+
+								if (response.data.media_group_count) {
+									$('#buddypress').find('.bp-wrap .users-nav ul li#photos-groups-li a span.count').text( response.data.media_group_count );
+								}
 
 								for (var i = 0; i < self.dropzone_media.length; i++) {
 									self.dropzone_media[ i ].saved = true;
