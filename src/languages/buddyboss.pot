@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.5.5.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-12-08 05:02:55+00:00\n"
+"POT-Creation-Date: 2020-12-08 10:01:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5981,7 +5981,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-list-table.php:436
 #: bp-members/classes/class-bp-members-list-table.php:156
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:30
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:38
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
 #: bp-templates/bp-nouveau/includes/document/ajax.php:862
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1184
@@ -7035,7 +7035,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:739 bp-groups/bp-groups-template.php:744
 #: bp-groups/bp-groups-template.php:749 bp-groups/bp-groups-template.php:752
 #: bp-groups/bp-groups-template.php:763 bp-groups/bp-groups-template.php:852
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:45
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:53
 msgid "Group"
 msgstr ""
 
@@ -7678,13 +7678,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -13779,7 +13779,7 @@ msgid "Forum Type"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:95
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:55
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:63
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
 #: bp-templates/bp-nouveau/includes/document/ajax.php:876
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1198
@@ -21565,7 +21565,7 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:74
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:82
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:48
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
@@ -22057,7 +22057,7 @@ msgstr ""
 msgid "Edit Post Privacy"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:36
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:44
 #: bp-templates/bp-nouveau/includes/document/ajax.php:869
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1191
 #: bp-templates/bp-nouveau/includes/document/ajax.php:1349

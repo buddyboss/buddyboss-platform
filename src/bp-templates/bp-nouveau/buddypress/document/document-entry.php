@@ -262,7 +262,7 @@ if ( $attachment_id ) {
 						if ( $can_add ) {
 						    if ( $is_comment_doc ) {
 							    ?>
-                                <li class="move_file disabled-move">
+                                <li class="move_file disabled-move" data-balloon-pos="down" data-balloon="Documents added in comment cannot be moved">
                                     <a href="#"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a>
                                 </li>
 							    <?php

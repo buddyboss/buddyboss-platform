@@ -424,7 +424,7 @@ window.bp = window.bp || {};
 			comments.each(
 				function( c, comment ) {
 					comment_parents = $( comment ).children( 'ul' ).not( '.conflict-activity-ul-li-comment' );
-					comment_items   = $( comment_parents ).find( 'li' ).not( '.document-action-class' );
+					comment_items   = $( comment_parents ).find( 'li' ).not( $( '.document-action-class, .media-action-class' ) );
 
 					if ( ! comment_items.length ) {
 						return;
