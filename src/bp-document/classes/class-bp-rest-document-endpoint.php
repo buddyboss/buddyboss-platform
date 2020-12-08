@@ -776,6 +776,8 @@ class BP_REST_Document_Endpoint extends WP_REST_Controller {
 			$parent_folder     = new BP_Document_Folder( $args['folder_id'] );
 			$args['privacy']   = $parent_folder->privacy;
 			$args['group_id']  = $parent_folder->group_id;
+		} elseif ( isset( $request['folder_id'] ) && 0 === (int) $request['folder_id'] ) {
+			$args['folder_id'] = $request['folder_id'];
 		}
 
 		if ( isset( $request['content'] ) ) {
