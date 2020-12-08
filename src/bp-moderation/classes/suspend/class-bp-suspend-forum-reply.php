@@ -302,6 +302,14 @@ class BP_Suspend_Forum_Reply extends BP_Suspend_Abstract {
 			$related_contents[ BP_Suspend_Activity::$type ] = BP_Suspend_Activity::get_bbpress_activity_ids( $reply_id );
 		}
 
+		if ( bp_is_active( 'document' ) ) {
+			$related_contents[ BP_Suspend_Document::$type ] = BP_Suspend_Document::get_document_ids_meta( $reply_id );
+		}
+
+		if ( bp_is_active( 'media' ) ) {
+			$related_contents[ BP_Suspend_Media::$type ] = BP_Suspend_Media::get_media_ids_meta( $reply_id );
+		}
+
 		return $related_contents;
 	}
 }

@@ -63,7 +63,37 @@ class BP_Suspend_Document extends BP_Suspend_Abstract {
 	public static function get_member_document_ids( $member_id ) {
 		$document_ids = array();
 
-		//add query
+		$documents = bp_document_get( array(
+			'moderation_query' => false,
+			'per_page'         => 0,
+			'fields'           => 'ids',
+			'user_id'          => $member_id,
+		) );
+
+		if ( ! empty( $documents['documents'] ) ) {
+			$document_ids = wp_list_pluck( $documents['documents'], 'scalar' );
+		}
+
+		return $document_ids;
+	}
+
+	/**
+	 * Get Document ids of blocked item [ Forums/topics/replies/activity etc ] from meta
+	 *
+	 * @param int    $item_id  item id.
+	 * @param string $function Function Name to get meta.
+	 *
+	 * @return array Document IDs
+	 */
+	public static function get_document_ids_meta( $item_id, $function = 'get_post_meta' ) {
+		$document_ids = array();
+
+		if ( function_exists( $function ) ) {
+			if ( ! empty( $item_id ) ) {
+				$post_document = $function( $item_id, 'bp_document_ids', true );
+				$document_ids  = wp_parse_id_list( $post_document );
+			}
+		}
 
 		return $document_ids;
 	}

@@ -287,21 +287,22 @@ function bp_media_get( $args = '' ) {
 
 	$media = BP_Media::get(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'activity_id'  => $r['activity_id'],
-			'album_id'     => $r['album_id'],
-			'group_id'     => $r['group_id'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'order_by'     => $r['order_by'],
-			'search_terms' => $r['search_terms'],
-			'scope'        => $r['scope'],
-			'privacy'      => $r['privacy'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
+			'page'             => $r['page'],
+			'per_page'         => $r['per_page'],
+			'user_id'          => $r['user_id'],
+			'activity_id'      => $r['activity_id'],
+			'album_id'         => $r['album_id'],
+			'group_id'         => $r['group_id'],
+			'max'              => $r['max'],
+			'sort'             => $r['sort'],
+			'order_by'         => $r['order_by'],
+			'search_terms'     => $r['search_terms'],
+			'scope'            => $r['scope'],
+			'privacy'          => $r['privacy'],
+			'exclude'          => $r['exclude'],
+			'count_total'      => $r['count_total'],
+			'fields'           => $r['fields'],
+			'moderation_query' => $r['moderation_query'],
 		)
 	);
 

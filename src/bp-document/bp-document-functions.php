@@ -383,6 +383,7 @@ function bp_document_get( $args = '' ) {
 			'user_directory'      => $r['user_directory'],
 			'meta_query_document' => $r['meta_query_document'],
 			'meta_query_folder'   => $r['meta_query_folder'],
+			'moderation_query'    => $r['moderation_query'],
 		)
 	);
 
